@@ -1,0 +1,25 @@
+{
+  "name": "lipe/libs",
+  "description": "WordPress library for core plugin and theme",
+  "repositories": [],
+  "config": {
+    "vendor-dir": "vendor",
+    "preferred-install": "dist"
+  },
+  "require": {
+  },
+  "authors": [
+    {
+      "name": "Mat Lipe",
+      "email": "mat@matlipe.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Lipe\\Lib\\": "src/"
+    },
+    "files": [
+    ]
+  },
+  "minimum-stability": "stable"
+}
