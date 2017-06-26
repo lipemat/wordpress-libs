@@ -100,7 +100,7 @@ abstract class Post_Abstract {
 				unset( $meta[ $_key ] );
 			} else {
 				if( is_array( $meta[ $_key ] ) && count( $meta[ $_key ] ) === 1 ){
-					$meta[ $_key ] = array_shift( $meta[ $_key ] );
+					$meta[ $_key ] = maybe_unserialize( array_shift( $meta[ $_key ] ) );
 				}
 			}
 		}
