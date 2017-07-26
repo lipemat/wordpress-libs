@@ -165,7 +165,6 @@ class Image_Resize {
 		$class = '';
 		extract( $args );
 
-		/* SET VARS FOR OUTPUT */
 
 		// from explicit thumbnail ID
 		if( !empty( $args[ 'id' ] ) ){
@@ -186,23 +185,21 @@ class Image_Resize {
 		} elseif( has_post_thumbnail() ) {
 			$image_id = get_post_thumbnail_id();
 			$image_url = wp_get_attachment_url( $image_id );
-
-			// get the first image of the post
-		} elseif( $args[ 'image_scan' ] ) {
-			$image_id  = null;
-			$image_url = $this->get_image_from_content( $args[ 'post_id' ] );
-
 			// if we are currently on an attachment
 		} elseif( is_attachment() ) {
 			global $post;
 			$image_id = $post->ID;
 			$image_url = wp_get_attachment_url( $image_id );
 
-		} else {
-			return null;
 		}
 
-		// return null, if any image is defined
+		//get first image from content
+		if( empty( $image_url ) && $args[ 'image_scan' ] ){
+			$image_id = null;
+			$image_url = $this->get_image_from_content( $args[ 'post_id' ] );
+		}
+
+
 		if( empty( $image_url ) && empty( $image_id ) ){
 			return null;
 		}
@@ -293,7 +290,14 @@ class Image_Resize {
 			return $image_url;
 
 		} elseif( $args[ 'output' ] == 'array' ) {
-			return [ $image_url, $width, $height ];
+			//@todo set the alt and title from findings above
+			return [
+				'src'    => $image_url,
+				'width'  => $width,
+				'height' => $height,
+				'alt'    => $alt,
+				'title'  => $title,
+			];
 		}
 
 		if( !empty( $image_id ) ){
@@ -316,6 +320,7 @@ class Image_Resize {
 				$class .= " attachment-$size";
 			}
 
+			//@todo set the alt and title from findings above
 			$attr = [
 				'src'    => $image_url,
 				'alt'    => $alt,
