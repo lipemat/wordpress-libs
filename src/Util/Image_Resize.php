@@ -128,6 +128,7 @@ class Image_Resize {
 	 *                      'class' => '',
 	 *                      'title' => '',
 	 *                      'size' => '',
+	 *                      'image_scan' => false, //grab image from content if nothing else available
 	 *                      'width' => null,
 	 *                      'height' => null,
 	 *                      'crop' => false,
@@ -138,7 +139,7 @@ class Image_Resize {
 	 *                      'link_title' => '',      // the title of <a> tag. If empty, get it from "title" attribute.
 	 *                      );
 	 *
-	 * @return string|void
+	 * @return string|null|array
 	 */
 	public function image( $args = [], $echo = true ) {
 		$defaults = [
@@ -160,29 +161,36 @@ class Image_Resize {
 
 		];
 
-		extract( wp_parse_args( $args, $defaults ) );
+		$args = wp_parse_args( $args, $defaults );
+		$class = '';
+		extract( $args );
 
 		/* SET VARS FOR OUTPUT */
 
-		// from esplicit thumbnail ID
-		if( !empty( $id ) ){
-			$image_id = $id;
-			$image_url = wp_get_attachment_url( $id );
+		// from explicit thumbnail ID
+		if( !empty( $args[ 'id' ] ) ){
+			$image_id = $args[ 'id' ];
+			$image_url = wp_get_attachment_url( $args[ 'id' ]);
 
 			// thumbnail of specified post
-		} elseif( !empty( $post_id ) ) {
-			$image_id = get_post_thumbnail_id( $post_id );
+		} elseif( !empty( $args[ 'post_id' ] ) ) {
+			$image_id = get_post_thumbnail_id( $args[ 'post_id' ] );
 			$image_url = wp_get_attachment_url( $image_id );
 
 			// or from SRC
-		} elseif( !empty( $src ) ) {
+		} elseif( !empty( $args[ 'src' ] ) ) {
 			$image_id = null;
-			$image_url = esc_url( $src );
+			$image_url = esc_url( $args[ 'src' ] );
 
 			// or the post thumbnail of current post
 		} elseif( has_post_thumbnail() ) {
 			$image_id = get_post_thumbnail_id();
 			$image_url = wp_get_attachment_url( $image_id );
+
+			// get the first image of the post
+		} elseif( $args[ 'image_scan' ] ) {
+			$image_id  = null;
+			$image_url = $this->get_image_from_content( $args[ 'post_id' ] );
 
 			// if we are currently on an attachment
 		} elseif( is_attachment() ) {
@@ -196,7 +204,7 @@ class Image_Resize {
 
 		// return null, if any image is defined
 		if( empty( $image_url ) && empty( $image_id ) ){
-			return;
+			return null;
 		}
 
 		// save original image url for the <a> tag
@@ -208,30 +216,30 @@ class Image_Resize {
 		}
 
 		// get size from add_image_size
-		if( !empty( $size ) ){
+		if( !empty( $args[ 'size' ] ) ){
 			global $_wp_additional_image_sizes, $content_width;
 
 			// if is array, put width and height indivudually
-			if( is_array( $size ) ){
-				$width = $size[ 0 ];
-				$height = $size[ 1 ];
-				$crop = empty( $size[ 2 ] ) ? false : $size[ 2 ];
+			if( is_array( $args[ 'size' ] ) ){
+				$width = $args[ 'size' ][ 0 ];
+				$height = $args[ 'size' ][ 1 ];
+				$crop = empty( $args[ 'size' ][ 2 ] ) ? false : $args[ 'size' ][ 2 ];
 
-			} elseif( isset( $this->_image_sizes[ $size ] ) ) {
+			} elseif( isset( $this->_image_sizes[ $args[ 'size' ] ] ) ) {
 
-				$width = $this->_image_sizes[ $size ][ 'width' ];
-				$height = $this->_image_sizes[ $size ][ 'height' ];
-				$crop = $this->_image_sizes[ $size ][ 'crop' ];
+				$width = $this->_image_sizes[ $args[ 'size' ] ][ 'width' ];
+				$height = $this->_image_sizes[ $args[ 'size' ] ][ 'height' ];
+				$crop = $this->_image_sizes[ $args[ 'size' ] ][ 'crop' ];
 
-			} elseif( isset( $_wp_additional_image_sizes[ $size ] ) ) {
-				$width = $_wp_additional_image_sizes[ $size ][ 'width' ];
-				$height = $_wp_additional_image_sizes[ $size ][ 'height' ];
-				$crop = $_wp_additional_image_sizes[ $size ][ 'crop' ];
+			} elseif( isset( $_wp_additional_image_sizes[ $args[ 'size' ] ] ) ) {
+				$width = $_wp_additional_image_sizes[ $args[ 'size' ] ][ 'width' ];
+				$height = $_wp_additional_image_sizes[ $args[ 'size' ] ][ 'height' ];
+				$crop = $_wp_additional_image_sizes[ $args[ 'size' ] ][ 'crop' ];
 
 				// standard sizes of wordpress
 
 				// thumbnail
-			} elseif( $size == 'thumb' || $size == 'thumbnail' ) {
+			} elseif( $args[ 'size' ] == 'thumb' || $args[ 'size' ] == 'thumbnail' ) {
 				$width = intval( get_option( 'thumbnail_size_w' ) );
 				$height = intval( get_option( 'thumbnail_size_h' ) );
 				// last chance thumbnail size defaults
@@ -242,13 +250,13 @@ class Image_Resize {
 				$crop = (bool) get_option( 'thumbnail_crop' );
 
 				// medium
-			} elseif( $size == 'medium' ) {
+			} elseif( $args[ 'size' ] == 'medium' ) {
 				$width = intval( get_option( 'medium_size_w' ) );
 				$height = intval( get_option( 'medium_size_h' ) );
 				// if no width is set, default to the theme content width if available
 
 				// large
-			} elseif( $size == 'large' ) {
+			} elseif( $args[ 'size' ] == 'large' ) {
 				// We're inserting a large size image into the editor. If it's a really
 				// big image we'll scale it down to fit reasonably within the editor
 				// itself, and within the theme's content width if it's known. The user
@@ -270,28 +278,27 @@ class Image_Resize {
 		}
 
 		/* BEGIN OUTPUT */
-		$attr = [];
 
 		// return null, if there isn't $image_url
 		if( empty( $image_url ) ){
-			return;
+			return null;
 		}
 
 		//if we only want an arry or url
-		if( $output == 'url' ){
+		if( $args[ 'output' ] == 'url' ){
 			if( $echo ){
 				echo $image_url;
 			}
 
 			return $image_url;
 
-		} elseif( $output == 'array' ) {
+		} elseif( $args[ 'output' ] == 'array' ) {
 			return [ $image_url, $width, $height ];
 		}
 
 		if( !empty( $image_id ) ){
 			$size = empty( $size ) ? $size = [ $width, $height ] : $size;
-			if( $output != 'a' ){
+			if( $args[ 'output' ] != 'a' ){
 				$class .= ' lipe/lib/util/resized-image';
 			}
 			$html_image = wp_get_attachment_image( $image_id, $size, false, [
@@ -302,10 +309,10 @@ class Image_Resize {
 
 		} else {
 			$html_image = rtrim( "<img" );
-			if( $output != 'a' ){
+			if( $args[ 'output' ] != 'a' ){
 				$class .= ' lipe/lib/util/resized-image';
 			}
-			if( !is_array( $size ) && !empty( $size ) ){
+			if( !is_array( $args[ 'size' ] ) && !empty( $args[ 'size' ] ) ){
 				$class .= " attachment-$size";
 			}
 
@@ -328,7 +335,7 @@ class Image_Resize {
 		}
 
 		// return only image
-		if( $output == 'img' ){
+		if( $args[ 'output' ] == 'img' ){
 			if( $echo ){
 				echo $html_image;
 			}
@@ -336,9 +343,9 @@ class Image_Resize {
 			return $html_image;
 
 			// return the image wrapper in <a> tag
-		} elseif( $output == 'a' ) {
+		} elseif( $args[ 'output' ] == 'a' ) {
 			$html_link = rtrim( "<a" );
-			$link_class .= ' lipe/lib/util/resized-image';
+			$link_class = 'lipe/lib/util/resized-image';
 			$attr = [
 				'href'  => empty( $link ) ? $full_image_url : $link,
 				'title' => empty( $link_title ) ? $title : $link_title,
@@ -524,6 +531,44 @@ class Image_Resize {
 		];
 
 		return $image;
+	}
+
+
+	public function get_image_from_content( $post_id = false ) {
+		global $post;
+
+		$first_img = wp_cache_get( __METHOD__ . ':' . $post_id, 'default' );
+		if( $first_img !== false ){
+			return $first_img;
+		}
+
+		if( !$post_id && !isset( $post->ID ) ){
+			$first_img = '';
+		} else {
+
+			if( $post_id != false && $post_id == $post->ID ){
+				$content = $post->post_content;
+			} else {
+				$content = get_post_field( 'post_content', $post_id );
+			}
+
+			if( is_wp_error( $content ) || empty( $content ) ){
+				$first_img = '';
+
+			} else {
+
+				preg_match_all( '/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $content, $matches );
+				if( !isset( $matches[ 1 ][ 0 ] ) ){
+					$first_img = '';
+				} else {
+					$first_img = $matches[ 1 ][ 0 ];
+				}
+			}
+		}
+
+		wp_cache_set( __METHOD__ . ':' . $post_id, $first_img, 'default', DAY_IN_SECONDS );
+
+		return $first_img;
 	}
 
 }
