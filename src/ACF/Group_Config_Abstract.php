@@ -19,7 +19,7 @@ abstract class Group_Config_Abstract {
 	protected $key;
 
 
-	protected abstract function get_config();
+	public abstract function get_config();
 
 
 	protected function add_field( $name, $label, array $args ) {
