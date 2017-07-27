@@ -539,35 +539,32 @@ class Image_Resize {
 	}
 
 
-	public function get_image_from_content( $post_id = false ) {
-		global $post;
+	public function get_image_from_content( $post_id = 0 ) {
+
+		if( empty( $post_id ) ){
+			$post_id = get_the_ID();
+			if( empty( $post_id ) ){
+				return null;
+			}
+		}
 
 		$first_img = wp_cache_get( __METHOD__ . ':' . $post_id, 'default' );
 		if( $first_img !== false ){
 			return $first_img;
 		}
 
-		if( !$post_id && !isset( $post->ID ) ){
+		$content = get_post_field( 'post_content', $post_id );
+
+		if( is_wp_error( $content ) || empty( $content ) ){
 			$first_img = '';
+
 		} else {
 
-			if( $post_id != false && $post_id == $post->ID ){
-				$content = $post->post_content;
+			preg_match_all( '/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $content, $matches );
+			if( isset( $matches[ 1 ][ 0 ] ) ){
+				$first_img = $matches[ 1 ][ 0 ];
 			} else {
-				$content = get_post_field( 'post_content', $post_id );
-			}
-
-			if( is_wp_error( $content ) || empty( $content ) ){
 				$first_img = '';
-
-			} else {
-
-				preg_match_all( '/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $content, $matches );
-				if( !isset( $matches[ 1 ][ 0 ] ) ){
-					$first_img = '';
-				} else {
-					$first_img = $matches[ 1 ][ 0 ];
-				}
 			}
 		}
 
