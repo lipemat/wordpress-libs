@@ -115,7 +115,7 @@ class Extended_CPTS extends Custom_Post_Type {
 
 		if( !is_wp_error( $post_type ) ){
 			parent::$registry[ $this->post_type ] = get_class( $this );
-			if( $post_type->capability_type != "post" ){
+			if( $post_type->args[ 'capability_type' ] != "post" ){
 				$this->add_administrator_capabilities( $post_type );
 			}
 

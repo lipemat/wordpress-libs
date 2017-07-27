@@ -7,8 +7,7 @@
     "preferred-install": "dist"
   },
   "require": {
-    "johnbillion/extended-cpts": "^3.2",
-    "johnbillion/extended-taxos": "^2.0"
+
   },
   "authors": [
     {
