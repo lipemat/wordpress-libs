@@ -1,6 +1,6 @@
 <?php
 
-namespace Lipe\Lib\Schema;
+namespace Lipe\Lib\Taxonomy;
 
 /**
  * Taxonomy
@@ -21,9 +21,9 @@ namespace Lipe\Lib\Schema;
  */
 class Taxonomy {
 
-	private static $taxonomy_registry = [];
+	protected static $taxonomy_registry = [];
 
-	private static $rewrite_checked = false;
+	protected static $rewrite_checked = false;
 
 	/**
 	 * The arguments for the taxonomy
@@ -80,7 +80,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	private $_post_list_filter = false;
+	protected $_post_list_filter = false;
 
 
 	/**
@@ -462,7 +462,7 @@ class Taxonomy {
 	 *
 	 * @return array
 	 */
-	private function rewrites() {
+	protected function rewrites() {
 		if( empty( $this->rewrite ) ){
 			return [
 				'slug'         => $this->get_slug(),

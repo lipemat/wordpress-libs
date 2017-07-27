@@ -1,14 +1,14 @@
 <?php
 
-namespace Lipe\Lib\Schema;
+namespace Lipe\Lib\Post_Type;
 
 class Custom_Post_Type {
 	const REGISTRY_OPTION = 'lipe/lib/schema/cpt_registry';
-	const CUSTOM_CAPS_OPTION = 'lipe/lib/schema/caps';
+	const CUSTOM_CAPS_OPTION = 'lipe/lib/schema/cpt_caps';
 
-	private static $registry = [];
+	protected static $registry = [];
 
-	private static $rewrite_checked = false;
+	protected static $rewrite_checked = false;
 
 	public $post_type_label_singular = '';
 
@@ -353,7 +353,7 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	private function add_administrator_capabilities( $post_type ) {
+	protected function add_administrator_capabilities( $post_type ) {
 		if( !$this->auto_admin_caps ){
 			return;
 		}
