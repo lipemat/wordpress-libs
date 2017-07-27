@@ -2,7 +2,7 @@
 
 namespace Lipe\Lib\ACF;
 
-abstract class Group_Config_Abstract {
+trait Group_Trait {
 
 	/**
 	 * group
@@ -17,9 +17,6 @@ abstract class Group_Config_Abstract {
 	 * @var string
 	 */
 	protected $key;
-
-
-	public abstract function get_config();
 
 
 	protected function add_field( $name, $label, array $args ) {

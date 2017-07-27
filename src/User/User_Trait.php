@@ -1,8 +1,10 @@
 <?php
 
-namespace Lipe\Lib\Traits;
+namespace Lipe\Lib\User;
 
-trait User {
+use Lipe\Lib\Meta\Meta_Repo;
+
+trait User_Trait {
 
 	/**
 	 * user_id
@@ -33,6 +35,24 @@ trait User {
 		}
 
 		return $this->user;
+	}
+
+
+	public function get_meta( $key ) {
+		return Meta_Repo::instance()->get_meta( $this->user_id, $key );
+	}
+
+
+	/**
+	 *
+	 * @param int $user_id
+	 *
+	 * @static
+	 *
+	 * @return static
+	 */
+	public static function factory( $user_id ) {
+		return new static( $user_id );
 	}
 
 }
