@@ -2,6 +2,7 @@
 namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\Traits\Singleton;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 /**
  * Meta_Repo
@@ -27,6 +28,9 @@ class Meta_Repo {
 	}
 
 	public function get_meta( $id, $key ){
+		if( !isset( $this->keys[ $key ] ) ){
+			throw new \Exception("This meta key {$key} was not added to the repo. Did you add it to get_keys()" );
+		}
 		$class_name = $this->keys[ $key ];
 		return $this->classes[ $class_name ]->get_meta( $id, $key );
 	}

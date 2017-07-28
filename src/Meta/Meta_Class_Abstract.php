@@ -14,14 +14,22 @@ abstract class Meta_Class_Abstract {
 
 	abstract function get_keys();
 
+
 	abstract function get_meta( $id, $key );
+
 
 	public function __construct() {
 		$this->register_with_repo();
 	}
 
-	protected function register_with_repo(){
+
+	protected function register_with_repo() {
 		Meta_Repo::instance()->register_keys( $this, $this->get_keys() );
+	}
+
+
+	public static function meta( $term_id, $key ) {
+		return static::instance()->get_meta( $term_id, $key );
 	}
 
 }

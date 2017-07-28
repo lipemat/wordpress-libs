@@ -86,7 +86,7 @@ class Box {
 	public $enqueue_js;
 
 	/**
-	 * Handles hooking CMB2 forms/metaboxes into the post/attachement/user screens,
+	 * Handles hooking CMB2 forms/metaboxes into the post/attachment/user screens,
 	 * and handles hooking in and saving those fields.
 	 * Set to false if you plan on handling the form/field output/saving
 	 * (via something like cmb2_metabox_form()).
@@ -97,27 +97,6 @@ class Box {
 	 */
 	public $hookup;
 
-	/**
-	 * if object_types is set to 'term', and set to false,
-	 * will remove the fields from the new-term screen.
-	 *
-	 * @default is true.
-	 *
-	 *
-	 * @var string
-	 */
-	public $new_term_section;
-
-	/**
-	 * if object_types is set to 'user',
-	 * will determine where fields are output in the new-user screen.
-	 * Options are 'add-existing-user' and 'add-new-user'.
-	 *
-	 * @default is 'add-new-user'
-	 *
-	 * @var string
-	 */
-	public $new_user_section;
 
 	/**
 	 * This parameter is for post alternate-context metaboxes only.
@@ -181,17 +160,6 @@ class Box {
 	 * @var bool
 	 */
 	public $show_on_cb;
-
-	/**
-	 * if object_types is set to 'term',
-	 * it is required to provide a the taxonomies property,
-	 * which should be an array of Taxonomies.
-	 *
-	 * @example array( 'category', 'post_tag' ),
-	 *
-	 * @var     []
-	 */
-	public $taxonomies;
 
 	/**
 	 * cmb
