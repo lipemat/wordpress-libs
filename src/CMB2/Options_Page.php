@@ -66,6 +66,14 @@ class Options_Page extends Box {
 
 	/**
 	 * This parameter is for options-page metaboxes only,
+	 * Specify if network settings or not
+	 *
+	 * @var bool
+	 */
+	public $network = false;
+
+	/**
+	 * This parameter is for options-page metaboxes only,
 	 * and is sent along to add_submenu_page() to define the parent-menu item slug.
 	 *
 	 * @exampl 'tools.php'
@@ -108,7 +116,16 @@ class Options_Page extends Box {
 		];
 		parent::__construct( $id, [ 'options-page' ], $title );
 
-		add_action( 'admin_menu', [ $this, 'add_options_page' ] );
+		add_action( 'network_admin_menu', function () {
+			if( $this->network ){
+				$this->add_options_page();
+			}
+		} );
+		add_action( 'admin_menu', function () {
+			if( !$this->network ){
+				$this->add_options_page();
+			}
+		} );
 	}
 
 
@@ -126,7 +143,17 @@ class Options_Page extends Box {
 		}
 
 		add_action( "admin_print_styles-{$options_page}", [ 'CMB2_hookup', 'enqueue_cmb_css' ] );
+		add_action( "cmb2_save_options-page_fields_{$this->id}", [ $this, 'notices' ], 10, 2 );
 
+	}
+
+
+	public function notices( $object_id, $updated ) {
+		if( $object_id !== $this->id || !$updated ){
+			return;
+		}
+		add_settings_error( $this->id . '-notices', '', __( 'Settings updated.', 'myprefix' ), 'updated' );
+		settings_errors( $this->id . '-notices' );
 	}
 
 
