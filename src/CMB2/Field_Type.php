@@ -89,8 +89,21 @@ class Field_Type {
 	}
 
 
+	private static $instance;
+
+
+	/**
+	 *
+	 * @static
+	 *
+	 * @return \Lipe\Lib\CMB2\Field_Type
+	 */
 	public static function types(){
-		return new self();
+		if( !is_a( self::$instance, __CLASS__ ) ){
+			self::$instance = new self();
+		}
+
+		return self::$instance;
 	}
 
 }

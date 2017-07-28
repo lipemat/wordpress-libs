@@ -41,27 +41,6 @@ class Box {
 	public $priority = 'high';
 
 	/**
-	 * This parameter is for options-page metaboxes only and defaults to 'admin_menu',
-	 * to register your options-page at the network level:
-	 *
-	 * @example 'network_admin_menu'
-	 *
-	 * @var string
-	 */
-	public $admin_menu_hook;
-
-	/**
-	 * This parameter is for options-page metaboxes only,
-	 * and is sent along to add_menu_page()/add_submenu_page()
-	 * to define the capability required to view the options page.
-	 *
-	 * @example 'edit_posts'
-	 *
-	 * @var string
-	 */
-	public $capability;
-
-	/**
 	 * This property allows you to optionally add classes to the CMB2 wrapper.
 	 * This property can take a string, or array.
 	 *
@@ -100,16 +79,6 @@ class Box {
 	public $cmb_styles;
 
 	/**
-	 * This parameter is for options-page metaboxes only
-	 * and allows overriding the options page form output.
-	 *
-	 * @example 'my_callback_function_to_display_output'
-	 *
-	 * @var callable
-	 */
-	public $display_cb;
-
-	/**
 	 * Whether to enqeue CMB2 Javascript files
 	 *
 	 * @var bool
@@ -127,27 +96,6 @@ class Box {
 	 * @var bool
 	 */
 	public $hookup;
-
-	/**
-	 * This parameter is for options-page metaboxes only,
-	 * and is sent along to add_menu_page() to define the menu icon.
-	 * Only applicable if parent_slug is left empty.
-	 *
-	 * @example 'dashicons-chart-pie'
-	 *
-	 * @var string
-	 */
-	public $icon_url;
-
-	/**
-	 * This parameter is for options-page metaboxes only,
-	 * and is sent along to add_menu_page()/add_submenu_page() to define the menu title.
-	 *
-	 * @example 'Site Options
-	 *
-	 * @var string
-	 */
-	public $menu_title;
 
 	/**
 	 * if object_types is set to 'term', and set to false,
@@ -172,26 +120,6 @@ class Box {
 	public $new_user_section;
 
 	/**
-	 * This parameter is for options-page metaboxes only,
-	 * and is sent along to add_submenu_page() to define the parent-menu item slug.
-	 *
-	 * @exampl 'tools.php'
-	 * @var string
-	 */
-	public $parent_slug;
-
-	/**
-	 * This parameter is for options-page metaboxes only,
-	 * and is sent along to add_menu_page() to define the menu position.
-	 * Only applicable if parent_slug is left empty.
-	 *
-	 * @example 1
-	 *
-	 * @var int
-	 */
-	public $position;
-
-	/**
 	 * This parameter is for post alternate-context metaboxes only.
 	 *
 	 * To output the fields 'naked' (without a postbox wrapper/style):
@@ -201,16 +129,6 @@ class Box {
 	 * @var bool
 	 */
 	public $remove_box_wrap;
-
-	/**
-	 * This parameter is for options-page metaboxes only and
-	 * defines the text for the options page save button. defaults to 'Save'.
-	 *
-	 * @example 'Save Settings'
-	 *
-	 * @var string
-	 */
-	public $save_button;
 
 	/**
 	 * If false, will not save during hookup
@@ -325,7 +243,6 @@ class Box {
 
 
 	public function add_field( Field $field ) {
-
 		$box = $this->get_box();
 		$box->add_field( $field->get_field_args() );
 	}
