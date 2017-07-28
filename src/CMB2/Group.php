@@ -2,8 +2,6 @@
 
 namespace Lipe\Lib\CMB2;
 
-use WP_CLI\Iterators\Exception;
-
 /**
  * Group
  *
@@ -73,14 +71,23 @@ class Group extends Field {
 	 * Group constructor.
 	 *
 	 * @param string             $id
-	 * @param string             $name
+	 * @param string             $title
 	 * @param \Lipe\Lib\CMB2\Box $box
+	 * @param string             $group_title - include a {#} to have replace with number
+	 * @param string             $add_button_text
+	 * @param string             $remove_button_text
 	 * @param string             $desc
+	 * @param bool               $sortable
+	 * @param bool               $closed
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 */
-	public function __construct( $id, $name, Box $box, $desc = '' ) {
+	public function __construct( $id, $title, Box $box, $group_title = null, $add_button_text = null, $remove_button_text = null, $desc = '', $sortable = true, $closed = false ) {
 		$this->box = $box;
 
-		parent::__construct( $id, $name, Field_Type::types()->group, $desc );
+		$type = Field_Type::types()->group( $group_title, $add_button_text, $remove_button_text, $sortable, $closed );
+
+		parent::__construct( $id, $title, $type, $desc );
 	}
 
 

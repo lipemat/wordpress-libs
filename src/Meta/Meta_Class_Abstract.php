@@ -15,7 +15,7 @@ abstract class Meta_Class_Abstract {
 	abstract function get_keys();
 
 
-	abstract function get_meta( $id, $key );
+	abstract function get_meta( $object_id, $key );
 
 
 	public function __construct() {
@@ -28,8 +28,8 @@ abstract class Meta_Class_Abstract {
 	}
 
 
-	public static function meta( $term_id, $key ) {
-		return static::instance()->get_meta( $term_id, $key );
+	public static function meta( $object_id, $key ) {
+		return static::instance()->get_meta( $object_id, $key );
 	}
 
 }

@@ -274,6 +274,14 @@ class Field {
 	public $options_cb;
 
 	/**
+	 * For use with the file fields only to control the preview size
+	 *
+	 * @var string
+	 */
+	public $preview_size;
+
+
+	/**
 	 * Allows overriding the default CMB2_Type_Base class
 	 * that is used when rendering the field.
 	 * This provides interesting object-oriented ways to override default CMB2 behavior
@@ -326,6 +334,14 @@ class Field {
 	public $sanitization_cb;
 
 	/**
+	 * Whether to show select all button for items
+	 * with multi select like multicheck
+	 *
+	 * @var
+	 */
+	public $select_all_button;
+
+	/**
 	 * Whether to show labels for the fields
 	 *
 	 * @var bool
@@ -350,6 +366,17 @@ class Field {
 	 * @var string
 	 */
 	public $timezone_meta_key;
+
+	/**
+	 * Used for taxonomy fields
+	 *
+	 * Set to the taxonomy slug
+	 *
+	 * @notice these fields will save terms not meta
+	 *
+	 * @var string
+	 */
+	public $taxonomy;
 
 	/**
 	 * Used to configure some strings for things like
@@ -385,7 +412,7 @@ class Field {
 	 *
 	 * @param string $id
 	 * @param string $name
-	 * @param string $type
+	 * @param string|array $type
 	 * @param string $desc
 	 */
 	public function __construct( $id, $name, $type, $desc = '' ) {
@@ -396,7 +423,13 @@ class Field {
 	}
 
 
-
+	/**
+	 * Retrieve an array of this fields args to be
+	 * submitted to CMB2 by way of
+	 * @see Box::add_field()
+	 *
+	 * @return array
+	 */
 	public function get_field_args() {
 		$args = [];
 		foreach( get_object_vars( $this ) as $_var => $_value ){
@@ -408,6 +441,14 @@ class Field {
 					$args[ $_var ] = $this->{$_var};
 					break;
 			}
+		}
+		//we have arguments related to the type so we split
+		//them out into the args.
+		//If we have a class property set we prefer that value
+		if( is_array( $args[ 'type' ] ) ){
+			$type = $args[ 'type' ];
+			unset( $args[ 'type' ] );
+			$args = array_merge( $type, $args );
 		}
 
 		return $args;
