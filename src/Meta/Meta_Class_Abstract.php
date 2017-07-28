@@ -14,7 +14,7 @@ abstract class Meta_Class_Abstract {
 
 	abstract function get_keys();
 
-	abstract function get_value( $id, $key );
+	abstract function get_meta( $id, $key );
 
 	public function __construct() {
 		$this->register_with_repo();

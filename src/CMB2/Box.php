@@ -12,7 +12,7 @@ namespace Lipe\Lib\CMB2;
  */
 class Box {
 
-	public $id = '';
+	protected $id;
 
 	/**
 	 *  'normal', 'side', 'advanced'
@@ -22,14 +22,16 @@ class Box {
 	 *
 	 * @var string
 	 */
-	public $context = '';
+	protected $context;
 
 	/**
 	 * An array containing post type slugs, or 'user', 'term', 'comment', or 'options-page'.
 	 *
 	 * @var array
 	 */
-	public $object_types = [];
+	protected $object_types = [];
+
+	protected $title = '';
 
 	/**
 	 * 'high', 'low', 'default'
@@ -37,8 +39,6 @@ class Box {
 	 * @var string
 	 */
 	public $priority = 'high';
-
-	public $title = '';
 
 	/**
 	 * This parameter is for options-page metaboxes only and defaults to 'admin_menu',
@@ -280,7 +280,24 @@ class Box {
 	 *
 	 * @var \CMB2
 	 */
-	protected $cmb;
+	public $cmb;
+
+
+	/**
+	 * Box constructor.
+	 *
+	 * @param        $id
+	 * @param array  $object_types - post type slugs, or 'user', 'term', 'comment', or 'options-page'
+	 * @param        $title
+	 * @param string $context      - 'normal', 'side', 'advanced', 'form_top', 'before_permalink', 'after_title',
+	 *                             'after_editor'
+	 */
+	public function __construct( $id, array $object_types, $title, $context = 'normal' ) {
+		$this->id = $id;
+		$this->object_types = $object_types;
+		$this->title = $title;
+		$this->context = 'normal';
+	}
 
 
 	/**
@@ -308,8 +325,9 @@ class Box {
 
 
 	public function add_field( Field $field ) {
+
 		$box = $this->get_box();
-		$box->add_field( $field->get_field() );
+		$box->add_field( $field->get_field_args() );
 	}
 
 }

@@ -14,7 +14,7 @@ namespace Lipe\Lib\CMB2;
  * @package Lipe\Lib\CMB2
  */
 class Field_Type {
-	public $title;
+	public $title = 'title';
 
 	public $text;
 
@@ -82,21 +82,15 @@ class Field_Type {
 
 	public $group;
 
-
-	/**
-	 * Get whatever type is set to true
-	 *
-	 * @throws \Exception
-	 *
-	 * @return int|string
-	 */
-	public function get_type() {
+	public function __construct() {
 		foreach( get_object_vars( $this ) as $_var => $_value ){
-			if( isset( $_value ) ){
-				return $_var;
-			}
+			$this->{$_var} = $_var;
 		}
-		throw new \Exception( "You must set a type to true in the class" );
+	}
+
+
+	public static function types(){
+		return new self();
 	}
 
 }

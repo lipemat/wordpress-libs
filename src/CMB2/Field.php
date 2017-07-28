@@ -16,14 +16,14 @@ class Field {
 	 *
 	 * @var string
 	 */
-	public $name = '';
+	protected $name = '';
 
 	/**
 	 * Field description. Usually under or adjacent to the field input.
 	 *
 	 * @var string
 	 */
-	public $desc = '';
+	protected $desc = '';
 
 	/**
 	 * The data key. If using for posts, will be the post-meta key.
@@ -35,15 +35,17 @@ class Field {
 	 *
 	 * @var string
 	 */
-	public $id = '';
+	protected $id = '';
 
 	/**
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
-	 * @var \Lipe\Lib\CMB2\Field_Type;
+	 * @see \Lipe\Lib\CMB2\Field_Type;
+	 *
+	 * @var string;
 	 */
-	public $type;
+	protected $type;
 
 	/**
 	 * Will modify default attributes (class, input type, rows, etc),
@@ -120,54 +122,6 @@ class Field {
 	 * @var callable|string
 	 */
 	public $after_field;
-
-	/**
-	 * ONLY APPLIES TO GROUPS
-	 *
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
-	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
-	 *
-	 * @var callable|string
-	 */
-	public $before_group;
-
-	/**
-	 * ONLY APPLIES TO GROUPS
-	 *
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
-	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
-	 *
-	 * @var callable|string
-	 */
-	public $after_group;
-
-	/**
-	 * ONLY APPLIES TO GROUPS
-	 *
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
-	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
-	 *
-	 * @var callable|string
-	 */
-	public $before_group_row;
-
-	/**
-	 * ONLY APPLIES TO GROUPS
-	 *
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
-	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
-	 *
-	 * @var callable|string
-	 */
-	public $after_group_row;
 
 	/**
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
@@ -266,8 +220,9 @@ class Field {
 	public $default;
 
 	/**
-	 * This parameter is for options-page metaboxes only
-	 * and allows overriding the options page form output.
+	 * With the addition of optional columns display output in 2.2.2,
+	 * You can now set the field's 'display_cb' to dictate
+	 * how that field value should be displayed.
 	 *
 	 * @example 'my_callback_function_to_display_output'
 	 *
@@ -375,7 +330,7 @@ class Field {
 	 *
 	 * @var bool
 	 */
-	public $show_names = true;
+	public $show_names;
 
 	/**
 	 * To show or not based on the result
@@ -411,16 +366,34 @@ class Field {
 	public $query_args;
 
 
-	public function get_field() {
+	/**
+	 * Field constructor.
+	 *
+	 * @see \Lipe\Lib\CMB2\Field_Type
+	 *
+	 * @example $field = new Field( self::FEATURED_TAG, __( 'Featured Tag', 'tribe' ), Field_Type::types()->checkbox );
+	 *
+	 * @param string $id
+	 * @param string $name
+	 * @param string $type
+	 * @param string $desc
+	 */
+	public function __construct( $id, $name, $type, $desc = '' ) {
+		$this->id = $id;
+		$this->name = $name;
+		$this->type = $type;
+		$this->desc = $desc;
+	}
+
+
+
+	public function get_field_args() {
 		$args = [];
 		foreach( get_object_vars( $this ) as $_var => $_value ){
 			if( !isset( $this->{$_var} ) ){
 				continue;
 			}
 			switch ( $_var ){
-				case 'type':
-					$args[ $_var ] = $this->type->get_type();
-					break;
 				default:
 					$args[ $_var ] = $this->{$_var};
 					break;
