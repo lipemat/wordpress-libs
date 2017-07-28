@@ -342,6 +342,16 @@ class Field {
 	public $show_on_cb;
 
 	/**
+	 * Used for date/time fields
+	 *
+	 * Optionally make this field honor the timezone selected
+	 * in the select_timezone field specified above.
+	 *
+	 * @var string
+	 */
+	public $timezone_meta_key;
+
+	/**
 	 * Used to configure some strings for things like
 	 *
 	 * 'add_row_text' for repeaters
