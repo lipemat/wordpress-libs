@@ -227,6 +227,16 @@ class Box {
 		if( isset( $this->cmb ) ){
 			return $this->cmb;
 		}
+
+		$args = $this->get_args();
+		$this->cmb = new_cmb2_box( $args );
+
+		return $this->cmb;
+
+	}
+
+
+	protected function get_args() {
 		$args = [];
 		foreach( get_object_vars( $this ) as $_var => $_value ){
 			if( $_var == 'cmb' || !isset( $this->{$_var} ) ){
@@ -235,10 +245,7 @@ class Box {
 			$args[ $_var ] = $this->{$_var};
 		}
 
-		$this->cmb = new_cmb2_box( $args );
-
-		return $this->cmb;
-
+		return $args;
 	}
 
 

@@ -20,7 +20,7 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	public $admin_menu_hook;
+	public $admin_menu_hook = 'admin_menu';
 
 	/**
 	 * This parameter is for options-page metaboxes only,
@@ -41,7 +41,7 @@ class Options_Page extends Box {
 	 *
 	 * @var callable
 	 */
-	public $display_cb;
+	public $display_cb = 'cmb2_metabox_form';
 
 	/**
 	 * This parameter is for options-page metaboxes only,
@@ -116,27 +116,20 @@ class Options_Page extends Box {
 		];
 		parent::__construct( $id, [ 'options-page' ], $title );
 
-		add_action( 'network_admin_menu', function () {
-			if( $this->network ){
-				$this->add_options_page();
-			}
-		} );
-		add_action( 'admin_menu', function () {
-			if( !$this->network ){
-				$this->add_options_page();
-			}
-		} );
+		add_action( $this->admin_menu_hook, [ $this, 'add_options_page' ] );
 	}
 
 
 	public function add_options_page() {
-		if( empty( $this->parent_slug ) ){
-			$options_page = add_menu_page( $this->title, $this->title, $this->capability, $this->id, [
+		$this->menu_title = empty( $this->menu_title ) ? $this->title : $this->menu_title;
+
+		if( !isset( $this->parent_slug ) ){
+			$options_page = add_menu_page( $this->title, $this->menu_title, $this->capability, $this->id, [
 				$this,
 				'admin_page_display',
 			], $this->icon_url, $this->position );
 		} else {
-			$options_page = add_submenu_page( $this->parent_slug, $this->title, $this->title, $this->capability, $this->id, [
+			$options_page = add_submenu_page( $this->parent_slug, $this->title, $this->menu_title, $this->capability, $this->id, [
 				$this,
 				'admin_page_display',
 			] );
@@ -160,8 +153,8 @@ class Options_Page extends Box {
 	public function admin_page_display() {
 		?>
         <div class="wrap cmb2-options-page <?php echo $this->id; ?>">
-            <h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
-			<?php cmb2_metabox_form( $this->id, $this->id ); ?>
+            <h2><?= esc_html( get_admin_page_title() ); ?></h2>
+			<?php call_user_func_array( $this->display_cb, [ $this->id, $this->id, $this->get_args() ] ); ?>
         </div>
 		<?php
 	}
