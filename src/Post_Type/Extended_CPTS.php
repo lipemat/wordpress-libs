@@ -2,6 +2,8 @@
 
 namespace Lipe\Lib\Post_Type;
 
+use Lipe\Lib\Post_Type\Extended_CPTS\Column;
+
 /**
  * Register
  *
@@ -86,6 +88,22 @@ class Extended_CPTS extends Custom_Post_Type {
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Query-vars-for-filtering
 	 */
 	public $site_filters = [];
+
+
+	/**
+	 * Add a column pragmatically
+	 *
+	 * Return an object that you can follow along with
+	 * to enter in all params without memorizing any of them
+	 *
+	 * @example admin_cols()->p2p( 'p2p title', 'p_to_o', 'view' )->set_as_default_sort_column( 'DESC' )
+	 *
+	 *
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column
+	 */
+	public function admin_cols(){
+		return new Column( $this );
+	}
 
 
 	protected function get_post_type_args() {
