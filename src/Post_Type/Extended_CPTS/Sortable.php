@@ -63,9 +63,11 @@ class Sortable {
 	 * @return void
 	 */
 	public function set( array $args ) {
-		$this->sortables_array_key = $args[ 'sort_key' ];
-		$this->CPTS->site_sortables[ $this->sortables_array_key ] = [];
-		unset( $args[ 'sort_key' ] );
+		if( !isset( $this->CPTS->site_sortables[ $this->sortables_array_key ] ) ){
+			$this->sortables_array_key = $args[ 'sort_key' ];
+			$this->CPTS->site_sortables[ $this->sortables_array_key ] = [];
+			unset( $args[ 'sort_key' ] );
+		}
 
 		$existing = $this->CPTS->site_sortables[ $this->sortables_array_key ];
 

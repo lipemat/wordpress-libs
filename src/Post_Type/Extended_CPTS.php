@@ -4,6 +4,7 @@ namespace Lipe\Lib\Post_Type;
 
 use Lipe\Lib\Post_Type\Extended_CPTS\Column;
 use Lipe\Lib\Post_Type\Extended_CPTS\Filter;
+use Lipe\Lib\Post_Type\Extended_CPTS\Query_Var;
 use Lipe\Lib\Post_Type\Extended_CPTS\Sortable;
 
 /**
@@ -98,15 +99,45 @@ class Extended_CPTS extends Custom_Post_Type {
 	 *
 	 * @param string $permastruct
 	 *
-	 * @link https://github.com/johnbillion/extended-cpts/wiki/Custom-permalink-structures#examples
+	 * @link     https://github.com/johnbillion/extended-cpts/wiki/Custom-permalink-structures#examples
 	 *
 	 * @example  '/foo/%custom_tax%/%article%'
 	 *
 	 * @return void
 	 */
-	public function rewrite( $permastruct ){
-		
+	public function rewrite( $permastruct ) {
+
 		$this->rewrite[ 'permastruct' ] = $permastruct;
+	}
+
+
+	/**
+	 * Extended CPTs provides a mechanism for registering public query vars
+	 * which allow users to filter your post type archives by various fields.
+	 * This also works in WP_Query,
+	 * although the main advantage is the fact these are public query vars
+	 * accessible via URL parameters.
+	 *
+	 * Think of these as the front-end equivalent of list table filters in the admin area,
+	 * minus the UI.
+	 *
+	 * It also allows you to filter posts in WP_Query thusly:
+	 *
+	 * @example new WP_Query( array(
+	 * 'post_type' => 'article',
+	 * $query_var    => 'bar',
+	 * ) );
+	 *
+	 * @example test.loc/articles/?{$query_var}=bar
+	 *
+	 * @author  Mat Lipe
+	 * @since   7/29/2017
+	 *
+	 * @link    https://github.com/johnbillion/extended-cpts/wiki/Query-vars-for-filtering#example
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Query_Var
+	 */
+	public function site_filters() {
+		return new Query_Var( $this );
 	}
 
 
@@ -127,9 +158,10 @@ class Extended_CPTS extends Custom_Post_Type {
 	 *
 	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Sortable
 	 */
-	public function site_sortables(){
+	public function site_sortables() {
 		return new Sortable( $this );
 	}
+
 
 	/**
 	 * Add a column pragmatically
@@ -142,7 +174,7 @@ class Extended_CPTS extends Custom_Post_Type {
 	 *
 	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column
 	 */
-	public function admin_cols(){
+	public function admin_cols() {
 		return new Column( $this );
 	}
 
@@ -155,7 +187,7 @@ class Extended_CPTS extends Custom_Post_Type {
 	 *
 	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter
 	 */
-	public function admin_filters(){
+	public function admin_filters() {
 		return new Filter( $this );
 	}
 
@@ -182,6 +214,12 @@ class Extended_CPTS extends Custom_Post_Type {
 	}
 
 
+	/**
+	 * Register the post type using args from our normal
+	 * Custom_Post_Type class and this class
+	 *
+	 * @return \Extended_CPT
+	 */
 	public function register_post_type() {
 		$post_type = register_extended_post_type( $this->post_type, $this->get_post_type_args() );
 
@@ -192,6 +230,7 @@ class Extended_CPTS extends Custom_Post_Type {
 			}
 
 		}
+		return $post_type;
 	}
 
 }

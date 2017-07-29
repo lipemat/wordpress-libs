@@ -155,7 +155,7 @@ class Custom_Post_Type {
 	/**
 	 * Register this post type with WordPress
 	 *
-	 * @return void
+	 * @return \WP_Post_Type
 	 */
 	public function register_post_type() {
 		$post_type = register_post_type( $this->post_type, $this->post_type_args() );
@@ -166,6 +166,7 @@ class Custom_Post_Type {
 			}
 
 		}
+		return $post_type;
 	}
 
 
