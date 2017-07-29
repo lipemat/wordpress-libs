@@ -19,13 +19,6 @@ class Field {
 	protected $name = '';
 
 	/**
-	 * Field description. Usually under or adjacent to the field input.
-	 *
-	 * @var string
-	 */
-	protected $desc = '';
-
-	/**
 	 * The data key. If using for posts, will be the post-meta key.
 	 * If using for an options page, will be the array key.
 	 *
@@ -41,11 +34,12 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
-	 * @see \Lipe\Lib\CMB2\Field_Type;
+	 * @see  \Lipe\Lib\CMB2\Field_Type;
+	 * @see  \Lipe\Lib\CMB2\Field::type();
 	 *
 	 * @var string;
 	 */
-	protected $type;
+	public $type;
 
 	/**
 	 * Will modify default attributes (class, input type, rows, etc),
@@ -220,6 +214,13 @@ class Field {
 	public $default;
 
 	/**
+	 * Field description. Usually under or adjacent to the field input.
+	 *
+	 * @var string
+	 */
+	public $desc = '';
+
+	/**
 	 * With the addition of optional columns display output in 2.2.2,
 	 * You can now set the field's 'display_cb' to dictate
 	 * how that field value should be displayed.
@@ -279,7 +280,6 @@ class Field {
 	 * @var string
 	 */
 	public $preview_size;
-
 
 	/**
 	 * Allows overriding the default CMB2_Type_Base class
@@ -406,31 +406,49 @@ class Field {
 	/**
 	 * Field constructor.
 	 *
-	 * @see \Lipe\Lib\CMB2\Field_Type
+	 * @see     \Lipe\Lib\CMB2\Field_Type
 	 *
 	 * @example $field = new Field( self::FEATURED_TAG, __( 'Featured Tag', 'tribe' ), Field_Type::types()->checkbox );
 	 *
 	 * @param string $id
 	 * @param string $name
-	 * @param string|array $type
-	 * @param string $desc
 	 */
-	public function __construct( $id, $name, $type, $desc = '' ) {
+	public function __construct( $id, $name ) {
 		$this->id = $id;
 		$this->name = $name;
-		$this->type = $type;
-		$this->desc = $desc;
+	}
+
+
+	/**
+	 * Set the type programmatically
+	 * Using the Field_Type class which
+	 * maps all special keys for every
+	 * available field
+	 *
+	 * This is much preferred over setting $this->type
+	 * directly which has room for error
+	 *
+	 * @return \Lipe\Lib\CMB2\Field_Type
+	 */
+	public function type() {
+		return new Field_Type( $this );
 	}
 
 
 	/**
 	 * Retrieve an array of this fields args to be
 	 * submitted to CMB2 by way of
+	 *
 	 * @see Box::add_field()
+	 *
+	 * @throws \Exception
 	 *
 	 * @return array
 	 */
 	public function get_field_args() {
+		if( empty( $this->type ) ){
+			throw new \Exception( __( 'You must specify a field type (use $field->type() ).', 'lipe' ) );
+		}
 		$args = [];
 		foreach( get_object_vars( $this ) as $_var => $_value ){
 			if( !isset( $this->{$_var} ) ){
@@ -441,14 +459,6 @@ class Field {
 					$args[ $_var ] = $this->{$_var};
 					break;
 			}
-		}
-		//we have arguments related to the type so we split
-		//them out into the args.
-		//If we have a class property set we prefer that value
-		if( is_array( $args[ 'type' ] ) ){
-			$type = $args[ 'type' ];
-			unset( $args[ 'type' ] );
-			$args = array_merge( $type, $args );
 		}
 
 		return $args;

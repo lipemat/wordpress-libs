@@ -76,18 +76,17 @@ class Group extends Field {
 	 * @param string             $group_title - include a {#} to have replace with number
 	 * @param string             $add_button_text
 	 * @param string             $remove_button_text
-	 * @param string             $desc
 	 * @param bool               $sortable
 	 * @param bool               $closed
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 */
-	public function __construct( $id, $title, Box $box, $group_title = null, $add_button_text = null, $remove_button_text = null, $desc = '', $sortable = true, $closed = false ) {
+	public function __construct( $id, $title, Box $box, $group_title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false ) {
 		$this->box = $box;
 
-		$type = Field_Type::types()->group( $group_title, $add_button_text, $remove_button_text, $sortable, $closed );
+		$this->type()->group( $group_title, $add_button_text, $remove_button_text, $sortable, $closed );
 
-		parent::__construct( $id, $title, $type, $desc );
+		parent::__construct( $id, $title );
 	}
 
 
