@@ -17,7 +17,7 @@ class Column {
 	protected $TAXOS;
 
 	/**
-	 * cols_array_key
+	 * filters_array_key
 	 *
 	 * @see \Lipe\Lib\Taxonomy\Extended_TAXOS\Column::set()
 	 *

@@ -17,7 +17,6 @@ class Column {
 	protected $CPTS;
 
 	/**
-	 * cols_array_key
 	 *
 	 * @see \Lipe\Lib\Post_Type\Extended_CPTS\Column::set()
 	 * @var string

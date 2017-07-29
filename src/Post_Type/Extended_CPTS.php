@@ -3,6 +3,8 @@
 namespace Lipe\Lib\Post_Type;
 
 use Lipe\Lib\Post_Type\Extended_CPTS\Column;
+use Lipe\Lib\Post_Type\Extended_CPTS\Filter;
+use Lipe\Lib\Post_Type\Extended_CPTS\Sortable;
 
 /**
  * Register
@@ -42,38 +44,38 @@ class Extended_CPTS extends Custom_Post_Type {
 	/**
 	 * Whether to show this post type on the 'At a Glance' section of the admin
 	 */
-	public $dashboard_glance = null;
+	public $dashboard_glance;
 
 	/**
 	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Other-admin-parameters
 	 */
-	public $enter_title_here = null;
+	public $enter_title_here;
 
 	/**
 	 *
 	 *  Text which replaces the 'Featured Image' phrase for this post type
 	 */
-	public $featured_image = null;
+	public $featured_image;
 
 	/**
-	 * permastruck
+	 * rewrite
 	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Custom-permalink-structures
 	 */
-	public $permastruck = null;
+	public $rewrite;
 
 	/**
 	 *
 	 * Whether to show Quick Edit links for this post type
 	 */
-	public $quick_edit = null;
+	public $quick_edit;
 
 	/**
 	 * Add the post type to the site's main RSS feed:
 	 *
 	 */
-	public $show_in_feed = null;
+	public $show_in_feed;
 
 	/**
 	 * site_sortables
@@ -91,6 +93,45 @@ class Extended_CPTS extends Custom_Post_Type {
 
 
 	/**
+	 * Allows a custom permalink structure to be specified via the permastruct
+	 * parameter in the rewrite argument.
+	 *
+	 * @param string $permastruct
+	 *
+	 * @link https://github.com/johnbillion/extended-cpts/wiki/Custom-permalink-structures#examples
+	 *
+	 * @example  '/foo/%custom_tax%/%article%'
+	 *
+	 * @return void
+	 */
+	public function rewrite( $permastruct ){
+		
+		$this->rewrite[ 'permastruct' ] = $permastruct;
+	}
+
+
+	/**
+	 * Extended CPTs provides a mechanism for registering values for the public orderby query var,
+	 * which allows users to sort your post type archives by various fields.
+	 * This also works in WP_Query, which makes ordering custom post type listings very powerful and dead easy.
+	 *
+	 * Think of these as the front-end equivalent of sortable columns in the admin area, minus the UI.
+	 *
+	 * @example
+	 * new WP_Query( array(
+	 * 'post_type' => 'article',
+	 * 'orderby'   => $sort_key,
+	 * 'order'     => 'DESC',
+	 * ) );
+	 *
+	 *
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Sortable
+	 */
+	public function site_sortables(){
+		return new Sortable( $this );
+	}
+
+	/**
 	 * Add a column pragmatically
 	 *
 	 * Return an object that you can follow along with
@@ -106,6 +147,19 @@ class Extended_CPTS extends Custom_Post_Type {
 	}
 
 
+	/**
+	 * Add a filter programically
+	 *
+	 * Returns an object that you can follow along with
+	 * to enter in all the params without memorizing any of them
+	 *
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter
+	 */
+	public function admin_filters(){
+		return new Filter( $this );
+	}
+
+
 	protected function get_post_type_args() {
 		$args = parent::post_type_args();
 
@@ -113,7 +167,7 @@ class Extended_CPTS extends Custom_Post_Type {
 			if( property_exists( get_parent_class( $this ), $_var ) ){
 				continue;
 			}
-			if( $this->{$_var} !== null ){
+			if( isset( $this->{$_var} ) ){
 				if( is_array( $this->{$_var} ) ){
 					if( !empty( $this->{$_var} ) ){
 						$args[ $_var ] = $this->{$_var};

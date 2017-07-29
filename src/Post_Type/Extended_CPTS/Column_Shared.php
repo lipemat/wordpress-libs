@@ -13,6 +13,11 @@ namespace Lipe\Lib\Post_Type\Extended_CPTS;
 class Column_Shared {
 	protected $column;
 
+	/**
+	 * For possible future use
+	 *
+	 * @var array
+	 */
 	protected $args;
 
 
