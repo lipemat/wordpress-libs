@@ -5,11 +5,15 @@ namespace Lipe\Lib\Taxonomy;
 use Lipe\Lib\Taxonomy\Extended_TAXOS\Column;
 
 /**
- * Extended_TAXOS
+ * Taxonomy_Extended
+ *
+ * Extends our Taxonomy class with support for
+ * extended-taxos
+ *
  *
  * @see \register_extended_taxonomy()
  */
-class Extended_TAXOS extends Taxonomy {
+class Taxonomy_Extended extends Taxonomy {
 
 	/**
 	 * @see \Extended_Taxonomy_Admin::cols()

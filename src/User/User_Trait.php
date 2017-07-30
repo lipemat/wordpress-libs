@@ -11,16 +11,21 @@ trait User_Trait {
 	 *
 	 * @var int
 	 */
-	public $user_id = null;
+	protected $user_id;
 
 	/**
 	 * user
 	 *
 	 * @var \WP_User
 	 */
-	private $user;
+	protected $user;
 
 
+	/**
+	 * User_Trait constructor.
+	 *
+	 * @param null|int $user_id
+	 */
 	public function __construct( $user_id = null ) {
 		if( $user_id === null ){
 			$user_id = get_current_user_id();
@@ -28,6 +33,9 @@ trait User_Trait {
 		$this->user_id = $user_id;
 	}
 
+	public function get_user_id(){
+		return $this->user_id;
+	}
 
 	public function get_user() {
 		if( empty( $this->user ) ){

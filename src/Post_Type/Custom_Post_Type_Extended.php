@@ -8,14 +8,17 @@ use Lipe\Lib\Post_Type\Extended_CPTS\Query_Var;
 use Lipe\Lib\Post_Type\Extended_CPTS\Sortable;
 
 /**
- * Register
+ * Custom_Post_Type_Extended
+ *
+ * Extends our Custom_Post_Type class with support
+ * for extended-cpts
  *
  * @author  Mat Lipe
- * @since   7/27/2017
+ * @since   7.30.17
  *
- * @package Lipe\Project\Post_Types
+ * @package Lipe\Lib\Post_Type
  */
-class Extended_CPTS extends Custom_Post_Type {
+class Custom_Post_Type_Extended extends Custom_Post_Type {
 
 	/**
 	 * admin_cols
@@ -231,6 +234,19 @@ class Extended_CPTS extends Custom_Post_Type {
 
 		}
 		return $post_type;
+	}
+
+
+	/**
+	 *
+	 * @param $post_type
+	 *
+	 * @static
+	 *
+	 * @return \Lipe\Lib\Post_Type\Custom_Post_Type_Extended
+	 */
+	public static function factory( $post_type ){
+		return new self( $post_type );
 	}
 
 }

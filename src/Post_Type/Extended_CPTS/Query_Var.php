@@ -2,7 +2,7 @@
 
 namespace Lipe\Lib\Post_Type\Extended_CPTS;
 
-use Lipe\Lib\Post_Type\Extended_CPTS;
+use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
 
 /**
  * Query_Var
@@ -30,9 +30,9 @@ use Lipe\Lib\Post_Type\Extended_CPTS;
  *
  * @link    https://github.com/johnbillion/extended-cpts/wiki/Query-vars-for-filtering#example
  *
- * @package Lipe\Lib\Post_Type\Extended_CPTS
+ * @package Lipe\Lib\Post_Type\Custom_Post_Type_Extended
  */
-class Query_Var {
+class Query_Var extends Argument_Abstract {
 	protected $CPTS;
 
 	/**
@@ -46,9 +46,9 @@ class Query_Var {
 	/**
 	 * Query_var constructor.
 	 *
-	 * @param \Lipe\Lib\Post_Type\Extended_CPTS $CPTS
+	 * @param \Lipe\Lib\Post_Type\Custom_Post_Type_Extended $CPTS
 	 */
-	public function __construct( Extended_CPTS $CPTS ) {
+	public function __construct( Custom_Post_Type_Extended $CPTS ) {
 		$this->CPTS = $CPTS;
 	}
 

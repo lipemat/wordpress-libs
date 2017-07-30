@@ -8,9 +8,9 @@ namespace Lipe\Lib\Post_Type\Extended_CPTS;
  * @author  Mat Lipe
  * @since   7/29/2017
  *
- * @package Lipe\Lib\Post_Type\Extended_CPTS
+ * @package Lipe\Lib\Post_Type\Custom_Post_Type_Extended
  */
-class Filter_Shared {
+class Filter_Shared extends Shared_Abstract{
 	protected $filter;
 
 	/**
@@ -34,6 +34,18 @@ class Filter_Shared {
 
 
 	/**
+	 *
+	 * @param array $args
+	 *
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
+	 */
+	protected function return( array $args ){
+		$this->filter->set( $args );
+		return $this;
+	}
+
+
+	/**
 	 * Any filter can be restricted so it's only shown to users
 	 * with a given capability by using the cap parameter:
 	 *
@@ -41,10 +53,10 @@ class Filter_Shared {
 	 *
 	 * @example 'manage_options'
 	 *
-	 * @return void
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
 	 */
 	public function capability( $capability ) {
-		$this->filter->set( [ 'cap' => $capability ] );
+		return $this->return( [ 'cap' => $capability ] );
 	}
 
 
@@ -54,10 +66,10 @@ class Filter_Shared {
 	 *
 	 * @param array $query
 	 *
-	 * @return void
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
 	 */
 	public function meta_query( array $query ){
-		$this->filter->set( [ 'meta_query' => $query ] );
+		return $this->return( [ 'meta_query' => $query ] );
 	}
 
 }
