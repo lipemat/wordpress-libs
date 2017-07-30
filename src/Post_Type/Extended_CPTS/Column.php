@@ -37,7 +37,6 @@ class Column {
 	/**
 	 * Store args to cpt object
 	 * This must be called from every method that is saving args
-	 *
 	 * or they will go nowhere
 	 *
 	 * @internal
@@ -59,6 +58,20 @@ class Column {
 
 
 	/**
+	 * Store args to cpt object
+	 * Then return the Column_Shared class
+	 *
+	 * @param array $args
+	 *
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 */
+	protected function return( array $args ){
+		$this->set( $args );
+		return new Column_Shared( $this, $args );
+	}
+
+
+	/**
 	 * If you don't want to use one of Extended CPT's built-in column types,
 	 * you can use a callback function to output your column value by using the function parameter.
 	 * Anything callable can be passed as the value, such as a function name or a closure.
@@ -73,9 +86,7 @@ class Column {
 			'title'    => $title,
 			'function' => $callback,
 		];
-		$this->set( $_args );
-
-		return new Column_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 
@@ -115,9 +126,7 @@ class Column {
 			$_args[ 'value' ] = $meta_value;
 		}
 
-		$this->set( $_args );
-
-		return new Column_Shared( $this, $_args );
+		return $this->return( $_args );
 
 	}
 
@@ -140,9 +149,7 @@ class Column {
 			'post_field' => $field,
 		];
 
-		$this->set( $_args );
-
-		return new Column_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 
@@ -167,9 +174,7 @@ class Column {
 			'height'         => $height,
 		];
 
-		$this->set( $_args );
-
-		return new Column_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 
@@ -197,9 +202,7 @@ class Column {
 			'link'     => $link_to,
 		];
 
-		$this->set( $_args );
-
-		return new Column_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 
@@ -227,9 +230,7 @@ class Column {
 			$_args[ 'date_format' ] = $date_format;
 		}
 
-		$this->set( $_args );
-
-		return new Column_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 }

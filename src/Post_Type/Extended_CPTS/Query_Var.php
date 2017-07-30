@@ -79,6 +79,20 @@ class Query_Var {
 
 
 	/**
+	 * Store args to cpt object
+	 * Then return the Query_Var_Shared class
+	 *
+	 * @param array $args
+	 *
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Query_Var_Shared
+	 */
+	protected function return( array $args ){
+		$this->set( $args );
+		return new Query_Var_Shared( $this, $args );
+	}
+
+
+	/**
 	 * Allow posts to be filtered by an exact match on the value of the given meta key
 	 *
 	 * You can additionally specify a meta_query parameter
@@ -105,9 +119,7 @@ class Query_Var {
 			$_args[ 'meta_query' ] = $meta_query;
 		}
 
-		$this->set( $_args );
-
-		return new Query_Var_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 
@@ -126,9 +138,7 @@ class Query_Var {
 			'meta_search_key' => $meta_key,
 		];
 
-		$this->set( $_args );
-
-		return new Query_Var_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 
@@ -149,9 +159,7 @@ class Query_Var {
 			'meta_exists' => $meta_key,
 		];
 
-		$this->set( $_args );
-
-		return new Query_Var_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 
@@ -179,9 +187,7 @@ class Query_Var {
 			'taxonomy'  => $taxonomy,
 		];
 
-		$this->set( $_args );
-
-		return new Query_Var_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 }

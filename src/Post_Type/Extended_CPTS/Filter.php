@@ -56,6 +56,19 @@ class Filter {
 		$this->CPTS->admin_filters[ $this->filters_array_key ] = $existing;
 	}
 
+	/**
+	 * Store args to cpt object
+	 * Then return the Filter_Shared class
+	 *
+	 * @param array $args
+	 *
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
+	 */
+	protected function return( array $args ){
+		$this->set( $args );
+		return new Filter_Shared( $this, $args );
+	}
+
 
 	/**
 	 * Displays a checkbox or a select dropdown for filtering by posts
@@ -77,9 +90,7 @@ class Filter {
 			'meta_exists' => $meta_fields,
 		];
 
-		$this->set( $_args );
-
-		return new Filter_Shared( $this, $_args );
+		return $this->return( $_args );
 
 	}
 
@@ -100,9 +111,7 @@ class Filter {
 			'meta_search_key' => $meta_key,
 		];
 
-		$this->set( $_args );
-
-		return new Filter_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 
@@ -128,9 +137,7 @@ class Filter {
 			$_args[ 'options' ] = $options_or_callback;
 		}
 
-		$this->set( $_args );
-
-		return new Filter_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 
@@ -150,9 +157,7 @@ class Filter {
 			'taxonomy' => $taxonomy,
 		];
 
-		$this->set( $_args );
-
-		return new Filter_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 }

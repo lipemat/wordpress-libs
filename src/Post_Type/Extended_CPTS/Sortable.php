@@ -75,6 +75,19 @@ class Sortable {
 		$this->CPTS->site_sortables[ $this->sortables_array_key ] = $existing;
 	}
 
+	/**
+	 * Store args to cpt object
+	 * Then return the Sortable_Shared class
+	 *
+	 * @param array $args
+	 *
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Sortable_Shared
+	 */
+	protected function return( array $args ){
+		$this->set( $args );
+		return new Sortable_Shared( $this, $args );
+	}
+
 
 	/**
 	 * Sort posts by their meta value by using the meta_key parameter:
@@ -90,9 +103,7 @@ class Sortable {
 			'meta_key' => $meta_key,
 		];
 
-		$this->set( $_args );
-
-		return new Sortable_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 
@@ -110,9 +121,7 @@ class Sortable {
 			'taxonomy' => $taxonomy,
 		];
 
-		$this->set( $_args );
-
-		return new Sortable_Shared( $this, $_args );
+		return $this->return( $_args );
 
 	}
 
@@ -131,9 +140,7 @@ class Sortable {
 			'post_field' => $post_field,
 		];
 
-		$this->set( $_args );
-
-		return new Sortable_Shared( $this, $_args );
+		return $this->return( $_args );
 
 	}
 
