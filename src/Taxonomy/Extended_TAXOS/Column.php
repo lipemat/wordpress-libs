@@ -59,6 +59,19 @@ class Column {
 		$this->TAXOS->admin_cols[ $this->cols_array_key ] = $existing;
 	}
 
+	/**
+	 * Store args to taxonomy object
+	 * Then return the Column_Shared class
+	 *
+	 * @param array $args
+	 *
+	 * @return \Lipe\Lib\Taxonomy\Extended_TAXOS\Column_Shared
+	 */
+	protected function return( array $args ){
+		$this->set( $args );
+		return new Column_Shared( $this, $args );
+	}
+
 
 	/**
 	 * If you don't want to use one of Extended CPT's built-in column types,
@@ -75,9 +88,7 @@ class Column {
 			'title'    => $title,
 			'function' => $callback,
 		];
-		$this->set( $_args );
-
-		return new Column_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 
@@ -105,9 +116,7 @@ class Column {
 			$_args[ 'date_format' ] = $date_format;
 		}
 
-		$this->set( $_args );
-
-		return new Column_Shared( $this, $_args );
+		return $this->return( $_args );
 	}
 
 }
