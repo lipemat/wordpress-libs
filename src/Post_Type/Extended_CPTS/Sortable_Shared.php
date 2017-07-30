@@ -8,9 +8,9 @@ namespace Lipe\Lib\Post_Type\Extended_CPTS;
  * @author  Mat Lipe
  * @since   7/29/2017
  *
- * @package Lipe\Lib\Post_Type\Extended_CPTS
+ * @package Lipe\Lib\Post_Type\Custom_Post_Type_Extended
  */
-class Sortable_Shared {
+class Sortable_Shared extends Shared_Abstract {
 
 	protected $sortable;
 
@@ -35,15 +35,28 @@ class Sortable_Shared {
 
 
 	/**
+	 *
+	 * @param array $args
+	 *
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Sortable_Shared
+	 */
+	protected function return ( array $args ) {
+		$this->sortable->set( $args );
+		return $this;
+	}
+
+
+
+	/**
 	 * Make this sortable the default orderby
 	 * on any FE WP_Query
 	 *
 	 * @param string $direction - 'ASC', 'DESC' (default 'ASC' )
 	 *
-	 * @return void
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Sortable_Shared
 	 */
 	public function set_as_default_sort_sortable( $direction = 'ASC' ) {
-		$this->sortable->set( [ 'default' => $direction ] );
+		return $this->return( [ 'default' => $direction ] );
 	}
 
 }

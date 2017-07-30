@@ -2,7 +2,8 @@
 
 namespace Lipe\Lib\Taxonomy\Extended_TAXOS;
 
-use Lipe\Lib\Taxonomy\Extended_TAXOS;
+use Lipe\Lib\Post_Type\Extended_CPTS\Argument_Abstract;
+use Lipe\Lib\Taxonomy\Taxonomy_Extended;
 
 /**
  * Column
@@ -10,9 +11,9 @@ use Lipe\Lib\Taxonomy\Extended_TAXOS;
  * @author  Mat Lipe
  * @since   7/29/2017
  *
- * @package Lipe\Lib\Taxonomy\Extended_TAXOS
+ * @package Lipe\Lib\Taxonomy\Taxonomy_Extended
  */
-class Column {
+class Column extends Argument_Abstract {
 
 	protected $TAXOS;
 
@@ -29,9 +30,9 @@ class Column {
 	/**
 	 * Column constructor.
 	 *
-	 * @param \Lipe\Lib\Taxonomy\Extended_TAXOS $TAXOS
+	 * @param \Lipe\Lib\Taxonomy\Taxonomy_Extended $TAXOS
 	 */
-	public function __construct( Extended_TAXOS $TAXOS ) {
+	public function __construct( Taxonomy_Extended $TAXOS ) {
 		$this->TAXOS = $TAXOS;
 	}
 

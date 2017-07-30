@@ -2,7 +2,7 @@
 
 namespace Lipe\Lib\Post_Type\Extended_CPTS;
 
-use Lipe\Lib\Post_Type\Extended_CPTS;
+use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
 
 /**
  * Column
@@ -10,9 +10,9 @@ use Lipe\Lib\Post_Type\Extended_CPTS;
  * @author  Mat Lipe
  * @since   7/29/2017
  *
- * @package Lipe\Lib\Post_Type\Extended_CPTS
+ * @package Lipe\Lib\Post_Type\Custom_Post_Type_Extended
  */
-class Column {
+class Column extends Argument_Abstract {
 
 	protected $CPTS;
 
@@ -27,9 +27,9 @@ class Column {
 	/**
 	 * Column constructor.
 	 *
-	 * @param \Lipe\Lib\Post_Type\Extended_CPTS $CPTS
+	 * @param \Lipe\Lib\Post_Type\Custom_Post_Type_Extended $CPTS
 	 */
-	public function __construct( Extended_CPTS $CPTS ) {
+	public function __construct( Custom_Post_Type_Extended $CPTS ) {
 		$this->CPTS = $CPTS;
 	}
 

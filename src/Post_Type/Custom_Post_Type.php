@@ -550,4 +550,17 @@ class Custom_Post_Type {
 
 		return $this->supports;
 	}
+
+
+	/**
+	 *
+	 * @param $post_type
+	 *
+	 * @static
+	 *
+	 * @return \Lipe\Lib\Post_Type\Custom_Post_Type
+	 */
+	public static function factory( $post_type ){
+		return new self( $post_type );
+	}
 }

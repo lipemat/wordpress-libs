@@ -8,9 +8,9 @@ namespace Lipe\Lib\Post_Type\Extended_CPTS;
  * @author  Mat Lipe
  * @since   7/29/2017
  *
- * @package Lipe\Lib\Post_Type\Extended_CPTS
+ * @package Lipe\Lib\Post_Type\Custom_Post_Type_Extended
  */
-class Column_Shared {
+class Column_Shared extends Shared_Abstract {
 	protected $column;
 
 	/**
@@ -34,15 +34,42 @@ class Column_Shared {
 
 
 	/**
+	 *
+	 * @param array $args
+	 *
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 */
+	protected function return( array $args ){
+		$this->column->set( $args );
+		return $this;
+	}
+
+
+	/**
 	 * Make this column the default sort column instead
 	 * of the default 'title'
 	 *
 	 * @param string $direction - 'ASC', 'DESC' (default 'ASC' )
 	 *
-	 * @return void
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
 	 */
 	public function set_as_default_sort_column( $direction = 'ASC' ) {
-		$this->column->set( [ 'default' => $direction ] );
+		return $this->return( [ 'default' => $direction ] );
+	}
+
+
+	/**
+	 * Make a column sortable
+	 * Most columns are by default
+	 *
+	 * @notice feature_image can not be sortable
+	 *
+	 * @param bool $is_sortable - (default to false);
+	 *
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 */
+	public function sortable( $is_sortable = false ){
+		return $this->return( [ 'sortable' => $is_sortable ] );
 	}
 
 
@@ -54,10 +81,10 @@ class Column_Shared {
 	 *
 	 * @example 'manage_options'
 	 *
-	 * @return void
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
 	 */
 	public function column_capability( $capability ) {
-		$this->column->set( [ 'cap' => $capability ] );
+		return $this->return( [ 'cap' => $capability ] );
 	}
 
 
@@ -74,10 +101,10 @@ class Column_Shared {
 	 *
 	 * @example 'edit_post'
 	 *
-	 * @return void
+	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
 	 */
 	public function post_capability( $capability ) {
-		$this->column->set( [ 'post_cap' => $capability ] );
+		return $this->return( [ 'post_cap' => $capability ] );
 	}
 
 }
