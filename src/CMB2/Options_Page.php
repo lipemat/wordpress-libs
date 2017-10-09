@@ -16,7 +16,7 @@ class Options_Page extends Box {
 	 * This parameter is for options-page metaboxes only and defaults to 'admin_menu',
 	 * to register your options-page at the network level:
 	 *
-	 * Example 'network_admin_menu'
+	 * @example 'network_admin_menu'
 	 *
 	 * @var string
 	 */
@@ -27,7 +27,7 @@ class Options_Page extends Box {
 	 * and is sent along to add_menu_page()/add_submenu_page()
 	 * to define the capability required to view the options page.
 	 *
-	 * Example 'edit_posts'
+	 * @example 'edit_posts'
 	 *
 	 * @var string
 	 */
@@ -37,7 +37,7 @@ class Options_Page extends Box {
 	 * This parameter is for options-page metaboxes only
 	 * and allows overriding the options page form output.
 	 *
-	 * Example 'my_callback_function_to_display_output'
+	 * @example 'my_callback_function_to_display_output'
 	 *
 	 * @var callable
 	 */
@@ -47,8 +47,8 @@ class Options_Page extends Box {
 	 * This parameter is for options-page metaboxes only,
 	 * and is sent along to add_menu_page() to define the menu icon.
 	 * Only applicable if parent_slug is left empty.
-     * 
-	 * Example 'dashicons-chart-pie'
+     *
+	 * @example 'dashicons-chart-pie'
 	 *
 	 * @var string
 	 */
@@ -58,7 +58,7 @@ class Options_Page extends Box {
 	 * This parameter is for options-page metaboxes only,
 	 * and is sent along to add_menu_page()/add_submenu_page() to define the menu title.
 	 *
-	 * Example 'Site Options
+	 * @example 'Site Options
 	 *
 	 * @var string
 	 */
@@ -76,7 +76,7 @@ class Options_Page extends Box {
 	 * This parameter is for options-page metaboxes only,
 	 * and is sent along to add_submenu_page() to define the parent-menu item slug.
 	 *
-	 * Example 'tools.php'
+	 * @example 'tools.php'
 	 *
 	 * @var string
 	 */
@@ -87,7 +87,7 @@ class Options_Page extends Box {
 	 * and is sent along to add_menu_page() to define the menu position.
 	 * Only applicable if parent_slug is left empty.
 	 *
-	 * Example 6
+	 * @example 6
 	 *
 	 * @var int
 	 */
@@ -97,7 +97,7 @@ class Options_Page extends Box {
 	 * This parameter is for options-page metaboxes only and
 	 * defines the text for the options page save button. defaults to 'Save'.
 	 *
-	 * Example 'Save Settings'
+	 * @example 'Save Settings'
 	 *
 	 * @var string
 	 */
@@ -107,7 +107,7 @@ class Options_Page extends Box {
 	 * This parameter is for options-page metaboxes only and
 	 * defines the settings page slug. Defaults to $id.
      *
-     * Example 'my_options_page_slug'
+     * @example 'my_options_page_slug'
 	 *
 	 * @var string
 	 */

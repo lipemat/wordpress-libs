@@ -146,7 +146,8 @@ class Box {
 	 *
 	 * @link    https://github.com/WebDevStudios/CMB2/wiki/Adding-your-own-show_on-filters
 	 *
-	 * @example array( 'id' => 2 ), // Only show on the "about" page
+	 * @example array( 'key' => 'page-template', 'value' => 'template-contact.php' )
+	 * @example array( 'key' => 'id', 'value' => array( 50, 24 ) )
 	 *
 	 * @var     []
 	 */

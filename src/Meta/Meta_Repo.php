@@ -2,7 +2,6 @@
 namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\Traits\Singleton;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 /**
  * Meta_Repo
