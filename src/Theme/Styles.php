@@ -65,36 +65,33 @@ class Styles {
 	/**
 	 * Add Font
 	 *
-	 * Add a google font the head of the webpage in the front end and admin
+	 * Add a google font the head of the page in the front end and admin
+     * To use other providers such as typekit see @link and create custom
+     * This method is for google fonts only
+     * @link https://github.com/typekit/webfontloader
+     *
+	 * @param string|array $families - the family to include
 	 *
+	 * @example add_font( 'Droid Serif,Oswald' );
 	 *
-	 * @param mixed string|array $families - the family to include
-	 *
-	 * @example Raleway:400,700,600:latin
-	 *
-	 * @uses    Must be called before the 'wp_head' hook fires
+	 * @uses   Must be called before the 'wp_head' hook fires
 	 */
-	function add_font( $families ) {
+	public function add_font( $families ) : void {
 		if( is_array( $families ) ){
 			$families = implode( "','", $families );
 		}
 
 		ob_start();
 		?>
-        <script type="text/javascript">
-			WebFontConfig = {
-				google : {families : ['<?php echo $families; ?>']}
-			};
-			(function(){
-				var wf   = document.createElement( 'script' );
-				wf.src   = ('https:' == document.location.protocol ? 'https' : 'http') + '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-				wf.type  = 'text/javascript';
-				wf.async = 'true';
-				var s    = document.getElementsByTagName( 'script' )[0];
-				s.parentNode.insertBefore( wf, s );
-			})(); </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+        <script>
+			WebFont.load({
+				google: {
+					families : ['<?php echo $families; ?>']}
+				}
+			})
+        </script>
 		<?php
-
 		$output = ob_get_clean();
 
 		add_action( 'wp_head', function () use ( $output ) {

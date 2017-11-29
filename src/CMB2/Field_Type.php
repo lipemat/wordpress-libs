@@ -197,6 +197,13 @@ class Field_Type {
 	protected $taxonomy_radio_inline;
 
 	/**
+	 * Hierarchical radio buttons pre-populated with taxonomy terms.
+	 *
+	 * @todo add a link to docs because they don't exist at time of writing
+	 */
+	protected $taxonomy_radio_hierarchical;
+
+	/**
 	 * A select field pre-populated with taxonomy terms.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_select
@@ -216,6 +223,13 @@ class Field_Type {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_inline
 	 */
 	protected $taxonomy_multicheck_inline;
+
+	/**
+	 * Hierarchical checkboxes with taxonomy terms.
+	 *
+	 * @todo add a link to docs because they don't exist at time of writing
+	 */
+	protected $taxonomy_multicheck_hierarchical;
 
 	/**
 	 * A metabox with TinyMCE editor (same as WordPress' visual editor).
@@ -645,6 +659,24 @@ class Field_Type {
 
 	}
 
+	/**
+	 * Hierarchical radio buttons pre-populated with taxonomy terms
+	 *
+	 * @param string $taxonomy       - slug
+	 * @param string $no_terms_text
+	 * @param bool   $remove_default - remove default WP terms metabox (default true)
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
+	 *
+	 * @return void
+	 */
+	public function taxonomy_radio_hierarchical( $taxonomy, $no_terms_text = null, $remove_default = null ) {
+		$_args = $this->field_type_taxonomy( $this->taxonomy_radio_hierarchical, $taxonomy, $no_terms_text, $remove_default );
+
+		$this->set( $_args );
+
+	}
+
 
 	/**
 	 * Inline radio buttons pre-populated with taxonomy terms
@@ -702,6 +734,25 @@ class Field_Type {
 
 		$this->set( $_args );
 
+	}
+
+	/**
+	 * Hierarchical checkboxes with taxonomy terms, and multiple terms can be selected.
+	 *
+	 * @param string $taxonomy       - slug
+	 * @param string $no_terms_text
+	 * @param bool   $remove_default - remove default WP terms metabox (default true)
+	 * @param bool   $select_all     - display the select all button
+	 *
+	 * @todo update with links to docs once they exist
+	 *
+	 * @return void
+	 */
+	public function taxonomy_multicheck_hierarchical( $taxonomy, $no_terms_text = null, $remove_default = null, $select_all = true ) {
+		$_args = $this->field_type_taxonomy( $this->taxonomy_multicheck_hierarchical, $taxonomy, $no_terms_text, $remove_default );
+		$_args[ 'select_all_button' ] = $select_all;
+
+		$this->set( $_args );
 	}
 
 
