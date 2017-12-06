@@ -34,29 +34,199 @@ class Taxonomy {
 	 */
 	public $post_types = [];
 
-	public $public = true;
+	/**
+	 * Whether a taxonomy is intended for use publicly either via the
+	 * admin interface or by front-end users.
+	 * The default settings of `$publicly_queryable`, `$show_ui`,
+	 * and `$show_in_nav_menus` are inherited from `$public`.
+     *
+     * @default true
+	 *
+	 * @var bool
+	 */
+	public $public;
 
-	public $show_ui = null;
+	/**
+	 * Whether the taxonomy is publicly queryable.
+     *
+     * @default $this->public
+	 *
+	 * @var bool
+	 */
+	public $publicly_queryable;
 
-	public $show_in_nav_menus = null;
+	/**
+	 * Whether to generate a default UI for managing this taxonomy.
+     *
+     * @default $this->public
+	 *
+	 * @var bool
+	 */
+	public $show_ui;
 
-	public $show_admin_column = false;
+	/**
+	 * Where to show the taxonomy in the admin menu.
+	 * show_ui must be true.
+	 *
+     * @default $this->show_ui
+	 *
+	 * @var bool
+	 */
+	public $show_in_menu;
 
-	public $show_tagcloud = null;
+	/**
+	 * true makes this taxonomy available for selection in navigation menus.
+     *
+     * @default $this->public
+	 *
+	 * @var bool
+	 */
+	public $show_in_nav_menus;
 
-	public $hierarchical = false;
+	/**
+	 * Whether to include the taxonomy in the REST API
+     *
+     * @default false
+	 *
+	 * @var bool
+	 */
+	public $show_in_rest;
 
-	public $update_count_callback = null;
+	/**
+	 * To change the base url of REST API route
+     *
+     * @default $this->taxonomy
+	 *
+	 * @var string
+	 */
+	public $rest_base;
 
-	public $query_var = null;
+	/**
+	 * REST API Controller class name.
+     *
+     * @default 'WP_REST_Terms_Controller'
+	 *
+	 * @var string
+	 */
+	public $rest_controller_class;
 
-	public $capabilities = [];
+	/**
+	 * Whether to allow the Tag Cloud widget to use this taxonomy.
+     *
+     * @default $this->show_ui
+	 *
+	 * @var bool
+	 */
+	public $show_tagcloud;
 
-	public $slug = null;
+	/**
+	 * Whether to show the taxonomy in the quick/bulk edit panel
+     *
+     * @default $this->show_ui
+	 *
+	 * @var bool
+	 */
+	public $show_in_quick_edit;
 
-	public $meta_box_cb = null;
+	/**
+	 * Provide a callback function name for the meta box display
+	 *
+	 * @var callable
+	 */
+	public $meta_box_cb;
 
-	public $rewrite = null;
+	/**
+	 * Whether to allow automatic creation of taxonomy columns
+	 * on associated post-types lists
+     *
+     * @default false
+	 *
+	 * @var bool
+	 */
+	public $show_admin_column;
+
+	/***
+	 * Include a description of the taxonomy.
+     *
+     * @default ''
+	 *
+	 * @var string
+	 */
+	public $description;
+
+	/**
+	 * Is this taxonomy hierarchical (have descendants) like categories
+	 * or not hierarchical like tags.
+     *
+     * @default false
+	 *
+	 * @var bool
+	 */
+	public $hierarchical;
+
+	/**
+	 * A function name that will be called when the count of
+	 * an associated $object_type, such as post, is updated.
+	 * Works much like a hook.
+	 *
+	 * @var callable
+	 */
+	public $update_count_callback;
+
+	/**
+	 * False to disable the query_var, set as string to use
+	 * custom query_var instead of default
+	 * True is not seen as a valid entry and will result in 404 issues
+     *
+     * @default $this->taxonomy
+	 *
+	 * @var false|string
+	 */
+	public $query_var;
+
+	/**
+	 * Assign special rewrite args. Send only the ones wanted to change.
+     * Set to false to disable URL rewriting.
+     *
+	 * {
+	 * 'slug' - Used as pretty permalink text (i.e. /tag/) - defaults to $this->taxonomy
+	 * 'with_front' - allowing permalinks to be prepended with front base - defaults to true
+	 * 'hierarchical' - true or false allow hierarchical urls -  defaults to false
+	 * 'ep_mask' - Assign an endpoint mask for this taxonomy - defaults to EP_NONE.
+	 *}
+     *
+     * @default true
+	 *
+	 * @var array|bool
+	 */
+	public $rewrite;
+
+	/**
+	 * Capabilities for these terms
+	 *{
+	 * 'manage_terms' - 'manage_categories'
+	 * 'edit_terms' - 'manage_categories'
+	 * 'delete_terms' - 'manage_categories'
+	 * 'assign_terms' - 'edit_posts'
+     * }
+     *
+     * @default []
+	 *
+	 * @var array
+	 */
+	public $capabilities;
+
+	/**
+	 * Whether this taxonomy should remember the order in which terms
+	 * are added to objects.
+	 *
+	 * @var bool
+	 */
+	public $sort;
+
+
+	public $slug;
+
 
 	/**
 	 * The taxonomy slug
@@ -327,24 +497,33 @@ class Taxonomy {
 	 *
 	 * @return array
 	 */
-	protected function taxonomy_args() {
+	protected function taxonomy_args() : array {
+
 		$args = [
 			'labels'                => $this->taxonomy_labels(),
 			'public'                => $this->public,
+			'publicly_queryable'    => $this->publicly_queryable,
 			'show_ui'               => $this->show_ui,
+			'show_in_menu'          => $this->show_in_menu,
 			'show_in_nav_menus'     => $this->show_in_nav_menus,
-			'show_admin_column'     => $this->show_admin_column,
+			'show_in_rest'          => $this->show_in_rest,
+			'rest_base'             => $this->rest_base,
+			'rest_controller_class' => $this->rest_controller_class,
 			'show_tagcloud'         => $this->show_tagcloud,
+			'show_in_quick_edit'    => $this->show_in_quick_edit,
+			'meta_box_cb'           => $this->meta_box_cb,
+			'show_admin_column'     => $this->show_admin_column,
+			'description'           => $this->description,
 			'hierarchical'          => $this->hierarchical,
 			'update_count_callback' => $this->update_count_callback,
-			'query_var'             => empty( $this->query_var ) ? $this->taxonomy : $this->query_var,
+			'query_var'             => $this->query_var ?? $this->taxonomy,
 			'rewrite'               => $this->rewrites(),
 			'capabilities'          => $this->capabilities,
-			'meta_box_cb'           => $this->meta_box_cb,
+			'sort'                  => $this->sort,
 		];
 
-		$args = apply_filters( 'lipe/lib/schema/taxonomy_args', $args, $this->taxonomy );
-		$args = apply_filters( "lipe/lib/schema/taxonomy_args_{$this->taxonomy}", $args );
+		$args = apply_filters( 'lipe/lib/taxonomy/args', $args, $this->taxonomy );
+		$args = apply_filters( "lipe/lib/taxonomy/args_{$this->taxonomy}", $args );
 
 		return $args;
 	}
@@ -358,9 +537,9 @@ class Taxonomy {
 	 *
 	 * @return array
 	 */
-	protected function taxonomy_labels( $single = '', $plural = '' ) {
-		$single = $single ? $single : $this->get_label( 'singular' );
-		$plural = $plural ? $plural : $this->get_label( 'plural' );
+	protected function taxonomy_labels( $single = null, $plural = null ) : array {
+		$single = $single ?? $this->get_label();
+		$plural = $plural ?? $this->get_label( 'plural' );
 		$labels = [
 			'name'                       => $plural,
 			'singular_name'              => $single,
@@ -370,23 +549,30 @@ class Taxonomy {
 			'parent_item'                => sprintf( __( 'Parent %s' ), $single ),
 			'parent_item_colon'          => sprintf( __( 'Parent %s:' ), $single ),
 			'edit_item'                  => sprintf( __( 'Edit %s' ), $single ),
+			'view_item'                  => sprintf( __( 'View %s' ), $single ),
 			'update_item'                => sprintf( __( 'Update %s' ), $single ),
 			'add_new_item'               => sprintf( __( 'Add New %s' ), $single ),
 			'new_item_name'              => sprintf( __( 'New %s Name' ), $single ),
 			'separate_items_with_commas' => sprintf( __( 'Separate %s with commas' ), $plural ),
 			'add_or_remove_items'        => sprintf( __( 'Add or remove %s' ), $plural ),
 			'choose_from_most_used'      => sprintf( __( 'Choose from the most used %s' ), $plural ),
+			'not_found'                  => sprintf( __( 'No %s found' ), $plural ),
+			'no_terms'                   => sprintf( __( 'No %s' ), $plural ),
+			'items_list_navigation'      => sprintf( __( '%s list navigation' ), $plural ),
+			'items_list'                 => sprintf( __( '%s list' ), $plural ),
+			'most_used'                  => __( 'Most Used' ),
+			'back_to_items'              => sprintf( __( '&larr; Back to %s' ), $plural ),
 			'menu_name'                  => $this->get_menu_label(),
 		];
 
-		$labels = apply_filters( 'lipe/lib/schema/taxonomy_labels', $labels, $this->taxonomy );
-		$labels = apply_filters( "lipe/lib/schema/taxonomy_labels_{$this->taxonomy}", $labels );
+		$labels = apply_filters( 'lipe/lib/taxonomy/labels', $labels, $this->taxonomy );
+		$labels = apply_filters( "lipe/lib/taxonomy/labels_{$this->taxonomy}", $labels );
 
 		return $labels;
 	}
 
 
-	public function get_label( $quantity = 'singular' ) {
+	public function get_label( $quantity = 'singular' ) : ?string {
 		switch ( $quantity ){
 			case 'plural':
 				if( !$this->label_plural ){
@@ -460,18 +646,19 @@ class Taxonomy {
 	 *
 	 * Build rewrite args or pass the the class var if set
 	 *
-	 * @return array
+	 * @return array|null
 	 */
-	protected function rewrites() {
+	protected function rewrites() : ?array {
 		if( empty( $this->rewrite ) ){
 			return [
 				'slug'         => $this->get_slug(),
 				'with_front'   => false,
 				'hierarchical' => $this->hierarchical,
 			];
-		} else {
-			return $this->rewrite;
 		}
+
+		return $this->rewrite;
+
 	}
 
 

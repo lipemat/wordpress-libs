@@ -3,8 +3,8 @@
 namespace Lipe\Lib\Post_Type;
 
 class Custom_Post_Type {
-	const REGISTRY_OPTION = 'lipe/lib/schema/cpt_registry';
-	const CUSTOM_CAPS_OPTION = 'lipe/lib/schema/cpt_caps';
+	protected const REGISTRY_OPTION = 'lipe/lib/post-type/cpt_registry';
+	protected const CUSTOM_CAPS_OPTION = 'lipe/lib/post-type/cpt_caps';
 
 	protected static $registry = [];
 
@@ -45,19 +45,31 @@ class Custom_Post_Type {
 
 	public $supports = [ 'title', 'editor', 'author', 'thumbnail', 'excerpt' ];
 
-	public $map_meta_cap = null;
+	/**
+	 * Provide a callback function that will be called when setting
+	 * up the meta boxes for the edit form.
+	 * The callback function takes one argument $post,
+	 * which contains the WP_Post object for the currently edited post
+	 *
+	 * @default none
+	 *
+	 * @var callable
+	 */
+	public $register_meta_box_cb;
 
-	public $menu_name = null;
+	public $map_meta_cap;
 
-	public $menu_icon = null;
+	public $menu_name;
+
+	public $menu_icon;
 
 	public $menu_position = 5;
 
 	public $public = true;
 
-	public $publicly_queryable = null;
+	public $publicly_queryable;
 
-	public $exclude_from_search = null;
+	public $exclude_from_search;
 
 	public $has_archive = true;
 
@@ -65,18 +77,64 @@ class Custom_Post_Type {
 
 	public $query_var = true;
 
-	public $show_ui = null;
+	public $show_ui;
 
-	public $show_in_menu = null;
+	public $show_in_menu;
 
-	public $show_in_nav_menus = null;
+	public $show_in_nav_menus;
 
-	public $show_in_admin_bar = null;
+	public $show_in_admin_bar;
 
+	/**
+	 * Whether to delete posts of this type when deleting a user.
+	 * If true, posts of this type belonging to the user will be moved to trash
+	 * when then user is deleted.
+	 * If false, posts of this type belonging to the user will not be
+	 * trashed or deleted.
+	 * If not set (the default), posts are trashed if post_type_supports('author').
+	 * Otherwise posts are not trashed or deleted.
+	 *
+	 * @var bool
+	 */
+	public $delete_with_user;
+
+	/**
+	 * Whether to expose this post type in the REST API
+	 *
+	 * @var bool
+	 */
 	public $show_in_rest = false;
 
-	public $rewrite = null;
+	/**
+	 * The base slug that this post type will use when accessed using the REST API.
+	 *
+	 * @default $this->post_type
+	 *
+	 * @var string
+	 */
+	public $rest_base;
 
+	/**
+	 * An optional custom controller to use instead of WP_REST_Posts_Controller.
+	 * Must be a subclass of WP_REST_Controller.
+	 *
+	 * @default 'WP_REST_Posts_Controller'
+	 *
+	 * @var string
+	 */
+	public $rest_controller_class;
+
+	public $rewrite;
+
+	/**
+	 * The default rewrite endpoint bitmasks
+	 *
+	 * @link http://make.wordpress.org/plugins/2012/06/07/rewrite-endpoints-api/
+	 *
+	 * @default EP_PERMALINK
+	 *
+	 * @var int
+	 */
 	public $permalink_epmask = EP_PERMALINK;
 
 	public $can_export = true;
@@ -161,7 +219,7 @@ class Custom_Post_Type {
 		$post_type = register_post_type( $this->post_type, $this->post_type_args() );
 		if( !is_wp_error( $post_type ) ){
 			self::$registry[ $this->post_type ] = get_class( $this );
-			if( $post_type->capability_type != "post" ){
+			if( $post_type->capability_type !== "post" ){
 				$this->add_administrator_capabilities( $post_type );
 			}
 
@@ -175,30 +233,36 @@ class Custom_Post_Type {
 	 *
 	 * @return array
 	 */
-	protected function post_type_args() {
+	protected function post_type_args() : array {
 		$args = [
-			'labels'              => $this->post_type_labels(),
-			'description'         => $this->description,
-			'public'              => $this->public,
-			'publicly_queryable'  => $this->publicly_queryable,
-			'show_ui'             => $this->show_ui,
-			'show_in_menu'        => $this->show_in_menu,
-			'show_in_nav_menus'   => $this->show_in_nav_menus,
-			'show_in_admin_bar'   => $this->show_in_admin_bar,
-			'show_in_rest'        => $this->show_in_rest,
-			'menu_icon'           => $this->menu_icon,
-			'capability_type'     => $this->capability_type,
-			'map_meta_cap'        => $this->map_meta_cap,
-			'capabilities'        => $this->capabilities,
-			'hierarchical'        => $this->hierarchical,
-			'supports'            => $this->supports,
-			'has_archive'         => $this->has_archive,
-			'taxonomies'          => $this->taxonomies,
-			'rewrite'             => $this->rewrites(),
-			'query_var'           => $this->query_var,
-			'menu_position'       => $this->menu_position,
-			'exclude_from_search' => $this->exclude_from_search,
-			'can_export'          => $this->can_export,
+			'labels'                => $this->post_type_labels(),
+			'description'           => $this->description,
+			'public'                => $this->public,
+			'exclude_from_search'   => $this->exclude_from_search,
+			'publicly_queryable'    => $this->publicly_queryable,
+			'show_ui'               => $this->show_ui,
+			'show_in_nav_menus'     => $this->show_in_nav_menus,
+			'show_in_menu'          => $this->show_in_menu,
+			'show_in_admin_bar'     => $this->show_in_admin_bar,
+			'menu_position'         => $this->menu_position,
+			'menu_icon'             => $this->menu_icon,
+			'capability_type'       => $this->capability_type,
+			'capabilities'          => $this->capabilities,
+			'map_meta_cap'          => $this->map_meta_cap,
+			'hierarchical'          => $this->hierarchical,
+			'supports'              => $this->supports,
+			'register_meta_box_cb'  => $this->register_meta_box_cb,
+			'taxonomies'            => $this->taxonomies,
+			'has_archive'           => $this->has_archive,
+			'rewrite'               => $this->rewrites(),
+			'permalink_epmask'      => $this->permalink_epmask,
+			'query_var'             => $this->query_var,
+			'can_export'            => $this->can_export,
+			'delete_with_user'      => $this->delete_with_user,
+			'show_in_rest'          => $this->show_in_rest,
+			'rest_base'             => $this->rest_base,
+			'rest_controller_class' => $this->rest_controller_class,
+
 		];
 
 		$args = apply_filters( 'lipe/lib/schema/post_type_args', $args, $this->post_type );
@@ -218,32 +282,44 @@ class Custom_Post_Type {
 	 *
 	 * @return array
 	 */
-	protected function post_type_labels( $single = '', $plural = '' ) {
-		$single = $single ? $single : $this->get_post_type_label( 'singular' );
-		$plural = $plural ? $plural : $this->get_post_type_label( 'plural' );
+	protected function post_type_labels( $single = null, $plural = null ) : array {
+		$single = $single ?? $this->get_post_type_label();
+		$plural = $plural ?? $this->get_post_type_label( 'plural' );
 
 		$labels = [
-			'name'               => $plural,
-			'singular_name'      => $single,
-			'add_new'            => __( 'Add New' ),
-			'add_new_item'       => sprintf( __( 'Add New %s' ), $single ),
-			'edit_item'          => sprintf( __( 'Edit %s' ), $single ),
-			'new_item'           => sprintf( __( 'New %s' ), $single ),
-			'view_item'          => sprintf( __( 'View %s' ), $single ),
-			'search_items'       => sprintf( __( 'Search %s' ), $plural ),
-			'not_found'          => sprintf( __( 'No %s Found' ), $plural ),
-			'not_found_in_trash' => sprintf( __( 'No %s Found in Trash' ), $plural ),
-			'menu_name'          => empty( $this->menu_name ) ? $plural : $this->menu_name,
-			'parent_item_colon'  => sprintf( __( 'Parent %s:' ), $single ),
-			'all_items'          => sprintf( __( 'All %s' ), $plural ),
+			'name'                  => $plural,
+			'singular_name'         => $single,
+			'add_new'               => __( 'Add New' ),
+			'add_new_item'          => sprintf( __( 'Add New %s' ), $single ),
+			'edit_item'             => sprintf( __( 'Edit %s' ), $single ),
+			'new_item'              => sprintf( __( 'New %s' ), $single ),
+			'view_item'             => sprintf( __( 'View %s' ), $single ),
+			'view_items'            => sprintf( __( 'View %s' ), $plural ),
+			'search_items'          => sprintf( __( 'Search %s' ), $plural ),
+			'not_found'             => sprintf( __( 'No %s Found' ), $plural ),
+			'not_found_in_trash'    => sprintf( __( 'No %s Found in Trash' ), $plural ),
+			'parent_item_colon'     => sprintf( __( 'Parent %s:' ), $single ),
+			'all_items'             => sprintf( __( 'All %s' ), $plural ),
+			'archives'              => sprintf( __( '%s Archives' ), $single ),
+			'attributes'            => sprintf( __( '%s Attributes' ), $single ),
+			'insert_into_item'      => sprintf( __( 'Insert into %s' ), $single ),
+			'uploaded_to_this_item' => sprintf( __( 'Uploaded to this %s' ), $single ),
+			'featured_image'        => __( 'Featured Image' ),
+			'set_featured_image'    => __( 'Set featured image' ),
+			'remove_featured_image' => __( 'Remove featured image' ),
+			'use_featured_image'    => __( 'Use as featured image' ),
+			'filter_items_list'     => sprintf( __( 'Filter %s list' ), $plural ),
+			'items_list_navigation' => sprintf( __( '%s list navigation' ), $plural ),
+			'items_list'            => sprintf( __( '%s list' ), $plural ),
+			'menu_name'             => $this->menu_name ?? $plural,
 		];
 
 		if( !empty( $this->labels ) ){
 			$labels = wp_parse_args( $this->labels, $labels );
 		}
 
-		$labels = apply_filters( "lipe/lib/schema/post_type_labels", $labels, $this->post_type );
-		$labels = apply_filters( "lipe/lib/schema/post_type_labels_{$this->post_type}", $labels );
+		$labels = apply_filters( 'lipe/lib/post-type/labels', $labels, $this->post_type );
+		$labels = apply_filters( "lipe/lib/post-type/labels_{$this->post_type}", $labels );
 
 		return $labels;
 	}
@@ -316,17 +392,17 @@ class Custom_Post_Type {
 	 *
 	 * Build the rewrites param. Will send defaults if not set
 	 *
-	 * @return array
+	 * @return array|null
 	 */
-	protected function rewrites() {
+	protected function rewrites() : ?array {
 		if( empty( $this->rewrite ) ){
 			return [
 				'slug'       => $this->get_slug(),
 				'with_front' => false,
 			];
-		} else {
-			return $this->rewrite;
 		}
+
+		return $this->rewrite;
 	}
 
 
