@@ -16,8 +16,11 @@ class Term_Box extends Box {
 	 * if object_types is set to 'term', and set to false,
 	 * will remove the fields from the new-term screen.
 	 *
-	 * @default is true.
+	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#new_term_section
 	 *
+	 * @default true
+	 *
+	 * @example false
 	 *
 	 * @var string
 	 */
@@ -28,9 +31,11 @@ class Term_Box extends Box {
 	 * it is required to provide a the taxonomies property,
 	 * which should be an array of Taxonomies.
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#taxonomies
+	 *
 	 * @example array( 'category', 'post_tag' ),
 	 *
-	 * @var     []
+	 * @var  []
 	 */
 	public $taxonomies;
 

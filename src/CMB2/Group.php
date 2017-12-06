@@ -19,6 +19,8 @@ class Group extends Field {
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
+	 *
 	 * @var callable|string
 	 */
 	public $before_group;
@@ -30,6 +32,8 @@ class Group extends Field {
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
 	 * @var callable|string
 	 */
@@ -43,6 +47,8 @@ class Group extends Field {
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
+	 *
 	 * @var callable|string
 	 */
 	public $before_group_row;
@@ -54,6 +60,8 @@ class Group extends Field {
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
 	 * @var callable|string
 	 */
