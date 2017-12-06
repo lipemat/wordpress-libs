@@ -202,15 +202,11 @@ class Field {
 	public $classes;
 
 	/**
-	 * you can now set admin post-listing columns with an extra field parameter, 'column' => true,.
-	 * If you want to dictate what position the column is,
-	 * use 'column' => array( 'position' => 2 ),.
-	 * If you want to dictate the column title (instead of using the field 'name' value),
-	 * use 'column' => array( 'name' => 'My Column' ),.
-	 * If you need to specify the column display callback,
-	 * set the 'display_cb' parameter to a callback function.
-	 *
+	 * Set to true to display a object list column.
+	 * Use this classes method for more refined control.
 	 * Columns work for post (all post-types), comment, user, and term object types.
+	 *
+	 * @see \Lipe\Lib\CMB2\Field::column()
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#column
 	 *
@@ -513,6 +509,28 @@ class Field {
 
 
 	/**
+	 * Add this field as a post list column on the attached
+	 * posts, comments, users, terms
+	 *
+	 * @param int      $position
+	 * @param string   $name - defaults to field name
+	 * @param callable $display_cb - optional display callback
+	 *
+	 * @return \Lipe\Lib\CMB2\Field
+	 */
+	public function column( int $position, string $name = null, $display_cb = null ) : Field {
+		$this->column = [
+			'position' => $position,
+			'name'     => $name ?? $this->name,
+		];
+		if( null !== $display_cb ){
+			$this->column[ 'display_cb' ] = $display_cb;
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Set the type programmatically
 	 * Using the Field_Type class which
 	 * maps all special keys for every
@@ -547,11 +565,7 @@ class Field {
 			if( !isset( $this->{$_var} ) ){
 				continue;
 			}
-			switch ( $_var ){
-				default:
-					$args[ $_var ] = $this->{$_var};
-					break;
-			}
+			$args[ $_var ] = $this->{$_var};
 		}
 
 		return $args;
