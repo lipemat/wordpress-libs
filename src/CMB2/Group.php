@@ -11,6 +11,8 @@ namespace Lipe\Lib\CMB2;
  * @package Lipe\Lib\CMB2
  */
 class Group extends Field {
+	use Shorthand_Fields;
+
 	/**
 	 * ONLY APPLIES TO GROUPS
 	 *
@@ -74,6 +76,8 @@ class Group extends Field {
 	 */
 	protected $box;
 
+	protected $fields = [];
+
 
 	/**
 	 * Group constructor.
@@ -98,6 +102,7 @@ class Group extends Field {
 	}
 
 
+
 	/**
 	 *
 	 * @param \Lipe\Lib\CMB2\Field $field
@@ -105,18 +110,17 @@ class Group extends Field {
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function add_field( Field $field ) {
-		if( !isset( $this->box->cmb ) ){
+	public function add_field( Field $field ) : void {
+		if( null === $this->box->cmb ){
 			throw new \Exception( 'You must add the group to the box before you add fields to the group' );
 		}
 		$box = $this->box->get_box();
 		$box->add_group_field( $this->id, $field->get_field_args() );
 	}
 
-
 	public function get_field_args() {
 		$args = parent::get_field_args();
-		unset( $args[ 'box' ] );
+		unset( $args[ 'box' ], $args[ 'fields' ] );
 
 		return $args;
 	}

@@ -14,6 +14,7 @@ Lets see this in action: Say you want to add new meta box to pages with a few cu
 <h4>Step 2: Register the box and add field</h4>
 <pre lang="php">function register_cmb2_groups(){
    $box = new Box( 'box-id', ['page'], 'Box Title' );
+    //longhand
    $field = new Field( 'field-id', 'Field Label' );
    $field->type()
          ->multicheck( [
@@ -21,6 +22,9 @@ Lets see this in action: Say you want to add new meta box to pages with a few cu
             '2' => 'two',
          ], true );
    $box->add_field( $field );
+    //shorthand
+    $box->field( 'field-id', 'Field Label' )
+        ->multicheck( [ '1' => 'one' ] );
 }</pre>
 <h4>Step 3: Umm.. There is no step 3!</h4>
 Let's break down the register_cmb2_groups function to see how this works.

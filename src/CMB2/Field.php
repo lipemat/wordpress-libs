@@ -327,6 +327,15 @@ class Field {
 	public $options_cb;
 
 	/**
+	 * Order the field will display in.
+	 *
+	 * @default 0
+	 *
+	 * @var int
+	 */
+	public $position = 0;
+
+	/**
 	 * For use with the file fields only to control the preview size
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file
@@ -530,6 +539,20 @@ class Field {
 		return $this;
 	}
 
+
+	/**
+	 * Set the position of the field in the meta box
+	 *
+	 * @param int $position
+	 * @default 1
+	 *
+	 * @return $this
+	 */
+	public function position( int $position = 1 ){
+		$this->position = $position;
+		return $this;
+	}
+
 	/**
 	 * Set the type programmatically
 	 * Using the Field_Type class which
@@ -539,10 +562,11 @@ class Field {
 	 * This is much preferred over setting $this->type
 	 * directly which has room for error
 	 *
+	 *
 	 * @return \Lipe\Lib\CMB2\Field_Type
 	 */
-	public function type() {
-		return new Field_Type( $this );
+	public function type() : Field_Type{
+		return new Field_Type( $this);
 	}
 
 

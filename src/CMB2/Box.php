@@ -11,6 +11,8 @@ namespace Lipe\Lib\CMB2;
  * @package Lipe\Lib\CMB2
  */
 class Box {
+	use Shorthand_Fields;
+
 	/**
 	 * The id of metabox
 	 *
@@ -27,8 +29,8 @@ class Box {
 	 * @example 'normal', 'side', 'advanced' 'form_top',
 	 *          'before_permalink', 'after_title', 'after_editor'
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#context
-	 * @see \Lipe\Lib\CMB2\Box::$remove_box_wrap
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#context
+	 * @see     \Lipe\Lib\CMB2\Box::$remove_box_wrap
 	 *
 	 * @var string
 	 */
@@ -37,7 +39,7 @@ class Box {
 	/**
 	 * An array containing post type slugs, or 'user', 'term', 'comment', or 'options-page'.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#object_types
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#object_types
 	 * @example [ 'page', 'post' ]
 	 *
 	 * @var array
@@ -61,7 +63,8 @@ class Box {
 
 	/**
 	 * Priority of the metabox in its context.
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#priority
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#priority
 	 *
 	 * @example 'high' || 'low' || 'default'
 	 * @default 'high'
@@ -75,7 +78,7 @@ class Box {
 	 * This property allows you to optionally add classes to the CMB2 wrapper.
 	 * This property can take a string, or array.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#classes
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#classes
 	 *
 	 * @example 'additional-class'
 	 * @example array( 'additional-class', 'another-class' ),
@@ -91,7 +94,7 @@ class Box {
 	 * The callback gets passed the CMB2 $properties array as the first argument,
 	 * and the CMB2 $cmb object as the second argument.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#classes_cb
+	 * @link   https://github.com/CMB2/CMB2/wiki/Box-Properties#classes_cb
 	 *
 	 * @example: 'yourprefix_function_to_add_classes( $properties, $cmb ){ return [] }',
 	 *
@@ -102,7 +105,7 @@ class Box {
 	/**
 	 * Set to true to default metabox being closed
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#closed
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#closed
 	 *
 	 * @example true
 	 * @default false
@@ -114,7 +117,7 @@ class Box {
 	/**
 	 * Whether to enqeue CMB2 stylesheet
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#cmb_styles
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#cmb_styles
 	 *
 	 * @example false
 	 * @default true
@@ -126,7 +129,7 @@ class Box {
 	/**
 	 * Whether to enqeue CMB2 Javascript files.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#enqueue_js
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#enqueue_js
 	 *
 	 * @example false
 	 * @default true
@@ -141,7 +144,7 @@ class Box {
 	 * Set to false if you plan on handling the form/field output/saving
 	 * (via something like cmb2_metabox_form()).
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#hookup
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#hookup
 	 *
 	 * @default true
 	 *
@@ -149,15 +152,14 @@ class Box {
 	 */
 	public $hookup;
 
-
 	/**
 	 * This parameter is for post alternate-context metaboxes only.
 	 * To output the fields 'naked' (without a postbox wrapper/style)
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#context
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#remove_box_wrap
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#context
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#remove_box_wrap
 	 *
-	 * @see \Lipe\Lib\CMB2\Box::$context
+	 * @see     \Lipe\Lib\CMB2\Box::$context
 	 *
 	 * @example true
 	 * @default false
@@ -169,9 +171,9 @@ class Box {
 	/**
 	 * If false, will not save during hookup
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#save_fields
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#save_fields
 	 *
-	 * @see \Lipe\Lib\CMB2\Box::$hookup
+	 * @see     \Lipe\Lib\CMB2\Box::$hookup
 	 *
 	 * @example false
 	 * @default true
@@ -183,8 +185,8 @@ class Box {
 	/**
 	 * Determines if/how fields/metabox are available in the REST API.
 	 *
-	 * @link https://github.com/WebDevStudios/CMB2/wiki/REST-API
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#show_in_rest
+	 * @link    https://github.com/WebDevStudios/CMB2/wiki/REST-API
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_in_rest
 	 *
 	 * @example WP_REST_Server::READABLE, // or
 	 * @example WP_REST_Server::ALLMETHODS/WP_REST_Server::EDITABLE
@@ -198,7 +200,7 @@ class Box {
 	/**
 	 * Whether to show labels for the fields
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#show_names
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_names
 	 * @default true
 	 * @example false
 	 *
@@ -211,8 +213,8 @@ class Box {
 	 * Overrides 'show_on_cb'.
 	 * More info:
 	 *
-	 * @link https://github.com/WebDevStudios/CMB2/wiki/Adding-your-own-show_on-filters
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on
+	 * @link    https://github.com/WebDevStudios/CMB2/wiki/Adding-your-own-show_on-filters
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on
 	 *
 	 * @example array( 'key' => 'page-template', 'value' => 'template-contact.php' )
 	 * @example array( 'key' => 'id', 'value' => array( 50, 24 ) )
@@ -226,7 +228,7 @@ class Box {
 	 * of a function.
 	 * Pass a function name here
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on_cb
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on_cb
 	 *
 	 * @example should_show_meta_box( $cmb ){ return bool; }
 	 *
@@ -249,7 +251,7 @@ class Box {
 	 * @param array  $object_types - [post type slugs], or 'user', 'term',
 	 *                             'comment', or 'options-page'
 	 * @param        $title
-	 * @param string $context - 'normal', 'side', 'advanced', 'form_top',
+	 * @param string $context      - 'normal', 'side', 'advanced', 'form_top',
 	 *                             'before_permalink', 'after_title',
 	 *                             'after_editor'
 	 */
@@ -282,7 +284,7 @@ class Box {
 	protected function get_args() : array {
 		$args = [];
 		foreach( get_object_vars( $this ) as $_var => $_value ){
-			if( $_var === 'cmb' || !isset( $this->{$_var} ) ){
+			if( $_var === 'cmb' || !isset( $this->{$_var} ) || 'fields' === $_var ){
 				continue;
 			}
 			$args[ $_var ] = $this->{$_var};
@@ -294,7 +296,38 @@ class Box {
 
 	public function add_field( Field $field ) : void {
 		$box = $this->get_box();
-		$box->add_field( $field->get_field_args() );
+		$box->add_field( $field->get_field_args(), $field->position );
+	}
+
+
+	/**
+	 * Add a group to this box
+	 * For shorthand calls where no special setting is necessary
+	 *
+	 * @example $group = $box->group( $id, $name );
+	 *
+	 * @see \Lipe\Lib\CMB2\Shorthand_Fields
+	 *
+	 * @notice  This will currently not work on the front end of the site
+	 *         due to using the admin only init.
+	 *         For boxes that are needed on the front end use the
+	 *         long hand version of registering fields
+	 *
+	 * @param string $id
+	 * @param string $title
+	 * @param string $group_title - include a {#} to have replace with number
+	 * @param string $add_button_text
+	 * @param string $remove_button_text
+	 * @param bool   $sortable
+	 * @param bool   $closed
+	 *
+	 *
+	 * @return \Lipe\Lib\CMB2\Group
+	 */
+	public function group( $id, $title, $group_title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false ) : Group {
+		$this->fields[ $id ] = new Group( $id, $title, $this, $group_title, $add_button_text, $remove_button_text, $sortable, $closed );
+
+		return $this->fields[ $id ];
 	}
 
 }
