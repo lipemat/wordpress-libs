@@ -259,13 +259,14 @@ class Field {
 	public $desc = '';
 
 	/**
-	 * With the addition of optional columns display output in 2.2.2,
-	 * You can now set the field's 'display_cb' to dictate
-	 * how that field value should be displayed.
+	 * To be used in conjunction with $this->column or $this->column().
+	 * Callback function to display the output of the column in the
+	 * object-lists
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#display_cb
+	 * @see link for markup example
 	 *
-	 * @example 'my_callback_function_to_display_output'
+	 * @example my_callback_function_to_display_output( $field_args, $field )
 	 *
 	 * @var callable
 	 */
@@ -527,13 +528,17 @@ class Field {
 	 *
 	 * @return \Lipe\Lib\CMB2\Field
 	 */
-	public function column( int $position, string $name = null, $display_cb = null ) : Field {
+	public function column( int $position = null, string $name = null, $display_cb = null ) : Field {
 		$this->column = [
 			'position' => $position,
 			'name'     => $name ?? $this->name,
 		];
+		if( null === $position && null === $name ){
+			$this->column = true;
+		}
+
 		if( null !== $display_cb ){
-			$this->column[ 'display_cb' ] = $display_cb;
+			$this->display_cb = $display_cb;
 		}
 
 		return $this;
@@ -576,13 +581,13 @@ class Field {
 	 *
 	 * @see Box::add_field()
 	 *
-	 * @throws \Exception
+	 * @throws \LogicException
 	 *
 	 * @return array
 	 */
-	public function get_field_args() {
+	public function get_field_args() : array {
 		if( empty( $this->type ) ){
-			throw new \Exception( __( 'You must specify a field type (use $field->type() ).', 'lipe' ) );
+			throw new \LogicException( __( 'You must specify a field type (use $field->type() ).', 'lipe' ) );
 		}
 		$args = [];
 		foreach( get_object_vars( $this ) as $_var => $_value ){
