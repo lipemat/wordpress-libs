@@ -9,35 +9,33 @@ class Styles {
 
 
 	/**
-	 * Get Version
-	 *
 	 * You can set it in the wp-config or some dynamic way using grunt like so
 	 * define( 'SCRIPTS_VERSION', '9999' );
-	 *
-	 * Otherwise
-	 *
+     *
+	 * OR
+     *
 	 * Beanstalk adds a .revision file to deployments this grabs that
-	 * revision and return it.
-	 * If no .revison file available returns false
+	 * revision and returns it.
+     *
+     * If neither the constant nor the .revision is available this will
+     * return null which false back to the WP version when cueing scripts
+     * and styles
 	 *
-	 * @see lib/build/post-commit for the hook to use locally to increment the .revision and test
-	 *
-	 *
-	 * @return bool|string
+	 * @return null|string
 	 */
-	public function get_version() {
+	public function get_version() : ?string {
 		static $version = null;
 		if( $version !== null ){
 			return $version;
 		}
 
-		if( defined( 'SCRIPTS_VERSION' ) ){
+		if( \defined( 'SCRIPTS_VERSION' ) ){
 			$version = SCRIPTS_VERSION;
 		} else {
 			//beanstalk style
 			$file = $_SERVER[ 'DOCUMENT_ROOT' ] . '/.revision';
-			if( file_exists( $file ) ){
-				$version = trim( file_get_contents( $file ) );
+			if( \file_exists( $file ) ){
+				$version = \trim( \file_get_contents( $file ) );
 			}
 		}
 
@@ -53,10 +51,10 @@ class Styles {
 	 *
 	 * @return void
 	 */
-	public function live_reload() {
-		if( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ){
-			add_action( 'wp_enqueue_scripts', function () {
-				wp_enqueue_script( 'livereload', '//localhost:35729/livereload.js', [], time(), true );
+	public function live_reload() : void {
+		if( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ){
+			\add_action( 'wp_enqueue_scripts', function () {
+				\wp_enqueue_script( 'livereload', '//localhost:35729/livereload.js', [], \time(), true );
 			} );
 		}
 	}
@@ -77,11 +75,11 @@ class Styles {
 	 * @uses   Must be called before the 'wp_head' hook fires
 	 */
 	public function add_font( $families ) : void {
-		if( is_array( $families ) ){
-			$families = implode( "','", $families );
+		if( \is_array( $families ) ){
+			$families = \implode( "','", $families );
 		}
 
-		ob_start();
+		\ob_start();
 		?>
         <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
         <script>
@@ -92,12 +90,12 @@ class Styles {
 			})
         </script>
 		<?php
-		$output = ob_get_clean();
+		$output = \ob_get_clean();
 
-		add_action( 'wp_head', function () use ( $output ) {
+		\add_action( 'wp_head', function () use ( $output ) {
 			echo $output;
 		} );
-		add_action( 'admin_print_scripts', function () use ( $output ) {
+		\add_action( 'admin_print_scripts', function () use ( $output ) {
 			echo $output;
 		} );
 	}
