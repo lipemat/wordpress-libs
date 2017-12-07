@@ -1,7 +1,7 @@
 # WordPress Libs
 WordPress library which supports a core plugin and theme.
 
-**Version [0.3.0-beta](https://github.com/lipemat/wordpress-lipe-libs/releases/tag/0.3.0-beta)**
+**Version [0.4.0-beta](https://github.com/lipemat/wordpress-lipe-libs/releases/tag/0.4.0-beta)**
 
 **Currently in beta and getting closer to production ready. Please fork for current usage as breaking changes may occur prior to version 1.0.0**
 
