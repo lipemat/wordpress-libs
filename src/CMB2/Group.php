@@ -11,6 +11,8 @@ namespace Lipe\Lib\CMB2;
  * @package Lipe\Lib\CMB2
  */
 class Group extends Field {
+	use Shorthand_Fields;
+
 	/**
 	 * ONLY APPLIES TO GROUPS
 	 *
@@ -18,6 +20,8 @@ class Group extends Field {
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
 	 * @var callable|string
 	 */
@@ -31,6 +35,8 @@ class Group extends Field {
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
+	 *
 	 * @var callable|string
 	 */
 	public $after_group;
@@ -42,6 +48,8 @@ class Group extends Field {
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
 	 * @var callable|string
 	 */
@@ -55,6 +63,8 @@ class Group extends Field {
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
+	 *
 	 * @var callable|string
 	 */
 	public $after_group_row;
@@ -65,6 +75,8 @@ class Group extends Field {
 	 * @var \Lipe\Lib\CMB2\Box
 	 */
 	protected $box;
+
+	protected $fields = [];
 
 
 	/**
@@ -95,22 +107,42 @@ class Group extends Field {
 	 * @param \Lipe\Lib\CMB2\Field $field
 	 *
 	 * @return void
-	 * @throws \Exception
+	 * @throws \LogicException
 	 */
-	public function add_field( Field $field ) {
-		if( !isset( $this->box->cmb ) ){
-			throw new \Exception( 'You must add the group to the box before you add fields to the group' );
+	public function add_field( Field $field ) : void {
+		if( null === $this->box->cmb ){
+			throw new \LogicException( 'You must add the group to the box before you add fields to the group.' );
 		}
 		$box = $this->box->get_box();
 		$box->add_group_field( $this->id, $field->get_field_args() );
 	}
 
 
-	public function get_field_args() {
+	/**
+	 * Retrieve an array of this fields args to be
+	 * submitted to CMB2 by way of
+	 *
+	 * @see Box::add_field()
+	 *
+	 * @throws \LogicException
+	 *
+	 * @return array
+	 */
+	public function get_field_args() : array {
 		$args = parent::get_field_args();
-		unset( $args[ 'box' ] );
+		unset( $args[ 'box' ], $args[ 'fields' ] );
 
 		return $args;
+	}
+
+
+	/**
+	 * @override
+	 *
+	 * @throws \LogicException
+	 */
+	public function group() {
+		throw new \LogicException( 'You cannot add a group to another group.' );
 	}
 
 }

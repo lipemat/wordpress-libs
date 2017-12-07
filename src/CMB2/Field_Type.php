@@ -17,6 +17,8 @@ class Field_Type {
 	 * A large title (useful for breaking up sections of fields in metabox)
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#title
+	 *
+	 * @var string
 	 */
 	protected $title;
 
@@ -24,6 +26,8 @@ class Field_Type {
 	 * Standard text field (large).
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text
+	 *
+	 * @var string
 	 */
 	protected $text;
 
@@ -31,6 +35,8 @@ class Field_Type {
 	 * Small text field.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_small
+	 *
+	 * @var string
 	 */
 	protected $text_small;
 
@@ -38,6 +44,8 @@ class Field_Type {
 	 * Medium text field.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_medium
+	 *
+	 * @var string
 	 */
 	protected $text_medium;
 
@@ -45,6 +53,8 @@ class Field_Type {
 	 * Standard text field which enforces an email address..
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_email
+	 *
+	 * @var string
 	 */
 	protected $text_email;
 
@@ -52,6 +62,8 @@ class Field_Type {
 	 * Standard text field which enforces a url.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_url
+	 *
+	 * @var string
 	 */
 	protected $text_url;
 
@@ -60,6 +72,8 @@ class Field_Type {
 	 * (useful to prevent users from adding a dollar sign to input). .
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_money
+	 *
+	 * @var string
 	 */
 	protected $text_money;
 
@@ -67,6 +81,8 @@ class Field_Type {
 	 * Standard textarea.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea
+	 *
+	 * @var string
 	 */
 	protected $textarea;
 
@@ -74,6 +90,8 @@ class Field_Type {
 	 * Smaller textarea..
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea_small
+	 *
+	 * @var string
 	 */
 	protected $textarea_small;
 
@@ -81,6 +99,8 @@ class Field_Type {
 	 * Code textarea.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea_code
+	 *
+	 * @var string
 	 */
 	protected $textarea_code;
 
@@ -88,6 +108,8 @@ class Field_Type {
 	 * Time picker field.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_time
+	 *
+	 * @var string
 	 */
 	protected $text_time;
 
@@ -95,6 +117,8 @@ class Field_Type {
 	 * Timezone field.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#select_timezone
+	 *
+	 * @var string
 	 */
 	protected $select_timezone;
 
@@ -102,6 +126,8 @@ class Field_Type {
 	 * Date field. Stored and displayed according to the date_format.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_date
+	 *
+	 * @var string
 	 */
 	protected $text_date;
 
@@ -109,6 +135,8 @@ class Field_Type {
 	 * Date field, stored as UNIX timestamp. Useful if you plan to query based on it (ex: events listing )
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_date_timestamp
+	 *
+	 * @var string
 	 */
 	protected $text_date_timestamp;
 
@@ -116,6 +144,8 @@ class Field_Type {
 	 * Date and time field, stored as UNIX timestamp.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp
+	 *
+	 * @var string
 	 */
 	protected $text_datetime_timestamp;
 
@@ -123,6 +153,8 @@ class Field_Type {
 	 * Date, time and timezone field, stored as serialized DateTime object.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp_timezone
+	 *
+	 * @var string
 	 */
 	protected $text_datetime_timestamp_timezone;
 
@@ -130,6 +162,8 @@ class Field_Type {
 	 * Adds a hidden input type to the bottom of the CMB2 output.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#hidden
+	 *
+	 * @var string
 	 */
 	protected $hidden;
 
@@ -137,6 +171,8 @@ class Field_Type {
 	 * A colorpicker field.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#colorpicker
+	 *
+	 * @var string
 	 */
 	protected $colorpicker;
 
@@ -144,6 +180,8 @@ class Field_Type {
 	 * Standard checkbox.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#checkbox
+	 *
+	 * @var string
 	 */
 	protected $checkbox;
 
@@ -151,6 +189,8 @@ class Field_Type {
 	 * A field with multiple checkboxes (and multiple can be selected).
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
+	 *
+	 * @var string
 	 */
 	protected $multicheck;
 
@@ -158,6 +198,8 @@ class Field_Type {
 	 * A field with multiple checkboxes (and multiple can be selected).
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
+	 *
+	 * @var string
 	 */
 	protected $multicheck_inline;
 
@@ -165,6 +207,8 @@ class Field_Type {
 	 * Standard radio buttons.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio
+	 *
+	 * @var string
 	 */
 	protected $radio;
 
@@ -172,6 +216,8 @@ class Field_Type {
 	 * Inline radio buttons.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio_inline
+	 *
+	 * @var string
 	 */
 	protected $radio_inline;
 
@@ -179,6 +225,8 @@ class Field_Type {
 	 * Standard select dropdown.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#select
+	 *
+	 * @var string
 	 */
 	protected $select;
 
@@ -186,6 +234,8 @@ class Field_Type {
 	 * Radio buttons pre-populated with taxonomy terms.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
+	 *
+	 * @var string
 	 */
 	protected $taxonomy_radio;
 
@@ -193,6 +243,8 @@ class Field_Type {
 	 * Inline radio buttons pre-populated with taxonomy terms.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio_inline
+	 *
+	 * @var string
 	 */
 	protected $taxonomy_radio_inline;
 
@@ -200,6 +252,8 @@ class Field_Type {
 	 * Hierarchical radio buttons pre-populated with taxonomy terms.
 	 *
 	 * @todo add a link to docs because they don't exist at time of writing
+	 *
+	 * @var string
 	 */
 	protected $taxonomy_radio_hierarchical;
 
@@ -207,6 +261,8 @@ class Field_Type {
 	 * A select field pre-populated with taxonomy terms.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_select
+	 *
+	 * @var string
 	 */
 	protected $taxonomy_select;
 
@@ -214,6 +270,8 @@ class Field_Type {
 	 * A field with checkboxes with taxonomy terms, and multiple terms can be selected.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
+	 *
+	 * @var string
 	 */
 	protected $taxonomy_multicheck;
 
@@ -221,6 +279,8 @@ class Field_Type {
 	 * Inline checkboxes with taxonomy terms.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_inline
+	 *
+	 * @var string
 	 */
 	protected $taxonomy_multicheck_inline;
 
@@ -228,6 +288,8 @@ class Field_Type {
 	 * Hierarchical checkboxes with taxonomy terms.
 	 *
 	 * @todo add a link to docs because they don't exist at time of writing
+	 *
+	 * @var string
 	 */
 	protected $taxonomy_multicheck_hierarchical;
 
@@ -235,6 +297,8 @@ class Field_Type {
 	 * A metabox with TinyMCE editor (same as WordPress' visual editor).
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#wysiwyg
+	 *
+	 * @var string
 	 */
 	protected $wysiwyg;
 
@@ -250,6 +314,8 @@ class Field_Type {
 	 * The example shows its default values, with possible values commented inline.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file
+	 *
+	 * @var string
 	 */
 	protected $file;
 
@@ -261,6 +327,8 @@ class Field_Type {
 	 * with the attachment ID as the array key and the attachment url as the value. Example:
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file_list
+	 *
+	 * @var string
 	 */
 	protected $file_list;
 
@@ -270,6 +338,8 @@ class Field_Type {
 	 * See codex.wordpress.org/Embeds for more info and for a list of embed services supported
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#oembed
+	 *
+	 * @var string
 	 */
 	protected $oembed;
 
@@ -277,6 +347,8 @@ class Field_Type {
 	 * Hybrid field that supports adding other fields as a repeatable group.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
+	 *
+	 * @var string
 	 */
 	protected $group;
 
@@ -288,20 +360,15 @@ class Field_Type {
 	protected $field;
 
 
+
 	public function __construct( Field $field ) {
 		$this->field = $field;
 
 		//set all properties to the values of matching field types
 		foreach( get_object_vars( $this ) as $_var => $_value ){
-			switch ( $_var ){
-				case 'field':
-					continue;
-					break;
-				default:
-					$this->{$_var} = $_var;
-					break;
+			if( $_var !== 'field' && 'box' !== $_var ){
+				$this->{$_var} = $_var;
 			}
-
 		}
 	}
 
@@ -312,12 +379,13 @@ class Field_Type {
 	 *
 	 * @param array $args - [$key => $value]
 	 *
-	 * @return void
+	 * @return \Lipe\Lib\CMB2\Field
 	 */
 	protected function set( array $args ) {
 		foreach( $args as $_key => $_value ){
 			$this->field->{$_key} = $_value;
 		}
+		return $this->field;
 	}
 
 
@@ -327,7 +395,7 @@ class Field_Type {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#title
 	 */
 	public function title() {
-		$this->set( [ 'type' => $this->title ] );
+		return $this->set( [ 'type' => $this->title ] );
 	}
 
 
@@ -335,9 +403,11 @@ class Field_Type {
 	 * Standard text field (large).
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text
+	 *
+	 * @return Field
 	 */
 	public function text() {
-		$this->set( [ 'type' => $this->text ] );
+		return $this->set( [ 'type' => $this->text ] );
 	}
 
 
@@ -345,9 +415,11 @@ class Field_Type {
 	 * Small text field.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_small
+	 *
+	 * @return Field
 	 */
 	public function text_small() {
-		$this->set( [ 'type' => $this->text_small ] );
+		return $this->set( [ 'type' => $this->text_small ] );
 	}
 
 
@@ -355,9 +427,11 @@ class Field_Type {
 	 * Medium text field.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_medium
+	 *
+	 * @return Field
 	 */
 	public function text_medium() {
-		$this->set( [ 'type' => $this->text_medium ] );
+		return $this->set( [ 'type' => $this->text_medium ] );
 	}
 
 
@@ -365,9 +439,11 @@ class Field_Type {
 	 * Standard text field which enforces an email address..
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_email
+	 *
+	 * @return Field
 	 */
 	public function text_email() {
-		$this->set( [ 'type' => $this->text_email ] );
+		return $this->set( [ 'type' => $this->text_email ] );
 	}
 
 
@@ -375,9 +451,11 @@ class Field_Type {
 	 * Standard text field which enforces a url.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_url
+	 *
+	 * @return Field
 	 */
 	public function text_url() {
-		$this->set( [ 'type' => $this->text_url ] );
+		return $this->set( [ 'type' => $this->text_url ] );
 	}
 
 
@@ -386,9 +464,11 @@ class Field_Type {
 	 * (useful to prevent users from adding a dollar sign to input). .
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_money
+	 *
+	 * @return Field
 	 */
 	public function text_money() {
-		$this->set( [ 'type' => $this->text_money ] );
+		return $this->set( [ 'type' => $this->text_money ] );
 	}
 
 
@@ -396,9 +476,11 @@ class Field_Type {
 	 * Standard textarea.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea
+	 *
+	 * @return Field
 	 */
 	public function textarea() {
-		$this->set( [ 'type' => $this->textarea ] );
+		return $this->set( [ 'type' => $this->textarea ] );
 	}
 
 
@@ -406,9 +488,11 @@ class Field_Type {
 	 * Smaller textarea..
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea_small
+	 *
+	 * @return Field
 	 */
 	public function textarea_small() {
-		$this->set( [ 'type' => $this->textarea_small ] );
+		return $this->set( [ 'type' => $this->textarea_small ] );
 	}
 
 
@@ -416,9 +500,11 @@ class Field_Type {
 	 * Code textarea.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea_code
+	 *
+	 * @return Field
 	 */
 	public function textarea_code() {
-		$this->set( [ 'type' => $this->textarea_code ] );
+		return $this->set( [ 'type' => $this->textarea_code ] );
 	}
 
 
@@ -426,9 +512,11 @@ class Field_Type {
 	 * Time picker field.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_time
+	 *
+	 * @return Field
 	 */
 	public function text_time() {
-		$this->set( [ 'type' => $this->text_time ] );
+		return $this->set( [ 'type' => $this->text_time ] );
 	}
 
 
@@ -436,9 +524,11 @@ class Field_Type {
 	 * Timezone field.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#select_timezone
+	 *
+	 * @return Field
 	 */
 	public function select_timezone() {
-		$this->set( [ 'type' => $this->select_timezone ] );
+		return $this->set( [ 'type' => $this->select_timezone ] );
 	}
 
 
@@ -446,9 +536,11 @@ class Field_Type {
 	 * Adds a hidden input type to the bottom of the CMB2 output.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#hidden
+	 *
+	 * @return Field
 	 */
 	public function hidden() {
-		$this->set( [ 'type' => $this->hidden ] );
+		return $this->set( [ 'type' => $this->hidden ] );
 	}
 
 
@@ -456,9 +548,11 @@ class Field_Type {
 	 * Standard checkbox.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#checkbox
+	 *
+	 * @return Field
 	 */
 	public function checkbox() {
-		$this->set( [ 'type' => $this->checkbox ] );
+		return $this->set( [ 'type' => $this->checkbox ] );
 	}
 
 
@@ -468,9 +562,11 @@ class Field_Type {
 	 * See codex.wordpress.org/Embeds for more info and for a list of embed services supported
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#oembed
+	 *
+	 * @return Field
 	 */
 	public function oembed() {
-		$this->set( [ 'type' => $this->oembed ] );
+		return $this->set( [ 'type' => $this->oembed ] );
 	}
 
 
@@ -484,10 +580,10 @@ class Field_Type {
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_date
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function text_date( $date_format = 'l jS \of F Y', $timezone_meta_key = '', $date_picker_options = [] ) {
-		$this->set( $this->field_type_date( $this->text_date, $date_format, $timezone_meta_key, $date_picker_options ) );
+		return $this->set( $this->field_type_date( $this->text_date, $date_format, $timezone_meta_key, $date_picker_options ) );
 	}
 
 
@@ -502,10 +598,10 @@ class Field_Type {
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function text_date_timestamp( $date_format = 'l jS \of F Y', $timezone_meta_key = '', $date_picker_options = [] ) {
-		$this->set( $this->field_type_date( $this->text_date_timestamp, $date_format, $timezone_meta_key . $date_picker_options ) );
+		return $this->set( $this->field_type_date( $this->text_date_timestamp, $date_format, $timezone_meta_key . $date_picker_options ) );
 	}
 
 
@@ -519,10 +615,10 @@ class Field_Type {
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp_timezone
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function text_datetime_timestamp_timezone( $date_format = 'l jS \of F Y', $timezone_meta_key = '', $date_picker_options = [] ) {
-		$this->set( $this->field_type_date( $this->text_datetime_timestamp_timezone, $date_format, $timezone_meta_key, $date_picker_options ) );
+		return $this->set( $this->field_type_date( $this->text_datetime_timestamp_timezone, $date_format, $timezone_meta_key, $date_picker_options ) );
 	}
 
 
@@ -537,20 +633,27 @@ class Field_Type {
 	 *
 	 * [Default Iris Options] (http://automattic.github.io/Iris/#options):
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#colorpicker
+	 *
 	 * @param array $iris_options
+	 * @param bool  $transparency = to enable transparency
+	 *
+	 * @return Field
 	 *
 	 */
-	public function colorpicker( $iris_options = [] ) {
-		if( empty( $iris_options ) ){
-			$this->set( [ 'type' => $this->colorpicker ] );
-		}
-
-		$this->set( [
-			'type'       => $this->colorpicker,
-			'attributes' => [
+	public function colorpicker( array $iris_options = [], bool $transparency = false ) : Field {
+		$_args = [ 'type' => $this->colorpicker ];
+		if( !empty( $iris_options ) ){
+			$_args[ 'attributes' ] = [
 				'data-colorpicker' => json_encode( $iris_options ),
-			],
-		] );
+			];
+		}
+		if( $transparency ){
+			$_args[ 'options' ] = [
+				'alpha' => true,
+			];
+		}
+		return $this->set( $_args );
 	}
 
 
@@ -562,13 +665,13 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function multicheck( $options_or_callback, $select_all = true ) {
 		$_args = $this->field_type_options( $this->multicheck, $options_or_callback );
 		$_args[ 'select_all_button' ] = $select_all;
 
-		$this->set( $_args );
+		return $this->set( $_args );
 	}
 
 
@@ -580,13 +683,13 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function multicheck_inline( $options_or_callback, $select_all = true ) {
 		$_args = $this->field_type_options( $this->multicheck_inline, $options_or_callback );
 		$_args[ 'select_all_button' ] = $select_all;
 
-		$this->set( $_args );
+		return $this->set( $_args );
 	}
 
 
@@ -598,12 +701,12 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function radio( $options_or_callback, $show_option_none = true ) {
 		$_args = $this->field_type_options( $this->radio, $options_or_callback, $show_option_none );
 
-		$this->set( $_args );
+		return $this->set( $_args );
 	}
 
 
@@ -615,12 +718,12 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio_inline
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function radio_inline( $options_or_callback, $show_option_none = true ) {
 		$_args = $this->field_type_options( $this->radio_inline, $options_or_callback, $show_option_none );
 
-		$this->set( $_args );
+		return $this->set( $_args );
 	}
 
 
@@ -632,12 +735,12 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#select
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function select( $options_or_callback, $show_option_none = true ) {
 		$_args = $this->field_type_options( $this->select, $options_or_callback, $show_option_none );
 
-		$this->set( $_args );
+		return $this->set( $_args );
 	}
 
 
@@ -650,12 +753,12 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function taxonomy_radio( $taxonomy, $no_terms_text = null, $remove_default = null ) {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_radio, $taxonomy, $no_terms_text, $remove_default );
 
-		$this->set( $_args );
+		return $this->set( $_args );
 
 	}
 
@@ -668,12 +771,12 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function taxonomy_radio_hierarchical( $taxonomy, $no_terms_text = null, $remove_default = null ) {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_radio_hierarchical, $taxonomy, $no_terms_text, $remove_default );
 
-		$this->set( $_args );
+		return $this->set( $_args );
 
 	}
 
@@ -687,12 +790,12 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio_inline
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function taxonomy_radio_inline( $taxonomy, $no_terms_text = null, $remove_default = null ) {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_radio_inline, $taxonomy, $no_terms_text, $remove_default );
 
-		$this->set( $_args );
+		return $this->set( $_args );
 
 	}
 
@@ -706,12 +809,12 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_select
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function taxonomy_select( $taxonomy, $no_terms_text = null, $remove_default = null ) {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_select, $taxonomy, $no_terms_text, $remove_default );
 
-		$this->set( $_args );
+		return $this->set( $_args );
 
 	}
 
@@ -726,13 +829,13 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function taxonomy_multicheck( $taxonomy, $no_terms_text = null, $remove_default = null, $select_all = true ) {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_multicheck, $taxonomy, $no_terms_text, $remove_default );
 		$_args[ 'select_all_button' ] = $select_all;
 
-		$this->set( $_args );
+		return $this->set( $_args );
 
 	}
 
@@ -746,13 +849,13 @@ class Field_Type {
 	 *
 	 * @todo update with links to docs once they exist
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function taxonomy_multicheck_hierarchical( $taxonomy, $no_terms_text = null, $remove_default = null, $select_all = true ) {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_multicheck_hierarchical, $taxonomy, $no_terms_text, $remove_default );
 		$_args[ 'select_all_button' ] = $select_all;
 
-		$this->set( $_args );
+		return $this->set( $_args );
 	}
 
 
@@ -766,13 +869,13 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_inline
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function taxonomy_multicheck_inline( $taxonomy, $no_terms_text = null, $remove_default = null, $select_all = true ) {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_multicheck_inline, $taxonomy, $no_terms_text, $remove_default );
 		$_args[ 'select_all_button' ] = $select_all;
 
-		$this->set( $_args );
+		return $this->set( $_args );
 
 	}
 
@@ -786,7 +889,7 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#wysiwyg
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function wysiwyg( $mce_options = [] ) {
 		$_args = [
@@ -796,7 +899,7 @@ class Field_Type {
 			$_args[ 'options' ] = $mce_options;
 		}
 
-		$this->set( $_args );
+		return $this->set( $_args );
 	}
 
 
@@ -822,12 +925,12 @@ class Field_Type {
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#file
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function file( $button_text = null, $file_mime_type = null, $show_text_input = null, $preview_size = null ) {
 		$_args = $this->field_type_file( $this->file, $button_text, $file_mime_type, $show_text_input, $preview_size );
 
-		$this->set( $_args );
+		return $this->set( $_args );
 
 	}
 
@@ -849,12 +952,12 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file_list
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function file_list( $button_text = null, $file_mime_type = null, $show_text_input = null, $preview_size = null, $remove_item_text = null, $file_text = null, $download_text = null ) {
 		$_args = $this->field_type_file( $this->file_list, $button_text, $file_mime_type, $show_text_input, $preview_size, $remove_item_text, $file_text, $download_text );
 
-		$this->set( $_args );
+		return $this->set( $_args );
 	}
 
 
@@ -869,7 +972,7 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 *
-	 * @return void
+	 * @return Field
 	 */
 	public function group( $title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false ) {
 		$_args = [
@@ -890,7 +993,7 @@ class Field_Type {
 			$_args[ 'options' ][ 'remove_button' ] = $remove_button_text;
 		}
 
-		$this->set( $_args );
+		return $this->set( $_args );
 	}
 
 	/************ protected ***********************/

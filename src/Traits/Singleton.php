@@ -16,13 +16,23 @@ trait Singleton {
 	 * @static
 	 * @return void
 	 */
-	public static function init() {
+	public static function init() : void {
 		static::$instance = static::instance();
 		if( method_exists( static::$instance, 'hook' ) ){
 			static::$instance->hook();
 		}
 	}
 
+
+	/**
+	 *
+	 * @static
+	 *
+	 * @return $this
+	 */
+	public static function in(){
+		return self::instance();
+	}
 
 	/**
 	 *

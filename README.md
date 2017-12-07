@@ -1,9 +1,54 @@
-# Library For WordPress
+# WordPress Libs
 WordPress library which supports a core plugin and theme.
-Currently in bleeding edge alpha.
 
-This is the next iteration of the mvc family. The world is moving toward having most development done in a core plugin instead of the theme. The days where having a MVC structure theme was awesome are coming to an end. mvc-remix had a good run and was the backbone to a ton of amazing projects. Now it's time to say goodbye and move toward a formal library structure.
+**Version [0.4.0-beta](https://github.com/lipemat/wordpress-lipe-libs/releases/tag/0.4.0-beta)**
 
-Welcome Lipe Libs, all the tools of mvc-remix without the MVC. 
+**Currently in beta and getting closer to production ready. Please fork for current usage as breaking changes may occur prior to version 1.0.0**
+
+### Requirements
+1. PHP Version 7.1+
+2. WordPress Version 4.8=<5.0
+
+
+### Installation
+``` sh 
+composer require lipemat/wordpress-libs
+```
+### Usage
+
+``` php
+require __DIR__ . '/vendor/autoload.php'
+```
+
+### Current Features (non exhaustive)
+* YouTube Api integration
+* CMB2 mapping
+* Meta Data repository
+* Custom Post Type registration object
+* Extended CPTS mapping
+* Rest Api endpoint registration mapping
+* Rest Api authentication
+* Database interaction object
+* Meta Box registration object
+* Post List Column registration object
+* Settings Page registration object
+* Taxonomy registration object
+* Extended TAXOS mapping
+* Pagination generation object
+* Script and Styles helpers
+* Singleton Trait
+* Api endpoint
+* Autoloader helper
+* Object Cache helper
+* PostCSS Modules helper
+* On Demand Image Resizer
+* Url Route registration object
+* Url helper
+* Version management helper
+
+
+
+
+
 
 

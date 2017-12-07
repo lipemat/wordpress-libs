@@ -14,6 +14,8 @@ class Field {
 	/**
 	 * The field label
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#name
+	 *
 	 * @var string
 	 */
 	protected $name = '';
@@ -21,6 +23,8 @@ class Field {
 	/**
 	 * The data key. If using for posts, will be the post-meta key.
 	 * If using for an options page, will be the array key.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#id
 	 *
 	 * @required
 	 *
@@ -31,6 +35,11 @@ class Field {
 	protected $id = '';
 
 	/**
+	 * The type of field
+	 * Calling Field::type() will return the Field_Type object which
+	 * will auto complete any type.
+	 *
+	 * link https://github.com/CMB2/CMB2/wiki/Field-Parameters#type
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
@@ -44,6 +53,8 @@ class Field {
 	/**
 	 * Will modify default attributes (class, input type, rows, etc),
 	 * or add your own (placeholder, data attributes)
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#attributes
 	 *
 	 * @example [
 	 *          'placeholder' => 'A small amount of text',
@@ -63,6 +74,8 @@ class Field {
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
+	 *
 	 * @var callable|string
 	 */
 	public $before;
@@ -72,6 +85,8 @@ class Field {
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
 	 *
 	 * @var callable|string
 	 */
@@ -83,6 +98,8 @@ class Field {
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
+	 *
 	 * @var callable|string
 	 */
 	public $before_row;
@@ -92,6 +109,8 @@ class Field {
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
 	 *
 	 * @var callable|string
 	 */
@@ -103,6 +122,8 @@ class Field {
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
+	 *
 	 * @var callable|string
 	 */
 	public $before_field;
@@ -112,6 +133,8 @@ class Field {
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
 	 *
 	 * @var callable|string
 	 */
@@ -123,6 +146,8 @@ class Field {
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
+	 *
 	 * @var callable|string
 	 */
 	public $before_display_wrap;
@@ -132,6 +157,8 @@ class Field {
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
 	 *
 	 * @var callable|string
 	 */
@@ -143,6 +170,8 @@ class Field {
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
+	 *
 	 * @var callable|string
 	 */
 	public $after_display;
@@ -153,6 +182,8 @@ class Field {
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
+	 *
 	 * @var callable|string
 	 */
 	public $after_display_wrap;
@@ -160,6 +191,8 @@ class Field {
 	/**
 	 * This property allows you to optionally add classes to the CMB2 wrapper.
 	 * This property can take a string, or array.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#classes
 	 *
 	 * @example 'additional-class'
 	 * @example array( 'additional-class', 'another-class' ),
@@ -169,15 +202,13 @@ class Field {
 	public $classes;
 
 	/**
-	 * you can now set admin post-listing columns with an extra field parameter, 'column' => true,.
-	 * If you want to dictate what position the column is,
-	 * use 'column' => array( 'position' => 2 ),.
-	 * If you want to dictate the column title (instead of using the field 'name' value),
-	 * use 'column' => array( 'name' => 'My Column' ),.
-	 * If you need to specify the column display callback,
-	 * set the 'display_cb' parameter to a callback function.
-	 *
+	 * Set to true to display a object list column.
+	 * Use this classes method for more refined control.
 	 * Columns work for post (all post-types), comment, user, and term object types.
+	 *
+	 * @see \Lipe\Lib\CMB2\Field::column()
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#column
 	 *
 	 * @var array|bool
 	 */
@@ -190,6 +221,8 @@ class Field {
 	 * The callback gets passed the CMB2 $properties array as the first argument,
 	 * and the CMB2 $cmb object as the second argument.
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#classes_cb
+	 *
 	 * @example: 'yourprefix_function_to_add_classes',
 	 *
 	 * @var callable
@@ -200,6 +233,7 @@ class Field {
 	 * Field parameter used in the date field types which allows specifying
 	 * the php date format for your field.
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#date_format
 	 * @link php.net/manual/en/function.date.php.
 	 *
 	 * @var
@@ -209,6 +243,8 @@ class Field {
 	/**
 	 * Specify a default value for the field.
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#default
+	 *
 	 * @var string
 	 */
 	public $default;
@@ -216,16 +252,21 @@ class Field {
 	/**
 	 * Field description. Usually under or adjacent to the field input.
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#desc
+	 *
 	 * @var string
 	 */
 	public $desc = '';
 
 	/**
-	 * With the addition of optional columns display output in 2.2.2,
-	 * You can now set the field's 'display_cb' to dictate
-	 * how that field value should be displayed.
+	 * To be used in conjunction with $this->column or $this->column().
+	 * Callback function to display the output of the column in the
+	 * object-lists
 	 *
-	 * @example 'my_callback_function_to_display_output'
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#display_cb
+	 * @see link for markup example
+	 *
+	 * @example my_callback_function_to_display_output( $field_args, $field )
 	 *
 	 * @var callable
 	 */
@@ -235,6 +276,10 @@ class Field {
 	 * Bypass the CMB escaping (escapes before display) methods with your own callback.
 	 * Set to false if you do not want any escaping (not recommended).
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#escape_cb
+	 *
+	 * @var callable|false
+	 *
 	 */
 	public $escape_cb;
 
@@ -243,7 +288,9 @@ class Field {
 	 * then you can specify that certain fields do not get displayed there
 	 * by setting this parameter to false.
 	 *
-	 * Default is true.
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#on_front
+	 *
+	 * @default true
 	 *
 	 * @var bool
 	 */
@@ -257,6 +304,8 @@ class Field {
 	 * If you are doing any kind of database querying or logic/conditional checking,
 	 * you're almost always better off using the options_cb parameter.
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#options
+	 *
 	 * @var []
 	 */
 	public $options;
@@ -268,14 +317,29 @@ class Field {
 	 * It is recommended to use this parameter over the options parameter
 	 * if you are doing anything complex to generate your options array,
 	 * as the '*_cb' parameters are run at the moment the field is generated,
-	 * instead of on every page load (admin or otherwise). Example:
+	 * instead of on every page load (admin or otherwise).
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#options_cb
+	 *
+	 * @example my_get_options_function( $field ){ return [ value => label ] }
 	 *
 	 * @var callable
 	 */
 	public $options_cb;
 
 	/**
+	 * Order the field will display in.
+	 *
+	 * @default 0
+	 *
+	 * @var int
+	 */
+	public $position = 0;
+
+	/**
 	 * For use with the file fields only to control the preview size
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file
 	 *
 	 * @var string
 	 */
@@ -288,6 +352,7 @@ class Field {
 	 * by subclassing the default class and overriding methods.
 	 * For best results, your class should extend the class it is overriding.
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#render_class
 	 *
 	 * @var string
 	 */
@@ -298,6 +363,7 @@ class Field {
 	 * You will be completely responsible for outputting that row's html.
 	 * The callback function gets passed the field $args array, and the $field object.
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#render_row_cb
 	 * @link https://github.com/WebDevStudios/CMB2/issues/596#issuecomment-187941343
 	 *
 	 * @var callable
@@ -309,9 +375,10 @@ class Field {
 	 *
 	 * In order to customize Add Row button label, add to your Field's config array:
 	 *
-	 * @link    https://github.com/WebDevStudios/CMB2/wiki/Field-Types#types
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#repeatable
+	 * @link https://github.com/WebDevStudios/CMB2/wiki/Field-Types#types
 	 *
-	 * @default is false.
+	 * @default false.
 	 * @example true
 	 *
 	 * @var bool
@@ -322,6 +389,11 @@ class Field {
 	 * New field parameter for taxonomy fields, 'remove_default'
 	 * which allows disabling the default taxonomy metabox.
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#remove_default
+	 *
+	 * @example true
+	 * @default false
+	 *
 	 * @var bool
 	 */
 	public $remove_default;
@@ -330,6 +402,12 @@ class Field {
 	 * Bypass the CMB sanitization (sanitizes before saving) methods with your own callback.
 	 * Set to false if you do not want any sanitization (not recommended).
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
+	 *
+	 * @example sanitize_function( $value, $field_args, $field ){ return string }
+	 *
+	 * @var callable|false
+	 *
 	 */
 	public $sanitization_cb;
 
@@ -337,23 +415,33 @@ class Field {
 	 * Whether to show select all button for items
 	 * with multi select like multicheck
 	 *
-	 * @var
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
+	 *
+	 * @default true
+	 * @example false
+	 *
+	 * @var bool
 	 */
 	public $select_all_button;
 
 	/**
 	 * Whether to show labels for the fields
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_names
+	 * @default true
+	 * @example false
+	 *
 	 * @var bool
 	 */
 	public $show_names;
 
 	/**
-	 * To show or not based on the result
-	 * of a function.
-	 * Pass a function name here
+	 * To show this field or not based on the result of a function.
 	 *
-	 * @var bool
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_on_cb
+	 * @example should_i_show( $field ){ return bool}
+	 *
+	 * @var callable
 	 */
 	public $show_on_cb;
 
@@ -361,7 +449,12 @@ class Field {
 	 * Used for date/time fields
 	 *
 	 * Optionally make this field honor the timezone selected
-	 * in the select_timezone field specified above.
+	 * in the select_timezone field specified above in the form.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_date
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#select_timezone
+	 *
+	 * @example 'key_of_select_timezone_field'
 	 *
 	 * @var string
 	 */
@@ -374,17 +467,21 @@ class Field {
 	 *
 	 * @notice these fields will save terms not meta
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_select
+	 *
 	 * @var string
 	 */
 	public $taxonomy;
 
 	/**
-	 * Used to configure some strings for things like
+	 * Used to configure some strings for thinks like taxonomy and repeater fields
 	 *
-	 * 'add_row_text' for repeaters
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#repeatable
 	 *
 	 * @example array(
-	 * 'add_row_text' => 'Add Another Special Row',
+	 *          'add_row_text' => 'Add Another Special Row',
+	 *          'no_terms_text' => 'Sorry, no terms could be found.'
 	 * )
 	 *
 	 *
@@ -398,7 +495,9 @@ class Field {
 	 * to override the arguments passed to get_terms(), and for the 'file_*' field types,
 	 * allows overriding the media library query arguments.
 	 *
-	 * @var
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
+	 *
+	 * @var []
 	 */
 	public $query_args;
 
@@ -420,6 +519,46 @@ class Field {
 
 
 	/**
+	 * Add this field as a post list column on the attached
+	 * posts, comments, users, terms
+	 *
+	 * @param int      $position
+	 * @param string   $name - defaults to field name
+	 * @param callable $display_cb - optional display callback
+	 *
+	 * @return \Lipe\Lib\CMB2\Field
+	 */
+	public function column( int $position = null, string $name = null, $display_cb = null ) : Field {
+		$this->column = [
+			'position' => $position,
+			'name'     => $name ?? $this->name,
+		];
+		if( null === $position && null === $name ){
+			$this->column = true;
+		}
+
+		if( null !== $display_cb ){
+			$this->display_cb = $display_cb;
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Set the position of the field in the meta box
+	 *
+	 * @param int $position
+	 * @default 1
+	 *
+	 * @return $this
+	 */
+	public function position( int $position = 1 ){
+		$this->position = $position;
+		return $this;
+	}
+
+	/**
 	 * Set the type programmatically
 	 * Using the Field_Type class which
 	 * maps all special keys for every
@@ -428,10 +567,11 @@ class Field {
 	 * This is much preferred over setting $this->type
 	 * directly which has room for error
 	 *
+	 *
 	 * @return \Lipe\Lib\CMB2\Field_Type
 	 */
-	public function type() {
-		return new Field_Type( $this );
+	public function type() : Field_Type{
+		return new Field_Type( $this);
 	}
 
 
@@ -441,24 +581,20 @@ class Field {
 	 *
 	 * @see Box::add_field()
 	 *
-	 * @throws \Exception
+	 * @throws \LogicException
 	 *
 	 * @return array
 	 */
-	public function get_field_args() {
+	public function get_field_args() : array {
 		if( empty( $this->type ) ){
-			throw new \Exception( __( 'You must specify a field type (use $field->type() ).', 'lipe' ) );
+			throw new \LogicException( __( 'You must specify a field type (use $field->type() ).', 'lipe' ) );
 		}
 		$args = [];
 		foreach( get_object_vars( $this ) as $_var => $_value ){
 			if( !isset( $this->{$_var} ) ){
 				continue;
 			}
-			switch ( $_var ){
-				default:
-					$args[ $_var ] = $this->{$_var};
-					break;
-			}
+			$args[ $_var ] = $this->{$_var};
 		}
 
 		return $args;
