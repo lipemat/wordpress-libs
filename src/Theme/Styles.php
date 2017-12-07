@@ -14,8 +14,12 @@ class Styles {
      *
 	 * OR
      *
-	 * Beanstalk adds a .revision file to deployments this grabs that
+	 * Beanstalk adds a .revision file to deployments. This grabs that
 	 * revision and returns it.
+	 * You will find a 'post-commit' script in the /dev
+     * folder which may be added to your .git/hooks directory to automatically generate
+     * this .revision file locally on each commit. In which case you will likely want to
+     * git ignore it.
      *
      * If neither the constant nor the .revision is available this will
      * return null which false back to the WP version when cueing scripts
