@@ -102,27 +102,47 @@ class Group extends Field {
 	}
 
 
-
 	/**
 	 *
 	 * @param \Lipe\Lib\CMB2\Field $field
 	 *
 	 * @return void
-	 * @throws \Exception
+	 * @throws \LogicException
 	 */
 	public function add_field( Field $field ) : void {
 		if( null === $this->box->cmb ){
-			throw new \Exception( 'You must add the group to the box before you add fields to the group' );
+			throw new \LogicException( 'You must add the group to the box before you add fields to the group.' );
 		}
 		$box = $this->box->get_box();
 		$box->add_group_field( $this->id, $field->get_field_args() );
 	}
 
-	public function get_field_args() {
+
+	/**
+	 * Retrieve an array of this fields args to be
+	 * submitted to CMB2 by way of
+	 *
+	 * @see Box::add_field()
+	 *
+	 * @throws \LogicException
+	 *
+	 * @return array
+	 */
+	public function get_field_args() : array {
 		$args = parent::get_field_args();
 		unset( $args[ 'box' ], $args[ 'fields' ] );
 
 		return $args;
+	}
+
+
+	/**
+	 * @override
+	 *
+	 * @throws \LogicException
+	 */
+	public function group() {
+		throw new \LogicException( 'You cannot add a group to another group.' );
 	}
 
 }

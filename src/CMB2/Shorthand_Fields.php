@@ -51,6 +51,37 @@ trait Shorthand_Fields {
 
 
 	/**
+	 * Add a group to this box
+	 * For shorthand calls where no special setting is necessary
+	 *
+	 * @example $group = $box->group( $id, $name );
+	 *
+	 * @see \Lipe\Lib\CMB2\Shorthand_Fields
+	 *
+	 * @notice  This will currently not work on the front end of the site
+	 *         due to using the admin only init.
+	 *         For boxes that are needed on the front end use the
+	 *         long hand version of registering fields
+	 *
+	 * @param string $id
+	 * @param string $title
+	 * @param string $group_title - include a {#} to have replace with number
+	 * @param string $add_button_text
+	 * @param string $remove_button_text
+	 * @param bool   $sortable
+	 * @param bool   $closed
+	 *
+	 *
+	 * @return \Lipe\Lib\CMB2\Group
+	 */
+	public function group( $id, $title, $group_title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false ) : Group {
+		$this->fields[ $id ] = new Group( $id, $title, $this, $group_title, $add_button_text, $remove_button_text, $sortable, $closed );
+
+		return $this->fields[ $id ];
+	}
+
+
+	/**
 	 * Registers any fields which were adding using $this->field()
 	 * when the cmb2_init action fires.
 	 * This allows for storing/appending a fields properties beyond
