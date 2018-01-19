@@ -26,16 +26,10 @@ use MVC\Cache;
  * # Under "Where will you be calling the API from?" select "Web Browser"
  * # Under "What data will you be accessing?" check "Public data"
  * # Click "What credentials do I need?"
- * # Under "Get your credentials" copy the API key and post it here
+ * # Under "Get your credentials" copy the API key
  * # Click "Done"
  *
  * E.G AIzaSyCwuMNgkjhfDWZc_FDrcq8TexW3OMT3I1Q
- *
- *
- * @author  Mat Lipe
- *
- *
- * @link    https://developers.google.com/youtube/v3/getting-started#Sample_Partial_Requests
  *
  */
 class YouTube implements \JsonSerializable {
