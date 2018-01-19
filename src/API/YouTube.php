@@ -14,20 +14,20 @@ use MVC\Cache;
  * An api key may be obtained by registering a project with Google APIs and giving it YouTube access.
  *
  * # Go to the developer console https://console.developers.google.com/project
- * # Click "Create Project" if some already exist otherwise, use the "Select a Project" drop-down and click "Create a
- * Project"
+ * # Click "Create Project" if some already exist otherwise, use the "Select a Project" drop-down and click "Create a Project"
  * # Enter a project name like "Steelcase.com"
  * # Click "Create"
- * # Under the list of "Popular APIs" click "YouTube Data API"
+ * # Click on the project to enter it
+ * # Using the hamburger on the top left go to "Apis & Services"
+ * # Under the list of "Popular APIs" click "View All"
+ * # Search For "YouTube Data API v3" and click it
  * # Click "Enable"
- * # Click "Go to Credentials"
+ * # Click "Create credentials"
  * # Under "Where will you be calling the API from?" select "Web Browser"
  * # Under "What data will you be accessing?" check "Public data"
  * # Click "What credentials do I need?"
- * # Fill out the "Name" field
- * # Leave the "Accept requests from these HTTP referrers (web sites)" blank
- * # Click "Create API key"
  * # Under "Get your credentials" copy the API key and post it here
+ * # Click "Done"
  *
  * E.G AIzaSyCwuMNgkjhfDWZc_FDrcq8TexW3OMT3I1Q
  *
