@@ -87,6 +87,8 @@ trait Shorthand_Fields {
 	 * This allows for storing/appending a fields properties beyond
 	 * a basic return pattern
 	 *
+	 * @internal
+	 *
 	 * @return void
 	 */
 	public function register_shorthand_fields() : void {

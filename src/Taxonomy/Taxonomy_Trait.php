@@ -4,6 +4,12 @@ namespace Lipe\Lib\Taxonomy;
 
 use Lipe\Lib\Meta\Meta_Repo;
 
+/**
+ * Trait Taxonomy_Trait
+ *
+ * @package Lipe\Lib\Taxonomy
+ * @since 1.1.0
+ */
 trait Taxonomy_Trait {
 
 	/**
@@ -37,8 +43,15 @@ trait Taxonomy_Trait {
 	}
 
 
-	public function get_meta( $key ) {
-		return Meta_Repo::instance()->get_meta( $this->term_id, $key );
+	/**
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function get_meta( string $key ) {
+		return Meta_Repo::instance()->get_meta( $this->term_id, $key, 'term' );
 	}
 
 
