@@ -4,14 +4,7 @@ namespace Lipe\Lib\Post_Type;
 
 use Lipe\Lib\Meta\Meta_Repo;
 
-/**
- * Post_Object_Trait
- *
- * @author  Mat Lipe
- * @since   7/27/2017
- *
- * @package Lipe\Lib\Post_Type
- */
+
 trait Post_Object_Trait {
 
 	protected $post_id;
@@ -34,8 +27,8 @@ trait Post_Object_Trait {
 	 *
 	 * @return null|\WP_Post
 	 */
-	public function get_post() {
-		if( empty( $this->post ) ){
+	public function get_post() : ?\WP_Post {
+		if( null === $this->post ){
 			$this->post = get_post( $this->post_id );
 		}
 
@@ -48,7 +41,14 @@ trait Post_Object_Trait {
 	}
 
 
-	public function get_meta( $key ) {
+	/**
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function get_meta( string $key ) {
 		return Meta_Repo::instance()->get_meta( $this->post_id, $key );
 	}
 

@@ -4,6 +4,12 @@ namespace Lipe\Lib\User;
 
 use Lipe\Lib\Meta\Meta_Repo;
 
+/**
+ * Trait User_Trait
+ *
+ * @package Lipe\Lib\User
+ * @since 1.0.0
+ */
 trait User_Trait {
 
 	/**
@@ -27,7 +33,7 @@ trait User_Trait {
 	 * @param null|int $user_id
 	 */
 	public function __construct( $user_id = null ) {
-		if( $user_id === null ){
+		if( null === $user_id ){
 			$user_id = get_current_user_id();
 		}
 		$this->user_id = $user_id;
@@ -38,7 +44,7 @@ trait User_Trait {
 	}
 
 	public function get_user() {
-		if( empty( $this->user ) ){
+		if( null === $this->user ){
 			$this->user = get_user_by( 'id', $this->user_id );
 		}
 
@@ -46,8 +52,15 @@ trait User_Trait {
 	}
 
 
-	public function get_meta( $key ) {
-		return Meta_Repo::instance()->get_meta( $this->user_id, $key );
+	/**
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function get_meta( string $key ) {
+		return Meta_Repo::instance()->get_meta( $this->user_id, $key, 'user' );
 	}
 
 

@@ -56,6 +56,8 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#attributes
 	 *
+	 * @see Field::attributes()
+	 *
 	 * @example [
 	 *          'placeholder' => 'A small amount of text',
 	 *          'rows'        => 3,
@@ -64,7 +66,8 @@ class Field {
 	 * 'min'  => '101',
 	 *          ]
 	 *
-	 * @var     []
+	 *
+	 * @var     array
 	 */
 	public $attributes;
 
@@ -373,7 +376,10 @@ class Field {
 	/**
 	 * Supported by most field types, and will make the individual field a repeatable one.
 	 *
-	 * In order to customize Add Row button label, add to your Field's config array:
+	 * In order to customize Add Row button label, set
+	 * $this->text[ 'add_row_text' ] = 'Add Row':
+	 *
+	 * @see Field::repeatable()
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#repeatable
 	 * @link https://github.com/WebDevStudios/CMB2/wiki/Field-Types#types
@@ -544,6 +550,45 @@ class Field {
 		return $this;
 	}
 
+
+	/**
+	 * Will modify default attributes (class, input type, rows, etc),
+	 * or add your own (placeholder, data attributes)
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#attributes
+	 *
+	 * @example [
+	 *          'placeholder' => 'A small amount of text',
+	 *          'rows'        => 3,
+	 *          'required'    => 'required',
+	 *          'type' => 'number',
+	 * 'min'  => '101',
+	 *          ]
+	 *
+	 * @param array $attributes
+	 *
+	 * @return Field
+	 */
+	public function attributes( array $attributes ) : Field {
+		$this->attributes = $attributes;
+		return $this;
+	}
+
+	/**
+	 * Supported by most field types, and will make the individual field a repeatable one.
+	 * @param bool $repeatable
+	 * @param string $add_row_text
+	 *
+	 * @default true
+	 *
+	 * @return $this
+	 */
+	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ) : Field {
+		$this->repeatable = $repeatable;
+		$this->text[ 'add_row_text' ] = $add_row_text;
+
+		return $this;
+	}
 
 	/**
 	 * Set the position of the field in the meta box
