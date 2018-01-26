@@ -1,13 +1,14 @@
 # WordPress Libs
 WordPress library which supports a core plugin and theme.
 
-**Version [0.4.0-beta](https://github.com/lipemat/wordpress-lipe-libs/releases/tag/0.4.0-beta)**
+**Version [1.0.0](https://github.com/lipemat/wordpress-lipe-libs/releases/tag/1.0.0)**
 
-**Currently in beta and getting closer to production ready. Please fork for current usage as breaking changes may occur prior to version 1.0.0**
+### Officially Ready For Production Use!
+Version 1.0.0 was releases on 1.26.2018. Any future changes will respect standard versioning practices and respect backward compatibility of any minor and dot version updates. Please Enjoy!
 
 ### Requirements
-1. PHP Version 7.1+
-2. WordPress Version 4.8=<5.0
+1. PHP Version 7.2+
+2. WordPress Version 4.9=<5.0
 
 
 ### Installation
@@ -41,7 +42,7 @@ require __DIR__ . '/vendor/autoload.php'
 * Autoloader helper
 * Object Cache helper
 * PostCSS Modules helper
-* On Demand Image Resizer
+* On Demand Image Resizing
 * Url Route registration object
 * Url helper
 * Version management helper
