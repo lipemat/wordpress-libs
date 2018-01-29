@@ -46,12 +46,17 @@ trait Taxonomy_Trait {
 	/**
 	 *
 	 * @param string $key
+	 * @param mixed $default
 	 *
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public function get_meta( string $key ) {
-		return Meta_Repo::instance()->get_meta( $this->term_id, $key, 'term' );
+	public function get_meta( string $key, $default = null ) {
+		$value = Meta_Repo::instance()->get_meta( $this->term_id, $key, 'term' );
+		if( null !== $default && empty( $value ) ){
+			return $default;
+		}
+		return $value;
 	}
 
 

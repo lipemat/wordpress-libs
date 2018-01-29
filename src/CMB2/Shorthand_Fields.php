@@ -24,15 +24,31 @@ trait Shorthand_Fields {
 
 
 	/**
+	 * Hook into cmb2_init to register all the shorthand fields
+	 * We use cmb2_init instead of cmb2_admin_init so this may be used in the admin
+	 * or on the front end.
+	 * If the core plugin is registering fields via cmb2_admin_init only this will
+	 * never get called anyway, so we can control if we need front end fields from there.
+	 *
+	 * @return void
+	 */
+	protected function hook() : void {
+		if( !has_action( 'cmb2_init', [ $this, 'register_shorthand_fields' ] ) ){
+			//be sure to run register_shorthand fields on groups after the box
+			if( self::class === Group::class ){
+				add_action( 'cmb2_init', [ $this, 'register_shorthand_fields' ], 12 );
+			} else {
+				add_action( 'cmb2_init', [ $this, 'register_shorthand_fields' ], 11 );
+			}
+		}
+	}
+
+
+	/**
 	 * Add a field to this box.
 	 * For shorthand calls where no special setting is necessary.
 	 *
 	 * @example $box->field( $id, $name )->checkbox();
-	 *
-	 * @notice  This will currently not work on the front end of the site
-	 *         due to using the admin only init.
-	 *         For boxes that are needed on the front end use the
-	 *         long hand version of registering fields
 	 *
 	 * @param $id
 	 * @param $name
@@ -40,10 +56,7 @@ trait Shorthand_Fields {
 	 * @return \Lipe\Lib\CMB2\Field_Type
 	 */
 	public function field( $id, $name ) : Field_Type {
-		if( !has_action( 'cmb2_admin_init', [ $this, 'register_shorthand_fields' ] ) ){
-			add_action( 'cmb2_admin_init', [ $this, 'register_shorthand_fields' ], 11 );
-		}
-
+		$this->hook();
 		$this->fields[ $id ] = new Field( $id, $name );
 
 		return $this->fields[ $id ]->type();
@@ -58,10 +71,6 @@ trait Shorthand_Fields {
 	 *
 	 * @see \Lipe\Lib\CMB2\Shorthand_Fields
 	 *
-	 * @notice  This will currently not work on the front end of the site
-	 *         due to using the admin only init.
-	 *         For boxes that are needed on the front end use the
-	 *         long hand version of registering fields
 	 *
 	 * @param string $id
 	 * @param string $title
@@ -75,6 +84,7 @@ trait Shorthand_Fields {
 	 * @return \Lipe\Lib\CMB2\Group
 	 */
 	public function group( $id, $title, $group_title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false ) : Group {
+		$this->hook();
 		$this->fields[ $id ] = new Group( $id, $title, $this, $group_title, $add_button_text, $remove_button_text, $sortable, $closed );
 
 		return $this->fields[ $id ];

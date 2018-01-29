@@ -1,0 +1,58 @@
+#!/bin/sh
+
+#######################################################################################
+#
+# This script is setup for PHP 7.2 .git/hooks/pre-commit
+# It only works for the root of the project .git/hooks/pre-commit
+# @see pre-commit-submodules for sub-modules
+#
+#####################################################################################
+PHP='D:/xampp/php-7.2/php'
+PROJECT="."
+
+## Fix windows paths
+PROJECT=${PROJECT//\\//}
+
+STAGED_FILES_CMD=`git diff --cached --name-only --diff-filter=ACMR HEAD | grep \\\\.php`
+
+# Check for phpcs config
+if [ ! -f $PROJECT/phpcs.xml ] && [ ! -f $PROJECT/phpcs.xml.dist ]; then
+  echo "$PROJECT/phpcs.xml or $PROJECT/phpcs.xml.dist not found!"
+  exit 1;
+fi
+
+# Determine if a file list is passed.
+if [ "$#" -eq 1 ]; then
+  oIFS=$IFS
+  IFS='
+  '
+  SFILES="$1"
+  IFS=$oIFS
+fi
+SFILES=${SFILES:-$STAGED_FILES_CMD}
+
+# Run php lint.
+echo "Checking PHP Lint..."
+for FILE in $SFILES; do
+  $PHP -l -d display_errors=0 $PROJECT/$FILE
+  if [ $? != 0 ]; then
+    echo "Fix the error before commit."
+    exit 1
+  fi
+  FILES="$FILES $PROJECT/$FILE"
+done
+
+# Run phpcs.
+if [ "$FILES" != "" ]; then
+  echo "Running Code Sniffer."
+  phpcs --encoding=utf-8 -s -n -p $FILES
+  if [ $? != 0 ]; then
+    echo "Fix the error before commit!"
+    echo "Run"
+    echo "  phpcbf $FILES"
+    echo "for automatic fix or fix it manually."
+    exit 1
+  fi
+fi
+
+exit $?
