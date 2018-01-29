@@ -1,6 +1,8 @@
 <?php
 
 namespace Lipe\Lib\CMB2;
+use function is_callable;
+use Lipe\Lib\Meta\Meta_Repo;
 
 /**
  * Field
@@ -573,6 +575,30 @@ class Field {
 		$this->attributes = $attributes;
 		return $this;
 	}
+
+
+	/**
+	 * Specify a default value for the field
+	 * or a function which will return a default value.
+	 *
+	 * @notice The default will only be used when rendering form and not on retrieving value.
+	 *
+	 * @param string|callable $default_value
+	 *
+	 * @example = 'John'
+	 * @example function prefix_set_test_default( $field_args, $field ) {
+	 *                      return 'Post ID: '. $field->object_id
+	 *                  }
+	 *
+	 * @notice checkboxes are tricky https://github.com/CMB2/CMB2/wiki/Tips-&-Tricks#setting-a-default-value-for-a-checkbox
+	 *
+	 * @return Field
+	 */
+	public function default( $default_value ) : Field {
+		$this->default = $default_value;
+		return $this;
+	}
+
 
 	/**
 	 * Supported by most field types, and will make the individual field a repeatable one.
