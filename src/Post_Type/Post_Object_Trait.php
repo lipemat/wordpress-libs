@@ -44,12 +44,17 @@ trait Post_Object_Trait {
 	/**
 	 *
 	 * @param string $key
+	 * @param mixed $default
 	 *
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public function get_meta( string $key ) {
-		return Meta_Repo::instance()->get_meta( $this->post_id, $key );
+	public function get_meta( string $key, $default = null ) {
+		$value = Meta_Repo::instance()->get_meta( $this->post_id, $key );
+		if( null !== $default && empty( $value ) ){
+			return $default;
+		}
+		return $value;
 	}
 
 
