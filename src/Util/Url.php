@@ -2,6 +2,8 @@
 
 namespace Lipe\Lib\Util;
 
+use Lipe\Lib\Traits\Singleton;
+
 /**
  * Url
  *
@@ -11,6 +13,7 @@ namespace Lipe\Lib\Util;
  * @package Lipe\Lib\Util
  */
 class Url {
+	use Singleton;
 
 	/**
 	 * Get Current Url
