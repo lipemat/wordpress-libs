@@ -1,8 +1,6 @@
 <?php
 
 namespace Lipe\Lib\CMB2;
-use function is_callable;
-use Lipe\Lib\Meta\Meta_Repo;
 
 /**
  * Field
