@@ -7,16 +7,18 @@ use Lipe\Lib\Traits\Singleton;
 /**
  * Versions
  *
- * Allow for running things only once and keeping track of the db version
+ * Run callable based on a version or simply run an item only once.
+ * Use add_update() for items which may depend on previously run items or to run
+ * items in order.
+ * Use once() for items with no prerequisites and just need to be run once.
  *
- * @example Versions::init();
- * @example Versions::instance()->add_update( %version%, %function% );
+ * @example Versions::in()->add_update( $version, function(){}, [ data ] );
+ * @example Versions::in()->once( $key, function(){}, [ data ] );
  *
- * @uses    You must add updates during the init hook, because this will run them at the end of the init hook
- * @uses    may retrieve current version via Versions::instance()->get_version()
+ * @author  Mat Lipe
+ * @since   2/7/2018
  *
- *
- *
+ * @package Lipe\Lib\Util
  */
 class Versions {
 	use Singleton;
@@ -75,10 +77,8 @@ class Versions {
 
 
 	/**
-	 * Get Version
 	 *
-	 * Returns current version in db to know where to set updates
-	 *
+	 * Returns current version in db to know which version to supply
 	 *
 	 * @return string
 	 */
@@ -90,10 +90,13 @@ class Versions {
 
 	/**
 	 * Run a function one time only
+	 * To be use for items with no pre-requisites which just need to be run once.
 	 *
 	 * @param callable $callable
 	 * @param string   $key - unique identifier
 	 * @param mixed    $args
+	 *
+	 * @since 1.2.0
 	 *
 	 * @return void
 	 */
@@ -105,9 +108,11 @@ class Versions {
 
 
 	/**
-	 * Add Update
+	 * Adds a callable to be run if the version is higher than the highest
+	 * item which was previously run.
+	 * Multiple items will always be sorted and run in order of their version.
 	 *
-	 * Adds a method to be run if the version says to
+	 * To be used when items have pre-requisites that must be run in a particular order.
 	 *
 	 * @param string|float $version  - the version to check against
 	 * @param mixed        $callable - method or function to run if the version checks out
@@ -128,7 +133,11 @@ class Versions {
 
 
 	/**
-	 * Run any versioned updates as well as once items
+	 * Run any versioned updates as well as once items.
+	 *
+	 * When complete, the stored version will be the highest version supplied.
+	 * Any future items needed to run via Versions::in()->run_updates() must have a
+	 * higher version than the previously supplied versions.
 	 *
 	 * @action init
 	 *
@@ -140,6 +149,7 @@ class Versions {
 				if( !isset( $run_before[ $_key ] ) ){
 					self::$once_run_before[ $_key ] = 1;
 					\call_user_func( $_item[ 'callable' ], $_item[ 'args' ] );
+					unset( self::$once[ $_key ] );
 				}
 			}
 			\update_option( self::ONCE, self::$once_run_before );
@@ -148,10 +158,10 @@ class Versions {
 		if( !empty( self::$updates ) ){
 			\usort( self::$updates, [ $this, 'sort_by_version' ] );
 
-			foreach( self::$updates as $func ){
+			foreach( self::$updates as $i => $func ){
 				self::$version = $func[ 'version' ];
-
 				\call_user_func( $func[ 'callable' ], $func[ 'args' ] );
+				unset( self::$updates[ $i ] );
 
 			}
 			\update_option( self::OPTION, self::$version );
