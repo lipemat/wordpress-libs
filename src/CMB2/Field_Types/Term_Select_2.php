@@ -32,6 +32,11 @@ class Term_Select_2 {
 	public const GET_TERMS = 'lipe/lib/cmb2/field-types/term-select-2/ajax';
 
 
+	/**
+	 * Called via self::init_once() from various entry points
+	 *
+	 * @return void
+	 */
 	protected function hook() : void {
 		\add_action( 'cmb2_render_' . self::NAME, [ $this, 'render' ], 10, 5 );
 		\add_filter( 'cmb2_sanitize_' . self::NAME, [ $this, 'sanitize_value' ], 10, 4 );

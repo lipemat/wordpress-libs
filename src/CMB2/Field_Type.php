@@ -834,6 +834,8 @@ class Field_Type {
 	 * @return \Lipe\Lib\CMB2\Field
 	 */
 	public function taxonomy_select_2( $taxonomy, $no_terms_text = null, $remove_default = null  ) : Field {
+		Term_Select_2::init_once();
+
 		$_args = $this->field_type_taxonomy( Term_Select_2::NAME, $taxonomy, $no_terms_text, $remove_default );
 
 		return $this->set( $_args );

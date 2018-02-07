@@ -656,6 +656,8 @@ class Field {
 	 * @return $this
 	 */
 	public function tab( string $id ){
+		Tab::init_once();
+
 		$this->tab = $id;
 		$this->render_row_cb = [ Tab::in(), 'render_field' ];
 		return $this;

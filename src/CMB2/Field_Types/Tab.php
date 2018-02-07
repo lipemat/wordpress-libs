@@ -39,6 +39,11 @@ class Tab {
 	protected $fields_output = [];
 
 
+	/**
+	 * Called via self::init_once() from various entry points
+	 *
+	 * @return void
+	 */
 	protected function hook() : void {
 		add_action( 'cmb2_before_form', [ $this, 'opening_div' ], 10, 4 );
 		add_action( 'cmb2_after_form', [ $this, 'closing_div' ], 20, 4 );
