@@ -17,10 +17,17 @@ trait Post_Object_Trait {
 	protected $post;
 
 
-	public function __construct( $post_id ) {
-		$this->post_id = $post_id;
+	/**
+	 * @param int|\WP_Post $post
+	 */
+	public function __construct( $post ) {
+		if( is_a( $post, \WP_Post::class ) ){
+			$this->post = $post;
+			$this->post_id = $this->post->ID;
+		} else {
+			$this->post_id = $post;
+		}
 	}
-
 
 	/**
 	 * Get the WP post from current context
@@ -62,14 +69,14 @@ trait Post_Object_Trait {
 
 	/**
 	 *
-	 * @param int $post_id
+	 * @param int|\WP_Post $post
 	 *
 	 * @static
 	 *
 	 * @return static
 	 */
-	public static function factory( $post_id ) {
-		return new static( $post_id );
+	public static function factory( $post ) {
+		return new static( $post );
 	}
 
 }
