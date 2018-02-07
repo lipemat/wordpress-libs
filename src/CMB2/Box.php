@@ -237,6 +237,26 @@ class Box {
 	public $show_on_cb;
 
 	/**
+	 * Tabs for this box
+	 *
+	 * @see \Lipe\Lib\CMB2\Box::add_tab()
+	 * @since   1.2.0
+	 *
+	 * @var array
+	 */
+	public $tabs = [];
+
+	/**
+	 * Tabs to display either vertical or horizontal
+	 *
+	 * @see Box::tabs_style()
+	 * @since   1.2.0
+	 *
+	 * @var string
+	 */
+	protected $tab_style;
+
+	/**
 	 * cmb
 	 *
 	 * @var \CMB2
@@ -262,6 +282,38 @@ class Box {
 		$this->context = $context;
 	}
 
+
+	/**
+	 * Add a tab to this box which can later be assigned to fields via
+	 * Field::tab( $id );
+	 *
+	 * @see \Lipe\Lib\CMB2\Field::tab();
+	 *
+	 * @param string $id
+	 * @param string $label
+	 *
+	 * @since   1.2.0
+	 *
+	 * @return void
+	 */
+	public function add_tab( string $id, string $label ) : void {
+		$this->tabs[ $id ] = $label;
+	}
+
+
+	/**
+	 * Should the tabs display vertical or horizontal?
+	 * Default is vertical when not calling this.
+	 *
+	 * @param string $layout - vertical, horizontal (default to horizontal)
+	 *
+	 * @since   1.2.0
+	 *
+	 * @return void
+	 */
+	public function tabs_style( string $layout ) : void {
+		$this->tab_style = $layout ? 'classic' : 'default';
+	}
 
 	/**
 	 *
