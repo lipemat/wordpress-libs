@@ -2,6 +2,7 @@
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\CMB2\Field_Types\Term_Select_2;
 use function stripslashes;
 
 /**
@@ -818,6 +819,24 @@ class Field_Type {
 
 		return $this->set( $_args );
 
+	}
+
+
+	/**
+	 * Custom field which exists only within Lipe\Lib
+	 *
+	 * Select 2 term selector.
+	 *
+	 * @param string $taxonomy       - slug
+	 * @param string $no_terms_text
+	 * @param bool   $remove_default - remove default WP terms metabox (default true)
+	 *
+	 * @return \Lipe\Lib\CMB2\Field
+	 */
+	public function taxonomy_select_2( $taxonomy, $no_terms_text = null, $remove_default = null  ) : Field {
+		$_args = $this->field_type_taxonomy( Term_Select_2::NAME, $taxonomy, $no_terms_text, $remove_default );
+
+		return $this->set( $_args );
 	}
 
 

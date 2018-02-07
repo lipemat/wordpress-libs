@@ -73,12 +73,12 @@ class Term_Select_2 {
 			'taxonomy' => $field->args( 'taxonomy' ) ?? 'category',
 		];
 		$url = \add_query_arg( $url_args, admin_url( 'admin-ajax.php' ) );
-
+		$no_results_text = $field->args( 'text' )[ 'no_terms_text' ] ?? get_taxonomy( $url_args[ 'taxonomy' ] )->labels->not_found;
 		?>
 		<script>
 			(function( $ ){
 				$( document ).ready( function(){
-					$( '#<?= esc_js( $field_type_object->_id() ); ?>' ).select2( {
+					$( '[id="<?= esc_js( $field_type_object->_id() ); ?>"]' ).select2( {
 						ajax : {
 							url : '<?= $url; ?>',
 							dataType : 'json',
@@ -101,7 +101,12 @@ class Term_Select_2 {
 								};
 							},
 						},
-						cache : true
+						cache : true,
+						"language": {
+							"noResults": function(){
+								return "<?= esc_js( $no_results_text ); ?>";
+							}
+						}
 					} );
 				} );
 			})( jQuery );
