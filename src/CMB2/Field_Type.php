@@ -2,6 +2,8 @@
 
 namespace Lipe\Lib\CMB2;
 
+use function stripslashes;
+
 /**
  * Field_Type
  *
@@ -891,13 +893,18 @@ class Field_Type {
 	 *
 	 * @return Field
 	 */
-	public function wysiwyg( $mce_options = [] ) {
+	public function wysiwyg( array $mce_options = [] ) : Field {
 		$_args = [
 			'type' => $this->wysiwyg,
 		];
+		//because / in id breaks wp_editor()
+		if( !isset( $this->field->attributes[ 'id' ] ) ){
+			$this->field->attributes[ 'id' ] = str_replace( '/', '-',  $this->field->get_id() );
+		}
 		if( !empty( $mce_options ) ){
 			$_args[ 'options' ] = $mce_options;
 		}
+
 
 		return $this->set( $_args );
 	}

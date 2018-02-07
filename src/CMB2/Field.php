@@ -537,6 +537,10 @@ class Field {
 	}
 
 
+	public function get_id() : string {
+		return $this->id;
+	}
+
 	/**
 	 * Add this field as a post list column on the attached
 	 * posts, comments, users, terms
