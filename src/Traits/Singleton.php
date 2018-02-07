@@ -9,6 +9,12 @@ trait Singleton {
 	 */
 	protected static $instance;
 
+	/**
+	 * @static
+	 * @since 1.2.0
+	 *
+	 * @var bool
+	 */
 	protected static $inited = false;
 
 
@@ -32,6 +38,8 @@ trait Singleton {
 	 * class will only init() one time.
 	 *
 	 * @static
+	 *
+	 * @since 1.2.0
 	 *
 	 * @return void
 	 */
