@@ -65,7 +65,9 @@ class Term_Select_2 {
 
 
 	public function render( CMB2_Field $field, $value, $object_id, string $object_type, CMB2_Types $field_type_object ) : void {
-
+		if( empty( $value ) ){
+			$value = null;
+		}
 		$url_args = [
 			'action'   => self::GET_TERMS,
 			'taxonomy' => $field->args( 'taxonomy' ) ?? 'category',
@@ -109,7 +111,7 @@ class Term_Select_2 {
 		$field_type_object->type = new CMB2_Type_Select( $field_type_object );
 
 		$a = [
-			'multiple'         => $field->args( 'multiple' ) ?? 'multiple',
+			'multiple'         => empty( $field->args( 'multiple' ) ) ? 'multiple' : $field->args( 'multiple' ),
 			'style'            => 'width: 99%',
 			'name'             => $field_type_object->_name() . '[]',
 			'id'               => $field_type_object->_id(),
@@ -132,7 +134,7 @@ class Term_Select_2 {
 	 *
 	 * @return string
 	 */
-	public function get_multiselect_options( array $field_escaped_value = [], CMB2_Types $field_type_object ) : string {
+	public function get_multiselect_options( ?array $field_escaped_value = [], CMB2_Types $field_type_object ) : string {
 		$options = (array) $field_type_object->field->options();
 
 		// If we have selected items, we need to preserve their order
