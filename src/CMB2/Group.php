@@ -114,7 +114,7 @@ class Group extends Field {
 			throw new \LogicException( 'You must add the group to the box before you add fields to the group.' );
 		}
 		$box = $this->box->get_box();
-		$box->add_group_field( $this->id, $field->get_field_args() );
+		$box->add_group_field( $this->id, $field->get_field_args(), $field->position );
 	}
 
 

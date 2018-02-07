@@ -2,6 +2,9 @@
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\CMB2\Field_Types\Term_Select_2;
+use function stripslashes;
+
 /**
  * Field_Type
  *
@@ -820,6 +823,26 @@ class Field_Type {
 
 
 	/**
+	 * Custom field which exists only within Lipe\Lib
+	 *
+	 * Select 2 term selector.
+	 *
+	 * @param string $taxonomy       - slug
+	 * @param string $no_terms_text
+	 * @param bool   $remove_default - remove default WP terms metabox (default true)
+	 *
+	 * @return \Lipe\Lib\CMB2\Field
+	 */
+	public function taxonomy_select_2( $taxonomy, $no_terms_text = null, $remove_default = null  ) : Field {
+		Term_Select_2::init_once();
+
+		$_args = $this->field_type_taxonomy( Term_Select_2::NAME, $taxonomy, $no_terms_text, $remove_default );
+
+		return $this->set( $_args );
+	}
+
+
+	/**
 	 * A field with checkboxes with taxonomy terms, and multiple terms can be selected.
 	 *
 	 * @param string $taxonomy       - slug
@@ -891,13 +914,18 @@ class Field_Type {
 	 *
 	 * @return Field
 	 */
-	public function wysiwyg( $mce_options = [] ) {
+	public function wysiwyg( array $mce_options = [] ) : Field {
 		$_args = [
 			'type' => $this->wysiwyg,
 		];
+		//because / in id breaks wp_editor()
+		if( !isset( $this->field->attributes[ 'id' ] ) ){
+			$this->field->attributes[ 'id' ] = str_replace( '/', '-',  $this->field->get_id() );
+		}
 		if( !empty( $mce_options ) ){
 			$_args[ 'options' ] = $mce_options;
 		}
+
 
 		return $this->set( $_args );
 	}

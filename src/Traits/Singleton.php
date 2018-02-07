@@ -9,6 +9,14 @@ trait Singleton {
 	 */
 	protected static $instance;
 
+	/**
+	 * @static
+	 * @since 1.2.0
+	 *
+	 * @var bool
+	 */
+	protected static $inited = false;
+
 
 	/**
 	 * Create the instance of the class
@@ -21,6 +29,25 @@ trait Singleton {
 		if( method_exists( static::$instance, 'hook' ) ){
 			static::$instance->hook();
 		}
+		static::$inited = true;
+	}
+
+
+	/**
+	 * Call this method as many times as needed and the
+	 * class will only init() one time.
+	 *
+	 * @static
+	 *
+	 * @since 1.2.0
+	 *
+	 * @return void
+	 */
+	public static function init_once() : void {
+		if( !static::$inited ){
+			static::init();
+			static::$inited = true;
+		}
 	}
 
 
@@ -30,9 +57,10 @@ trait Singleton {
 	 *
 	 * @return $this
 	 */
-	public static function in(){
+	public static function in() {
 		return self::instance();
 	}
+
 
 	/**
 	 *
@@ -47,4 +75,4 @@ trait Singleton {
 
 		return static::$instance;
 	}
-} 
+}

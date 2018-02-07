@@ -108,6 +108,11 @@ trait Shorthand_Fields {
 	}
 
 
+	/**
+	 * Get all fields registered in a shorthand way
+	 *
+	 * @return \Lipe\Lib\CMB2\Field[]|\Lipe\Lib\CMB2\Group[]
+	 */
 	protected function get_shorthand_fields() : array {
 		return $this->fields;
 	}

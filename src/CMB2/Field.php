@@ -1,8 +1,8 @@
 <?php
 
 namespace Lipe\Lib\CMB2;
-use function is_callable;
-use Lipe\Lib\Meta\Meta_Repo;
+
+use Lipe\Lib\CMB2\Field_Types\Tab;
 
 /**
  * Field
@@ -454,6 +454,17 @@ class Field {
 	public $show_on_cb;
 
 	/**
+	 * Id of boxes tab which this field should display in.
+	 * The tab must be first registered with the box
+	 *
+	 * @see \Lipe\Lib\CMB2\Field::tab();
+	 * @see \Lipe\Lib\CMB2\Box::add_tab()
+	 *
+	 * @var string
+	 */
+	protected $tab;
+
+	/**
 	 * Used for date/time fields
 	 *
 	 * Optionally make this field honor the timezone selected
@@ -525,6 +536,10 @@ class Field {
 		$this->name = $name;
 	}
 
+
+	public function get_id() : string {
+		return $this->id;
+	}
 
 	/**
 	 * Add this field as a post list column on the attached
@@ -626,6 +641,25 @@ class Field {
 	 */
 	public function position( int $position = 1 ){
 		$this->position = $position;
+		return $this;
+	}
+
+
+	/**
+	 * Add this field to a tab.
+	 * The tab must be first registered with the box.
+	 *
+	 * @see \Lipe\Lib\CMB2\Box::add_tab()
+	 *
+	 * @param string $id
+	 *
+	 * @return $this
+	 */
+	public function tab( string $id ){
+		Tab::init_once();
+
+		$this->tab = $id;
+		$this->render_row_cb = [ Tab::in(), 'render_field' ];
 		return $this;
 	}
 

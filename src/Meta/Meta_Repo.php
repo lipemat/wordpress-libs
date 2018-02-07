@@ -29,14 +29,14 @@ class Meta_Repo {
 
 	/**
 	 *
-	 * @param string $id
+	 * @param string|int $id
 	 * @param string $key
 	 * @param string $meta_type - user, term, post (defaults to 'post')
 	 *
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public function get_meta( string $id, string $key, string $meta_type = 'post' ){
+	public function get_meta( $id, string $key, string $meta_type = 'post' ){
 		if( !isset( $this->keys[ $key ] ) ){
 			throw new \Exception("This meta key {$key} was not added to the repo. Did you add it to get_keys()" );
 		}
