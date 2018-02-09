@@ -2,8 +2,6 @@
 
 namespace Lipe\Lib\Schema;
 
-use Lipe\Lib\Traits\Singleton;
-
 /**
  * Meta Box
  *
@@ -44,6 +42,25 @@ abstract class Meta_Box {
 	public $callback_args;
 
 	public $post_type;
+
+	/**
+	 * @abstract
+	 *
+	 * @param \WP_Post $post The post being edited
+	 *
+	 * @return void
+	 */
+	abstract public function render( $post ) : void;
+
+	/**
+	 * @abstract
+	 *
+	 * @param int      $post_id The ID of the post being saved
+	 * @param \WP_Post $post    The post being saved
+	 *
+	 * @return void
+	 */
+	abstract protected function save( $post_id, $post ) : void ;
 
 
 	/**
@@ -189,17 +206,6 @@ abstract class Meta_Box {
 
 
 	/**
-	 * @abstract
-	 *
-	 * @param int      $post_id The ID of the post being saved
-	 * @param \WP_Post $post    The post being saved
-	 *
-	 * @return void
-	 */
-	abstract protected function save( $post_id, $post );
-
-
-	/**
 	 * Get the metabox with the given ID
 	 *
 	 * @static
@@ -293,14 +299,7 @@ abstract class Meta_Box {
 	}
 
 
-	/**
-	 * @abstract
-	 *
-	 * @param \WP_Post $post The post being edited
-	 *
-	 * @return void
-	 */
-	abstract public function render( $post ) : void;
+
 
 
 	/**
@@ -422,7 +421,14 @@ abstract class Meta_Box {
 	}
 
 
-	public static function init_once() : void {
+	/**
+	 * @since 1.2.2
+	 *
+	 * @static
+	 *
+	 * @return void
+	 */
+	private static function init_once() : void {
 		static $inited = false;
 		if( !$inited ){
 			static::hook();
