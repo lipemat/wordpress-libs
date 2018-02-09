@@ -43,6 +43,21 @@ class Custom_Post_Type {
 
 	public $capabilities = [];
 
+	/**
+	 * 'title'
+	 * 'editor' (content)
+	 * 'author'
+	 * 'thumbnail' (featured image, current theme must also support post-thumbnails)
+	 * 'excerpt'
+	 * 'trackbacks'
+	 * 'custom-fields'
+	 * 'comments' (also will see comment count balloon on edit screen)
+	 * 'revisions' (will store revisions)
+	 * 'page-attributes' (menu order, hierarchical must be true to show Parent option)
+	 * 'post-formats' add post formats
+	 *
+	 * @var array
+	 */
 	public $supports = [ 'title', 'editor', 'author', 'thumbnail', 'excerpt' ];
 
 	/**
