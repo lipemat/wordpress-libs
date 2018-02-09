@@ -752,7 +752,7 @@ class Field_Type {
 	 *
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @see CMB2_hookup::add_metaboxes() and CMB2_hookup::post_hooks() )
+	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
 	 *
@@ -770,7 +770,7 @@ class Field_Type {
 	 *
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @see CMB2_hookup::add_metaboxes() and CMB2_hookup::post_hooks() )
+	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
 	 *
@@ -789,7 +789,7 @@ class Field_Type {
 	 *
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @see CMB2_hookup::add_metaboxes() and CMB2_hookup::post_hooks() )
+	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio_inline
 	 *
@@ -808,7 +808,7 @@ class Field_Type {
 	 *
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @see CMB2_hookup::add_metaboxes() and CMB2_hookup::post_hooks() )
+	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_select
 	 *
@@ -831,7 +831,7 @@ class Field_Type {
 	 * @param bool $create_new_terms - allow creating new terms
 	 * @param bool $save_as_terms - append the terms to the object as well as storing them in meta (default to false );
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @see CMB2_hookup::add_metaboxes() and CMB2_hookup::post_hooks() )
+	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
 	 *
 	 * @return \Lipe\Lib\CMB2\Field
 	 */
@@ -851,7 +851,7 @@ class Field_Type {
 	 *
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @see CMB2_hookup::add_metaboxes() and CMB2_hookup::post_hooks() )
+	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
 	 * @param bool   $select_all     - display the select all button
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
@@ -871,7 +871,7 @@ class Field_Type {
 	 *
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @see CMB2_hookup::add_metaboxes() and CMB2_hookup::post_hooks() )
+	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
 	 * @param bool   $select_all     - display the select all button
 	 *
 	 * @todo update with links to docs once they exist
@@ -891,7 +891,7 @@ class Field_Type {
 	 *
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @see CMB2_hookup::add_metaboxes() and CMB2_hookup::post_hooks() )
+	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
 	 * @param bool   $select_all     - display the select all button
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_inline
@@ -1087,7 +1087,7 @@ class Field_Type {
 	 * @param string $type
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @see CMB2_hookup::add_metaboxes() and CMB2_hookup::post_hooks() )
+	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
 	 *
 	 * @return array
 	 */
