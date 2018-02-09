@@ -280,16 +280,17 @@ abstract class Meta_Box {
 	 * @type string             $priority  - 'high', 'core', 'default' or 'low' ( defaults to 'default' )
 	 * @type [] $callback_args - will be assigned as $this->callback_args
 	 *                              can be retrieved via $this->get_callback_args()
-	 * @return Meta_Box
+	 * @return Meta_Box|\Lipe\Lib\Schema\Meta_Box[]
 	 */
 	public static function register( $post_type = null, array $args = [] ) : Meta_Box {
+		$class = [];
 		if( null === $post_type ){
 			foreach( get_post_types() as $_post_type ){
-				$class = new static( $_post_type, $args );
+				$class[] = new static( $_post_type, $args );
 			}
 		} elseif( \is_array( $post_type ) ) {
 			foreach( $post_type as $_post_type ){
-				$class = new static( $_post_type, $args );
+				$class[] = new static( $_post_type, $args );
 			}
 		} else {
 			$class = new static( $post_type, $args );
