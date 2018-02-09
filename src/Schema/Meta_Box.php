@@ -2,8 +2,9 @@
 
 namespace Lipe\Lib\Schema;
 
+use Lipe\Lib\Traits\Singleton;
+
 /**
- *
  * Meta Box
  *
  * The base meta box class. To extend this, implement the
@@ -16,55 +17,38 @@ namespace Lipe\Lib\Schema;
  * worry about validating if the correct post type has been
  * submitted, nonces, and all that. They're already taken care of.
  *
- * @example $this::register( [%post_type%], %args% );
- * @example new $this( 'page', [ 'title' => 'Meta Box Title' ] );
+ * @example self::register( [%post_type%], %args% );
  *
  */
 abstract class Meta_Box {
-	const NONCE_ACTION = 'lipe/lib/schema/meta_box_save_post';
-	const NONCE_NAME = 'lipe/lib/schema/meta_box_save_post_nonce';
+
+	protected const NONCE_ACTION = 'lipe/lib/schema/meta_box_save_post';
+	protected const NONCE_NAME = 'lipe/lib/schema/meta_box_save_post_nonce';
 
 	/**
-	 * Is Init
+	 * Store the registered meta box for later registering with WP
 	 *
-	 * Bool to know if we already ran init so we can call internally once
-	 *
-	 * @var bool
-	 */
-	public static $is_init = false;
-
-	private static $registry = [];
-
-	protected $id;
-
-	protected $title;
-
-	protected $context;
-
-	protected $priority;
-
-	protected $callback_args;
-
-	/**
-	 * Defaults
-	 *
-	 * Default class args
-	 *
+	 * @static
 	 * @var array
 	 */
-	protected $defaults = [
-		'title'         => '',
-		'context'       => 'advanced',
-		'priority'      => 'default',
-		'callback_args' => null,
-		'defaults'      => [],
-	];
+	private static $registry = [];
+
+	public $id;
+
+	public $title;
+
+	public $context;
+
+	public $priority;
+
+	public $callback_args;
+
+	public $post_type;
 
 
 	/**
-	 * Constructor
 	 *
-	 * @param string $post_type     -
+	 * @param string $post_type
 	 * @param array  $args          = array{
 	 *                              Optional arguments to pass to the meta box class.
 	 *
@@ -74,41 +58,34 @@ abstract class Meta_Box {
 	 * @type string  $context       - 'normal', 'advanced', or 'side' ( defaults to 'advanced' )
 	 * @type string  $priority      - 'high', 'core', 'default' or 'low' ( defaults to 'default' )
 	 * @type array   $callback_args - will be assigned as $this->callback_args to the meta box class and can be
-	 *       retrieved via $this->get_callback_args(),
-	 * @type array   $defaults      - can be retrieved using $this->get_defaults() ( @todo uncertain of this purpose,
-	 *       but have to make sure I'm not using it anywhere before deleting )
+	 *       retrieved via $this->get_callback_args()
 	 * }
 	 *
-	 * @return self()
-	 *
 	 */
-	public function __construct( $post_type, $args = [] ) {
+	protected function __construct( string $post_type, array $args = [] ) {
 		$this->post_type = $post_type;
 
-		//only call init the first time this class sees light of day
-		if( !self::$is_init ){
-			self::init();
-		}
+		self::init_once();
 
 		if( !empty( $args[ 'id' ] ) ){
 			$this->id = $args[ 'id' ];
 		} else {
-			$this->id = self::build_id( $this->post_type, get_class( $this ) );
+			$this->id = self::build_id( $this->post_type, \get_class( $this ) );
 		}
 
 		self::$registry[ $post_type ][ $this->id ] = $this;
 
-		if( !$this->defaults[ 'title' ] ){
-			$this->defaults[ 'title' ] = $this->id;
-		}
+		$args = wp_parse_args( $args, [
+			'title'         => null,
+			'context'       => 'advanced',
+			'priority'      => 'default',
+			'callback_args' => null,
+		] );
 
-		$args = wp_parse_args( $args, $this->defaults );
-
-		$this->title = $args[ 'title' ];
+		$this->title = $args[ 'title' ] ?? $this->id;
 		$this->context = $args[ 'context' ];
 		$this->priority = $args[ 'priority' ];
 		$this->callback_args = $args[ 'callback_args' ];
-		$this->meta_box_defaults = $args[ 'defaults' ];
 
 		add_action( 'add_meta_boxes_' . $this->post_type, [
 			$this,
@@ -117,17 +94,7 @@ abstract class Meta_Box {
 	}
 
 
-	/**
-	 * Init
-	 *
-	 * Add the actions to handle output and saving meta box data
-	 *
-	 * @example Run this before anything else
-	 *
-	 * @return void
-	 */
-	public static function init() {
-		self::$is_init = true;
+	protected static function hook() : void {
 		add_action( 'post_submitbox_misc_actions', [
 			__CLASS__,
 			'display_nonce',
@@ -147,13 +114,14 @@ abstract class Meta_Box {
 	 *
 	 * @return string A unique identifier for this meta box
 	 */
-	protected static function build_id( $post_type, $class ) {
+	protected static function build_id( $post_type, $class ) : string {
 		$id = $post_type . '-' . $class;
 		$append = 0;
-		if( isset( self::$registry[ $post_type ][ ( $id . ( $append ? '-' . $append : '' ) ) ] ) ){
+		$appended = $id . ( $append ? '-' . $append : '' );
+		if( isset( self::$registry[ $post_type ][ $appended ] ) ){
 			$append ++;
 		}
-		$id = $id . ( $append ? '-' . $append : '' );
+		$id .= ( $append ? '-' . $append : '' );
 
 		return $id;
 	}
@@ -165,9 +133,8 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	public static function display_nonce() {
-		global $post;
-		if( !empty( self::$registry[ $post->post_type ] ) ){
+	public static function display_nonce() : void {
+		if( !empty( self::$registry[ get_post_type() ] ) ){
 			wp_nonce_field( self::NONCE_ACTION, self::NONCE_NAME );
 		}
 	}
@@ -176,74 +143,56 @@ abstract class Meta_Box {
 	/**
 	 * Save the meta boxes for this post type
 	 *
-	 * @param int    $post_id The ID of the post being saved
-	 * @param object $post    The post being saved
+	 * @param int      $post_id The ID of the post being saved
+	 * @param \WP_Post $post    The post being saved
 	 *
 	 * @return void
 	 */
-	public static function save_meta_boxes( $post_id, $post ) {
-		if( !$post_type = self::should_meta_boxes_be_saved( $post_id, $post ) ){
+	public static function save_meta_boxes( $post_id, $post ) : void {
+		if( self::should_meta_boxes_be_saved( $post_id, $post ) ){
 			return;
 		}
-		if( empty( self::$registry[ $post_type ] ) ){
+		if( empty( self::$registry[ $post->post_type ] ) ){
 			return;
 		}
+		remove_action( 'save_post', [ __CLASS__, 'save_meta_boxes' ] );
 
-		global $wp_filter;
-		$current = key( $wp_filter[ 'save_post' ] );
-
-		foreach( self::$registry[ $post_type ] as $meta_box ){
+		foreach( (array) self::$registry[ $post->post_type ] as $meta_box ){
 			/** @var $meta_box Meta_Box */
 			$meta_box->save( $post_id, $post );
 		}
 
-		/*
-		 * if any of the meta boxes creates/updates a different
-		 * post, we'll end up leaving the $wp_filter['save_post']
-		 * array in an incorrect state
-		 * see http://xplus3.net/2011/08/18/wordpress-action-nesting/
-		 */
-		if( key( $wp_filter[ 'save_post' ] ) != $current ){
-			reset( $wp_filter[ 'save_post' ] );
-			foreach( array_keys( $wp_filter[ 'save_post' ] ) as $key ){
-				if( $key == $current ){
-					break;
-				}
-				next( $wp_filter[ 'save_post' ] );
-			}
-		}
 	}
 
 
 	/**
 	 * Make sure this is a save_post where we actually want to update the meta
 	 *
-	 * @param int    $post_id
-	 * @param object $post
+	 * @param int      $post_id
+	 * @param \WP_Post $post
 	 *
 	 * @return bool
 	 */
-	protected static function should_meta_boxes_be_saved( $post_id, $post ) {
+	protected static function should_meta_boxes_be_saved( $post_id, $post ) : bool {
 		// make sure this is a valid submission
 		if( !isset( $_POST[ self::NONCE_NAME ] ) || !wp_verify_nonce( $_POST[ self::NONCE_NAME ], self::NONCE_ACTION ) ){
 			return false;
 		}
 
 		// don't do anything on autosave, auto-draft, bulk edit, or quick edit
-		if( wp_is_post_autosave( $post_id ) || $post->post_status == 'auto-draft' || defined( 'DOING_AJAX' ) || isset( $_GET[ 'bulk_edit' ] ) || wp_is_post_revision( $post_id ) ){
+		if( $post->post_status === 'auto-draft' || isset( $_GET[ 'bulk_edit' ] ) || wp_is_post_autosave( $post_id ) || \wp_doing_ajax() || wp_is_post_revision( $post_id ) ){
 			return false;
 		}
 
-		// looks like the answer is Yes
-		return $post->post_type;
+		return true;
 	}
 
 
 	/**
 	 * @abstract
 	 *
-	 * @param int    $post_id The ID of the post being saved
-	 * @param object $post    The post being saved
+	 * @param int      $post_id The ID of the post being saved
+	 * @param \WP_Post $post    The post being saved
 	 *
 	 * @return void
 	 */
@@ -260,7 +209,7 @@ abstract class Meta_Box {
 	 *
 	 * @return Meta_Box|null
 	 */
-	public static function get_meta_box_by_id( $post_type, $id ) {
+	public static function get_meta_box_by_id( $post_type, $id ) : ?Meta_Box {
 		if( isset( self::$registry[ $post_type ][ $id ] ) ){
 			return self::$registry[ $post_type ][ $id ];
 		}
@@ -278,13 +227,10 @@ abstract class Meta_Box {
 	 * @return bool Whether a meta box with the given class has been
 	 *              registered for the given post type
 	 */
-	public static function has_meta_box( $post_type, $class ) {
+	public static function has_meta_box( $post_type, $class ) : bool {
 		$metabox = self::get_meta_box( $post_type, $class );
-		if( $metabox == null ){
-			return false;
-		}
 
-		return true;
+		return $metabox !== null;
 	}
 
 
@@ -301,12 +247,12 @@ abstract class Meta_Box {
 	 *
 	 * @return Meta_Box|null
 	 */
-	public static function get_meta_box( $post_type, $class ) {
+	public static function get_meta_box( $post_type, $class ) : ?Meta_Box {
 		if( !isset( self::$registry[ $post_type ] ) ){
 			return null;
 		}
-		foreach( self::$registry[ $post_type ] as $meta_box ){
-			if( get_class( $meta_box ) == $class ){
+		foreach( (array) self::$registry[ $post_type ] as $meta_box ){
+			if( \get_class( $meta_box ) === $class ){
 				return $meta_box;
 			}
 		}
@@ -320,22 +266,22 @@ abstract class Meta_Box {
 	 *
 	 * @see   https://codex.wordpress.org/Function_Reference/add_meta_box for more info
 	 *
-	 * @param string|array $post_type - null will add it to all post types
-	 * @param []        $args  = {
+	 * @param string|array|null $post_type - null will add it to all post types
+	 * @param array             $args      = {
 	 *
-	 * @type string        $title     ( defaults to the id of the metabox built by the class ),
-	 * @type string        $context   - 'normal', 'advanced', or 'side' ( defaults to 'advanced' )
-	 * @type string        $priority  - 'high', 'core', 'default' or 'low' ( defaults to 'default' )
+	 * @type string             $title     ( defaults to the id of the metabox built by the class ),
+	 * @type string             $context   - 'normal', 'advanced', or 'side' ( defaults to 'advanced' )
+	 * @type string             $priority  - 'high', 'core', 'default' or 'low' ( defaults to 'default' )
 	 * @type [] $callback_args - will be assigned as $this->callback_args
 	 *                              can be retrieved via $this->get_callback_args()
 	 * @return Meta_Box
 	 */
-	public static function register( $post_type = null, $args = [] ) {
-		if( $post_type == null ){
+	public static function register( $post_type = null, array $args = [] ) : Meta_Box {
+		if( null === $post_type ){
 			foreach( get_post_types() as $_post_type ){
 				$class = new static( $_post_type, $args );
 			}
-		} elseif( is_array( $post_type ) ) {
+		} elseif( \is_array( $post_type ) ) {
 			foreach( $post_type as $_post_type ){
 				$class = new static( $_post_type, $args );
 			}
@@ -354,7 +300,7 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	abstract public function render( $post );
+	abstract public function render( $post ) : void;
 
 
 	/**
@@ -363,7 +309,7 @@ abstract class Meta_Box {
 	 * @action 'add_meta_boxes_' . $post_type
 	 * @return void
 	 */
-	public function register_meta_box() {
+	public function register_meta_box() : void {
 		add_meta_box( $this->get_id(), $this->get_title(), [
 			$this,
 			'render',
@@ -376,7 +322,7 @@ abstract class Meta_Box {
 	 *
 	 * @return string
 	 */
-	public function get_id() {
+	public function get_id() : string {
 		return $this->id;
 	}
 
@@ -386,7 +332,7 @@ abstract class Meta_Box {
 	 *
 	 * @return string
 	 */
-	public function get_title() {
+	public function get_title() : string {
 		return $this->title;
 	}
 
@@ -396,7 +342,7 @@ abstract class Meta_Box {
 	 *
 	 * @return string
 	 */
-	public function get_context() {
+	public function get_context() : string {
 		return $this->context;
 	}
 
@@ -406,7 +352,7 @@ abstract class Meta_Box {
 	 *
 	 * @return string
 	 */
-	public function get_priority() {
+	public function get_priority() : string {
 		return $this->priority;
 	}
 
@@ -416,7 +362,7 @@ abstract class Meta_Box {
 	 *
 	 * @return array|null
 	 */
-	public function get_callback_args() {
+	public function get_callback_args() : ?array {
 		return $this->callback_args;
 	}
 
@@ -428,7 +374,7 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	public function set_callback_args( $args ) {
+	public function set_callback_args( $args ) : void {
 		$this->callback_args = $args;
 	}
 
@@ -446,8 +392,7 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	public function save_meta_field( $post_id, $field ) {
-
+	public function save_meta_field( $post_id, $field ) : void {
 		foreach( (array) $field as $this_field ){
 			if( !empty( $_POST[ $this_field ] ) ){
 				update_post_meta( $post_id, $this_field, $_POST[ $this_field ] );
@@ -455,15 +400,6 @@ abstract class Meta_Box {
 				update_post_meta( $post_id, $this_field, null );
 			}
 		}
-	}
-
-
-	/**
-	 *
-	 * @deprecated in favor of $this->get_values()
-	 */
-	public function extractable_meta_fields( $post_id, $field ) {
-		return $this->get_values( $post_id, $field );
 	}
 
 
@@ -483,6 +419,15 @@ abstract class Meta_Box {
 		}
 
 		return $meta;
+	}
+
+
+	public static function init_once() : void {
+		static $inited = false;
+		if( !$inited ){
+			static::hook();
+			$inited = true;
+		}
 	}
 
 }
