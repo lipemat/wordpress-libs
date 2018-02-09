@@ -282,8 +282,7 @@ abstract class Meta_Box {
 	 *                              can be retrieved via $this->get_callback_args()
 	 * @return Meta_Box|\Lipe\Lib\Schema\Meta_Box[]
 	 */
-	public static function register( $post_type = null, array $args = [] ) : Meta_Box {
-		$class = [];
+	public static function register( $post_type = null, array $args = [] ) {
 		if( null === $post_type ){
 			foreach( get_post_types() as $_post_type ){
 				$class[] = new static( $_post_type, $args );
