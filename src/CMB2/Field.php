@@ -449,6 +449,8 @@ class Field {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_on_cb
 	 * @example should_i_show( $field ){ return bool}
 	 *
+	 * @see \Lipe\Lib\CMB2\Field::show_on_cb()
+	 *
 	 * @var callable
 	 */
 	public $show_on_cb;
@@ -641,6 +643,22 @@ class Field {
 	 */
 	public function position( int $position = 1 ){
 		$this->position = $position;
+		return $this;
+	}
+
+
+	/**
+	 * To show this field or not based on the result of a function.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_on_cb
+	 * @example should_i_show( $field ){ return bool}
+	 *
+	 * @param callable $func
+	 *
+	 * @return $this
+	 */
+	public function show_on_cb( callable $func ) : Field{
+		$this->show_on_cb = $func;
 		return $this;
 	}
 
