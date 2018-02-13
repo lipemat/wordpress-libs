@@ -41,6 +41,14 @@ class Custom_Post_Type {
 
 	public $capability_type = 'post';
 
+	/**
+	 * @link https://codex.wordpress.org/Function_Reference/register_post_type#capabilities
+	 *
+	 * @notice if you set only some of these you probably want to
+	 *         set $this->map_meta_cap = true
+	 *
+	 * @var array
+	 */
 	public $capabilities = [];
 
 	/**
