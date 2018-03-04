@@ -445,7 +445,7 @@ class Taxonomy {
 			return;
 		}
 
-		$already_defaulted = get_option( 'lipe/lib/schema/taxonomy_defaults_registry', [] );
+		$already_defaulted = get_option( 'lipe/lib/schema/defaults_registry', [] );
 		if( !in_array( $this->get_slug(), $already_defaulted ) ){
 			// don't do anything if the taxonomy already has terms
 			if( !get_terms( $this->taxonomy, [ 'hide_empty' => false, 'number' => 1 ] ) ){
