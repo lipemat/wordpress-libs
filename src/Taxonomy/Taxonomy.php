@@ -214,7 +214,7 @@ class Taxonomy {
 	 *
 	 * @var array
 	 */
-	public $capabilities;
+	public $capabilities = [];
 
 	/**
 	 * Whether this taxonomy should remember the order in which terms

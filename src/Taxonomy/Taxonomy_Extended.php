@@ -52,6 +52,8 @@ class Taxonomy_Extended extends Taxonomy {
 	public $exclusive = null;
 
 	/**
+	 * Use a special meta box structure
+	 *
 	 * @field 'radio'
 	 * @field 'dropdown'
 	 * @field 'simple'
@@ -73,6 +75,11 @@ class Taxonomy_Extended extends Taxonomy {
 	 */
 	public function admin_cols(){
 		return new Column( $this );
+	}
+
+
+	public function meta_box( string $type ) : void {
+		$this->meta_box = $type;
 	}
 
 
