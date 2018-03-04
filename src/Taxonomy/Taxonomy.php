@@ -417,7 +417,7 @@ class Taxonomy {
 
 		if( $been_filtered ){
 			?>
-            <a style="margin: 1px 8px 0 58px;position: absolute;" href="edit.php?post_type=<?php echo $_GET[ 'post_type' ]; ?>" class="button">
+            <a style="float: left; margin-top: 1px" href="<?= admin_url( "edit.php?post_type={$_GET[ 'post_type' ]}" ); ?>" class="button">
                 Clear Filters
             </a>
 			<?php
