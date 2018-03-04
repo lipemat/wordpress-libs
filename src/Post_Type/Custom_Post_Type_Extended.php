@@ -221,19 +221,12 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 * Register the post type using args from our normal
 	 * Custom_Post_Type class and this class
 	 *
-	 * @return \Extended_CPT
 	 */
-	public function register_post_type() {
-		$post_type = register_extended_post_type( $this->post_type, $this->get_post_type_args() );
+	public function register_post_type() : void {
+		\register_extended_post_type( $this->post_type, $this->get_post_type_args() );
 
-		if( !is_wp_error( $post_type ) ){
-			parent::$registry[ $this->post_type ] = get_class( $this );
-			if( $post_type->args[ 'capability_type' ] != "post" ){
-				$this->add_administrator_capabilities( $post_type );
-			}
+		$this->add_administrator_capabilities( get_post_type_object( $this->post_type ) );
 
-		}
-		return $post_type;
 	}
 
 

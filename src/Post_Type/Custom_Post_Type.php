@@ -236,18 +236,10 @@ class Custom_Post_Type {
 	/**
 	 * Register this post type with WordPress
 	 *
-	 * @return \WP_Post_Type
 	 */
-	public function register_post_type() {
-		$post_type = register_post_type( $this->post_type, $this->post_type_args() );
-		if( !is_wp_error( $post_type ) ){
-			self::$registry[ $this->post_type ] = get_class( $this );
-			if( $post_type->capability_type !== "post" ){
-				$this->add_administrator_capabilities( $post_type );
-			}
-
-		}
-		return $post_type;
+	public function register_post_type() : void {
+		$post_type = \register_post_type( $this->post_type, $this->post_type_args() );
+		$this->add_administrator_capabilities( $post_type );
 	}
 
 
@@ -449,11 +441,17 @@ class Custom_Post_Type {
 	 *
 	 * Checks to make sure we have not done this already
 	 *
-	 * @param object $post_type
+	 * @param \WP_Post_Type $post_type
 	 *
 	 * @return void
 	 */
-	protected function add_administrator_capabilities( $post_type ) {
+	protected function add_administrator_capabilities( $post_type ) : void  {
+		static::$registry[ $this->post_type ] = \get_class( $this );
+
+		if( $post_type->capability_type === 'post' || is_wp_error( $post_type ) ){
+			return;
+		}
+
 		if( !$this->auto_admin_caps ){
 			return;
 		}
