@@ -585,26 +585,43 @@ class Field_Type {
 	 *
 	 * @return Field
 	 */
-	public function text_date( $date_format = 'l jS \of F Y', $timezone_meta_key = '', $date_picker_options = [] ) {
+	public function text_date( $date_format = 'm/d/Y', $timezone_meta_key = '', $date_picker_options = [] ) {
 		return $this->set( $this->field_type_date( $this->text_date, $date_format, $timezone_meta_key, $date_picker_options ) );
 	}
 
 
 	/**
-	 * Date and time field, stored as UNIX timestamp.
+	 * Date field, stored as UNIX timestamp. Useful if you plan to query based on it
 	 *
 	 * @param string $date_format
 	 * @param string $timezone_meta_key - to use the value of another timezone_select field
 	 *                                  as the timezone
 	 *
-	 * @param [] $date_picker_options - overrides for jQuery UI Datepicker (see text_date example)
+	 * @param array $date_picker_options - overrides for jQuery UI Datepicker (see text_date example)
+	 *
+	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_date_timestamp
+	 *
+	 * @return Field
+	 */
+	public function text_date_timestamp( $date_format = 'm/d/Y', $timezone_meta_key = '', array $date_picker_options = [] ) {
+		return $this->set( $this->field_type_date( $this->text_date_timestamp, $date_format, $timezone_meta_key, $date_picker_options ) );
+	}
+
+	/**
+	 * Date and time field, stored as UNIX timestamp.. Useful if you plan to query based on it
+	 *
+	 * @param string $date_format
+	 * @param string $timezone_meta_key - to use the value of another timezone_select field
+	 *                                  as the timezone
+	 *
+	 * @param array $date_picker_options - overrides for jQuery UI Datepicker (see text_date example)
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp
 	 *
 	 * @return Field
 	 */
-	public function text_date_timestamp( $date_format = 'l jS \of F Y', $timezone_meta_key = '', $date_picker_options = [] ) {
-		return $this->set( $this->field_type_date( $this->text_date_timestamp, $date_format, $timezone_meta_key . $date_picker_options ) );
+	public function text_datetime_timestamp( $date_format = 'm/d/Y', $timezone_meta_key = '', array $date_picker_options = [] ) : Field {
+		return $this->set( $this->field_type_date( $this->text_datetime_timestamp, $date_format, $timezone_meta_key, $date_picker_options ) );
 	}
 
 
@@ -620,7 +637,7 @@ class Field_Type {
 	 *
 	 * @return Field
 	 */
-	public function text_datetime_timestamp_timezone( $date_format = 'l jS \of F Y', $timezone_meta_key = '', $date_picker_options = [] ) {
+	public function text_datetime_timestamp_timezone( $date_format = 'm/d/Y', $timezone_meta_key = '', $date_picker_options = [] ) {
 		return $this->set( $this->field_type_date( $this->text_datetime_timestamp_timezone, $date_format, $timezone_meta_key, $date_picker_options ) );
 	}
 
@@ -1145,7 +1162,7 @@ class Field_Type {
 	 *
 	 * @return array
 	 */
-	protected function field_type_date( $type, $date_format = 'l jS \of F Y', $timezone_meta_key = '', $date_picker_options = [] ) {
+	protected function field_type_date( $type, $date_format = 'm/d/Y', $timezone_meta_key = '', $date_picker_options = [] ) {
 
 		$_args = [
 			'type'        => $type,
