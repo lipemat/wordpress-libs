@@ -96,14 +96,14 @@ class Image_Resize {
 	 *
 	 */
 	public function convert_image_downsize( $out, $id, $size ) {
-		if( $size == 'full' ){
+		if( $size === 'full' ){
 			return $out;
 		}
 
 		$new_image = $this->image( [
 			'id'     => $id,
 			'size'   => $size,
-			'output' => 'array',
+			'output' => 'numeric_array',
 		] );
 
 		if( empty( $new_image ) ){
@@ -134,6 +134,7 @@ class Image_Resize {
 	 *                      'crop' => false,
 	 *                      'output' => 'img',   // how print: 'a', with anchor; 'img' without anchor; 'url' only url;
 	 *                      'array' array width 'url', 'width' and 'height'
+	 *                      'numeric_array' default way wp expects it
 	 *                      'link' => '',      // the link of <a> tag. If empty, get from original image url
 	 *                      'link_class' => '',      // the class of <a> tag
 	 *                      'link_title' => '',      // the title of <a> tag. If empty, get it from "title" attribute.
@@ -281,15 +282,14 @@ class Image_Resize {
 			return null;
 		}
 
-		//if we only want an arry or url
-		if( $args[ 'output' ] == 'url' ){
+
+		if( $args[ 'output' ] === 'url' ){
 			if( $echo ){
 				echo $image_url;
 			}
-
 			return $image_url;
 
-		} elseif( $args[ 'output' ] == 'array' ) {
+		} elseif ( $args['output'] === 'array' ) {
 			//@todo set the alt and title from findings above
 			return [
 				'src'    => $image_url,
@@ -297,6 +297,12 @@ class Image_Resize {
 				'height' => $height,
 				'alt'    => $alt,
 				'title'  => $title,
+			];
+		} elseif ( $args['output'] === 'numeric_array' ) {
+			return [
+				0 => $image_url,
+				1 => $width,
+				2 => $height,
 			];
 		}
 
@@ -323,11 +329,11 @@ class Image_Resize {
 			//@todo set the alt and title from findings above
 			$attr = [
 				'src'    => $image_url,
+				'width'  => $width,
+				'height' => $height,
 				'alt'    => $alt,
 				'title'  => $title,
 				'class'  => trim( $class ),
-				'width'  => $width,
-				'height' => $height,
 			];
 
 			foreach( $attr as $name => $value ){
