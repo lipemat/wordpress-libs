@@ -285,9 +285,9 @@ class Route {
 	 * @static
 	 * @return int The ID of the new post
 	 */
-	private static function make_post() {
+	private static function make_post() : int {
 		$post = [
-			'post_title'  => 'Mvc Placeholder Post',
+			'post_title'  => 'Lipe Libs Placeholder Post',
 			'post_status' => 'publish',
 			'post_type'   => self::POST_TYPE,
 		];

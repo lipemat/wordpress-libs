@@ -1,8 +1,8 @@
 <?php
 
 namespace Lipe\Project\Api;
+use Lipe\Lib\Util\Cache;
 
-use MVC\Cache;
 
 /**
  * Youtube API
@@ -257,9 +257,10 @@ class YouTube implements \JsonSerializable {
 	/**
 	 * @deprecated
 	 *
-	 * @see \MVC\APIYoutube::get_thumbnail_url();
+	 * @see YouTube::get_thumbnail_url()
 	 */
 	public function get_thumbnail() {
+		\_deprecated_function( 'YouTube::get_thumbnail', '1.0.0', 'YouTube::get_thumbnail_url' );
 		return $this->get_thumbnail_url();
 	}
 }
