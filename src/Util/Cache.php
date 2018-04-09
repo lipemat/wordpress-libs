@@ -58,7 +58,7 @@ class Cache {
 	 * Process the cache key so that any unique data may serve as a key,
 	 * even if it's an object or array.
 	 *
-	 * @param array|string $key
+	 * @param array|string|object $key
 	 *
 	 * @return bool|string
 	 */
@@ -66,7 +66,7 @@ class Cache {
 		if( empty( $key ) ){
 			return false;
 		}
-		$key = ( is_array( $key ) || is_object( $key ) ) ? md5( serialize( $key ) ) : $key;
+		$key = ( \is_array( $key ) || \is_object( $key ) ) ? md5( serialize( $key ) ) : $key;
 
 		return $key;
 	}
