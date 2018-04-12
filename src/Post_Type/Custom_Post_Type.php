@@ -239,6 +239,7 @@ class Custom_Post_Type {
 		$this->add_administrator_capabilities( get_post_type_object( $this->post_type ) );
 	}
 
+
 	/**
 	 * Register this post type with WordPress
 	 *
@@ -311,6 +312,7 @@ class Custom_Post_Type {
 		$single = $single ?? $this->get_post_type_label();
 		$plural = $plural ?? $this->get_post_type_label( 'plural' );
 
+		//phpcs:ignore start
 		$labels = [
 			'name'                  => $plural,
 			'singular_name'         => $single,
@@ -338,6 +340,7 @@ class Custom_Post_Type {
 			'items_list'            => sprintf( __( '%s list' ), $plural ),
 			'menu_name'             => $this->menu_name ?? $plural,
 		];
+		//phpcs:ignore end
 
 		if ( ! empty( $this->labels ) ) {
 			$labels = wp_parse_args( $this->labels, $labels );
@@ -505,7 +508,7 @@ class Custom_Post_Type {
 	 * @param array $bulk_messages
 	 * @param array $bulk_counts
 	 *
-	 * @since 1.6.0
+	 * @since  1.6.0
 	 *
 	 * @return array
 	 */
@@ -550,7 +553,7 @@ class Custom_Post_Type {
 	 *
 	 * @param array $messages
 	 *
-	 * @since 1.6.0
+	 * @since  1.6.0
 	 *
 	 * @return array
 	 *
@@ -594,6 +597,18 @@ class Custom_Post_Type {
 
 
 	/**
+	 * Set capabilities for the post type using the methods
+	 * of the Capabilities class
+	 *
+	 * @return Capabilities
+	 *
+	 */
+	public function capabilities() : Capabilities {
+		return new Capabilities( $this );
+	}
+
+
+	/**
 	 * Get Post Type Archive Label
 	 *
 	 * Used when retrieving the post type archive title
@@ -629,7 +644,7 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	public function add_support( $features ) : void {
-		$features = (array) $features;
+		$features       = (array) $features;
 		$this->supports = array_unique( array_merge( $this->supports, $features ) );
 
 	}
@@ -646,7 +661,7 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	public function remove_support( $features ) : void {
-		$features = (array) $features;
+		$features       = (array) $features;
 		$this->supports = array_diff( $this->supports, $features );
 	}
 
@@ -658,7 +673,7 @@ class Custom_Post_Type {
 	 *
 	 * @return Custom_Post_Type|Custom_Post_Type_Extended
 	 */
-	public static function factory( string $post_type ) {
+	public static function factory( string $post_type ) : Custom_Post_Type {
 		return new static( $post_type );
 	}
 }
