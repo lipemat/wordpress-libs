@@ -43,6 +43,7 @@ require __DIR__ . '/vendor/autoload.php'
 * Url Route registration object
 * Url helper
 * Version management helper
+* Comment Object Trait
 
 
 
