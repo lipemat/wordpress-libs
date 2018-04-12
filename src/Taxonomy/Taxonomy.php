@@ -68,15 +68,22 @@ class Taxonomy {
 	 * Show this taxonomy in the admin menu.
 	 * If set to true, it will show up under all object_types the
 	 * taxonomy is assigned to.
+	 *
 	 * If a menu slug is provided, the taxonomy will show under the
 	 * menu provided.
 	 *
+	 * If an array is provided, the taxonomy will show under the menu
+	 * provided by the array key and the order provided by the array value.
+	 *
+	 * @example 'tools.php'
+	 * @example [ 'tools.php' => 6 ]
+	 *
 	 * @notice $this->show_ui must be set to true.
-	 * @notice this is extended to specify a menu slug
+	 * @notice  this is extended to specify a menu slug
 	 *
 	 * @default $this->show_ui
 	 *
-	 * @var bool|string
+	 * @var bool|string|array
 	 */
 	public $show_in_menu;
 
@@ -487,6 +494,67 @@ class Taxonomy {
 		}
 
 		return $this->slug;
+	}
+
+
+	/**
+	 * If $this->show_in_menu was set to a slug instead
+	 * of a boolean, we add the taxonomy as a submenu of
+	 * the provided slug.
+	 *
+	 * The taxonomy will be added at the end of the menu unless
+	 * an order is provided by setting $this->show_in_menu to an array.
+	 *
+	 * @see   Taxonomy::$show_in_menu
+	 *
+	 * @since 1.6.0
+	 *
+	 * @return void
+	 */
+	public function add_as_submenu() : void {
+		global $submenu;
+		$edit_tags_file = 'edit-tags.php?taxonomy=%s';
+
+		if ( ! \is_bool( $this->show_in_menu ) && ! empty( $this->show_in_menu ) ) {
+			$tax = \get_taxonomy( $this->taxonomy );
+			if ( null !== $tax ) {
+				$parent                       = \is_array( $this->show_in_menu ) ? key( $this->show_in_menu ) : $this->show_in_menu;
+				$order                        = \is_array( $this->show_in_menu ) ? $this->show_in_menu[ $parent ] : 100;
+				$submenu[ $parent ][ $order ] = [
+					esc_attr( $tax->labels->menu_name ),
+					$tax->cap->manage_terms,
+					sprintf( $edit_tags_file, $tax->name ),
+				];
+				ksort( $submenu[ $parent ] );
+			}
+		}
+		//set the current parent menu for the custom location
+		add_filter( 'parent_file', [ $this, 'set_current_menu' ] );
+	}
+
+
+	/**
+	 * Set the current admin menu so the correct one is highlighted.
+	 * Only used when $this->show_menu is set to a slug of a menu.
+	 *
+	 * @filter parent_file 10 1
+	 *
+	 * @param string|array $parent_file
+	 *
+	 * @see    Taxonomy::add_as_submenu();
+	 *
+	 * @return string
+	 */
+	public function set_current_menu( $parent_file ) : string {
+		$screen = \get_current_screen();
+		if ( null === $screen ) {
+			return $parent_file;
+		}
+		if ( "edit-{$this->taxonomy}" === $screen->id && $this->taxonomy === $screen->taxonomy ) {
+			return \is_array( $this->show_in_menu ) ? key( $this->show_in_menu ) : $this->show_in_menu;
+		}
+
+		return $parent_file;
 	}
 
 
