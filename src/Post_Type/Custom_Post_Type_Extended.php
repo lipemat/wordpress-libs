@@ -224,22 +224,6 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 */
 	public function register_post_type() : void {
 		\register_extended_post_type( $this->post_type, $this->get_post_type_args() );
-
-		$this->add_administrator_capabilities( get_post_type_object( $this->post_type ) );
-
-	}
-
-
-	/**
-	 *
-	 * @param $post_type
-	 *
-	 * @static
-	 *
-	 * @return \Lipe\Lib\Post_Type\Custom_Post_Type_Extended
-	 */
-	public static function factory( $post_type ){
-		return new self( $post_type );
 	}
 
 }

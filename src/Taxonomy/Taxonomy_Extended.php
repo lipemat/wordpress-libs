@@ -106,10 +106,7 @@ class Taxonomy_Extended extends Taxonomy {
 
 
 	public function register_taxonomy() : void {
-		$response = register_extended_taxonomy( $this->taxonomy, $this->post_types, $this->get_taxonomy_args() );
-		if( !is_wp_error( $response ) ){
-			self::$taxonomy_registry[ $this->taxonomy ] = $this;
-		}
+		register_extended_taxonomy( $this->taxonomy, $this->post_types, $this->get_taxonomy_args() );
 	}
 
 }

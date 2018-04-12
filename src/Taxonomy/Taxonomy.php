@@ -20,8 +20,9 @@ namespace Lipe\Lib\Taxonomy;
  *
  */
 class Taxonomy {
+	protected const REGISTRY_OPTION = 'lipe/lib/schema/taxonomy_registry';
 
-	protected static $taxonomy_registry = [];
+	protected static $registry = [];
 
 	protected static $rewrite_checked = false;
 
@@ -267,11 +268,10 @@ class Taxonomy {
 
 
 	/**
-	 * Construct
 	 *
 	 * Takes care of the necessary hook and registering
 	 *
-	 * @uses set the class vars to edit arguments
+	 * @notice set the class vars to edit arguments
 	 *
 	 * @param string $taxonomy - Taxonomy Slug ( will convert a title to a slug as well )
 	 * @param string|array     [$post_types] - may also be set by $this->post_types = array
@@ -296,7 +296,7 @@ class Taxonomy {
 	 */
 	public function hook() : void {
 		//so we can add and edit stuff on init hook
-		add_action( 'wp_loaded', [ $this, 'register_taxonomy' ], 8, 0 );
+		add_action( 'wp_loaded', [ $this, 'register' ], 8, 0 );
 		add_action( 'wp_loaded', [ $this, 'register_default_terms' ], 9, 0 );
 		add_action( 'admin_menu', [ $this, 'add_as_submenu' ] );
 
@@ -308,23 +308,23 @@ class Taxonomy {
 		}
 
 		if ( ! self::$rewrite_checked ) {
-			add_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 10, 0 );
+			add_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 10000, 0 );
 			self::$rewrite_checked = true;
 		}
 	}
 
 
 	/**
-	 * @static
-	 *
 	 * If the taxonomies registered through this API have changed,
 	 * rewrite rules need to be flushed.
+	 *
+	 * @static
 	 */
 	public static function check_rewrite_rules() : void {
-		$slugs = wp_list_pluck( self::$taxonomy_registry, 'slug' );
-		if ( get_option( 'lipe/lib/schema/taxonomy_registry' ) !== $slugs ) {
-			add_action( 'init', 'flush_rewrite_rules', 10000, 0 );
-			update_option( 'lipe/lib/schema/taxonomy_registry', $slugs );
+		$slugs = wp_list_pluck( self::$registry, 'slug' );
+		if ( get_option( self::REGISTRY_OPTION ) !== $slugs ) {
+			\flush_rewrite_rules();
+			update_option( self::REGISTRY_OPTION, $slugs );
 		}
 	}
 
@@ -339,8 +339,8 @@ class Taxonomy {
 	 * @return Taxonomy_Extended|Taxonomy|null
 	 */
 	public static function get_taxonomy( $taxonomy ) {
-		if ( isset( self::$taxonomy_registry[ $taxonomy ] ) ) {
-			return self::$taxonomy_registry[ $taxonomy ];
+		if ( isset( self::$registry[ $taxonomy ] ) ) {
+			return self::$registry[ $taxonomy ];
 		}
 
 		return null;
@@ -557,17 +557,30 @@ class Taxonomy {
 		return $parent_file;
 	}
 
-
 	/**
-	 * Register this post type with WordPress
+	 * Handles any calls which need to run to register this taxnomy
+	 *
+	 * @since 1.6.0
+	 *
 	 *
 	 * @return void
 	 */
-	public function register_taxonomy() : void {
-		$response = register_taxonomy( $this->taxonomy, $this->post_types, $this->taxonomy_args() );
-		if ( ! is_wp_error( $response ) ) {
-			self::$taxonomy_registry[ $this->taxonomy ] = $this;
-		}
+	public function register() : void {
+		$this->register_taxonomy();
+		self::$registry[ $this->taxonomy ] = $this;
+	}
+
+	/**
+	 * Register this taxonomy with WordPress
+	 *
+	 * Allow using a different process for registering taxonomies via
+	 * child classes.
+	 *
+	 * @since 1.6.0
+	 *
+	 */
+	protected function register_taxonomy() : void {
+		register_taxonomy( $this->taxonomy, $this->post_types, $this->taxonomy_args() );
 	}
 
 

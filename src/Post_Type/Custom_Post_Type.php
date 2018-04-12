@@ -42,7 +42,7 @@ class Custom_Post_Type {
 	public $capability_type = 'post';
 
 	/**
-	 * @link https://codex.wordpress.org/Function_Reference/register_post_type#capabilities
+	 * @link   https://codex.wordpress.org/Function_Reference/register_post_type#capabilities
 	 *
 	 * @notice if you set only some of these you probably want to
 	 *         set $this->map_meta_cap = true
@@ -152,7 +152,7 @@ class Custom_Post_Type {
 	/**
 	 * The default rewrite endpoint bitmasks
 	 *
-	 * @link http://make.wordpress.org/plugins/2012/06/07/rewrite-endpoints-api/
+	 * @link    http://make.wordpress.org/plugins/2012/06/07/rewrite-endpoints-api/
 	 *
 	 * @default EP_PERMALINK
 	 *
@@ -167,8 +167,6 @@ class Custom_Post_Type {
 	public $labels;
 
 	/**
-	 * Post Type
-	 *
 	 * The post type slug
 	 *
 	 * @var string
@@ -177,45 +175,39 @@ class Custom_Post_Type {
 
 
 	/**
-	 * Constructor
+	 * Takes care of the necessary hook and registering
 	 *
-	 * @param string $post_type ;
+	 * @notice set the class vars to edit arguments
 	 *
-	 * @return self()
+	 * @param string $post_type
 	 */
 	public function __construct( $post_type ) {
 		$this->post_type = $post_type;
 		$this->hook();
-
 	}
 
 
 	/**
-	 * Hooks
-	 *
-	 * Setup necessary hook to register post type
+	 * Hook the post_type into WordPress
 	 *
 	 * @return void
-	 *
 	 */
-	public function hook() {
-		if( !self::$rewrite_checked ){
+	public function hook() : void {
+		//allow methods added to the init hook to customize the post type
+		add_action( 'wp_loaded', [ $this, 'register' ], 8, 0 );
+
+		add_filter( 'adjust_post_updated_messages', [ $this, 'adjust_post_updated_messages' ], 10, 1 );
+		add_filter( 'post_type_archive_title', [ $this, 'get_post_type_archive_label' ], 10, 1 );
+		add_filter( 'bulk_post_updated_messages', [ $this, 'adjust_bulk_edit_messages' ], 10, 2 );
+
+		if ( ! self::$rewrite_checked ) {
 			add_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 10000, 0 );
 			self::$rewrite_checked = true;
 		}
-
-		//allow methods added to the init hook to customize the post type
-		add_action( 'wp_loaded', [ $this, 'register_post_type' ] );
-
-		add_filter( 'post_updated_messages', [ $this, 'post_updated_messages' ], 10, 1 );
-		add_filter( 'post_type_archive_title', [ $this, 'get_post_type_archive_label' ], 10, 1 );
-		add_filter( 'bulk_post_updated_messages', [ $this, 'bulk_edit_messages' ], 10, 2 );
 	}
 
 
 	/**
-	 * Check Rewrite Rules
-	 *
 	 * If the post types registered through this API have changed,
 	 * rewrite rules need to be flushed.
 	 *
@@ -224,22 +216,40 @@ class Custom_Post_Type {
 	 * @return void
 	 *
 	 */
-	public static function check_rewrite_rules() {
-		$previous = get_option( self::REGISTRY_OPTION );
-		if( $previous != self::$registry ){
-			flush_rewrite_rules();
-			update_option( self::REGISTRY_OPTION, self::$registry );
+	public static function check_rewrite_rules() : void {
+		$slugs = wp_list_pluck( self::$registry, 'slug' );
+		if ( get_option( self::REGISTRY_OPTION ) !== $slugs ) {
+			\flush_rewrite_rules();
+			update_option( self::REGISTRY_OPTION, $slugs );
 		}
 	}
 
 
 	/**
+	 * Handles any calls which need to run to register this post type
+	 *
+	 * @since 1.6.0
+	 *
+	 *
+	 * @return void
+	 */
+	public function register() : void {
+		$this->register_post_type();
+		self::$registry[ $this->post_type ] = $this;
+		$this->add_administrator_capabilities( get_post_type_object( $this->post_type ) );
+	}
+
+	/**
 	 * Register this post type with WordPress
 	 *
+	 * Allow using a different process for registering post types via
+	 * child classes.
+	 *
+	 * @since 1.6.0
+	 *
 	 */
-	public function register_post_type() : void {
-		$post_type = \register_post_type( $this->post_type, $this->post_type_args() );
-		$this->add_administrator_capabilities( $post_type );
+	protected function register_post_type() : void {
+		\register_post_type( $this->post_type, $this->post_type_args() );
 	}
 
 
@@ -317,7 +327,7 @@ class Custom_Post_Type {
 			'all_items'             => sprintf( __( 'All %s' ), $plural ),
 			'archives'              => sprintf( __( '%s Archives' ), $single ),
 			'attributes'            => sprintf( __( '%s Attributes' ), $single ),
-			'insert_into_item'      => sprintf( __( 'Insert into %s' ), $single ),
+			'insert_into_item'      => sprintf( __( 'INSERT INTO %s' ), $single ),
 			'uploaded_to_this_item' => sprintf( __( 'Uploaded to this %s' ), $single ),
 			'featured_image'        => __( 'Featured Image' ),
 			'set_featured_image'    => __( 'Set featured image' ),
@@ -329,7 +339,7 @@ class Custom_Post_Type {
 			'menu_name'             => $this->menu_name ?? $plural,
 		];
 
-		if( !empty( $this->labels ) ){
+		if ( ! empty( $this->labels ) ) {
 			$labels = wp_parse_args( $this->labels, $labels );
 		}
 
@@ -345,26 +355,23 @@ class Custom_Post_Type {
 	 *
 	 * Get a post type label
 	 *
-	 * @param string $quantity - set to plural if getting plural plural
+	 * @param string $quantity - (singular,plural)
 	 *
 	 * @return string
 	 */
-	public function get_post_type_label( $quantity = 'singular' ) {
-		switch ( $quantity ){
-			case 'plural':
-				if( empty( $this->post_type_label_plural ) ){
-					$this->set_post_type_label( $this->post_type_label_singular );
-				}
+	public function get_post_type_label( $quantity = 'singular' ) : string {
+		if ( 'plural' === $quantity ) {
+			if ( empty( $this->post_type_label_plural ) ) {
+				$this->set_post_type_label( $this->post_type_label_singular );
+			}
 
-				return $this->post_type_label_plural;
-
-			default:
-				if( empty( $this->post_type_label_singular ) ){
-					$this->set_post_type_label( $this->post_type_label_singular, $this->post_type_label_plural );
-				}
-
-				return $this->post_type_label_singular;
+			return $this->post_type_label_plural;
 		}
+		if ( empty( $this->post_type_label_singular ) ) {
+			$this->set_post_type_label( $this->post_type_label_singular, $this->post_type_label_plural );
+		}
+
+		return $this->post_type_label_singular;
 
 	}
 
@@ -379,18 +386,17 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	public function set_post_type_label( $singular = '', $plural = '' ) {
-
-		if( !$singular ){
+	public function set_post_type_label( $singular = '', $plural = '' ) : void {
+		if ( ! $singular ) {
 			$singular = str_replace( '_', ' ', $this->post_type );
 			$singular = ucwords( $singular );
 		}
 
-		if( !$plural ){
+		if ( ! $plural ) {
 			$end = substr( $singular, - 1 );
-			if( $end == 's' ){
+			if ( 's' === $end ) {
 				$plural = ucwords( $singular . 'es' );
-			} elseif( $end == 'y' ) {
+			} elseif ( 'y' === $end ) {
 				$plural = ucwords( rtrim( $singular, 'y' ) . 'ies' );
 			} else {
 				$plural = ucwords( $singular . 's' );
@@ -398,7 +404,7 @@ class Custom_Post_Type {
 
 		}
 		$this->post_type_label_singular = $singular;
-		$this->post_type_label_plural = $plural;
+		$this->post_type_label_plural   = $plural;
 	}
 
 
@@ -410,7 +416,7 @@ class Custom_Post_Type {
 	 * @return array|null
 	 */
 	protected function rewrites() : ?array {
-		if( empty( $this->rewrite ) ){
+		if ( empty( $this->rewrite ) ) {
 			return [
 				'slug'       => $this->get_slug(),
 				'with_front' => false,
@@ -422,19 +428,23 @@ class Custom_Post_Type {
 
 
 	/**
-	 * Return the slug of the supertype
+	 * Return the slug of this post type, formatted appropriately
 	 *
-	 * @return string supertype slug
+	 * @return string
 	 */
-	public function get_slug() {
-		return $this->slug ? $this->slug : $this->post_type;
+	public function get_slug() : string {
+		if ( empty( $this->slug ) ) {
+			$this->slug = strtolower( str_replace( ' ', '-', $this->post_type ) );
+		}
+
+		return $this->slug;
 	}
 
 
 	/**
 	 * Add Administrator Capabilities
 	 *
-	 * If the capability_type is not post it has custom cababilites
+	 * If the capability_type is not post it has custom capabilities
 	 * We need to add these to the administrators of the site
 	 *
 	 * This gets called during $this->register_post_type()
@@ -445,87 +455,86 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	protected function add_administrator_capabilities( $post_type ) : void  {
-		static::$registry[ $this->post_type ] = \get_class( $this );
-
-		if( $post_type->capability_type === 'post' || is_wp_error( $post_type ) ){
+	protected function add_administrator_capabilities( $post_type ) : void {
+		if ( ! $this->auto_admin_caps || $post_type->capability_type === 'post' || is_wp_error( $post_type ) ) {
 			return;
 		}
 
-		if( !$this->auto_admin_caps ){
+		$previous = \get_option( self::CUSTOM_CAPS_OPTION, [] );
+		if ( isset( $previous[ $post_type->capability_type ] ) ) {
+			return;
+		}
+		$admin = \get_role( 'administrator' );
+		if ( null === $admin ) {
 			return;
 		}
 
-		$previous = get_option( self::CUSTOM_CAPS_OPTION, [] );
-		if( in_array( $post_type->capability_type, $previous ) ){
-			return;
-		}
-
-		$admin = get_role( 'administrator' );
-		foreach( $post_type->cap as $cap ){
+		foreach ( (array) $post_type->cap as $cap ) {
 			$admin->add_cap( $cap );
 		}
 
-		$previous[] = $post_type->capability_type;
+		$previous[ $post_type->capability_type ] = 1;
 		update_option( self::CUSTOM_CAPS_OPTION, $previous );
 
 	}
 
 
 	/**
-	 * The the post type defined by this class
+	 * Get a registered post type object
 	 *
-	 * @param string $format Either 'id' (for the post type ID) or 'object' (for the WP post type object)
+	 * @param string $post_type
 	 *
-	 * @return object|string
+	 * @since 1.6.0
+	 *
+	 * @return Custom_Post_Type|Custom_Post_Type_Extended|null
 	 */
-	public function get_post_type( $format = 'id' ) {
-		switch ( $format ){
-			case 'object':
-				return get_post_type_object( $this->post_type );
-			default:
-				return $this->post_type;
+	public function get_post_type( $post_type ) {
+		if ( isset( self::$registry[ $post_type ] ) ) {
+			return self::$registry[ $post_type ];
 		}
+
+		return null;
 	}
 
 
 	/**
-	 * Bulk Edit Messages
-	 *
 	 * Filters the bulk edit message to match the custom post type
 	 *
-	 * @uses added to the post_row_actions filter by self::register_post_type
+	 * @filter bulk_post_updated_messages 10 2
 	 *
+	 * @param array $bulk_messages
+	 * @param array $bulk_counts
+	 *
+	 * @since 1.6.0
 	 *
 	 * @return array
-	 *
 	 */
-	public function bulk_edit_messages( $bulk_messages, $bulk_counts ) {
+	public function adjust_bulk_edit_messages( array $bulk_messages, array $bulk_counts ) : array {
 		$bulk_messages[ $this->post_type ] = [
 			'updated'   => _n(
 				'%s ' . $this->post_type_label_singular . ' updated.',
 				'%s ' . $this->post_type_label_plural . ' updated.',
-				$bulk_counts[ 'updated' ]
+				$bulk_counts['updated']
 			),
 			'locked'    => _n(
 				'%s ' . $this->post_type_label_singular . ' not updated, somebody is editing it.',
 				'%s ' . $this->post_type_label_plural . ' not updated, somebody is editing them.',
-				$bulk_counts[ 'locked' ]
+				$bulk_counts['locked']
 			),
 			'deleted'   => _n(
 				'%s ' . $this->post_type_label_singular . ' permanently deleted.',
 				'%s ' . $this->post_type_label_plural . ' permanently deleted.',
-				$bulk_counts[ 'deleted' ]
+				$bulk_counts['deleted']
 			),
 			'trashed'   => _n(
 				'%s ' . $this->post_type_label_singular . ' moved to the Trash.',
 				'%s ' . $this->post_type_label_plural . ' moved to the Trash.',
-				$bulk_counts[ 'trashed' ]
+				$bulk_counts['trashed']
 			),
 			'untrashed' => _n(
 				'%s ' . $this->post_type_label_singular . ' restored from the Trash.',
 				'%s ' . $this->post_type_label_plural . ' restored from the Trash.',
-				$bulk_counts[ 'untrashed' ]
+				$bulk_counts['untrashed']
 			),
 		];
 
@@ -534,28 +543,29 @@ class Custom_Post_Type {
 
 
 	/**
-	 * Post Updated Messages
-	 *
 	 * Filter the post updated messages so they match this post type
 	 * Smart enough to handle public and none public types
 	 *
+	 * @filter post_updated_messages 10 1
 	 *
 	 * @param array $messages
+	 *
+	 * @since 1.6.0
 	 *
 	 * @return array
 	 *
 	 */
-	public function post_updated_messages( $messages = [] ) {
+	public function adjust_post_updated_messages( array $messages = [] ) : array {
 		global $post, $post_ID;
 
 		$lower_label = strtolower( $this->get_post_type_label() );
 
-		if( $this->public === false || $this->publicly_queryable === false ){
+		if ( $this->public === false || $this->publicly_queryable === false ) {
 			$view_link = $preview_link = false;
 		} else {
-			$url = esc_url( get_permalink( $post_ID ) );
-			$preview_url = add_query_arg( 'preview', 'true', $url );
-			$view_link = '<a href="' . $url . '">' . sprintf( __( 'View the %s...' ), $this->get_post_type_label(), $lower_label ) . '</a>';
+			$url          = esc_url( get_permalink( $post_ID ) );
+			$preview_url  = add_query_arg( 'preview', 'true', $url );
+			$view_link    = '<a href="' . $url . '">' . sprintf( __( 'View the %s...' ), $this->get_post_type_label(), $lower_label ) . '</a>';
 			$preview_link = '<a target="_blank" href="' . $preview_url . '">' . sprintf( 'Preview %s', $lower_label ) . '</a>';
 
 		}
@@ -566,8 +576,8 @@ class Custom_Post_Type {
 			2  => __( 'Custom field updated.' ),
 			3  => __( 'Custom field deleted.' ),
 			4  => sprintf( __( '%s updated.' ), $this->get_post_type_label() ),
-			5  => isset( $_GET[ 'revision' ] ) ? sprintf( __( '%s restored to revision from %s' ),
-				$this->get_post_type_label(), wp_post_revision_title( (int) $_GET[ 'revision' ], false ) ) : false,
+			5  => isset( $_GET['revision'] ) ? sprintf( __( '%s restored to revision from %s' ),
+				$this->get_post_type_label(), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
 			6  => sprintf( __( '%s published. %s' ), $this->get_post_type_label(),
 				$view_link ),
 			7  => sprintf( __( '%s saved.' ), $this->get_post_type_label() ),
@@ -595,9 +605,9 @@ class Custom_Post_Type {
 	 *
 	 * @return string
 	 */
-	public function get_post_type_archive_label( $title ) {
-		if( is_post_type_archive( $this->post_type ) ){
-			if( $this->archive_label ){
+	public function get_post_type_archive_label( $title ) : string {
+		if ( is_post_type_archive( $this->post_type ) ) {
+			if ( $this->archive_label ) {
 				$title = $this->archive_label;
 			} else {
 				$title = $this->get_post_type_label( 'plural' );
@@ -609,8 +619,6 @@ class Custom_Post_Type {
 
 
 	/**
-	 * Add Support
-	 *
 	 * Adds post type support.
 	 * Send a single feature or array of features
 	 *
@@ -620,17 +628,14 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	public function add_support( $features = [] ) {
+	public function add_support( $features ) : void {
 		$features = (array) $features;
-
 		$this->supports = array_unique( array_merge( $this->supports, $features ) );
 
 	}
 
 
 	/**
-	 * Remove Support
-	 *
 	 * Removes post type support.
 	 * Send a single feature or array of features
 	 *
@@ -638,26 +643,22 @@ class Custom_Post_Type {
 	 *
 	 * @param array|string $features
 	 *
-	 * @return array
+	 * @return void
 	 */
-	public function remove_support( $features = [] ) {
+	public function remove_support( $features ) : void {
 		$features = (array) $features;
-
 		$this->supports = array_diff( $this->supports, $features );
-
-		return $this->supports;
 	}
 
 
 	/**
-	 *
-	 * @param $post_type
+	 * @param string $post_type
 	 *
 	 * @static
 	 *
-	 * @return \Lipe\Lib\Post_Type\Custom_Post_Type
+	 * @return Custom_Post_Type|Custom_Post_Type_Extended
 	 */
-	public static function factory( $post_type ){
-		return new self( $post_type );
+	public static function factory( string $post_type ) {
+		return new static( $post_type );
 	}
 }
