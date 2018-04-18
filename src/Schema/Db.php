@@ -3,36 +3,26 @@
 namespace Lipe\Lib\Schema;
 
 /**
- * Db
- *
  * Interact with custom Database Tables
  *
- * Set the necessary class vars in the child class like so
+ * Set the necessary class constants in the child class like so
  *
- * protected $db_option = "auth_db";
- * protected $db_version = 1;
+ * protected const NAME = 'personal'; //table name without prefix (prefix is set during construct)
+ * protected const ID_FIELD = 'personal_id';
+ * protected const DB_OPTION = "auth_db";
+ * protected const DB_VERSION = 1;
  *
- * protected $columns = array()
+ * protected const COLUMNS = []
  *
- * $this->id_field = "ID";
+ * @since 04/18/2018
  *
- * private function __construct(){
- * $this->table = $wpdb->prefix . 'saved_items';
- *
- * if( $this->update_required() ){
- * $this->run_updates();
- * }
- * }
  *
  */
 abstract class Db {
 
-	protected $table = null;
-
-	protected $id_field = null;
+	protected $table;
 
 	/**
-	 * Columns
 	 *
 	 * Db columns with corresponding data type
 	 * Used to sanitize queries
@@ -50,33 +40,40 @@ abstract class Db {
 	 *
 	 * @var array
 	 */
-	protected $columns = [];
+	protected const COLUMNS = [];
 
+	public function __construct() {
+		if( \defined( 'static::NAME' ) ){
+			return;
+		}
+		global $wpdb;
+		$this->table = $wpdb->prefix . static::NAME;
 
-	/**
-	 * get_id_field
-	 *
-	 *
-	 * @return string
-	 */
-	public function get_id_field() {
-		return $this->id_field;
+		if( $this->update_required() ){
+			$this->run_updates();
+		}
 	}
 
 
 	/**
-	 * get_table
-	 *
 	 *
 	 * @return string
 	 */
-	public function get_table() {
+	public function get_id_field() : string {
+		return static::ID_FIELD ?? $this->id_field;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 */
+	public function get_table() : string {
 		return $this->table;
 	}
 
 
 	/**
-	 * get
 	 *
 	 * Retrieve data from this db table
 	 *
@@ -100,58 +97,59 @@ abstract class Db {
 	public function get( $columns, $id_or_wheres = null, $count = null, $order_by = null ) {
 		global $wpdb;
 
-		if( is_array( $columns ) ){
+		if ( \is_array( $columns ) ) {
 			$columns = implode( ',', $columns );
 		}
 
-		if( is_numeric( $id_or_wheres ) ){
-			$id_or_wheres = [ $this->id_field => $id_or_wheres ];
-			$count = 1;
+		if ( is_numeric( $id_or_wheres ) ) {
+			$id_or_wheres = [ $this->get_id_field() => $id_or_wheres ];
+			$count        = 1;
 		}
 
-		$sql = "SELECT $columns FROM $this->table";
+		$sql = "SELECT $columns FROM {$this->get_table()}";
 
-		if( $id_or_wheres != null ){
+		if ( null !== $id_or_wheres ) {
+			$wheres        = [];
+			$values        = [];
 			$where_formats = $this->get_formats( $id_or_wheres );
-			foreach( $id_or_wheres as $column => $value ){
-				if( !empty( $value ) ){
+			foreach ( $id_or_wheres as $column => $value ) {
+				if ( ! empty( $value ) ) {
 					$wheres[ $column ] = "`$column` = " . array_shift( $where_formats );
-					$values[] = $value;
+					$values[]          = $value;
 				}
 			}
 
-			$where = " WHERE " . implode( ' AND ', $wheres );
-			$sql .= $wpdb->prepare( $where, $values );
+			$where = ' WHERE ' . implode( ' AND ', $wheres );
+			$sql   .= $wpdb->prepare( $where, $values );
 		}
 
-		if( $order_by != null ){
+		if ( null !== $order_by ) {
 			$sql .= " ORDER BY $order_by";
 		}
 
-		if( $count != null ){
+		if ( null !== $count ) {
 			$sql .= " LIMIT $count";
 		}
 
-		if( "*" == $columns || count( explode( ',', $columns ) ) > 1 ){
-			if( $count === 1 ){
+		if ( '*' === $columns || \substr_count( $columns, ',' ) > 1 ) {
+			if ( $count === 1 ) {
 				return $wpdb->get_row( $sql );
-			} else {
-				return $wpdb->get_results( $sql );
 			}
 
-		} else {
-			if( $count === 1 ){
-				return $wpdb->get_var( $sql );
-			} else {
-				return $wpdb->get_col( $sql );
-			}
+			return $wpdb->get_results( $sql );
+
 		}
+		if ( $count === 1 ) {
+			return $wpdb->get_var( $sql );
+		}
+
+		return $wpdb->get_col( $sql );
+
 
 	}
 
 
 	/**
-	 * get_formats
 	 *
 	 * Get the sprintf style formats matching an array of columns
 	 *
@@ -161,14 +159,15 @@ abstract class Db {
 	 *
 	 * @return array
 	 */
-	protected function get_formats( $columns ) {
-		foreach( $columns as $column => $value ){
-			if( $column == $this->id_field ){
-				$formats[] = "%d";
-			} elseif( !empty( $this->columns[ $column ] ) ) {
-				$formats[] = $this->columns[ $column ];
+	protected function get_formats( array $columns ) : array {
+		$formats = [];
+		foreach ( $columns as $column => $value ) {
+			if ( $column === $this->get_id_field() ) {
+				$formats[] = '%d';
+			} elseif ( ! empty( $this->get_columns()[ $column ] ) ) {
+				$formats[] = $this->get_columns()[ $column ];
 			} else {
-				$formats[] = "%s";
+				$formats[] = '%s';
 			}
 		}
 
@@ -177,7 +176,6 @@ abstract class Db {
 
 
 	/**
-	 * Add
 	 *
 	 * Add a row to the table
 	 *
@@ -192,7 +190,7 @@ abstract class Db {
 
 		$columns = $this->sort_columns( $columns );
 
-		if( $wpdb->insert( $this->table, $columns, $this->columns ) ){
+		if ( $wpdb->insert( $this->get_table(), $columns, $this->get_columns() ) ) {
 			return $wpdb->insert_id;
 		}
 
@@ -211,15 +209,15 @@ abstract class Db {
 	 *
 	 * @return array
 	 */
-	public function sort_columns( $columns ) {
+	protected function sort_columns( $columns ) : array {
 		$clean = [];
 
-		foreach( $this->columns as $column => $type ){
-			if( array_key_exists( $column, $columns ) ){
+		foreach ( $this->get_columns() as $column => $type ) {
+			if ( array_key_exists( $column, $columns ) ) {
 				$clean[ $column ] = $columns[ $column ];
 			} else {
 				//we are always doing default date stuff
-				if( $column != 'date' ){
+				if ( $column !== 'date' ) {
 					$clean[ $column ] = null;
 				}
 			}
@@ -230,56 +228,87 @@ abstract class Db {
 
 
 	/**
-	 * Remove
 	 *
 	 * Add a meta row will delete if exists
 	 *
 	 * @param int|array $id_or_wheres - row id or array or column => values to use as where
 	 *
-	 * @return void
+	 * @return int|false
 	 */
 	public function remove( $id_or_wheres ) {
 		global $wpdb;
 
-		if( is_numeric( $id_or_wheres ) ){
-			$id_or_wheres = [ $this->id_field => $id_or_wheres ];
+		if ( is_numeric( $id_or_wheres ) ) {
+			$id_or_wheres = [ $this->get_id_field() => $id_or_wheres ];
 		}
 
 		$formats = $this->get_formats( $id_or_wheres );
 
-		$wpdb->delete( $this->table, $id_or_wheres, $formats );
+		return $wpdb->delete( $this->get_table(), $id_or_wheres, $formats );
 
 	}
 
 
 	/**
-	 * Update
 	 *
 	 * @param int|array $id_or_wheres - row id or array or column => values to use as where
 	 * @param array     $columns      - data to change
 	 *
 	 * @see $this->columns for columns
 	 *
-	 * @return bool
+	 * @return int|bool - number of rows updated or false on error
 	 */
 	public function update( $id_or_wheres, $columns ) {
 		global $wpdb;
 
-		if( is_numeric( $id_or_wheres ) ){
-			$id_or_wheres = [ $this->id_field => $id_or_wheres ];
+		if ( is_numeric( $id_or_wheres ) ) {
+			$id_or_wheres = [ $this->get_id_field() => $id_or_wheres ];
 		}
 
 		$column_formats = $this->get_formats( $columns );
 
 		$formats = $this->get_formats( $id_or_wheres );
 
-		return $wpdb->update( $this->table, $columns, $id_or_wheres, $column_formats, $formats );
+		return $wpdb->update( $this->get_table(), $columns, $id_or_wheres, $column_formats, $formats );
 
 	}
 
 
 	/**
-	 * Run Updates
+	 *
+	 * @since 1.6.1
+	 *
+	 * @return array
+	 */
+	public function get_columns() : array {
+		return static::COLUMNS ?? $this->columns;
+	}
+
+	/**
+	 *
+	 * @since 1.6.1
+	 *
+	 * @return string
+	 */
+	protected function get_db_version() : string {
+		return static::DB_VERSION ?? $this->db_version;
+	}
+
+	/**
+	 *
+	 * @since 1.6.1
+	 *
+	 * @return string
+	 */
+	protected function get_db_option() : string {
+		return static::DB_OPTION ?? $this->db_option;
+	}
+
+
+
+
+
+	/**
 	 *
 	 * Run specified updates based on db version and update the option to match
 	 *
@@ -288,13 +317,13 @@ abstract class Db {
 	 *
 	 * @return void
 	 */
-	protected function run_updates() {
+	protected function run_updates() : void {
 		$this->create_table();
-		if( method_exists( $this, 'update_table' ) ){
+		if ( method_exists( $this, 'update_table' ) ) {
 			$this->update_table();
 		}
 
-		update_option( $this->db_option, $this->db_version );
+		update_option( $this-$this->get_db_option(), $this->get_db_version() );
 
 	}
 
@@ -302,7 +331,6 @@ abstract class Db {
 	/** Table creation *************************** */
 
 	/**
-	 * create_table
 	 *
 	 * Create the custom db table
 	 *
@@ -337,38 +365,34 @@ abstract class Db {
 	 *
 	 * @return bool
 	 */
-	protected function update_required() {
-		if( !isset( $this->db_option ) ){
-			trigger_error( "You must define a db_option in class extending db to use update_required" );
+	protected function update_required() : bool {
+		if ( \defined( 'static::DB_OPTION' ) && ! \property_exists( $this, 'db_option' ) ) {
+			trigger_error( 'You must define a "const DB_OPTION" in class extending db to use update_required' );
 
 			return false;
 		}
 
-		if( !isset( $this->db_version ) ){
-			trigger_error( "You must define a db_version in class extending db to use update_required" );
+		if ( \defined( 'static::DB_VERSION' ) && ! \property_exists( $this, 'db_version' ) ) {
+			trigger_error( 'You must define a "const DB_VERSION"  in class extending db to use update_required' );
 
 			return false;
 		}
 
-		if( $this->table == null ){
-			trigger_error( "You must define a table in class extending db to use update_required" );
+		if ( \defined( 'static::NAME' ) && ! \property_exists( $this, 'table' ) ) {
+			trigger_error( 'You must define a "const NAME" in class extending db to use update_required' );
 
 			return false;
 		}
 
-		if( $this->id_field == null ){
-			trigger_error( "You must define a table in class extending db to use update_required" );
+		if ( \defined( 'static::ID_FIELD' ) && ! \property_exists( $this, 'id_field' ) ) {
+			trigger_error( 'You must define a "const ID_FIELD" in class extending db to use update_required' );
 
 			return false;
 		}
 
-		$version = get_option( $this->db_option, 0.1 );
+		$version = get_option( $this->get_db_option(), 0.1 );
 
-		if( version_compare( $version, $this->db_version ) == - 1 ){
-			return true;
-		} else {
-			return false;
-		}
+		return version_compare( $version, $this->get_db_version(), '<' );
 	}
 
-} 
+}
