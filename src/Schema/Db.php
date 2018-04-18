@@ -153,9 +153,9 @@ abstract class Db {
 	 *
 	 * Get the sprintf style formats matching an array of columns
 	 *
-	 * @uses $this->columns
+	 * @uses Db::COLUMNS
 	 *
-	 * @param $columns
+	 * @param array $columns
 	 *
 	 * @return array
 	 */
@@ -181,7 +181,7 @@ abstract class Db {
 	 *
 	 * @param array $columns
 	 *
-	 * @see $this->columns for args
+	 * @see Db::COLUMNS
 	 *
 	 * @return int|bool - insert id on success or false
 	 */
@@ -203,7 +203,7 @@ abstract class Db {
 	 *
 	 * Sorts columns to match $this->columns for use with query sanitization
 	 *
-	 * @uses $this->columns;
+	 * @uses Db::COLUMNS
 	 *
 	 * @param array $columns
 	 *
@@ -254,7 +254,7 @@ abstract class Db {
 	 * @param int|array $id_or_wheres - row id or array or column => values to use as where
 	 * @param array     $columns      - data to change
 	 *
-	 * @see $this->columns for columns
+	 * @see Db::COLUMNS
 	 *
 	 * @return int|bool - number of rows updated or false on error
 	 */
