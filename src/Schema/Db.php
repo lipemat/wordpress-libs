@@ -40,10 +40,10 @@ abstract class Db {
 	 *
 	 * @var array
 	 */
-	protected const COLUMNS = [];
+	public const COLUMNS = [];
 
 	public function __construct() {
-		if( \defined( 'static::NAME' ) ){
+		if( ! \defined( 'static::NAME' ) ){
 			return;
 		}
 		global $wpdb;
@@ -185,7 +185,7 @@ abstract class Db {
 	 *
 	 * @return int|bool - insert id on success or false
 	 */
-	public function add( $columns ) {
+	public function add( array $columns ) {
 		global $wpdb;
 
 		$columns = $this->sort_columns( $columns );
