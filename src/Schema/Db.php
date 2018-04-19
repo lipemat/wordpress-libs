@@ -228,14 +228,22 @@ abstract class Db {
 
 
 	/**
-	 *
-	 * Add a meta row will delete if exists
+	 * @see Db::delete();
+	 * @deprecated in favor of Db::delete()
+	 */
+	public function remove( $id_or_wheres ) {
+		\_deprecated_function( 'Db::remove', '1.6.1', 'Db::delete' );
+	}
+
+	
+	/**
+	 * Delete a row from the database
 	 *
 	 * @param int|array $id_or_wheres - row id or array or column => values to use as where
 	 *
 	 * @return int|false
 	 */
-	public function remove( $id_or_wheres ) {
+	public function delete( $id_or_wheres ) {
 		global $wpdb;
 
 		if ( is_numeric( $id_or_wheres ) ) {
