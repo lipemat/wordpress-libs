@@ -235,11 +235,12 @@ abstract class Db {
 		\_deprecated_function( 'Db::remove', '1.6.1', 'Db::delete' );
 	}
 
-	
+
 	/**
 	 * Delete a row from the database
 	 *
 	 * @param int|array $id_or_wheres - row id or array or column => values to use as where
+	 * @since 1.6.1
 	 *
 	 * @return int|false
 	 */
