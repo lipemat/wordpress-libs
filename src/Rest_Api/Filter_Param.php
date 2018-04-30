@@ -44,23 +44,20 @@ class Filter_Param {
 	 * @return array $args.
 	 **/
 	public function add_filter_param( $args, $request ) : array {
-		if ( empty( $request['filter'] ) || ! \is_array( $request['filter'] ) ) {
-			return $args;
-		}
-
-		$filter = $request['filter'];
-
-		if ( isset( $filter['posts_per_page'] ) && ( (int) $filter['posts_per_page'] >= 1 && (int) $filter['posts_per_page'] <= 100 ) ) {
-			$args['posts_per_page'] = $filter['posts_per_page'];
-		}
-
 		global $wp;
 		$vars = apply_filters( 'query_vars', $wp->public_query_vars );
 
 		foreach ( $vars as $var ) {
-			if ( isset( $filter[ $var ] ) ) {
-				$args[ $var ] = $filter[ $var ];
+			if ( isset( $request['filter'][ $var ] ) ) {
+				$args[ $var ] = $request['filter'][ $var ];
+			} elseif ( isset( $_REQUEST[ $var ] ) ) {
+				$args[ $var ] = $_REQUEST[ $var ];
 			}
+		}
+
+		//limit to 100 no matter what
+		if ( isset( $args['posts_per_page'] ) && (int) $args['posts_per_page'] > 100 ) {
+			$args['posts_per_page'] = 100;
 		}
 
 		return $args;
