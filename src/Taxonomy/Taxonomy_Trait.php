@@ -8,7 +8,7 @@ use Lipe\Lib\Meta\Meta_Repo;
  * Trait Taxonomy_Trait
  *
  * @package Lipe\Lib\Taxonomy
- * @since 1.1.0
+ * @since   1.1.0
  */
 trait Taxonomy_Trait {
 
@@ -33,7 +33,7 @@ trait Taxonomy_Trait {
 
 
 	public function get_term() {
-		if( $this->term != null ){
+		if ( null !== $this->term ) {
 			return $this->term;
 		}
 		$this->term = get_term( $this->term_id );
@@ -43,19 +43,25 @@ trait Taxonomy_Trait {
 	}
 
 
+	public function get_id() : int {
+		return (int) $this->term_id;
+	}
+
+
 	/**
 	 *
 	 * @param string $key
-	 * @param mixed $default
+	 * @param mixed  $default
 	 *
 	 * @return mixed
 	 * @throws \Exception
 	 */
 	public function get_meta( string $key, $default = null ) {
 		$value = Meta_Repo::instance()->get_meta( $this->term_id, $key, 'term' );
-		if( null !== $default && empty( $value ) ){
+		if ( null !== $default && empty( $value ) ) {
 			return $default;
 		}
+
 		return $value;
 	}
 
