@@ -547,7 +547,7 @@ class Taxonomy {
 	 */
 	public function set_current_menu( $parent_file ) : string {
 		$screen = \get_current_screen();
-		if ( null === $screen ) {
+		if ( null === $screen || null === $this->show_in_menu ) {
 			return $parent_file;
 		}
 		if ( "edit-{$this->taxonomy}" === $screen->id && $this->taxonomy === $screen->taxonomy ) {
