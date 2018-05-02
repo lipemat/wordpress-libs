@@ -5,18 +5,25 @@ namespace Lipe\Lib\Rest_Api;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * Allows using any public wp_query argument to be added to the url
- * via a filter[<var>]=<value> param
+ * Allow using any public query_var as a rest api param.
+ *
+ * Will also bring back the deprecated "filter" rest api param, which
+ * is not necessary because you can use the arguments directly without wrapping
+ * them in filter, however this fixes backward compatibility for projects using the
+ * filter param.
  *
  * @uses    Run init() on this class before the rest_api_init hook fires.
+ *
+ * @example /wp-json/wp/v2/posts?cat=4
  * @example /wp-json/wp/v2/posts?filter[cat]=4
+ *
  *
  * @author  Mat Lipe
  * @since   1.7.0
  *
  * @package Lipe\Project\Rest_Api
  */
-class Filter_Param {
+class Query_Vars {
 	use Singleton;
 
 
@@ -30,28 +37,29 @@ class Filter_Param {
 	 **/
 	public function add_filters() : void {
 		foreach ( get_post_types( [ 'show_in_rest' => true ], 'objects' ) as $post_type ) {
-			add_filter( 'rest_' . $post_type->name . '_query', [ $this, 'add_filter_param' ], 10, 2 );
+			add_filter( 'rest_' . $post_type->name . '_query', [ $this, 'add_query_args' ], 10, 2 );
 		}
 	}
 
 
 	/**
-	 * Add the filter parameter
+	 * Add any public query args which exist in the current request.
+	 *
 	 *
 	 * @param  array            $args    The query arguments.
 	 * @param  \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return array $args.
+	 * @return array
 	 **/
-	public function add_filter_param( $args, $request ) : array {
+	public function add_query_args( $args, $request ) : array {
 		global $wp;
 		$vars = apply_filters( 'query_vars', $wp->public_query_vars );
 
 		foreach ( $vars as $var ) {
 			if ( isset( $request['filter'][ $var ] ) ) {
 				$args[ $var ] = $request['filter'][ $var ];
-			} elseif ( isset( $_REQUEST[ $var ] ) ) {
-				$args[ $var ] = $_REQUEST[ $var ];
+			} elseif ( isset( $request[ $var ] ) ) {
+				$args[ $var ] = $request[ $var ];
 			}
 		}
 
