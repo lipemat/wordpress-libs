@@ -13,11 +13,15 @@ use Lipe\Lib\Traits\Singleton;
  * @package Lipe\Lib\Util
  */
 class Zip {
-	use Singleton;
+	use Singleton {
+		init as protected singleton_init;
+	}
 
 	public const ACTION = 'zip';
-	public const POST_KEY = 'lipe/project/util/zip/key';
-	public const POST_URLS = 'lipe/project/util/zip/urls';
+
+	public const KEY = 'lipe/project/util/zip/key';
+	public const NAME = 'lipe/project/util/zip/name';
+	public const URLS = 'lipe/project/util/zip/urls';
 
 	private $file_name;
 	private $file_path;
@@ -26,8 +30,6 @@ class Zip {
 
 
 	protected function hook() : void {
-		Api::init_once();
-
 		add_action( 'lipe/lib/util/api_' . self::ACTION, [ $this, 'handle_request' ], 10, 0 );
 	}
 
@@ -41,14 +43,14 @@ class Zip {
 	 */
 	public function handle_request() : void {
 		$this->validate_request();
-		$this->build_zip( (array) $_POST[ self::POST_URLS ] );
+		$this->build_zip( (array) $_POST[ self::URLS ], $_POST[ self::NAME ] ?? null );
 	}
 
 
 	/**
 	 * Set all the paths we are going to work with
 	 *
-	 * @param array $files
+	 * @param array  $files
 	 * @param string $zip_name - optional name for the zip folder
 	 *
 	 * @return void
@@ -128,11 +130,11 @@ class Zip {
 	 * @return void
 	 */
 	private function validate_request() : void {
-		if ( empty( $_POST[ self::POST_KEY ] ) || ( self::get_key() !== $_POST[ self::POST_KEY ] ) ) {
+		if ( empty( $_POST[ self::KEY ] ) || ( self::get_key() !== $_POST[ self::KEY ] ) ) {
 			die( 'Incorrect Key Sent' );
 		}
 
-		if ( empty( $_POST[ self::POST_URLS ] ) ) {
+		if ( empty( $_POST[ self::URLS ] ) ) {
 			die( 'No Urls Specified' );
 		}
 	}
@@ -176,15 +178,17 @@ class Zip {
 	 * Get an array of data to send to this zip service to render a zip file
 	 *
 	 * @param array $urls - array of urls to be added to the zip file
+	 * @param string $name - name of the zip when downloaded
 	 *
 	 * @static
 	 *
 	 * @return array
 	 */
-	public static function get_post_data_to_send( array $urls ) : array {
+	public static function get_post_data_to_send( array $urls, ?string $name = null ) : array {
 		return [
-			self::POST_KEY  => self::get_key(),
-			self::POST_URLS => $urls,
+			self::KEY  => self::get_key(),
+			self::NAME => $name,
+			self::URLS => $urls,
 		];
 	}
 
@@ -200,4 +204,16 @@ class Zip {
 		return Api::in()->get_api_url( self::ACTION );
 	}
 
+
+	/**
+	 * We need to load the api if we are loading this class
+	 *
+	 * @static
+	 *
+	 * @return void
+	 */
+	public static function init() : void {
+		Api::init_once();
+		self::singleton_init();
+	}
 }
