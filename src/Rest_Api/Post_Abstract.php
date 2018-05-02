@@ -16,8 +16,6 @@ namespace Lipe\Lib\Rest_Api;
 abstract class Post_Abstract {
 
 	/**
-	 * taxonomies
-	 *
 	 * which taxonomies will show in object
 	 *
 	 * @var array
@@ -25,8 +23,6 @@ abstract class Post_Abstract {
 	protected $taxonomies = [];
 
 	/**
-	 * allowed_meta_keys
-	 *
 	 * Which keys may be queried against
 	 *
 	 * @var array
@@ -34,17 +30,16 @@ abstract class Post_Abstract {
 	protected $allowed_meta_keys = [];
 
 	/**
-	 * related
-	 *
-	 * Which connected may be queried against
+	 * Which connection types may be queried against
 	 *
 	 * @var array
 	 */
 	protected $related = [];
 
 
-	public function hook() {
+	public function hook() : void {
 		add_action( 'rest_api_init', [ $this, 'add_fields' ] );
+		add_filter( 'rest_prepare_' . static::POST_TYPE, [ $this, 'add_stripped_content' ], 10, 3 );
 		add_filter( 'rest_prepare_' . static::POST_TYPE, [ $this, 'add_stripped_content' ], 10, 3 );
 
 		add_filter( 'rest_' . static::POST_TYPE . '_query', [ $this, 'allow_meta_queries' ], 10, 2 );
@@ -52,8 +47,7 @@ abstract class Post_Abstract {
 	}
 
 
-	public function add_fields() {
-
+	public function add_fields() : void {
 		register_rest_field( static::POST_TYPE, 'thumbnail', [
 			'get_callback' => [ $this, 'render_thumbnail' ],
 		] );
@@ -65,41 +59,37 @@ abstract class Post_Abstract {
 		register_rest_field( static::POST_TYPE, 'terms', [
 			'get_callback' => [ $this, 'render_terms' ],
 		] );
-
 	}
 
 
 	public function add_stripped_content( $response, $post, $request ) {
 		$content = $post->post_content;
-		$content = str_replace( PHP_EOL, " ", $content );
-		$content = str_replace( "  ", " ", $content );
+		$content = str_replace( [ PHP_EOL, '  ' ], ' ', $content );
 
-		$response->data[ 'content' ][ 'stripped' ] = wp_strip_all_tags( $content );
+		$response->data['content']['stripped'] = wp_strip_all_tags( $content );
 
 		return $response;
 	}
 
 
 	public function render_thumbnail( $object, $field_name, $request ) {
-		return get_the_post_thumbnail_url( $object[ 'id' ] );
+		return get_the_post_thumbnail_url( $object['id'] );
 	}
 
 
 	public function render_terms( $object, $field_name, $request ) {
-		$terms = wp_get_post_terms( $object[ 'id' ], $this->taxonomies );
-
-		return $terms;
+		return wp_get_post_terms( $object['id'], $this->taxonomies );
 	}
 
 
 	public function render_meta( $object, $field_name, $request ) {
-		$meta = get_post_meta( $object[ 'id' ] );
+		$meta = get_post_meta( $object['id'] );
 		ksort( $meta );
-		foreach( $meta as $_key => $_item ){
-			if( is_protected_meta( $_key, 'post' ) ){
+		foreach ( (array) $meta as $_key => $_item ) {
+			if ( is_protected_meta( $_key, 'post' ) ) {
 				unset( $meta[ $_key ] );
 			} else {
-				if( is_array( $meta[ $_key ] ) && count( $meta[ $_key ] ) === 1 ){
+				if ( \is_array( $meta[ $_key ] ) && \count( $meta[ $_key ] ) === 1 ) {
 					$meta[ $_key ] = maybe_unserialize( array_shift( $meta[ $_key ] ) );
 				}
 			}
@@ -110,15 +100,15 @@ abstract class Post_Abstract {
 
 
 	public function allow_meta_queries( $query_args, $request ) {
-		foreach( $this->allowed_meta_keys as $_key ){
-			if( isset( $request[ $_key ] ) ){
+		foreach ( $this->allowed_meta_keys as $_key ) {
+			if ( isset( $request[ $_key ] ) ) {
 				$meta_query = [
 					'key'   => $_key,
 					'value' => $request[ $_key ],
 				];
 				//It's possible the key does not exist yet so a check for false
 				//should also check if not exists using a sub meta query
-				if( $request[ $_key ] == "0" ){
+				if ( false === (bool) $request[ $_key ] ) {
 					$meta_query = [
 						'relation' => 'OR',
 						$meta_query,
@@ -130,7 +120,7 @@ abstract class Post_Abstract {
 					];
 				}
 
-				$query_args[ 'meta_query' ][] = $meta_query;
+				$query_args['meta_query'][] = $meta_query;
 			}
 		}
 
@@ -139,11 +129,11 @@ abstract class Post_Abstract {
 
 
 	public function allow_related_queries( $query_args, $request ) {
-		foreach( $this->related as $_connection ){
-			if( isset( $request[ $_connection ] ) ){
-				$query_args[ 'connected_type' ] = $_connection;
-				$query_args[ 'connected_items' ] = $request[ $_connection ];
-				$query_args[ 'suppress_filters' ] = false;
+		foreach ( $this->related as $_connection ) {
+			if ( isset( $request[ $_connection ] ) ) {
+				$query_args['connected_type']   = $_connection;
+				$query_args['connected_items']  = $request[ $_connection ];
+				$query_args['suppress_filters'] = false;
 			}
 		}
 

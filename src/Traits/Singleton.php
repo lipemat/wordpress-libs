@@ -55,10 +55,10 @@ trait Singleton {
 	 *
 	 * @static
 	 *
-	 * @return $this
+	 * @return static
 	 */
 	public static function in() {
-		return self::instance();
+		return static::instance();
 	}
 
 
@@ -66,7 +66,7 @@ trait Singleton {
 	 *
 	 * @static
 	 *
-	 * @return $this
+	 * @return static
 	 */
 	public static function instance() {
 		if( !is_a( static::$instance, __CLASS__ ) ){
