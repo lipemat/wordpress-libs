@@ -56,9 +56,9 @@ class Zip {
 	protected function set_paths( array $files, ?string $zip_name = null ) : void {
 		$this->file_name = md5( implode( '|', $files ) );
 		$this->file_path = sys_get_temp_dir() . '/' . $this->file_name;
+		$this->zip_path  = $this->file_path . '/' . $this->file_name;
+
 		$this->zip_name = $zip_name ?? $this->file_name;
-		$this->zip_name .= ' - ' . \count( $files ) . '.zip';
-		$this->zip_path  = $this->file_path . '/' . $this->zip_name;
 	}
 
 
@@ -145,8 +145,12 @@ class Zip {
 	 */
 	private function serve_existing_file() : void {
 		if ( file_exists( $this->zip_path ) ) {
+			header( 'Pragma: public' );
+			header( 'Expires: 0' );
+			header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+			header( 'Cache-Control: private', false );
 			header( 'Content-Type: application/zip' );
-			header( 'Content-disposition: attachment; filename=' . $this->zip_name );
+			header( "Content-disposition: attachment; filename='{$this->zip_name}.zip'" );
 			header( 'Content-Length: ' . filesize( $this->zip_path ) );
 			readfile( $this->zip_path );
 
