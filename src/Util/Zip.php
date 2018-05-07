@@ -167,7 +167,7 @@ class Zip {
 			header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
 			header( 'Cache-Control: private', false );
 			header( 'Content-Type: application/zip' );
-			header( "Content-disposition: attachment; filename='{$this->zip_name}.zip'" );
+			header( "Content-disposition: attachment; filename={$this->zip_name}.zip" );
 			header( 'Content-Length: ' . filesize( $this->zip_path ) );
 			readfile( $this->zip_path );
 
