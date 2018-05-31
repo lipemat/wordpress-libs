@@ -151,9 +151,9 @@ class Query_Var extends Argument_Abstract {
 	 * @param string $query_var
 	 * @param string $meta_key
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Query_Var_Shared
+	 * @return Query_Var_Shared
 	 */
-	public function meta_exits( $query_var, $meta_key ) {
+	public function meta_exists( $query_var, $meta_key ) : Query_Var_Shared {
 		$_args = [
 			'query_var'   => $query_var,
 			'meta_exists' => $meta_key,

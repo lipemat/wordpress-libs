@@ -5,10 +5,25 @@ namespace Lipe\Lib\Util;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * Zip
+ * Zip Service
+ *
+ * May be used directly with PHP via
+ * Zip::in()->build_zip( [ $url, $url ], $zip_name );
+ * To serve a file to the browser.
+ *
+ * Or via Ajax
+ * Zip::init_once();
+ * $js_endpoint = Zip::in()->get_url_for_endpoint()
+ * $js_config = Zip::in()->get_post_data_to_send( array $urls );
+ * $.post( $js_endpoint, $js_config);
+ *
  *
  * @author  Mat Lipe
  * @since   1.7.0
+ *
+ * @example Zip::in()->build_zip( [ $url, $url ], $zip_name );
+
+ *
  *
  * @package Lipe\Lib\Util
  */
@@ -152,7 +167,7 @@ class Zip {
 			header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
 			header( 'Cache-Control: private', false );
 			header( 'Content-Type: application/zip' );
-			header( "Content-disposition: attachment; filename='{$this->zip_name}.zip'" );
+			header( "Content-disposition: attachment; filename={$this->zip_name}.zip" );
 			header( 'Content-Length: ' . filesize( $this->zip_path ) );
 			readfile( $this->zip_path );
 
