@@ -158,6 +158,8 @@ class Box {
 	 * This parameter is for post alternate-context metaboxes only.
 	 * To output the fields 'naked' (without a postbox wrapper/style)
 	 *
+	 * @note Must set title of box to false
+	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#context
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#remove_box_wrap
 	 *
