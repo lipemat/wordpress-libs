@@ -15,6 +15,43 @@ use Lipe\Lib\Traits\Singleton;
 class Actions {
 	use Singleton;
 
+	/**
+	 * Add a callable to multiple actions at once
+	 *
+	 * @since 1.9.0
+	 *
+	 * @param array    $actions
+	 * @param callable $callable
+	 * @param int      $priority
+	 * @param int      $accepted_args
+	 *
+	 * @return void
+	 */
+	public function add_action_all( array $actions, callable $callable, int $priority = 10, int $accepted_args = 1 ) : void {
+		array_map( function ( $action ) use ( $callable, $priority, $accepted_args ) {
+			add_action( $action, $callable, $priority, $accepted_args );
+		}, $actions );
+	}
+
+
+	/**
+	 * Add a callable to multiple filters at once
+	 *
+	 * @since 1.9.0
+	 *
+	 * @param array    $filters
+	 * @param callable $callable
+	 * @param int      $priority
+	 * @param int      $accepted_args
+	 *
+	 * @return void
+	 */
+	public function add_filter_all( array $filters, callable $callable, int $priority = 10, int $accepted_args = 1 ) : void {
+		array_map( function ( $action ) use ( $callable, $priority, $accepted_args ) {
+			add_filter( $action, $callable, $priority, $accepted_args );
+		}, $filters );
+	}
+
 
 	/**
 	 * Add an filter which will only fire one time no matter how many times
