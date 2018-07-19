@@ -2,6 +2,7 @@
 
 namespace Lipe\Project\Rest_Api;
 
+use Lipe\Lib\Rest_Api\Post_Abstract;
 use Lipe\Project\Post_Types\Activities;
 use Lipe\Project\Taxonomies\ActivityCategories;
 use Lipe\Project\Taxonomies\AgeRange;
