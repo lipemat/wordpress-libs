@@ -3,11 +3,10 @@
 #######################################################################################
 #
 # This script is setup for PHP 7.2 .git/hooks/pre-commit
-# It only works for the root of the project .git/hooks/pre-commit
-# @see pre-commit-submodules for sub-modules
+# Change the PHP variable to use a specific path/or php version
 #
 #####################################################################################
-PHP='D:/xampp/php-7.2/php'
+PHP='php'
 PROJECT="."
 
 ## Fix windows paths
