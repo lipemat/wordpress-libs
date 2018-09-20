@@ -3,6 +3,7 @@
 namespace Lipe\Lib\Theme;
 
 use Lipe\Lib\Traits\Singleton;
+use Lipe\Lib\Util\Actions;
 
 class Styles {
 	use Singleton;
@@ -11,34 +12,34 @@ class Styles {
 	/**
 	 * You can set it in the wp-config or some dynamic way using grunt like so
 	 * define( 'SCRIPTS_VERSION', '9999' );
-     *
+	 *
 	 * OR
-     *
+	 *
 	 * Beanstalk adds a .revision file to deployments. This grabs that
 	 * revision and returns it.
 	 * You will find a 'post-commit' script in the /dev
-     * folder which may be added to your .git/hooks directory to automatically generate
-     * this .revision file locally on each commit. In which case you will likely want to
-     * git ignore it.
-     *
-     * If neither the constant nor the .revision is available this will
-     * return null which false back to the WP version when cueing scripts
-     * and styles
+	 * folder which may be added to your .git/hooks directory to automatically generate
+	 * this .revision file locally on each commit. In which case you will likely want to
+	 * git ignore it.
+	 *
+	 * If neither the constant nor the .revision is available this will
+	 * return null which false back to the WP version when queuing scripts
+	 * and styles
 	 *
 	 * @return null|string
 	 */
 	public function get_version() : ?string {
 		static $version = null;
-		if( $version !== null ){
+		if ( null !== $version ) {
 			return $version;
 		}
 
-		if( \defined( 'SCRIPTS_VERSION' ) ){
+		if ( \defined( 'SCRIPTS_VERSION' ) ) {
 			$version = SCRIPTS_VERSION;
 		} else {
 			//beanstalk style
-			$file = $_SERVER[ 'DOCUMENT_ROOT' ] . '/.revision';
-			if( \file_exists( $file ) ){
+			$file = isset( $_SERVER['DOCUMENT_ROOT'] ) ? sanitize_key( $_SERVER['DOCUMENT_ROOT'] ) : '' . '/.revision';
+			if ( \file_exists( $file ) ) {
 				$version = \trim( \file_get_contents( $file ) );
 			}
 		}
@@ -58,11 +59,11 @@ class Styles {
 	 * @return void
 	 */
 	public function live_reload( bool $admin_also = false ) : void {
-		if( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ){
+		if ( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			\add_action( 'wp_enqueue_scripts', function () {
 				\wp_enqueue_script( 'livereload', '//localhost:35729/livereload.js', [], \time(), true );
 			} );
-			if( $admin_also ){
+			if ( $admin_also ) {
 				\add_action( 'admin_enqueue_scripts', function () {
 					\wp_enqueue_script( 'livereload', '//localhost:35729/livereload.js', [], \time(), true );
 				} );
@@ -75,39 +76,40 @@ class Styles {
 	 * Add Font
 	 *
 	 * Add a google font the head of the page in the front end and admin
-     * To use other providers such as typekit see @link and create custom
-     * This method is for google fonts only
-     * @link https://github.com/typekit/webfontloader
-     *
+	 * To use other providers such as typekit see @link and create custom
+	 * This method is for google fonts only
+	 *
+	 * @link    https://github.com/typekit/webfontloader
+	 *
 	 * @param string|array $families - the family to include
 	 *
 	 * @example add_font( 'Droid Serif,Oswald' );
 	 *
-	 * @uses   Must be called before the 'wp_head' hook fires
+	 * @uses    Must be called before the 'wp_head' hook fires
 	 */
 	public function add_font( $families ) : void {
-		if( \is_array( $families ) ){
+		if ( \is_array( $families ) ) {
 			$families = \implode( "','", $families );
 		}
 
 		\ob_start();
 		?>
-        <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
-        <script>
+		<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+		<script>
 			WebFont.load({
 				google: {
-					families : ['<?php echo $families; ?>']}
+					families: ['<?= esc_js( $families ); ?>']
 				}
 			})
-        </script>
+		</script>
 		<?php
 		$output = \ob_get_clean();
+		Actions::in()->add_action_all( [
+			'wp_head',
+			'admin_print_scripts',
+		], function () use ( $output ) {
+			echo wp_kses( $output, [ 'script' => [ 'src' => [] ] ] );
+		} );
 
-		\add_action( 'wp_head', function () use ( $output ) {
-			echo $output;
-		} );
-		\add_action( 'admin_print_scripts', function () use ( $output ) {
-			echo $output;
-		} );
 	}
 }
