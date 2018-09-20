@@ -3,7 +3,13 @@
 namespace Lipe\Lib\Util;
 
 /**
- * Class_Names
+ * Conditionally add css classes to an element
+ *
+ * Mirrored after npm classnames
+ * @link https://www.npmjs.com/package/classnames
+ *
+ * @example $class = new Class_Names( [ 'top' => false, 'bottom' => true ] ); //echo $class; outputs "bottom"
+ * @example $class = new Class_Names( [ 'top', 'bottom' ] ); //"echo $class; outputs top bottom"
  *
  * @author  Mat Lipe
  * @since   1.4.0
