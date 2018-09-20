@@ -163,7 +163,7 @@ class Options_Page extends Box {
 	 * @param  string $title
 	 */
 	public function __construct( $id, $title ) {
-		if( null === $this->option_key ){
+		if ( null === $this->option_key ) {
 		    $this->option_key = $id;
 		}
 		parent::__construct( $id, [ 'options-page' ], $title );

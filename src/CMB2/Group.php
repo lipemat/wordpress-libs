@@ -110,7 +110,7 @@ class Group extends Field {
 	 * @throws \LogicException
 	 */
 	public function add_field( Field $field ) : void {
-		if( null === $this->box->cmb ){
+		if ( null === $this->box->cmb ) {
 			throw new \LogicException( 'You must add the group to the box before you add fields to the group.' );
 		}
 		$box = $this->box->get_box();
@@ -130,7 +130,7 @@ class Group extends Field {
 	 */
 	public function get_field_args() : array {
 		$args = parent::get_field_args();
-		unset( $args[ 'box' ], $args[ 'fields' ] );
+		unset( $args['box'], $args['fields'] );
 
 		return $args;
 	}

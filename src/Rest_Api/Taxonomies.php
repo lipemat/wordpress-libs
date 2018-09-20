@@ -50,12 +50,12 @@ class Taxonomies {
 
 	public function get_terms( \WP_REST_Request $request ) {
 		$taxonomy = $request->get_param( 'taxonomy' );
-		if( empty( $taxonomy ) ){
+		if ( empty( $taxonomy ) ) {
 			return new \WP_Error( 'get_terms_failed', __( 'You must supply a taxonomy', 'wswd' ), [ 'status' => 201 ] );
 		}
 
 		$object = get_taxonomy( $taxonomy );
-		if( empty( $object ) || !in_array( $taxonomy, $this->allowed_taxonomies ) ){
+		if ( empty( $object ) || ! in_array( $taxonomy, $this->allowed_taxonomies ) ) {
 			return new \WP_Error( 'get_terms_failed', __( 'Invalid taxonomy', 'wswd' ), [ 'status' => 201 ] );
 		}
 

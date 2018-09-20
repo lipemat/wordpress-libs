@@ -228,25 +228,25 @@ abstract class Settings {
 	 */
 	private function fill_class_vars() {
 
-		if( empty( $this->title ) ){
+		if ( empty( $this->title ) ) {
 			$this->title = __( 'Settings', 'lipe' );
 		}
 
-		if( empty( $this->slug ) ){
+		if ( empty( $this->slug ) ) {
 			$this->slug = strtolower( str_replace( '\\', '-', get_class( $this ) ) );
 		}
 
-		if( empty( $this->menu_title ) ){
+		if ( empty( $this->menu_title ) ) {
 			$this->menu_title = $this->title;
 		}
 
-		if( $this->network ){
-			if( 'options-general.php' == $this->parent_menu_slug ){
+		if ( $this->network ) {
+			if ( 'options-general.php' == $this->parent_menu_slug ) {
 				$this->parent_menu_slug = 'settings.php';
 			}
 		}
 
-		if( $this->network ){
+		if ( $this->network ) {
 			$this->form_url = network_admin_url( 'edit.php?action=' . $this->slug );
 		} else {
 			$this->form_url = admin_url( 'options.php' );
@@ -256,7 +256,7 @@ abstract class Settings {
 
 
 	public function hook() {
-		if( $this->network ){
+		if ( $this->network ) {
 			add_action( 'network_admin_menu', [ $this, 'register_settings_page' ], 10, 0 );
 			add_action( 'network_admin_edit_' . $this->slug, [ $this, 'save_network_settings' ], 10, 0 );
 
@@ -287,9 +287,9 @@ abstract class Settings {
 	 * @return void
 	 */
 	public function maybe_run_settings_save() {
-		if( !empty( $_POST[ 'settings_page_slug' ] ) ){
-			if( $_POST[ 'settings_page_slug' ] == $this->slug ){
-				if( method_exists( $this, 'on_settings_save' ) ){
+		if ( ! empty( $_POST['settings_page_slug'] ) ) {
+			if ( $_POST['settings_page_slug'] == $this->slug ) {
+				if ( method_exists( $this, 'on_settings_save' ) ) {
 					$this->on_settings_save();
 				}
 			}
@@ -321,38 +321,40 @@ abstract class Settings {
 	 * @return void
 	 */
 	public function save_network_settings() {
-		if( !isset( $_POST[ '_wpnonce' ] ) || !wp_verify_nonce( $_POST[ '_wpnonce' ], $this->slug . '-options' ) ){
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], $this->slug . '-options' ) ) {
 			return;
 		}
 
-		if( method_exists( $this, 'on_settings_save' ) ){
+		if ( method_exists( $this, 'on_settings_save' ) ) {
 			$this->on_settings_save();
 		}
 
-		foreach( $this->settings as $section => $params ){
-			foreach( $params[ 'fields' ] as $field => $title ){
+		foreach ( $this->settings as $section => $params ) {
+			foreach ( $params['fields'] as $field => $title ) {
 				$value = false;
-				if( method_exists( $this, $field . "_sanitize" ) ){
+				if ( method_exists( $this, $field . "_sanitize" ) ) {
 					$value = $this->{$field . "_sanitize"}( $_POST[ $this->get_field_name( $field ) ] );
 
-				} elseif( method_exists( $this, $this->get_field_name( $field ) . "_sanitize" ) ) {
+				} elseif ( method_exists( $this, $this->get_field_name( $field ) . "_sanitize" ) ) {
 					$value = $this->{$this->get_field_name( $field ) . "_sanitize"}( $_POST[ $this->get_field_name( $field ) ] );
 				} else {
-					if( isset( $_POST[ $this->get_field_name( $field ) ] ) ){
+					if ( isset( $_POST[ $this->get_field_name( $field ) ] ) ) {
 						$value = $_POST[ $this->get_field_name( $field ) ];
-					}
-
-				}
+					}               
+}
 				update_site_option( $this->get_field_name( $field ), $value );
 			}
 		}
 
-		if( strpos( $this->parent_menu_slug, '.php' ) === false ){
+		if ( strpos( $this->parent_menu_slug, '.php' ) === false ) {
 			$parent_url = network_admin_url( 'admin.php' );
 		} else {
 			$parent_url = network_admin_url( $this->parent_menu_slug );
 		}
-		$url = add_query_arg( [ 'page' => $this->slug, 'updated' => 'true' ], $parent_url );
+		$url = add_query_arg( [
+			'page'    => $this->slug,
+			'updated' => 'true',
+		], $parent_url );
 
 		wp_redirect( $url );
 		die();
@@ -370,11 +372,11 @@ abstract class Settings {
 	 * @return string
 	 */
 	protected function get_field_name( $field ) {
-		if( empty( $this->namespace ) ){
+		if ( empty( $this->namespace ) ) {
 			return $field;
 		}
 
-		if( strpos( $field, $this->namespace ) !== false ){
+		if ( strpos( $field, $this->namespace ) !== false ) {
 			return $field;
 		}
 
@@ -394,7 +396,7 @@ abstract class Settings {
 	 */
 	public function register_settings_page() {
 
-		if( !empty( $this->parent_menu_slug ) ){
+		if ( ! empty( $this->parent_menu_slug ) ) {
 			add_submenu_page(
 				$this->parent_menu_slug,
 				$this->title,
@@ -415,15 +417,15 @@ abstract class Settings {
 			);
 		}
 
-		foreach( $this->settings as $section => $params ){
+		foreach ( $this->settings as $section => $params ) {
 			add_settings_section(
 				$section,
-				$params[ 'title' ],
+				$params['title'],
 				[ $this, $section . '_description' ],
 				$this->slug
 			);
 
-			foreach( $params[ 'fields' ] as $field => $title ){
+			foreach ( $params['fields'] as $field => $title ) {
 				add_settings_field(
 					$this->get_field_name( $field ),
 					$title,
@@ -433,13 +435,13 @@ abstract class Settings {
 					$field
 				);
 
-				if( !$this->network ){
-					if( method_exists( $this, $field . "_sanitize" ) ){
+				if ( ! $this->network ) {
+					if ( method_exists( $this, $field . "_sanitize" ) ) {
 						register_setting( $this->slug, $this->get_field_name( $field ), [
 							$this,
 							$field . '_sanitize',
 						] );
-					} elseif( method_exists( $this, $this->get_field_name( $field ) . "_sanitize" ) ) {
+					} elseif ( method_exists( $this, $this->get_field_name( $field ) . "_sanitize" ) ) {
 						register_setting( $this->slug, $this->get_field_name( $field ), [
 							$this,
 							$this->get_field_name( $field ) . '_sanitize',
@@ -447,9 +449,8 @@ abstract class Settings {
 					} else {
 						register_setting( $this->slug, $this->get_field_name( $field ) );
 					}
-				}
-
-			}
+				}           
+}
 		}
 
 	}
@@ -473,17 +474,17 @@ abstract class Settings {
 
 		$value = $this->get_option( $field );
 
-		if( method_exists( $this, $field ) ){
+		if ( method_exists( $this, $field ) ) {
 			$this->{$field}( $value, $field );
 
-		} elseif( method_exists( $this, $this->get_non_namespaced_field( $field ) ) ) {
+		} elseif ( method_exists( $this, $this->get_non_namespaced_field( $field ) ) ) {
 			$this->{$this->get_non_namespaced_field( $field )}( $value, $field );
 
 		} else {
 			printf( '<input type="text" name="%1$s" value="%2$s" class="regular-text" />', esc_attr( $field ), esc_attr( $value ) );
 		}
 
-		if( method_exists( $this, $this->get_non_namespaced_field( $field ) . '_description' ) ){
+		if ( method_exists( $this, $this->get_non_namespaced_field( $field ) . '_description' ) ) {
 			?>
             <p class="description">
 				<?php $this->{$this->get_non_namespaced_field( $field ) . '_description'}( $value ); ?>
@@ -507,18 +508,18 @@ abstract class Settings {
 	 */
 	public function get_option( $field ) {
 		$field = $this->get_field_name( $field );
-		if( $this->network ){
+		if ( $this->network ) {
 			$option = get_site_option( $field, null );
 		} else {
 			$option = get_option( $field, null );
 		}
 
-		if( $option === null ){
-			if( !empty( $this->defaults[ $field ] ) ){
+		if ( $option === null ) {
+			if ( ! empty( $this->defaults[ $field ] ) ) {
 				return $this->defaults[ $field ];
 			} else {
 				$non_namespaced = $this->get_non_namespaced_field( $field );
-				if( !empty( $this->defaults[ $non_namespaced ] ) ){
+				if ( ! empty( $this->defaults[ $non_namespaced ] ) ) {
 					return $this->defaults[ $non_namespaced ];
 				}
 			}
@@ -538,7 +539,7 @@ abstract class Settings {
 	 * @return string
 	 */
 	protected function get_non_namespaced_field( $field ) {
-		if( empty( $this->namespace ) ){
+		if ( empty( $this->namespace ) ) {
 			return $field;
 		}
 
@@ -558,7 +559,7 @@ abstract class Settings {
         <div class="wrap">
             <h2><?php echo $this->title; ?></h2>
 			<?php
-			if( !empty( $this->description ) ){
+			if ( ! empty( $this->description ) ) {
 				?>
                 <p class="description">
 					<?php echo $this->description; ?>
@@ -566,7 +567,7 @@ abstract class Settings {
 				<?php
 			}
 
-			if( $this->tabs ){
+			if ( $this->tabs ) {
 				$this->tabbed_form();
 
 			} else {
@@ -602,17 +603,17 @@ abstract class Settings {
 	private function tabbed_form() {
 		reset( $this->settings );
 
-		$tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : key( $this->settings );
+		$tab = isset( $_GET['tab'] ) ? $_GET['tab'] : key( $this->settings );
 
 		?>
         <h2 class="nav-tab-wrapper">
 			<?php
-			foreach( $this->settings as $section => $params ){
+			foreach ( $this->settings as $section => $params ) {
 				printf( '<a id="nav-%s" href="%s" class="nav-tab%s">%s</a>',
 					$section,
 					add_query_arg( 'tab', $section ),
 					$tab == $section ? ' nav-tab-active' : '',
-					$params[ 'title' ]
+					$params['title']
 				);
 			}
 			?>
@@ -622,14 +623,14 @@ abstract class Settings {
 			<?php
 			settings_fields( $this->slug );
 
-			foreach( $this->settings as $section => $params ){
+			foreach ( $this->settings as $section => $params ) {
 				printf( '<div class="tab-content" id="tab-%s" %s>',
 					$section,
 					$section != $tab ? 'style="display:none;"' : ''
 				);
 
 				?>
-                <h3><?php echo $params[ 'title' ]; ?></h3>
+                <h3><?php echo $params['title']; ?></h3>
 
 				<?php
 				$func = $section . '_description';
@@ -681,9 +682,9 @@ abstract class Settings {
 	 * @return void
 	 */
 	protected function add_setting_section( $slug, $title ) {
-		$this->settings[ $slug ][ 'title' ] = $title;
-		if( empty( $this->settings[ $slug ][ 'fields' ] ) ){
-			$this->settings[ $slug ][ 'fields' ] = [];
+		$this->settings[ $slug ]['title'] = $title;
+		if ( empty( $this->settings[ $slug ]['fields'] ) ) {
+			$this->settings[ $slug ]['fields'] = [];
 		}
 
 	}
@@ -705,7 +706,7 @@ abstract class Settings {
 	 * @return void
 	 */
 	protected function add_setting( $section, $field, $label ) {
-		$this->settings[ $section ][ 'fields' ][ $field ] = $label;
+		$this->settings[ $section ]['fields'][ $field ] = $label;
 	}
 
 }

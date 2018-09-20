@@ -85,13 +85,13 @@ class Taxonomy_Extended extends Taxonomy {
 
 	protected function get_taxonomy_args() {
 		$args = parent::taxonomy_args();
-		foreach( get_object_vars( $this ) as $_var => $_value ){
-			if( property_exists( get_parent_class( $this ), $_var ) ){
+		foreach ( get_object_vars( $this ) as $_var => $_value ) {
+			if ( property_exists( get_parent_class( $this ), $_var ) ) {
 				continue;
 			}
-			if( $this->{$_var} !== null ){
-				if( is_array( $this->{$_var} ) ){
-					if( !empty( $this->{$_var} ) ){
+			if ( $this->{$_var} !== null ) {
+				if ( is_array( $this->{$_var} ) ) {
+					if ( ! empty( $this->{$_var} ) ) {
 						$args[ $_var ] = $this->{$_var};
 					}
 				} else {

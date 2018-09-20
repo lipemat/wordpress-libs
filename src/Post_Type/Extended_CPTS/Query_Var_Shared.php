@@ -39,7 +39,7 @@ class Query_Var_Shared extends Shared_Abstract {
 	 *
 	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Query_Var_Shared
 	 */
-	protected function return( array $args ){
+	protected function return( array $args ) {
 		$this->query_var->set( $args );
 		return $this;
 	}

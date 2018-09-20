@@ -110,7 +110,7 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 */
 	public function rewrite( $permastruct ) {
 
-		$this->rewrite[ 'permastruct' ] = $permastruct;
+		$this->rewrite['permastruct'] = $permastruct;
 	}
 
 
@@ -198,13 +198,13 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	protected function get_post_type_args() {
 		$args = parent::post_type_args();
 
-		foreach( get_object_vars( $this ) as $_var => $_value ){
-			if( property_exists( get_parent_class( $this ), $_var ) ){
+		foreach ( get_object_vars( $this ) as $_var => $_value ) {
+			if ( property_exists( get_parent_class( $this ), $_var ) ) {
 				continue;
 			}
-			if( isset( $this->{$_var} ) ){
-				if( is_array( $this->{$_var} ) ){
-					if( !empty( $this->{$_var} ) ){
+			if ( isset( $this->{$_var} ) ) {
+				if ( is_array( $this->{$_var} ) ) {
+					if ( ! empty( $this->{$_var} ) ) {
 						$args[ $_var ] = $this->{$_var};
 					}
 				} else {

@@ -101,8 +101,11 @@ class Versions {
 	 * @return void
 	 */
 	public function once( string $key, callable $callable, $args = null ) : void {
-		if( !isset( self::$once_run_before[ $key ] ) ){
-			self::$once[ $key ] = [ 'callable' => $callable, 'args' => $args ];
+		if ( ! isset( self::$once_run_before[ $key ] ) ) {
+			self::$once[ $key ] = [
+				'callable' => $callable,
+				'args'     => $args,
+			];
 		}
 	}
 
@@ -125,8 +128,12 @@ class Versions {
 	 */
 	public function add_update( $version, callable $callable, $args = null ) : void {
 		//if the version is higher than one in db, add to updates
-		if( version_compare( self::$version, (string) $version, '<' ) ){
-			self::$updates[] = [ 'version' => (string) $version, 'callable' => $callable, 'args' => $args ];
+		if ( version_compare( self::$version, (string) $version, '<' ) ) {
+			self::$updates[] = [
+				'version'  => (string) $version,
+				'callable' => $callable,
+				'args'     => $args,
+			];
 		}
 
 	}
@@ -144,23 +151,23 @@ class Versions {
 	 * @return void
 	 */
 	public function run_updates() : void {
-		if( !empty( self::$once ) ){
-			foreach( self::$once as $_key => $_item ){
-				if( !isset( $run_before[ $_key ] ) ){
+		if ( ! empty( self::$once ) ) {
+			foreach ( self::$once as $_key => $_item ) {
+				if ( ! isset( $run_before[ $_key ] ) ) {
 					self::$once_run_before[ $_key ] = 1;
-					\call_user_func( $_item[ 'callable' ], $_item[ 'args' ] );
+					\call_user_func( $_item['callable'], $_item['args'] );
 					unset( self::$once[ $_key ] );
 				}
 			}
 			\update_option( self::ONCE, self::$once_run_before );
 		}
 
-		if( !empty( self::$updates ) ){
+		if ( ! empty( self::$updates ) ) {
 			\usort( self::$updates, [ $this, 'sort_by_version' ] );
 
-			foreach( self::$updates as $i => $func ){
-				self::$version = $func[ 'version' ];
-				\call_user_func( $func[ 'callable' ], $func[ 'args' ] );
+			foreach ( self::$updates as $i => $func ) {
+				self::$version = $func['version'];
+				\call_user_func( $func['callable'], $func['args'] );
 				unset( self::$updates[ $i ] );
 
 			}
@@ -182,6 +189,6 @@ class Versions {
 	 *
 	 */
 	public function sort_by_version( $a, $b ) : bool {
-		return version_compare( $a[ 'version' ], $b[ 'version' ], '>' );
+		return version_compare( $a['version'], $b['version'], '>' );
 	}
 }

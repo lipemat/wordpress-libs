@@ -60,7 +60,7 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	abstract protected function save( $post_id, $post ) : void ;
+	abstract protected function save( $post_id, $post ) : void;
 
 
 	/**
@@ -84,8 +84,8 @@ abstract class Meta_Box {
 
 		self::init_once();
 
-		if( !empty( $args[ 'id' ] ) ){
-			$this->id = $args[ 'id' ];
+		if ( ! empty( $args['id'] ) ) {
+			$this->id = $args['id'];
 		} else {
 			$this->id = self::build_id( $this->post_type, \get_class( $this ) );
 		}
@@ -99,10 +99,10 @@ abstract class Meta_Box {
 			'callback_args' => null,
 		] );
 
-		$this->title = $args[ 'title' ] ?? $this->id;
-		$this->context = $args[ 'context' ];
-		$this->priority = $args[ 'priority' ];
-		$this->callback_args = $args[ 'callback_args' ];
+		$this->title = $args['title'] ?? $this->id;
+		$this->context = $args['context'];
+		$this->priority = $args['priority'];
+		$this->callback_args = $args['callback_args'];
 
 		add_action( 'add_meta_boxes_' . $this->post_type, [
 			$this,
@@ -135,7 +135,7 @@ abstract class Meta_Box {
 		$id = $post_type . '-' . $class;
 		$append = 0;
 		$appended = $id . ( $append ? '-' . $append : '' );
-		if( isset( self::$registry[ $post_type ][ $appended ] ) ){
+		if ( isset( self::$registry[ $post_type ][ $appended ] ) ) {
 			$append ++;
 		}
 		$id .= ( $append ? '-' . $append : '' );
@@ -151,7 +151,7 @@ abstract class Meta_Box {
 	 * @return void
 	 */
 	public static function display_nonce() : void {
-		if( !empty( self::$registry[ get_post_type() ] ) ){
+		if ( ! empty( self::$registry[ get_post_type() ] ) ) {
 			wp_nonce_field( self::NONCE_ACTION, self::NONCE_NAME );
 		}
 	}
@@ -166,15 +166,15 @@ abstract class Meta_Box {
 	 * @return void
 	 */
 	public static function save_meta_boxes( $post_id, $post ) : void {
-		if( self::should_meta_boxes_be_saved( $post_id, $post ) ){
+		if ( self::should_meta_boxes_be_saved( $post_id, $post ) ) {
 			return;
 		}
-		if( empty( self::$registry[ $post->post_type ] ) ){
+		if ( empty( self::$registry[ $post->post_type ] ) ) {
 			return;
 		}
 		remove_action( 'save_post', [ __CLASS__, 'save_meta_boxes' ] );
 
-		foreach( (array) self::$registry[ $post->post_type ] as $meta_box ){
+		foreach ( (array) self::$registry[ $post->post_type ] as $meta_box ) {
 			/** @var $meta_box Meta_Box */
 			$meta_box->save( $post_id, $post );
 		}
@@ -192,12 +192,12 @@ abstract class Meta_Box {
 	 */
 	protected static function should_meta_boxes_be_saved( $post_id, $post ) : bool {
 		// make sure this is a valid submission
-		if( !isset( $_POST[ self::NONCE_NAME ] ) || !wp_verify_nonce( $_POST[ self::NONCE_NAME ], self::NONCE_ACTION ) ){
+		if ( ! isset( $_POST[ self::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_NAME ], self::NONCE_ACTION ) ) {
 			return false;
 		}
 
 		// don't do anything on autosave, auto-draft, bulk edit, or quick edit
-		if( $post->post_status === 'auto-draft' || isset( $_GET[ 'bulk_edit' ] ) || wp_is_post_autosave( $post_id ) || \wp_doing_ajax() || wp_is_post_revision( $post_id ) ){
+		if ( $post->post_status === 'auto-draft' || isset( $_GET['bulk_edit'] ) || wp_is_post_autosave( $post_id ) || \wp_doing_ajax() || wp_is_post_revision( $post_id ) ) {
 			return false;
 		}
 
@@ -216,7 +216,7 @@ abstract class Meta_Box {
 	 * @return Meta_Box|null
 	 */
 	public static function get_meta_box_by_id( $post_type, $id ) : ?Meta_Box {
-		if( isset( self::$registry[ $post_type ][ $id ] ) ){
+		if ( isset( self::$registry[ $post_type ][ $id ] ) ) {
 			return self::$registry[ $post_type ][ $id ];
 		}
 
@@ -254,11 +254,11 @@ abstract class Meta_Box {
 	 * @return Meta_Box|null
 	 */
 	public static function get_meta_box( $post_type, $class ) : ?Meta_Box {
-		if( !isset( self::$registry[ $post_type ] ) ){
+		if ( ! isset( self::$registry[ $post_type ] ) ) {
 			return null;
 		}
-		foreach( (array) self::$registry[ $post_type ] as $meta_box ){
-			if( \get_class( $meta_box ) === $class ){
+		foreach ( (array) self::$registry[ $post_type ] as $meta_box ) {
+			if ( \get_class( $meta_box ) === $class ) {
 				return $meta_box;
 			}
 		}
@@ -283,12 +283,12 @@ abstract class Meta_Box {
 	 * @return Meta_Box|\Lipe\Lib\Schema\Meta_Box[]
 	 */
 	public static function register( $post_type = null, array $args = [] ) {
-		if( null === $post_type ){
-			foreach( get_post_types() as $_post_type ){
+		if ( null === $post_type ) {
+			foreach ( get_post_types() as $_post_type ) {
 				$class[] = new static( $_post_type, $args );
 			}
-		} elseif( \is_array( $post_type ) ) {
-			foreach( $post_type as $_post_type ){
+		} elseif ( \is_array( $post_type ) ) {
+			foreach ( $post_type as $_post_type ) {
 				$class[] = new static( $_post_type, $args );
 			}
 		} else {
@@ -392,8 +392,8 @@ abstract class Meta_Box {
 	 * @return void
 	 */
 	public function save_meta_field( $post_id, $field ) : void {
-		foreach( (array) $field as $this_field ){
-			if( !empty( $_POST[ $this_field ] ) ){
+		foreach ( (array) $field as $this_field ) {
+			if ( ! empty( $_POST[ $this_field ] ) ) {
 				update_post_meta( $post_id, $this_field, $_POST[ $this_field ] );
 			} else {
 				update_post_meta( $post_id, $this_field, null );
@@ -413,7 +413,7 @@ abstract class Meta_Box {
 	public function get_values( $post_id, $fields ) {
 		$meta = [];
 
-		foreach( (array) $fields as $this_field ){
+		foreach ( (array) $fields as $this_field ) {
 			$meta[ $this_field ] = get_post_meta( $post_id, $this_field, true );
 		}
 
@@ -430,7 +430,7 @@ abstract class Meta_Box {
 	 */
 	private static function init_once() : void {
 		static $inited = false;
-		if( !$inited ){
+		if ( ! $inited ) {
 			static::hook();
 			$inited = true;
 		}

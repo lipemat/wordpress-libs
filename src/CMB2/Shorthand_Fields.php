@@ -33,9 +33,9 @@ trait Shorthand_Fields {
 	 * @return void
 	 */
 	protected function hook() : void {
-		if( !has_action( 'cmb2_init', [ $this, 'register_shorthand_fields' ] ) ){
+		if ( ! has_action( 'cmb2_init', [ $this, 'register_shorthand_fields' ] ) ) {
 			//be sure to run register_shorthand fields on groups after the box
-			if( self::class === Group::class ){
+			if ( self::class === Group::class ) {
 				add_action( 'cmb2_init', [ $this, 'register_shorthand_fields' ], 12 );
 			} else {
 				add_action( 'cmb2_init', [ $this, 'register_shorthand_fields' ], 11 );
@@ -102,7 +102,7 @@ trait Shorthand_Fields {
 	 * @return void
 	 */
 	public function register_shorthand_fields() : void {
-		foreach( $this->get_shorthand_fields() as $_field ){
+		foreach ( $this->get_shorthand_fields() as $_field ) {
 			$this->add_field( $_field );
 		}
 	}

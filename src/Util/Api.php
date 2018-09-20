@@ -32,7 +32,7 @@ class Api {
 	public function add_endpoint() {
 		add_rewrite_endpoint( 'api', EP_ROOT );
 
-		if( version_compare( get_option( self::DB_KEY, '0.0.1' ), self::DB_VERSION ) == - 1 ){
+		if ( version_compare( get_option( self::DB_KEY, '0.0.1' ), self::DB_VERSION ) == - 1 ) {
 			flush_rewrite_rules();
 			update_option( self::DB_KEY, self::DB_VERSION );
 		}
@@ -45,13 +45,13 @@ class Api {
 	 * @return void
 	 */
 	public function handle_request( $wp ) {
-		if( empty( $wp->query_vars[ 'api' ] ) ){
+		if ( empty( $wp->query_vars['api'] ) ) {
 			return;
 		}
 
 		$this->doing_api = true;
 
-		$args = explode( '/', $wp->query_vars[ 'api' ] );
+		$args = explode( '/', $wp->query_vars['api'] );
 		$endpoint = array_shift( $args );
 
 		do_action( "lipe/lib/util/api_{$endpoint}", $args );
@@ -80,7 +80,7 @@ class Api {
 	 */
 	public function get_api_url( $action = null, $data = [] ) {
 		$url = trailingslashit( trailingslashit( get_home_url() ) . 'api/' . $action );
-		foreach( $data as $_param ){
+		foreach ( $data as $_param ) {
 			$url .= $_param . '/';
 		}
 

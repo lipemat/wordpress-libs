@@ -40,7 +40,7 @@ class Sortable_Shared extends Shared_Abstract {
 	 *
 	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Sortable_Shared
 	 */
-	protected function return ( array $args ) {
+	protected function return( array $args ) {
 		$this->sortable->set( $args );
 		return $this;
 	}

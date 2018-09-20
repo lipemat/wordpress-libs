@@ -42,15 +42,15 @@ class Pagination {
 		$this->items = $items;
 		$this->wp_query = $wp_query;
 
-		if( $wp_query ){
+		if ( $wp_query ) {
 			$this->per_page = $wp_query->get( 'posts_per_page' );
 			$page = $this->wp_query->is_paged() ? $wp_query->get( 'paged' ) : 1;
 		} else {
 			$this->per_page = $per_page;
-			$page = empty( $_REQUEST[ 'page' ] ) ? 1 : $_REQUEST[ 'page' ];
+			$page = empty( $_REQUEST['page'] ) ? 1 : $_REQUEST['page'];
 		}
 		//certain areas of the admin pass page in url
-		if( !is_numeric( $page ) ){
+		if ( ! is_numeric( $page ) ) {
 			$page = 1;
 		}
 
@@ -66,7 +66,7 @@ class Pagination {
 	 */
 	public function get_this_pages_items() {
 		//wp_query already gave us this page's items in the first place
-		if( $this->wp_query ){
+		if ( $this->wp_query ) {
 			return $this->items;
 		}
 		$page = $this->page;
@@ -91,31 +91,31 @@ class Pagination {
 		$page = $this->page;
 		$total = $this->get_total_pages();
 
-		if( $total < 2 ){
+		if ( $total < 2 ) {
 			return;
 		}
 
-		if( $page < 3 ){
+		if ( $page < 3 ) {
 			$bottom = 1;
-		} elseif( $page == $total ) {
+		} elseif ( $page == $total ) {
 			$bottom = max( 1, $page - 5 );
-		} elseif( $page + 3 > $total ) {
+		} elseif ( $page + 3 > $total ) {
 			$bottom = max( 1, $page - 4 );
 		} else {
 			$bottom = $page - 2;
 		}
 
-		if( $page > ( $total - 3 ) ){
+		if ( $page > ( $total - 3 ) ) {
 			$top = $total - 1;
 		} else {
-			if( ( $bottom + 4 ) > $total ){
+			if ( ( $bottom + 4 ) > $total ) {
 				$top = $total;
 			} else {
 				$top = $bottom + 4;
 			}
 		}
 
-		if( $this->wp_query ){
+		if ( $this->wp_query ) {
 			$this->link_html( $page, $total, $top, $bottom );
 		} else {
 			$this->ajax_html( $page, $total, $top, $bottom );
@@ -124,12 +124,12 @@ class Pagination {
 
 
 	public function get_total_pages() {
-		if( $this->wp_query ){
+		if ( $this->wp_query ) {
 			$count = $this->wp_query->found_posts;
 		} else {
 			$count = count( $this->items );
 		}
-		if( $count == 0 ){
+		if ( $count == 0 ) {
 			return 0;
 		}
 
@@ -154,7 +154,7 @@ class Pagination {
 		?>
         <ul class="navigation">
 			<?php
-			if( $page != "1" ){
+			if ( $page != "1" ) {
 				?>
                 <li>
                     <a href="<?php echo get_pagenum_link( 1 ); ?>">
@@ -169,9 +169,9 @@ class Pagination {
 				<?php
 			}
 
-			while( $bottom <= $top ){
+			while ( $bottom <= $top ) {
 				$class = '';
-				if( $bottom == $page ){
+				if ( $bottom == $page ) {
 					$class = ' class="current"';
 				}
 				?>
@@ -183,7 +183,7 @@ class Pagination {
 				<?php
 				$bottom ++;
 			}
-			if( $total > $top ){
+			if ( $total > $top ) {
 				?>
                 <li> ...</li>
                 <li>
@@ -193,7 +193,7 @@ class Pagination {
                 </li>
 				<?php
 			}
-			if( $page != $total ){
+			if ( $page != $total ) {
 				?>
                 <li>
                     <a href="<?php echo get_pagenum_link( $page + 1 ); ?>">
@@ -228,7 +228,7 @@ class Pagination {
 		?>
         <ul class="pagination navigation">
 			<?php
-			if( $page != "1" ){
+			if ( $page != "1" ) {
 				?>
                 <li>
                     <a data-page="1">
@@ -243,9 +243,9 @@ class Pagination {
 				<?php
 			}
 
-			while( $bottom <= $top ){
+			while ( $bottom <= $top ) {
 				$class = '';
-				if( $bottom == $page ){
+				if ( $bottom == $page ) {
 					$class = ' class="current"';
 				}
 				?>
@@ -258,7 +258,7 @@ class Pagination {
 				$bottom ++;
 			}
 
-			if( $total > $top ){
+			if ( $total > $top ) {
 				?>
                 <li>
                     ...
@@ -271,7 +271,7 @@ class Pagination {
 				<?php
 			}
 
-			if( $page != $total ){
+			if ( $page != $total ) {
 				?>
                 <li>
                     <a data-page="<?php echo $page + 1; ?>">

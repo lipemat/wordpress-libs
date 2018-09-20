@@ -403,9 +403,8 @@ class Custom_Post_Type {
 				$plural = ucwords( rtrim( $singular, 'y' ) . 'ies' );
 			} else {
 				$plural = ucwords( $singular . 's' );
-			}
-
-		}
+			}       
+}
 		$this->post_type_label_singular = $singular;
 		$this->post_type_label_plural   = $plural;
 	}
@@ -575,19 +574,19 @@ class Custom_Post_Type {
 
 		$messages[ $this->post_type ] = [
 			0  => null,
-			1  => sprintf( __( '%s updated. %s' ), $this->get_post_type_label(), $view_link ),
+			1  => sprintf( __( '%1$s updated. %2$s' ), $this->get_post_type_label(), $view_link ),
 			2  => __( 'Custom field updated.' ),
 			3  => __( 'Custom field deleted.' ),
 			4  => sprintf( __( '%s updated.' ), $this->get_post_type_label() ),
-			5  => isset( $_GET['revision'] ) ? sprintf( __( '%s restored to revision from %s' ),
+			5  => isset( $_GET['revision'] ) ? sprintf( __( '%1$s restored to revision from %2$s' ),
 				$this->get_post_type_label(), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-			6  => sprintf( __( '%s published. %s' ), $this->get_post_type_label(),
+			6  => sprintf( __( '%1$s published. %2$s' ), $this->get_post_type_label(),
 				$view_link ),
 			7  => sprintf( __( '%s saved.' ), $this->get_post_type_label() ),
-			8  => sprintf( __( '%s submitted. %s' ), $this->get_post_type_label(), $preview_link ),
+			8  => sprintf( __( '%1$s submitted. %2$s' ), $this->get_post_type_label(), $preview_link ),
 			9  => sprintf( __( '%3$s scheduled for: %1$s. %2$s' ),
 				'<strong>' . date_i18n( __( 'M j, Y @ G:i' ) . '</strong>', strtotime( $post->post_date ) ), $preview_link, $this->get_post_type_label() ),
-			10 => sprintf( __( '%s draft updated. %s' ), $this->get_post_type_label(), $preview_link ),
+			10 => sprintf( __( '%1$s draft updated. %2$s' ), $this->get_post_type_label(), $preview_link ),
 
 		];
 

@@ -54,14 +54,14 @@ class Term_Select_2 {
 
 
 	public function ajax_get_terms() : void {
-		$search = \sanitize_text_field( $_POST[ 'q' ] ?? '' );
+		$search = \sanitize_text_field( $_POST['q'] ?? '' );
 		$terms = get_terms( [
 			'number'   => 10,
-			'taxonomy' => $_REQUEST[ 'taxonomy' ],
-			'search'   => $_POST[ 'q' ],
+			'taxonomy' => $_REQUEST['taxonomy'],
+			'search'   => $_POST['q'],
 			'fields'   => 'id=>name',
 		] );
-		if( $_REQUEST[ self::CREATE_NEW_TERMS ] ){
+		if ( $_REQUEST[ self::CREATE_NEW_TERMS ] ) {
 			//add a newly entered term as an option
 			$terms[ $search ] = $search;
 		}
@@ -77,7 +77,7 @@ class Term_Select_2 {
 
 
 	public function render( CMB2_Field $field, $value, $object_id, string $object_type, CMB2_Types $field_type_object ) : void {
-		if( empty( $value ) ){
+		if ( empty( $value ) ) {
 			$value = null;
 		}
 
@@ -95,7 +95,7 @@ class Term_Select_2 {
 		];
 
 		$attrs = $field_type_object->concat_attrs( $a, [ 'desc', 'options' ] );
-		echo \sprintf( '<select%s>%s</select>%s', $attrs, $a[ 'options' ], $a[ 'desc' ] );
+		echo \sprintf( '<select%s>%s</select>%s', $attrs, $a['options'], $a['desc'] );
 		$this->js_inline( $field, $field_type_object );
 	}
 
@@ -114,7 +114,7 @@ class Term_Select_2 {
 	 */
 	private function js_inline( CMB2_Field $field, CMB2_Types $field_type_object ) : void {
 		static $rendered = [];
-		if( isset( $rendered[ $field->id() ] ) ){
+		if ( isset( $rendered[ $field->id() ] ) ) {
 			return;
 		}
 		$rendered[ $field->id() ] = 1;
@@ -125,7 +125,7 @@ class Term_Select_2 {
 			self::CREATE_NEW_TERMS => $field->args( self::CREATE_NEW_TERMS ),
 		];
 		$url = \add_query_arg( $url_args, admin_url( 'admin-ajax.php' ) );
-		$no_results_text = $field->args( 'text' )[ 'no_terms_text' ] ?? get_taxonomy( $url_args[ 'taxonomy' ] )->labels->not_found;
+		$no_results_text = $field->args( 'text' )['no_terms_text'] ?? get_taxonomy( $url_args['taxonomy'] )->labels->not_found;
 
 		$id = $field->id();
 
@@ -201,14 +201,14 @@ class Term_Select_2 {
 		$options = (array) $field_type_object->field->options();
 
 		// If we have selected items, we need to preserve their order
-		if( !empty( $field_escaped_value ) ){
-			if( !empty( $options ) ){
+		if ( ! empty( $field_escaped_value ) ) {
+			if ( ! empty( $options ) ) {
 				$options = $this->put_selected_options_first( $options, $field_escaped_value );
 			} else {
 				$options = \get_terms( [
 					'include'    => array_map( '\intval', $field_escaped_value ),
 					'fields'     => 'id=>name',
-					'taxonomy'   => $field_type_object->field->args[ 'taxonomy' ] ?? 'category',
+					'taxonomy'   => $field_type_object->field->args['taxonomy'] ?? 'category',
 					'hide_empty' => false,
 				] );
 			}
@@ -217,7 +217,7 @@ class Term_Select_2 {
 		$selected_items = '';
 		$other_items = '';
 
-		foreach( $options as $option_value => $option_label ){
+		foreach ( $options as $option_value => $option_label ) {
 			// Clone args & modify for just this item
 			$option = [
 				'value' => $option_value,
@@ -225,8 +225,8 @@ class Term_Select_2 {
 			];
 
 			// Split options into those which are selected and the rest
-			if( empty( $options ) || \in_array( $option_value, $field_escaped_value, false ) ){
-				$option[ 'checked' ] = true;
+			if ( empty( $options ) || \in_array( $option_value, $field_escaped_value, false ) ) {
+				$option['checked'] = true;
 				$selected_items .= $field_type_object->select_option( $option );
 			} else {
 				$other_items .= $field_type_object->select_option( $option );
@@ -247,8 +247,8 @@ class Term_Select_2 {
 	 */
 	protected function put_selected_options_first( array $all_options, array $selected_options ) : array {
 		$ordered = [];
-		foreach( $selected_options as $key ){
-			if( \array_key_exists( $key, $all_options ) ){
+		foreach ( $selected_options as $key ) {
+			if ( \array_key_exists( $key, $all_options ) ) {
 				$ordered[ $key ] = $all_options[ $key ];
 				unset( $all_options[ $key ] );
 			}
@@ -273,13 +273,13 @@ class Term_Select_2 {
 	 *
 	 */
 	public function assign_terms_during_save( $check, $meta_value, $object_id, array $field_args ) : ?array {
-		if( !\is_array( $meta_value ) || empty( $meta_value ) ){
+		if ( ! \is_array( $meta_value ) || empty( $meta_value ) ) {
 			return $check;
 		}
 
-		if( $field_args[ self::CREATE_NEW_TERMS ] ){
-			if( $field_args[ 'repeatable' ] ){
-				foreach( $meta_value as $k => $terms ){
+		if ( $field_args[ self::CREATE_NEW_TERMS ] ) {
+			if ( $field_args['repeatable'] ) {
+				foreach ( $meta_value as $k => $terms ) {
 					$meta_value[ $k ] = $this->create_terms( $terms, $this->get_taxonomy( $field_args ) );
 				}
 			} else {
@@ -287,7 +287,7 @@ class Term_Select_2 {
 			}
 		}
 
-		if( !empty( $object_id ) && $field_args[ self::SAVE_AS_TERMS ] ){
+		if ( ! empty( $object_id ) && $field_args[ self::SAVE_AS_TERMS ] ) {
 			\wp_add_object_terms( $object_id, \array_map( '\intval', $meta_value ), $this->get_taxonomy( $field_args ) );
 
 		}
@@ -297,11 +297,11 @@ class Term_Select_2 {
 
 
 	private function create_terms( array $terms, string $taxonomy ) : array {
-		foreach( $terms as $key => $val ){
-			if( !\is_numeric( $val ) ){
+		foreach ( $terms as $key => $val ) {
+			if ( ! \is_numeric( $val ) ) {
 				$term = \wp_create_term( $val, $taxonomy );
-				if( !\is_wp_error( $term ) ){
-					$terms [ $key ] = (string) $term[ 'term_id' ];
+				if ( ! \is_wp_error( $term ) ) {
+					$terms [ $key ] = (string) $term['term_id'];
 				}
 			}
 		}
@@ -320,11 +320,11 @@ class Term_Select_2 {
 	 * @return array|null
 	 */
 	public function esc_repeater_values( $check, $meta_value, array $field_args ) : ?array {
-		if( !\is_array( $meta_value ) || !$field_args[ 'repeatable' ] ){
+		if ( ! \is_array( $meta_value ) || ! $field_args['repeatable'] ) {
 			return $check;
 		}
 
-		foreach( $meta_value as $key => $val ){
+		foreach ( $meta_value as $key => $val ) {
 			$meta_value[ $key ] = \array_map( 'esc_attr', $val );
 		}
 
@@ -340,6 +340,6 @@ class Term_Select_2 {
 	 * @return string
 	 */
 	private function get_taxonomy( array $field_args ) : string {
-		return $field_args[ 'taxonomy' ] ?? 'category';
+		return $field_args['taxonomy'] ?? 'category';
 	}
 }

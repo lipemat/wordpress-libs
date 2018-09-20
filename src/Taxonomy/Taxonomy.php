@@ -468,7 +468,10 @@ class Taxonomy {
 
 		if ( ! isset( $already_defaulted[ $this->get_slug() ] ) ) {
 			// don't do anything if the taxonomy already has terms
-			if ( ! get_terms( $this->taxonomy, [ 'hide_empty' => false, 'number' => 1 ] ) ) {
+			if ( ! get_terms( $this->taxonomy, [
+				'hide_empty' => false,
+				'number'     => 1,
+			] ) ) {
 				foreach ( $this->default_terms as $slug => $term ) {
 					$args = [];
 					if ( ! is_numeric( $slug ) ) {

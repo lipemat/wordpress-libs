@@ -39,7 +39,7 @@ class Column_Shared extends Shared_Abstract {
 	 *
 	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
 	 */
-	protected function return( array $args ){
+	protected function return( array $args ) {
 		$this->column->set( $args );
 		return $this;
 	}
@@ -68,7 +68,7 @@ class Column_Shared extends Shared_Abstract {
 	 *
 	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
 	 */
-	public function sortable( $is_sortable = false ){
+	public function sortable( $is_sortable = false ) {
 		return $this->return( [ 'sortable' => $is_sortable ] );
 	}
 

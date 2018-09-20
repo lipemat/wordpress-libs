@@ -1,6 +1,7 @@
 <?php
 
 namespace Lipe\Project\Rest_Api;
+
 use Lipe\Lib\Rest_Api\Post_Abstract;
 
 /**
@@ -37,7 +38,7 @@ class Woo_Product extends Post_Abstract {
 
 
 	public function allow_object_in_rest( $args ) {
-		$args[ 'show_in_rest' ] = true;
+		$args['show_in_rest'] = true;
 
 		return $args;
 	}

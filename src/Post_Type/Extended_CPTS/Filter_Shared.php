@@ -39,7 +39,7 @@ class Filter_Shared extends Shared_Abstract{
 	 *
 	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
 	 */
-	protected function return( array $args ){
+	protected function return( array $args ) {
 		$this->filter->set( $args );
 		return $this;
 	}
@@ -68,7 +68,7 @@ class Filter_Shared extends Shared_Abstract{
 	 *
 	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
 	 */
-	public function meta_query( array $query ){
+	public function meta_query( array $query ) {
 		return $this->return( [ 'meta_query' => $query ] );
 	}
 

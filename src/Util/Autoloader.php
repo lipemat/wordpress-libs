@@ -42,7 +42,7 @@ class Autoloader {
 	 * @return \Lipe\Lib\Util\Autoloader
 	 */
 	private static function get_loader() {
-		if( empty( self::$instance ) ){
+		if ( empty( self::$instance ) ) {
 			self::$instance = new Autoloader();
 			self::$instance->register( true );
 		}
@@ -79,7 +79,7 @@ class Autoloader {
 	 */
 	public function loadClass( $class ) {
 		$file = $this->findFile( $class );
-		if( null !== $file ){
+		if ( null !== $file ) {
 			require $file;
 
 			return true;
@@ -97,12 +97,12 @@ class Autoloader {
 	public function findFile( $class ) {
 		$class = ltrim( $class, '\\' );
 
-		foreach( $this->prefixes as $current ){
+		foreach ( $this->prefixes as $current ) {
 			list( $currentPrefix, $currentBaseDir ) = $current;
-			if( 0 === strpos( $class, $currentPrefix ) ){
+			if ( 0 === strpos( $class, $currentPrefix ) ) {
 				$classWithoutPrefix = substr( $class, strlen( $currentPrefix ) );
 				$file = $currentBaseDir . str_replace( '\\', DIRECTORY_SEPARATOR, $classWithoutPrefix ) . '.php';
-				if( file_exists( $file ) ){
+				if ( file_exists( $file ) ) {
 					return $file;
 				}
 			}

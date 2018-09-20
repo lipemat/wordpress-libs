@@ -46,8 +46,8 @@ class Filter extends Argument_Abstract {
 	 * @return void
 	 */
 	public function set( array $args ) {
-		if( !isset( $this->filters_array_key ) ){
-			$this->filters_array_key = sanitize_title_with_dashes( $args[ 'title' ] );
+		if ( ! isset( $this->filters_array_key ) ) {
+			$this->filters_array_key = sanitize_title_with_dashes( $args['title'] );
 			$this->CPTS->admin_filters[ $this->filters_array_key ] = [];
 		}
 		$existing = $this->CPTS->admin_filters[ $this->filters_array_key ];
@@ -64,7 +64,7 @@ class Filter extends Argument_Abstract {
 	 *
 	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
 	 */
-	protected function return( array $args ){
+	protected function return( array $args ) {
 		$this->set( $args );
 		return new Filter_Shared( $this, $args );
 	}
@@ -133,8 +133,8 @@ class Filter extends Argument_Abstract {
 			'title'    => $title,
 			'meta_key' => $meta_key,
 		];
-		if( null !== $options_or_callback ){
-			$_args[ 'options' ] = $options_or_callback;
+		if ( null !== $options_or_callback ) {
+			$_args['options'] = $options_or_callback;
 		}
 
 		return $this->return( $_args );

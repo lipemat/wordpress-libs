@@ -21,7 +21,7 @@ class Meta_Repo {
 		$class_name = \get_class( $meta_class );
 		$this->classes[ $class_name ] = $meta_class;
 
-		foreach( $keys as $_key ){
+		foreach ( $keys as $_key ) {
 			$this->keys[ $_key ] = $class_name;
 		}
 	}
@@ -36,8 +36,8 @@ class Meta_Repo {
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public function get_meta( $id, string $key, string $meta_type = 'post' ){
-		if( !isset( $this->keys[ $key ] ) ){
+	public function get_meta( $id, string $key, string $meta_type = 'post' ) {
+		if ( ! isset( $this->keys[ $key ] ) ) {
 			throw new \Exception("This meta key {$key} was not added to the repo. Did you add it to get_keys()" );
 		}
 		$class_name = $this->keys[ $key ];

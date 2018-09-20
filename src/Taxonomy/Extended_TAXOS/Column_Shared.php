@@ -36,7 +36,7 @@ class Column_Shared extends Shared_Abstract {
 	 *
 	 * @return \Lipe\Lib\Taxonomy\Extended_TAXOS\Column_Shared
 	 */
-	protected function return ( array $args ) {
+	protected function return( array $args ) {
 		$this->column->set( $args );
 		return $this;
 

@@ -34,7 +34,7 @@ class Auth_Table extends Db {
 		global $wpdb;
 		$this->table = $wpdb->prefix . 'auth';
 
-		if( $this->update_required() ){
+		if ( $this->update_required() ) {
 			$this->run_updates();
 		}
 	}
@@ -52,7 +52,7 @@ class Auth_Table extends Db {
 
 
 	public function add_token( $columns ) {
-		$columns[ 'token' ] = wp_hash( $columns[ 'token' ] );
+		$columns['token'] = wp_hash( $columns['token'] );
 		$this->add( $columns );
 		$this->clean_expired_tokens();
 	}

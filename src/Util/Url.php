@@ -24,7 +24,7 @@ class Url {
 	 */
 	public function get_current_url() {
 		$prefix = is_ssl() ? "https://" : "http://";
-		$current_url = $prefix . $_SERVER[ "HTTP_HOST" ] . $_SERVER[ "REQUEST_URI" ];
+		$current_url = $prefix . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
 
 		return $current_url;
 	}

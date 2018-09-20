@@ -63,10 +63,10 @@ class Sortable extends Argument_Abstract {
 	 * @return void
 	 */
 	public function set( array $args ) {
-		if( !isset( $this->CPTS->site_sortables[ $this->sortables_array_key ] ) ){
-			$this->sortables_array_key = $args[ 'sort_key' ];
+		if ( ! isset( $this->CPTS->site_sortables[ $this->sortables_array_key ] ) ) {
+			$this->sortables_array_key = $args['sort_key'];
 			$this->CPTS->site_sortables[ $this->sortables_array_key ] = [];
-			unset( $args[ 'sort_key' ] );
+			unset( $args['sort_key'] );
 		}
 
 		$existing = $this->CPTS->site_sortables[ $this->sortables_array_key ];
@@ -83,7 +83,7 @@ class Sortable extends Argument_Abstract {
 	 *
 	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Sortable_Shared
 	 */
-	protected function return( array $args ){
+	protected function return( array $args ) {
 		$this->set( $args );
 		return new Sortable_Shared( $this, $args );
 	}

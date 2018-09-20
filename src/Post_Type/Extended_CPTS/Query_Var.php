@@ -66,8 +66,8 @@ class Query_Var extends Argument_Abstract {
 	 * @return void
 	 */
 	public function set( array $args ) {
-		if( !isset( $this->CPTS->site_filters[ $this->query_vars_array_key ] ) ){
-			$this->query_vars_array_key = $args[ 'query_var' ];
+		if ( ! isset( $this->CPTS->site_filters[ $this->query_vars_array_key ] ) ) {
+			$this->query_vars_array_key = $args['query_var'];
 			$this->CPTS->site_filters[ $this->query_vars_array_key ] = [];
 		}
 
@@ -86,7 +86,7 @@ class Query_Var extends Argument_Abstract {
 	 *
 	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Query_Var_Shared
 	 */
-	protected function return( array $args ){
+	protected function return( array $args ) {
 		$this->set( $args );
 		return new Query_Var_Shared( $this, $args );
 	}
@@ -115,8 +115,8 @@ class Query_Var extends Argument_Abstract {
 			'meta_key'  => $meta_key,
 		];
 
-		if( null !== $meta_query ){
-			$_args[ 'meta_query' ] = $meta_query;
+		if ( null !== $meta_query ) {
+			$_args['meta_query'] = $meta_query;
 		}
 
 		return $this->return( $_args );
@@ -179,7 +179,7 @@ class Query_Var extends Argument_Abstract {
 	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Query_Var_Shared
 	 */
 	public function taxonomy( $query_var, $taxonomy ) {
-		if( taxonomy_exists( $query_var ) ){
+		if ( taxonomy_exists( $query_var ) ) {
 			throw new \Exception( __( 'Your query var clashes with an existing taxonomy. You can probably just use default WP filtering', 'lipe' ) );
 		}
 		$_args = [

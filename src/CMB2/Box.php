@@ -326,7 +326,7 @@ class Box {
 	 * @return \CMB2
 	 */
 	public function get_box() : \CMB2 {
-		if( null !== $this->cmb ){
+		if ( null !== $this->cmb ) {
 			return $this->cmb;
 		}
 
@@ -340,8 +340,8 @@ class Box {
 
 	protected function get_args() : array {
 		$args = [];
-		foreach( get_object_vars( $this ) as $_var => $_value ){
-			if( $_var === 'cmb' || !isset( $this->{$_var} ) || 'fields' === $_var ){
+		foreach ( get_object_vars( $this ) as $_var => $_value ) {
+			if ( $_var === 'cmb' || ! isset( $this->{$_var} ) || 'fields' === $_var ) {
 				continue;
 			}
 			$args[ $_var ] = $this->{$_var};

@@ -26,7 +26,7 @@ trait Singleton {
 	 */
 	public static function init() : void {
 		static::$instance = static::instance();
-		if( method_exists( static::$instance, 'hook' ) ){
+		if ( method_exists( static::$instance, 'hook' ) ) {
 			static::$instance->hook();
 		}
 		static::$inited = true;
@@ -44,7 +44,7 @@ trait Singleton {
 	 * @return void
 	 */
 	public static function init_once() : void {
-		if( !static::$inited ){
+		if ( ! static::$inited ) {
 			static::init();
 			static::$inited = true;
 		}
@@ -69,7 +69,7 @@ trait Singleton {
 	 * @return static
 	 */
 	public static function instance() {
-		if( !is_a( static::$instance, __CLASS__ ) ){
+		if ( ! is_a( static::$instance, __CLASS__ ) ) {
 			static::$instance = new static();
 		}
 

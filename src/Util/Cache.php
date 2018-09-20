@@ -24,7 +24,7 @@ class Cache {
 	public function hook() : void {
 		add_action( 'init', [ $this, 'maybe_clear_cache' ], 9, 0 );
 
-		if( current_user_can( 'manage_options' ) ){
+		if ( current_user_can( 'manage_options' ) ) {
 			add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_button' ], 100, 1 );
 		}
 	}
@@ -33,7 +33,7 @@ class Cache {
 	public static function set( $key, $value, $group = self::DEFAULT_GROUP, $expire_in_seconds = 0 ) : bool {
 		$group = self::get_group_key( $group );
 
-		if( null === $value ){
+		if ( null === $value ) {
 			//store an empty value that memcache can handle
 			$value = '';
 		}
@@ -44,7 +44,7 @@ class Cache {
 
 	private static function get_group_key( $group ) : string {
 		//tap into the existing last_changed for posts group
-		if( self::FLUSH_ON_SAVE_POST_GROUP === $group ){
+		if ( self::FLUSH_ON_SAVE_POST_GROUP === $group ) {
 			$last_changed = wp_cache_get_last_changed( 'posts' );
 		} else {
 			$last_changed = wp_cache_get_last_changed( $group );
@@ -63,7 +63,7 @@ class Cache {
 	 * @return bool|string
 	 */
 	private static function filter_key( $key ) {
-		if( empty( $key ) ){
+		if ( empty( $key ) ) {
 			return false;
 		}
 		$key = ( \is_array( $key ) || \is_object( $key ) ) ? md5( serialize( $key ) ) : $key;
@@ -89,8 +89,8 @@ class Cache {
 
 	public static function flush_all_sites() : void {
 		global $wp_object_cache;
-		if( null !== $wp_object_cache->mc ){
-			foreach( array_keys( $wp_object_cache->mc ) as $group ){
+		if ( null !== $wp_object_cache->mc ) {
+			foreach ( array_keys( $wp_object_cache->mc ) as $group ) {
 				$wp_object_cache->mc[ $group ]->flush();
 			}
 		}
@@ -108,7 +108,7 @@ class Cache {
 
 
 	public function maybe_clear_cache() : void {
-		if( empty( $_REQUEST[ self::QUERY_ARG ] ) || empty( $_REQUEST[ '_wpnonce' ] ) || !wp_verify_nonce( $_REQUEST[ '_wpnonce' ], self::QUERY_ARG ) ){
+		if ( empty( $_REQUEST[ self::QUERY_ARG ] ) || empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], self::QUERY_ARG ) ) {
 			return;
 		}
 		wp_cache_flush();

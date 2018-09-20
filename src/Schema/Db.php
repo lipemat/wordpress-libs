@@ -43,13 +43,13 @@ abstract class Db {
 	public const COLUMNS = [];
 
 	public function __construct() {
-		if( ! \defined( 'static::NAME' ) ){
+		if ( ! \defined( 'static::NAME' ) ) {
 			return;
 		}
 		global $wpdb;
 		$this->table = $wpdb->prefix . static::NAME;
 
-		if( $this->update_required() ){
+		if ( $this->update_required() ) {
 			$this->run_updates();
 		}
 	}
@@ -332,7 +332,7 @@ abstract class Db {
 			$this->update_table();
 		}
 
-		update_option( $this-$this->get_db_option(), $this->get_db_version() );
+		update_option( $this - $this->get_db_option(), $this->get_db_version() );
 
 	}
 

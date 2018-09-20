@@ -113,7 +113,7 @@ class Route {
 	 * @return void
 	 */
 	public function maybe_add_post_hooks( $query ) {
-		if( isset( $query->query_vars[ self::QUERY_VAR ] ) ){
+		if ( isset( $query->query_vars[ self::QUERY_VAR ] ) ) {
 			$this->add_post_hooks();
 		}
 	}
@@ -150,19 +150,19 @@ class Route {
 	public function adjust_body_class( $classes ) {
 		$post = get_post();
 
-		foreach( $classes as $k => $_class ){
-			if( strpos( $_class, 'postid' ) !== false ){
+		foreach ( $classes as $k => $_class ) {
+			if ( strpos( $_class, 'postid' ) !== false ) {
 				unset( $classes[ $k ] );
-			} elseif( $_class == $post->post_name ) {
+			} elseif ( $_class == $post->post_name ) {
 				unset( $classes[ $k ] );
-			} elseif( strpos( $_class, 'page-template' ) !== false ) {
+			} elseif ( strpos( $_class, 'page-template' ) !== false ) {
 				unset( $classes[ $k ] );
 			}
 		}
 
 		$route = self::get_current_route();
-		$classes[] = sanitize_title_with_dashes( $route[ 'title' ] );
-		$template = explode( '/', $route[ 'template' ] );
+		$classes[] = sanitize_title_with_dashes( $route['title'] );
+		$template = explode( '/', $route['template'] );
 		$classes[] = 'page-template-' . str_replace( '.', '-', end( $template ) );
 
 		return $classes;
@@ -179,7 +179,7 @@ class Route {
 	 */
 	public function get_current_route() {
 		$route = get_query_var( self::QUERY_VAR );
-		if( empty( $route ) || empty( self::$routes[ $route ] ) ){
+		if ( empty( $route ) || empty( self::$routes[ $route ] ) ) {
 			return false;
 		}
 
@@ -196,7 +196,7 @@ class Route {
 	 * @return void
 	 */
 	public function maybe_flush_rules() {
-		if( get_option( self::OPTION ) != md5( serialize( self::$routes ) ) ){
+		if ( get_option( self::OPTION ) != md5( serialize( self::$routes ) ) ) {
 			flush_rewrite_rules();
 			update_option( self::OPTION, md5( serialize( self::$routes ) ) );
 		}
@@ -230,7 +230,7 @@ class Route {
 	 * @return void
 	 */
 	public function setup_endpoints() {
-		foreach( self::$routes as $_route => $_args ){
+		foreach ( self::$routes as $_route => $_args ) {
 			add_rewrite_rule( $_route . '/([^/]+)/?.?', 'index.php?post_type=' . self::POST_TYPE . '&p=' . self::get_post_id() . '&' . self::QUERY_VAR . '=' . $_route . '&' . self::PARAM_QUERY_VAR . '=$matches[1]', 'top' );
 
 			add_rewrite_rule( $_route, 'index.php?post_type=' . self::POST_TYPE . '&p=' . self::get_post_id() . '&' . self::QUERY_VAR . '=' . $_route, 'top' );
@@ -248,12 +248,12 @@ class Route {
 	 * @return int
 	 */
 	protected static function get_post_id() {
-		if( self::$post_id ){
+		if ( self::$post_id ) {
 			return self::$post_id;
 		}
 
 		self::$post_id = (int) get_option( self::POST_ID_OPTION, false );
-		if( self::$post_id ){
+		if ( self::$post_id ) {
 			return self::$post_id;
 		}
 
@@ -263,13 +263,13 @@ class Route {
 			'posts_per_page' => 1,
 			'fields'         => 'ids',
 		] );
-		if( $posts ){
-			self::$post_id = $posts[ 0 ];
+		if ( $posts ) {
+			self::$post_id = $posts[0];
 		} else {
 			self::$post_id = self::make_post();
 		}
 
-		if( self::$post_id ){
+		if ( self::$post_id ) {
 			update_option( self::POST_ID_OPTION, (int) self::$post_id );
 		}
 
@@ -292,7 +292,7 @@ class Route {
 			'post_type'   => self::POST_TYPE,
 		];
 		$id = wp_insert_post( $post );
-		if( is_wp_error( $id ) ){
+		if ( is_wp_error( $id ) ) {
 			return 0;
 		}
 
@@ -312,7 +312,7 @@ class Route {
 	public function override_template( $template ) {
 		$route = $this->get_current_route();
 
-		return $route[ 'template' ];
+		return $route['template'];
 	}
 
 
@@ -329,7 +329,7 @@ class Route {
 	 * @return bool
 	 */
 	public function is_current_route( $route ) {
-		if( get_query_var( self::QUERY_VAR ) === $route ){
+		if ( get_query_var( self::QUERY_VAR ) === $route ) {
 			return true;
 		}
 
@@ -364,10 +364,10 @@ class Route {
 	 */
 	public function get_title( $title, $post ) {
 		$post = get_post( $post );
-		if( $post->ID == self::get_post_id() ){
+		if ( $post->ID == self::get_post_id() ) {
 			$route = $this->get_current_route();
 
-			return $route[ 'title' ];
+			return $route['title'];
 		}
 
 		return $title;

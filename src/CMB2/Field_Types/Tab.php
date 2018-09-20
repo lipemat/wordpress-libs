@@ -65,7 +65,7 @@ class Tab {
 	 * @return void
 	 */
 	public function opening_div( $cmb_id, $object_id, $object_type, $cmb ) {
-		if( !$cmb->prop( 'tabs' ) ){
+		if ( ! $cmb->prop( 'tabs' ) ) {
 			return;
 		}
 		$this->cmb = $cmb;
@@ -74,7 +74,7 @@ class Tab {
 		$tab_style = $cmb->prop( 'tab_style' );
 		$class = 'cmb-tabs clearfix';
 
-		if( null !== $tab_style && 'default' !== $tab_style ){
+		if ( null !== $tab_style && 'default' !== $tab_style ) {
 			$class .= ' cmb-tabs-' . $tab_style;
 		}
 		$this->styles();
@@ -85,7 +85,7 @@ class Tab {
 
 
 	public function closing_div() : void {
-		if( !$this->has_tabs ){
+		if ( ! $this->has_tabs ) {
 			return;
 		}
 		echo '</div>';
@@ -108,12 +108,12 @@ class Tab {
 	public function render_nav( $cmb_id, $object_id, $object_type, $cmb ) {
 		$tabs = $cmb->prop( 'tabs' );
 
-		if( $tabs ){
+		if ( $tabs ) {
 			echo '<ul class="cmb-tab-nav">';
 			$active_nav = true;
-			foreach( $tabs as $key => $label ){
+			foreach ( $tabs as $key => $label ) {
 				$class = "cmb-tab-$key";
-				if( $active_nav ){
+				if ( $active_nav ) {
 					$class .= ' cmb-tab-active';
 					$this->active_panel = $key;
 					$active_nav = false;
@@ -134,9 +134,9 @@ class Tab {
 
 
 	public function add_wrap_class( $classes ) {
-		if( $this->has_tabs ){
+		if ( $this->has_tabs ) {
 			$classes[] = 'cmb-tabs-panel';
-			if( !empty( $this->fields_output ) ){
+			if ( ! empty( $this->fields_output ) ) {
 				$classes[] = 'cmb2-wrap-tabs';
 			}
 		}
@@ -154,7 +154,7 @@ class Tab {
 	 */
 	public function render_field( $field_args, CMB2_Field $field ) : void {
 		ob_start();
-		if( 'group' === $field_args[ 'type' ] ){
+		if ( 'group' === $field_args['type'] ) {
 			$this->cmb->render_group_callback( $field_args, $field );
 		} else {
 			$field->render_field_callback();
@@ -174,14 +174,14 @@ class Tab {
 	 * @return void
 	 */
 	public function show_panels( $cmb_id, $object_id, $object_type, $cmb ) : void {
-		if( !$this->has_tabs || empty( $this->fields_output ) ){
+		if ( ! $this->has_tabs || empty( $this->fields_output ) ) {
 			return;
 		}
 
 		echo '<div class="', esc_attr( $cmb->box_classes() ), '">
 					<div id="cmb2-metabox-', sanitize_html_class( $cmb_id ), '" class="cmb2-metabox cmb-field-list">';
 
-		foreach( $this->fields_output as $tab => $fields ){
+		foreach ( $this->fields_output as $tab => $fields ) {
 			$active_panel = $this->active_panel === $tab ? 'show' : '';
 			echo '<div class="' . $active_panel . ' cmb-tab-panel cmb2-metabox cmb-tab-panel-' . $tab . '">';
 			echo implode( '', $fields );
@@ -193,13 +193,13 @@ class Tab {
 
 
 	public function capture_fields( $output, $field_args ) : string {
-		if( !$this->has_tabs || !isset( $field_args[ 'tab' ] ) ){
+		if ( ! $this->has_tabs || ! isset( $field_args['tab'] ) ) {
 			return $output;
 		}
 
-		$tab = $field_args[ 'tab' ];
+		$tab = $field_args['tab'];
 
-		if( !isset( $this->fields_output[ $tab ] ) ){
+		if ( ! isset( $this->fields_output[ $tab ] ) ) {
 			$this->fields_output[ $tab ] = [];
 		}
 		$this->fields_output[ $tab ][] = $output;
@@ -210,7 +210,7 @@ class Tab {
 
 	protected function styles() {
 		static $displayed = false;
-		if( $displayed ){
+		if ( $displayed ) {
 			return;
 		}
 		$displayed = true;

@@ -50,8 +50,8 @@ class Column extends Argument_Abstract {
 	 * @return void
 	 */
 	public function set( array $args ) {
-		if( !isset( $this->cols_array_key ) ){
-			$this->cols_array_key = sanitize_title_with_dashes( $args[ 'title' ] );
+		if ( ! isset( $this->cols_array_key ) ) {
+			$this->cols_array_key = sanitize_title_with_dashes( $args['title'] );
 			$this->TAXOS->admin_cols[ $this->cols_array_key ] = [];
 		}
 		$existing = $this->TAXOS->admin_cols[ $this->cols_array_key ];
@@ -68,7 +68,7 @@ class Column extends Argument_Abstract {
 	 *
 	 * @return \Lipe\Lib\Taxonomy\Extended_TAXOS\Column_Shared
 	 */
-	protected function return( array $args ){
+	protected function return( array $args ) {
 		$this->set( $args );
 		return new Column_Shared( $this, $args );
 	}
@@ -113,8 +113,8 @@ class Column extends Argument_Abstract {
 			'title'    => $title,
 			'meta_key' => $meta_key,
 		];
-		if( null !== $date_format ){
-			$_args[ 'date_format' ] = $date_format;
+		if ( null !== $date_format ) {
+			$_args['date_format'] = $date_format;
 		}
 
 		return $this->return( $_args );

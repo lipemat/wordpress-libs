@@ -368,8 +368,8 @@ class Field_Type {
 		$this->field = $field;
 
 		//set all properties to the values of matching field types
-		foreach( get_object_vars( $this ) as $_var => $_value ){
-			if( $_var !== 'field' && 'box' !== $_var ){
+		foreach ( get_object_vars( $this ) as $_var => $_value ) {
+			if ( $_var !== 'field' && 'box' !== $_var ) {
 				$this->{$_var} = $_var;
 			}
 		}
@@ -385,7 +385,7 @@ class Field_Type {
 	 * @return \Lipe\Lib\CMB2\Field
 	 */
 	protected function set( array $args ) {
-		foreach( $args as $_key => $_value ){
+		foreach ( $args as $_key => $_value ) {
 			$this->field->{$_key} = $_value;
 		}
 		return $this->field;
@@ -663,13 +663,13 @@ class Field_Type {
 	 */
 	public function colorpicker( array $iris_options = [], bool $transparency = false ) : Field {
 		$_args = [ 'type' => $this->colorpicker ];
-		if( !empty( $iris_options ) ){
-			$_args[ 'attributes' ] = [
+		if ( ! empty( $iris_options ) ) {
+			$_args['attributes'] = [
 				'data-colorpicker' => json_encode( $iris_options ),
 			];
 		}
-		if( $transparency ){
-			$_args[ 'options' ] = [
+		if ( $transparency ) {
+			$_args['options'] = [
 				'alpha' => true,
 			];
 		}
@@ -689,7 +689,7 @@ class Field_Type {
 	 */
 	public function multicheck( $options_or_callback, $select_all = true ) {
 		$_args = $this->field_type_options( $this->multicheck, $options_or_callback );
-		$_args[ 'select_all_button' ] = $select_all;
+		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args );
 	}
@@ -707,7 +707,7 @@ class Field_Type {
 	 */
 	public function multicheck_inline( $options_or_callback, $select_all = true ) {
 		$_args = $this->field_type_options( $this->multicheck_inline, $options_or_callback );
-		$_args[ 'select_all_button' ] = $select_all;
+		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args );
 	}
@@ -852,7 +852,7 @@ class Field_Type {
 	 *
 	 * @return \Lipe\Lib\CMB2\Field
 	 */
-	public function taxonomy_select_2( $taxonomy, $create_new_terms = false, $save_as_terms = false, $no_terms_text = null, $remove_default = null  ) : Field {
+	public function taxonomy_select_2( $taxonomy, $create_new_terms = false, $save_as_terms = false, $no_terms_text = null, $remove_default = null ) : Field {
 		Term_Select_2::init_once();
 
 		$_args = $this->field_type_taxonomy( Term_Select_2::NAME, $taxonomy, $no_terms_text, $remove_default );
@@ -877,7 +877,7 @@ class Field_Type {
 	 */
 	public function taxonomy_multicheck( $taxonomy, $no_terms_text = null, $remove_default = null, $select_all = true ) {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_multicheck, $taxonomy, $no_terms_text, $remove_default );
-		$_args[ 'select_all_button' ] = $select_all;
+		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args );
 
@@ -897,7 +897,7 @@ class Field_Type {
 	 */
 	public function taxonomy_multicheck_hierarchical( $taxonomy, $no_terms_text = null, $remove_default = null, $select_all = true ) {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_multicheck_hierarchical, $taxonomy, $no_terms_text, $remove_default );
-		$_args[ 'select_all_button' ] = $select_all;
+		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args );
 	}
@@ -917,7 +917,7 @@ class Field_Type {
 	 */
 	public function taxonomy_multicheck_inline( $taxonomy, $no_terms_text = null, $remove_default = null, $select_all = true ) {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_multicheck_inline, $taxonomy, $no_terms_text, $remove_default );
-		$_args[ 'select_all_button' ] = $select_all;
+		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args );
 
@@ -940,11 +940,11 @@ class Field_Type {
 			'type' => $this->wysiwyg,
 		];
 		//because / in id breaks wp_editor()
-		if( !isset( $this->field->attributes[ 'id' ] ) ){
-			$this->field->attributes[ 'id' ] = str_replace( '/', '-',  $this->field->get_id() );
+		if ( ! isset( $this->field->attributes['id'] ) ) {
+			$this->field->attributes['id'] = str_replace( '/', '-',  $this->field->get_id() );
 		}
-		if( !empty( $mce_options ) ){
-			$_args[ 'options' ] = $mce_options;
+		if ( ! empty( $mce_options ) ) {
+			$_args['options'] = $mce_options;
 		}
 
 
@@ -1032,14 +1032,14 @@ class Field_Type {
 			],
 		];
 
-		if( $title !== null ){
-			$_args[ 'options' ][ 'group_title' ] = $title;
+		if ( $title !== null ) {
+			$_args['options']['group_title'] = $title;
 		}
-		if( $add_button_text !== null ){
-			$_args[ 'options' ][ 'add_button' ] = $add_button_text;
+		if ( $add_button_text !== null ) {
+			$_args['options']['add_button'] = $add_button_text;
 		}
-		if( $remove_button_text !== null ){
-			$_args[ 'options' ][ 'remove_button' ] = $remove_button_text;
+		if ( $remove_button_text !== null ) {
+			$_args['options']['remove_button'] = $remove_button_text;
 		}
 
 		return $this->set( $_args );
@@ -1067,31 +1067,31 @@ class Field_Type {
 			'type' => $type,
 		];
 
-		if( $button_text !== null ){
-			$_args[ 'text' ][ 'add_upload_file_text' ] = $button_text;
+		if ( $button_text !== null ) {
+			$_args['text']['add_upload_file_text'] = $button_text;
 		}
-		if( null !== $remove_item_text ){
-			$_args[ 'text' ][ 'remove_image_text' ] = $remove_item_text;
-			$_args[ 'text' ][ 'remove_item_text' ] = $remove_item_text;
+		if ( null !== $remove_item_text ) {
+			$_args['text']['remove_image_text'] = $remove_item_text;
+			$_args['text']['remove_item_text'] = $remove_item_text;
 		}
-		if( null !== $file_text ){
-			$_args[ 'text' ][ 'file_text' ] = $file_text;
+		if ( null !== $file_text ) {
+			$_args['text']['file_text'] = $file_text;
 		}
-		if( null !== $download_text ){
-			$_args[ 'text' ][ 'file_download_text' ] = $download_text;
+		if ( null !== $download_text ) {
+			$_args['text']['file_download_text'] = $download_text;
 		}
-		if( null !== $file_mime_type ){
-			$_args[ 'query_args' ] = [
+		if ( null !== $file_mime_type ) {
+			$_args['query_args'] = [
 				'type' => $file_mime_type,
 			];
 		}
-		if( null !== $show_text_input ){
-			$_args[ 'options' ] = [
+		if ( null !== $show_text_input ) {
+			$_args['options'] = [
 				'url' => $show_text_input,
 			];
 		}
-		if( null !== $preview_size ){
-			$_args[ 'preview_size' ] = $preview_size;
+		if ( null !== $preview_size ) {
+			$_args['preview_size'] = $preview_size;
 		}
 
 		return $_args;
@@ -1113,11 +1113,11 @@ class Field_Type {
 			'type'     => $type,
 			'taxonomy' => $taxonomy,
 		];
-		if( null !== $remove_default ){
-			$_args[ 'remove_default' ] = $remove_default;
+		if ( null !== $remove_default ) {
+			$_args['remove_default'] = $remove_default;
 		}
-		if( null !== $no_terms_text ){
-			$_args[ 'text' ][ 'no_terms_text' ] = $no_terms_text;
+		if ( null !== $no_terms_text ) {
+			$_args['text']['no_terms_text'] = $no_terms_text;
 		}
 
 		return $_args;
@@ -1134,7 +1134,7 @@ class Field_Type {
 	 * @return array
 	 */
 	protected function field_type_options( $type, $options_or_callback, $show_option_none = null ) {
-		if( is_callable( $options_or_callback ) ){
+		if ( is_callable( $options_or_callback ) ) {
 			$_args = [
 				'type'       => $type,
 				'options_cb' => $options_or_callback,
@@ -1145,8 +1145,8 @@ class Field_Type {
 				'options' => $options_or_callback,
 			];
 		}
-		if( null !== $show_option_none ){
-			$_args[ 'show_option_none' ] = $show_option_none;
+		if ( null !== $show_option_none ) {
+			$_args['show_option_none'] = $show_option_none;
 		}
 
 		return $_args;
@@ -1168,12 +1168,12 @@ class Field_Type {
 			'type'        => $type,
 			'date_format' => $date_format,
 		];
-		if( !empty( $timezone_meta_key ) ){
-			$_args[ 'timezone_meta_key' ] = $timezone_meta_key;
+		if ( ! empty( $timezone_meta_key ) ) {
+			$_args['timezone_meta_key'] = $timezone_meta_key;
 		}
 
-		if( !empty( $date_picker_options ) ){
-			$_args[ 'date_picker_options' ][ 'data-datepicker' ] = json_encode( $date_picker_options );
+		if ( ! empty( $date_picker_options ) ) {
+			$_args['date_picker_options']['data-datepicker'] = json_encode( $date_picker_options );
 		}
 
 		return $_args;

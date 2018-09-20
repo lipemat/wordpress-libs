@@ -21,7 +21,7 @@ trait Post_Object_Trait {
 	 * @param int|\WP_Post $post
 	 */
 	public function __construct( $post ) {
-		if( is_a( $post, \WP_Post::class ) ){
+		if ( is_a( $post, \WP_Post::class ) ) {
 			$this->post = $post;
 			$this->post_id = $this->post->ID;
 		} else {
@@ -35,7 +35,7 @@ trait Post_Object_Trait {
 	 * @return null|\WP_Post
 	 */
 	public function get_post() : ?\WP_Post {
-		if( null === $this->post ){
+		if ( null === $this->post ) {
 			$this->post = get_post( $this->post_id );
 		}
 
@@ -58,7 +58,7 @@ trait Post_Object_Trait {
 	 */
 	public function get_meta( string $key, $default = null ) {
 		$value = Meta_Repo::instance()->get_meta( $this->post_id, $key );
-		if( null !== $default && empty( $value ) ){
+		if ( null !== $default && empty( $value ) ) {
 			return $default;
 		}
 		return $value;

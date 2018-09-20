@@ -33,7 +33,7 @@ trait User_Trait {
 	 * @param null|int $user_id
 	 */
 	public function __construct( $user_id = null ) {
-		if( null === $user_id ){
+		if ( null === $user_id ) {
 			$user_id = get_current_user_id();
 		}
 		$this->user_id = $user_id;
@@ -44,7 +44,7 @@ trait User_Trait {
 	}
 
 	public function get_user() {
-		if( null === $this->user ){
+		if ( null === $this->user ) {
 			$this->user = get_user_by( 'id', $this->user_id );
 		}
 
@@ -61,8 +61,8 @@ trait User_Trait {
 	 * @throws \Exception
 	 */
 	public function get_meta( string $key, $default = null ) {
-		$value =  Meta_Repo::instance()->get_meta( $this->user_id, $key, 'user' );
-		if( null !== $default && empty( $value ) ){
+		$value = Meta_Repo::instance()->get_meta( $this->user_id, $key, 'user' );
+		if ( null !== $default && empty( $value ) ) {
 			return $default;
 		}
 		return $value;

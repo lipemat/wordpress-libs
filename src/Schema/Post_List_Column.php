@@ -31,10 +31,10 @@ abstract class Post_List_Column {
 
 	public function hook() {
 		global $pagenow;
-		if( is_admin() && $pagenow == 'edit.php' ){
+		if ( is_admin() && $pagenow == 'edit.php' ) {
 			add_action( 'restrict_manage_posts', [ $this, 'render_filter' ] );
 			add_action( 'parse_query', [ $this, 'maybe_filter_query' ] );
-			foreach( $this->post_types as $post_type ){
+			foreach ( $this->post_types as $post_type ) {
 				add_action( "manage_{$post_type}_posts_columns", [ $this, 'add_column' ] );
 				add_action( "manage_{$post_type}_posts_custom_column", [ $this, 'maybe_render_column' ], 10, 2 );
 
@@ -65,7 +65,7 @@ abstract class Post_List_Column {
 	 * @return void
 	 */
 	public function maybe_render_column( $column, $post_id ) {
-		if( $column == $this->column_slug ){
+		if ( $column == $this->column_slug ) {
 			$this->render_column( $column, $post_id );
 		}
 	}
@@ -93,7 +93,7 @@ abstract class Post_List_Column {
 	 * @return array
 	 */
 	public function add_column( $columns ) {
-		if( !empty( $this->column_position ) ){
+		if ( ! empty( $this->column_position ) ) {
 			$before = array_slice( $columns, 0, $this->column_position );
 			$after = array_slice( $columns, $this->column_position );
 			$before[ $this->column_slug ] = $this->column_label;
@@ -121,13 +121,13 @@ abstract class Post_List_Column {
 	 * @return void
 	 */
 	public function maybe_filter_query( \WP_Query $query ) {
-		if( empty( $query->query_vars[ 'post_type' ] ) || !in_array( $query->query_vars[ 'post_type' ], $this->post_types ) ){
+		if ( empty( $query->query_vars['post_type'] ) || ! in_array( $query->query_vars['post_type'], $this->post_types ) ) {
 			return;
 		}
 
-		if( !empty( $this->filters[ 'name' ] ) ){
-			$selected = empty( $_REQUEST[ $this->filters[ 'name' ] ] ) ? false : $_REQUEST[ $this->filters[ 'name' ] ];
-			if( !empty( $selected ) ){
+		if ( ! empty( $this->filters['name'] ) ) {
+			$selected = empty( $_REQUEST[ $this->filters['name'] ] ) ? false : $_REQUEST[ $this->filters['name'] ];
+			if ( ! empty( $selected ) ) {
 				$query = $this->filter_query( $selected, $query );
 			}
 		}
@@ -164,24 +164,24 @@ abstract class Post_List_Column {
 	public function render_filter() {
 		global $typenow;
 
-		if( empty( $this->filters ) || !in_array( $typenow, $this->post_types ) ){
+		if ( empty( $this->filters ) || ! in_array( $typenow, $this->post_types ) ) {
 			return;
 		}
 
 		$args = $this->filters;
-		$selected = empty( $_REQUEST[ $args[ 'name' ] ] ) ? false : $_REQUEST[ $args[ 'name' ] ];
+		$selected = empty( $_REQUEST[ $args['name'] ] ) ? false : $_REQUEST[ $args['name'] ];
 
 		?>
-        <select name="<?php echo $args[ 'name' ]; ?>" id="<?php echo $args[ 'name' ]; ?>-select" class="postform" title="<?php echo $args[ 'show_all' ]; ?>">
+        <select name="<?php echo $args['name']; ?>" id="<?php echo $args['name']; ?>-select" class="postform" title="<?php echo $args['show_all']; ?>">
 			<?php
-			if( !empty( $args[ 'show_all' ] ) ){
+			if ( ! empty( $args['show_all'] ) ) {
 				?>
                 <option value="0" selected="selected">
-					<?php echo $args[ 'show_all' ]; ?>
+					<?php echo $args['show_all']; ?>
                 </option>
 				<?php
 			}
-			foreach( $args[ 'items' ] as $value => $_label ){
+			foreach ( $args['items'] as $value => $_label ) {
 				?>
                 <option class="level-0" value="<?php echo $value; ?>" <?php selected( $selected, $value ); ?>>
 					<?php echo $_label; ?>

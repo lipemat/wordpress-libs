@@ -1,6 +1,7 @@
 <?php
 
 namespace Lipe\Project\Api;
+
 use Lipe\Lib\Util\Cache;
 
 
@@ -72,7 +73,7 @@ class YouTube implements \JsonSerializable {
 	 * @return bool
 	 */
 	public function __get( $field ) {
-		if( method_exists( $this, "get_$field" ) ){
+		if ( method_exists( $this, "get_$field" ) ) {
 			return $this->{"get_$field"}();
 		}
 
@@ -102,10 +103,10 @@ class YouTube implements \JsonSerializable {
 
 
 	public function get_object() {
-		if( isset( $this->object ) ){
+		if ( isset( $this->object ) ) {
 			return $this->object;
 		}
-		if( empty( $this->api_key ) ){
+		if ( empty( $this->api_key ) ) {
 			$this->object = $this->get_oembed();
 		} else {
 			$this->object = $this->request_from_api();
@@ -133,7 +134,7 @@ class YouTube implements \JsonSerializable {
 		];
 
 		$object = Cache::get( $cache_key );
-		if( $object === false ){
+		if ( $object === false ) {
 			$url = str_replace( '{{url}}', urlencode( $this->url ), self::OEMBED_URL );
 			$url = str_replace( '{{height}}', $this->height, $url );
 			$url = str_replace( '{{width}}', $this->width, $url );
@@ -158,7 +159,7 @@ class YouTube implements \JsonSerializable {
 	 * @return mixed
 	 */
 	private function request_from_api() {
-		if( empty( $this->api_key ) ){
+		if ( empty( $this->api_key ) ) {
 			return false;
 		}
 
@@ -169,15 +170,15 @@ class YouTube implements \JsonSerializable {
 		];
 
 		$object = Cache::get( $cache_key );
-		if( $object === false ){
+		if ( $object === false ) {
 			$id = $this->get_id_from_url();
-			if( !empty( $id ) ){
+			if ( ! empty( $id ) ) {
 				$url = str_replace( '{{id}}', $id, self::API_URL );
 				$url = str_replace( '{{api_key}}', $this->api_key, $url );
 
 				$response = wp_remote_get( $url );
 				$object = json_decode( wp_remote_retrieve_body( $response ) );
-				if( !empty( $object ) ){
+				if ( ! empty( $object ) ) {
 					$video = array_shift( $object->items );
 					$object = $video->snippet;
 					$object->id = $video->id;
@@ -193,9 +194,9 @@ class YouTube implements \JsonSerializable {
 	private function get_id_from_url() {
 		$id = false;
 		parse_str( parse_url( $this->url, PHP_URL_QUERY ), $_args );
-		if( !empty( $_args[ 'v' ] ) ){
-			$id = $_args[ 'v' ];
-		} elseif( strpos( $this->url, 'youtu.be' ) ) {
+		if ( ! empty( $_args['v'] ) ) {
+			$id = $_args['v'];
+		} elseif ( strpos( $this->url, 'youtu.be' ) ) {
 			$id = trim( parse_url( $this->url, PHP_URL_PATH ), '/' );
 		}
 
@@ -214,7 +215,7 @@ class YouTube implements \JsonSerializable {
 	public function get_html() {
 		$object = $this->get_object();
 		$frame = "";
-		if( !empty( $object->id ) ){
+		if ( ! empty( $object->id ) ) {
 			$frame = '<iframe 
 						width="' . $this->width . '" 
 						height="' . $this->height . '"
@@ -229,16 +230,16 @@ class YouTube implements \JsonSerializable {
 	public function get_thumbnail_url() {
 		$object = $this->get_object();
 		$thumbnail = '';
-		if( !empty( $object->thumbnails ) ){
-			if( isset( $object->thumbnails->maxres ) ){
+		if ( ! empty( $object->thumbnails ) ) {
+			if ( isset( $object->thumbnails->maxres ) ) {
 				$thumbnail = $object->thumbnails->maxres->url;
-			} elseif( isset( $object->thumbnails->high ) ) {
+			} elseif ( isset( $object->thumbnails->high ) ) {
 				$thumbnail = $object->thumbnails->high->url;
-			} elseif( isset( $object->thumbnails->medium ) ) {
+			} elseif ( isset( $object->thumbnails->medium ) ) {
 				$thumbnail = $object->thumbnails->medium->url;
 			}
 			//fallback to oembed url
-		} elseif( !empty( $object->thumbnail_url ) ) {
+		} elseif ( ! empty( $object->thumbnail_url ) ) {
 			$thumbnail = $object->thumbnail_url;
 		}
 

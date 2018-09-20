@@ -98,7 +98,7 @@ class Zip {
 
 		$success = [];
 
-		$zip = new \ZipArchive;
+		$zip = new \ZipArchive();
 		$zip->open( $this->zip_path, \ZipArchive::CREATE );
 
 		foreach ( $files as $file ) {

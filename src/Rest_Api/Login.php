@@ -54,9 +54,9 @@ class Login {
 	 */
 	public function login_via_token( $user ) {
 		$token = $this->get_token_from_header();
-		if( !empty( $token ) ){
+		if ( ! empty( $token ) ) {
 			$user_id = Auth_Table::instance()->get_user( $token );
-			if( !empty( $user_id ) ){
+			if ( ! empty( $user_id ) ) {
 				return $user_id;
 			}
 		}
@@ -67,21 +67,21 @@ class Login {
 
 	private function get_token_from_header() {
 		$headers = null;
-		if( isset( $_SERVER[ 'Authorization' ] ) ){
-			$headers = trim( $_SERVER[ "Authorization" ] );
-		} else if( isset( $_SERVER[ 'HTTP_AUTHORIZATION' ] ) ){
-			$headers = trim( $_SERVER[ "HTTP_AUTHORIZATION" ] );
-		} elseif( function_exists( 'apache_request_headers' ) ) {
+		if ( isset( $_SERVER['Authorization'] ) ) {
+			$headers = trim( $_SERVER["Authorization"] );
+		} elseif ( isset( $_SERVER['HTTP_AUTHORIZATION'] ) ) {
+			$headers = trim( $_SERVER["HTTP_AUTHORIZATION"] );
+		} elseif ( function_exists( 'apache_request_headers' ) ) {
 			$requestHeaders = apache_request_headers();
 			$requestHeaders = array_combine( array_map( 'ucwords', array_keys( $requestHeaders ) ), array_values( $requestHeaders ) );
-			if( isset( $requestHeaders[ 'Authorization' ] ) ){
-				$headers = trim( $requestHeaders[ 'Authorization' ] );
+			if ( isset( $requestHeaders['Authorization'] ) ) {
+				$headers = trim( $requestHeaders['Authorization'] );
 			}
 		}
 
-		if( !empty( $headers ) ){
-			if( preg_match( '/Bearer\s(\S+)/', $headers, $matches ) ){
-				return $matches[ 1 ];
+		if ( ! empty( $headers ) ) {
+			if ( preg_match( '/Bearer\s(\S+)/', $headers, $matches ) ) {
+				return $matches[1];
 			}
 		}
 
@@ -115,16 +115,16 @@ class Login {
 	 */
 	public function basic_auth_handler( \WP_REST_Request $request ) {
 		//!! if this is not set @see this methods php docs for fastcgi !!
-		if( !isset( $_SERVER[ 'PHP_AUTH_USER' ] ) ){
+		if ( ! isset( $_SERVER['PHP_AUTH_USER'] ) ) {
 			return new \WP_Error( 'no_user', __( 'No User Passed', 'wswd' ), [ 'status' => 201 ] );
 		}
 
-		$username = $_SERVER[ 'PHP_AUTH_USER' ];
-		$password = $_SERVER[ 'PHP_AUTH_PW' ];
+		$username = $_SERVER['PHP_AUTH_USER'];
+		$password = $_SERVER['PHP_AUTH_PW'];
 
 		$user = wp_authenticate( $username, $password );
 
-		if( is_wp_error( $user ) ){
+		if ( is_wp_error( $user ) ) {
 			return $user;
 		}
 
