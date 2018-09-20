@@ -38,9 +38,9 @@ class Styles {
 			$version = SCRIPTS_VERSION;
 		} else {
 			//beanstalk style
-			$file = isset( $_SERVER['DOCUMENT_ROOT'] ) ? sanitize_key( $_SERVER['DOCUMENT_ROOT'] ) : '' . '/.revision';
-			if ( \file_exists( $file ) ) {
-				$version = \trim( \file_get_contents( $file ) );
+			$path = isset( $_SERVER['DOCUMENT_ROOT'] ) ? \sanitize_text_field( \wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) : '';
+			if ( \file_exists( $path . '/.revision' ) ) {
+				$version = \trim( \file_get_contents( $path . '/.revision' ) );
 			}
 		}
 
