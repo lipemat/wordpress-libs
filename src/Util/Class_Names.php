@@ -18,7 +18,8 @@ namespace Lipe\Lib\Util;
  *
  *
  * @author  Mat Lipe
- * @since   1.4.0
+ * @since   1.4.0 - added
+ * @since   1.9.0 - support for adding/removing classes as we go
  *
  * @package Lipe\Lib\Util
  */
@@ -40,18 +41,28 @@ class Class_Names implements \ArrayAccess {
 	}
 
 
+	/**
+	 * @param string $class
+	 *
+	 * @return int|false
+	 */
+	private function get_classes_key( string $class ) {
+		return array_search( $class, $this->classes, true );
+	}
+
+
 	public function __toString() {
 		return implode( ' ', $this->classes );
 	}
 
 
 	public function offsetExists( $class ) : bool {
-		return isset( $this->classes[ $class ] );
+		return false !== $this->get_classes_key( $class );
 	}
 
 
 	public function offsetGet( $class ) {
-		return $this->classes[ $class ];
+		return $this->offsetExists( $class );
 	}
 
 
@@ -59,13 +70,15 @@ class Class_Names implements \ArrayAccess {
 		if ( (bool) $active ) {
 			$this->classes[] = $class;
 		} else {
-			unset( $this->classes[ $class ] );
+			$this->offsetUnset( $class );
 		}
 	}
 
 
 	public function offsetUnset( $class ) : void {
-		unset( $this->classes[ $class ] );
+		if ( $this->offsetExists( $class ) ) {
+			unset( $this->classes[ (int) $this->get_classes_key( $class ) ] );
+		}
 	}
 }
 
