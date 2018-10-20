@@ -33,12 +33,17 @@ class Class_Names implements \ArrayAccess {
 			$this->classes = $classes;
 		}
 
-		foreach ( $classes as $_class => $_active ) {
-			if ( (bool) $_active ) {
-				$this->classes[] = $_class;
+		foreach ( $classes as $_class => $_state ) {
+			if ( \is_string( $_class  ) ) {
+				if ( (bool) $_state ) {
+					$this->classes[] = $_class;
+				}
+			} else {
+				$this->classes[] = $_state;
 			}
 		}
 	}
+
 
 
 	/**
