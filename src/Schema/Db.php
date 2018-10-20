@@ -74,7 +74,6 @@ abstract class Db {
 
 
 	/**
-	 *
 	 * Retrieve data from this db table
 	 *
 	 * @param array|string $columns   - array or csv of columns we want to return
@@ -83,6 +82,7 @@ abstract class Db {
 	 *                                depending on what $count is set to
 	 *
 	 * @param array|string [$id_or_wheres] - row id or array or where column => value
+	 *                     Adding a % within the value will turn the query into a Like query
 	 *
 	 * @param              bool       [$count] - number of rows to return.
 	 *                                If set to 1 this will return a single var or
@@ -90,6 +90,9 @@ abstract class Db {
 	 *                                $columns, instead of an array of results
 	 *
 	 * @param              string     [ $order_by ] - an orderby value used verbatim in query
+	 *
+	 * @since 1.9.2 - Support passing an empty '' value
+	 * @since 1.9.2 - Support like queries
 	 *
 	 * @return array|string
 	 *
@@ -113,12 +116,14 @@ abstract class Db {
 			$values        = [];
 			$where_formats = $this->get_formats( $id_or_wheres );
 			foreach ( $id_or_wheres as $column => $value ) {
-				if ( ! empty( $value ) ) {
+				if ( false !== strpos( $value, '%' ) ) {
+					$wheres[ $column ] = "`$column` LIKE " . array_shift( $where_formats );
+				} else {
 					$wheres[ $column ] = "`$column` = " . array_shift( $where_formats );
-					$values[]          = $value;
 				}
+				$values[] = $value;
 			}
-
+            // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 			$where = ' WHERE ' . implode( ' AND ', $wheres );
 			$sql   .= $wpdb->prepare( $where, $values );
 		}
@@ -131,20 +136,21 @@ abstract class Db {
 			$sql .= " LIMIT $count";
 		}
 
+
 		if ( '*' === $columns || \substr_count( $columns, ',' ) > 1 ) {
-			if ( $count === 1 ) {
+			if ( 1 === $count ) {
 				return $wpdb->get_row( $sql );
 			}
 
 			return $wpdb->get_results( $sql );
 
 		}
-		if ( $count === 1 ) {
+		if ( 1 === $count ) {
 			return $wpdb->get_var( $sql );
 		}
 
 		return $wpdb->get_col( $sql );
-
+		// phpcs:enable
 
 	}
 
@@ -215,11 +221,11 @@ abstract class Db {
 		foreach ( $this->get_columns() as $column => $type ) {
 			if ( array_key_exists( $column, $columns ) ) {
 				$clean[ $column ] = $columns[ $column ];
-			} else {
-				//we are always doing default date stuff
-				if ( $column !== 'date' ) {
-					$clean[ $column ] = null;
-				}
+
+				//because we usually let mysql handle default dates
+			} elseif ( 'date' !== $column ) {
+				$clean[ $column ] = null;
+
 			}
 		}
 
