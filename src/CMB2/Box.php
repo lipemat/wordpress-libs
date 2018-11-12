@@ -316,7 +316,7 @@ class Box {
 	 *
 	 * @return void
 	 */
-	public function tabs_style( string $layout ) : void {
+	public function tabs_style( string $layout = 'horizontal' ) : void {
 		$this->tab_style = $layout ? 'classic' : 'default';
 	}
 
@@ -341,7 +341,7 @@ class Box {
 	protected function get_args() : array {
 		$args = [];
 		foreach ( get_object_vars( $this ) as $_var => $_value ) {
-			if ( $_var === 'cmb' || ! isset( $this->{$_var} ) || 'fields' === $_var ) {
+			if ( 'cmb' === $_var || ! isset( $this->{$_var} ) || 'fields' === $_var ) {
 				continue;
 			}
 			$args[ $_var ] = $this->{$_var};

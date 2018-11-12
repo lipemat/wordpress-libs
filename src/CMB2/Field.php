@@ -703,7 +703,7 @@ class Field {
 	 *
 	 * @return $this
 	 */
-	public function tab( string $id ) {
+	public function tab( string $id ) : Field {
 		Tab::init_once();
 
 		$this->tab           = $id;

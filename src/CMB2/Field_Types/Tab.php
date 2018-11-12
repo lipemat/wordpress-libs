@@ -8,6 +8,12 @@ use Lipe\Lib\Traits\Singleton;
 /**
  * Support Tabs in meta boxes
  *
+ * @usage Assign and array of tabs to a box when registering it
+ *        via the Lipe\Lib\CMB2\Box::add_tab() method.
+ *        Then use the Lipe\Lib\CMB2\Field::tab() method to assign each field to a particular tab.
+ *        Every field a box has must be assigned to a tab or none will display.
+ *
+ *
  * @author  Mat Lipe
  * @since   1.2.0
  *
@@ -79,7 +85,7 @@ class Tab {
 		}
 		$this->styles();
 
-		echo '<div class="' . $class . '">';
+		echo '<div class="' . esc_attr( $class ) . '">';
 
 	}
 
@@ -121,9 +127,9 @@ class Tab {
 
 				printf(
 					'<li class="%s" data-panel="%s"><a href="#"><span>%s</span></a></li>',
-					$class,
-					$key,
-					$label
+					esc_attr( $class ),
+					esc_attr( $key ),
+					esc_html( $label )
 				);
 			}
 
@@ -160,7 +166,7 @@ class Tab {
 			$field->render_field_callback();
 		}
 		$output = ob_get_clean();
-		echo $this->capture_fields( $output, $field_args, $field );
+		echo $this->capture_fields( $output, $field_args ); //phpcs:ignore
 	}
 
 
@@ -183,8 +189,8 @@ class Tab {
 
 		foreach ( $this->fields_output as $tab => $fields ) {
 			$active_panel = $this->active_panel === $tab ? 'show' : '';
-			echo '<div class="' . $active_panel . ' cmb-tab-panel cmb2-metabox cmb-tab-panel-' . $tab . '">';
-			echo implode( '', $fields );
+			echo '<div class="' . esc_attr( $active_panel ) . ' cmb-tab-panel cmb2-metabox cmb-tab-panel-' . esc_attr( $tab ) . '">';
+			echo implode( '', $fields ); //phpcs:ignore
 			echo '</div>';
 		}
 
