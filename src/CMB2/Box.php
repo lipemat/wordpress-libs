@@ -2,7 +2,7 @@
 
 namespace Lipe\Lib\CMB2;
 
-use Lipe\Lib\CMB2\Field_Types\Tab;
+use Lipe\Lib\CMB2\Box\Tabs;
 
 /**
  * Box
@@ -302,7 +302,7 @@ class Box {
 	 */
 	public function add_tab( string $id, string $label ) : void {
 		$this->tabs[ $id ] = $label;
-		Tab::init_once();
+		Tabs::init_once();
 	}
 
 
@@ -310,14 +310,14 @@ class Box {
 	 * Should the tabs display vertical or horizontal?
 	 * Default is vertical when not calling this.
 	 *
-	 * @param string $layout - vertical, horizontal (default to horizontal)
+	 * @param string $layout - vertical, horizontal
 	 *
 	 * @since   1.2.0
 	 *
 	 * @return void
 	 */
-	public function tabs_style( string $layout ) : void {
-		$this->tab_style = $layout ? 'classic' : 'default';
+	public function tabs_style( string $layout = 'horizontal' ) : void {
+		$this->tab_style = $layout;
 	}
 
 	/**
@@ -341,7 +341,7 @@ class Box {
 	protected function get_args() : array {
 		$args = [];
 		foreach ( get_object_vars( $this ) as $_var => $_value ) {
-			if ( $_var === 'cmb' || ! isset( $this->{$_var} ) || 'fields' === $_var ) {
+			if ( 'cmb' === $_var || ! isset( $this->{$_var} ) || 'fields' === $_var ) {
 				continue;
 			}
 			$args[ $_var ] = $this->{$_var};

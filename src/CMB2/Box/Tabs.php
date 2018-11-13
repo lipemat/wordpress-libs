@@ -1,19 +1,27 @@
 <?php
 
-namespace Lipe\Lib\CMB2\Field_Types;
+namespace Lipe\Lib\CMB2\Box;
 
 use CMB2_Field;
+use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\Traits\Singleton;
+use Lipe\Lib\Util\Class_Names;
 
 /**
  * Support Tabs in meta boxes
+ *
+ * @usage Assign and array of tabs to a box when registering it
+ *        via the Lipe\Lib\CMB2\Box::add_tab() method.
+ *        Then use the Lipe\Lib\CMB2\Field::tab() method to assign each field to a particular tab.
+ *        Every field a box has must be assigned to a tab or none will display.
+ *
  *
  * @author  Mat Lipe
  * @since   1.2.0
  *
  * @package Lipe\Lib\CMB2\Field_Types
  */
-class Tab {
+class Tabs {
 	use Singleton;
 
 	/**
@@ -72,14 +80,15 @@ class Tab {
 		$this->has_tabs = true;
 
 		$tab_style = $cmb->prop( 'tab_style' );
-		$class = 'cmb-tabs clearfix';
+		$classes = new Class_Names( [
+			'cmb-tabs',
+			'clearfix',
+		] );
+		$classes[ 'cmb-tabs-' . $tab_style ] = ( null !== $tab_style && 'vertical' !== $tab_style );
 
-		if ( null !== $tab_style && 'default' !== $tab_style ) {
-			$class .= ' cmb-tabs-' . $tab_style;
-		}
 		$this->styles();
 
-		echo '<div class="' . $class . '">';
+		echo '<div class="' . esc_attr( $classes ) . '">';
 
 	}
 
@@ -121,9 +130,9 @@ class Tab {
 
 				printf(
 					'<li class="%s" data-panel="%s"><a href="#"><span>%s</span></a></li>',
-					$class,
-					$key,
-					$label
+					esc_attr( $class ),
+					esc_attr( $key ),
+					esc_html( $label )
 				);
 			}
 
@@ -146,9 +155,13 @@ class Tab {
 
 
 	/**
+	 * Replaces the render_field callback for a field which as been
+	 * assigned to a tab
 	 *
-	 * @param $field_args
-	 * @param $field
+	 * @param array $field_args
+	 * @param CMB2_Field $field
+	 *
+	 * @see Field::tab()
 	 *
 	 * @return void
 	 */
@@ -160,7 +173,7 @@ class Tab {
 			$field->render_field_callback();
 		}
 		$output = ob_get_clean();
-		echo $this->capture_fields( $output, $field_args, $field );
+		echo $this->capture_fields( $output, $field_args ); //phpcs:ignore
 	}
 
 
@@ -183,8 +196,8 @@ class Tab {
 
 		foreach ( $this->fields_output as $tab => $fields ) {
 			$active_panel = $this->active_panel === $tab ? 'show' : '';
-			echo '<div class="' . $active_panel . ' cmb-tab-panel cmb2-metabox cmb-tab-panel-' . $tab . '">';
-			echo implode( '', $fields );
+			echo '<div class="' . esc_attr( $active_panel ) . ' cmb-tab-panel cmb2-metabox cmb-tab-panel-' . esc_attr( $tab ) . '">';
+			echo implode( '', $fields ); //phpcs:ignore
 			echo '</div>';
 		}
 
@@ -208,7 +221,7 @@ class Tab {
 	}
 
 
-	protected function styles() {
+	protected function styles() : void {
 		static $displayed = false;
 		if ( $displayed ) {
 			return;
@@ -445,9 +458,9 @@ class Tab {
 			}
 
 			/*--------------------------------------------------------------
-			Classic Tab
+			Horizontal Tabs
 			--------------------------------------------------------------*/
-			.cmb-tabs.cmb-tabs-classic ul.cmb-tab-nav {
+			.cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav {
 				width: 100%;
 				float: none;
 				background-color: #fafafa;
@@ -457,37 +470,37 @@ class Tab {
 				padding-top: 15px;
 			}
 
-			.cmb-tabs.cmb-tabs-classic .cmb-tab-nav li {
+			.cmb-tabs.cmb-tabs-horizontal .cmb-tab-nav li {
 				background: #ebebeb none repeat scroll 0 0;
 				margin: 0 5px -1px 5px;
 				display: inline-block;
 			}
 
-			.cmb-tabs.cmb-tabs-classic .cmb-tab-nav li:first-of-type {
+			.cmb-tabs.cmb-tabs-horizontal .cmb-tab-nav li:first-of-type {
 				margin-left: 18px;
 			}
 
-			.cmb-tabs.cmb-tabs-classic ul.cmb-tab-nav::after {
+			.cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav::after {
 				display: none;
 			}
 
-			.cmb-tabs.cmb-tabs-classic .cmb-tabs-panel {
+			.cmb-tabs.cmb-tabs-horizontal .cmb-tabs-panel {
 				width: 100%;
 			}
 
-			.cmb-tabs.cmb-tabs-classic .cmb-tab-panel {
+			.cmb-tabs.cmb-tabs-horizontal .cmb-tab-panel {
 				/*background: #ebebeb none repeat scroll 0 0;*/
 				padding-top: 10px;
 			}
 
-			.cmb-tabs.cmb-tabs-classic ul.cmb-tab-nav li a {
+			.cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav li a {
 				padding: 8px 12px;
 				background-color: #fafafa;
 				border: none;
 				border-bottom: 1px solid #dedede;
 			}
 
-			.cmb-tabs.cmb-tabs-classic ul.cmb-tab-nav li.cmb-tab-active a {
+			.cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav li.cmb-tab-active a {
 				background-color: #fff;
 				border-color: #fff;
 				border: none;
