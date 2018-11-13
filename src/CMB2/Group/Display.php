@@ -22,11 +22,16 @@ class Display {
 
 
 	protected function hook() : void {
-		add_action( 'cmb2_before_form', [ $this, 'init_group' ], 10, 4 );
+		add_action( 'cmb2_before_form', [ $this, 'store_meta_box_class' ], 10, 4 );
 	}
 
 
 	/**
+	 * Store the meta box class so we can use it later
+	 *
+	 * @notice This should not be called directly
+	 *
+	 * @internal
 	 *
 	 * @param string     $cmb_id
 	 * @param string|int $object_id
@@ -35,8 +40,13 @@ class Display {
 	 *
 	 * @return void
 	 */
-	public function init_group( $cmb_id, $object_id, $object_type, \CMB2 $cmb ) : void {
+	public function store_meta_box_class( $cmb_id, $object_id, $object_type, \CMB2 $cmb ) : void {
 		$this->cmb = $cmb;
+	}
+
+
+	protected function is_table( \CMB2_Field $field_group ) : bool {
+		return ( 'table' === $field_group->args( 'display' ) );
 	}
 
 
@@ -63,10 +73,9 @@ class Display {
 
 		$desc      = $field_group->args( 'description' );
 		$label     = $field_group->args( 'name' );
-		$is_table  = ( 'table' === $field_group->args( 'display' ) );
 		$group_val = (array) $field_group->value();
 
-		echo '<div class="cmb-row cmb-repeat-group-wrap cmb-group-' . esc_attr( $field_group->args( 'display' ) ) . ' ' . esc_attr( $field_group->row_classes() ), '" data-fieldtype="group"><div class="cmb-td"><div data-groupid="' . esc_attr( $field_group->id() ) . '" id="' . esc_attr( $field_group->id() ) . '_repeat" ' . $this->cmb->group_wrap_attributes( $field_group ) . '>'; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<div class="cmb-row cmb-repeat-group-wrap cmb-group-table cmb-group-display-' . esc_attr( $field_group->args( 'display' ) ) . ' ' . esc_attr( $field_group->row_classes() ), '" data-fieldtype="group"><div class="cmb-td"><div data-groupid="' . esc_attr( $field_group->id() ) . '" id="' . esc_attr( $field_group->id() ) . '_repeat" ' . $this->cmb->group_wrap_attributes( $field_group ) . '>'; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		if ( $desc || $label ) {
 			$class = $desc ? ' cmb-group-description' : '';
@@ -80,31 +89,25 @@ class Display {
 			echo '</div></div>';
 		}
 
-		if ( $is_table ) {
-			echo '<table class="cmb-table">';
-			if ( $field_group->args( 'show_names' ) ) {
-				$this->render_group_table_header( $field_group );
-			}
+		echo '<table class="cmb-table" cellpadding="0" cellspacing="0">';
+
+		if ( $this->is_table( $field_group ) && $field_group->args( 'show_names' ) ) {
+			$this->render_group_table_header( $field_group );
 		}
 
 		if ( ! empty( $group_val ) ) {
 			foreach ( $group_val as $group_key => $field_id ) {
-				if ( $is_table ) {
-					$this->render_group_table_row( $field_group );
-				}
+				$this->render_group_table_row( $field_group );
 				$field_group->index ++;
 			}
-		} elseif ( $is_table ) {
+		} else {
 			$this->render_group_table_row( $field_group );
 		}
 
-		if ( $is_table ) {
-			echo '</table>';
-		}
+		echo '</table>';
 
 		if ( $field_group->args( 'repeatable' ) ) {
-			$title = $is_table ? '{#}' : $field_group->options( 'group_title' );
-			echo '<div class="cmb-row"><div class="cmb-td"><p class="cmb-add-row"><button type="button" data-selector="' . esc_attr( $field_group->id() ) . '_repeat" data-grouptitle="' . esc_attr( $title ) . '" class="cmb-add-group-row button-secondary">' . esc_html( $field_group->options( 'add_button' ) ) . '</button></p></div></div>';
+			echo '<div class="cmb-row"><div class="cmb-td"><p class="cmb-add-row"><button type="button" data-selector="' . esc_attr( $field_group->id() ) . '_repeat" data-grouptitle="{#}" class="cmb-add-group-row button-secondary">' . esc_html( $field_group->options( 'add_button' ) ) . '</button></p></div></div>';
 		}
 
 		echo '</div></div></div>';
@@ -149,32 +152,56 @@ class Display {
 	 *
 	 * @return \CMB2
 	 */
-	public function render_group_table_row( $field_group ) : \CMB2 {
+	public function render_group_table_row( \CMB2_Field $field_group ) : \CMB2 {
 		$field_group->peform_param_callback( 'before_group_row' );
 		?>
 		<tr class="cmb-row cmb-repeatable-grouping" data-iterator="<?= esc_attr( $field_group->index ); ?>">
-			<td class="cmb-group-table-control">
-				<h3 class="cmb-group-title cmbhandle-title">
-					<span><?= esc_html( $field_group->replace_hash( '{#}' ) ); ?></span>
-				</h3>
-			</td>
 			<?php
-			// Loop and render repeatable group fields.
-			foreach ( array_values( $field_group->args( 'fields' ) ) as $field_args ) {
+			if ( $field_group->args( 'repeatable' ) ) {
 				?>
-				<td class="inside cmb-nested cmb-field-list">
-					<?php
-					if ( 'hidden' === $field_args['type'] ) {
-						// Save rendering for after the metabox.
-						$this->cmb->add_hidden_field( $field_args, $field_group );
-					} else {
-						$field_args['show_names'] = false;
-						$this->cmb->get_field( $field_args, $field_group )->render_field();
-					}
-					?>
+				<td class="cmb-group-table-control">
+					<h3 class="cmb-group-title cmbhandle-title">
+						<span><?= esc_html( $field_group->replace_hash( '{#}' ) ); ?></span>
+					</h3>
 				</td>
 				<?php
 			}
+
+			if ( $this->is_table( $field_group ) ) {
+				foreach ( array_values( $field_group->args( 'fields' ) ) as $field_args ) {
+					?>
+					<td class="inside cmb-nested cmb-field-list">
+						<?php
+						$this->render_field( $field_args, $field_group );
+						?>
+					</td>
+					<?php
+				}
+			} else {
+				?>
+				<td class="cmb-group-row-fields">
+					<table border="0" cellpadding="0" cellspacing="0">
+						<?php
+						foreach ( array_values( $field_group->args( 'fields' ) ) as $field_args ) {
+							?>
+							<tr>
+								<th>
+									<?= esc_html( $field_args['name'] ); ?>
+								</th>
+								<td>
+									<?php
+									$this->render_field( $field_args, $field_group );
+									?>
+								</td>
+							</tr>
+							<?php
+						}
+						?>
+					</table>
+				</td>
+				<?php
+			}
+
 			if ( $field_group->args( 'repeatable' ) ) {
 				?>
 				<td class="cmb-remove-field-row cmb-group-table-control">
@@ -199,7 +226,18 @@ class Display {
 	}
 
 
-	private function styles() : void {
+	protected function render_field( array $field_args, \CMB2_Field $field_group ) : void {
+		if ( 'hidden' === $field_args['type'] ) {
+			// Save rendering for after the metabox.
+			$this->cmb->add_hidden_field( $field_args, $field_group );
+		} else {
+			$field_args['show_names'] = false;
+			$this->cmb->get_field( $field_args, $field_group )->render_field();
+		}
+	}
+
+
+	protected function styles() : void {
 		static $displayed = false;
 		if ( $displayed ) {
 			return;
@@ -227,6 +265,32 @@ class Display {
 				padding: 8px !important;
 				vertical-align: top;
 				text-align: left;
+			}
+
+			.cmb-group-table.cmb-group-display-row td {
+				padding-bottom: 0 !important;
+			}
+
+			.cmb-group-table.cmb-group-display-row .cmb-table {
+				border-top: #DFDFDF solid 1px;
+			}
+
+			.cmb-group-table .cmb-group-row-fields {
+				padding: 0 !important;
+				margin: 0 !important;
+			}
+
+			.cmb-group-row-fields td,
+			.cmb-group-row-fields th{
+				border: none !important;
+				border-bottom: #EEEEEE solid 1px !important;
+			}
+
+			.cmb-group-row-fields th {
+				width: 20%;
+				vertical-align: top;
+				background: #F9F9F9;
+				border-right: 1px solid #E1E1E1 !important;
 			}
 
 			.cmb-group-table-control {
