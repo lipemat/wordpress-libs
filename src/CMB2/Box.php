@@ -310,14 +310,14 @@ class Box {
 	 * Should the tabs display vertical or horizontal?
 	 * Default is vertical when not calling this.
 	 *
-	 * @param string $layout - vertical, horizontal (default to horizontal)
+	 * @param string $layout - vertical, horizontal
 	 *
 	 * @since   1.2.0
 	 *
 	 * @return void
 	 */
 	public function tabs_style( string $layout = 'horizontal' ) : void {
-		$this->tab_style = $layout ? 'classic' : 'default';
+		$this->tab_style = $layout;
 	}
 
 	/**

@@ -698,6 +698,7 @@ class Field {
 	 * The tab must be first registered with the box.
 	 *
 	 * @see \Lipe\Lib\CMB2\Box::add_tab()
+	 * @see Tabs::render_field()
 	 *
 	 * @param string $id
 	 *
