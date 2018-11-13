@@ -2,7 +2,7 @@
 
 namespace Lipe\Lib\CMB2;
 
-use Lipe\Lib\CMB2\Field_Types\Tab;
+use Lipe\Lib\CMB2\Box\Tabs;
 
 /**
  * Box
@@ -302,7 +302,7 @@ class Box {
 	 */
 	public function add_tab( string $id, string $label ) : void {
 		$this->tabs[ $id ] = $label;
-		Tab::init_once();
+		Tabs::init_once();
 	}
 
 

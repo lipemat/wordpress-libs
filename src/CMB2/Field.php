@@ -2,7 +2,7 @@
 
 namespace Lipe\Lib\CMB2;
 
-use Lipe\Lib\CMB2\Field_Types\Tab;
+use Lipe\Lib\CMB2\Box\Tabs;
 
 /**
  * Field
@@ -704,10 +704,10 @@ class Field {
 	 * @return $this
 	 */
 	public function tab( string $id ) : Field {
-		Tab::init_once();
+		Tabs::init_once();
 
 		$this->tab           = $id;
-		$this->render_row_cb = [ Tab::in(), 'render_field' ];
+		$this->render_row_cb = [ Tabs::in(), 'render_field' ];
 
 		return $this;
 	}

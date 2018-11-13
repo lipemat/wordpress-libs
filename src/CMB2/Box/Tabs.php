@@ -1,6 +1,6 @@
 <?php
 
-namespace Lipe\Lib\CMB2\Field_Types;
+namespace Lipe\Lib\CMB2\Box;
 
 use CMB2_Field;
 use Lipe\Lib\Traits\Singleton;
@@ -19,7 +19,7 @@ use Lipe\Lib\Traits\Singleton;
  *
  * @package Lipe\Lib\CMB2\Field_Types
  */
-class Tab {
+class Tabs {
 	use Singleton;
 
 	/**
