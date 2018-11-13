@@ -3,7 +3,6 @@
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Field_Types\Term_Select_2;
-use function stripslashes;
 
 /**
  * Field_Type
@@ -369,7 +368,7 @@ class Field_Type {
 
 		//set all properties to the values of matching field types
 		foreach ( get_object_vars( $this ) as $_var => $_value ) {
-			if ( $_var !== 'field' && 'box' !== $_var ) {
+			if ( 'field' !== $_var && 'box' !== $_var ) {
 				$this->{$_var} = $_var;
 			}
 		}
@@ -579,7 +578,7 @@ class Field_Type {
 	 * @param string $date_format
 	 * @param string $timezone_meta_key - to use the value of another timezone_select field
 	 *                                  as the timezone
-	 * @param [] $date_picker_options - overrides for jQuery UI Datepicker (see example)
+	 * @param array $date_picker_options - overrides for jQuery UI Datepicker (see example)
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_date
 	 *
@@ -769,7 +768,7 @@ class Field_Type {
 	 *
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
+	 * @param bool   $remove_default - remove default WP terms metabox
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
 	 *
@@ -787,7 +786,7 @@ class Field_Type {
 	 *
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
+	 * @param bool   $remove_default - remove default WP terms metabox
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
 	 *
@@ -806,7 +805,7 @@ class Field_Type {
 	 *
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
+	 * @param bool   $remove_default - remove default WP terms metabox
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio_inline
 	 *
@@ -825,7 +824,7 @@ class Field_Type {
 	 *
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
+	 * @param bool   $remove_default - remove default WP terms metabox
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_select
 	 *
@@ -848,7 +847,9 @@ class Field_Type {
 	 * @param bool $create_new_terms - allow creating new terms
 	 * @param bool $save_as_terms - append the terms to the object as well as storing them in meta (default to false );
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
+	 * @param bool   $remove_default - remove default WP terms metabox
+	 *
+	 * @see Term_Select_2
 	 *
 	 * @return \Lipe\Lib\CMB2\Field
 	 */
@@ -868,7 +869,7 @@ class Field_Type {
 	 *
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
+	 * @param bool   $remove_default - remove default WP terms metabox
 	 * @param bool   $select_all     - display the select all button
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
@@ -888,7 +889,7 @@ class Field_Type {
 	 *
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
+	 * @param bool   $remove_default - remove default WP terms metabox
 	 * @param bool   $select_all     - display the select all button
 	 *
 	 * @todo update with links to docs once they exist
@@ -908,7 +909,7 @@ class Field_Type {
 	 *
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
+	 * @param bool   $remove_default - remove default WP terms metabox
 	 * @param bool   $select_all     - display the select all button
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_inline
@@ -1032,13 +1033,13 @@ class Field_Type {
 			],
 		];
 
-		if ( $title !== null ) {
+		if ( null !== $title ) {
 			$_args['options']['group_title'] = $title;
 		}
-		if ( $add_button_text !== null ) {
+		if ( null !== $add_button_text ) {
 			$_args['options']['add_button'] = $add_button_text;
 		}
-		if ( $remove_button_text !== null ) {
+		if ( null !== $remove_button_text ) {
 			$_args['options']['remove_button'] = $remove_button_text;
 		}
 
@@ -1067,7 +1068,7 @@ class Field_Type {
 			'type' => $type,
 		];
 
-		if ( $button_text !== null ) {
+		if ( null !== $button_text ) {
 			$_args['text']['add_upload_file_text'] = $button_text;
 		}
 		if ( null !== $remove_item_text ) {
@@ -1104,7 +1105,7 @@ class Field_Type {
 	 * @param string $type
 	 * @param string $taxonomy       - slug
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox (does not work if box is outputting outside normal meta_boxes like after_title because the actions fire too late @link https://github.com/CMB2/CMB2/pull/1088 to my pull request. If they refuse it, consider merging the feature branch into my fork and maintaining my own repo
+	 * @param bool   $remove_default - remove default WP terms metabox
 	 *
 	 * @return array
 	 */
