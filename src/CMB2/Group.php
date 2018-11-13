@@ -2,6 +2,8 @@
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\CMB2\Group\Display;
+
 /**
  * Group
  *
@@ -70,6 +72,15 @@ class Group extends Field {
 	public $after_group_row;
 
 	/**
+	 * Display format for the group
+	 *
+	 * block (default), row, table
+	 *
+	 * @var string
+	 */
+	public $display = 'block';
+
+	/**
 	 * box
 	 *
 	 * @var \Lipe\Lib\CMB2\Box
@@ -99,6 +110,27 @@ class Group extends Field {
 		$this->type()->group( $group_title, $add_button_text, $remove_button_text, $sortable, $closed );
 
 		parent::__construct( $id, $title );
+	}
+
+
+	/**
+	 * Display format for the group
+	 *
+	 * block (default), row, table
+	 *
+	 * @param string $display
+	 *
+	 * @since 1.10.0
+	 *
+	 * @return Group
+	 */
+	public function display( string $display ) : Group {
+		Display::init_once();
+
+		$this->render_row_cb = [ Display::in(), 'render_group_callback' ];
+		$this->display       = $display;
+
+		return $this;
 	}
 
 
