@@ -195,6 +195,9 @@ class Box {
 	 * @example WP_REST_Server::READABLE, // or
 	 * @example WP_REST_Server::ALLMETHODS/WP_REST_Server::EDITABLE
 	 *
+	 * @notice Boxes must be registered on `cmb2_init` instead of `cmb2_admin_init`
+	 *         to use this property. Change in `Meta_Provider` if applicable
+	 *
 	 * @default false
 	 *
 	 * @var string
