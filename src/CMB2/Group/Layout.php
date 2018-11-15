@@ -7,10 +7,10 @@ use Lipe\Lib\Traits\Singleton;
 
 /**
  * @author Mat Lipe
- * @since  1.10.0
+ * @since  1.10.1
  *
  */
-class Display {
+class Layout {
 	use Singleton;
 
 	protected function is_table( \CMB2_Field $field_group ) : bool {
@@ -24,7 +24,7 @@ class Display {
 	 * @param  array       $field_args  Array of field arguments for the group field parent.
 	 * @param  \CMB2_Field $field_group The CMB2_Field group object.
 	 *
-	 * @see Group::display()
+	 * @see Group::layout()
 	 * @see \CMB2::render_group_callback()
 	 *
 	 * @return \CMB2_Field|null Group field object.

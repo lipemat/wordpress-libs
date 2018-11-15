@@ -2,7 +2,7 @@
 
 namespace Lipe\Lib\CMB2;
 
-use Lipe\Lib\CMB2\Group\Display;
+use Lipe\Lib\CMB2\Group\Layout;
 
 /**
  * Group
@@ -78,7 +78,7 @@ class Group extends Field {
 	 *
 	 * @var string
 	 */
-	public $display = 'block';
+	public $layout = 'block';
 
 	/**
 	 * box
@@ -118,17 +118,17 @@ class Group extends Field {
 	 *
 	 * block (default), row, table
 	 *
-	 * @param string $display
+	 * @param string $layout
 	 *
 	 * @since 1.10.0
 	 *
 	 * @return Group
 	 */
-	public function display( string $display ) : Group {
-		Display::init_once();
+	public function layout( string $layout ) : Group {
+		Layout::init_once();
 
-		$this->render_row_cb = [ Display::in(), 'render_group_callback' ];
-		$this->display       = $display;
+		$this->render_row_cb = [ Layout::in(), 'render_group_callback' ];
+		$this->layout        = $layout;
 
 		return $this;
 	}
