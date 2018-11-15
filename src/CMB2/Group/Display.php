@@ -13,38 +13,6 @@ use Lipe\Lib\Traits\Singleton;
 class Display {
 	use Singleton;
 
-	/**
-	 * Cmb instance of this particular meta box
-	 *
-	 * @var \CMB2
-	 */
-	private $cmb;
-
-
-	protected function hook() : void {
-		add_action( 'cmb2_before_form', [ $this, 'store_meta_box_class' ], 10, 4 );
-	}
-
-
-	/**
-	 * Store the meta box class so we can use it later
-	 *
-	 * @notice This should not be called directly
-	 *
-	 * @internal
-	 *
-	 * @param string     $cmb_id
-	 * @param string|int $object_id
-	 * @param string     $object_type
-	 * @param \CMB2      $cmb
-	 *
-	 * @return void
-	 */
-	public function store_meta_box_class( $cmb_id, $object_id, $object_type, \CMB2 $cmb ) : void {
-		$this->cmb = $cmb;
-	}
-
-
 	protected function is_table( \CMB2_Field $field_group ) : bool {
 		return ( 'table' === $field_group->args( 'display' ) );
 	}
@@ -62,6 +30,7 @@ class Display {
 	 * @return \CMB2_Field|null Group field object.
 	 */
 	public function render_group_callback( $field_args, \CMB2_Field $field_group ) : ?\CMB2_Field {
+		$cmb = \CMB2_Boxes::get( $field_group->cmb_id );
 		// If field is requesting to be conditionally shown.
 		if ( ! $field_group || ! $field_group->should_show() ) {
 			return null;
@@ -75,7 +44,7 @@ class Display {
 		$label     = $field_group->args( 'name' );
 		$group_val = (array) $field_group->value();
 
-		echo '<div class="cmb-row cmb-repeat-group-wrap cmb-group-table cmb-group-display-' . esc_attr( $field_group->args( 'display' ) ) . ' ' . esc_attr( $field_group->row_classes() ), '" data-fieldtype="group"><div class="cmb-td"><div data-groupid="' . esc_attr( $field_group->id() ) . '" id="' . esc_attr( $field_group->id() ) . '_repeat" ' . $this->cmb->group_wrap_attributes( $field_group ) . '>'; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<div class="cmb-row cmb-repeat-group-wrap cmb-group-table cmb-group-display-' . esc_attr( $field_group->args( 'display' ) ) . ' ' . esc_attr( $field_group->row_classes() ), '" data-fieldtype="group"><div class="cmb-td"><div data-groupid="' . esc_attr( $field_group->id() ) . '" id="' . esc_attr( $field_group->id() ) . '_repeat" ' . $cmb->group_wrap_attributes( $field_group ) . '>'; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		if ( $desc || $label ) {
 			$class = $desc ? ' cmb-group-description' : '';
@@ -222,17 +191,18 @@ class Display {
 
 		$field_group->peform_param_callback( 'after_group_row' );
 
-		return $this->cmb;
+		return \CMB2_Boxes::get( $field_group->cmb_id );
 	}
 
 
 	protected function render_field( array $field_args, \CMB2_Field $field_group ) : void {
+		$cmb = \CMB2_Boxes::get( $field_group->cmb_id );
 		if ( 'hidden' === $field_args['type'] ) {
 			// Save rendering for after the metabox.
-			$this->cmb->add_hidden_field( $field_args, $field_group );
+			$cmb->add_hidden_field( $field_args, $field_group );
 		} else {
 			$field_args['show_names'] = false;
-			$this->cmb->get_field( $field_args, $field_group )->render_field();
+			$cmb->get_field( $field_args, $field_group )->render_field();
 		}
 	}
 
