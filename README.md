@@ -1,7 +1,7 @@
 # WordPress Libs
 WordPress library which supports a core plugin and theme.
 
-**Version [1.10.0](https://github.com/lipemat/wordpress-lipe-libs/releases/tag/1.10.0)**
+**Version [1.10.1](https://github.com/lipemat/wordpress-lipe-libs/releases/tag/1.10.1)**
 
 ### Requirements
 1. PHP Version 7.2
@@ -20,7 +20,7 @@ require __DIR__ . '/vendor/autoload.php'
 
 ### Current Features (non exhaustive)
 * YouTube Api integration
-* CMB2 mapping + group display formats
+* CMB2 mapping
 * Meta Data repository
 * Custom Post Type registration object
 * Extended CPTS mapping
@@ -45,11 +45,8 @@ require __DIR__ . '/vendor/autoload.php'
 * Version management helper
 * Comment Object Trait
 
-### Changelog (non exhaustive)
+## Changelog may be found in [releases](https://github.com/lipemat/wordpress-libs/releases) (non exhaustive)
 
-#### 1.10.0
-* Support using keyed and flat arrays at the same time with Class_Names
-* Add support for table and row displays of CMB2 groups
 
 
 
