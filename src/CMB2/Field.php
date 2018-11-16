@@ -37,6 +37,15 @@ class Field {
 	protected $id = '';
 
 	/**
+	 * Custom callback to return the label for the field
+	 *
+	 * Part of cmb2 core but undocumented
+	 *
+	 * @var callable
+	 */
+	public $label_cb;
+
+	/**
 	 * The type of field
 	 * Calling Field::type() will return the Field_Type object which
 	 * will auto complete any type.
@@ -541,6 +550,10 @@ class Field {
 
 	public function get_id() : string {
 		return $this->id;
+	}
+
+	public function get_name() : string {
+		return $this->name;
 	}
 
 
