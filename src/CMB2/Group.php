@@ -78,7 +78,7 @@ class Group extends Field {
 	 *
 	 * @var string
 	 */
-	public $layout = 'block';
+	protected $layout = 'block';
 
 	/**
 	 * box
