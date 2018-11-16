@@ -2,6 +2,7 @@
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\CMB2\Field\Checkbox;
 use Lipe\Lib\CMB2\Field_Types\Term_Select_2;
 
 /**
@@ -551,10 +552,18 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#checkbox
 	 *
+	 * @param string $layout - compact, block (cmb2 default is block)
+	 *
 	 * @return Field
 	 */
-	public function checkbox() {
-		return $this->set( [ 'type' => $this->checkbox ] );
+	public function checkbox( string $layout = 'block' ) : Field {
+		$_args = [
+			'type' => $this->checkbox,
+		];
+		if( 'block' !== $layout ) {
+			$_args['render_row_cb' ] = [ Checkbox::in(), 'render_field_callback' ];
+		}
+		return $this->set( $_args );
 	}
 
 
