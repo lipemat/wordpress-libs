@@ -44,7 +44,7 @@ class Checkbox {
 
 		$field->peform_param_callback( 'before_row' );
 
-		printf( "<div class=\"cmb-row checkbox-compact %s\" data-fieldtype=\"%s\">\n", $field->row_classes(), $field->type() );
+		printf( "<div class=\"cmb-row checkbox-compact %s\" data-fieldtype=\"%s\">\n", esc_attr( $field->row_classes() ), esc_attr( $field->type() ) );
 
 		$field->peform_param_callback( 'before' );
 
@@ -89,7 +89,7 @@ class Checkbox {
 		?>
 		<style>
 			.checkbox-compact {
-				padding: .5em 0 !important;
+				padding: 0 0 1em !important;
 			}
 
 			.checkbox-compact label {

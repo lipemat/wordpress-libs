@@ -14,7 +14,7 @@ class Layout {
 	use Singleton;
 
 	protected function is_table( \CMB2_Field $field_group ) : bool {
-		return ( 'table' === $field_group->args( 'display' ) );
+		return ( 'table' === $field_group->args( 'layout' ) );
 	}
 
 
