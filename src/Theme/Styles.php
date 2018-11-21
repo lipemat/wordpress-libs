@@ -61,11 +61,11 @@ class Styles {
 	public function live_reload( bool $admin_also = false ) : void {
 		if ( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			\add_action( 'wp_enqueue_scripts', function () {
-				\wp_enqueue_script( 'livereload', '//localhost:35729/livereload.js', [], \time(), true );
+				\wp_enqueue_script( 'livereload', 'http://localhost:35729/livereload.js', [], \time(), true );
 			} );
 			if ( $admin_also ) {
 				\add_action( 'admin_enqueue_scripts', function () {
-					\wp_enqueue_script( 'livereload', '//localhost:35729/livereload.js', [], \time(), true );
+					\wp_enqueue_script( 'livereload', 'http://localhost:35729/livereload.js', [], \time(), true );
 				} );
 			}
 		}
