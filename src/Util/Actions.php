@@ -15,6 +15,30 @@ use Lipe\Lib\Traits\Singleton;
 class Actions {
 	use Singleton;
 
+
+	/**
+	 * Add a filter but always return the original value.
+	 * Useful for cases where we want to treat an
+	 * `apply_filters` as an `do_actions` and call a function
+	 * without actually changing the original value.
+	 *
+	 * @since 1.12.0
+	 *
+	 * @param string   $filter
+	 * @param callable $callable
+	 * @param int      $priority
+	 * @param int      $accepted_args
+	 *
+	 * @return void
+	 */
+	public function add_filter_as_action( string $filter, callable $callable, int $priority = 10, int $accepted_args = 1 ) : void {
+		\add_filter( $filter, function ( ...$args ) use ( $filter, $callable ) {
+			\call_user_func( $callable, ...$args );
+
+			return reset( $args );
+		}, $priority, $accepted_args );
+	}
+
 	/**
 	 * Add a callable to multiple actions at once
 	 *
