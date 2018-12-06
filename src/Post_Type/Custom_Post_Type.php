@@ -124,6 +124,10 @@ class Custom_Post_Type {
 	/**
 	 * Whether to expose this post type in the REST API
 	 *
+	 * @notice Must be set to true to support Gutenberg
+	 *
+	 * @link https://make.wordpress.org/core/2018/10/30/block-editor-filters/
+	 *
 	 * @var bool
 	 */
 	public $show_in_rest = false;
@@ -312,7 +316,7 @@ class Custom_Post_Type {
 		$single = $single ?? $this->get_post_type_label();
 		$plural = $plural ?? $this->get_post_type_label( 'plural' );
 
-		//phpcs:ignore start
+		// phpcs:disable WordPress.WP.I18n
 		$labels = [
 			'name'                  => $plural,
 			'singular_name'         => $single,
@@ -338,9 +342,14 @@ class Custom_Post_Type {
 			'filter_items_list'     => sprintf( __( 'Filter %s list' ), $plural ),
 			'items_list_navigation' => sprintf( __( '%s list navigation' ), $plural ),
 			'items_list'            => sprintf( __( '%s list' ), $plural ),
-			'menu_name'             => $this->menu_name ?? $plural,
+			'item_published'           => sprintf( __( '%s published.' ), $single ),
+			'item_published_privately' => sprintf( __( '%s published privately.' ), $single ),
+			'item_reverted_to_draft'   => sprintf( __( '%s reverted to draft.' ), $single ),
+			'item_scheduled'           => sprintf( __( '%s scheduled.' ), $single ),
+			'item_updated'             => sprintf( __( '%s updated.' ), $single ),
+			'menu_name'                => $this->menu_name ?? $plural,
 		];
-		//phpcs:ignore end
+		// phpcs:enable
 
 		if ( ! empty( $this->labels ) ) {
 			$labels = wp_parse_args( $this->labels, $labels );
@@ -403,8 +412,8 @@ class Custom_Post_Type {
 				$plural = ucwords( rtrim( $singular, 'y' ) . 'ies' );
 			} else {
 				$plural = ucwords( $singular . 's' );
-			}       
-}
+			}
+		}
 		$this->post_type_label_singular = $singular;
 		$this->post_type_label_plural   = $plural;
 	}
@@ -458,7 +467,7 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	protected function add_administrator_capabilities( $post_type ) : void {
-		if ( ! $this->auto_admin_caps || $post_type->capability_type === 'post' || is_wp_error( $post_type ) ) {
+		if ( ! $this->auto_admin_caps || 'post' === $post_type->capability_type || is_wp_error( $post_type ) ) {
 			return;
 		}
 
@@ -491,11 +500,7 @@ class Custom_Post_Type {
 	 * @return Custom_Post_Type|Custom_Post_Type_Extended|null
 	 */
 	public function get_post_type( $post_type ) {
-		if ( isset( self::$registry[ $post_type ] ) ) {
-			return self::$registry[ $post_type ];
-		}
-
-		return null;
+		return self::$registry[ $post_type ] ?? null;
 	}
 
 
@@ -512,6 +517,7 @@ class Custom_Post_Type {
 	 * @return array
 	 */
 	public function adjust_bulk_edit_messages( array $bulk_messages, array $bulk_counts ) : array {
+		// phpcs:disable WordPress.WP.I18n
 		$bulk_messages[ $this->post_type ] = [
 			'updated'   => _n(
 				'%s ' . $this->post_type_label_singular . ' updated.',
@@ -539,6 +545,7 @@ class Custom_Post_Type {
 				$bulk_counts['untrashed']
 			),
 		];
+		// phpcs:enable
 
 		return $bulk_messages;
 	}
@@ -561,15 +568,14 @@ class Custom_Post_Type {
 		global $post, $post_ID;
 
 		$lower_label = strtolower( $this->get_post_type_label() );
-
-		if ( $this->public === false || $this->publicly_queryable === false ) {
-			$view_link = $preview_link = false;
-		} else {
+		$view_link = false;
+		$preview_link = false;
+		// phpcs:disable WordPress.WP.I18n
+		if ( false !== $this->public && false !== $this->publicly_queryable ) {
 			$url          = esc_url( get_permalink( $post_ID ) );
 			$preview_url  = add_query_arg( 'preview', 'true', $url );
 			$view_link    = '<a href="' . $url . '">' . sprintf( __( 'View the %s...' ), $this->get_post_type_label(), $lower_label ) . '</a>';
 			$preview_link = '<a target="_blank" href="' . $preview_url . '">' . sprintf( 'Preview %s', $lower_label ) . '</a>';
-
 		}
 
 		$messages[ $this->post_type ] = [
@@ -578,17 +584,15 @@ class Custom_Post_Type {
 			2  => __( 'Custom field updated.' ),
 			3  => __( 'Custom field deleted.' ),
 			4  => sprintf( __( '%s updated.' ), $this->get_post_type_label() ),
-			5  => isset( $_GET['revision'] ) ? sprintf( __( '%1$s restored to revision from %2$s' ),
-				$this->get_post_type_label(), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-			6  => sprintf( __( '%1$s published. %2$s' ), $this->get_post_type_label(),
-				$view_link ),
+			5  => isset( $_GET['revision'] ) ? sprintf( __( '%1$s restored to revision from %2$s' ), $this->get_post_type_label(), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			6  => sprintf( __( '%1$s published. %2$s' ), $this->get_post_type_label(), $view_link ),
 			7  => sprintf( __( '%s saved.' ), $this->get_post_type_label() ),
 			8  => sprintf( __( '%1$s submitted. %2$s' ), $this->get_post_type_label(), $preview_link ),
-			9  => sprintf( __( '%3$s scheduled for: %1$s. %2$s' ),
-				'<strong>' . date_i18n( __( 'M j, Y @ G:i' ) . '</strong>', strtotime( $post->post_date ) ), $preview_link, $this->get_post_type_label() ),
+			9  => sprintf( __( '%3$s scheduled for: %1$s. %2$s' ), '<strong>' . date_i18n( __( 'M j, Y @ G:i' ) . '</strong>', strtotime( $post->post_date ) ), $preview_link, $this->get_post_type_label() ),
 			10 => sprintf( __( '%1$s draft updated. %2$s' ), $this->get_post_type_label(), $preview_link ),
 
 		];
+		// phpcs:enable
 
 		return $messages;
 

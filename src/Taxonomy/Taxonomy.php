@@ -100,11 +100,13 @@ class Taxonomy {
 	/**
 	 * Whether to include the taxonomy in the REST API
 	 *
+	 * @notice Must be set to true to show in the Gutenberg editor
+	 *
 	 * @default false
 	 *
 	 * @var bool
 	 */
-	public $show_in_rest;
+	public $show_in_rest = false;
 
 	/**
 	 * To change the base url of REST API route

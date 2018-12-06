@@ -38,8 +38,56 @@ abstract class Meta_Box {
 	public $context;
 
 	public $priority;
-
+	/**
+	 * The following parameter is any additional arguments passed as $callback_args
+	 * to add_meta_box, if/when applicable.
+	 *
+	 * We have our own Gutenberg/block-editor properties in this class so use those instead
+	 * of this property if you are working with Gutenberg
+	 *
+	 * @see Box::$display_when_gutenberg_active
+	 * @see Box::$gutenberg_compatible
+	 *
+	 * More: https://wordpress.org/gutenberg/handbook/designers-developers/developers/backwards-compatibility/meta-box/
+	 */
 	public $callback_args;
+
+	/**
+	 * This flag lets you set whether the meta box works in the block editor or not.
+	 * Setting it to true signifies that the you’ve confirmed that the meta box
+	 * works in the block editor, setting it to false signifies that it doesn't.
+	 *
+	 * If set to false, WP will automatically fall back to the classic editor when
+	 * this box is loaded.
+	 *
+	 * @uses sets the `__block_editor_compatible_meta_box` meta box flag
+	 *
+	 * @see Box::get_args()
+	 * @see Box::$display_when_gutenberg_active
+	 *
+	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
+	 *
+	 * @var bool
+	 */
+	public $gutenberg_compatible = true;
+
+	/**
+	 * Set to false if you have converted this meta box fully to Gutenberg and
+	 * you don't want the default meta box to display when gutenberg is active.
+	 *
+	 * When the classic editor is loaded this meta box will load no matter what
+	 * this is set to.
+	 *
+	 * @uses sets the `__back_compat_meta_box` meta box flag
+	 *
+	 * @see Box::get_args()
+	 * @see Box::$gutenberg_compatible
+	 *
+	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
+	 *
+	 * @var bool
+	 */
+	public $display_when_gutenberg_active = true;
 
 	public $post_type;
 
@@ -102,7 +150,9 @@ abstract class Meta_Box {
 		$this->title = $args['title'] ?? $this->id;
 		$this->context = $args['context'];
 		$this->priority = $args['priority'];
-		$this->callback_args = $args['callback_args'];
+		if ( null !== $args['callback_args'] ) {
+			$this->callback_args = $args['callback_args'];
+		}
 
 		add_action( 'add_meta_boxes_' . $this->post_type, [
 			$this,
@@ -280,9 +330,10 @@ abstract class Meta_Box {
 	 * @type string             $priority  - 'high', 'core', 'default' or 'low' ( defaults to 'default' )
 	 * @type [] $callback_args - will be assigned as $this->callback_args
 	 *                              can be retrieved via $this->get_callback_args()
-	 * @return Meta_Box|\Lipe\Lib\Schema\Meta_Box[]
+	 * @return Meta_Box|Meta_Box[]
 	 */
 	public static function register( $post_type = null, array $args = [] ) {
+		$class = null;
 		if ( null === $post_type ) {
 			foreach ( get_post_types() as $_post_type ) {
 				$class[] = new static( $_post_type, $args );
@@ -359,9 +410,18 @@ abstract class Meta_Box {
 	/**
 	 * Return arguments to pass to the meta box
 	 *
-	 * @return array|null
+	 * @return array
 	 */
-	public function get_callback_args() : ?array {
+	protected function get_callback_args() : array {
+		if ( ! isset( $this->callback_args['__block_editor_compatible_meta_box'] ) ) {
+			$this->callback_args['__block_editor_compatible_meta_box'] = $this->gutenberg_compatible;
+		}
+
+		if ( ! isset( $this->callback_args['__back_compat_meta_box'] ) ) {
+			// Notice we use the opposite here
+			$this->callback_args['__back_compat_meta_box'] = ! $this->display_when_gutenberg_active;
+		}
+
 		return $this->callback_args;
 	}
 

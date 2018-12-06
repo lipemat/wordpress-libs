@@ -173,6 +173,61 @@ class Box {
 	public $remove_box_wrap;
 
 	/**
+	 * The following parameter is any additional arguments passed as $callback_args
+	 * to add_meta_box, if/when applicable.
+	 *
+	 * CMB2 does not use these arguments in the add_meta_box callback, however, these args
+	 * are parsed for certain special properties, like determining Gutenberg/block-editor
+	 * compatibility.
+	 *
+	 * We have our own Gutenberg/block-editor properties in this class so use those instead
+	 * of this property if you are working with Gutenberg
+	 *
+	 * @see Box::$display_when_gutenberg_active
+	 * @see Box::$gutenberg_compatible
+	 *
+	 * More: https://wordpress.org/gutenberg/handbook/designers-developers/developers/backwards-compatibility/meta-box/
+	 */
+	public $mb_callback_args;
+
+	/**
+	 * This flag lets you set whether the meta box works in the block editor or not.
+	 * Setting it to true signifies that the you’ve confirmed that the meta box
+	 * works in the block editor, setting it to false signifies that it doesn't.
+	 *
+	 * If set to false, WP will automatically fall back to the classic editor when
+	 * this box is loaded.
+	 *
+	 * @uses sets the `__block_editor_compatible_meta_box` meta box flag
+	 *
+	 * @see Box::get_args()
+	 * @see Box::$display_when_gutenberg_active
+	 *
+	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
+	 *
+	 * @var bool
+	 */
+	public $gutenberg_compatible = true;
+
+	/**
+	 * Set to false if you have converted this meta box fully to Gutenberg and
+	 * you don't want the default meta box to display when gutenberg is active.
+	 *
+	 * When the classic editor is loaded this meta box will load no matter what
+	 * this is set to.
+	 *
+	 * @uses sets the `__back_compat_meta_box` meta box flag
+	 *
+	 * @see Box::get_args()
+	 * @see Box::$gutenberg_compatible
+	 *
+	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
+	 *
+	 * @var bool
+	 */
+	public $display_when_gutenberg_active = true;
+
+	/**
 	 * If false, will not save during hookup
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#save_fields
@@ -350,7 +405,32 @@ class Box {
 			$args[ $_var ] = $this->{$_var};
 		}
 
+		$args['mb_callback_args'] = $this->get_meta_box_callback_args();
+
 		return $args;
+	}
+
+
+	/**
+	 * Handle any massaging of callback arguments and return them
+	 *
+	 * Take care of the Gutenberg properties
+	 *
+	 * @link https://wordpress.org/gutenberg/handbook/designers-developers/developers/backwards-compatibility/meta-box/
+	 *
+	 * @return array
+	 */
+	protected function get_meta_box_callback_args() : array {
+		if ( ! isset( $this->mb_callback_args['__block_editor_compatible_meta_box'] ) ) {
+			$this->mb_callback_args['__block_editor_compatible_meta_box'] = $this->gutenberg_compatible;
+		}
+
+		if ( ! isset( $this->mb_callback_args['__back_compat_meta_box'] ) ) {
+			// Notice we use the opposite here
+			$this->mb_callback_args['__back_compat_meta_box'] = ! $this->display_when_gutenberg_active;
+		}
+
+		return $this->mb_callback_args;
 	}
 
 
