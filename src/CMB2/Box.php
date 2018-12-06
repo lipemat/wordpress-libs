@@ -186,10 +186,9 @@ class Box {
 	 * @see Box::$display_when_gutenberg_active
 	 * @see Box::$gutenberg_compatible
 	 *
-	 * More: https://wordpress.org/gutenberg/handbook/extensibility/meta-box/
+	 * More: https://wordpress.org/gutenberg/handbook/designers-developers/developers/backwards-compatibility/meta-box/
 	 */
 	public $mb_callback_args;
-
 
 	/**
 	 * This flag lets you set whether the meta box works in the block editor or not.
@@ -406,16 +405,32 @@ class Box {
 			$args[ $_var ] = $this->{$_var};
 		}
 
-		if ( ! isset( $args['mb_callback_args']['__block_editor_compatible_meta_box'] ) ) {
-			$args['mb_callback_args']['__block_editor_compatible_meta_box'] = $this->gutenberg_compatible;
-		}
-
-		if ( ! isset( $args['mb_callback_args']['__back_compat_meta_box'] ) ) {
-			// Notice we use the opposite here
-			$args['mb_callback_args']['__back_compat_meta_box'] = ! $this->display_when_gutenberg_active;
-		}
+		$args['mb_callback_args'] = $this->get_meta_box_callback_args();
 
 		return $args;
+	}
+
+
+	/**
+	 * Handle any massaging of callback arguments and return them
+	 *
+	 * Take care of the Gutenberg properties
+	 *
+	 * @link https://wordpress.org/gutenberg/handbook/designers-developers/developers/backwards-compatibility/meta-box/
+	 *
+	 * @return array
+	 */
+	protected function get_meta_box_callback_args() : array {
+		if ( ! isset( $this->mb_callback_args['__block_editor_compatible_meta_box'] ) ) {
+			$this->mb_callback_args['__block_editor_compatible_meta_box'] = $this->gutenberg_compatible;
+		}
+
+		if ( ! isset( $this->mb_callback_args['__back_compat_meta_box'] ) ) {
+			// Notice we use the opposite here
+			$this->mb_callback_args['__back_compat_meta_box'] = ! $this->display_when_gutenberg_active;
+		}
+
+		return $this->mb_callback_args;
 	}
 
 
