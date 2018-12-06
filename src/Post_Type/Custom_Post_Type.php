@@ -124,6 +124,10 @@ class Custom_Post_Type {
 	/**
 	 * Whether to expose this post type in the REST API
 	 *
+	 * @notice Must be set to true to support Gutenberg
+	 *
+	 * @link https://make.wordpress.org/core/2018/10/30/block-editor-filters/
+	 *
 	 * @var bool
 	 */
 	public $show_in_rest = false;
