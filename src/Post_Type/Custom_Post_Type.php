@@ -338,7 +338,12 @@ class Custom_Post_Type {
 			'filter_items_list'     => sprintf( __( 'Filter %s list' ), $plural ),
 			'items_list_navigation' => sprintf( __( '%s list navigation' ), $plural ),
 			'items_list'            => sprintf( __( '%s list' ), $plural ),
-			'menu_name'             => $this->menu_name ?? $plural,
+			'item_published'           => sprintf( __( '%s published.' ), $single ),
+			'item_published_privately' => sprintf( __( '%s published privately.' ), $single ),
+			'item_reverted_to_draft'   => sprintf( __( '%s reverted to draft.' ), $single ),
+			'item_scheduled'           => sprintf( __( '%s scheduled.' ), $single ),
+			'item_updated'             => sprintf( __( '%s updated.' ), $single ),
+			'menu_name'                => $this->menu_name ?? $plural,
 		];
 		// phpcs:enable
 
