@@ -247,7 +247,7 @@ abstract class Meta_Box {
 		}
 
 		// don't do anything on autosave, auto-draft, bulk edit, or quick edit
-		if ( $post->post_status === 'auto-draft' || isset( $_GET['bulk_edit'] ) || wp_is_post_autosave( $post_id ) || \wp_doing_ajax() || wp_is_post_revision( $post_id ) ) {
+		if ( 'auto-draft' === $post->post_status || isset( $_GET['bulk_edit'] ) || wp_is_post_autosave( $post_id ) || \wp_doing_ajax() || wp_is_post_revision( $post_id ) ) {
 			return false;
 		}
 
@@ -266,11 +266,7 @@ abstract class Meta_Box {
 	 * @return Meta_Box|null
 	 */
 	public static function get_meta_box_by_id( $post_type, $id ) : ?Meta_Box {
-		if ( isset( self::$registry[ $post_type ][ $id ] ) ) {
-			return self::$registry[ $post_type ][ $id ];
-		}
-
-		return null;
+		return self::$registry[ $post_type ][ $id ] ?? null;
 	}
 
 
@@ -284,9 +280,7 @@ abstract class Meta_Box {
 	 *              registered for the given post type
 	 */
 	public static function has_meta_box( $post_type, $class ) : bool {
-		$metabox = self::get_meta_box( $post_type, $class );
-
-		return $metabox !== null;
+		return null !== self::get_meta_box( $post_type, $class );
 	}
 
 
@@ -439,19 +433,11 @@ abstract class Meta_Box {
 
 
 	/**
-	 * Save Meta Field
-	 *
-	 * Quick and dirty save a field what was sent via $_POST[ %field% ]
-	 * Can send array if desired
-	 * Will save the meta field to null if empty
-	 *
-	 *
-	 * @param int          $post_id
-	 * @param string|array $field
-	 *
-	 * @return void
+	 * @deprecated Impossible to sanitize, don't use this
 	 */
 	public function save_meta_field( $post_id, $field ) : void {
+		\_deprecated_function( 'save_meta_field', '1.13.0', 'Handle sanitization and saving yourself!!' );
+		// phpcs:disable
 		foreach ( (array) $field as $this_field ) {
 			if ( ! empty( $_POST[ $this_field ] ) ) {
 				update_post_meta( $post_id, $this_field, $_POST[ $this_field ] );
@@ -459,6 +445,7 @@ abstract class Meta_Box {
 				update_post_meta( $post_id, $this_field, null );
 			}
 		}
+		//phpcs:enable
 	}
 
 

@@ -34,9 +34,9 @@ class Zip {
 
 	public const ACTION = 'zip';
 
-	public const KEY = 'lipe/project/util/zip/key';
-	public const NAME = 'lipe/project/util/zip/name';
-	public const URLS = 'lipe/project/util/zip/urls';
+	public const KEY = 'lipe/lib/util/zip/key';
+	public const NAME = 'lipe/lib/util/zip/name';
+	public const URLS = 'lipe/lib/util/zip/urls';
 
 	private $file_name;
 	private $file_path;
