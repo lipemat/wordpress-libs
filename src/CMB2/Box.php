@@ -346,6 +346,34 @@ class Box {
 
 
 	/**
+	 * Display a description at the top of a meta box or an options page
+	 *
+	 * @since 1.14.0
+	 *
+	 * @param string $description
+	 *
+	 * @return void
+	 */
+	public function description( string $description ) : void {
+		$types = $this->object_types;
+		$types[] = 'post';
+		foreach ( $types as $_type ) {
+			add_action( "cmb2_before_{$_type}_form_{$this->id}", function () use ( $description ) {
+				?>
+				<div class="cmb-row">
+					<p>
+						<span class="description">
+							<?= $description; ?>
+						</span>
+					</p>
+				</div>
+				<?php
+			} );
+		}
+	}
+
+
+	/**
 	 * Add a tab to this box which can later be assigned to fields via
 	 * Field::tab( $id );
 	 *
