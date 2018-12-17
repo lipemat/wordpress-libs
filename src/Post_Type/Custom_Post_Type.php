@@ -80,6 +80,20 @@ class Custom_Post_Type {
 	 */
 	public $register_meta_box_cb;
 
+	/**
+	 * Set to false to disable gutenberg block editor
+	 * for this post type.
+	 * Set to true to enable gutenberg block editor for
+	 * this post type.
+	 *
+	 * If set to true, this will also enable
+	 * 1. editor support
+	 * 2. Rest api support
+	 *
+	 * @var bool
+	 */
+	public $gutenberg_compatible;
+
 	public $map_meta_cap;
 
 	public $menu_name;
@@ -238,6 +252,7 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	public function register() : void {
+		$this->handle_block_editor_support();
 		$this->register_post_type();
 		self::$registry[ $this->post_type ] = $this;
 		$this->add_administrator_capabilities( get_post_type_object( $this->post_type ) );
@@ -257,6 +272,30 @@ class Custom_Post_Type {
 		\register_post_type( $this->post_type, $this->post_type_args() );
 	}
 
+	/**
+	 * Turn on and off Gutenberg block editor support based on
+	 * WP core requirements and $this->gutenberg_compatible
+	 *
+	 * 1. There is a filter to disable block editor support
+	 * 2. To enable block editor, we need to have show_in_rest set to true
+	 * 3. To enable block editor, we need to have editor support.
+	 *
+	 * @return void
+	 */
+	private function handle_block_editor_support() : void {
+		if ( false === $this->gutenberg_compatible ) {
+			add_filter( 'use_block_editor_for_post_type', function ( $use, $post_type ) {
+				if ( $post_type === $this->post_type ) {
+					return false;
+				}
+
+				return $use;
+			}, 10, 2 );
+		} elseif ( true === $this->gutenberg_compatible ) {
+			$this->show_in_rest = true;
+			$this->supports[]   = 'editor';
+		}
+	}
 
 	/**
 	 * Build the args array for the post type definition
