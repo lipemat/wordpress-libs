@@ -3,6 +3,7 @@
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Field\Checkbox;
+use Lipe\Lib\CMB2\Field\True_False;
 use Lipe\Lib\CMB2\Field_Types\Term_Select_2;
 
 /**
@@ -401,6 +402,22 @@ class Field_Type {
 		return $this->set( [ 'type' => $this->title ] );
 	}
 
+	/**
+	 * True false switch like checkbox
+	 *
+	 * Custom to WP-Libs
+	 *
+	 * @since 1.17.0
+	 *
+	 * @return Field
+	 */
+	public function true_false() : Field {
+		return $this->set( [
+			'type' => $this->checkbox,
+			'render_class' => True_False::class,
+		]);
+	}
+
 
 	/**
 	 * Standard text field (large).
@@ -585,9 +602,10 @@ class Field_Type {
 		$_args = [
 			'type' => $this->checkbox,
 		];
-		if( 'block' !== $layout ) {
-			$_args['render_row_cb' ] = [ Checkbox::in(), 'render_field_callback' ];
+		if ( 'block' !== $layout ) {
+			$_args['render_row_cb'] = [ Checkbox::in(), 'render_field_callback' ];
 		}
+
 		return $this->set( $_args );
 	}
 
