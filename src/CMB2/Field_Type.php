@@ -474,6 +474,31 @@ class Field_Type {
 		return $this->set( [ 'type' => $this->text_money ] );
 	}
 
+	/**
+	 * HTML number field
+	 * Custom to WP-Libs
+	 *
+	 * @link https://www.w3schools.com/tags/att_input_type_number.asp
+	 *
+	 * @param float      $step
+	 * @param float|null $min
+	 * @param float|null $max
+	 *
+	 * @return Field
+	 */
+	public function text_number( float $step = 1, ?float $min = null, ?float $max = null ) : Field {
+		$this->field->attributes['type'] = 'number';
+		$this->field->attributes['step'] = $step;
+		if ( null !== $min ) {
+			$this->field->attributes['min'] = $min;
+		}
+		if ( null !== $max ) {
+			$this->field->attributes['max'] = $max;
+		}
+
+		return $this->set( [ 'type' => $this->text_small ] );
+	}
+
 
 	/**
 	 * Standard textarea.
