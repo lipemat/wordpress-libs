@@ -80,7 +80,7 @@ class Field {
 	 *
 	 * @var     array
 	 */
-	public $attributes;
+	public $attributes = [];
 
 	/**
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
@@ -603,7 +603,7 @@ class Field {
 	 * @return Field
 	 */
 	public function attributes( array $attributes ) : Field {
-		$this->attributes = $attributes;
+		$this->attributes = array_merge( $this->attributes, $attributes );
 
 		return $this;
 	}
@@ -630,6 +630,19 @@ class Field {
 	public function default( $default_value ) : Field {
 		$this->default = $default_value;
 
+		return $this;
+	}
+
+
+	/**
+	 * Mark this field as 'disabled'
+	 *
+	 * @since 1.18.0
+	 *
+	 * @return Field
+	 */
+	public function disabled() : Field {
+		$this->attributes( [ 'disabled' => 'disabled' ] );
 		return $this;
 	}
 
@@ -663,6 +676,35 @@ class Field {
 	 */
 	public function position( int $position = 1 ) {
 		$this->position = $position;
+
+		return $this;
+	}
+
+
+	/**
+	 * Mark this field as 'readonly'
+	 *
+	 * @since 1.18.0
+	 *
+	 * @return Field
+	 */
+	public function readonly() : Field {
+		$disable_only = [
+			'select',
+			'select_timezone',
+			'text_date',
+			'text_date_timestamp',
+			'text_datetime_timestamp',
+			'text_datetime_timestamp_timezone',
+			'taxonomy_select',
+		];
+
+		// These html inputs do not work as readonly and must be disabled
+		if ( in_array( $this->type, $disable_only, true ) ) {
+			$this->disabled();
+		}
+
+		$this->attributes( [ 'readonly' => 'readonly' ] );
 
 		return $this;
 	}
