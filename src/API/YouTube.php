@@ -1,9 +1,8 @@
 <?php
 
-namespace Lipe\Project\Api;
+namespace Lipe\Lipe\Api;
 
 use Lipe\Lib\Util\Cache;
-
 
 /**
  * Youtube API
@@ -15,7 +14,8 @@ use Lipe\Lib\Util\Cache;
  * An api key may be obtained by registering a project with Google APIs and giving it YouTube access.
  *
  * # Go to the developer console https://console.developers.google.com/project
- * # Click "Create Project" if some already exist otherwise, use the "Select a Project" drop-down and click "Create a Project"
+ * # Click "Create Project" if some already exist otherwise, use the "Select a Project" drop-down and click "Create a
+ * Project"
  * # Enter a project name like "Steelcase.com"
  * # Click "Create"
  * # Click on the project to enter it
@@ -34,9 +34,9 @@ use Lipe\Lib\Util\Cache;
  *
  */
 class YouTube implements \JsonSerializable {
-	const API_URL = "https://www.googleapis.com/youtube/v3/videos?id={{id}}&key={{api_key}}&part=snippet";
+	public const API_URL = 'https://www.googleapis.com/youtube/v3/videos?id={{id}}&key={{api_key}}&part=snippet';
 
-	const OEMBED_URL = "http://www.youtube.com/oembed?url={{url}}&maxwidth={{width}}&maxheight={{height}}";
+	public const OEMBED_URL = 'http://www.youtube.com/oembed?url={{url}}&maxwidth={{width}}&maxheight={{height}}';
 
 	public $height = 400;
 
@@ -48,17 +48,17 @@ class YouTube implements \JsonSerializable {
 
 
 	public function __construct( $url, $api_key ) {
-		$this->url = $url;
+		$this->url     = $url;
 		$this->api_key = $api_key;
 	}
 
 
-	public function set_width( $width ) {
+	public function set_width( $width ) : void {
 		$this->width = $width;
 	}
 
 
-	public function set_height( $height ) {
+	public function set_height( $height ) : void {
 		$this->height = $height;
 	}
 
@@ -97,7 +97,7 @@ class YouTube implements \JsonSerializable {
 	public function get_id() {
 		$object = $this->get_object();
 
-		return isset( $object->id ) ? $object->id : "";
+		return $object->id ?? '';
 
 	}
 
@@ -134,13 +134,22 @@ class YouTube implements \JsonSerializable {
 		];
 
 		$object = Cache::get( $cache_key );
-		if ( $object === false ) {
-			$url = str_replace( '{{url}}', urlencode( $this->url ), self::OEMBED_URL );
-			$url = str_replace( '{{height}}', $this->height, $url );
-			$url = str_replace( '{{width}}', $this->width, $url );
+		if ( false === $object ) {
+			$url = str_replace(
+				[
+					'{{url}}',
+					'{{height}}',
+					'{{width}}',
+				],
+				[
+					$this->height,
+					$this->width,
+					urlencode( $this->url ),
+				],
+				self::OEMBED_URL );
 
 			$response = wp_remote_get( $url );
-			$object = json_decode( wp_remote_retrieve_body( $response ) );
+			$object   = json_decode( wp_remote_retrieve_body( $response ) );
 			Cache::set( $cache_key, $object );
 		}
 
@@ -170,17 +179,16 @@ class YouTube implements \JsonSerializable {
 		];
 
 		$object = Cache::get( $cache_key );
-		if ( $object === false ) {
+		if ( false === $object ) {
 			$id = $this->get_id_from_url();
 			if ( ! empty( $id ) ) {
-				$url = str_replace( '{{id}}', $id, self::API_URL );
-				$url = str_replace( '{{api_key}}', $this->api_key, $url );
+				$url = str_replace( [ '{{id}}', '{{api_key}}' ], [ $id, $this->api_key ], self::API_URL );
 
 				$response = wp_remote_get( $url );
-				$object = json_decode( wp_remote_retrieve_body( $response ) );
+				$object   = json_decode( wp_remote_retrieve_body( $response ) );
 				if ( ! empty( $object ) ) {
-					$video = array_shift( $object->items );
-					$object = $video->snippet;
+					$video      = array_shift( $object->items );
+					$object     = $video->snippet;
 					$object->id = $video->id;
 				}
 				Cache::set( $cache_key, $object );
@@ -191,7 +199,7 @@ class YouTube implements \JsonSerializable {
 	}
 
 
-	private function get_id_from_url() {
+	private function get_id_from_url() : string {
 		$id = false;
 		parse_str( parse_url( $this->url, PHP_URL_QUERY ), $_args );
 		if ( ! empty( $_args['v'] ) ) {
@@ -204,17 +212,17 @@ class YouTube implements \JsonSerializable {
 	}
 
 
-	public function get_title() {
+	public function get_title() : string {
 		$object = $this->get_object();
 
-		return isset( $object->title ) ? $object->title : "";
+		return $object->title ?? '';
 
 	}
 
 
-	public function get_html() {
+	public function get_html() : string {
 		$object = $this->get_object();
-		$frame = "";
+		$frame  = '';
 		if ( ! empty( $object->id ) ) {
 			$frame = '<iframe 
 						width="' . $this->width . '" 
@@ -227,8 +235,8 @@ class YouTube implements \JsonSerializable {
 	}
 
 
-	public function get_thumbnail_url() {
-		$object = $this->get_object();
+	public function get_thumbnail_url() : string {
+		$object    = $this->get_object();
 		$thumbnail = '';
 		if ( ! empty( $object->thumbnails ) ) {
 			if ( isset( $object->thumbnails->maxres ) ) {
@@ -250,18 +258,7 @@ class YouTube implements \JsonSerializable {
 	public function get_description() {
 		$object = $this->get_object();
 
-		return isset( $object->description ) ? $object->description : "";
+		return $object->description ?? '';
 
-	}
-
-
-	/**
-	 * @deprecated
-	 *
-	 * @see YouTube::get_thumbnail_url()
-	 */
-	public function get_thumbnail() {
-		\_deprecated_function( 'YouTube::get_thumbnail', '1.0.0', 'YouTube::get_thumbnail_url' );
-		return $this->get_thumbnail_url();
 	}
 }
