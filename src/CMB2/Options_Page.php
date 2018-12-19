@@ -195,6 +195,8 @@ class Options_Page extends Box {
 	 *
 	 * @param null|string $text
 	 *
+	 * @since 1.18.0
+	 *
 	 * @return void
 	 */
 	public function save_button( ?string $text ) : void {
