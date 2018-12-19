@@ -163,10 +163,13 @@ class Box {
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#context
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#remove_box_wrap
 	 *
-	 * @see     \Lipe\Lib\CMB2\Box::$context
+	 * @see Box::$context
+	 * @see Box::remove_box_wrap();
 	 *
 	 * @example true
 	 * @default false
+	 *
+	 * @internal
 	 *
 	 * @var bool
 	 */

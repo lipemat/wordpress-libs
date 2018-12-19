@@ -16,7 +16,7 @@ class Options_Page extends Box {
 	 * This parameter is for options-page metaboxes only and defaults to 'admin_menu',
 	 * to register your options-page at the network level:
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#admin_menu_hook
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#admin_menu_hook
 	 *
 	 * @example 'network_admin_menu'
 	 *
@@ -29,7 +29,7 @@ class Options_Page extends Box {
 	 * and is sent along to add_menu_page()/add_submenu_page()
 	 * to define the capability required to view the options page.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#capability
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#capability
 	 *
 	 * @example 'edit_posts'
 	 *
@@ -41,7 +41,7 @@ class Options_Page extends Box {
 	 * On settings pages (not options-general.php sub-pages), allows disabling
 	 * of error displaying
 	 *
-	 * @notice only exists in example-functions.php and not in docs. May require
+	 * @notice  only exists in example-functions.php and not in docs. May require
 	 *         more testing.
 	 *
 	 * @example = true
@@ -54,7 +54,7 @@ class Options_Page extends Box {
 	 * This parameter is for options-page metaboxes only
 	 * and allows overriding the options page form output.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
 	 *
 	 * @example 'my_callback_function_to_display_output'
 	 *
@@ -67,8 +67,8 @@ class Options_Page extends Box {
 	 * and is sent along to add_menu_page() to define the menu icon.
 	 * Only applicable if parent_slug is left empty.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#icon_url
-     *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#icon_url
+	 *
 	 * @example 'dashicons-chart-pie'
 	 *
 	 * @var string
@@ -79,7 +79,7 @@ class Options_Page extends Box {
 	 * This parameter is for options-page metaboxes only,
 	 * and is sent along to add_menu_page()/add_submenu_page() to define the menu title.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#menu_title
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#menu_title
 	 *
 	 * @example 'Site Options
 	 *
@@ -88,9 +88,9 @@ class Options_Page extends Box {
 	public $menu_title;
 
 	/**
-     * @deprecated in favor of $this->admin_menu_hook
-     *
-     * @see Options_Page::admin_menu_hook
+	 * @deprecated in favor of $this->admin_menu_hook
+	 *
+	 * @see        Options_Page::admin_menu_hook
 	 *
 	 */
 	public $network;
@@ -99,7 +99,7 @@ class Options_Page extends Box {
 	 * Allows specifying a custom callback for setting the
 	 * error/success message on save.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#message_cb
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#message_cb
 	 *
 	 * @example 'my_callback_function_to_display_messages( $cmb, $args )'
 	 *
@@ -111,7 +111,7 @@ class Options_Page extends Box {
 	 * This parameter is for options-page metaboxes only,
 	 * and is sent along to add_submenu_page() to define the parent-menu item slug.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#parent_slug
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#parent_slug
 	 *
 	 * @example 'tools.php'
 	 *
@@ -125,7 +125,7 @@ class Options_Page extends Box {
 	 * and is sent along to add_menu_page() to define the menu position.
 	 * Only applicable if parent_slug is left empty.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#position
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#position
 	 *
 	 * @example 6
 	 *
@@ -137,9 +137,12 @@ class Options_Page extends Box {
 	 * This parameter is for options-page metaboxes only and
 	 * defines the text for the options page save button. defaults to 'Save'.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#save_button
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#save_button
 	 *
 	 * @example 'Save Settings'
+	 *
+	 * @internal
+	 * @see     Options_Page::save_button();
 	 *
 	 * @var string
 	 */
@@ -148,8 +151,8 @@ class Options_Page extends Box {
 	/**
 	 * This parameter is for options-page metaboxes only and
 	 * defines the settings page slug. Defaults to $id.
-     *
-     * @example 'my_options_page_slug'
+	 *
+	 * @example 'my_options_page_slug'
 	 *
 	 * @var string
 	 */
@@ -181,8 +184,39 @@ class Options_Page extends Box {
 	 */
 	public function __construct( $id, $title ) {
 		if ( null === $this->option_key ) {
-		    $this->option_key = $id;
+			$this->option_key = $id;
 		}
 		parent::__construct( $id, [ 'options-page' ], $title );
+	}
+
+	/**
+	 * Specify the save button text.
+	 * Set to `null` to create a read-only form which has no save button.
+	 *
+	 * @param null|string $text
+	 *
+	 * @return void
+	 */
+	public function save_button( ?string $text ) : void {
+		$this->save_button = $text;
+		if ( null === $text ) {
+			add_action( "cmb2_before_options-page_form_{$this->id}", function () {
+				// Hide so we never see it.
+				// Remove so we can't submit the form via enter.
+				?>
+				<style>
+					[id="<?= esc_js( $this->id ); ?>"] .submit {
+						display: none;
+					}
+				</style>
+				<script>
+					jQuery(function ($) {
+						$('[id="<?= esc_js( $this->id ); ?>"] .submit').remove();
+					});
+				</script>
+				<?php
+			} );
+		}
+
 	}
 }
