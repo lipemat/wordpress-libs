@@ -37,9 +37,8 @@ class True_False extends \CMB2_Type_Checkbox {
 
 		return $this->rendered(
 			sprintf(
-				'%s <label for="%s">%s</label>',
+				'%s %s',
 				$this->render_toggle_field( $defaults ),
-				$this->_id(),
 				$this->_desc()
 			)
 		);
