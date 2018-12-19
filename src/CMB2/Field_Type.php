@@ -504,14 +504,17 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function text_number( float $step = 1, ?float $min = null, ?float $max = null ) : Field {
-		$this->field->attributes['type'] = 'number';
-		$this->field->attributes['step'] = $step;
+		$attributes = [
+			'type' => 'number',
+			'step' => $step,
+		];
 		if ( null !== $min ) {
-			$this->field->attributes['min'] = $min;
+			$attributes['min'] = $min;
 		}
 		if ( null !== $max ) {
-			$this->field->attributes['max'] = $max;
+			$attributes['max'] = $max;
 		}
+		$this->field->attributes( $attributes );
 
 		return $this->set( [ 'type' => $this->text_small ] );
 	}
@@ -715,9 +718,7 @@ class Field_Type {
 	public function colorpicker( array $iris_options = [], bool $transparency = false ) : Field {
 		$_args = [ 'type' => $this->colorpicker ];
 		if ( ! empty( $iris_options ) ) {
-			$_args['attributes'] = [
-				'data-colorpicker' => json_encode( $iris_options ),
-			];
+			$this->field->attributes( [ 'data-colorpicker' => json_encode( $iris_options ) ] );
 		}
 		if ( $transparency ) {
 			$_args['options'] = [
@@ -994,7 +995,7 @@ class Field_Type {
 		];
 		//because / in id breaks wp_editor()
 		if ( ! isset( $this->field->attributes['id'] ) ) {
-			$this->field->attributes['id'] = str_replace( '/', '-',  $this->field->get_id() );
+			$this->field->attributes( [ 'id' => str_replace( '/', '-', $this->field->get_id() ) ] );
 		}
 		if ( ! empty( $mce_options ) ) {
 			$_args['options'] = $mce_options;

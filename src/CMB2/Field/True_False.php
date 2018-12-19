@@ -37,9 +37,8 @@ class True_False extends \CMB2_Type_Checkbox {
 
 		return $this->rendered(
 			sprintf(
-				'%s <label for="%s">%s</label>',
+				'%s %s',
 				$this->render_toggle_field( $defaults ),
-				$this->_id(),
 				$this->_desc()
 			)
 		);
@@ -55,10 +54,17 @@ class True_False extends \CMB2_Type_Checkbox {
 	protected function render_toggle_field( array $args ) : string {
 		ob_start();
 		$args['class'] .= ' checkbox-toggle-checkbox';
+		$args = $this->parse_args( 'checkbox', $args );
+		$for = $this->_id();
+		if ( ( isset( $args['readonly'] ) && ! empty( $args['readonly'] ) ) || ( isset( $args['disabled'] ) && ! empty( $args['disabled'] ) ) ) {
+			// Labels not matching field id won't toggle the checkbox when clicked.
+			// We set one that does not match but we can target via CSS.
+			$for = 'readonly';
+		}
 		?>
 		<div class="checkbox-toggle-wrap">
-			<?= \CMB2_Type_Text::render( $this->parse_args( 'checkbox', $args ) ); //phpcs:ignore  ?>
-			<label class="checkbox-toggle-label" for="<?= esc_attr( $this->_id() ); ?>">
+			<?= \CMB2_Type_Text::render( $args ); //phpcs:ignore  ?>
+			<label class="checkbox-toggle-label" for="<?= esc_attr( $for ); ?>">
 				<span class="checkbox-toggle-inner"></span>
 				<span class="checkbox-toggle-switch"></span>
 			</label>
@@ -110,6 +116,9 @@ class True_False extends \CMB2_Type_Checkbox {
 				border-color: #999;
 				border-radius: 3px;
 				transition: all 0.3s ease-in 0s;
+			}
+			.checkbox-toggle-label[for="readonly"] {
+				cursor: default;
 			}
 
 			.checkbox-toggle-inner {

@@ -163,10 +163,13 @@ class Box {
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#context
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#remove_box_wrap
 	 *
-	 * @see     \Lipe\Lib\CMB2\Box::$context
+	 * @see Box::$context
+	 * @see Box::remove_box_wrap();
 	 *
 	 * @example true
 	 * @default false
+	 *
+	 * @internal
 	 *
 	 * @var bool
 	 */
@@ -391,6 +394,22 @@ class Box {
 		Tabs::init_once();
 	}
 
+	/**
+	 * Remove meta box wrap for alternate-context meta-boxes
+	 *
+	 * Takes care of setting the title to false which is required
+	 * by the native `remove_box_wrap` property
+	 *
+	 * @since 1.18.0
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#context
+	 *
+	 * @return void
+	 */
+	public function remove_box_wrap() : void {
+		$this->title = false;
+		$this->remove_box_wrap = true;
+	}
 
 	/**
 	 * Should the tabs display vertical or horizontal?
