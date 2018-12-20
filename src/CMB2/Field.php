@@ -635,6 +635,21 @@ class Field {
 
 
 	/**
+	 * Field description. Usually under or adjacent to the field input.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#desc
+	 *
+	 * @param string $description
+	 *
+	 * @return Field
+	 */
+	public function description( string $description ) : Field {
+		$this->desc = $description;
+		return $this;
+	}
+
+
+	/**
 	 * Mark this field as 'disabled'
 	 *
 	 * @since 1.18.0
