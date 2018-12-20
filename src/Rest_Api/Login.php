@@ -24,13 +24,13 @@ class Login {
 	use Singleton;
 
 
-	public function hook() {
+	public function hook() : void {
 		add_filter( 'determine_current_user', [ $this, 'login_via_token' ], 20 );
 		add_action( 'rest_api_init', [ $this, 'register_routes' ], 10 );
 	}
 
 
-	public function register_routes() {
+	public function register_routes() : void {
 		register_rest_route( 'auth/v1', '/login/', [
 			'methods'  => 'POST',
 			'callback' => [ $this, 'basic_auth_handler' ],
@@ -52,12 +52,12 @@ class Login {
 	 *
 	 * @return \WP_User
 	 */
-	public function login_via_token( $user ) {
+	public function login_via_token( $user ) : ?\WP_User {
 		$token = $this->get_token_from_header();
 		if ( ! empty( $token ) ) {
 			$user_id = Auth_Table::instance()->get_user( $token );
-			if ( ! empty( $user_id ) ) {
-				return $user_id;
+			if ( null !== $user_id ) {
+				return new \WP_User( $user_id );
 			}
 		}
 
@@ -67,22 +67,22 @@ class Login {
 
 	private function get_token_from_header() {
 		$headers = null;
+		// phpcs:disable
 		if ( isset( $_SERVER['Authorization'] ) ) {
-			$headers = trim( $_SERVER["Authorization"] );
+			$headers = trim( $_SERVER['Authorization'] );
 		} elseif ( isset( $_SERVER['HTTP_AUTHORIZATION'] ) ) {
-			$headers = trim( $_SERVER["HTTP_AUTHORIZATION"] );
+			$headers = trim( $_SERVER['HTTP_AUTHORIZATION'] );
 		} elseif ( function_exists( 'apache_request_headers' ) ) {
-			$requestHeaders = apache_request_headers();
-			$requestHeaders = array_combine( array_map( 'ucwords', array_keys( $requestHeaders ) ), array_values( $requestHeaders ) );
-			if ( isset( $requestHeaders['Authorization'] ) ) {
-				$headers = trim( $requestHeaders['Authorization'] );
+			$apache_headers = apache_request_headers();
+			$apache_headers = array_combine( array_map( 'ucwords', array_keys( $apache_headers ) ), array_values( $apache_headers ) );
+			if ( isset( $apache_headers['Authorization'] ) ) {
+				$headers = trim( $apache_headers['Authorization'] );
 			}
 		}
+		// phpcs:enable
 
-		if ( ! empty( $headers ) ) {
-			if ( preg_match( '/Bearer\s(\S+)/', $headers, $matches ) ) {
-				return $matches[1];
-			}
+		if ( null !== $headers && preg_match( '/Bearer\s(\S+)/', $headers, $matches ) ) {
+			return $matches[1];
 		}
 
 		return null;
@@ -116,13 +116,10 @@ class Login {
 	public function basic_auth_handler( \WP_REST_Request $request ) {
 		//!! if this is not set @see this methods php docs for fastcgi !!
 		if ( ! isset( $_SERVER['PHP_AUTH_USER'] ) ) {
-			return new \WP_Error( 'no_user', __( 'No User Passed', 'wswd' ), [ 'status' => 201 ] );
+			return new \WP_Error( 'no_user', __( 'No User Passed', 'lipe' ), [ 'status' => 201 ] );
 		}
 
-		$username = $_SERVER['PHP_AUTH_USER'];
-		$password = $_SERVER['PHP_AUTH_PW'];
-
-		$user = wp_authenticate( $username, $password );
+		$user = wp_authenticate( $_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'] ); //phpcs:ignore
 
 		if ( is_wp_error( $user ) ) {
 			return $user;
@@ -140,7 +137,7 @@ class Login {
 	 *
 	 * @return \WP_REST_Response
 	 */
-	private function get_valid_authenticated_response( $user ) {
+	private function get_valid_authenticated_response( $user ) : \WP_REST_Response {
 		$columns = [
 			'user_id' => $user->ID,
 			'token'   => wp_hash_password( $user->user_email . time() ),

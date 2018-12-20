@@ -3,6 +3,7 @@
 namespace Lipe\Lib\Comment;
 
 use Lipe\Lib\Meta\Meta_Repo;
+use Lipe\Lib\Meta\Repo;
 
 /**
  * Trait Comment_Trait
@@ -64,7 +65,7 @@ trait Comment_Trait {
 	 * @throws \Exception
 	 */
 	public function get_meta( string $key, $default = null ) {
-		$value = Meta_Repo::instance()->get_meta( $this->comment_id, $key, 'comment' );
+		$value = Repo::instance()->get_value( $this->comment_id, $key, 'comment' );
 		if ( null !== $default && empty( $value ) ) {
 			return $default;
 		}

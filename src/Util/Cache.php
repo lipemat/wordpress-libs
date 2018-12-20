@@ -16,9 +16,10 @@ use Lipe\Lib\Traits\Singleton;
 class Cache {
 	use Singleton;
 
-	const DEFAULT_GROUP = 'lipe/lib/util/group';
-	const FLUSH_ON_SAVE_POST_GROUP = 'lipe/lib/util/cache_flush_save_post';
-	const QUERY_ARG = 'lipe/lib/util/clear-cache';
+	protected const QUERY_ARG = 'lipe/lib/util/cache/cache';
+	protected const DEFAULT_GROUP = 'lipe/lib/util/cache/group';
+
+	public const FLUSH_ON_SAVE_POST_GROUP = 'lipe/lib/util/cache/flush-save-post';
 
 
 	public function hook() : void {
@@ -30,79 +31,42 @@ class Cache {
 	}
 
 
-	public static function set( $key, $value, $group = self::DEFAULT_GROUP, $expire_in_seconds = 0 ) : bool {
-		$group = self::get_group_key( $group );
+	public function set( $key, $value, $group = self::DEFAULT_GROUP, $expire_in_seconds = 0 ) : bool {
+		$group = $this->get_group_key( $group );
 
 		if ( null === $value ) {
 			//store an empty value that memcache can handle
 			$value = '';
 		}
 
-		return wp_cache_set( self::filter_key( $key ), $value, $group, $expire_in_seconds );
+		return wp_cache_set( $this->filter_key( $key ), $value, $group, $expire_in_seconds );
 	}
 
 
-	private static function get_group_key( $group ) : string {
-		//tap into the existing last_changed for posts group
-		if ( self::FLUSH_ON_SAVE_POST_GROUP === $group ) {
-			$last_changed = wp_cache_get_last_changed( 'posts' );
-		} else {
-			$last_changed = wp_cache_get_last_changed( $group );
-		}
 
-		return $group . ':' . $last_changed;
+	public function get( $key, $group = self::DEFAULT_GROUP ) {
+		$group = $this->get_group_key( $group );
+
+		return wp_cache_get( $this->filter_key( $key ), $group );
+
+	}
+
+
+	public function delete( $key, $group = self::DEFAULT_GROUP ) : bool {
+		$group = $this->get_group_key( $group );
+
+		return wp_cache_delete( $this->filter_key( $key ), $group );
 	}
 
 
 	/**
-	 * Process the cache key so that any unique data may serve as a key,
-	 * even if it's an object or array.
+	 * Flush a group by changing the "last_changed" key.
 	 *
-	 * @param array|string|object $key
+	 * @param string $group
 	 *
-	 * @return bool|string
+	 * @return void
 	 */
-	private static function filter_key( $key ) {
-		if ( empty( $key ) ) {
-			return false;
-		}
-		$key = ( \is_array( $key ) || \is_object( $key ) ) ? md5( serialize( $key ) ) : $key;
-
-		return $key;
-	}
-
-
-	public static function get( $key, $group = self::DEFAULT_GROUP ) {
-		$group = self::get_group_key( $group );
-
-		return wp_cache_get( self::filter_key( $key ), $group );
-
-	}
-
-
-	public static function delete( $key, $group = self::DEFAULT_GROUP ) : bool {
-		$group = self::get_group_key( $group );
-
-		return wp_cache_delete( self::filter_key( $key ), $group );
-	}
-
-
-	public static function flush_all_sites() : void {
-		global $wp_object_cache;
-		if ( null !== $wp_object_cache->mc ) {
-			foreach ( array_keys( $wp_object_cache->mc ) as $group ) {
-				$wp_object_cache->mc[ $group ]->flush();
-			}
-		}
-	}
-
-
-	public function clear_save_post_group() : void {
-		self::flush_group( self::FLUSH_ON_SAVE_POST_GROUP );
-	}
-
-
-	public static function flush_group( $group = self::DEFAULT_GROUP ) : void {
+	public function flush_group( $group = self::DEFAULT_GROUP ) : void {
 		wp_cache_set( 'last_changed', microtime(), $group );
 	}
 
@@ -125,6 +89,44 @@ class Cache {
 			'meta'   => [ 'title' => __( 'Clear the cache for this site', 'lipe' ) ],
 			'href'   => wp_nonce_url( add_query_arg( [ self::QUERY_ARG => 1 ] ), self::QUERY_ARG ),
 		] );
+	}
+
+
+	/**
+	 * Group key with a custom "last_change" appended to it to handle
+	 * flushing an entire group by changing a "last_changed" cache key.
+	 *
+	 * @param $group
+	 *
+	 * @return string
+	 */
+	protected function get_group_key( $group ) : string {
+		if ( self::FLUSH_ON_SAVE_POST_GROUP === $group ) {
+			//Tap into the existing last_changed for posts group so we can flush automatically.
+			$last_changed = wp_cache_get_last_changed( 'posts' );
+		} else {
+			$last_changed = wp_cache_get_last_changed( $group );
+		}
+
+		return $group . ':' . $last_changed;
+	}
+
+
+	/**
+	 * Process the cache key so that any unique data may serve as a key,
+	 * even if it's an object or array.
+	 *
+	 * @param array|string|object $key
+	 *
+	 * @return bool|string
+	 */
+	protected function filter_key( $key ) {
+		if ( empty( $key ) ) {
+			return false;
+		}
+		$key = ( \is_array( $key ) || \is_object( $key ) ) ? md5( serialize( $key ) ) : $key;
+
+		return $key;
 	}
 
 }

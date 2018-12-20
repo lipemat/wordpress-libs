@@ -2,7 +2,7 @@
 
 namespace Lipe\Lib\Taxonomy;
 
-use Lipe\Lib\Meta\Meta_Repo;
+use Lipe\Lib\Meta\Repo;
 
 /**
  * Trait Taxonomy_Trait
@@ -57,7 +57,7 @@ trait Taxonomy_Trait {
 	 * @throws \Exception
 	 */
 	public function get_meta( string $key, $default = null ) {
-		$value = Meta_Repo::instance()->get_meta( $this->term_id, $key, 'term' );
+		$value = Repo::instance()->get_value( $this->term_id, $key, 'term' );
 		if ( null !== $default && empty( $value ) ) {
 			return $default;
 		}

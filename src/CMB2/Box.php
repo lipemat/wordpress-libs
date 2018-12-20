@@ -3,6 +3,7 @@
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
+use Lipe\Lib\Meta\Repo;
 
 /**
  * Box
@@ -481,9 +482,19 @@ class Box {
 	}
 
 
+	/**
+	 * 1. Add a field to this box.
+	 * 2. Register the field with the Meta\Repo
+	 *
+	 * @param Field $field
+	 *
+	 * @return void
+	 */
 	public function add_field( Field $field ) : void {
 		$box = $this->get_box();
 		$box->add_field( $field->get_field_args(), $field->position );
+
+		Repo::in()->register_field( $field );
 	}
 
 }

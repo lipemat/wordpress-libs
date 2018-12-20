@@ -1,6 +1,6 @@
 <?php
 
-namespace Lipe\Lib\Util;
+namespace Lipe\Lib\Api;
 
 use Lipe\Lib\Traits\Singleton;
 
@@ -17,11 +17,12 @@ use Lipe\Lib\Traits\Singleton;
 class Route {
 	use Singleton;
 
-	const POST_TYPE = 'lipe/lib/util/route';
-	const QUERY_VAR = 'lipe/lib/util/route_template';
-	const PARAM_QUERY_VAR = 'lipe/lib/util/route_param';
-	const OPTION = 'lipe/lib/util/route_cache';
-	const POST_ID_OPTION = 'lipe/lib/util/route_post_id';
+	protected const NAME = 'lipe/lib/util/route';
+
+	protected const QUERY_VAR = 'lipe/lib/util/route_template';
+	protected const PARAM_QUERY_VAR = 'lipe/lib/util/route_param';
+	protected const OPTION = 'lipe/lib/util/route_cache';
+	protected const POST_ID_OPTION = 'lipe/lib/util/route_post_id';
 
 	/**
 	 * post_id
@@ -53,7 +54,7 @@ class Route {
 	 *
 	 * @return void
 	 */
-	public static function add( $url, array $args ) {
+	public static function add( $url, array $args ) : void {
 		self::$routes[ $url ] = $args;
 	}
 
@@ -70,8 +71,7 @@ class Route {
 	 *
 	 * @return void
 	 */
-	public static function register_post_type() {
-
+	public static function register_post_type() : void {
 		$args = [
 			'public'              => false,
 			'show_ui'             => false,
@@ -88,11 +88,11 @@ class Route {
 				'pages'      => false,
 			],
 		];
-		register_post_type( self::POST_TYPE, $args );
+		register_post_type( self::NAME, $args );
 	}
 
 
-	public function hook() {
+	public function hook() : void {
 		add_filter( 'query_vars', [ $this, 'add_query_var' ] );
 		add_action( 'init', [ $this, 'setup_endpoints' ] );
 		add_action( 'init', [ __CLASS__, 'register_post_type' ] );
@@ -112,7 +112,7 @@ class Route {
 	 *
 	 * @return void
 	 */
-	public function maybe_add_post_hooks( $query ) {
+	public function maybe_add_post_hooks( $query ) : void {
 		if ( isset( $query->query_vars[ self::QUERY_VAR ] ) ) {
 			$this->add_post_hooks();
 		}
@@ -128,7 +128,7 @@ class Route {
 	 *
 	 * @return void
 	 */
-	protected function add_post_hooks() {
+	protected function add_post_hooks() : void {
 		add_filter( 'the_title', [ $this, 'get_title' ], 10, 2 );
 		add_filter( 'single_post_title', [ $this, 'get_title' ], 10, 2 );
 		add_filter( 'body_class', [ $this, 'adjust_body_class' ], 99 );
@@ -147,22 +147,22 @@ class Route {
 	 *
 	 * @return array
 	 */
-	public function adjust_body_class( $classes ) {
+	public function adjust_body_class( $classes ) : array {
 		$post = get_post();
 
 		foreach ( $classes as $k => $_class ) {
 			if ( strpos( $_class, 'postid' ) !== false ) {
 				unset( $classes[ $k ] );
-			} elseif ( $_class == $post->post_name ) {
+			} elseif ( $_class === $post->post_name ) {
 				unset( $classes[ $k ] );
 			} elseif ( strpos( $_class, 'page-template' ) !== false ) {
 				unset( $classes[ $k ] );
 			}
 		}
 
-		$route = self::get_current_route();
+		$route     = $this->get_current_route();
 		$classes[] = sanitize_title_with_dashes( $route['title'] );
-		$template = explode( '/', $route['template'] );
+		$template  = explode( '/', $route['template'] );
 		$classes[] = 'page-template-' . str_replace( '.', '-', end( $template ) );
 
 		return $classes;
@@ -195,8 +195,8 @@ class Route {
 	 *
 	 * @return void
 	 */
-	public function maybe_flush_rules() {
-		if ( get_option( self::OPTION ) != md5( serialize( self::$routes ) ) ) {
+	public function maybe_flush_rules() : void {
+		if ( get_option( self::OPTION ) !== md5( serialize( self::$routes ) ) ) {
 			flush_rewrite_rules();
 			update_option( self::OPTION, md5( serialize( self::$routes ) ) );
 		}
@@ -204,15 +204,13 @@ class Route {
 
 
 	/**
-	 * Add Query Var
-	 *
-	 * Add a query var to allow for our custom urls to be specificed
+	 * Add a query var to allow for our custom urls to be specified
 	 *
 	 * @param $vars
 	 *
 	 * @return array
 	 */
-	public function add_query_var( $vars ) {
+	public function add_query_var( $vars ) : array {
 		$vars[] = self::QUERY_VAR;
 		$vars[] = self::PARAM_QUERY_VAR;
 
@@ -221,33 +219,28 @@ class Route {
 
 
 	/**
-	 * Setup Endpoints
-	 *
 	 * Register the rewrite rules to send the appropriate urls to our
 	 * custom query var which will tell us what route we are using
 	 *
-	 *
 	 * @return void
 	 */
-	public function setup_endpoints() {
+	public function setup_endpoints() : void {
 		foreach ( self::$routes as $_route => $_args ) {
-			add_rewrite_rule( $_route . '/([^/]+)/?.?', 'index.php?post_type=' . self::POST_TYPE . '&p=' . self::get_post_id() . '&' . self::QUERY_VAR . '=' . $_route . '&' . self::PARAM_QUERY_VAR . '=$matches[1]', 'top' );
+			add_rewrite_rule( $_route . '/([^/]+)/?.?', 'index.php?post_type=' . self::NAME . '&p=' . self::get_post_id() . '&' . self::QUERY_VAR . '=' . $_route . '&' . self::PARAM_QUERY_VAR . '=$matches[1]', 'top' );
 
-			add_rewrite_rule( $_route, 'index.php?post_type=' . self::POST_TYPE . '&p=' . self::get_post_id() . '&' . self::QUERY_VAR . '=' . $_route, 'top' );
+			add_rewrite_rule( $_route, 'index.php?post_type=' . self::NAME . '&p=' . self::get_post_id() . '&' . self::QUERY_VAR . '=' . $_route, 'top' );
 
 		}
 	}
 
 
 	/**
-	 * Get Post ID
-	 *
 	 * Get the ID of the placeholder post
 	 *
 	 * @static
 	 * @return int
 	 */
-	protected static function get_post_id() {
+	protected static function get_post_id() : int {
 		if ( self::$post_id ) {
 			return self::$post_id;
 		}
@@ -258,7 +251,7 @@ class Route {
 		}
 
 		$posts = get_posts( [
-			'post_type'      => self::POST_TYPE,
+			'post_type'      => self::NAME,
 			'post_status'    => 'publish',
 			'posts_per_page' => 1,
 			'fields'         => 'ids',
@@ -278,8 +271,6 @@ class Route {
 
 
 	/**
-	 * Make Post
-	 *
 	 * Make a new placeholder post
 	 *
 	 * @static
@@ -289,9 +280,9 @@ class Route {
 		$post = [
 			'post_title'  => 'Lipe Libs Placeholder Post',
 			'post_status' => 'publish',
-			'post_type'   => self::POST_TYPE,
+			'post_type'   => self::NAME,
 		];
-		$id = wp_insert_post( $post );
+		$id   = wp_insert_post( $post );
 		if ( is_wp_error( $id ) ) {
 			return 0;
 		}
@@ -305,19 +296,14 @@ class Route {
 	 *
 	 * Use the specified template file based on the current route
 	 *
-	 * @param string $template
-	 *
 	 * @return string
 	 */
-	public function override_template( $template ) {
-		$route = $this->get_current_route();
-
-		return $route['template'];
+	public function override_template() : string {
+		return $this->get_current_route()['template'];
 	}
 
 
 	/********** statics ***************/
-
 
 	/**
 	 * Is Current Route
@@ -328,12 +314,8 @@ class Route {
 	 *
 	 * @return bool
 	 */
-	public function is_current_route( $route ) {
-		if ( get_query_var( self::QUERY_VAR ) === $route ) {
-			return true;
-		}
-
-		return false;
+	public function is_current_route( $route ) : bool {
+		return get_query_var( self::QUERY_VAR ) === $route;
 	}
 
 
@@ -347,7 +329,7 @@ class Route {
 	 *
 	 * @return string
 	 */
-	public function get_url_parameter() {
+	public function get_url_parameter() : string {
 		return get_query_var( self::PARAM_QUERY_VAR );
 	}
 
@@ -357,14 +339,14 @@ class Route {
 	 *
 	 * Set the title for the placeholder page
 	 *
-	 * @param string $title
-	 * @param int    $post_id
+	 * @param string       $title
+	 * @param int|\WP_Post $post
 	 *
 	 * @return string
 	 */
-	public function get_title( $title, $post ) {
-		$post = get_post( $post );
-		if ( $post->ID == self::get_post_id() ) {
+	public function get_title( $title, $post ) : string {
+		$_post = get_post( $post );
+		if ( self::get_post_id() === $_post->ID ) {
 			$route = $this->get_current_route();
 
 			return $route['title'];

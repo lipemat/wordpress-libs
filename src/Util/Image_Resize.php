@@ -27,7 +27,7 @@ class Image_Resize {
 	private $_image_sizes = []; //Keeps track of all theme and plugins image sizes
 
 
-	public function hook() {
+	public function hook() : void {
 		// convert other add_image_sizes from other plugin, to the attribute of the class
 		add_action( 'init', [ $this, 'add_other_image_sizes' ] );
 

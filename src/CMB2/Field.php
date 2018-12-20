@@ -3,6 +3,7 @@
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
+use Lipe\Lib\Meta\Repo;
 
 /**
  * Field
@@ -59,7 +60,7 @@ class Field {
 	 *
 	 * @var string;
 	 */
-	public $type;
+	protected $type;
 
 	/**
 	 * Will modify default attributes (class, input type, rows, etc),
@@ -548,10 +549,30 @@ class Field {
 	}
 
 
+	/**
+	 * The data key. If using for posts, will be the post-meta key.
+	 * If using for an options page, will be the array key.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#id
+	 *
+	 * @required
+	 *
+	 * @example 'lipe/project/meta/category-fields',
+	 *
+	 * @return string
+	 */
 	public function get_id() : string {
 		return $this->id;
 	}
 
+
+	/**
+	 * The field label
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#name
+	 *
+	 * @return string
+	 */
 	public function get_name() : string {
 		return $this->name;
 	}
@@ -635,6 +656,22 @@ class Field {
 
 
 	/**
+	 * Field description. Usually under or adjacent to the field input.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#desc
+	 *
+	 * @param string $description
+	 *
+	 * @return Field
+	 */
+	public function description( string $description ) : Field {
+		$this->desc = $description;
+
+		return $this;
+	}
+
+
+	/**
 	 * Mark this field as 'disabled'
 	 *
 	 * @since 1.18.0
@@ -643,6 +680,7 @@ class Field {
 	 */
 	public function disabled() : Field {
 		$this->attributes( [ 'disabled' => 'disabled' ] );
+
 		return $this;
 	}
 
@@ -733,9 +771,9 @@ class Field {
 	 * to override the arguments passed to get_terms(), and for the 'file_*' field types,
 	 * allows overriding the media library query arguments.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
+	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
 	 *
-	 * @var array $args;
+	 * @var array $args ;
 	 *
 	 * @since 1.7.0
 	 *
@@ -778,11 +816,46 @@ class Field {
 	 * This is much preferred over setting $this->type
 	 * directly which has room for error
 	 *
-	 *
 	 * @return \Lipe\Lib\CMB2\Field_Type
 	 */
 	public function type() : Field_Type {
 		return new Field_Type( $this );
+	}
+
+	/**
+	 * The type of field
+	 *
+	 * link https://github.com/CMB2/CMB2/wiki/Field-Parameters#type
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
+	 *
+	 * @see  \Lipe\Lib\CMB2\Field_Type;
+	 * @see  \Lipe\Lib\CMB2\Field::type();
+	 *
+	 * @return string
+	 */
+	public function get_type() : string {
+		return $this->type;
+	}
+
+
+	/**
+	 * Set a Fields Type and register the type with Meta\Repo
+	 *
+	 * @param string $type
+	 * @param string $data_type - a type of data to return [Repo::DEFAULT, Repo::CHECKBOX, Repo::FILE, Repo::TAXONOMY ]
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
+	 *
+	 * @since 2.0.0
+	 *
+	 * @internal
+	 *
+	 * @return void
+	 */
+	public function set_type( string $type, string $data_type ) : void {
+		$this->type = $type;
+		Repo::in()->register_field_type( $this->type, $data_type );
 	}
 
 

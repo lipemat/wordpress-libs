@@ -25,17 +25,17 @@ class Taxonomies {
 	];
 
 
-	public function hook() {
+	public function hook() : void {
 		add_action( 'rest_api_init', [ $this, 'register_routes' ], 10 );
 	}
 
 
-	public function add_taxonomy( $taxonomy ) {
+	public function add_taxonomy( $taxonomy ) : void {
 		$this->allowed_taxonomies[] = $taxonomy;
 	}
 
 
-	public function register_routes() {
+	public function register_routes() : void {
 		register_rest_route( '/taxonomies/v1', '/terms/(?P<taxonomy>[a-zA-Z0-9-]+)', [
 			'methods'  => 'GET',
 			'callback' => [ $this, 'get_terms' ],
@@ -51,12 +51,12 @@ class Taxonomies {
 	public function get_terms( \WP_REST_Request $request ) {
 		$taxonomy = $request->get_param( 'taxonomy' );
 		if ( empty( $taxonomy ) ) {
-			return new \WP_Error( 'get_terms_failed', __( 'You must supply a taxonomy', 'wswd' ), [ 'status' => 201 ] );
+			return new \WP_Error( 'get_terms_failed', __( 'You must supply a taxonomy', 'lipe' ), [ 'status' => 201 ] );
 		}
 
 		$object = get_taxonomy( $taxonomy );
-		if ( empty( $object ) || ! in_array( $taxonomy, $this->allowed_taxonomies ) ) {
-			return new \WP_Error( 'get_terms_failed', __( 'Invalid taxonomy', 'wswd' ), [ 'status' => 201 ] );
+		if ( empty( $object ) || ! \in_array( $taxonomy, $this->allowed_taxonomies, true ) ) {
+			return new \WP_Error( 'get_terms_failed', __( 'Invalid taxonomy', 'lipe' ), [ 'status' => 201 ] );
 		}
 
 		$columns = [

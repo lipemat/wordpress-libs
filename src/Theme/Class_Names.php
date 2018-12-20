@@ -1,12 +1,13 @@
 <?php
 
-namespace Lipe\Lib\Util;
+namespace Lipe\Lib\Theme;
 
 /**
  * Conditionally add css classes to an element
  *
  * Mirrored after npm classnames and enhanced
- * @link https://www.npmjs.com/package/classnames
+ *
+ * @link    https://www.npmjs.com/package/classnames
  *
  * @example $class = new Class_Names( [ 'top' => false, 'bottom' => true ] ); //echo $class; outputs "bottom"
  *
@@ -34,7 +35,7 @@ class Class_Names implements \ArrayAccess {
 		}
 
 		foreach ( $classes as $_class => $_state ) {
-			if ( \is_string( $_class  ) ) {
+			if ( \is_string( $_class ) ) {
 				if ( (bool) $_state ) {
 					$this->classes[] = $_class;
 				}
@@ -43,7 +44,6 @@ class Class_Names implements \ArrayAccess {
 			}
 		}
 	}
-
 
 
 	/**
