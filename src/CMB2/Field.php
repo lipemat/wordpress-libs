@@ -59,7 +59,7 @@ class Field {
 	 *
 	 * @var string;
 	 */
-	public $type;
+	protected $type;
 
 	/**
 	 * Will modify default attributes (class, input type, rows, etc),
