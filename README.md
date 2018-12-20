@@ -1,7 +1,7 @@
 # WordPress Libs
 WordPress library which supports a core plugin and theme.
 
-**Version [1.19.0](https://github.com/lipemat/wordpress-lipe-libs/releases/tag/1.19.0)**
+**Version [1.19.1](https://github.com/lipemat/wordpress-lipe-libs/releases/tag/1.19.1)**
 
 ### Requirements
 1. PHP Version 7.1.3+ (Recommended 7.2.0+)
