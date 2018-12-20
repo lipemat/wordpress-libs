@@ -2,8 +2,7 @@
 
 namespace Lipe\Lib\Post_Type;
 
-use Lipe\Lib\Meta\Meta_Repo;
-
+use Lipe\Lib\Meta\Repo;
 
 trait Post_Object_Trait {
 
@@ -57,7 +56,7 @@ trait Post_Object_Trait {
 	 * @throws \Exception
 	 */
 	public function get_meta( string $key, $default = null ) {
-		$value = Meta_Repo::instance()->get_meta( $this->post_id, $key );
+		$value = Repo::instance()->get_value( $this->post_id, $key );
 		if ( null !== $default && empty( $value ) ) {
 			return $default;
 		}

@@ -2,7 +2,7 @@
 
 namespace Lipe\Lib\User;
 
-use Lipe\Lib\Meta\Meta_Repo;
+use Lipe\Lib\Meta\Repo;
 
 /**
  * Trait User_Trait
@@ -39,7 +39,7 @@ trait User_Trait {
 		$this->user_id = $user_id;
 	}
 
-	public function get_user_id(){
+	public function get_user_id() {
 		return $this->user_id;
 	}
 
@@ -61,7 +61,7 @@ trait User_Trait {
 	 * @throws \Exception
 	 */
 	public function get_meta( string $key, $default = null ) {
-		$value = Meta_Repo::instance()->get_meta( $this->user_id, $key, 'user' );
+		$value = Repo::instance()->get_value( $this->user_id, $key, 'user' );
 		if ( null !== $default && empty( $value ) ) {
 			return $default;
 		}
