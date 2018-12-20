@@ -5,7 +5,7 @@ namespace Lipe\Lib\CMB2\Box;
 use CMB2_Field;
 use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\Traits\Singleton;
-use Lipe\Lib\Util\Class_Names;
+use Lipe\Lib\Theme\Class_Names;
 
 /**
  * Support Tabs in meta boxes
@@ -72,7 +72,7 @@ class Tabs {
 	 *
 	 * @return void
 	 */
-	public function opening_div( $cmb_id, $object_id, $object_type, $cmb ) {
+	public function opening_div( $cmb_id, $object_id, $object_type, $cmb ) : void {
 		if ( ! $cmb->prop( 'tabs' ) ) {
 			return;
 		}
@@ -114,7 +114,7 @@ class Tabs {
 	 *
 	 * @return void
 	 */
-	public function render_nav( $cmb_id, $object_id, $object_type, $cmb ) {
+	public function render_nav( $cmb_id, $object_id, $object_type, $cmb ) : void {
 		$tabs = $cmb->prop( 'tabs' );
 
 		if ( $tabs ) {
@@ -142,7 +142,7 @@ class Tabs {
 	}
 
 
-	public function add_wrap_class( $classes ) {
+	public function add_wrap_class( $classes ) : array {
 		if ( $this->has_tabs ) {
 			$classes[] = 'cmb-tabs-panel';
 			if ( ! empty( $this->fields_output ) ) {
