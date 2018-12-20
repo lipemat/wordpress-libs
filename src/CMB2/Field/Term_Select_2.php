@@ -1,6 +1,6 @@
 <?php
 
-namespace Lipe\Lib\CMB2\Field_Types;
+namespace Lipe\Lib\CMB2\Field;
 
 use CMB2_Field;
 use CMB2_Types;

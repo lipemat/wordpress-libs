@@ -4,7 +4,7 @@ namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Field\Checkbox;
 use Lipe\Lib\CMB2\Field\True_False;
-use Lipe\Lib\CMB2\Field_Types\Term_Select_2;
+use Lipe\Lib\CMB2\Field\Term_Select_2;
 
 /**
  * Field_Type
