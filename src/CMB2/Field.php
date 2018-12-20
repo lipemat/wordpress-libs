@@ -847,13 +847,15 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
+	 * @since 2.0.0
+	 *
 	 * @internal
 	 *
 	 * @return void
 	 */
 	public function set_type( string $type, string $data_type ) : void {
 		$this->type = $type;
-		Repo::in()->register_field_type( $this->type, $data_type, $this );
+		Repo::in()->register_field_type( $this->type, $data_type );
 	}
 
 
