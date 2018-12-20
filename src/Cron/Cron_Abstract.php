@@ -70,7 +70,7 @@ abstract class Cron_Abstract {
 	 * @return int
 	 */
 	public function get_last_run() : int {
-		get_option( static::NAME . '/last-run', 0 );
+		return get_option( static::NAME . '/last-run', 0 );
 	}
 
 
