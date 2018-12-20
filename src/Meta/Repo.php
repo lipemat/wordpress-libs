@@ -68,6 +68,30 @@ class Repo {
 
 
 	/**
+	 * Get a registered field by id.
+	 *
+	 * @param string $field_id
+	 *
+	 * @return Field
+	 */
+	protected function get_field( string $field_id ) : Field {
+		return $this->fields[ $field_id ];
+	}
+
+
+	/**
+	 * Get the data type of a registered field by id
+	 *
+	 * @param string $field_id
+	 *
+	 * @return string
+	 */
+	protected function get_field_data_type( string $field_id ) : string {
+		return $this->types[ $this->get_field( $field_id )->get_type() ];
+	}
+
+
+	/**
 	 * Get a fields value
 	 *
 	 * Use the registered fields and registered types to determine the appropriate method to
@@ -80,18 +104,21 @@ class Repo {
 	 * @return mixed
 	 */
 	public function get_value( $object_id, string $field_id, string $meta_type = 'post' ) {
-		$field = $this->fields[ $field_id ];
-
-		switch ( $this->types[ $field->get_type() ] ) {
+		switch ( $this->get_field_data_type( $field_id ) ) {
 			case self::CHECKBOX:
 				return $this->get_checkbox_field_value( $object_id, $field_id, $meta_type );
 			case self::FILE:
 				return $this->get_file_field_value( $object_id, $field_id, $meta_type );
 			case self::TAXONOMY:
-				return $this->get_taxonomy_field_value( $object_id, $field->taxonomy );
-			default:
-				return $this->get_meta_value( $object_id, $field_id, $meta_type );
+				if ( 'option' === $meta_type ) {
+					break; // Terms are saved as meta for settings.
+				}
+
+				return $this->get_taxonomy_field_value( $object_id, $this->get_field( $field_id )->taxonomy );
 		}
+
+		return $this->get_meta_value( $object_id, $field_id, $meta_type );
+
 	}
 
 
@@ -106,6 +133,16 @@ class Repo {
 	 * @return mixed
 	 */
 	protected function get_meta_value( $object_id, string $key, string $meta_type ) {
+		// Settings page store all values in one option.
+		if ( 'option' === $meta_type ) {
+			$values = get_option( $object_id, [] );
+			if ( ! isset( $values[ $key ] ) ) {
+				return null;
+			}
+
+			return $values[ $key ];
+		}
+
 		return get_metadata( $meta_type, $object_id, $key, true );
 	}
 
