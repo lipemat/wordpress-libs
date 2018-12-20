@@ -10,13 +10,13 @@ class Template {
 	/**
 	 * Render of an array of attributes to be used in markup
 	 *
-	 * @param array $atts
+	 * @param array $attributes
 	 *
 	 * @return    string
 	 */
-	public function esc_attr( array $atts ) : string {
+	public function esc_attr( array $attributes ) : string {
 		$e = [];
-		foreach ( $atts as $k => $v ) {
+		foreach ( $attributes as $k => $v ) {
 			if ( \ is_array( $v ) || \is_object( $v ) ) {
 				$v = \json_encode( $v );
 			} elseif ( \is_bool( $v ) ) {

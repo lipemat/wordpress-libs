@@ -1,6 +1,6 @@
 <?php
 
-namespace Lipe\Lib\Util;
+namespace Lipe\Lib\Api;
 
 use Lipe\Lib\Traits\Singleton;
 
