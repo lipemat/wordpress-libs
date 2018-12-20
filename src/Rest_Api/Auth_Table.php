@@ -16,13 +16,13 @@ use Lipe\Lib\Traits\Singleton;
 class Auth_Table extends Db {
 	use Singleton;
 
-	protected $db_option = "lipe/lib/rest-api/auth_db_version";
+	protected $db_option = 'lipe/lib/rest-api/auth-table';
 
 	protected $db_version = 1;
 
 	protected $id_field = 'id';
 
-	protected $columns = [
+	public const COLUMNS = [
 		'id'      => '%d',
 		'user_id' => '%d',
 		'token'   => '%s',
@@ -43,11 +43,11 @@ class Auth_Table extends Db {
 	public function get_user( $token ) {
 		global $wpdb;
 		$expires = gmdate( 'Y-m-d H:i:s' );
-		$token = wp_hash( $token );
+		$token   = wp_hash( $token );
 
 		$sql = "SELECT user_id FROM $this->table WHERE `token` = '$token' AND `expires` > '$expires'";
 
-		return $wpdb->get_var( $sql );
+		return $wpdb->get_var( $sql ); // phpcs:ignore
 	}
 
 
@@ -69,24 +69,22 @@ class Auth_Table extends Db {
 	public function clean_expired_tokens() {
 		global $wpdb;
 		$expires = gmdate( 'Y-m-d H:i:s' );
-		$sql = "DELETE FROM $this->table WHERE `expires` < '$expires'";
+		$sql     = "DELETE FROM $this->table WHERE `expires` < '$expires'";
 
-		return $wpdb->query( $sql );
+		return $wpdb->query( $sql ); // phpcs:ignore
 	}
 
 
-	protected function create_table() {
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	protected function create_table() : void {
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-		$sql = "CREATE TABLE IF NOT EXISTS " . $this->table . " (
+		dbDelta( 'CREATE TABLE IF NOT EXISTS ' . $this->table . ' (
 	  id BIGINT(50) NOT NULL AUTO_INCREMENT,
 	  user_id BIGINT(20) NOT NULL,
 	  token VARCHAR(50) NOT NULL,
       expires TIMESTAMP NOT NULL,
       PRIMARY KEY (id),
       UNIQUE KEY auth_tokens (token, expires)
-	  );";
-
-		dbDelta( $sql );
+	  );' );
 	}
 }
