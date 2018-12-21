@@ -700,11 +700,18 @@ class Field {
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ) : Field {
 		// Ugh! Hack so I can use a method from that class
 		$mock = new class() extends \CMB2_Field {
-			public function __construct() {
+			public function __construct() {}
+
+			public function allowed( $type ) : bool {
+				if ( parent::repeatable_exception( $type ) ) {
+					return false;
+				}
+				// Cases not covered by CMB2
+				return 'file_list' !== $type;
 			}
 		};
-		if ( $mock->repeatable_exception( $this->get_type() ) ) {
-			trigger_error( esc_html( "Fields of {$this->get_type()} type do not support repeating" ) );
+		if ( ! $mock->allowed( $this->get_type() ) ) {
+			trigger_error( esc_html( "Fields of `{$this->get_type()}` type do not support repeating" ) );
 		}
 		$this->repeatable           = $repeatable;
 		$this->text['add_row_text'] = $add_row_text;
