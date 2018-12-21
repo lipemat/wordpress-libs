@@ -6,6 +6,7 @@ use Lipe\Lib\CMB2\Field\Checkbox;
 use Lipe\Lib\CMB2\Field\True_False;
 use Lipe\Lib\CMB2\Field\Term_Select_2;
 use Lipe\Lib\Meta\Repo;
+use Lipe\Lib\Util\Arrays;
 
 /**
  * Field_Type
@@ -555,12 +556,42 @@ class Field_Type {
 	/**
 	 * Code textarea.
 	 *
+	 * The defaults are most likely what you want to use, but just in case
+	 * there are arguments for specialize fine tuning
+	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea_code
+	 * @link https://www.ibenic.com/wordpress-code-editor#file-code-editor-js
+	 *
+	 * @param bool   $disable_codemirror    - disable code mirror handling in favor or a basic textbox
+	 * @param string $language              - [clike, css, diff, htmlmixed, http, javascript, jsx, markdown, gfm,
+	 *                                      nginx, php, sass, shell, sql, xml, yaml]
+	 * @param array  $code_editor_arguments - The arguments are then passed to `wp.codeEditor.initialize` method.
 	 *
 	 * @return Field
 	 */
-	public function textarea_code() : Field {
-		return $this->set( [ 'type' => $this->textarea_code ], Repo::DEFAULT );
+	public function textarea_code( bool $disable_codemirror = false, ?string $language = null, array $code_editor_arguments = [] ) : Field {
+		$set = [
+			'type' => $this->textarea_code,
+		];
+		if ( $disable_codemirror ) {
+			$set['options'] = [
+				'disable_codemirror' => true,
+			];
+		}
+		if ( null !== $language ) {
+			$code_editor_arguments = Arrays::in()->array_merge_recursive( $code_editor_arguments, [
+				'codemirror' => [
+					'mode' => $language,
+				],
+			] );
+		}
+		if ( ! empty( $code_editor_arguments ) ) {
+			$this->field->attributes( [
+				'data-codeeditor' => json_encode( $code_editor_arguments ),
+			] );
+		}
+
+		return $this->set( $set, Repo::DEFAULT );
 	}
 
 
