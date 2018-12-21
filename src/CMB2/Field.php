@@ -4,6 +4,7 @@ namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
 use Lipe\Lib\Meta\Repo;
+use Lipe\Lib\Util\Arrays;
 
 /**
  * Field
@@ -624,7 +625,7 @@ class Field {
 	 * @return Field
 	 */
 	public function attributes( array $attributes ) : Field {
-		$this->attributes = array_merge( $this->attributes, $attributes );
+		$this->attributes = Arrays::in()->array_merge_recursive( $this->attributes, $attributes );
 
 		return $this;
 	}
