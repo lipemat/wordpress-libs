@@ -5,6 +5,7 @@ namespace Lipe\Lib\CMB2;
 use Lipe\Lib\CMB2\Box\Tabs;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
+use Whoops\Example\Exception;
 
 /**
  * Field
@@ -697,6 +698,14 @@ class Field {
 	 * @return $this
 	 */
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ) : Field {
+		// Ugh! Hack so I can use a method from that class
+		$mock = new class() extends \CMB2_Field {
+			public function __construct() {
+			}
+		};
+		if ( $mock->repeatable_exception( $this->get_type() ) ) {
+			trigger_error( esc_html( "Fields of {$this->get_type()} type do not support repeating" ) );
+		}
 		$this->repeatable           = $repeatable;
 		$this->text['add_row_text'] = $add_row_text;
 
@@ -846,7 +855,7 @@ class Field {
 	 * @param string $type
 	 * @param string $data_type - a type of data to return [Repo::DEFAULT, Repo::CHECKBOX, Repo::FILE, Repo::TAXONOMY ]
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
+	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
 	 * @since 2.0.0
 	 *
