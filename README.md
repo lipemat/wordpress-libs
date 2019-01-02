@@ -19,7 +19,6 @@ require __DIR__ . '/vendor/autoload.php'
 ```
 
 ### Current Features (non exhaustive)
-* YouTube Api integration
 * CMB2 mapping
 * Meta Data repository
 * Custom Post Type registration object
@@ -41,7 +40,6 @@ require __DIR__ . '/vendor/autoload.php'
 * PostCSS Modules helper
 * On Demand Image Resizing
 * Url Route registration object
-* Url helper
 * Version management helper
 * Comment Object Trait
 
