@@ -48,12 +48,13 @@ trait Post_Object_Trait {
 
 
 	/**
+	 * Get the value of this post's meta field
+	 * using the meta repo to map the appropriate data type.
 	 *
 	 * @param string $key
 	 * @param mixed $default
 	 *
 	 * @return mixed
-	 * @throws \Exception
 	 */
 	public function get_meta( string $key, $default = null ) {
 		$value = Repo::instance()->get_value( $this->post_id, $key );
