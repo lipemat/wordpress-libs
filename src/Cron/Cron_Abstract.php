@@ -18,7 +18,12 @@ abstract class Cron_Abstract {
 
 
 	/**
-	 * Get the recurrence schedule of this cron.
+	 * How often the event should reoccur.
+	 * hourly, twicedaily, daily
+	 *
+	 * If going to be using custom recurrence intervals, it is best
+	 * to create a class for managing them with interval constants to return
+	 * with this method.
 	 *
 	 * @return string
 	 */
@@ -76,12 +81,6 @@ abstract class Cron_Abstract {
 
 	/**
 	 * Schedule the task
-	 *
-	 * @const  RECURRENCE - Use Cron_Schedules' constants
-	 *
-	 * @notice 'weekly' and 'monthly' are custom added by Cron_Schedules
-	 *
-	 * @see    Cron_Schedules
 	 *
 	 * @return void
 	 */
