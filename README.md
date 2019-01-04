@@ -1,7 +1,7 @@
 # WordPress Libs
 WordPress library which supports a core plugin and theme.
 
-**Version [2.1.0](https://github.com/lipemat/wordpress-lipe-libs/releases/tag/2.1.0)**
+**Version [2.2.0](https://github.com/lipemat/wordpress-lipe-libs/releases/tag/2.2.0)**
 
 ### Requirements
 1. PHP Version 7.1.3+ (Recommended 7.2.0+)
@@ -19,7 +19,6 @@ require __DIR__ . '/vendor/autoload.php'
 ```
 
 ### Current Features (non exhaustive)
-* YouTube Api integration
 * CMB2 mapping
 * Meta Data repository
 * Custom Post Type registration object
@@ -41,7 +40,6 @@ require __DIR__ . '/vendor/autoload.php'
 * PostCSS Modules helper
 * On Demand Image Resizing
 * Url Route registration object
-* Url helper
 * Version management helper
 * Comment Object Trait
 

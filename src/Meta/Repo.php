@@ -123,7 +123,7 @@ class Repo {
 
 
 	/**
-	 * Get a value from the standard WP meta api.
+	 * Get a value from the standard WP meta api or the options api.
 	 *
 	 * @param string|int $object_id
 	 * @param string     $key
