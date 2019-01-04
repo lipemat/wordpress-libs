@@ -406,6 +406,17 @@ class Field {
 	public $repeatable;
 
 	/**
+	 * Filter the value which is returned in the rest api responses
+	 *
+	 * @see Field::rest_value_cb()
+	 *
+	 * @example 'intval'
+	 *
+	 * @var callable
+	 */
+	public $rest_value_cb;
+
+	/**
 	 * New field parameter for taxonomy fields, 'remove_default'
 	 * which allows disabling the default taxonomy metabox.
 	 *
@@ -719,6 +730,20 @@ class Field {
 		return $this;
 	}
 
+	/**
+	 * Callback to filter the return value for this field in
+	 * the rest api responses.
+	 *
+	 * @param callable $callback
+	 *
+	 * @example 'intval'
+	 *
+	 * @return Field
+	 */
+	public function rest_value_cb( callable $callback ) : Field {
+		$this->rest_value_cb = $callback;
+		return $this;
+	}
 
 	/**
 	 * Set the position of the field in the meta box
