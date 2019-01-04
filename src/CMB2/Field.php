@@ -295,6 +295,8 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#escape_cb
 	 *
+	 * @see Field::escape_cb()
+	 *
 	 * @var callable|false
 	 *
 	 */
@@ -434,6 +436,8 @@ class Field {
 	 * Set to false if you do not want any sanitization (not recommended).
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
+	 *
+	 * @see Field::sanitization_cb()
 	 *
 	 * @example sanitize_function( $value, $field_args, $field ){ return string }
 	 *
@@ -697,6 +701,21 @@ class Field {
 		return $this;
 	}
 
+	/**
+	 * Bypass the CMB escaping (escapes before display) methods with your own callback.
+	 * Set to false if you do not want any escaping (not recommended).
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#escape_cb
+	 *
+	 * @param callable $callback
+	 *
+	 * @return Field
+	 */
+	public function escape_cb( callable $callback ) : Field {
+		$this->escape_cb = $callback;
+		return $this;
+	}
+
 
 	/**
 	 * Supported by most field types, and will make the individual field a repeatable one.
@@ -898,6 +917,22 @@ class Field {
 	public function set_type( string $type, string $data_type ) : void {
 		$this->type = $type;
 		Repo::in()->register_field_type( $this->type, $data_type );
+	}
+
+
+	/**
+	 * Bypass the CMB sanitization (sanitizes before saving) methods with your own callback.
+	 * Set to false if you do not want any sanitization (not recommended).
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
+	 *
+	 * @param callable $callback
+	 *
+	 * @return Field
+	 */
+	public function sanitization_cb( callable $callback ) : Field {
+		$this->sanitization_cb = $callback;
+		return $this;
 	}
 
 
