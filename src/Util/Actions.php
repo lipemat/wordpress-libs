@@ -32,7 +32,7 @@ class Actions {
 	 * @return void
 	 */
 	public function add_filter_as_action( string $filter, callable $callable, int $priority = 10, int $accepted_args = 1 ) : void {
-		\add_filter( $filter, function ( ...$args ) use ( $filter, $callable ) {
+		\add_filter( $filter, function ( ...$args ) use ( $callable ) {
 			\call_user_func( $callable, ...$args );
 
 			return reset( $args );
@@ -78,8 +78,11 @@ class Actions {
 
 
 	/**
-	 * Add an filter which will only fire one time no matter how many times
+	 * Add a filter which will only fire one time no matter how many times
 	 * apply_filters( <filter> ) is called.
+	 *
+	 * If you call this method multiple times with the same $action, $callable, $priority
+	 * the filter will also fire only once.
 	 *
 	 * @since 1.8.0
 	 *
@@ -103,6 +106,9 @@ class Actions {
 	/**
 	 * Add an action which will only fire one time no matter how many times
 	 * do_action( <action> ) is called.
+	 *
+	 * If you call this method multiple times with the same $action, $callable, $priority
+	 * the action will also fire only once.
 	 *
 	 * @since 1.8.0
 	 *

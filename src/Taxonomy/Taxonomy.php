@@ -2,6 +2,8 @@
 
 namespace Lipe\Lib\Taxonomy;
 
+use Lipe\Lib\Util\Actions;
+
 /**
  * Taxonomy
  *
@@ -23,8 +25,6 @@ class Taxonomy {
 	protected const REGISTRY_OPTION = 'lipe/lib/schema/taxonomy_registry';
 
 	protected static $registry = [];
-
-	protected static $rewrite_checked = false;
 
 	/**
 	 * The arguments for the taxonomy
@@ -309,9 +309,8 @@ class Taxonomy {
 			}
 		}
 
-		if ( ! self::$rewrite_checked ) {
-			add_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 10000, 0 );
-			self::$rewrite_checked = true;
+		if ( is_admin() ) { // In case there are some taxonomies not registered on front end.
+			Actions::in()->add_single_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 1000 );
 		}
 	}
 

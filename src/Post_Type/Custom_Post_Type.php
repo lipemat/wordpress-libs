@@ -2,13 +2,13 @@
 
 namespace Lipe\Lib\Post_Type;
 
+use Lipe\Lib\Util\Actions;
+
 class Custom_Post_Type {
-	protected const REGISTRY_OPTION = 'lipe/lib/post-type/cpt_registry';
-	protected const CUSTOM_CAPS_OPTION = 'lipe/lib/post-type/cpt_caps';
+	protected const REGISTRY_OPTION = 'lipe/lib/post-type/custom-post-type/registry';
+	protected const CUSTOM_CAPS_OPTION = 'lipe/lib/post-type/custom-post-type/caps';
 
 	protected static $registry = [];
-
-	protected static $rewrite_checked = false;
 
 	public $post_type_label_singular = '';
 
@@ -232,14 +232,14 @@ class Custom_Post_Type {
 		//allow methods added to the init hook to customize the post type
 		add_action( 'wp_loaded', [ $this, 'register' ], 8, 0 );
 
-		add_filter( 'adjust_post_updated_messages', [ $this, 'adjust_post_updated_messages' ], 10, 1 );
-		add_filter( 'post_type_archive_title', [ $this, 'get_post_type_archive_label' ], 10, 1 );
+		add_filter( 'adjust_post_updated_messages', [ $this, 'adjust_post_updated_messages' ] );
+		add_filter( 'post_type_archive_title', [ $this, 'get_post_type_archive_label' ] );
 		add_filter( 'bulk_post_updated_messages', [ $this, 'adjust_bulk_edit_messages' ], 10, 2 );
 
-		if ( ! self::$rewrite_checked ) {
-			add_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 10000, 0 );
-			self::$rewrite_checked = true;
+		if ( is_admin() ) { // In case there are posts types not registered on front end.
+			Actions::in()->add_single_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 1000 );
 		}
+
 	}
 
 
