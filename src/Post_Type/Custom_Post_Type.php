@@ -69,6 +69,24 @@ class Custom_Post_Type {
 	public $supports = [ 'title', 'editor', 'author', 'thumbnail', 'excerpt' ];
 
 	/**
+	 * Gutenberg Template for this post type.
+	 *
+	 * @link https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#custom-post-types
+	 *
+	 * @var array
+	 */
+	protected $template;
+
+	/**
+	 * Locking of the Gutenberg template.
+	 *
+	 * @link https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#locking
+	 *
+	 * @var string
+	 */
+	protected $template_lock;
+
+	/**
 	 * Provide a callback function that will be called when setting
 	 * up the meta boxes for the edit form.
 	 * The callback function takes one argument $post,
@@ -331,7 +349,8 @@ class Custom_Post_Type {
 			'show_in_rest'          => $this->show_in_rest,
 			'rest_base'             => $this->rest_base,
 			'rest_controller_class' => $this->rest_controller_class,
-
+			'template'              => $this->template,
+			'template_lock'         => $this->template_lock,
 		];
 
 		$args = apply_filters( 'lipe/lib/schema/post_type_args', $args, $this->post_type );
@@ -528,6 +547,38 @@ class Custom_Post_Type {
 
 	}
 
+
+	/**
+	 * Set a Gutenberg template for this post type.
+	 *
+	 * @example array(
+	 *        array( 'core/image', array(
+	 *            'align' => 'left',
+	 *       ) ),
+	 *        array( 'core/heading', array(
+	 *            'placeholder' => 'Add Author...',
+	 *        ) ),
+	 *        array( 'core/paragraph', array(
+	 *            'placeholder' => 'Add Description...',
+	 *        ) ),
+	 *    )
+	 *
+	 * @link    https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#custom-post-types
+	 *
+	 * @param array       $template
+	 * @param string|null $template_lock [ 'all', 'insert' ]
+	 *                                   all — prevents all operations. It is not possible to insert new blocks, move
+	 *                                   existing blocks, or delete blocks. insert — prevents inserting or removing
+	 *                                   blocks, but allows moving existing blocks.
+	 *
+	 * @return Custom_Post_Type
+	 */
+	public function gutenberg_template( array $template, ?string $template_lock = null ) : Custom_Post_Type {
+		$this->template      = $template;
+		$this->template_lock = $template_lock;
+
+		return $this;
+	}
 
 	/**
 	 * Get a registered post type object
