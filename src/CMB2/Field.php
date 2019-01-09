@@ -410,6 +410,9 @@ class Field {
 	/**
 	 * Filter the value which is returned in the rest api responses
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#rest_value_cb
+	 * @link https://github.com/CMB2/CMB2/wiki/REST-API#overriding-a-returned-value-for-a-individual-field
+	 *
 	 * @see Field::rest_value_cb()
 	 *
 	 * @example 'intval'
@@ -752,6 +755,9 @@ class Field {
 	/**
 	 * Callback to filter the return value for this field in
 	 * the rest api responses.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#rest_value_cb
+	 * @link https://github.com/CMB2/CMB2/wiki/REST-API#overriding-a-returned-value-for-a-individual-field
 	 *
 	 * @param callable $callback
 	 *

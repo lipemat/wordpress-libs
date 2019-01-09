@@ -2,13 +2,13 @@
 
 namespace Lipe\Lib\Post_Type;
 
+use Lipe\Lib\Util\Actions;
+
 class Custom_Post_Type {
-	protected const REGISTRY_OPTION = 'lipe/lib/post-type/cpt_registry';
-	protected const CUSTOM_CAPS_OPTION = 'lipe/lib/post-type/cpt_caps';
+	protected const REGISTRY_OPTION = 'lipe/lib/post-type/custom-post-type/registry';
+	protected const CUSTOM_CAPS_OPTION = 'lipe/lib/post-type/custom-post-type/caps';
 
 	protected static $registry = [];
-
-	protected static $rewrite_checked = false;
 
 	public $post_type_label_singular = '';
 
@@ -67,6 +67,24 @@ class Custom_Post_Type {
 	 * @var array
 	 */
 	public $supports = [ 'title', 'editor', 'author', 'thumbnail', 'excerpt' ];
+
+	/**
+	 * Gutenberg Template for this post type.
+	 *
+	 * @link https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#custom-post-types
+	 *
+	 * @var array
+	 */
+	protected $template;
+
+	/**
+	 * Locking of the Gutenberg template.
+	 *
+	 * @link https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#locking
+	 *
+	 * @var string
+	 */
+	protected $template_lock;
 
 	/**
 	 * Provide a callback function that will be called when setting
@@ -214,14 +232,14 @@ class Custom_Post_Type {
 		//allow methods added to the init hook to customize the post type
 		add_action( 'wp_loaded', [ $this, 'register' ], 8, 0 );
 
-		add_filter( 'adjust_post_updated_messages', [ $this, 'adjust_post_updated_messages' ], 10, 1 );
-		add_filter( 'post_type_archive_title', [ $this, 'get_post_type_archive_label' ], 10, 1 );
+		add_filter( 'adjust_post_updated_messages', [ $this, 'adjust_post_updated_messages' ] );
+		add_filter( 'post_type_archive_title', [ $this, 'get_post_type_archive_label' ] );
 		add_filter( 'bulk_post_updated_messages', [ $this, 'adjust_bulk_edit_messages' ], 10, 2 );
 
-		if ( ! self::$rewrite_checked ) {
-			add_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 10000, 0 );
-			self::$rewrite_checked = true;
+		if ( is_admin() ) { // In case there are posts types not registered on front end.
+			Actions::in()->add_single_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 1000 );
 		}
+
 	}
 
 
@@ -331,7 +349,8 @@ class Custom_Post_Type {
 			'show_in_rest'          => $this->show_in_rest,
 			'rest_base'             => $this->rest_base,
 			'rest_controller_class' => $this->rest_controller_class,
-
+			'template'              => $this->template,
+			'template_lock'         => $this->template_lock,
 		];
 
 		$args = apply_filters( 'lipe/lib/schema/post_type_args', $args, $this->post_type );
@@ -528,6 +547,38 @@ class Custom_Post_Type {
 
 	}
 
+
+	/**
+	 * Set a Gutenberg template for this post type.
+	 *
+	 * @example array(
+	 *        array( 'core/image', array(
+	 *            'align' => 'left',
+	 *       ) ),
+	 *        array( 'core/heading', array(
+	 *            'placeholder' => 'Add Author...',
+	 *        ) ),
+	 *        array( 'core/paragraph', array(
+	 *            'placeholder' => 'Add Description...',
+	 *        ) ),
+	 *    )
+	 *
+	 * @link    https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#custom-post-types
+	 *
+	 * @param array       $template
+	 * @param string|null $template_lock [ 'all', 'insert' ]
+	 *                                   all — prevents all operations. It is not possible to insert new blocks, move
+	 *                                   existing blocks, or delete blocks. insert — prevents inserting or removing
+	 *                                   blocks, but allows moving existing blocks.
+	 *
+	 * @return Custom_Post_Type
+	 */
+	public function gutenberg_template( array $template, ?string $template_lock = null ) : Custom_Post_Type {
+		$this->template      = $template;
+		$this->template_lock = $template_lock;
+
+		return $this;
+	}
 
 	/**
 	 * Get a registered post type object
