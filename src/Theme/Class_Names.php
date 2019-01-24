@@ -21,6 +21,7 @@ namespace Lipe\Lib\Theme;
  * @author  Mat Lipe
  * @since   1.4.0 - added
  * @since   1.9.0 - support for adding/removing classes as we go
+ * @since   2.3.1 - support multilayer arrays of classes
  *
  * @package Lipe\Lib\Util
  */
@@ -30,12 +31,41 @@ class Class_Names implements \ArrayAccess {
 
 
 	public function __construct( array $classes ) {
-		if ( \array_values( $classes ) === $classes ) {
-			$this->classes = $classes;
-		}
+		$this->parse_classes( $classes );
+	}
 
+
+	/**
+	 * Used for unit testing.
+	 * @see Class_Names::__toString
+	 * @interal
+	 *
+	 * @return array
+	 */
+	public function get_classes() : array {
+		return $this->classes;
+	}
+
+	/**
+	 * Extract classes out of arrays, strings, or a combination.
+	 *
+	 * Allows us to pass any combination of arrays or strings
+	 * and still get the appropriate classes
+	 *
+	 * @since 2.3.1
+	 *
+	 * @param $classes
+	 *
+	 * @return void
+	 */
+	protected function parse_classes( $classes ) : void {
+		if ( \is_string( $classes ) ) {
+			$this->classes[] = $classes;
+		}
 		foreach ( $classes as $_class => $_state ) {
-			if ( \is_string( $_class ) ) {
+			if ( \is_array( $_state ) ) {
+				$this->parse_classes( $_state );
+			} elseif ( \is_string( $_class ) ) {
 				if ( (bool) $_state ) {
 					$this->classes[] = $_class;
 				}
@@ -73,7 +103,7 @@ class Class_Names implements \ArrayAccess {
 
 	public function offsetSet( $class, $active ) : void {
 		if ( (bool) $active ) {
-			$this->classes[] = $class;
+			$this->parse_classes( $class );
 		} else {
 			$this->offsetUnset( $class );
 		}
