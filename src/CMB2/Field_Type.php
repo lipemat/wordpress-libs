@@ -871,7 +871,7 @@ class Field_Type {
 	public function taxonomy_radio( $taxonomy, $no_terms_text = null, $remove_default = null ) : Field {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_radio, $taxonomy, $no_terms_text, $remove_default );
 
-		return $this->set( $_args, Repo::TAXONOMY );
+		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
 
 	}
 
@@ -890,7 +890,7 @@ class Field_Type {
 	public function taxonomy_radio_hierarchical( $taxonomy, $no_terms_text = null, $remove_default = null ) : Field {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_radio_hierarchical, $taxonomy, $no_terms_text, $remove_default );
 
-		return $this->set( $_args, Repo::TAXONOMY );
+		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
 
 	}
 
@@ -909,7 +909,7 @@ class Field_Type {
 	public function taxonomy_radio_inline( $taxonomy, $no_terms_text = null, $remove_default = null ) : Field {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_radio_inline, $taxonomy, $no_terms_text, $remove_default );
 
-		return $this->set( $_args, Repo::TAXONOMY );
+		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
 
 	}
 
@@ -928,7 +928,7 @@ class Field_Type {
 	public function taxonomy_select( $taxonomy, $no_terms_text = null, $remove_default = null ) : Field {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_select, $taxonomy, $no_terms_text, $remove_default );
 
-		return $this->set( $_args, Repo::TAXONOMY );
+		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
 
 	}
 

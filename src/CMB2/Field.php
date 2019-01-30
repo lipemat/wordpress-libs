@@ -5,7 +5,6 @@ namespace Lipe\Lib\CMB2;
 use Lipe\Lib\CMB2\Box\Tabs;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
-use Whoops\Example\Exception;
 
 /**
  * Field

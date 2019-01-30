@@ -41,8 +41,7 @@ trait Settings_Trait {
 	 * @return void
 	 */
 	public function update_option( string $key, $value ) : void {
-		$values         = get_option( static::NAME, [] );
-		$values[ $key ] = $value;
-		update_option( static::NAME, $values );
+		// CMB2 will update an option key or network option key automatically.
+		\cmb2_options( static::NAME )->update( $key, $value, true );
 	}
 }
