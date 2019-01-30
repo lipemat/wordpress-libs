@@ -20,6 +20,7 @@ class Repo {
 	public const DEFAULT = 'default';
 	public const FILE = 'file';
 	public const TAXONOMY = 'taxonomy';
+	public const TAXONOMY_SINGULAR = 'taxonomy-singular';
 
 	/**
 	 * All fields that have been registered
@@ -101,7 +102,8 @@ class Repo {
 	 * @param string     $field_id  - field id to return
 	 * @param string     $meta_type - user, term, post, <custom> (defaults to 'post')
 	 *
-	 * @since 2.4.0 - will return term objects for taxonomy field within options
+	 * @since 2.4.0 - Will return term objects for taxonomy field within options.
+	 * @since 2.4.0 - Support singular taxonomy fields which return a single term.
 	 *
 	 * @return mixed
 	 */
@@ -113,6 +115,8 @@ class Repo {
 				return $this->get_file_field_value( $object_id, $field_id, $meta_type );
 			case self::TAXONOMY:
 				return $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type );
+			case self::TAXONOMY_SINGULAR:
+				return $this->get_taxonomy_singular_field_value( $object_id, $field_id, $meta_type );
 		}
 
 		return $this->get_meta_value( $object_id, $field_id, $meta_type );
@@ -188,9 +192,9 @@ class Repo {
 	 *
 	 * @since 2.4.0 - Will return term objects from option fields
 	 *
-	 * @return \WP_Term[]|false|\WP_Error
+	 * @return \WP_Term[]
 	 */
-	public function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) {
+	public function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : array {
 		$taxonomy = $this->get_field( $field_id )->taxonomy;
 		if ( 'option' === $meta_type ) {
 			return array_map( function ( $slug ) use ( $taxonomy ) {
@@ -198,6 +202,26 @@ class Repo {
 			}, (array) $this->get_meta_value( $object_id, $field_id, $meta_type ) );
 		}
 
-		return get_the_terms( $object_id, $taxonomy );
+		return (array) get_the_terms( $object_id, $taxonomy );
+	}
+
+
+	/**
+	 * Retrieve a single term from a taxonomy field that allows
+	 * selecting only a single term.
+	 *
+	 * @param string|int $object_id
+	 * @param string     $field_id
+	 * @param string     $meta_type
+	 *
+	 * @since 2.4.0
+	 *
+	 * @return \WP_Term|false
+	 */
+	public function get_taxonomy_singular_field_value( $object_id, string $field_id, string $meta_type ) {
+		$terms = $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type );
+
+		return empty( $terms ) ? false : array_shift( $terms );
+
 	}
 }
