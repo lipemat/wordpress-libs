@@ -101,6 +101,8 @@ class Repo {
 	 * @param string     $field_id  - field id to return
 	 * @param string     $meta_type - user, term, post, <custom> (defaults to 'post')
 	 *
+	 * @since 2.4.0 - will return term objects for taxonomy field within options
+	 *
 	 * @return mixed
 	 */
 	public function get_value( $object_id, string $field_id, string $meta_type = 'post' ) {
@@ -110,11 +112,7 @@ class Repo {
 			case self::FILE:
 				return $this->get_file_field_value( $object_id, $field_id, $meta_type );
 			case self::TAXONOMY:
-				if ( 'option' === $meta_type ) {
-					break; // Terms are saved as meta for settings.
-				}
-
-				return $this->get_taxonomy_field_value( $object_id, $this->get_field( $field_id )->taxonomy );
+				return $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type );
 		}
 
 		return $this->get_meta_value( $object_id, $field_id, $meta_type );
@@ -133,14 +131,9 @@ class Repo {
 	 * @return mixed
 	 */
 	protected function get_meta_value( $object_id, string $key, string $meta_type ) {
-		// Settings page store all values in one option.
 		if ( 'option' === $meta_type ) {
-			$values = get_option( $object_id, [] );
-			if ( ! isset( $values[ $key ] ) ) {
-				return null;
-			}
-
-			return $values[ $key ];
+			// CMB2 will pull a key from the option or network option automatically.
+			return cmb2_options( $object_id )->get( $key, null );
 		}
 
 		return get_metadata( $meta_type, $object_id, $key, true );
@@ -189,12 +182,22 @@ class Repo {
 	/**
 	 * CMB2 saves taxonomy fields as terms
 	 *
-	 * @param $object_id
-	 * @param $taxonomy
+	 * @param string|int $object_id
+	 * @param string     $field_id
+	 * @param string     $meta_type
 	 *
-	 * @return array|false|\WP_Error
+	 * @since 2.4.0 - Will return term objects from option fields
+	 *
+	 * @return \WP_Term[]|false|\WP_Error
 	 */
-	public function get_taxonomy_field_value( $object_id, $taxonomy ) {
+	public function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) {
+		$taxonomy = $this->get_field( $field_id )->taxonomy;
+		if ( 'option' === $meta_type ) {
+			return array_map( function ( $slug ) use ( $taxonomy ) {
+				return \get_term_by( 'slug', $slug, $taxonomy );
+			}, (array) $this->get_meta_value( $object_id, $field_id, $meta_type ) );
+		}
+
 		return get_the_terms( $object_id, $taxonomy );
 	}
 }

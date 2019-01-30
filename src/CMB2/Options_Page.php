@@ -88,14 +88,6 @@ class Options_Page extends Box {
 	public $menu_title;
 
 	/**
-	 * @deprecated in favor of $this->admin_menu_hook
-	 *
-	 * @see        Options_Page::admin_menu_hook
-	 *
-	 */
-	public $network;
-
-	/**
 	 * Allows specifying a custom callback for setting the
 	 * error/success message on save.
 	 *
@@ -187,6 +179,24 @@ class Options_Page extends Box {
 			$this->option_key = $id;
 		}
 		parent::__construct( $id, [ 'options-page' ], $title );
+	}
+
+
+	/**
+	 * Is this a network level settings page?
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param bool $is_network
+	 *
+	 * @return void
+	 */
+	public function network( bool $is_network = true ) : void {
+		if ( $is_network ) {
+			$this->admin_menu_hook = 'network_admin_menu';
+		} else {
+			$this->admin_menu_hook = 'admin_menu'; //default
+		}
 	}
 
 	/**
