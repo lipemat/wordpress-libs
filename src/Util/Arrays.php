@@ -16,8 +16,9 @@ class Arrays {
 	/**
 	 * Apply a callback to all elements of an array recursively.
 	 *
-	 * Similar to `array_walk_recursive` except the returns the result as
-	 * a new array instead of altering the provided array.
+	 * Similar to `array_walk_recursive` except this returns the result as
+	 * a new array instead of requiring you pass the array element by reference
+	 * and alter it directly.
 	 *
 	 * @since 2.5.0
 	 *
