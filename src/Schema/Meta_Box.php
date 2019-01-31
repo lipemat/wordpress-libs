@@ -216,7 +216,7 @@ abstract class Meta_Box {
 	 * @return void
 	 */
 	public static function save_meta_boxes( $post_id, $post ) : void {
-		if ( self::should_meta_boxes_be_saved( $post_id, $post ) ) {
+		if ( ! self::should_meta_boxes_be_saved( $post_id, $post ) ) {
 			return;
 		}
 		if ( empty( self::$registry[ $post->post_type ] ) ) {
