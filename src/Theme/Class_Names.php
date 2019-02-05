@@ -61,6 +61,7 @@ class Class_Names implements \ArrayAccess {
 	protected function parse_classes( $classes ) : void {
 		if ( \is_string( $classes ) ) {
 			$this->classes[] = $classes;
+			return;
 		}
 		foreach ( $classes as $_class => $_state ) {
 			if ( \is_array( $_state ) ) {
