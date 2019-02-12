@@ -57,6 +57,20 @@ trait Translate_Trait {
 
 
 	/**
+	 * Update a meta key from the standard WP meta api or the options api.
+	 *
+	 * @param string|int $object_id
+	 * @param string     $key
+	 * @param string     $meta_type
+	 *
+	 * @return void
+	 */
+	protected function delete_meta_value( $object_id, string $key, string $meta_type ) : void {
+		\delete_metadata( $meta_type, $object_id, $key );
+	}
+
+
+	/**
 	 * Get the boolean result from a CMB2 checkbox
 	 *
 	 * @param int|string $object_id
@@ -95,7 +109,7 @@ trait Translate_Trait {
 
 
 	/**
-	 * CMB2 saves file fields as 2 separate meta keys
+	 * CMB2 saves file fields as 2 separate meta keys.
 	 * This returns an array of both of them.
 	 *
 	 * @param int|string $object_id
@@ -114,6 +128,22 @@ trait Translate_Trait {
 		}
 
 		return null;
+	}
+
+
+	/**
+	 * CMB2 saves file fields as 2 separate meta keys.
+	 * This deletes both of them.
+	 *
+	 * @param int|string $object_id
+	 * @param string     $key
+	 * @param string     $meta_type
+	 *
+	 * @return void
+	 */
+	public function delete_file_field_value( $object_id, string $key, string $meta_type ) : void {
+		$this->delete_meta_value( $object_id, $key, $meta_type );
+		$this->delete_meta_value( $object_id, "{$key}_id", $meta_type );
 	}
 
 
@@ -179,9 +209,31 @@ trait Translate_Trait {
 
 				return $slug;
 			}, $terms ), $meta_type );
+		} else {
+			wp_set_object_terms( $object_id, $terms, $taxonomy );
 		}
+	}
 
-		wp_set_object_terms( $object_id, $terms, $taxonomy );
+
+	/**
+	 * CMB2 saves taxonomy fields as terms or meta value for options.
+	 * We delete either this meta value or these assigned terms.
+	 *
+	 * Does not delete the actual terms, just the assignment of them.
+	 *
+	 * @param        $object_id
+	 * @param string $field_id
+	 * @param string $meta_type
+	 *
+	 * @return void
+	 */
+	public function delete_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : void {
+		if ( 'option' === $meta_type ) {
+			$this->delete_meta_value( $object_id, $field_id, $meta_type );
+		} else {
+			$taxonomy = $this->get_field( $field_id )->taxonomy;
+			wp_delete_object_term_relationships( $object_id, $taxonomy );
+		}
 	}
 
 

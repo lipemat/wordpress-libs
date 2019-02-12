@@ -159,4 +159,35 @@ class Repo {
 	}
 
 
+	/**
+	 * Delete a fields value
+	 *
+	 * Use the registered fields and registered types to determine the appropriate method to
+	 * delete the data.
+	 *
+	 * @param int|string $object_id - id of post, term, user, <custom>
+	 * @param string     $field_id  - field id to set.
+	 * @param string     $meta_type - user, term, post, <custom> (defaults to 'post')
+	 *
+	 * @since 2.5.0
+	 *
+	 * @return void
+	 */
+	public function delete_value( $object_id, string $field_id, string $meta_type ) : void {
+		switch ( $this->get_field_data_type( $field_id ) ) {
+			case self::FILE:
+				$this->delete_file_field_value( $object_id, $field_id, $meta_type );
+				break;
+			case self::TAXONOMY:
+			case self::TAXONOMY_SINGULAR:
+				$this->delete_taxonomy_field_value( $object_id, $field_id, $meta_type );
+				break;
+			case self::CHECKBOX:
+			default:
+				$this->delete_meta_value( $object_id, $field_id, $meta_type );
+
+		}
+	}
+
+
 }
