@@ -11,7 +11,7 @@ use Lipe\Lib\CMB2\Field;
  * @since  2.5.0
  *
  */
-trait Translate_Trait {
+abstract class Translate_Abstract {
 
 	abstract protected function get_field( string $field_id ) : Field;
 

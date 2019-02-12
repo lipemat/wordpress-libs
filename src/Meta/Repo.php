@@ -13,8 +13,8 @@ use Lipe\Lib\Traits\Singleton;
  * @since  2.0.0
  *
  */
-class Repo {
-	use Singleton, Translate_Trait;
+class Repo extends Translate_Abstract {
+	use Singleton;
 
 	public const CHECKBOX = 'checkbox';
 	public const DEFAULT = 'default';

@@ -4,7 +4,11 @@ namespace Lipe\Lib\Meta;
 
 /**
  * Meta interaction support for Object Traits which use the Meta Repo.
- * Also provided Arrayacesss modifiers.
+ *
+ * Also provided \ArrayAccess modifiers if the class which uses this
+ * implements \ArrayAccess.
+ *
+ * Using the \ArrayAccess will manipulate data in the database directly.
  *
  * @author Mat Lipe
  * @since  2.5.0
@@ -15,25 +19,6 @@ trait Mutator_Trait {
 
 
 	abstract public function get_meta_type() : string;
-
-
-	public function offsetGet( string $field_id ) {
-		return $this->get_meta( $field_id );
-	}
-
-
-	public function offsetSet( string $field_id, $value ) : void {
-		$this->update_meta( $field_id, $value );
-	}
-
-
-	public function offsetUnset( string $field_id ) : void {
-	}
-
-
-	public function offsetExists( string $field_id ) : bool {
-		return ! empty( $this->get_meta( $field_id ) );
-	}
 
 
 	/**
@@ -68,6 +53,39 @@ trait Mutator_Trait {
 	 */
 	public function update_meta( string $key, $value ) : void {
 		Repo::instance()->update_value( $this->get_id(), $key, $value, $this->get_meta_type() );
+	}
+
+
+	/**
+	 * Delete the value of this post's meta field
+	 * using the meta repo to map the appropriate data type.
+	 *
+	 * @param string $key
+	 *
+	 * @return void
+	 */
+	public function delete_meta( string $key ) : void {
+		Repo::instance()->delete_value( $this->get_id(), $key, $this->get_meta_type() );
+	}
+
+
+	public function offsetGet( $field_id ) {
+		return $this->get_meta( $field_id );
+	}
+
+
+	public function offsetSet( $field_id, $value ) : void {
+		$this->update_meta( $field_id, $value );
+	}
+
+
+	public function offsetUnset( $field_id ) : void {
+		$this->delete_meta( $field_id );
+	}
+
+
+	public function offsetExists( $field_id ) : bool {
+		return ! empty( $this->get_meta( $field_id ) );
 	}
 
 
