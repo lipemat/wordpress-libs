@@ -2,8 +2,7 @@
 
 namespace Lipe\Lib\Comment;
 
-use Lipe\Lib\Meta\Meta_Repo;
-use Lipe\Lib\Meta\Repo;
+use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
  * Trait Comment_Trait
@@ -13,6 +12,7 @@ use Lipe\Lib\Meta\Repo;
  * @package Lipe\Lib\Comment
  */
 trait Comment_Trait {
+	use Mutator_Trait;
 
 	protected $comment_id;
 
@@ -51,27 +51,15 @@ trait Comment_Trait {
 	}
 
 
-	public function get_id() {
-		return $this->comment_id;
+	public function get_id() : int {
+		return (int) $this->comment_id;
 	}
 
 
-	/**
-	 *
-	 * @param string $key
-	 * @param mixed  $default
-	 *
-	 * @return mixed
-	 * @throws \Exception
-	 */
-	public function get_meta( string $key, $default = null ) {
-		$value = Repo::instance()->get_value( $this->comment_id, $key, 'comment' );
-		if ( null !== $default && empty( $value ) ) {
-			return $default;
-		}
-
-		return $value;
+	public function get_meta_type() : string {
+		return 'comment';
 	}
+
 
 
 	/********* static *******************/

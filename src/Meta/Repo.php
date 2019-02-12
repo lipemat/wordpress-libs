@@ -13,7 +13,7 @@ use Lipe\Lib\Traits\Singleton;
  * @since  2.0.0
  *
  */
-class Repo {
+class Repo extends Translate_Abstract {
 	use Singleton;
 
 	public const CHECKBOX = 'checkbox';
@@ -125,103 +125,69 @@ class Repo {
 
 
 	/**
-	 * Get a value from the standard WP meta api or the options api.
+	 * Update a fields value
 	 *
-	 * @param string|int $object_id
-	 * @param string     $key
-	 * @param string     $meta_type
+	 * Use the registered fields and registered types to determine the appropriate method to
+	 * set the data.
 	 *
+	 * @param int|string $object_id - id of post, term, user, <custom>
+	 * @param string     $field_id  - field id to set.
+	 * @param mixed      $value     - Value to save.
+	 * @param string     $meta_type - user, term, post, <custom> (defaults to 'post')
 	 *
-	 * @return mixed
+	 * @since 2.5.0
+	 *
+	 * @return void
 	 */
-	protected function get_meta_value( $object_id, string $key, string $meta_type ) {
-		if ( 'option' === $meta_type ) {
-			// CMB2 will pull a key from the option or network option automatically.
-			return cmb2_options( $object_id )->get( $key, null );
+	public function update_value( $object_id, string $field_id, $value, string $meta_type = 'post' ) : void {
+		switch ( $this->get_field_data_type( $field_id ) ) {
+			case self::CHECKBOX:
+				$this->update_checkbox_field_value( $object_id, $field_id, $value, $meta_type );
+				break;
+			case self::FILE:
+				$this->update_file_field_value( $object_id, $field_id, $value, $meta_type );
+				break;
+			case self::TAXONOMY:
+			case self::TAXONOMY_SINGULAR:
+				$this->update_taxonomy_field_value( $object_id, $field_id, $value, $meta_type );
+				break;
+			default:
+				$this->update_meta_value( $object_id, $field_id, $value, $meta_type );
+
 		}
 
-		return get_metadata( $meta_type, $object_id, $key, true );
 	}
 
 
 	/**
-	 * Get the boolean result from a CMB2 checkbox
+	 * Delete a fields value
 	 *
-	 * @param int|string $object_id
-	 * @param string     $key
-	 * @param string     $meta_type
+	 * Use the registered fields and registered types to determine the appropriate method to
+	 * delete the data.
 	 *
-	 * @return bool
+	 * @param int|string $object_id - id of post, term, user, <custom>
+	 * @param string     $field_id  - field id to set.
+	 * @param string     $meta_type - user, term, post, <custom> (defaults to 'post')
+	 *
+	 * @since 2.5.0
+	 *
+	 * @return void
 	 */
-	public function get_checkbox_field_value( $object_id, string $key, string $meta_type ) : bool {
-		$value = $this->get_meta_value( $object_id, $key, $meta_type );
+	public function delete_value( $object_id, string $field_id, string $meta_type ) : void {
+		switch ( $this->get_field_data_type( $field_id ) ) {
+			case self::FILE:
+				$this->delete_file_field_value( $object_id, $field_id, $meta_type );
+				break;
+			case self::TAXONOMY:
+			case self::TAXONOMY_SINGULAR:
+				$this->delete_taxonomy_field_value( $object_id, $field_id, $meta_type );
+				break;
+			case self::CHECKBOX:
+			default:
+				$this->delete_meta_value( $object_id, $field_id, $meta_type );
 
-		return ( 'on' === $value );
-	}
-
-
-	/**
-	 * CMB2 saves file fields as 2 separate meta keys
-	 * This returns and array of both of them.
-	 *
-	 * @param $object_id
-	 * @param $key
-	 * @param $meta_type
-	 *
-	 * @return array|false
-	 */
-	public function get_file_field_value( $object_id, $key, $meta_type ) : ?array {
-		$url = $this->get_meta_value( $object_id, $key, $meta_type );
-		if ( ! empty( $url ) ) {
-			return [
-				'id'  => $this->get_meta_value( $object_id, "{$key}_id", $meta_type ),
-				'url' => $url,
-			];
 		}
-
-		return null;
 	}
 
 
-	/**
-	 * CMB2 saves taxonomy fields as terms
-	 *
-	 * @param string|int $object_id
-	 * @param string     $field_id
-	 * @param string     $meta_type
-	 *
-	 * @since 2.4.0 - Will return term objects from option fields
-	 *
-	 * @return \WP_Term[]
-	 */
-	public function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : array {
-		$taxonomy = $this->get_field( $field_id )->taxonomy;
-		if ( 'option' === $meta_type ) {
-			return array_map( function ( $slug ) use ( $taxonomy ) {
-				return \get_term_by( 'slug', $slug, $taxonomy );
-			}, (array) $this->get_meta_value( $object_id, $field_id, $meta_type ) );
-		}
-
-		return (array) get_the_terms( $object_id, $taxonomy );
-	}
-
-
-	/**
-	 * Retrieve a single term from a taxonomy field that allows
-	 * selecting only a single term.
-	 *
-	 * @param string|int $object_id
-	 * @param string     $field_id
-	 * @param string     $meta_type
-	 *
-	 * @since 2.4.0
-	 *
-	 * @return \WP_Term|false
-	 */
-	public function get_taxonomy_singular_field_value( $object_id, string $field_id, string $meta_type ) {
-		$terms = $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type );
-
-		return empty( $terms ) ? false : array_shift( $terms );
-
-	}
 }

@@ -4,6 +4,7 @@ namespace Lipe\Lib\CMB2\Field;
 
 use CMB2_Field;
 use CMB2_Types;
+use Lipe\Lib\Theme\Styles;
 use Lipe\Lib\Traits\Singleton;
 
 /**
@@ -54,25 +55,28 @@ class Term_Select_2 {
 
 
 	public function ajax_get_terms() : void {
+		//phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 		$search = \sanitize_text_field( $_POST['q'] ?? '' );
-		$terms = get_terms( [
-			'number'   => 10,
-			'taxonomy' => $_REQUEST['taxonomy'],
-			'search'   => $_POST['q'],
-			'fields'   => 'id=>name',
+		$terms  = get_terms( [
+			'number'     => 10,
+			'taxonomy'   => \sanitize_text_field( $_REQUEST['taxonomy'] ?? '' ),
+			'search'     => $search,
+			'fields'     => 'id=>name',
+			'hide_empty' => false,
 		] );
-		if ( $_REQUEST[ self::CREATE_NEW_TERMS ] ) {
+		if ( \sanitize_text_field( $_REQUEST[ self::CREATE_NEW_TERMS ] ?? '' ) ) {
 			//add a newly entered term as an option
 			$terms[ $search ] = $search;
 		}
 
 		\wp_send_json( $terms );
+		//phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 	}
 
 
 	public function js() : void {
-		\wp_enqueue_style( 'select2-css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css' );
-		\wp_enqueue_script( 'select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js' );
+		\wp_enqueue_style( 'select2-css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css', [], Styles::in()->get_version() );
+		\wp_enqueue_script( 'select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js', [], Styles::in()->get_version() );
 	}
 
 
@@ -85,17 +89,17 @@ class Term_Select_2 {
 
 		$a = [
 			'multiple'         => empty( $field->args( 'multiple' ) ) ? 'multiple' : $field->args( 'multiple' ),
-			'style'            => 'width: 99%',
 			'data-js'          => $field->id(), //for js
 			'name'             => $field_type_object->_name() . '[]',
 			'id'               => $field_type_object->_id(),
 			'desc'             => $field_type_object->_desc( true ),
-			'options'          => $this->get_multiselect_options( (array) $value, $field_type_object ),
+			'options'          => $this->get_multi_select_options( $field_type_object, (array) $value ),
+			'class'            => 'regular-text',
 			'data-placeholder' => $field->args( 'attributes', 'placeholder' ) ?? $field->args( 'description' ),
 		];
 
 		$attrs = $field_type_object->concat_attrs( $a, [ 'desc', 'options' ] );
-		echo \sprintf( '<select%s>%s</select>%s', $attrs, $a['options'], $a['desc'] );
+		echo \sprintf( '<select%s>%s</select>%s', $attrs, $a['options'], $a['desc'] ); //phpcs:ignore
 		$this->js_inline( $field, $field_type_object );
 	}
 
@@ -119,69 +123,69 @@ class Term_Select_2 {
 		}
 		$rendered[ $field->id() ] = 1;
 
-		$url_args = [
+		$url_args        = [
 			'action'               => self::GET_TERMS,
 			'taxonomy'             => $this->get_taxonomy( $field->args ),
 			self::CREATE_NEW_TERMS => $field->args( self::CREATE_NEW_TERMS ),
 		];
-		$url = \add_query_arg( $url_args, admin_url( 'admin-ajax.php' ) );
+		$url             = \add_query_arg( $url_args, admin_url( 'admin-ajax.php' ) );
 		$no_results_text = $field->args( 'text' )['no_terms_text'] ?? get_taxonomy( $url_args['taxonomy'] )->labels->not_found;
 
 		$id = $field->id();
 
 		?>
 		<script>
-			(function( $ ){
+			( function( $ ) {
 				var el = {};
 
-				function load_selects( $last ){
-					if( $last ){
+				function load_selects( $last ) {
+					if ( $last ) {
 						el = $( 'div:not(.empty-row) > div > [data-js="<?= esc_js( $id ); ?>"]' ).last();
 					} else {
 						el = $( 'div:not(.empty-row) > div > [data-js="<?= esc_js( $id ); ?>"]' );
 					}
 					el.select2( {
-						ajax : {
-							url : '<?= $url; ?>',
-							dataType : 'json',
-							type : "POST",
-							cache : true,
-							minimumInputLength : 3,
-							delay : 250,
-							processResults : function( data ){
+						ajax: {
+							url: '<?= $url; //phpcs:disable?>',
+							dataType: 'json',
+							type: 'POST',
+							cache: true,
+							minimumInputLength: 3,
+							delay: 250,
+							processResults: function( data ) {
 								var options = [];
-								if( data ){
-									$.each( data, function( index, text ){
+								if ( data ) {
+									$.each( data, function( index, text ) {
 										options.push( {
-											id : index,
-											text : text
+											id: index,
+											text: text
 										} );
 									} );
 								}
 								return {
-									results : options
+									results: options
 								};
-							},
+							}
 						},
-						cache : true,
-						"language" : {
-							"noResults" : function(){
+						cache: true,
+						'language': {
+							'noResults': function() {
 								return "<?= esc_js( $no_results_text ); ?>";
 							}
 						}
 					} );
 				}
 
-				$( function(){
+				$( function() {
 					load_selects( false );
-					$( '.cmb-add-row-button' ).click( function(){
-						setTimeout( function(){
+					$( '.cmb-add-row-button' ).click( function() {
+						setTimeout( function() {
 							load_selects( true );
 						}, 0 );
 					} );
 				} );
 
-			})( jQuery );
+			} )( jQuery );
 		</script>
 
 		<?php
@@ -192,12 +196,12 @@ class Term_Select_2 {
 	 * Return the list of options, with selected options at the top preserving their order. This also handles the
 	 * removal of selected options which no longer exist in the options array.
 	 *
-	 * @param array      $field_escaped_value
 	 * @param CMB2_Types $field_type_object
+	 * @param array      $field_escaped_value
 	 *
 	 * @return string
 	 */
-	public function get_multiselect_options( ?array $field_escaped_value = [], CMB2_Types $field_type_object ) : string {
+	public function get_multi_select_options( CMB2_Types $field_type_object, ?array $field_escaped_value = [] ) : string {
 		$options = (array) $field_type_object->field->options();
 
 		// If we have selected items, we need to preserve their order
@@ -215,7 +219,7 @@ class Term_Select_2 {
 		}
 
 		$selected_items = '';
-		$other_items = '';
+		$other_items    = '';
 
 		foreach ( $options as $option_value => $option_label ) {
 			// Clone args & modify for just this item
@@ -227,7 +231,7 @@ class Term_Select_2 {
 			// Split options into those which are selected and the rest
 			if ( empty( $options ) || \in_array( $option_value, $field_escaped_value, false ) ) {
 				$option['checked'] = true;
-				$selected_items .= $field_type_object->select_option( $option );
+				$selected_items    .= $field_type_object->select_option( $option );
 			} else {
 				$other_items .= $field_type_object->select_option( $option );
 			}

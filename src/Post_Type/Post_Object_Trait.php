@@ -2,9 +2,10 @@
 
 namespace Lipe\Lib\Post_Type;
 
-use Lipe\Lib\Meta\Repo;
+use Lipe\Lib\Meta\Mutator_Trait;
 
 trait Post_Object_Trait {
+	use Mutator_Trait;
 
 	protected $post_id;
 
@@ -21,12 +22,13 @@ trait Post_Object_Trait {
 	 */
 	public function __construct( $post ) {
 		if ( is_a( $post, \WP_Post::class ) ) {
-			$this->post = $post;
+			$this->post    = $post;
 			$this->post_id = $this->post->ID;
 		} else {
 			$this->post_id = $post;
 		}
 	}
+
 
 	/**
 	 * Get the WP post from current context
@@ -42,28 +44,14 @@ trait Post_Object_Trait {
 	}
 
 
-	public function get_id() {
-		return $this->post_id;
+	public function get_id() : int {
+		return (int) $this->post_id;
 	}
 
 
-	/**
-	 * Get the value of this post's meta field
-	 * using the meta repo to map the appropriate data type.
-	 *
-	 * @param string $key
-	 * @param mixed $default
-	 *
-	 * @return mixed
-	 */
-	public function get_meta( string $key, $default = null ) {
-		$value = Repo::instance()->get_value( $this->post_id, $key );
-		if ( null !== $default && empty( $value ) ) {
-			return $default;
-		}
-		return $value;
+	public function get_meta_type() : string {
+		return 'post';
 	}
-
 
 	/********* static *******************/
 

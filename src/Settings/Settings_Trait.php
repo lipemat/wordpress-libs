@@ -2,7 +2,7 @@
 
 namespace Lipe\Lib\Settings;
 
-use Lipe\Lib\Meta\Repo;
+use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
  * CMB2 registered settings pages
@@ -12,28 +12,35 @@ use Lipe\Lib\Meta\Repo;
  *
  */
 trait Settings_Trait {
+	use Mutator_Trait;
 
-	/**
-	 * Use a static to get actual option so we can have a get_option
-	 * in the child class and still use this classes methods
-	 *
-	 * @param string $key
-	 * @param mixed  $default
-	 *
-	 * @return mixed
-	 */
-	public function get_option( $key, $default = null ) {
-		$value = Repo::in()->get_value( static::NAME, $key, 'option' );
-		if ( null !== $default && null === $value ) {
-			return $default;
-		}
 
-		return $value;
+	public function get_id() : string {
+		return static::NAME;
+	}
+
+
+	public function get_meta_type() : string {
+		return 'option';
 	}
 
 
 	/**
-	 * Update an option
+	 * Get an option from the Meta repo.
+	 *
+	 * @param string $key
+	 * @param null   $default
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function get_option( $key, $default = null ) {
+		return $this->get_meta( $key, $default );
+	}
+
+
+	/**
+	 * Update an option.
 	 *
 	 * @param string $key
 	 * @param mixed  $value
@@ -41,7 +48,6 @@ trait Settings_Trait {
 	 * @return void
 	 */
 	public function update_option( string $key, $value ) : void {
-		// CMB2 will update an option key or network option key automatically.
-		\cmb2_options( static::NAME )->update( $key, $value, true );
+		$this->update_meta( $key, $value );
 	}
 }

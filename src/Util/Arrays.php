@@ -12,6 +12,34 @@ use Lipe\Lib\Traits\Singleton;
 class Arrays {
 	use Singleton;
 
+
+	/**
+	 * Apply a callback to all elements of an array recursively.
+	 *
+	 * Similar to `array_walk_recursive` except this returns the result as
+	 * a new array instead of requiring you pass the array element by reference
+	 * and alter it directly.
+	 *
+	 * @since 2.5.0
+	 *
+	 * @param callable $callback
+	 * @param array    $array
+	 *
+	 * @return array
+	 */
+	public function array_map_recursive( callable $callback, array $array ) : array {
+		$output = [];
+		foreach ( $array as $key => $data ) {
+			if ( \is_array( $data ) ) {
+				$output[ $key ] = $this->array_map_recursive( $callback, $data );
+			} else {
+				$output[ $key ] = $callback( $data );
+			}
+		}
+
+		return $output;
+	}
+
 	/**
 	 * Works the same as `array_merge_recursive` except instead of turning
 	 * duplicate array keys into arrays, this will favor the $args over
