@@ -178,7 +178,7 @@ abstract class Translate_Abstract {
 	 */
 	public function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : array {
 		$taxonomy = $this->get_field( $field_id )->taxonomy;
-		if ( 'option' === $meta_type ) {
+		if ( 'option' === $meta_type || 'user' === $meta_type ) {
 			return array_map( function ( $slug ) use ( $taxonomy ) {
 				return \get_term_by( 'slug', $slug, $taxonomy );
 			}, (array) $this->get_meta_value( $object_id, $field_id, $meta_type ) );
@@ -201,7 +201,7 @@ abstract class Translate_Abstract {
 	 */
 	public function update_taxonomy_field_value( $object_id, string $field_id, array $terms, string $meta_type ) : void {
 		$taxonomy = $this->get_field( $field_id )->taxonomy;
-		if ( 'option' === $meta_type ) {
+		if ( 'option' === $meta_type || 'user' === $meta_type ) {
 			$this->update_meta_value( $object_id, $field_id, array_map( function ( $slug ) use ( $taxonomy ) {
 				if ( is_numeric( $slug ) ) {
 					return get_term( $slug, $taxonomy )->slug;
@@ -228,7 +228,7 @@ abstract class Translate_Abstract {
 	 * @return void
 	 */
 	public function delete_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : void {
-		if ( 'option' === $meta_type ) {
+		if ( 'option' === $meta_type || 'user' === $meta_type ) {
 			$this->delete_meta_value( $object_id, $field_id, $meta_type );
 		} else {
 			$taxonomy = $this->get_field( $field_id )->taxonomy;
