@@ -8,16 +8,34 @@ namespace Lipe\Lib\Meta;
  * Also provided \ArrayAccess modifiers if the class which uses this
  * implements \ArrayAccess.
  *
- * Using the \ArrayAccess will manipulate data in the database directly.
+ * If you don't want array keys to be able to modify data, then simply
+ * do not give not implement \ArrayAccess on the class and they will
+ * not work
+ *
+ * All methods will manipulate data in the database directly.
  *
  * @author Mat Lipe
  * @since  2.5.0
  *
  */
 trait Mutator_Trait {
+	/**
+	 * Get the object id.
+	 *
+	 * @example post_id, term_id, user_id, comment_id, <custom>
+	 *
+	 * @return mixed
+	 */
 	abstract public function get_id();
 
 
+	/**
+	 * Get the type of meta that is stored for this object.
+	 *
+	 * @example 'post','user','comment','term',<custom>
+	 *
+	 * @return string
+	 */
 	abstract public function get_meta_type() : string;
 
 

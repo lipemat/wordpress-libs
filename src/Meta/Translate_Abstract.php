@@ -12,7 +12,13 @@ use Lipe\Lib\CMB2\Field;
  *
  */
 abstract class Translate_Abstract {
-
+	/**
+	 * Get a field which was registered with CMB2 by id.
+	 *
+	 * @param string $field_id
+	 *
+	 * @return Field
+	 */
 	abstract protected function get_field( string $field_id ) : Field;
 
 
@@ -66,7 +72,12 @@ abstract class Translate_Abstract {
 	 * @return void
 	 */
 	protected function delete_meta_value( $object_id, string $key, string $meta_type ) : void {
-		\delete_metadata( $meta_type, $object_id, $key );
+		if ( 'option' === $meta_type ) {
+			// CMB2 will pull a key from the option or network option automatically.
+			cmb2_options( $object_id )->remove( $key );
+		} else {
+			\delete_metadata( $meta_type, $object_id, $key );
+		}
 	}
 
 
@@ -101,7 +112,7 @@ abstract class Translate_Abstract {
 	 */
 	public function update_checkbox_field_value( $object_id, string $key, $checked, string $meta_type ) : void {
 		if ( empty( $checked ) ) {
-			\delete_metadata( $meta_type, $object_id, $key );
+			$this->delete_meta_value( $object_id, $key, $meta_type );
 		} else {
 			$this->update_meta_value( $object_id, $key, 'on', $meta_type );
 		}
@@ -132,22 +143,6 @@ abstract class Translate_Abstract {
 
 
 	/**
-	 * CMB2 saves file fields as 2 separate meta keys.
-	 * This deletes both of them.
-	 *
-	 * @param int|string $object_id
-	 * @param string     $key
-	 * @param string     $meta_type
-	 *
-	 * @return void
-	 */
-	public function delete_file_field_value( $object_id, string $key, string $meta_type ) : void {
-		$this->delete_meta_value( $object_id, $key, $meta_type );
-		$this->delete_meta_value( $object_id, "{$key}_id", $meta_type );
-	}
-
-
-	/**
 	 * CMB2 saves file fields as 2 separate meta keys
 	 * This saves both meta keys.
 	 *
@@ -165,6 +160,22 @@ abstract class Translate_Abstract {
 
 
 	/**
+	 * CMB2 saves file fields as 2 separate meta keys.
+	 * This deletes both of them.
+	 *
+	 * @param int|string $object_id
+	 * @param string     $key
+	 * @param string     $meta_type
+	 *
+	 * @return void
+	 */
+	public function delete_file_field_value( $object_id, string $key, string $meta_type ) : void {
+		$this->delete_meta_value( $object_id, $key, $meta_type );
+		$this->delete_meta_value( $object_id, "{$key}_id", $meta_type );
+	}
+
+
+	/**
 	 * CMB2 saves taxonomy fields as terms or meta value for options.
 	 * We pull from either here.
 	 *
@@ -178,13 +189,13 @@ abstract class Translate_Abstract {
 	 */
 	public function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : array {
 		$taxonomy = $this->get_field( $field_id )->taxonomy;
-		if ( 'option' === $meta_type || 'user' === $meta_type ) {
-			return array_map( function ( $slug ) use ( $taxonomy ) {
+		if ( 'post' !== $meta_type ) {
+			return array_filter( array_map( function ( $slug ) use ( $taxonomy ) {
 				return \get_term_by( 'slug', $slug, $taxonomy );
-			}, (array) $this->get_meta_value( $object_id, $field_id, $meta_type ) );
+			}, (array) $this->get_meta_value( $object_id, $field_id, $meta_type ) ) );
 		}
 
-		return (array) get_the_terms( $object_id, $taxonomy );
+		return array_filter( (array) get_the_terms( $object_id, $taxonomy ) );
 	}
 
 
@@ -201,7 +212,7 @@ abstract class Translate_Abstract {
 	 */
 	public function update_taxonomy_field_value( $object_id, string $field_id, array $terms, string $meta_type ) : void {
 		$taxonomy = $this->get_field( $field_id )->taxonomy;
-		if ( 'option' === $meta_type || 'user' === $meta_type ) {
+		if ( 'post' !== $meta_type ) {
 			$this->update_meta_value( $object_id, $field_id, array_map( function ( $slug ) use ( $taxonomy ) {
 				if ( is_numeric( $slug ) ) {
 					return get_term( $slug, $taxonomy )->slug;
@@ -228,7 +239,7 @@ abstract class Translate_Abstract {
 	 * @return void
 	 */
 	public function delete_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : void {
-		if ( 'option' === $meta_type || 'user' === $meta_type ) {
+		if ( 'post' !== $meta_type ) {
 			$this->delete_meta_value( $object_id, $field_id, $meta_type );
 		} else {
 			$taxonomy = $this->get_field( $field_id )->taxonomy;

@@ -146,7 +146,7 @@ class Term_Select_2 {
 					}
 					el.select2( {
 						ajax: {
-							url: '<?= esc_url( $url ); ?>',
+							url: '<?= $url; //phpcs:disable?>',
 							dataType: 'json',
 							type: 'POST',
 							cache: true,
