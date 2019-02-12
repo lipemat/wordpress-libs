@@ -2,15 +2,16 @@
 
 namespace Lipe\Lib\User;
 
-use Lipe\Lib\Meta\Repo;
+use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
  * Trait User_Trait
  *
  * @package Lipe\Lib\User
- * @since 1.0.0
+ * @since   1.0.0
  */
 trait User_Trait {
+	use Mutator_Trait;
 
 	/**
 	 * user_id
@@ -39,9 +40,23 @@ trait User_Trait {
 		$this->user_id = $user_id;
 	}
 
-	public function get_user_id() {
-		return $this->user_id;
+
+	public function get_id() : int {
+		return (int) $this->user_id;
 	}
+
+
+	/**
+	 * @deprecated
+	 *
+	 * @return int
+	 */
+	public function get_user_id() : int {
+		\_deprecated_function( 'get_user_id', '2.5.0', 'get_id' );
+
+		return $this->get_id();
+	}
+
 
 	public function get_user() {
 		if ( null === $this->user ) {
@@ -52,20 +67,8 @@ trait User_Trait {
 	}
 
 
-	/**
-	 *
-	 * @param string $key
-	 * @param mixed $default
-	 *
-	 * @return mixed
-	 * @throws \Exception
-	 */
-	public function get_meta( string $key, $default = null ) {
-		$value = Repo::instance()->get_value( $this->user_id, $key, 'user' );
-		if ( null !== $default && empty( $value ) ) {
-			return $default;
-		}
-		return $value;
+	public function get_meta_type() : string {
+		return 'user';
 	}
 
 

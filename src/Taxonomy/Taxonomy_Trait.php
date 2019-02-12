@@ -2,7 +2,7 @@
 
 namespace Lipe\Lib\Taxonomy;
 
-use Lipe\Lib\Meta\Repo;
+use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
  * Trait Taxonomy_Trait
@@ -11,6 +11,7 @@ use Lipe\Lib\Meta\Repo;
  * @since   1.1.0
  */
 trait Taxonomy_Trait {
+	use Mutator_Trait;
 
 	/**
 	 * term_id
@@ -24,7 +25,7 @@ trait Taxonomy_Trait {
 	 *
 	 * @var \WP_Term
 	 */
-	protected $term = null;
+	protected $term;
 
 
 	public function __construct( $term_id ) {
@@ -48,21 +49,8 @@ trait Taxonomy_Trait {
 	}
 
 
-	/**
-	 *
-	 * @param string $key
-	 * @param mixed  $default
-	 *
-	 * @return mixed
-	 * @throws \Exception
-	 */
-	public function get_meta( string $key, $default = null ) {
-		$value = Repo::instance()->get_value( $this->term_id, $key, 'term' );
-		if ( null !== $default && empty( $value ) ) {
-			return $default;
-		}
-
-		return $value;
+	public function get_meta_type() : string {
+		return 'term';
 	}
 
 
