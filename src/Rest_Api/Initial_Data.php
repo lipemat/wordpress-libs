@@ -29,7 +29,7 @@ class Initial_Data {
 			$posts = $GLOBALS['wp_query']->posts;
 		}
 		global $wp_rest_server;
-		if ( null !== $wp_rest_server ) {
+		if ( null === $wp_rest_server ) {
 			$wp_rest_server_class = apply_filters( 'wp_rest_server_class', 'WP_REST_Server' );
 			$wp_rest_server       = new $wp_rest_server_class();
 			do_action( 'rest_api_init' );
