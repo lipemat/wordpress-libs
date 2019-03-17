@@ -1,7 +1,7 @@
 # WordPress Libs
 WordPress library which supports a core plugin and theme.
 
-**Version [2.5.1](https://github.com/lipemat/wordpress-lipe-libs/releases/tag/2.5.1)**
+**Version [2.6.0](https://github.com/lipemat/wordpress-lipe-libs/releases/tag/2.6.0)**
 
 ### Requirements
 1. PHP Version 7.1.3+ (Recommended 7.2.0+)
@@ -42,6 +42,7 @@ require __DIR__ . '/vendor/autoload.php'
 * Url Route registration object
 * Version management helper
 * Comment Object Trait
+* Memoize Trait (@since 2.6.0)
 
 ## Changelog may be found in [releases](https://github.com/lipemat/wordpress-libs/releases) (non exhaustive)
 
