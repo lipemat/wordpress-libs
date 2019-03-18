@@ -480,10 +480,24 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_url
 	 *
+	 * @param array $protocols - Specify the supported URL protocols.
+	 *                          Defaults to return value of wp_allowed_protocols()
+	 *
+	 * @since 2.6.1 (Support passing protocols)
+	 * @since 2.6.1 (Set type and classes to match regular text and type="url")
+	 *
 	 * @return Field
 	 */
-	public function text_url() : Field {
-		return $this->set( [ 'type' => $this->text_url ], Repo::DEFAULT );
+	public function text_url( ?array $protocols = null ) : Field {
+		$this->field->attributes( [
+			'type' => 'url',
+			'class' => 'cmb2-text-url regular-text',
+		] );
+
+		return $this->set( [
+			'type'      => $this->text_url,
+			'protocols' => $protocols,
+		], Repo::DEFAULT );
 	}
 
 
