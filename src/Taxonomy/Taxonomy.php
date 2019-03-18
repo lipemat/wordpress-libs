@@ -3,6 +3,8 @@
 namespace Lipe\Lib\Taxonomy;
 
 use Lipe\Lib\Util\Actions;
+use function sanitize_key;
+use function sanitize_text_field;
 
 /**
  * Taxonomy
@@ -251,6 +253,15 @@ class Taxonomy {
 	 */
 	protected $taxonomy = '';
 
+	/**
+	 * Override any generated labels here.
+	 *
+	 * @since 2.6.1
+	 *
+	 * @var array
+	 */
+	public $labels = [];
+
 	protected $label_singular = '';
 
 	protected $label_plural = '';
@@ -427,11 +438,13 @@ class Taxonomy {
 		}
 		wp_dropdown_categories( $args );
 
-		if ( $been_filtered ) {
+		if ( $been_filtered && isset($_GET['post_type'] ) ) {
+			$post_type = sanitize_key( $_GET['post_type'] );
 			?>
 			<a style="float: left; margin-top: 1px"
-			   href="<?= admin_url( "edit.php?post_type={$_GET[ 'post_type' ]}" ); ?>" class="button">
-				Clear Filters
+			   href="<?php echo esc_url( admin_url( 'edit.php?post_type=' . esc_attr( $post_type ) ) ); ?>"
+			   class="button">
+				<?php esc_html_e( 'Clear Filters', 'lipe' ); ?>
 			</a>
 			<?php
 		}
@@ -511,6 +524,8 @@ class Taxonomy {
 	 *
 	 * @see   Taxonomy::$show_in_menu
 	 *
+	 * @internal
+	 *
 	 * @since 1.6.0
 	 *
 	 * @return void
@@ -524,7 +539,7 @@ class Taxonomy {
 			if ( null !== $tax ) {
 				$parent                       = \is_array( $this->show_in_menu ) ? key( $this->show_in_menu ) : $this->show_in_menu;
 				$order                        = \is_array( $this->show_in_menu ) ? $this->show_in_menu[ $parent ] : 100;
-				$submenu[ $parent ][ $order ] = [
+				$submenu[ $parent ][ $order ] = [ //phpcs:disable WordPress.WP.GlobalVariablesOverride.OverrideProhibited
 					esc_attr( $tax->labels->menu_name ),
 					$tax->cap->manage_terms,
 					sprintf( $edit_tags_file, $tax->name ),
@@ -546,6 +561,8 @@ class Taxonomy {
 	 * @param string|array $parent_file
 	 *
 	 * @see    Taxonomy::add_as_submenu();
+	 *
+	 * @interanl
 	 *
 	 * @return string
 	 */
@@ -596,7 +613,6 @@ class Taxonomy {
 	 * @return array
 	 */
 	protected function taxonomy_args() : array {
-
 		$args = [
 			'labels'                => $this->taxonomy_labels(),
 			'public'                => $this->public,
@@ -638,6 +654,8 @@ class Taxonomy {
 	protected function taxonomy_labels( $single = null, $plural = null ) : array {
 		$single = $single ?? $this->get_label();
 		$plural = $plural ?? $this->get_label( 'plural' );
+
+		// phpcs:disable WordPress.WP.I18n
 		$labels = [
 			'name'                       => $plural,
 			'singular_name'              => $single,
@@ -656,12 +674,18 @@ class Taxonomy {
 			'choose_from_most_used'      => sprintf( __( 'Choose from the most used %s' ), $plural ),
 			'not_found'                  => sprintf( __( 'No %s found' ), $plural ),
 			'no_terms'                   => sprintf( __( 'No %s' ), $plural ),
+			'no_item'                    => sprintf( __( 'No %x' ), strtolower( $plural ) ), //For extended taxos.
 			'items_list_navigation'      => sprintf( __( '%s list navigation' ), $plural ),
 			'items_list'                 => sprintf( __( '%s list' ), $plural ),
 			'most_used'                  => __( 'Most Used' ),
 			'back_to_items'              => sprintf( __( '&larr; Back to %s' ), $plural ),
 			'menu_name'                  => $this->get_menu_label(),
 		];
+		// phpcs:enable WordPress.WP.I18n
+
+		if ( ! empty( $this->labels ) ) {
+			$labels = wp_parse_args( $this->labels, $labels );
+		}
 
 		$labels = apply_filters( 'lipe/lib/taxonomy/labels', $labels, $this->taxonomy );
 		$labels = apply_filters( "lipe/lib/taxonomy/labels_{$this->taxonomy}", $labels );
