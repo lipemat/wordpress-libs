@@ -24,10 +24,38 @@ namespace Lipe\Lib\Traits;
 trait Memoize {
 	protected $memoize_cache = [];
 
+	/**
+	 * Pass me a callback, a method identifier, and some optional arguments and
+	 * and I will return same same result every time.
+	 *
+	 * The passed function will only be called once not matter where it called from
+	 * and what the arguments are.
+	 * I will always return the value received from the callback on its first run.
+	 *
+	 * @example
+	 *
+	 * @since 2.6.1
+	 *
+	 * @param callable $fn
+	 * @param string   $identifier - Something unique to identify the the method being used
+	 *                             so we can determine the difference in the cache.
+	 *                             `__METHOD__` works nicely here.
+	 * @param mixed    ...$args    - Arguments will be passed to the callback..
+	 *
+	 * @return mixed
+	 */
+	public function once( callable $fn, string $identifier, ...$args ) {
+		if ( ! array_key_exists( $identifier . __METHOD__, $this->memoize_cache ) ) {
+			$this->memoize_cache[ $identifier . __METHOD__ ] = call_user_func_array( $fn, $args );
+		}
+
+		return $this->memoize_cache[ $identifier . __METHOD__ ];
+	}
+
 
 	/**
-	 * Pass me a callback, a method identifier, and some optional arguments
-	 * and I will return same same result every time the arguments are the same.
+	 * Pass me a callback, a method identifier, and some arguments and
+	 * I will return same same result every time the arguments are the same.
 	 *
 	 * If the arguments change, I will return a result matching the change.
 	 * I will only call the callback one time for the same set of arguments.
