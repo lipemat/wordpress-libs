@@ -12,10 +12,11 @@ namespace Lipe\Lib\Traits;
  *                    return $text;
  *                }, __METHOD__, $text );
  *            }
- *          $test->heavy( 'as hell'. "\n" ); //called
- *          $test->heavy( 'as hell x2' . "\n"); //called
- *          $test->heavy( 'as hell x2' . "\n"); //Not called
- *          $test->heavy( 'as hell X3'. "\n" ); // called
+ *          $test->heavy( 'as can be'. "\n" ); //called
+ *          $test->heavy( 'as can be x2' . "\n"); //called
+ *          $test->heavy( 'as can be X3'. "\n" ); // called
+ *          $test->heavy( 'as can be x2' . "\n"); //Not called
+
  *
  * @author  Mat Lipe
  * @since   2.6.0
