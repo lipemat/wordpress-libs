@@ -674,7 +674,7 @@ class Taxonomy {
 			'choose_from_most_used'      => sprintf( __( 'Choose from the most used %s' ), $plural ),
 			'not_found'                  => sprintf( __( 'No %s found' ), $plural ),
 			'no_terms'                   => sprintf( __( 'No %s' ), $plural ),
-			'no_item'                    => sprintf( __( 'No %x' ), strtolower( $plural ) ), //For extended taxos.
+			'no_item'                    => sprintf( __( 'No %s' ), strtolower( $plural ) ), //For extended taxos.
 			'items_list_navigation'      => sprintf( __( '%s list navigation' ), $plural ),
 			'items_list'                 => sprintf( __( '%s list' ), $plural ),
 			'most_used'                  => __( 'Most Used' ),
