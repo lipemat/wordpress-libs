@@ -445,6 +445,28 @@ class Custom_Post_Type {
 
 	}
 
+	/**
+	 * Text which replaces the 'Featured Image' phrase for this post type
+	 *
+	 * @notice Replaces the `featured_image` property for extended-cpts which does
+	 *         not work with our current structure.
+	 *
+	 * @param string $label - Text to use.
+	 *
+	 * @since 2.7.0
+	 *
+	 */
+	public function set_featured_image_labels( string $label ) : void {
+		$lowercase = strtolower( $label );
+
+		$this->labels = wp_parse_args( $this->labels, [
+			'featured_image'        => $label,
+			'set_featured_image'    => sprintf( 'Set %s', $lowercase ),
+			'remove_featured_image' => sprintf( 'Remove %s', $lowercase ),
+			'use_featured_image'    => sprintf( 'Use as %s', $lowercase ),
+		] );
+	}
+
 
 	/**
 	 * Set Post Type Label

@@ -57,12 +57,6 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	public $enter_title_here;
 
 	/**
-	 *
-	 *  Text which replaces the 'Featured Image' phrase for this post type
-	 */
-	public $featured_image;
-
-	/**
 	 * rewrite
 	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Custom-permalink-structures
@@ -108,11 +102,9 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	public function rewrite( $permastruct ) {
-
+	public function rewrite( $permastruct ) : void {
 		$this->rewrite['permastruct'] = $permastruct;
 	}
-
 
 	/**
 	 * Extended CPTs provides a mechanism for registering public query vars

@@ -73,8 +73,6 @@ class Styles {
 
 
 	/**
-	 * Add Font
-	 *
 	 * Add a google font the head of the page in the front end and admin
 	 * To use other providers such as typekit see @link and create custom
 	 * This method is for google fonts only
@@ -83,32 +81,26 @@ class Styles {
 	 *
 	 * @param string|array $families - the family to include
 	 *
-	 * @example add_font( 'Droid Serif,Oswald' );
+	 * @example 'Droid Serif,Oswald'
+	 * @example [ 'Oswald','Source+Sans+Pro' ]
 	 *
-	 * @uses    Must be called before the 'wp_head' hook fires
+	 * @notice Must called before the `wp_enqueue_scripts` hook completes.
 	 */
 	public function add_font( $families ) : void {
-		if ( \is_array( $families ) ) {
-			$families = \implode( "','", $families );
+		if ( ! \is_array( $families ) ) {
+			$families = \explode( ',', $families );
 		}
 
-		\ob_start();
-		?>
-		<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
-		<script>
-			WebFont.load({
-				google: {
-					families: ['<?= esc_js( $families ); ?>']
-				}
-			})
-		</script>
-		<?php
-		$output = \ob_get_clean();
 		Actions::in()->add_action_all( [
-			'wp_head',
-			'admin_print_scripts',
-		], function () use ( $output ) {
-			echo wp_kses( $output, [ 'script' => [ 'src' => [] ] ] );
+			'wp_enqueue_scripts',
+			'admin_enqueue_scripts',
+		], function () use ( $families ) {
+			\wp_enqueue_script( 'google-webfonts', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js' ); //phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+			\wp_add_inline_script( 'google-webfonts', 'WebFont.load({
+				google: {
+					families:' . json_encode( $families ) . '
+				}
+			})' );
 		} );
 
 	}
