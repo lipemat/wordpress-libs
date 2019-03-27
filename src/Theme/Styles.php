@@ -85,7 +85,7 @@ class Styles {
 	 *
 	 * @example add_font( 'Droid Serif,Oswald' );
 	 *
-	 * @uses    Must be called before the 'wp_head' hook fires
+	 * @uses    Must be called before the 'wp_head' hook completes
 	 */
 	public function add_font( $families ) : void {
 		if ( \is_array( $families ) ) {
@@ -98,7 +98,7 @@ class Styles {
 		<script>
 			WebFont.load({
 				google: {
-					families: ['<?= esc_js( $families ); ?>']
+					families: ['<?= $families ?>']
 				}
 			})
 		</script>
