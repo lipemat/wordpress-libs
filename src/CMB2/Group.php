@@ -96,18 +96,22 @@ class Group extends Field {
 	 * @param string             $id
 	 * @param string             $title
 	 * @param \Lipe\Lib\CMB2\Box $box
-	 * @param string             $group_title - include a {#} to have replace with number
+	 * @param string             $group_title    - include a {#} to have replace with number
 	 * @param string             $add_button_text
 	 * @param string             $remove_button_text
 	 * @param bool               $sortable
 	 * @param bool               $closed
+	 * @param string             $remove_confirm - @since 2.7.0 -
+	 *                                           A message to display when a user attempts
+	 *                                           to delete a group.
+	 *                                           (Defaults to null/false for no confirmation)
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 */
-	public function __construct( $id, $title, Box $box, $group_title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false ) {
+	public function __construct( $id, $title, Box $box, $group_title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false, ?string $remove_confirm = null ) {
 		$this->box = $box;
 
-		$this->type()->group( $group_title, $add_button_text, $remove_button_text, $sortable, $closed );
+		$this->type()->group( $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
 
 		parent::__construct( $id, $title );
 	}

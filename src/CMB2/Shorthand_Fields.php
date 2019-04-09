@@ -79,13 +79,17 @@ trait Shorthand_Fields {
 	 * @param string $remove_button_text
 	 * @param bool   $sortable
 	 * @param bool   $closed
+	 * @param string             $remove_confirm - @since 2.7.0 -
+	 *                                           A message to display when a user attempts
+	 *                                           to delete a group.
+	 *                                           (Defaults to null/false for no confirmation)
 	 *
 	 *
 	 * @return \Lipe\Lib\CMB2\Group
 	 */
-	public function group( $id, $title, $group_title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false ) : Group {
+	public function group( $id, $title, $group_title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false, ?string $remove_confirm = null ) : Group {
 		$this->hook();
-		$this->fields[ $id ] = new Group( $id, $title, $this, $group_title, $add_button_text, $remove_button_text, $sortable, $closed );
+		$this->fields[ $id ] = new Group( $id, $title, $this, $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
 
 		return $this->fields[ $id ];
 	}
