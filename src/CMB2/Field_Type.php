@@ -1124,17 +1124,21 @@ class Field_Type {
 	/**
 	 * Hybrid field that supports adding other fields as a repeatable group.
 	 *
-	 * @param string $title - include a {#} to have replace with number
+	 * @param string $title                      - include a {#} to have replace with number
 	 * @param string $add_button_text
 	 * @param string $remove_button_text
 	 * @param bool   $sortable
 	 * @param bool   $closed
+	 * @param string $remove_confirm             - @since 2.7.0 -
+	 *                                           A message to display when a user attempts
+	 *                                           to delete a group.
+	 *                                           (Defaults to null/false for no confirmation)
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 *
 	 * @return Field
 	 */
-	public function group( $title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false ) : Field {
+	public function group( $title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false, ?string $remove_confirm = null ) : Field {
 		$_args = [
 			'type'    => $this->group,
 			'options' => [
@@ -1151,6 +1155,9 @@ class Field_Type {
 		}
 		if ( null !== $remove_button_text ) {
 			$_args['options']['remove_button'] = $remove_button_text;
+		}
+		if ( ! empty( $remove_confirm ) ) {
+			$_args['options']['remove_confirm'] = $remove_confirm;
 		}
 
 		return $this->set( $_args, Repo::DEFAULT );
