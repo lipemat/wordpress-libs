@@ -123,8 +123,15 @@ class Layout {
 	 */
 	public function render_group_table_row( \CMB2_Field $field_group ) : \CMB2 {
 		$field_group->peform_param_callback( 'before_group_row' );
+		$closed_class     = $field_group->options( 'closed' ) ? ' closed' : '';
+		$confirm_deletion = $field_group->options( 'remove_confirm' );
+		$confirm_deletion = ! empty( $confirm_deletion ) ? $confirm_deletion : '';
+
 		?>
-		<tr class="cmb-row cmb-repeatable-grouping" data-iterator="<?= esc_attr( $field_group->index ); ?>">
+		<tr
+			id="cmb-group-<?= esc_attr( $field_group->id() ) ?>-<?= esc_attr( $field_group->index ) ?>"
+		    class="cmb-row cmb-repeatable-grouping<?= esc_attr( $closed_class ) ?> postbox"
+		    data-iterator="<?= esc_attr( $field_group->index ) ?>">
 			<?php
 			if ( $field_group->args( 'repeatable' ) ) {
 				?>
@@ -178,6 +185,7 @@ class Layout {
 						<a href="javascript:void(0)" type="button"
 						   data-selector="<?= esc_attr( $field_group->id() ); ?>_repeat"
 						   class="cmb-remove-group-row cmb-remove-group-row-button button-secondary cmb-shift-rows"
+						   data-confirm="<?= esc_attr( $confirm_deletion ) ?>"
 						   title="<?= esc_attr( $field_group->options( 'remove_button' ) ); ?>">
 							<span class="dashicons dashicons-no-alt"/>
 						</a>
