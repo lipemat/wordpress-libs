@@ -3,6 +3,7 @@
 namespace Lipe\Lib\CMB2\Group;
 
 use Lipe\Lib\CMB2\Group;
+use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
 
 /**
@@ -12,6 +13,7 @@ use Lipe\Lib\Traits\Singleton;
  */
 class Layout {
 	use Singleton;
+	use Memoize;
 
 	protected function is_table( \CMB2_Field $field_group ) : bool {
 		return ( 'table' === $field_group->args( 'layout' ) );
@@ -44,7 +46,7 @@ class Layout {
 		$label     = $field_group->args( 'name' );
 		$group_val = (array) $field_group->value();
 
-		echo '<div class="cmb-row cmb-repeat-group-wrap cmb-group-table cmb-group-display-' . esc_attr( $field_group->args( 'display' ) ) . ' ' . esc_attr( $field_group->row_classes() ), '" data-fieldtype="group"><div class="cmb-td"><div data-groupid="' . esc_attr( $field_group->id() ) . '" id="' . esc_attr( $field_group->id() ) . '_repeat" ' . $cmb->group_wrap_attributes( $field_group ) . '>'; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<div class="cmb-row cmb-repeat-group-wrap cmb-group-table cmb-group-display-' . esc_attr( $field_group->args( 'layout' ) ) . ' ' . esc_attr( $field_group->row_classes() ), '" data-fieldtype="group"><div class="cmb-td"><div data-groupid="' . esc_attr( $field_group->id() ) . '" id="' . esc_attr( $field_group->id() ) . '_repeat" ' . $cmb->group_wrap_attributes( $field_group ) . '>'; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		if ( $desc || $label ) {
 			$class = $desc ? ' cmb-group-description' : '';
@@ -130,7 +132,7 @@ class Layout {
 		?>
 		<tr
 			id="cmb-group-<?= esc_attr( $field_group->id() ) ?>-<?= esc_attr( $field_group->index ) ?>"
-		    class="cmb-row cmb-repeatable-grouping<?= esc_attr( $closed_class ) ?> postbox"
+		    class="cmb-row cmb-repeatable-grouping<?= esc_attr( $closed_class ) ?>"
 		    data-iterator="<?= esc_attr( $field_group->index ) ?>">
 			<?php
 			if ( $field_group->args( 'repeatable' ) ) {
@@ -216,114 +218,119 @@ class Layout {
 
 
 	protected function styles() : void {
-		static $displayed = false;
-		if ( $displayed ) {
-			return;
-		}
-		$displayed = true;
-		?>
-		<style>
-			.cmb-group-table table {
-				width: 100%;
-			}
+		$this->once( function () {
+			?>
+			<style>
+				.cmb-group-table table {
+					width: 100%;
+				}
 
-			.cmb-group-table th {
-				border-top: #DFDFDF solid 1px;
-			}
+				.cmb-group-table th {
+					border-top: #DFDFDF solid 1px;
+				}
 
-			.cmb-group-table td:last-child,
-			.cmb-group-table th:last-child {
-				border-right: #DFDFDF solid 1px;
-			}
+				.cmb-group-table tr {
+					background: #fff;
+				}
 
-			.cmb-group-table th,
-			.cmb-group-table td {
-				border-left: #DFDFDF solid 1px;
-				border-bottom: #DFDFDF solid 1px;
-				padding: 8px !important;
-				vertical-align: top;
-				text-align: left;
-			}
+				.cmb-group-table td:last-child,
+				.cmb-group-table th:last-child {
+					border-right: #DFDFDF solid 1px;
+				}
 
-			.cmb-group-table.cmb-group-display-row td {
-				padding-bottom: 0 !important;
-			}
+				.cmb-group-table th,
+				.cmb-group-table td {
+					border-left: #DFDFDF solid 1px;
+					border-bottom: #DFDFDF solid 1px;
+					padding: 8px !important;
+					vertical-align: top;
+					text-align: left;
+				}
 
-			.cmb-group-table.cmb-group-display-row .cmb-table {
-				border-top: #DFDFDF solid 1px;
-			}
+				.cmb-group-table.cmb-group-display-row td {
+					padding-bottom: 0 !important;
+				}
 
-			.cmb-group-table .cmb-group-row-fields {
-				padding: 0 !important;
-				margin: 0 !important;
-			}
+				.cmb-group-table.cmb-group-display-row .cmb-table {
+					border-top: #DFDFDF solid 1px;
+				}
 
-			.cmb-group-row-fields td,
-			.cmb-group-row-fields th{
-				border: none !important;
-				border-bottom: #EEEEEE solid 1px !important;
-			}
+				.cmb-group-table .cmb-group-row-fields {
+					padding: 0 !important;
+					margin: 0 !important;
+				}
 
-			.cmb-group-row-fields th {
-				width: 20%;
-				vertical-align: top;
-				background: #F9F9F9;
-				border-right: 1px solid #E1E1E1 !important;
-			}
+				.cmb-group-row-fields td,
+				.cmb-group-row-fields th {
+					border: none !important;
+					border-bottom: #EEEEEE solid 1px !important;
+				}
 
-			.cmb-group-table-control {
-				width: 16px;
-				padding: 0 !important;
-				vertical-align: middle !important;
-				text-align: center !important;
-				background: #f4f4f4;
-				text-shadow: #fff 0 1px 0;
-			}
+				.cmb-group-row-fields th {
+					width: 20%;
+					vertical-align: top;
+					background: #F9F9F9;
+					border-right: 1px solid #E1E1E1 !important;
+				}
 
-			.cmb-group-table .cmb-group-table-control a {
-				float: none !important;
-				display: block !important;
-				margin: 5px 0 !important;
-				text-align: center !important;
-			}
+				.cmb-group-table-control {
+					width: 16px;
+					padding: 0 !important;
+					vertical-align: middle !important;
+					text-align: center !important;
+					background: #f4f4f4;
+					text-shadow: #fff 0 1px 0;
+				}
 
-			.cmb-group-table-control a,
-			.cmb-group-table-control h3 {
-				color: #aaa !important;
-			}
+				.cmb-group-table .cmb-group-table-control a {
+					float: none !important;
+					display: block !important;
+					margin: 5px 0 !important;
+					text-align: center !important;
+				}
 
-			.cmb-group-table-control a:hover,
-			.cmb-group-table-control:hover h3 {
-				color: #23282d !important;
-			}
+				.cmb-group-table-control a,
+				.cmb-group-table-control h3 {
+					color: #aaa !important;
+				}
 
-			.cmb-group-table .cmb-group-table-control .cmb-remove-group-row {
-				color: #F55E4F !important;
-				margin-top: 12px !important;
-			}
+				.cmb-group-table-control a:hover,
+				.cmb-group-table-control:hover h3 {
+					color: #23282d !important;
+				}
 
-			.cmb-repeatable-group.sortable .cmb-group-table-control:first-child {
-				cursor: move;
-			}
+				.cmb-group-table .cmb-group-table-control .cmb-remove-group-row {
+					color: #F55E4F !important;
+					margin-top: 12px !important;
+				}
 
-			.cmb-group-table .cmb-group-title {
-				position: relative;
-				background: none;
-				margin: 0 !important;
-				padding: 0 !important;
-			}
+				.cmb-repeatable-group.sortable .cmb-group-table-control:first-child {
+					cursor: move;
+				}
 
-			.cmb-group-table th {
-				width: auto;
-			}
+				.cmb-group-table .ui-sortable-helper {
+					border-top: 1px solid #e9e9e9;
+				}
 
-			.cmb-group-table .cmb-repeat-group-field {
-				padding: 0 !important;
-			}
+				.cmb-group-table .cmb-group-title {
+					position: relative;
+					background: none;
+					margin: 0 !important;
+					padding: 0 !important;
+				}
+
+				.cmb-group-table th {
+					width: auto;
+				}
+
+				.cmb-group-table .cmb-repeat-group-field {
+					padding: 0 !important;
+				}
 
 
-		</style>
-		<?php
+			</style>
+			<?php
+		}, __METHOD__ );
 
 	}
 }
