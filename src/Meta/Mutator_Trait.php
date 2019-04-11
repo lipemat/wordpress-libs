@@ -22,7 +22,7 @@ trait Mutator_Trait {
 	/**
 	 * Get the object id.
 	 *
-	 * @example post_id, term_id, user_id, comment_id, <custom>
+	 * @example post_id, term_id, user_id, comment_id, site_id, <custom>
 	 *
 	 * @return mixed
 	 */
@@ -32,7 +32,7 @@ trait Mutator_Trait {
 	/**
 	 * Get the type of meta that is stored for this object.
 	 *
-	 * @example 'post','user','comment','term',<custom>
+	 * @example 'post','user','comment','term', 'blog', <custom>
 	 *
 	 * @return string
 	 */
@@ -40,7 +40,7 @@ trait Mutator_Trait {
 
 
 	/**
-	 * Get a value of this post's meta field
+	 * Get a value of this object's meta field
 	 * using the meta repo to map the appropriate data type.
 	 *
 	 * @param string $key
@@ -60,7 +60,7 @@ trait Mutator_Trait {
 
 
 	/**
-	 * Update a value of this post's meta field
+	 * Update a value of this object's meta field
 	 * using the meta repo to map the appropriate data type.
 	 *
 	 * @param string $key
@@ -75,7 +75,7 @@ trait Mutator_Trait {
 
 
 	/**
-	 * Delete the value of this post's meta field
+	 * Delete the value of this object's meta field
 	 * using the meta repo to map the appropriate data type.
 	 *
 	 * @param string $key
