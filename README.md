@@ -43,6 +43,7 @@ require __DIR__ . '/vendor/autoload.php'
 * Version management helper
 * Comment Object Trait
 * Memoize Trait (@since 2.6.0)
+* Site Object Trait (@since 2.8.0)
 
 ## Changelog may be found in [releases](https://github.com/lipemat/wordpress-libs/releases) (non exhaustive)
 
