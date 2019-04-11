@@ -2,7 +2,6 @@
 
 namespace Lipe\Lib\Api;
 
-use Lipe\Lib\Api\Api;
 use Lipe\Lib\Traits\Singleton;
 
 /**
@@ -23,7 +22,6 @@ use Lipe\Lib\Traits\Singleton;
  * @since   1.7.0
  *
  * @example Zip::in()->build_zip( [ $url, $url ], $zip_name );
-
  *
  *
  * @package Lipe\Lib\Util
@@ -46,7 +44,7 @@ class Zip {
 
 
 	protected function hook() : void {
-		add_action( 'lipe/lib/util/api_' . self::ACTION, [ $this, 'handle_request' ], 10, 0 );
+		add_action( Api::in()->get_action( self::ACTION ), [ $this, 'handle_request' ] );
 	}
 
 
@@ -120,7 +118,7 @@ class Zip {
 					$success[] = $temp;
 				}
 			} else {
-				echo "failed to copy $file...\n";
+				echo esc_html( "failed to copy $file...\n" );
 			}
 		}
 
@@ -193,7 +191,7 @@ class Zip {
 	/**
 	 * Get an array of data to send to this zip service to render a zip file
 	 *
-	 * @param array $urls - array of urls to be added to the zip file
+	 * @param array  $urls - array of urls to be added to the zip file
 	 * @param string $name - name of the zip when downloaded
 	 *
 	 * @static
