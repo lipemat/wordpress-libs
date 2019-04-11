@@ -815,6 +815,27 @@ class Field {
 
 
 	/**
+	 * Mark this field as 'required'
+	 *
+	 * @notice As of WP 5.1.1 this has not effect on meta box fields with
+	 *         Gutenberg enabled. Possibly will be changed in a future version
+	 *         of WP?
+	 *
+	 * @since 2.7.2
+	 *
+	 * @return Field
+	 */
+	public function required() : Field {
+		// The only way a file field may be required is if the text field is showing.
+		if ( 'file' === $this->type ) {
+			$this->options['url'] = true;
+		}
+		$this->attributes( [ 'required' => 'required' ] );
+		return $this;
+	}
+
+
+	/**
 	 * To show this field or not based on the result of a function.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_on_cb
