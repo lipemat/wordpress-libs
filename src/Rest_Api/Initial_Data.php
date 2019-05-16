@@ -5,11 +5,12 @@ namespace Lipe\Lib\Rest_Api;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * Initial_Data
+ * Generate JSON data which mimics the return of wp-json api.
  *
  * Use most commonly to get the json data without making a request to the api
- * Thus preventing an anti-pattern when using React and Such
+ * Thus preventing an anti-pattern when using React etc.
  *
+ * @since June, 2017
  *
  */
 class Initial_Data {
@@ -20,11 +21,12 @@ class Initial_Data {
 	 * Gets global posts data from the JSON API server
 	 * Alternatively an array of posts may be passed to be converted to json data
 	 *
-	 * @param null|[] $posts
+	 * @param \WP_Post[]|null $posts - Array of post objects
+	 *                               (defaults to global WP_Query->posts)
 	 *
 	 * @return array
 	 */
-	public function get_post_data( $posts = null ) : array {
+	public function get_post_data( ?array $posts = null ) : array {
 		if ( null === $posts && ! is_404() ) {
 			$posts = $GLOBALS['wp_query']->posts;
 		}
