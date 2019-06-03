@@ -82,4 +82,16 @@ trait Memoize {
 
 		return $this->memoize_cache[ $key ];
 	}
+
+
+	/**
+	 * Clear all caches on this class.
+	 * Typically used during unit testing.
+	 *
+	 * @since 2.8.1
+	 *
+	 */
+	public function clear_memoize_cache() : void {
+		$this->memoize_cache = [];
+	}
 }
