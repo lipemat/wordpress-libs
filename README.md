@@ -4,8 +4,8 @@ WordPress library which supports a core plugin and theme.
 **Version [2.8.1](https://github.com/lipemat/wordpress-lipe-libs/releases/tag/2.8.1)**
 
 ### Requirements
-1. PHP Version 7.1.3+ (Recommended 7.2.0+)
-2. WordPress Version 4.8+ 
+1. PHP Version 7.1.3+ (Recommended 7.3.6+)
+2. WordPress Version 4.8+ (Recommended 5.2.1+)
 
 
 ### Installation
