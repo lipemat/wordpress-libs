@@ -3,7 +3,6 @@
 namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\CMB2\Field;
-use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
 
 /**
@@ -16,7 +15,6 @@ use Lipe\Lib\Traits\Singleton;
  */
 class Repo extends Translate_Abstract {
 	use Singleton;
-	use Memoize;
 
 	public const CHECKBOX = 'checkbox';
 	public const DEFAULT = 'default';
@@ -85,30 +83,6 @@ class Repo extends Translate_Abstract {
 	 */
 	protected function get_field_data_type( string $field_id ) : string {
 		return $this->types[ $this->get_field( $field_id )->get_type() ];
-	}
-
-
-	/**
-	 * Get all the fields assigned to this group.
-	 *
-	 * @param string $group - The group id.
-	 *
-	 * @internal
-	 *
-	 * @return Field[]
-	 */
-	public function get_group_fields( string $group ) : array {
-		$groups = $this->once( function () {
-			$groups = [];
-			array_map( function ( Field $field ) use ( &$groups ) {
-				if ( null !== $field->group ) {
-					$groups[ $field->group ][] = $field->get_id();
-				}
-			}, $this->fields );
-			return $groups;
-		}, __METHOD__ );
-
-		return $groups[ $group ] ?? [];
 	}
 
 

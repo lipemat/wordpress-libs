@@ -3,6 +3,7 @@
 namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\CMB2\Field;
+use Lipe\Lib\Traits\Memoize;
 
 /**
  * Translate the fields into the correct data types.
@@ -12,6 +13,8 @@ use Lipe\Lib\CMB2\Field;
  *
  */
 abstract class Translate_Abstract {
+	use Memoize;
+
 	/**
 	 * All fields that have been registered
 	 *
@@ -250,7 +253,7 @@ abstract class Translate_Abstract {
 		}
 		foreach ( $existing as $_row => $_values ) {
 			$this->group_row = $_row;
-			foreach ( Repo::in()->get_group_fields( $group_id ) as $field ) {
+			foreach ( $this->get_group_fields( $group_id ) as $field ) {
 				$values[ $_row ][ $field ] = Repo::in()->get_value( $object_id, $field, $meta_type );
 			}
 		}
@@ -270,7 +273,7 @@ abstract class Translate_Abstract {
 	public function update_group_field_values( $object_id, string $group_id, array $values, string $meta_type ) : void {
 		foreach ( $values as $_row => $_values ) {
 			$this->group_row = $_row;
-			foreach ( Repo::in()->get_group_fields( $group_id ) as $field ) {
+			foreach ( $this->get_group_fields( $group_id ) as $field ) {
 				if ( \array_key_exists( $field, $_values ) ) {
 					Repo::in()->update_value( $object_id, $field, $_values[ $field ], $meta_type );
 				} else {
@@ -303,6 +306,29 @@ abstract class Translate_Abstract {
 		$group[ $this->group_row ][ $key ] = $value;
 
 		return $this->update_meta_value( $object_id, $this->fields[ $key ]->group, $group, $meta_type );
+	}
+
+	/**
+	 * Get all the fields assigned to this group.
+	 *
+	 * @param string $group - The group id.
+	 *
+	 * @internal
+	 *
+	 * @return Field[]
+	 */
+	protected function get_group_fields( string $group ) : array {
+		$groups = $this->once( function () {
+			$groups = [];
+			array_map( function ( Field $field ) use ( &$groups ) {
+				if ( null !== $field->group ) {
+					$groups[ $field->group ][] = $field->get_id();
+				}
+			}, $this->fields );
+			return $groups;
+		}, __METHOD__ );
+
+		return $groups[ $group ] ?? [];
 	}
 
 
