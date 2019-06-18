@@ -47,7 +47,6 @@ trait Mutator_Trait {
 	 * @param mixed  $default
 	 *
 	 * @return mixed
-	 * @throws \Exception
 	 */
 	public function get_meta( string $key, $default = null ) {
 		$value = Repo::instance()->get_value( $this->get_id(), $key, $this->get_meta_type() );

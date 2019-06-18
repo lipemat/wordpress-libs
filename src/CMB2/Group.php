@@ -3,6 +3,7 @@
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Group\Layout;
+use Lipe\Lib\Meta\Repo;
 
 /**
  * Group
@@ -83,28 +84,26 @@ class Group extends Field {
 	/**
 	 * box
 	 *
-	 * @var \Lipe\Lib\CMB2\Box
+	 * @var Box
 	 */
 	protected $box;
-
-	protected $fields = [];
 
 
 	/**
 	 * Group constructor.
 	 *
-	 * @param string             $id
-	 * @param string             $title
-	 * @param \Lipe\Lib\CMB2\Box $box
-	 * @param string             $group_title    - include a {#} to have replace with number
-	 * @param string             $add_button_text
-	 * @param string             $remove_button_text
-	 * @param bool               $sortable
-	 * @param bool               $closed
-	 * @param string             $remove_confirm - @since 2.7.0 -
-	 *                                           A message to display when a user attempts
-	 *                                           to delete a group.
-	 *                                           (Defaults to null/false for no confirmation)
+	 * @param string               $id
+	 * @param string               $title
+	 * @param Box|Shorthand_Fields $box
+	 * @param string               $group_title    - include a {#} to have replace with number
+	 * @param string               $add_button_text
+	 * @param string               $remove_button_text
+	 * @param bool                 $sortable
+	 * @param bool                 $closed
+	 * @param string               $remove_confirm - @since 2.7.0 -
+	 *                                             A message to display when a user attempts
+	 *                                             to delete a group.
+	 *                                             (Defaults to null/false for no confirmation)
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 */
@@ -139,8 +138,9 @@ class Group extends Field {
 
 
 	/**
+	 * Assign a field to a group, then register it.
 	 *
-	 * @param \Lipe\Lib\CMB2\Field $field
+	 * @param Field $field
 	 *
 	 * @return void
 	 * @throws \LogicException
@@ -149,8 +149,12 @@ class Group extends Field {
 		if ( null === $this->box->cmb ) {
 			throw new \LogicException( 'You must add the group to the box before you add fields to the group.' );
 		}
+
+		$field->group = $this->get_id();
 		$box = $this->box->get_box();
 		$box->add_group_field( $this->id, $field->get_field_args(), $field->position );
+
+		Repo::in()->register_field( $field );
 	}
 
 
@@ -177,7 +181,7 @@ class Group extends Field {
 	 *
 	 * @throws \LogicException
 	 */
-	public function group() {
+	public function group() : void {
 		throw new \LogicException( 'You cannot add a group to another group.' );
 	}
 

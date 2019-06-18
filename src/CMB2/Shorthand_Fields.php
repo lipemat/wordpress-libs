@@ -18,7 +18,7 @@ trait Shorthand_Fields {
 	 * @see \Lipe\Lib\CMB2\Box::register_shorthand_fields();
 	 * @see \Lipe\Lib\CMB2\Box::field();
 	 *
-	 * @var \Lipe\Lib\CMB2\Field[]|\Lipe\Lib\CMB2\Group[]
+	 * @var Field[]|Group[]
 	 */
 	protected $fields = [];
 
@@ -53,7 +53,7 @@ trait Shorthand_Fields {
 	 * @param $id
 	 * @param $name
 	 *
-	 * @return \Lipe\Lib\CMB2\Field_Type
+	 * @return Field_Type
 	 */
 	public function field( $id, $name ) : Field_Type {
 		$this->hook();
@@ -85,7 +85,7 @@ trait Shorthand_Fields {
 	 *                                           (Defaults to null/false for no confirmation)
 	 *
 	 *
-	 * @return \Lipe\Lib\CMB2\Group
+	 * @return Group
 	 */
 	public function group( $id, $title, $group_title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false, ?string $remove_confirm = null ) : Group {
 		$this->hook();
@@ -115,7 +115,7 @@ trait Shorthand_Fields {
 	/**
 	 * Get all fields registered in a shorthand way
 	 *
-	 * @return \Lipe\Lib\CMB2\Field[]|\Lipe\Lib\CMB2\Group[]
+	 * @return Field[]|Group[]
 	 */
 	protected function get_shorthand_fields() : array {
 		return $this->fields;

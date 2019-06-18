@@ -385,7 +385,7 @@ class Field_Type {
 	 * @param array  $args      - [$key => $value]
 	 * @param string $data_type - a type of data to return [Repo::DEFAULT, Repo::CHECKBOX, Repo::FILE, Repo::TAXONOMY ]
 	 *
-	 * @return \Lipe\Lib\CMB2\Field
+	 * @return Field
 	 */
 	protected function set( array $args, string $data_type ) : Field {
 		if ( isset( $args['type'] ) ) {
@@ -490,7 +490,7 @@ class Field_Type {
 	 */
 	public function text_url( ?array $protocols = null ) : Field {
 		$this->field->attributes( [
-			'type' => 'url',
+			'type'  => 'url',
 			'class' => 'cmb2-text-url regular-text',
 		] );
 
@@ -1160,7 +1160,7 @@ class Field_Type {
 			$_args['options']['remove_confirm'] = $remove_confirm;
 		}
 
-		return $this->set( $_args, Repo::DEFAULT );
+		return $this->set( $_args, Repo::GROUP );
 	}
 
 	/************ protected ***********************/

@@ -3,6 +3,7 @@
 namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\CMB2\Field;
+use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
 
 /**
@@ -15,19 +16,14 @@ use Lipe\Lib\Traits\Singleton;
  */
 class Repo extends Translate_Abstract {
 	use Singleton;
+	use Memoize;
 
 	public const CHECKBOX = 'checkbox';
 	public const DEFAULT = 'default';
 	public const FILE = 'file';
+	public const GROUP = 'group';
 	public const TAXONOMY = 'taxonomy';
 	public const TAXONOMY_SINGULAR = 'taxonomy-singular';
-
-	/**
-	 * All fields that have been registered
-	 *
-	 * @var Field[]
-	 */
-	protected $fields = [];
 
 	/**
 	 * All types of fields that have been registered
@@ -93,6 +89,30 @@ class Repo extends Translate_Abstract {
 
 
 	/**
+	 * Get all the fields assigned to this group.
+	 *
+	 * @param string $group - The group id.
+	 *
+	 * @internal
+	 *
+	 * @return Field[]
+	 */
+	public function get_group_fields( string $group ) : array {
+		$groups = $this->once( function () {
+			$groups = [];
+			array_map( function ( Field $field ) use ( &$groups ) {
+				if ( null !== $field->group ) {
+					$groups[ $field->group ][] = $field->get_id();
+				}
+			}, $this->fields );
+			return $groups;
+		}, __METHOD__ );
+
+		return $groups[ $group ] ?? [];
+	}
+
+
+	/**
 	 * Get a fields value
 	 *
 	 * Use the registered fields and registered types to determine the appropriate method to
@@ -113,6 +133,8 @@ class Repo extends Translate_Abstract {
 				return $this->get_checkbox_field_value( $object_id, $field_id, $meta_type );
 			case self::FILE:
 				return $this->get_file_field_value( $object_id, $field_id, $meta_type );
+			case self::GROUP:
+				return $this->get_group_field_value( $object_id, $field_id, $meta_type );
 			case self::TAXONOMY:
 				return $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type );
 			case self::TAXONOMY_SINGULAR:
@@ -145,15 +167,17 @@ class Repo extends Translate_Abstract {
 				$this->update_checkbox_field_value( $object_id, $field_id, $value, $meta_type );
 				break;
 			case self::FILE:
-				$this->update_file_field_value( $object_id, $field_id, $value, $meta_type );
+				$this->update_file_field_value( $object_id, $field_id, (int) $value, $meta_type );
+				break;
+			case self::GROUP:
+				$this->update_group_field_values( $object_id, $field_id, (array) $value, $meta_type );
 				break;
 			case self::TAXONOMY:
 			case self::TAXONOMY_SINGULAR:
-				$this->update_taxonomy_field_value( $object_id, $field_id, $value, $meta_type );
+				$this->update_taxonomy_field_value( $object_id, $field_id, (array)$value, $meta_type );
 				break;
 			default:
 				$this->update_meta_value( $object_id, $field_id, $value, $meta_type );
-
 		}
 
 	}
@@ -183,6 +207,7 @@ class Repo extends Translate_Abstract {
 				$this->delete_taxonomy_field_value( $object_id, $field_id, $meta_type );
 				break;
 			case self::CHECKBOX:
+			case self::GROUP:
 			default:
 				$this->delete_meta_value( $object_id, $field_id, $meta_type );
 

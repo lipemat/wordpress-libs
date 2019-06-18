@@ -302,6 +302,18 @@ class Field {
 	public $escape_cb;
 
 	/**
+	 * If this field is part of a group this may be used to retrieve
+	 * the group id.
+	 *
+	 * @internal
+	 *
+	 * @since 2.9.0
+	 *
+	 * @var string|null
+	 */
+	public $group;
+
+	/**
 	 * If you're planning on using your metabox fields on the front-end as well (user-facing),
 	 * then you can specify that certain fields do not get displayed there
 	 * by setting this parameter to false.
@@ -903,7 +915,7 @@ class Field {
 	 * This is much preferred over setting $this->type
 	 * directly which has room for error
 	 *
-	 * @return \Lipe\Lib\CMB2\Field_Type
+	 * @return Field_Type
 	 */
 	public function type() : Field_Type {
 		return new Field_Type( $this );
@@ -930,7 +942,7 @@ class Field {
 	 * Set a Fields Type and register the type with Meta\Repo
 	 *
 	 * @param string $type
-	 * @param string $data_type - a type of data to return [Repo::DEFAULT, Repo::CHECKBOX, Repo::FILE, Repo::TAXONOMY ]
+	 * @param string $data_type - a type of data to return [Repo::DEFAULT, Repo::CHECKBOX, Repo::FILE, Repo::GROUP, Repo::TAXONOMY ]
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
