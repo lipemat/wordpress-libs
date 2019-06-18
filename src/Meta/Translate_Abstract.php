@@ -296,11 +296,7 @@ abstract class Translate_Abstract {
 	 * @return bool|int
 	 */
 	protected function update_group_sub_field_value( $object_id, string $key, $value, string $meta_type ) {
-		if ( 'option' === $meta_type ) {
-			$group = cmb2_options( $object_id )->get( $this->fields[ $key ]->group, null );
-		} else {
-			$group = get_metadata( $meta_type, $object_id, $this->fields[ $key ]->group, true );
-		}
+		$group = $this->get_meta_value( $object_id, $this->fields[ $key ]->group, $meta_type );
 		if ( ! is_array( $group ) ) {
 			$group = [];
 		}
