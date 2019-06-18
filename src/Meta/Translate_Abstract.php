@@ -57,7 +57,7 @@ abstract class Translate_Abstract {
 	 * @return mixed
 	 */
 	protected function get_meta_value( $object_id, string $key, string $meta_type ) {
-		if ( null !== $this->fields[ $key ]->group ) {
+		if ( isset( $this->fields[ $key ] ) && null !== $this->fields[ $key ]->group ) {
 			$group = $this->get_meta_value( $object_id, $this->fields[ $key ]->group, $meta_type );
 
 			return $group[ $this->group_row ][ $key ] ?? null;
@@ -83,7 +83,7 @@ abstract class Translate_Abstract {
 	 * @return bool|int
 	 */
 	protected function update_meta_value( $object_id, string $key, $value, string $meta_type ) {
-		if ( null !== $this->fields[ $key ]->group ) {
+		if ( isset( $this->fields[ $key ] ) && null !== $this->fields[ $key ]->group ) {
 			return $this->update_group_sub_field_value( $object_id, $key, $value, $meta_type );
 		}
 
@@ -106,7 +106,7 @@ abstract class Translate_Abstract {
 	 * @return void
 	 */
 	protected function delete_meta_value( $object_id, string $key, string $meta_type ) : void {
-		if ( null !== $this->fields[ $key ]->group ) {
+		if ( isset( $this->fields[ $key ] ) && null !== $this->fields[ $key ]->group ) {
 			$group                             = $this->get_meta_value( $object_id, $this->fields[ $key ]->group, $meta_type );
 			$group[ $this->group_row ][ $key ] = null;
 			$this->update_meta_value( $object_id, $key, $group, $meta_type );
