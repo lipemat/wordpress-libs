@@ -16,11 +16,11 @@ use Lipe\Lib\Traits\Singleton;
 class Repo extends Translate_Abstract {
 	use Singleton;
 
-	public const CHECKBOX = 'checkbox';
-	public const DEFAULT = 'default';
-	public const FILE = 'file';
-	public const GROUP = 'group';
-	public const TAXONOMY = 'taxonomy';
+	public const CHECKBOX          = 'checkbox';
+	public const DEFAULT           = 'default';
+	public const FILE              = 'file';
+	public const GROUP             = 'group';
+	public const TAXONOMY          = 'taxonomy';
 	public const TAXONOMY_SINGULAR = 'taxonomy-singular';
 
 	/**
@@ -148,7 +148,7 @@ class Repo extends Translate_Abstract {
 				break;
 			case self::TAXONOMY:
 			case self::TAXONOMY_SINGULAR:
-				$this->update_taxonomy_field_value( $object_id, $field_id, (array)$value, $meta_type );
+				$this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type );
 				break;
 			default:
 				$this->update_meta_value( $object_id, $field_id, $value, $meta_type );
