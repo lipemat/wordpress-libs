@@ -1,12 +1,11 @@
 # WordPress Libs
 
-<p align="center">
+<p>
 <a href="https://github.com/lipemat/wordpress-libs/releases">
 <img src="https://img.shields.io/packagist/v/lipemat/wordpress-libs.svg?label=version" />
 </a>
     <img alt="" src="https://img.shields.io/badge/wordpress->=4.8.0-green.svg">
     <img src="https://img.shields.io/packagist/php-v/lipemat/wordpress-libs.svg?color=brown" />
-    <img src="https://img.shields.io/github/commits-since/lipemat/wordpress-libs/latest/develop.svg?label=pending commits&color=orange" alt="commits to be deployed"></a>
 </p>
 
 WordPress library which supports a core plugin and theme.
