@@ -6,6 +6,7 @@
 </a>
     <img alt="" src="https://img.shields.io/badge/wordpress->=4.8.0-green.svg">
     <img src="https://img.shields.io/packagist/php-v/lipemat/wordpress-libs.svg?color=brown" />
+    <img alt="Packagist" src="https://img.shields.io/packagist/l/lipemat/wordpress-libs.svg">
 </p>
 
 WordPress library which supports a core plugin and theme.
