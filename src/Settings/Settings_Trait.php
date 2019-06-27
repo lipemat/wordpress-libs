@@ -32,7 +32,6 @@ trait Settings_Trait {
 	 * @param null   $default
 	 *
 	 * @return mixed
-	 * @throws \Exception
 	 */
 	public function get_option( $key, $default = null ) {
 		return $this->get_meta( $key, $default );
