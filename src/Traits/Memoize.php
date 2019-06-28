@@ -46,11 +46,11 @@ trait Memoize {
 	 * @return mixed
 	 */
 	public function once( callable $fn, string $identifier, ...$args ) {
-		if ( ! array_key_exists( $identifier . __METHOD__, $this->memoize_cache ) ) {
-			$this->memoize_cache[ $identifier . __METHOD__ ] = call_user_func_array( $fn, $args );
+		if ( ! array_key_exists( "{$identifier}::once", $this->memoize_cache ) ) {
+			$this->memoize_cache[ "{$identifier}::once" ] = call_user_func_array( $fn, $args );
 		}
 
-		return $this->memoize_cache[ $identifier . __METHOD__ ];
+		return $this->memoize_cache[ "{$identifier}::once" ];
 	}
 
 
