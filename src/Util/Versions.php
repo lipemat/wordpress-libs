@@ -12,6 +12,9 @@ use Lipe\Lib\Traits\Singleton;
  * items in order.
  * Use once() for items with no prerequisites and just need to be run once.
  *
+ * For tracking for a single class
+ * @see \Lipe\Lib\Traits\Version
+ *
  * @example Versions::in()->add_update( $version, function(){}, [ data ] );
  * @example Versions::in()->once( $key, function(){}, [ data ] );
  *

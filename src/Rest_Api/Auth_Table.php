@@ -16,11 +16,10 @@ use Lipe\Lib\Traits\Singleton;
 class Auth_Table extends Db {
 	use Singleton;
 
-	protected $db_option = 'lipe/lib/rest-api/auth-table';
+	public const NAME = 'auth';
 
-	protected $db_version = 1;
-
-	protected $id_field = 'id';
+	protected const DB_VERSION = 1;
+	protected const ID_FIELD = 'id';
 
 	public const COLUMNS = [
 		'id'      => '%d',
@@ -28,17 +27,6 @@ class Auth_Table extends Db {
 		'token'   => '%s',
 		'expires' => '%s',
 	];
-
-
-	private function __construct() {
-		global $wpdb;
-		$this->table = $wpdb->prefix . 'auth';
-
-		if ( $this->update_required() ) {
-			$this->run_updates();
-		}
-	}
-
 
 	public function get_user( $token ) {
 		global $wpdb;

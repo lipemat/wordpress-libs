@@ -2,6 +2,8 @@
 
 namespace Lipe\Lib\Schema;
 
+use Lipe\Lib\Traits\Version;
+
 /**
  * Interact with custom Database Tables
  *
@@ -9,16 +11,12 @@ namespace Lipe\Lib\Schema;
  *
  * protected const NAME = 'personal'; //table name without prefix (prefix is set during construct)
  * protected const ID_FIELD = 'personal_id';
- * protected const DB_OPTION = "auth_db";
  * protected const DB_VERSION = 1;
  *
  * protected const COLUMNS = []
- *
- * @since 04/18/2018
- *
- *
  */
 abstract class Db {
+	use Version;
 
 	protected $table;
 
@@ -49,9 +47,7 @@ abstract class Db {
 		global $wpdb;
 		$this->table = $wpdb->prefix . static::NAME;
 
-		if ( $this->update_required() ) {
-			$this->run_updates();
-		}
+		$this->run_for_version( [ $this, 'run_updates' ], $this->get_db_version() );
 	}
 
 
@@ -232,16 +228,6 @@ abstract class Db {
 		return $clean;
 	}
 
-
-	/**
-	 * @see Db::delete();
-	 * @deprecated in favor of Db::delete()
-	 */
-	public function remove( $id_or_wheres ) {
-		\_deprecated_function( 'Db::remove', '1.6.1', 'Db::delete' );
-	}
-
-
 	/**
 	 * Delete a row from the database
 	 *
@@ -309,26 +295,9 @@ abstract class Db {
 		return static::DB_VERSION ?? $this->db_version;
 	}
 
-	/**
-	 *
-	 * @since 1.6.1
-	 *
-	 * @return string
-	 */
-	protected function get_db_option() : string {
-		return static::DB_OPTION ?? $this->db_option;
-	}
-
-
-
-
 
 	/**
-	 *
-	 * Run specified updates based on db version and update the option to match
-	 *
-	 * @uses self::DB_OPTION
-	 * @uses self::DB_VERSION
+	 * Run specified updates based on db version and update the option to match.
 	 *
 	 * @return void
 	 */
@@ -337,9 +306,6 @@ abstract class Db {
 		if ( method_exists( $this, 'update_table' ) ) {
 			$this->update_table();
 		}
-
-		update_option( $this - $this->get_db_option(), $this->get_db_version() );
-
 	}
 
 
@@ -368,46 +334,6 @@ abstract class Db {
 	 *
 	 * @return void
 	 */
-	abstract protected function create_table();
-
-
-	/**
-	 * Update Required ?
-	 *
-	 * Check if the db version is less than specified by this class
-	 *
-	 * @uses self::DB_OPTION
-	 *
-	 * @return bool
-	 */
-	protected function update_required() : bool {
-		if ( \defined( 'static::DB_OPTION' ) && ! \property_exists( $this, 'db_option' ) ) {
-			trigger_error( 'You must define a "const DB_OPTION" in class extending db to use update_required' );
-
-			return false;
-		}
-
-		if ( \defined( 'static::DB_VERSION' ) && ! \property_exists( $this, 'db_version' ) ) {
-			trigger_error( 'You must define a "const DB_VERSION"  in class extending db to use update_required' );
-
-			return false;
-		}
-
-		if ( \defined( 'static::NAME' ) && ! \property_exists( $this, 'table' ) ) {
-			trigger_error( 'You must define a "const NAME" in class extending db to use update_required' );
-
-			return false;
-		}
-
-		if ( \defined( 'static::ID_FIELD' ) && ! \property_exists( $this, 'id_field' ) ) {
-			trigger_error( 'You must define a "const ID_FIELD" in class extending db to use update_required' );
-
-			return false;
-		}
-
-		$version = get_option( $this->get_db_option(), 0.1 );
-
-		return version_compare( $version, $this->get_db_version(), '<' );
-	}
+	abstract protected function create_table() : void;
 
 }
