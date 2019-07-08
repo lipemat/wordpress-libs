@@ -320,7 +320,7 @@ class Box {
 	 *
 	 * @var string
 	 */
-	protected $tab_style;
+	protected $tab_style = 'vertical';
 
 	/**
 	 * cmb

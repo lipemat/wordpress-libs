@@ -82,8 +82,8 @@ class Tabs {
 		$classes = new Class_Names( [
 			'cmb-tabs',
 			'clearfix',
+			'cmb-tabs-' . $tab_style => null !== $tab_style,
 		] );
-		$classes[ 'cmb-tabs-' . $tab_style ] = ( null !== $tab_style && 'vertical' !== $tab_style );
 
 		$this->styles();
 
@@ -281,6 +281,12 @@ class Tabs {
 				font-size: 12px;
 			}
 
+			.cmb2-options-page .cmb-tabs .cmb-th label {
+				color: #222222;
+				font-size: 14px;
+				font-weight: 600;
+			}
+
 			.cmb-tabs .cmb-type-group .cmb-row,
 			.cmb-tabs .cmb2-postbox .cmb-row {
 				margin: 0 0 0.8em;
@@ -350,6 +356,10 @@ class Tabs {
 				position: relative;
 				width: 20%;
 				float: left;
+			}
+
+			.cmb2-options-page .cmb-tabs-vertical ul.cmb-tab-nav {
+				margin-right: -1px
 			}
 
 			.cmb-tabs ul.cmb-tab-nav li {
@@ -435,6 +445,10 @@ class Tabs {
 				width: 100%;
 			}
 
+			.cmb2-options-page .cmb-tabs-vertical.cmb-tabs .cmb-row {
+				padding: 1.5em;
+			}
+
 			.cmb-tabs .cmb-th {
 				width: 18%;
 			}
@@ -471,6 +485,10 @@ class Tabs {
 				padding: 0;
 				border-bottom: 1px solid #dedede;
 				padding-top: 15px;
+			}
+
+			.cmb2-options-page .cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav {
+				margin-bottom: -10px;
 			}
 
 			.cmb-tabs.cmb-tabs-horizontal .cmb-tab-nav li {
