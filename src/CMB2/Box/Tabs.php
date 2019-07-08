@@ -2,7 +2,6 @@
 
 namespace Lipe\Lib\CMB2\Box;
 
-use CMB2_Field;
 use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\Traits\Singleton;
 use Lipe\Lib\Theme\Class_Names;
@@ -159,18 +158,22 @@ class Tabs {
 	 * assigned to a tab
 	 *
 	 * @param array $field_args
-	 * @param CMB2_Field $field
+	 * @param \CMB2_Field $field
 	 *
 	 * @see Field::tab()
 	 *
 	 * @return void
 	 */
-	public function render_field( $field_args, CMB2_Field $field ) : void {
+	public function render_field( $field_args, \CMB2_Field $field ) : void {
 		ob_start();
-		if ( 'group' === $field_args['type'] ) {
-			$this->cmb->render_group_callback( $field_args, $field );
+		if ( isset( $field_args['tab_content_cb'] ) && \is_callable( $field_args['tab_content_cb'] ) ) {
+			$field_args['tab_content_cb']( $field_args, $field );
 		} else {
-			$field->render_field_callback();
+			if ( 'group' === $field_args['type'] ) {
+				$this->cmb->render_group_callback( $field_args, $field );
+			} else {
+				$field->render_field_callback();
+			}
 		}
 		$output = ob_get_clean();
 		echo $this->capture_fields( $output, $field_args ); //phpcs:ignore
@@ -245,8 +248,7 @@ class Tabs {
 			} );
 		</script>
 		<style type="text/css">
-			/*
-			<?= __FILE__; ?>   */
+			/* <?= __FILE__ ?> */
 			.clearfix:after {
 				visibility: hidden;
 				display: block;

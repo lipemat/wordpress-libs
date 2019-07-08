@@ -508,6 +508,17 @@ class Field {
 	protected $tab;
 
 	/**
+	 * A render row cb to use inside a tab.
+	 * Stored here so we can set the `render_row_cb` to the tab's
+	 * method an keep outside `render_row_cb` intact.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @var callable
+	 */
+	protected $tab_content_cb;
+
+	/**
 	 * Used for date/time fields
 	 *
 	 * Optionally make this field honor the timezone selected
@@ -617,7 +628,7 @@ class Field {
 	 * @param string   $name       - defaults to field name
 	 * @param callable $display_cb - optional display callback
 	 *
-	 * @return \Lipe\Lib\CMB2\Field
+	 * @return Field
 	 */
 	public function column( int $position = null, string $name = null, $display_cb = null ) : Field {
 		$this->column = [
@@ -900,7 +911,10 @@ class Field {
 		Tabs::init_once();
 
 		$this->tab           = $id;
-		$this->render_row_cb = [ Tabs::in(), 'render_field' ];
+		if ( $this->render_row_cb ) {
+			$this->tab_content_cb = $this->render_row_cb;
+		}
+		$this->render_row_cb( [ Tabs::in(), 'render_field' ] );
 
 		return $this;
 	}
@@ -935,6 +949,23 @@ class Field {
 	 */
 	public function get_type() : string {
 		return $this->type;
+	}
+
+
+	/**
+	 *
+	 * @param callable $callback
+	 *
+	 * @since 2.10.0
+	 *
+	 * @return Field
+	 */
+	public function render_row_cb( callable $callback ) : Field {
+
+		$this->render_row_cb = $callback;
+
+		return $this;
+
 	}
 
 

@@ -117,21 +117,23 @@ class Group extends Field {
 
 
 	/**
-	 * Display format for the group
+	 * Display format for the group.
 	 *
 	 * block (default), row, table
 	 *
 	 * @param string $layout
 	 *
-	 * @since 1.10.0
-	 *
 	 * @return Group
 	 */
 	public function layout( string $layout ) : Group {
 		Layout::init_once();
+		if ( $this->tab ) {
+			$this->tab_content_cb = [ Layout::in(), 'render_group_callback' ];
+		} else {
+			$this->render_row_cb( [ Layout::in(), 'render_group_callback' ] );
+		}
 
-		$this->render_row_cb = [ Layout::in(), 'render_group_callback' ];
-		$this->layout        = $layout;
+		$this->layout = $layout;
 
 		return $this;
 	}
