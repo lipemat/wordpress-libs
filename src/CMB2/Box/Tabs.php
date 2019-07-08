@@ -233,9 +233,10 @@ class Tabs {
 				'use strict';
 				$( '.cmb-tab-nav' ).on( 'click', 'a', function( e ){
 					e.preventDefault();
-					var $li = $( this ).parent(), panel = $li.data( 'panel' ),
-					    $wrapper                        = $li.parents( ".cmb-tabs" ).find( '.cmb2-wrap-tabs' ),
-					    $panel                          = $wrapper.find( '.cmb-tab-panel-' + panel );
+					var $li = $( this ).parent(),
+						panel = $li.data( 'panel' ),
+						$wrapper = $li.parents( '.cmb-tabs' ).find( '.cmb2-wrap-tabs' ),
+						$panel = $wrapper.find( '[class*="cmb-tab-panel-' + panel + '"]' );
 
 					$li.addClass( 'cmb-tab-active' ).siblings().removeClass( 'cmb-tab-active' );
 					$wrapper.find( '.cmb-tab-panel' ).removeClass( 'show' );
