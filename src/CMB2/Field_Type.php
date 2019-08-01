@@ -1077,7 +1077,7 @@ class Field_Type {
 	 *
 	 * @param string $button_text     - (default 'Add File' )
 	 * @param string $file_mime_type  - (default all)
-	 * @param bool   $show_text_input - (default false)
+	 * @param bool   $show_text_input - (default true) *May not be turned off for required fields*
 	 * @param string $preview_size    - (default full)
 	 *
 	 * @example file( 'Add Image', 'image', false );
@@ -1103,7 +1103,7 @@ class Field_Type {
 	 *
 	 * @param string $button_text      - (default 'Add File' )
 	 * @param string $file_mime_type   - (default all)
-	 * @param bool   $show_text_input  - (default false)
+	 * @param bool Deprecated $show_text_input
 	 * @param string $preview_size     - (default full)
 	 * @param string $remove_item_text - (default 'Remove' )
 	 * @param string $file_text        - (default 'File' )
@@ -1114,8 +1114,13 @@ class Field_Type {
 	 *
 	 * @return Field
 	 */
-	public function file_list( $button_text = null, $file_mime_type = null, $show_text_input = null, $preview_size = null, $remove_item_text = null, $file_text = null, $download_text = null ) : Field {
-		$_args = $this->field_type_file( $this->file_list, $button_text, $file_mime_type, $show_text_input, $preview_size, $remove_item_text, $file_text, $download_text );
+	public function file_list( $button_text = null, $file_mime_type = null, $deprecated = null, $preview_size = null, $remove_item_text = null, $file_text = null, $download_text = null ) : Field {
+		if ( null !== $deprecated ) {
+			\_deprecated_argument( __METHOD__, '2.10.0', 'show_text_input has not affect on file_list' );
+		}
+
+
+		$_args = $this->field_type_file( $this->file_list, $button_text, $file_mime_type, null, $preview_size, $remove_item_text, $file_text, $download_text );
 
 		return $this->set( $_args, Repo::FILE );
 	}
