@@ -9,6 +9,11 @@
     <!-- Include when not specified -->
     <file>./src</file>
 
+	<!-- sniff both PHP and JS -->
+	<arg name="extensions" value="php/PHP"/>
+	<!-- Show sniff codes in all reports, and progress when running -->
+	<arg value="snp"/>
+
     <!-- Exclude paths -->
     <exclude-pattern>*/dev/*</exclude-pattern>
 
@@ -16,19 +21,11 @@
 
     <!-- @see https://github.com/wimg/PHPCompatibility#sniffing-your-code-for-compatibility-with-specific-php-versions -->
     <config name="testVersion" value="7.1-"/>
-
-    <!-- Rules -->
-    <rule ref="PHPCompatibility"/>
+	<!-- @see https://github.com/PHPCompatibility/PHPCompatibilityWP#how-to-use -->
+	<rule ref="PHPCompatibilityWP"/>
 
     <rule ref="WordPress">
         <exclude name="WordPress.Variables.GlobalVariables.OverrideProhibited" />
-        <exclude name="WordPress.VIP.DirectDatabaseQuery.NoCaching" />
-        <exclude name="WordPress.VIP.DirectDatabaseQuery.SchemaChange" />
-        <exclude name="WordPress.VIP.FileSystemWritesDisallow.file_ops_fwrite" />
-        <exclude name="WordPress.VIP.OrderByRand" />
-        <exclude name="WordPress.VIP.RestrictedFunctions" />
-        <exclude name="WordPress.VIP.RestrictedVariables.user_meta__wpdb__usermeta" />
-        <exclude name="WordPress.VIP.PostsPerPage.posts_per_page_posts_per_page" />
         <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
         <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
         <exclude name="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid" />
@@ -40,9 +37,5 @@
         <properties>
             <property name="text_domain" type="array" value="lipe" />
         </properties>
-    </rule>
-    <!-- Remove this unless you really know what you are outputting -->
-    <rule ref="WordPress.XSS.EscapeOutput.OutputNotEscaped">
-        <type>warning</type>
     </rule>
 </ruleset>
