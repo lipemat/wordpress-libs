@@ -3,48 +3,58 @@
 namespace Lipe\Lib\Api;
 
 use Lipe\Lib\Traits\Singleton;
+use Lipe\Lib\Traits\Version;
+use Lipe\Lib\Util\Arrays;
 
 /**
  * Simple api endpoint.
  *
+ * While you could reverse engineer this class for some really creative implementations,
+ * in PHP you really only need to use the 2 helper methods.
+ * 1. `get_action`
+ * 2. `get_url`
+ *
+ * For JS requests you will need to pass the following parameters to your JS App.
+ * This is assuming you want to use this instead of the default WP AJAX functionality.
+ * 1. ENDPOINT - OR Pass full URL via `get_root_url` or URLS specific to endpoints via `get_url`.
+ * 2. FORMAT (optional if using ASSOC arrays) - $_REQUEST key
+ * 3. FORMAT_ASSOC (optional if using ASSOC arrays) - $_REQUEST value
+ *
+ *
  * @example Api::init();
- * @example add_action( Api::in()->get_actions( %action% ), %callable% )
- *          Then go to %site_root%/api/%action% to use the action
+ *          add_action( Api::in()->get_action( 'space' ), 'print_r' )
+ *          Api::in()->get_url( 'space', [ 'first' => 'FY', 'second' => 'TY'] );
  *
  */
 class Api {
 	use Singleton;
+	use Version;
 
-	protected const NAME = 'lipe/lib/api/api';
+	public const NAME = 'lipe/lib/api/api';
 
-	protected const VERSION = 2;
+	public const ENDPOINT = 'api';
+	public const FORMAT       = '_format';
+	public const FORMAT_ASSOC = 'assoc';
+
+	protected const VERSION  = '2.1.0';
+
+
 
 	/**
 	 * Are we currently handling an api request?
+	 *
 	 * @var bool
 	 */
 	protected $doing_api = false;
 
 
 	public function hook() : void {
-		add_action( 'init', function() {
+		add_action( 'init', function () {
 			$this->add_endpoint();
-		});
-		add_action( 'parse_request', function( \WP $wp ) {
+		} );
+		add_action( 'parse_request', function ( \WP $wp ) {
 			$this->handle_request( $wp );
-		});
-	}
-
-
-	/**
-	 * Get the name of the action to register with `add_action()`.
-	 *
-	 * @param string $action
-	 *
-	 * @return string
-	 */
-	public function get_action( string $action ) : string {
-		return "lipe/lib/api/api/{$action}";
+		} );
 	}
 
 
@@ -59,24 +69,68 @@ class Api {
 
 
 	/**
-	 * Get the url used to hit the api endpoint.
+	 * Get the name of the action to register with `add_action()`.
 	 *
-	 * @param string  $action
-	 * @param   array $data - params to be added to url
-	 *
-	 * @example get_api_url( 'load_more', [ 'page', 2 ] );
+	 * @param string $endpoint - Same action provided to the `get_url` method of this class.
+	 *                         Should be a url friendly slug which is unique to this API system.
 	 *
 	 * @return string
 	 */
-	public function get_api_url( ?string $action = null, array $data = [] ) : string {
-		$url = trailingslashit( trailingslashit( get_home_url() ) . 'api/' . $action );
-		foreach ( $data as $_param ) {
-			$url .= $_param . '/';
+	public function get_action( string $endpoint ) : string {
+		return "lipe/lib/api/api/{$endpoint}";
+	}
+
+
+	/**
+	 * Get the url used to hit the api endpoint.
+	 *
+	 * @param string $endpoint - Same action provided to the `get_action` method of this class
+	 *                         when calling `add_action()`.
+	 *                         Should be a url friendly slug which is unique to this API system.
+	 *
+	 * @param array  $data     - Data passed via the url separated by '/'.
+	 *                         Numeric arrays will have values spread in order.
+	 *                         Associative arrays will resolve to an
+	 *                         array of key values, just as provided.
+	 *
+	 * @since   2.11.0
+	 *
+	 * @example get_api_url( 'load_more', [ 'page => 2 ] );
+	 *
+	 * @example get_api_url( 'load_more', [ 'page', 2 ] );
+	 * @return string
+	 */
+	public function get_url( ?string $endpoint = null, array $data = [] ) : string {
+		$url = \trailingslashit( $this->get_root_url() . $endpoint );
+
+		if ( array_values( $data ) === $data ) {
+			$url .= trailingslashit( implode( '/', $data ) );
+
+		} else {
+			\array_walk_recursive( $data, function ( $value, $param ) use ( &$url ) {
+				$url .= "{$param}/{$value}/";
+			} );
+			$url = add_query_arg( [ static::FORMAT => static::FORMAT_ASSOC ], $url );
 		}
 
 		return $url;
 	}
 
+
+	/**
+	 * Get the url to root endpoint of this api (not route specific).
+	 *
+	 * Could be used independently to pass to a JS APP if you have a lot
+	 * of endpoints and don't want provided a full URL From `get_url`.
+	 *
+	 * @since 2.11.0
+	 *
+	 * @return string
+	 */
+	public function get_root_url() : string {
+		return trailingslashit( trailingslashit( get_home_url() ) . static::ENDPOINT  );
+
+	}
 
 	/**
 	 * Register the 'api' endpoint on the root of the site.
@@ -88,10 +142,7 @@ class Api {
 	protected function add_endpoint() : void {
 		add_rewrite_endpoint( 'api', EP_ROOT, self::NAME );
 
-		if ( version_compare( get_option( self::NAME, '0.0.1' ), self::VERSION ) === - 1 ) {
-			flush_rewrite_rules();
-			update_option( self::NAME, self::VERSION );
-		}
+		$this->run_for_version( 'flush_rewrite_rules', static::VERSION );
 	}
 
 
@@ -112,8 +163,12 @@ class Api {
 
 		$this->doing_api = true;
 
-		$args     = explode( '/', $wp->query_vars[ self::NAME ] );
+		$args     = array_filter( explode( '/', $wp->query_vars[ self::NAME ] ) );
 		$endpoint = array_shift( $args );
+
+		if ( ! empty( $_REQUEST[ static::FORMAT ] ) && static::FORMAT_ASSOC === $_REQUEST[ static::FORMAT ] ) {
+			$args = Arrays::in()->array_chunk_to_associative( $args );
+		}
 
 		do_action( $this->get_action( $endpoint ), $args );
 
@@ -123,4 +178,13 @@ class Api {
 		}
 	}
 
+
+	/**
+	 * @deprecated 2.11.0
+	 */
+	public function get_api_url( ?string $action = null, array $data = [] ) : string {
+		_deprecated_function( 'Api::get_api_url', '2.11.0', 'Api::get_url' );
+
+		return $this->get_url( $action, $data );
+	}
 }
