@@ -14,6 +14,34 @@ class Arrays {
 
 
 	/**
+	 * Turn a numeric array of values into an associative array with
+	 * the odd values being keys for the even values.
+	 *
+	 * @example ['page', 3, 'category', 6 ] becomes [ 'page' => 3, 'category' => 6 ]
+	 *
+	 * @since 2.11.0
+	 *
+	 * @param array $array
+	 *
+	 * @return array
+	 */
+	public function array_chunk_to_associative( array $array ) : array {
+		$assoc = [];
+		foreach ( array_chunk( $array, 2 ) as $pair ) {
+			if ( count( $pair ) === 2 ) {
+				[ $key, $value ] = $pair;
+				$assoc[ $key ] = $value;
+			} else {
+				$assoc[] = array_shift( $pair );
+			}
+
+		}
+
+		return $assoc;
+
+	}
+
+	/**
 	 * Apply a callback to all elements of an array recursively.
 	 *
 	 * Similar to `array_walk_recursive` except this returns the result as
