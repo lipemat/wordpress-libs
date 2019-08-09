@@ -126,6 +126,9 @@ class Group extends Field {
 	 * @return Group
 	 */
 	public function layout( string $layout ) : Group {
+		if ( 'block' === $layout ) {
+			return $this;
+		}
 		Layout::init_once();
 		if ( $this->tab ) {
 			$this->tab_content_cb = [ Layout::in(), 'render_group_callback' ];
