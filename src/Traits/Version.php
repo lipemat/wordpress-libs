@@ -22,6 +22,15 @@ trait Version {
 	private $_version = '0.0.1';
 
 
+	/**
+	 * Run a function one time for a particular version.
+	 *
+	 * @param callable $func     - The function to call if it has not yet been called for this version.
+	 * @param string   $version  - The version to verify against.
+	 * @param mixed    ...$extra - Any number of arguments to pass to the called function.
+	 *
+	 * @return mixed
+	 */
 	protected function run_for_version( callable $func, string $version, ...$extra ) {
 		$this->_version = $version;
 		if ( $this->update_required() ) {
@@ -32,6 +41,10 @@ trait Version {
 	}
 
 
+	/**
+	 * @internal
+	 *
+	 */
 	private function update_version() : void {
 		$versions                                    = $this->get_versions();
 		$versions[ $this->get_version_identifier() ] = $this->_version;
@@ -40,6 +53,11 @@ trait Version {
 	}
 
 
+	/**
+	 * @internal
+	 *
+	 * @return bool
+	 */
 	private function update_required() : bool {
 		$versions = $this->get_versions();
 
@@ -47,6 +65,11 @@ trait Version {
 	}
 
 
+	/**
+	 * @internal
+	 *
+	 * @return array
+	 */
 	private function get_versions() : array {
 		return get_option( $this->_option, [] );
 	}
@@ -55,7 +78,6 @@ trait Version {
 	/**
 	 * @notice Anonymous classes do not have identifiers and may not be used.
 	 *
-	 * @throws \ReflectionException
 	 * @return string
 	 */
 	private function get_version_identifier() : string {
