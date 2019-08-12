@@ -5,20 +5,9 @@ namespace Lipe\Lib\Rest_Api;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * Taxonomies
- *
- * Add taxonomy endpoints to get terms of an allowed taxonomy
- *
- * @example /wp-json/taxonomies/v1/terms/post_tag
- *
- * @example Add additional taxonomy support via
- *          $this->add_taxonomy( 'category' );
- *
  * @deprecated in favor of simply using the built in functionality.
  *             For example if you set `show_in_rest` to `true` when registering
  *             a taxonomy, the terms are available via `/wp-json/wp/v2/<taxonomy>`.
- *
- *
  */
 class Taxonomies {
 	use Singleton;
@@ -30,6 +19,8 @@ class Taxonomies {
 
 
 	public function hook() : void {
+		\_deprecated_file( __FILE__, '2.11.0', null, 'The ' . __CLASS__ . ' has been deprecated in favor of using the built in functionality for retrieving terms. If you set `show_in_rest` to `true` when registering a taxonomy, the terms are available via `/wp-json/wp/v2/<taxonomy>`' );
+
 		add_action( 'rest_api_init', [ $this, 'register_routes' ], 10 );
 	}
 
