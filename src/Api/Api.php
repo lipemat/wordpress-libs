@@ -185,6 +185,6 @@ class Api {
 	public function get_api_url( ?string $action = null, array $data = [] ) : string {
 		_deprecated_function( 'Api::get_api_url', '2.11.0', 'Api::get_url' );
 
-		return $this->get_url( $action, $data );
+		return $this->get_url( $action, array_values( $data ) );
 	}
 }
