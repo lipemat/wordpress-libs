@@ -14,6 +14,10 @@ use Lipe\Lib\Traits\Singleton;
  * @example Add additional taxonomy support via
  *          $this->add_taxonomy( 'category' );
  *
+ * @deprecated in favor of simply using the built in functionality.
+ *             For example if you set `show_in_rest` to `true` when registering
+ *             a taxonomy, the terms are available via `/wp-json/wp/v2/<taxonomy>`.
+ *
  *
  */
 class Taxonomies {

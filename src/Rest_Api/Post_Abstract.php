@@ -72,16 +72,27 @@ abstract class Post_Abstract {
 	}
 
 
+	/**
+	 * @deprecated in favor of sending _embed to the endpoint
+	 *             https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_embed
+	 */
 	public function render_thumbnail( $object, $field_name, $request ) {
 		return get_the_post_thumbnail_url( $object['id'] );
 	}
 
-
+	/**
+	 * @deprecated in favor of sending `_embed` to the endpoint
+	 *             https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_embed
+	 */
 	public function render_terms( $object, $field_name, $request ) {
 		return wp_get_post_terms( $object['id'], $this->taxonomies );
 	}
 
 
+	/**
+	 * @deprecated in favor of using `register_meta` to define which keys show up.
+	 *             https://codex.wordpress.org/Function_Reference/register_meta
+	 */
 	public function render_meta( $object, $field_name, $request ) {
 		$meta = get_post_meta( $object['id'] );
 		ksort( $meta );
