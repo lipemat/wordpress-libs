@@ -3,14 +3,9 @@
 namespace Lipe\Lib\Rest_Api;
 
 /**
- * Post_Abstract
  *
- * Extend into any post type class
- * Call the hook method to register actions
- *
- * @example A few examples in the Examples folder
- *
- * @see     the protected properties which may be overridden
+ * @deprecated The majority of this class is deprecated and anything remaining could be created
+ *             on a case by case basis and does not make to exist here any longer.
  *
  */
 abstract class Post_Abstract {
@@ -38,6 +33,8 @@ abstract class Post_Abstract {
 
 
 	public function hook() : void {
+		\_deprecated_file( __FILE__, '2.11.0', null, 'The ' . __CLASS__ . ' has been deprecated as the majority of it\'s functionality is no longer needed. If you still need something from here, port it into your parent class as this file will be removed in version 3' );
+
 		add_action( 'rest_api_init', [ $this, 'add_fields' ] );
 		add_filter( 'rest_prepare_' . static::POST_TYPE, [ $this, 'add_stripped_content' ], 10, 3 );
 		add_filter( 'rest_prepare_' . static::POST_TYPE, [ $this, 'add_stripped_content' ], 10, 3 );

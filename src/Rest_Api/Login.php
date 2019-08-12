@@ -5,7 +5,7 @@ namespace Lipe\Lib\Rest_Api;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * Login
+ * Login to the Rest Api via standard authentication.
  *
  * @notice on fast cgi install, this must be in the .htaccess for this to work
  *
@@ -15,10 +15,10 @@ use Lipe\Lib\Traits\Singleton;
  * RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
  * </IfModule>
  *
+ * @notice DO NOT use this if you are not on https!
  *
- * @see    AuthTable
- *
- *
+ * @see    Auth_Table
+ * @see    _Login.md
  */
 class Login {
 	use Singleton;
