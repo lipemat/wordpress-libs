@@ -10,17 +10,26 @@ namespace Lipe\Lib\Util;
  *
  * @since  2.12.0
  *
- * @link https://gist.github.com/ve3/0f77228b174cf92a638d81fddb17189d
+ * @link   https://gist.github.com/ve3/0f77228b174cf92a638d81fddb17189d
  *       Reference
+ * @see `js/src/helpers/crypt`
  *
  */
 class Crypt {
+	protected const ALGORITHM  = 'sha512';
+	protected const ITERATIONS = 999;
 
-	private $key;
+	/**
+	 * Recommended AES-128-CBC, AES-192-CBC, AES-256-CBC
+	 * due to there is no `openssl_cipher_iv_length()` function in JavaScript
+	 * and all of these methods are known as 16 in iv_length.
+	 */
+	protected const METHOD = 'AES-256-CBC';
 
-	private const ALGORITHM  = 'sha512';
-	private const METHOD     = 'AES-256-CBC';
-	private const ITERATIONS = 999;
+	/**
+	 * @var string The encryption key.
+	 */
+	protected $key;
 
 
 	/**
@@ -67,10 +76,10 @@ class Crypt {
 	 * @return string
 	 */
 	public function encrypt( string $string ) : ?string {
-		$iv   = openssl_random_pseudo_bytes( openssl_cipher_iv_length( self::METHOD ) );
-		$salt = openssl_random_pseudo_bytes( 256 );
-
-		if ( false === $salt || false === $iv ) {
+		try {
+			$iv   = random_bytes( openssl_cipher_iv_length( self::METHOD ) );
+			$salt = random_bytes( 256 );
+		} catch ( \Exception $e ) {
 			return null;
 		}
 
