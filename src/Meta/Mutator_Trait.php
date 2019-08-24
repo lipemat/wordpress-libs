@@ -63,13 +63,19 @@ trait Mutator_Trait {
 	 * using the meta repo to map the appropriate data type.
 	 *
 	 * @param string $key
-	 * @param mixed  $value
+	 * @param mixed|callable $value - If a callable is passed it will be called with the
+	 *                              previous value as the only argument.
 	 *
+	 * @since 2.12.0 (Support passing a callback as the second argument)
 	 *
 	 * @return void
 	 */
 	public function update_meta( string $key, $value ) : void {
-		Repo::instance()->update_value( $this->get_id(), $key, $value, $this->get_meta_type() );
+		if ( \is_callable( $value ) ) {
+			Repo::instance()->update_value( $this->get_id(), $key, $value( $this->get_meta( $key) ), $this->get_meta_type() );
+		} else {
+			Repo::instance()->update_value( $this->get_id(), $key, $value );
+		}
 	}
 
 
@@ -91,6 +97,13 @@ trait Mutator_Trait {
 	}
 
 
+	/**
+	 * @param $field_id
+	 * @param mixed|callable $value - If a callable is passed it will be called with the
+	 *                              previous value as the only argument.
+	 *
+	 * @since 2.12.0 (Support passing a callback as the second argument)
+	 */
 	public function offsetSet( $field_id, $value ) : void {
 		$this->update_meta( $field_id, $value );
 	}
