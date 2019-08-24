@@ -74,7 +74,7 @@ trait Mutator_Trait {
 	 */
 	public function update_meta( string $key, ...$value ) : void {
 		if ( is_callable( $value[0] ) ) {
-			$value[0] = $this->get_meta( $key, $value[1] ?? null );
+			$value[0] = $value[0]( $this->get_meta( $key, $value[1] ?? null ) );
 		}
 		Repo::instance()->update_value( $this->get_id(), $key, $value[0], $this->get_meta_type() );
 	}
