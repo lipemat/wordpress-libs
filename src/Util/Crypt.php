@@ -57,12 +57,12 @@ class Crypt {
 		try {
 			$salt     = hex2bin( $json['salt'] );
 			$iv       = hex2bin( $json['iv'] );
-			$hash_key = hex2bin( hash_pbkdf2( self::ALGORITHM, $this->key, $salt, self::ITERATIONS, $this->get_key_size() ) );
+			$hash_key = hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, static::ITERATIONS, $this->get_key_size() ) );
 		} catch ( \Exception $e ) {
 			return null;
 		}
 
-		return openssl_decrypt( base64_decode( $json['ciphertext'] ), self::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv );
+		return openssl_decrypt( base64_decode( $json['ciphertext'] ), static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv );
 	}
 
 
@@ -77,19 +77,19 @@ class Crypt {
 	 */
 	public function encrypt( string $string ) : ?string {
 		try {
-			$iv   = random_bytes( openssl_cipher_iv_length( self::METHOD ) );
+			$iv   = random_bytes( openssl_cipher_iv_length( static::METHOD ) );
 			$salt = random_bytes( 256 );
 		} catch ( \Exception $e ) {
 			return null;
 		}
 
-		$hash_key = hex2bin( hash_pbkdf2( self::ALGORITHM, $this->key, $salt, self::ITERATIONS, $this->get_key_size() ) );
+		$hash_key = hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, static::ITERATIONS, $this->get_key_size() ) );
 
 		$output = [
-			'ciphertext' => base64_encode( openssl_encrypt( $string, self::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv ) ),
+			'ciphertext' => base64_encode( openssl_encrypt( $string, static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv ) ),
 			'iv'         => bin2hex( $iv ),
 			'salt'       => bin2hex( $salt ),
-			'iterations' => self::ITERATIONS,
+			'iterations' => static::ITERATIONS,
 		];
 		unset( $encrypted, $iterations, $iv, $salt, $hash_key );
 
@@ -105,7 +105,7 @@ class Crypt {
 	 * @return int
 	 */
 	protected function get_key_size() : int {
-		return (int) abs( filter_var( self::METHOD, FILTER_SANITIZE_NUMBER_INT ) ) / 4;
+		return (int) abs( filter_var( static::METHOD, FILTER_SANITIZE_NUMBER_INT ) ) / 4;
 	}
 
 
