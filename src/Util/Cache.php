@@ -76,6 +76,7 @@ class Cache {
 			return;
 		}
 		wp_cache_flush();
+		do_action( 'lipe/lipe/util/cache/flush' );
 		wp_redirect( remove_query_arg( [ self::QUERY_ARG, '_wpnonce' ] ) );
 		die();
 	}
