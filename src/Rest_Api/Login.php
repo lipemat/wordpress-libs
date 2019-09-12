@@ -11,8 +11,10 @@ use Lipe\Lib\Traits\Singleton;
  *
  * ## To allow our rest api authentication to work on fast cgi installs
  * <IfModule mod_fcgid.c>
- * RewriteCond %{HTTP:Authorization} .
- * RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+ *  CGIPassAuth on
+ *  ##-- alternate
+ *  #RewriteCond %{HTTP:Authorization} .
+ *  # RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
  * </IfModule>
  *
  * @notice DO NOT use this if you are not on https!
