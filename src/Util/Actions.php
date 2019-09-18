@@ -33,7 +33,7 @@ class Actions {
 	 */
 	public function add_filter_as_action( string $filter, callable $callable, int $priority = 10, int $accepted_args = 1 ) : void {
 		\add_filter( $filter, function ( ...$args ) use ( $callable ) {
-			\call_user_func( $callable, ...$args );
+			$callable( ...$args );
 
 			return reset( $args );
 		}, $priority, $accepted_args );
