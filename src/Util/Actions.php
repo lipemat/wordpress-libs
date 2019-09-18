@@ -145,7 +145,7 @@ class Actions {
 	public function remove_action_always( string $action, callable $callable, int $priority = 10 ) : void {
 		\add_action( $action, function () use ( $action, $callable, $priority ) {
 			\remove_action( $action, $callable, $priority );
-		}, 0 );
+		}, -1 );
 	}
 
 
@@ -167,7 +167,7 @@ class Actions {
 			\remove_filter( $filter, $callable, $priority );
 
 			return $value;
-		}, 0 );
+		}, -1 );
 	}
 
 }
