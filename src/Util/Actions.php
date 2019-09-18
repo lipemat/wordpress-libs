@@ -22,12 +22,12 @@ class Actions {
 	 * `apply_filters` as an `do_actions` and call a function
 	 * without actually changing the original value.
 	 *
-	 * @since 1.12.0
-	 *
 	 * @param string   $filter
 	 * @param callable $callable
 	 * @param int      $priority
 	 * @param int      $accepted_args
+	 *
+	 * @since 1.12.0
 	 *
 	 * @return void
 	 */
@@ -39,15 +39,16 @@ class Actions {
 		}, $priority, $accepted_args );
 	}
 
+
 	/**
 	 * Add a callable to multiple actions at once
-	 *
-	 * @since 1.9.0
 	 *
 	 * @param array    $actions
 	 * @param callable $callable
 	 * @param int      $priority
 	 * @param int      $accepted_args
+	 *
+	 * @since 1.9.0
 	 *
 	 * @return void
 	 */
@@ -61,12 +62,12 @@ class Actions {
 	/**
 	 * Add a callable to multiple filters at once
 	 *
-	 * @since 1.9.0
-	 *
 	 * @param array    $filters
 	 * @param callable $callable
 	 * @param int      $priority
 	 * @param int      $accepted_args
+	 *
+	 * @since 1.9.0
 	 *
 	 * @return void
 	 */
@@ -84,22 +85,23 @@ class Actions {
 	 * If you call this method multiple times with the same $action, $callable, $priority
 	 * the filter will also fire only once.
 	 *
-	 * @since 1.8.0
-	 *
 	 * @param string   $filter
 	 * @param callable $callable
 	 * @param int      $priority
 	 * @param int      $accepted_args
 	 *
+	 * @since 1.8.0
+	 *
 	 * @return void
 	 */
 	public function add_single_filter( string $filter, callable $callable, int $priority = 10, int $accepted_args = 1 ) : void {
-		\add_filter( $filter, $callable, $priority, $accepted_args );
-		\add_filter( $filter, function ( $value ) use ( $filter, $callable, $priority ) {
-			\remove_filter( $filter, $callable, $priority );
+		$function = function ( ...$args ) use ( $filter, $callable, $priority, &$function ) {
+			\remove_filter( $filter, $function, $priority );
 
-			return $value;
-		}, $priority );
+			return $callable( ...$args );
+
+		};
+		\add_filter( $filter, $function, $priority, $accepted_args );
 	}
 
 
@@ -110,21 +112,22 @@ class Actions {
 	 * If you call this method multiple times with the same $action, $callable, $priority
 	 * the action will also fire only once.
 	 *
-	 * @since 1.8.0
-	 *
-	 *
 	 * @param string   $action
 	 * @param callable $callable
 	 * @param int      $priority
 	 * @param int      $accepted_args
 	 *
+	 * @since 1.8.0
+	 *
+	 *
 	 * @return void
 	 */
 	public function add_single_action( string $action, callable $callable, int $priority = 10, int $accepted_args = 1 ) : void {
-		\add_action( $action, $callable, $priority, $accepted_args );
-		\add_action( $action, function () use ( $action, $callable, $priority ) {
-			\remove_action( $action, $callable, $priority );
-		}, $priority );
+		$function = function ( ...$args ) use ( $action, $callable, $priority, &$function ) {
+			\remove_action( $action, $function, $priority );
+			$callable( ...$args );
+		};
+		\add_action( $action, $function, $priority, $accepted_args );
 	}
 
 
@@ -151,11 +154,11 @@ class Actions {
 	 * This may be called before or after the add_filter() is
 	 * called which is being removed.
 	 *
-	 * @see \remove_filter();
-	 *
 	 * @param string   $filter
 	 * @param callable $callable
 	 * @param int      $priority
+	 *
+	 * @see \remove_filter();
 	 *
 	 * @return void
 	 */
