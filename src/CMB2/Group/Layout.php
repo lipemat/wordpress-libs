@@ -255,6 +255,13 @@ class Layout {
 					border-top: #DFDFDF solid 1px;
 				}
 
+				.cmb-group-table .cmb-th {
+					width: 50%;
+					padding: 0 10px;
+					margin: 0 0 -10px 0;
+					border-bottom: 1px solid #e9e9e9
+				}
+
 				.cmb-group-table .cmb-group-row-fields {
 					padding: 0 !important;
 					margin: 0 !important;

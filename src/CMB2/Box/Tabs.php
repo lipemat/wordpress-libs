@@ -449,15 +449,16 @@ class Tabs {
 				padding: 1.5em;
 			}
 
-			.cmb-tabs .cmb-th {
-				width: 18%;
-			}
-
 			.cmb-tabs .cmb-th,
 			.cmb-tabs .cmb-td {
-				padding: 0 2% 0 2%;
+				padding: 0 2%;
 				-webkit-box-sizing: border-box;
 				box-sizing: border-box;
+			}
+
+			.cmb-tabs .cmb-th {
+				width: 50%;
+				padding: 0 10px;
 			}
 
 			.cmb-tabs .cmb-th + .cmb-td,
