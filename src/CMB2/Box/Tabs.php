@@ -457,8 +457,7 @@ class Tabs {
 			}
 
 			.cmb-tabs .cmb-th {
-				width: 50%;
-				padding: 0 10px;
+				width: 18%;
 			}
 
 			.cmb-tabs .cmb-th + .cmb-td,
