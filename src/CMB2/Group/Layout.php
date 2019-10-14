@@ -52,7 +52,7 @@ class Layout {
 			$class = $desc ? ' cmb-group-description' : '';
 			echo '<div class="cmb-row' . esc_attr( $class ) . '"><div class="cmb-th">';
 			if ( $label ) {
-				echo '<h2 class="cmb-group-name">' . esc_html( $label ) . '</h2>';
+				echo '<h2 class="cmb-group-name cmb-layout-header">' . esc_html( $label ) . '</h2>';
 			}
 			if ( $desc ) {
 				echo '<p class="cmb2-metabox-description">' . esc_html( $desc ) . '</p>';
@@ -334,7 +334,15 @@ class Layout {
 					padding: 0 !important;
 				}
 
-
+				.cmb2-options-page .cmb-repeatable-group .cmb-group-name,
+				#poststuff .cmb-repeatable-group h2.cmb-group-name {
+					font-size: 19px;
+					font-weight: 600;
+					margin: 0 0 3px 0;
+				}
+				#poststuff .cmb-repeatable-group h2.cmb-group-name {
+					margin: 0 0 3px -13px;
+				}
 			</style>
 			<?php
 		}, __METHOD__ );
