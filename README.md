@@ -1,7 +1,7 @@
 # WordPress Libs
 
 <p>
-<a href="https://github.com/lipemat/wordpress-libs/releases">
+<a href="https://github.com/lipemat/wordpress-libs/releases/latest">
 <img src="https://img.shields.io/packagist/v/lipemat/wordpress-libs.svg?label=version" />
 </a>
     <img alt="" src="https://img.shields.io/badge/wordpress->=4.8.0-green.svg">
