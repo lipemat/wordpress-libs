@@ -73,6 +73,7 @@ class Styles {
 					\wp_enqueue_script( 'livereload', 'http://localhost:35729/livereload.js', [], \time(), true );
 				} );
 			}
+			$this->async_javascript( 'livereload' );
 		}
 	}
 
