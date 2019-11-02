@@ -2,11 +2,16 @@
 
 namespace Lipe\Lib\Theme;
 
+use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
 use Lipe\Lib\Util\Actions;
 
 class Styles {
 	use Singleton;
+	use Memoize;
+
+	protected static $deffer = [];
+	protected static $async = [];
 
 
 	/**
@@ -74,17 +79,17 @@ class Styles {
 
 	/**
 	 * Add a google font the head of the page in the front end and admin
-	 * To use other providers such as typekit see @link and create custom
-	 * This method is for google fonts only
+	 * To use other providers such as typekit see @param string|array $families - the family to include
 	 *
 	 * @link    https://github.com/typekit/webfontloader
 	 *
-	 * @param string|array $families - the family to include
+	 * @link    and create custom
+	 * This method is for google fonts only
 	 *
 	 * @example 'Droid Serif,Oswald'
 	 * @example [ 'Oswald','Source+Sans+Pro' ]
 	 *
-	 * @notice Must called before the `wp_enqueue_scripts` hook completes.
+	 * @notice  Must called before the `wp_enqueue_scripts` hook completes.
 	 */
 	public function add_font( $families ) : void {
 		if ( ! \is_array( $families ) ) {
@@ -98,10 +103,75 @@ class Styles {
 			\wp_enqueue_script( 'google-webfonts', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js' ); //phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 			\wp_add_inline_script( 'google-webfonts', 'WebFont.load({
 				google: {
-					families:' . json_encode( $families ) . '
+					families:' . json_encode( $families, JSON_THROW_ON_ERROR, 512 ) . '
 				}
 			})' );
 		} );
+	}
 
+
+	/**
+	 * Async an enqueued script by handle.
+	 *
+	 * May be called before or after `wp_enqueue_script` but must be called
+	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
+	 * on if enqueued for footer of header.
+	 *
+	 * Downloads the file during HTML execution and executes it only after HTML parsing is completed.
+	 * Will not block the browser during download.
+	 * Good replacement for any script which uses a `jQuery(document).ready` or window.onload.
+	 * Defer scripts are also guaranteed to execute in the order they appear in the document
+	 * but after any non defer script.
+	 *
+	 * A positive effect of this attribute is that the DOM will be available for your script.
+	 *
+	 * @since 2.13.0
+	 *
+	 * @param string $handle - The handle used to enqueued this script.
+	 *
+	 *
+	 * @return void
+	 */
+	public function defer_javascript( string $handle ) : void {
+		static::$deffer[] = $handle;
+		$this->once( function () {
+			add_filter( 'script_loader_tag', function ( $tag, $handle, $src ) {
+				if ( in_array( $handle, static::$deffer, true ) ) {
+					return str_replace( '<script', '<script defer="defer"', $tag );
+				}
+				return $tag;
+			}, 11, 3 );
+		}, __METHOD__ );
+	}
+
+
+	/**
+	 * Defer an enqueued script by handle.
+	 *
+	 * May be called before or after `wp_enqueue_script` but must be called
+	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
+	 * on if enqueued for footer of header.
+	 *
+	 * Downloads the file during HTML execution and executes it when finished downloading.
+	 * Will not block the browser during download.
+	 * Executes at an unpredictable time so must be self contained.
+	 * Good for scripts such as Google Analytics.
+	 *
+	 * @since 2.13.0
+	 *
+	 * @param string $handle - The handle used to enqueued this script.
+	 *
+	 * @return void
+	 */
+	public function async_javascript( string $handle) : void {
+		static::$async[] = $handle;
+		$this->once( function () {
+			add_filter( 'script_loader_tag', function ( $tag, $handle, $src ) {
+				if ( in_array( $handle, static::$async, true ) ) {
+					return str_replace( '<script', '<script async="async"', $tag );
+				}
+				return $tag;
+			}, 11, 3 );
+		}, __METHOD__ );
 	}
 }
