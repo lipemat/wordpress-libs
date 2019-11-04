@@ -10,8 +10,10 @@ class Styles {
 	use Singleton;
 	use Memoize;
 
-	protected static $deffer = [];
 	protected static $async = [];
+	protected static $body_class = [];
+	protected static $deffer = [];
+
 
 
 	/**
@@ -108,6 +110,26 @@ class Styles {
 				}
 			})' );
 		} );
+	}
+
+
+	/**
+	 * Add a class to the body.
+	 *
+	 * Must be called before `get_body_class` which is most likely called
+	 * in the theme's "header.php".
+	 *
+	 * @since 2.13.0
+	 *
+	 * @param string $class
+	 */
+	public function add_body_class( string $class ) : void {
+		static::$body_class[] = $class;
+		$this->once( function () {
+			add_filter( 'body_class', function ( $classes ) {
+				return array_unique( array_merge( static::$body_class, $classes ) );
+			}, 11 );
+		}, __METHOD__ );
 	}
 
 
