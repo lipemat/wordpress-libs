@@ -158,12 +158,12 @@ class Styles {
 	public function defer_javascript( string $handle ) : void {
 		static::$deffer[] = $handle;
 		$this->once( function () {
-			add_filter( 'script_loader_tag', function ( $tag, $handle, $src ) {
+			add_filter( 'script_loader_tag', function ( $tag, $handle ) {
 				if ( in_array( $handle, static::$deffer, true ) ) {
 					return str_replace( '<script', '<script defer="defer"', $tag );
 				}
 				return $tag;
-			}, 11, 3 );
+			}, 11, 2 );
 		}, __METHOD__ );
 	}
 
@@ -186,15 +186,43 @@ class Styles {
 	 *
 	 * @return void
 	 */
-	public function async_javascript( string $handle) : void {
+	public function async_javascript( string $handle ) : void {
 		static::$async[] = $handle;
 		$this->once( function () {
-			add_filter( 'script_loader_tag', function ( $tag, $handle, $src ) {
+			add_filter( 'script_loader_tag', function ( $tag, $handle ) {
 				if ( in_array( $handle, static::$async, true ) ) {
 					return str_replace( '<script', '<script async="async"', $tag );
 				}
 				return $tag;
-			}, 11, 3 );
+			}, 11, 2 );
+		}, __METHOD__ );
+	}
+
+
+	/**
+	 * Add script integrity to an enqueued script by handle.
+	 *
+	 * May be called before or after `wp_enqueue_script` but must be called
+	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
+	 * on if enqueued for footer of header.
+	 *
+	 * @param string $handle - The handle used to enqueued this script.
+	 *
+	 * @param string $integrity - Integrity hash to add
+	 *
+	 * @since 2.13.1
+	 *
+	 * @return void
+	 */
+	public function integrity_javascript( string $handle, string $integrity ) : void {
+		static::$async[] = $handle;
+		$this->once( function () use ( $integrity ) {
+			add_filter( 'script_loader_tag', function ( $tag, $handle ) use ( $integrity ) {
+				if ( in_array( $handle, static::$async, true ) ) {
+					return str_replace( '<script', '<script integrity="' . $integrity . '" crossorigin="anonymous"', $tag );
+				}
+				return $tag;
+			}, 11, 2 );
 		}, __METHOD__ );
 	}
 }
