@@ -485,6 +485,16 @@ class Field {
 	public $show_names;
 
 	/**
+	 * To override the box's `show_in_rest` for this field.
+	 *
+	 * @example WP_REST_Server::READABLE
+	 * @example WP_REST_Server::ALLMETHODS
+	 *
+	 * @var string|bool
+	 */
+	public $show_in_rest;
+
+	/**
 	 * To show this field or not based on the result of a function.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_on_cb
@@ -857,6 +867,30 @@ class Field {
 		return $this;
 	}
 
+
+	/**
+	 * Override the box's `show_in_rest` value for this field.
+	 *
+	 * If the box's `show_in_rest` is false and a non `false` parameter
+	 * is passed, the box's `show_in_rest` will be set to true and all
+	 * fields which do not have a `show_in_rest` specified will be set to false.
+	 *
+	 * @see Shorthand_Fields::selectively_show_in_rest()
+	 *
+	 * @param string|bool $methods
+	 *
+	 * @example WP_REST_Server::READABLE
+	 * @example WP_REST_Server::ALLMETHODS
+	 *
+	 * @since 2.15.0
+	 *
+	 * @return Field
+	 */
+	public function show_in_rest( $methods ) : Field {
+		$this->show_in_rest = $methods;
+		return $this;
+
+	}
 
 	/**
 	 * To show this field or not based on the result of a function.

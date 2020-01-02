@@ -1,16 +1,10 @@
 <?php
-/**
- * Shorthand_Fields.php
- *
- * @author  mat
- * @since   12/6/2017
- *
- * @package Lipe\Lib\CMB2 *
- */
-
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\Traits\Memoize;
+
 trait Shorthand_Fields {
+	use Memoize;
 
 	/**
 	 * For shorthand fields that don't call $this->add_field
@@ -24,23 +18,25 @@ trait Shorthand_Fields {
 
 
 	/**
-	 * Hook into cmb2_init to register all the shorthand fields
-	 * We use cmb2_init instead of cmb2_admin_init so this may be used in the admin
+	 * Hook into `cmb2_init` to register all the shorthand fields.
+	 *
+	 * We use `cmb2_init` instead of `cmb2_admin_init` so this may be used in the admin
 	 * or on the front end.
-	 * If the core plugin is registering fields via cmb2_admin_init only this will
+	 *
+	 * If the core plugin is registering fields via `cmb2_admin_init` only, this will
 	 * never get called anyway, so we can control if we need front end fields from there.
 	 *
 	 * @return void
 	 */
 	protected function hook() : void {
-		if ( ! has_action( 'cmb2_init', [ $this, 'register_shorthand_fields' ] ) ) {
-			//be sure to run register_shorthand fields on groups after the box
+		$this->once( function () {
+			// Be sure to run register_shorthand fields on groups after the box.
 			if ( self::class === Group::class ) {
 				add_action( 'cmb2_init', [ $this, 'register_shorthand_fields' ], 12 );
 			} else {
 				add_action( 'cmb2_init', [ $this, 'register_shorthand_fields' ], 11 );
 			}
-		}
+		}, __METHOD__ );
 	}
 
 
@@ -97,17 +93,41 @@ trait Shorthand_Fields {
 
 	/**
 	 * Registers any fields which were adding using $this->field()
-	 * when the cmb2_init action fires.
-	 * This allows for storing/appending a fields properties beyond
-	 * a basic return pattern
+	 * when the `cmb2_init` action fires.
+	 *
+	 * Allows for storing/appending a fields properties beyond
+	 * a basic return pattern.
 	 *
 	 * @internal
 	 *
 	 * @return void
 	 */
 	public function register_shorthand_fields() : void {
-		foreach ( $this->get_shorthand_fields() as $_field ) {
-			$this->add_field( $_field );
+		if ( empty( $this->show_in_rest ) ) {
+			array_map( [ $this, 'selectively_show_in_rest' ], $this->get_shorthand_fields() );
+		}
+
+		array_map( [ $this, 'add_field' ], $this->get_shorthand_fields() );
+	}
+
+
+	/**
+	 * If we have marked particular fields `show_in_rest` without marking the box,
+	 * this marks the box "true" which marking any non specified fields to "false".
+	 *
+	 * Makes selectively adding fields to rest much simpler.
+	 *
+	 * @internal
+	 *
+	 * @since 2.15.0
+	 *
+	 * @param Field $field
+	 */
+	private function selectively_show_in_rest( Field $field ) : void {
+		if ( ! empty( $field->show_in_rest ) ) {
+			$this->show_in_rest = true;
+		} else {
+			$field->show_in_rest = false;
 		}
 	}
 
