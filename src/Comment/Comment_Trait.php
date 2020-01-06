@@ -5,11 +5,24 @@ namespace Lipe\Lib\Comment;
 use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
- * Trait Comment_Trait
- *
- * @since   1.5.0
- *
- * @package Lipe\Lib\Comment
+ * @property array children
+ * @property string comment_agent
+ * @property string comment_approved
+ * @property string comment_author
+ * @property string comment_author_email
+ * @property string comment_author_IP
+ * @property string comment_author_url
+ * @property string comment_content
+ * @property string comment_date
+ * @property string comment_date_gmt
+ * @property string comment_ID
+ * @property string comment_karma
+ * @property string comment_parent
+ * @property string comment_post_ID
+ * @property string comment_type
+ * @property bool populate_children
+ * @property array post_fields
+ * @property string user_id
  */
 trait Comment_Trait {
 	use Mutator_Trait;
@@ -38,11 +51,13 @@ trait Comment_Trait {
 
 
 	/**
-	 * Get the WP comment from current context
-	 *
-	 * @return null|\WP_Comment
+	 * @deprecated In favor of $this->get_object()
 	 */
 	public function get_comment() : ?\WP_Comment {
+		return $this->get_object();
+	}
+
+	public function get_object() : ?\WP_Comment {
 		if ( null === $this->comment ) {
 			$this->comment = get_comment( $this->comment_id );
 		}

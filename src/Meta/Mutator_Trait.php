@@ -39,6 +39,19 @@ trait Mutator_Trait {
 	abstract public function get_meta_type() : string;
 
 
+	public function __get( $key ) {
+		if ( ! \method_exists( $this, 'get_object' ) ) {
+			throw new \ErrorException( 'Direct access to object properties is only available for objects with `get_object`: ' . __CLASS__ . ":{$key}" );
+		}
+		$object = $this->get_object();
+		if ( null !== $object && \property_exists( $object, $key ) ) {
+			return $object->{$key};
+		}
+		throw new \ErrorException( 'Undefined property: ' . __CLASS__ . ":{$key}" );
+	}
+
+
+
 	/**
 	 * Get a value of this object's meta field
 	 * using the meta repo to map the appropriate data type.
