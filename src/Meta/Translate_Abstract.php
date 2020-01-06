@@ -42,9 +42,9 @@ abstract class Translate_Abstract {
 	 *
 	 * @param string $field_id
 	 *
-	 * @return Field
+	 * @return null|Field
 	 */
-	abstract protected function get_field( string $field_id ) : Field;
+	abstract protected function get_field( string $field_id ) : ?Field;
 
 
 	/**

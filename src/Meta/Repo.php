@@ -67,10 +67,10 @@ class Repo extends Translate_Abstract {
 	 *
 	 * @param string $field_id
 	 *
-	 * @return Field
+	 * @return null|Field
 	 */
-	protected function get_field( string $field_id ) : Field {
-		return $this->fields[ $field_id ];
+	protected function get_field( string $field_id ) : ?Field {
+		return $this->fields[ $field_id ] ?? null;
 	}
 
 
@@ -82,7 +82,11 @@ class Repo extends Translate_Abstract {
 	 * @return string
 	 */
 	protected function get_field_data_type( string $field_id ) : string {
-		return $this->types[ $this->get_field( $field_id )->get_type() ];
+		$field = $this->get_field( $field_id );
+		if ( null !== $field ) {
+			return $this->types[ $field->get_type() ];
+		}
+		return self::DEFAULT;
 	}
 
 

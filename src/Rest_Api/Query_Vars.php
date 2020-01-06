@@ -12,7 +12,7 @@ use Lipe\Lib\Traits\Singleton;
  * them in filter, however this fixes backward compatibility for projects using the
  * filter param.
  *
- * @uses    Run init() on this class before the rest_api_init hook fires.
+ * @example  Run init() on this class before the rest_api_init hook fires.
  *
  * @example /wp-json/wp/v2/posts?cat=4
  * @example /wp-json/wp/v2/posts?filter[cat]=4
@@ -21,7 +21,7 @@ use Lipe\Lib\Traits\Singleton;
  * @author  Mat Lipe
  * @since   1.7.0
  *
- * @package Lipe\Project\Rest_Api
+ * @package Resignation\Rest_Api
  */
 class Query_Vars {
 	use Singleton;
@@ -63,7 +63,7 @@ class Query_Vars {
 			}
 		}
 
-		//limit to 100 no matter what
+		// Limit to 100 no matter what.
 		if ( isset( $args['posts_per_page'] ) && (int) $args['posts_per_page'] > 100 ) {
 			$args['posts_per_page'] = 100;
 		}
