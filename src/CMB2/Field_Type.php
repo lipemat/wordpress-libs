@@ -3,8 +3,8 @@
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Field\Checkbox;
-use Lipe\Lib\CMB2\Field\True_False;
 use Lipe\Lib\CMB2\Field\Term_Select_2;
+use Lipe\Lib\CMB2\Field\True_False;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
 
@@ -548,10 +548,18 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea
 	 *
+	 * @param int $rows - For small text areas use `textarea_small`.
+	 *
 	 * @return Field
 	 */
-	public function textarea() : Field {
-		return $this->set( [ 'type' => $this->textarea ], Repo::DEFAULT );
+	public function textarea( int $rows = null ) : Field {
+		if ( null !== $rows ) {
+			$this->field->attributes( [ 'rows' => $rows ] );
+		}
+
+		return $this->set( [
+			'type' => $this->textarea,
+		], Repo::DEFAULT );
 	}
 
 
@@ -577,9 +585,13 @@ class Field_Type {
 	 * @link https://www.ibenic.com/wordpress-code-editor#file-code-editor-js
 	 *
 	 * @param bool   $disable_codemirror    - disable code mirror handling in favor or a basic textbox
-	 * @param string $language              - [clike, css, diff, htmlmixed, http, javascript, jsx, markdown, gfm,
-	 *                                      nginx, php, sass, shell, sql, xml, yaml]
+	 * @param string $language  - Language mode to use (example: php)
+	 * @link https://codemirror.net/doc/manual.html#option_mode
+	 * @link https://codemirror.net/mode/
+	 *
 	 * @param array  $code_editor_arguments - The arguments are then passed to `wp.codeEditor.initialize` method.
+	 * @example textarea_code( false, 'javascript', [ 'codemirror' => [ 'lineNumbers' => false, 'theme' => 'cobalt' ] ] );
+	 *
 	 *
 	 * @return Field
 	 */
@@ -601,7 +613,7 @@ class Field_Type {
 		}
 		if ( ! empty( $code_editor_arguments ) ) {
 			$this->field->attributes( [
-				'data-codeeditor' => json_encode( $code_editor_arguments ),
+				'data-codeeditor' => json_encode( $code_editor_arguments, JSON_THROW_ON_ERROR, 512 ),
 			] );
 		}
 
@@ -1051,10 +1063,6 @@ class Field_Type {
 		$_args = [
 			'type' => $this->wysiwyg,
 		];
-		//because / in id breaks wp_editor()
-		if ( ! isset( $this->field->attributes['id'] ) ) {
-			$this->field->attributes( [ 'id' => str_replace( '/', '-', $this->field->get_id() ) ] );
-		}
 		if ( ! empty( $mce_options ) ) {
 			$_args['options'] = $mce_options;
 		}
