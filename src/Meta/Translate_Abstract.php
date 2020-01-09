@@ -56,22 +56,24 @@ abstract class Translate_Abstract {
 	 *
 	 * @since 2.9.0 - Use a fields group to get meta value if field is
 	 *                is a group field.
+	 * @since 2.15.0 - Use `escape_cb` if defined for this field.
 	 *
 	 * @return mixed
 	 */
 	protected function get_meta_value( $object_id, string $key, string $meta_type ) {
 		if ( isset( $this->fields[ $key ] ) && null !== $this->fields[ $key ]->group ) {
 			$group = $this->get_meta_value( $object_id, $this->fields[ $key ]->group, $meta_type );
-
-			return $group[ $this->group_row ][ $key ] ?? null;
+			$value = $group[ $this->group_row ][ $key ] ?? null;
+		} elseif ( 'option' === $meta_type ) {
+			$value = cmb2_options( $object_id )->get( $key, null );
+		} else {
+			$value = get_metadata( $meta_type, $object_id, $key, true );
 		}
 
-		if ( 'option' === $meta_type ) {
-			// CMB2 will pull a key from the option or network option automatically.
-			return cmb2_options( $object_id )->get( $key, null );
+		if ( isset( $this->fields[ $key ] ) && null !== $this->fields[ $key ]->escape_cb ) {
+			return \cmb2_get_field( $this->fields[ $key ]->box_id, $key )->escaped_value( null, $value );
 		}
-
-		return get_metadata( $meta_type, $object_id, $key, true );
+		return $value;
 	}
 
 
@@ -83,15 +85,21 @@ abstract class Translate_Abstract {
 	 * @param mixed      $value
 	 * @param string     $meta_type
 	 *
+	 * @since 2.15.0 - Use `sanitization_cb` if defined for this field.
+	 *
 	 * @return bool|int
 	 */
 	protected function update_meta_value( $object_id, string $key, $value, string $meta_type ) {
-		if ( isset( $this->fields[ $key ] ) && null !== $this->fields[ $key ]->group ) {
-			return $this->update_group_sub_field_value( $object_id, $key, $value, $meta_type );
+		if ( isset( $this->fields[ $key ] ) ) {
+			if ( null !== $this->fields[ $key ]->sanitization_cb ) {
+				$value = \cmb2_get_field( $this->fields[ $key ]->box_id, $key )->sanitization_cb( $value );
+			}
+			if ( null !== $this->fields[ $key ]->group ) {
+				return $this->update_group_sub_field_value( $object_id, $key, $value, $meta_type );
+			}
 		}
 
 		if ( 'option' === $meta_type ) {
-			// CMB2 will save a key from the option or network option automatically.
 			return cmb2_options( $object_id )->update( $key, $value, true );
 		}
 
@@ -110,13 +118,12 @@ abstract class Translate_Abstract {
 	 */
 	protected function delete_meta_value( $object_id, string $key, string $meta_type ) : void {
 		if ( isset( $this->fields[ $key ] ) && null !== $this->fields[ $key ]->group ) {
-			$group                             = $this->get_meta_value( $object_id, $this->fields[ $key ]->group, $meta_type );
+			$group = $this->get_meta_value( $object_id, $this->fields[ $key ]->group, $meta_type );
 			$group[ $this->group_row ][ $key ] = null;
 			$this->update_meta_value( $object_id, $key, $group, $meta_type );
 		}
 
 		if ( 'option' === $meta_type ) {
-			// CMB2 will pull a key from the option or network option automatically.
 			cmb2_options( $object_id )->remove( $key );
 		} else {
 			\delete_metadata( $meta_type, $object_id, $key );
@@ -177,7 +184,7 @@ abstract class Translate_Abstract {
 		if ( ! empty( $url ) ) {
 			//Add the extra field so groups meta will be translated properly.
 			if ( null !== $this->fields[ $key ]->group ) {
-				$this->fields[ "{$key}_id" ] = $this->fields[ $key ];
+				$this->fields["{$key}_id"] = $this->fields[ $key ];
 			}
 
 			return [
@@ -204,7 +211,7 @@ abstract class Translate_Abstract {
 	public function update_file_field_value( $object_id, string $key, int $attachment_id, string $meta_type ) : void {
 		//Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->fields[ $key ]->group ) {
-			$this->fields[ "{$key}_id" ] = $this->fields[ $key ];
+			$this->fields["{$key}_id"] = $this->fields[ $key ];
 		}
 		$this->update_meta_value( $object_id, $key, \wp_get_attachment_url( $attachment_id ), $meta_type );
 		$this->update_meta_value( $object_id, "{$key}_id", $attachment_id, $meta_type );
@@ -224,7 +231,7 @@ abstract class Translate_Abstract {
 	public function delete_file_field_value( $object_id, string $key, string $meta_type ) : void {
 		//Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->fields[ $key ]->group ) {
-			$this->fields[ "{$key}_id" ] = $this->fields[ $key ];
+			$this->fields["{$key}_id"] = $this->fields[ $key ];
 		}
 		$this->delete_meta_value( $object_id, $key, $meta_type );
 		$this->delete_meta_value( $object_id, "{$key}_id", $meta_type );
@@ -307,6 +314,7 @@ abstract class Translate_Abstract {
 
 		return $this->update_meta_value( $object_id, $this->fields[ $key ]->group, $group, $meta_type );
 	}
+
 
 	/**
 	 * Get all the fields assigned to this group.

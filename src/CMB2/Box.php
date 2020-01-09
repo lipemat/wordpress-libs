@@ -483,8 +483,9 @@ class Box {
 
 
 	/**
-	 * 1. Add a field to this box.
-	 * 2. Register the field with the Meta\Repo
+	 * 1. Add a field to this CMB2 box.
+	 * 2. Assign the box_id to the field.
+	 * 3. Register the field with the Meta\Repo
 	 *
 	 * @param Field $field
 	 *
@@ -493,6 +494,7 @@ class Box {
 	public function add_field( Field $field ) : void {
 		$box = $this->get_box();
 		$box->add_field( $field->get_field_args(), $field->position );
+		$field->box_id = $this->id;
 
 		Repo::in()->register_field( $field );
 	}

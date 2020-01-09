@@ -16,15 +16,6 @@ use Lipe\Lib\Util\Arrays;
  */
 class Field {
 	/**
-	 * The field label
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#name
-	 *
-	 * @var string
-	 */
-	protected $name = '';
-
-	/**
 	 * The data key. If using for posts, will be the post-meta key.
 	 * If using for an options page, will be the array key.
 	 *
@@ -37,6 +28,26 @@ class Field {
 	 * @var string
 	 */
 	protected $id = '';
+
+	/**
+	 * Id of meta box this field is assigned to.
+	 *
+	 * @internal
+	 *
+	 * @since 2.15.0
+	 *
+	 * @var string
+	 */
+	public $box_id;
+
+	/**
+	 * The field label
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#name
+	 *
+	 * @var string
+	 */
+	protected $name = '';
 
 	/**
 	 * Custom callback to return the label for the field
