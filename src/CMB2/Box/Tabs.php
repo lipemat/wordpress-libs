@@ -2,9 +2,7 @@
 
 namespace Lipe\Lib\CMB2\Box;
 
-use Lipe\Lib\CMB2\Field;
-use Lipe\Lib\Traits\Singleton;
-use Lipe\Lib\Theme\Class_Names;
+use Lipe\Lib\CMB2\Field;use Lipe\Lib\Theme\Class_Names;use Lipe\Lib\Traits\Singleton;use Lipe\Lib\Util\Url;
 
 /**
  * Support Tabs in meta boxes
@@ -22,6 +20,8 @@ use Lipe\Lib\Theme\Class_Names;
  */
 class Tabs {
 	use Singleton;
+
+	protected const TAB_FIELD = 'lipe/lib/cmb2/box/tabs/active-tab';
 
 	/**
 	 * Current CMB2 instance
@@ -87,8 +87,10 @@ class Tabs {
 
 		$this->styles();
 
-		echo '<div class="' . esc_attr( $classes ) . '">';
-
+		?>
+		<input name="_wp_http_referer" value="<?= esc_url( Url::in()->get_current_url() ) ?>" type="hidden" />
+		<div class="<?= esc_attr( $classes ) ?>">
+		<?php
 	}
 
 
@@ -118,13 +120,18 @@ class Tabs {
 
 		if ( $tabs ) {
 			echo '<ul class="cmb-tab-nav">';
-			$active_nav = true;
+
+			if ( empty( $_REQUEST[ self::TAB_FIELD ] ) ) {
+				$active_nav = key( $tabs );
+			} else {
+				$active_nav = esc_attr( $_REQUEST[self::TAB_FIELD ] );
+			}
+
 			foreach ( $tabs as $key => $label ) {
 				$class = "cmb-tab-$key";
-				if ( $active_nav ) {
+				if ( $key === $active_nav ) {
 					$class .= ' cmb-tab-active';
 					$this->active_panel = $key;
-					$active_nav = false;
 				}
 
 				printf(
@@ -239,7 +246,12 @@ class Tabs {
 					var $li = $( this ).parent(),
 						panel = $li.data( 'panel' ),
 						$wrapper = $li.parents( '.cmb-tabs' ).find( '.cmb2-wrap-tabs' ),
+						$redirect = $('[name="_wp_http_referer"]'),
+						url = new URL( $redirect.val() ),
 						$panel = $wrapper.find( '[class*="cmb-tab-panel-' + panel + '"]' );
+
+					url.searchParams.set( '<?= self::TAB_FIELD ?>', panel );
+					$redirect.val( url.toString() );
 
 					$li.addClass( 'cmb-tab-active' ).siblings().removeClass( 'cmb-tab-active' );
 					$wrapper.find( '.cmb-tab-panel' ).removeClass( 'show' );
