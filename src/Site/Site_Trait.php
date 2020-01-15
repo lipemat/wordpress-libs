@@ -12,8 +12,15 @@ use Lipe\Lib\Meta\Mutator_Trait;
  *
  * @requires WP version 5.1+
  *
- * @author Mat Lipe
- * @since  2.8.0
+ * @author   Mat Lipe
+ * @since    2.8.0
+ *
+ * @property int    $id
+ * @property int    $network_id
+ * @property string $blogname
+ * @property string $siteurl
+ * @property int    $post_count
+ * @property string $home
  *
  */
 trait Site_Trait {
@@ -36,7 +43,7 @@ trait Site_Trait {
 	 */
 	public function __construct( $site ) {
 		if ( is_a( $site, \WP_Site::class ) ) {
-			$this->site    = $site;
+			$this->site = $site;
 			$this->site_id = $this->site->site_id;
 		} else {
 			$this->site_id = $site;
@@ -45,11 +52,14 @@ trait Site_Trait {
 
 
 	/**
-	 * Ger the WP Site from the current context.
-	 *
-	 * @return null|\WP_Site
+	 * @deprecated In favor of $this->get_object()
 	 */
 	public function get_site() : ?\WP_Site {
+		return $this->get_object();
+	}
+
+
+	public function get_object() : ?\WP_Site {
 		if ( null === $this->site ) {
 			$this->site = \get_site( $this->site_id );
 		}
@@ -88,7 +98,7 @@ trait Site_Trait {
 	 * Update a value in the `blogmeta` table for this site.
 	 *
 	 * @param string $key
-	 * @param  mixed $value
+	 * @param mixed  $value
 	 */
 	public function update_meta( string $key, $value ) : void {
 		\update_site_meta( $this->site_id, $key, $value );

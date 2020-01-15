@@ -5,10 +5,28 @@ namespace Lipe\Lib\User;
 use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
- * Trait User_Trait
- *
- * @package Lipe\Lib\User
- * @since   1.0.0
+ * @property string $nickname
+ * @property string $description
+ * @property string $user_description
+ * @property string $first_name
+ * @property string $user_firstname
+ * @property string $last_name
+ * @property string $user_lastname
+ * @property string $user_login
+ * @property string $user_pass
+ * @property string $user_nicename
+ * @property string $user_email
+ * @property string $user_url
+ * @property string $user_registered
+ * @property string $user_activation_key
+ * @property string $user_status
+ * @property int    $user_level
+ * @property string $display_name
+ * @property string $spam
+ * @property string $deleted
+ * @property string $locale
+ * @property string $rich_editing
+ * @property string $syntax_highlighting
  */
 trait User_Trait {
 	use Mutator_Trait;
@@ -31,13 +49,17 @@ trait User_Trait {
 	/**
 	 * User_Trait constructor.
 	 *
-	 * @param null|int $user_id
+	 * @param int|null|\WP_User $user
 	 */
-	public function __construct( $user_id = null ) {
-		if ( null === $user_id ) {
-			$user_id = get_current_user_id();
+	public function __construct( $user = null ) {
+		if ( null === $user ) {
+			$this->user_id = get_current_user_id();
+		} elseif ( is_a( $user, \WP_User::class ) ) {
+			$this->user = $user;
+			$this->user_id = $user->ID;
+		} else {
+			$this->user_id = $user;
 		}
-		$this->user_id = $user_id;
 	}
 
 
@@ -47,9 +69,9 @@ trait User_Trait {
 
 
 	/**
+	 * @return int
 	 * @deprecated
 	 *
-	 * @return int
 	 */
 	public function get_user_id() : int {
 		\_deprecated_function( 'get_user_id', '2.5.0', 'get_id' );
@@ -58,7 +80,15 @@ trait User_Trait {
 	}
 
 
+	/**
+	 * @deprecated In favor of $this->get_object()
+	 */
 	public function get_user() {
+		return $this->get_object();
+	}
+
+
+	public function get_object() : ?\WP_User {
 		if ( null === $this->user ) {
 			$this->user = get_user_by( 'id', $this->user_id );
 		}
@@ -74,14 +104,14 @@ trait User_Trait {
 
 	/**
 	 *
-	 * @param int $user_id
+	 * @param int|null|\WP_User $user
 	 *
 	 * @static
 	 *
 	 * @return static
 	 */
-	public static function factory( $user_id ) {
-		return new static( $user_id );
+	public static function factory( $user = null ) {
+		return new static( $user );
 	}
 
 }
