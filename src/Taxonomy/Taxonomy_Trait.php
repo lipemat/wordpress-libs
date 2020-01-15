@@ -41,8 +41,6 @@ trait Taxonomy_Trait {
 		} else {
 			$this->term_id = $term;
 		}
-
-		$this->term_id = $term;
 	}
 
 
