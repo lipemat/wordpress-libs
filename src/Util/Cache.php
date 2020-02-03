@@ -17,7 +17,7 @@ class Cache {
 	use Singleton;
 
 	protected const QUERY_ARG = 'lipe/lib/util/cache/cache';
-	protected const DEFAULT_GROUP = 'lipe/lib/util/cache/group';
+	public const DEFAULT_GROUP = 'lipe/lib/util/cache/group';
 
 	public const FLUSH_ON_SAVE_POST_GROUP = 'lipe/lib/util/cache/flush-save-post';
 

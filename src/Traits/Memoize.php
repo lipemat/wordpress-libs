@@ -2,10 +2,13 @@
 
 namespace Lipe\Lib\Traits;
 
+use Lipe\Lib\Util\Cache;
+
 /**
  * Support simple memoization for class methods which respond
  * with different caches based on the arguments provided.
  *
+ * @author  Mat Lipe
  * @example public function heavy( $text ) {
  *              return $this->memoize( function ( $text ) {
  *                   echo 'called' . "\n";
@@ -16,14 +19,45 @@ namespace Lipe\Lib\Traits;
  *          $test->heavy( 'as can be x2' . "\n"); //called
  *          $test->heavy( 'as can be X3'. "\n" ); // called
  *          $test->heavy( 'as can be x2' . "\n"); //Not called
-
  *
- * @author  Mat Lipe
  * @since   2.6.0
  *
  */
 trait Memoize {
+	protected $cache_group = 'lipe/lib/traits/memoize';
+
 	protected $memoize_cache = [];
+
+
+	/**
+	 * Pass me a callback, a method identifier, and some arguments and
+	 * I will return the same result every time the arguments are the same.
+	 *
+	 * If the arguments change, I will return a result matching the change.
+	 * I will only call the callback one time for the same set of arguments.
+	 * If the result already exists in the cache, the callback will not be called.
+	 *
+	 * @param callable $fn
+	 * @param string   $identifier - Something unique to identify the the method being used
+	 *                             so we can determine the difference in the cache.
+	 *                             `__METHOD__` works nicely here.
+	 * @param int      $expire     - Expire in seconds (defaults to never).
+	 * @param mixed    ...$args    - Arguments will be passed to the callback..
+	 *
+	 * @since 2.16.0
+	 *
+	 * @return mixed
+	 */
+	public function persistent( callable $fn, string $identifier, $expire = 0, ...$args ) {
+		$key = md5( serialize( [ $args, $identifier, __CLASS__ ] ) );
+		$data = Cache::in()->get( $key, $this->cache_group );
+		if ( false === $data ) {
+			$data = call_user_func_array( $fn, $args );
+			Cache::in()->set( $key, $data, $this->cache_group, $expire );
+		}
+		return $data;
+	}
+
 
 	/**
 	 * Pass me a callback, a method identifier, and some optional arguments and
@@ -32,8 +66,6 @@ trait Memoize {
 	 * The passed function will only be called once no matter where it called from
 	 * and what the arguments are.
 	 * I will always return the value received from the callback on its first run.
-	 *
-	 * @example
 	 *
 	 * @since 2.6.1
 	 *
@@ -60,8 +92,6 @@ trait Memoize {
 	 *
 	 * If the arguments change, I will return a result matching the change.
 	 * I will only call the callback one time for the same set of arguments.
-	 *
-	 * @example
 	 *
 	 * @since 2.6.0
 	 *
@@ -93,5 +123,6 @@ trait Memoize {
 	 */
 	public function clear_memoize_cache() : void {
 		$this->memoize_cache = [];
+		Cache::in()->flush_group( $this->cache_group );
 	}
 }
