@@ -49,11 +49,10 @@ trait Memoize {
 	 * @return mixed
 	 */
 	public function persistent( callable $fn, string $identifier, $expire = 0, ...$args ) {
-		$key = md5( serialize( [ $args, $identifier, __CLASS__ ] ) );
-		$data = Cache::in()->get( $key, $this->cache_group );
+		$data = Cache::in()->get( [ $args, $identifier, __CLASS__ ], $this->cache_group );
 		if ( false === $data ) {
-			$data = call_user_func_array( $fn, $args );
-			Cache::in()->set( $key, $data, $this->cache_group, $expire );
+			$data = $fn( ...$args );
+			Cache::in()->set( [ $args, $identifier, __CLASS__ ], $data, $this->cache_group, $expire );
 		}
 		return $data;
 	}
@@ -79,7 +78,7 @@ trait Memoize {
 	 */
 	public function once( callable $fn, string $identifier, ...$args ) {
 		if ( ! array_key_exists( "{$identifier}::once", $this->memoize_cache ) ) {
-			$this->memoize_cache[ "{$identifier}::once" ] = call_user_func_array( $fn, $args );
+			$this->memoize_cache[ "{$identifier}::once" ] = $fn( ...$args );
 		}
 
 		return $this->memoize_cache[ "{$identifier}::once" ];
@@ -107,7 +106,7 @@ trait Memoize {
 	public function memoize( callable $fn, string $identifier, ...$args ) {
 		$key = md5( serialize( [ $args, $identifier ] ) );
 		if ( ! array_key_exists( $key, $this->memoize_cache ) ) {
-			$this->memoize_cache[ $key ] = call_user_func_array( $fn, $args );
+			$this->memoize_cache[ $key ] = $fn( ...$args );
 		}
 
 		return $this->memoize_cache[ $key ];
