@@ -24,8 +24,6 @@ use Lipe\Lib\Util\Cache;
  *
  */
 trait Memoize {
-	protected $cache_group = 'lipe/lib/traits/memoize';
-
 	protected $memoize_cache = [];
 
 
@@ -49,10 +47,10 @@ trait Memoize {
 	 * @return mixed
 	 */
 	public function persistent( callable $fn, string $identifier, $expire = 0, ...$args ) {
-		$data = Cache::in()->get( [ $args, $identifier, __CLASS__ ], $this->cache_group );
+		$data = Cache::in()->get( [ $identifier, $args  ], __CLASS__ );
 		if ( false === $data ) {
 			$data = $fn( ...$args );
-			Cache::in()->set( [ $args, $identifier, __CLASS__ ], $data, $this->cache_group, $expire );
+			Cache::in()->set( [ $identifier, $args ], $data, __CLASS__, $expire );
 		}
 		return $data;
 	}
@@ -122,6 +120,6 @@ trait Memoize {
 	 */
 	public function clear_memoize_cache() : void {
 		$this->memoize_cache = [];
-		Cache::in()->flush_group( $this->cache_group );
+		Cache::in()->flush_group( __CLASS__ );
 	}
 }
