@@ -65,11 +65,7 @@ abstract class Translate_Abstract {
 			$group = $this->get_meta_value( $object_id, $this->fields[ $key ]->group, $meta_type );
 			$value = $group[ $this->group_row ][ $key ] ?? null;
 		} elseif ( 'option' === $meta_type ) {
-			if ( isset( $this->fields[ $key ] ) ) {
-				$value = \cmb2_options( $object_id )->get( $key, null );
-			} else {
-				$value = get_option( $key );
-			}
+			$value = cmb2_options( $object_id )->get( $key, null );
 		} else {
 			$value = get_metadata( $meta_type, $object_id, $key, true );
 		}
