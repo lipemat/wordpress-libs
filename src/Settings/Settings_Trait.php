@@ -52,6 +52,6 @@ trait Settings_Trait {
 	 * @return void
 	 */
 	public function update_option( string $key, ...$value ) : void {
-		$this->update_meta( $key, $value );
+		$this->update_meta( $key, ...$value );
 	}
 }
