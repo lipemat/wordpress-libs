@@ -42,11 +42,16 @@ trait Settings_Trait {
 	 * Update an option.
 	 *
 	 * @param string $key
-	 * @param mixed  $value
+	 * @param mixed|callable $value - If a callable is passed it will be called with the
+	 *                              previous value as the only argument.
+	 * @param mixed                 If a callable is passed with an additional argument,
+	 *                              it be be used as the default value for `$this->get_meta()`.
+	 *
+	 * @since 2.17.0 (Support passing a callback as the second argument)
 	 *
 	 * @return void
 	 */
-	public function update_option( string $key, $value ) : void {
+	public function update_option( string $key, ...$value ) : void {
 		$this->update_meta( $key, $value );
 	}
 }
