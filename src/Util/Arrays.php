@@ -17,11 +17,11 @@ class Arrays {
 	 * Turn a numeric array of values into an associative array with
 	 * the odd values being keys for the even values.
 	 *
+	 * @param array $array
+	 *
 	 * @example ['page', 3, 'category', 6 ] becomes [ 'page' => 3, 'category' => 6 ]
 	 *
-	 * @since 2.11.0
-	 *
-	 * @param array $array
+	 * @since   2.11.0
 	 *
 	 * @return array
 	 */
@@ -34,12 +34,11 @@ class Arrays {
 			} else {
 				$assoc[] = array_shift( $pair );
 			}
-
 		}
 
 		return $assoc;
-
 	}
+
 
 	/**
 	 * Apply a callback to all elements of an array recursively.
@@ -48,10 +47,10 @@ class Arrays {
 	 * a new array instead of requiring you pass the array element by reference
 	 * and alter it directly.
 	 *
-	 * @since 2.5.0
-	 *
 	 * @param callable $callback
 	 * @param array    $array
+	 *
+	 * @since 2.5.0
 	 *
 	 * @return array
 	 */
@@ -67,6 +66,7 @@ class Arrays {
 
 		return $output;
 	}
+
 
 	/**
 	 * Works the same as `array_merge_recursive` except instead of turning
@@ -90,5 +90,22 @@ class Arrays {
 		}
 
 		return $defaults;
+	}
+
+
+	/**
+	 * Works the same as `array_map` except the array key is passed as the
+	 * second argument to the callback and original keys are preserved.
+	 *
+	 *
+	 * @param callable $callback
+	 * @param array    $array
+	 *
+	 * @since 2.17.0
+	 *
+	 * @return array
+	 */
+	public function array_map_assoc( callable $callback, array $array ) : array {
+		return array_combine( array_keys( $array ), array_map( $callback, $array, array_keys( $array ) ) );
 	}
 }
