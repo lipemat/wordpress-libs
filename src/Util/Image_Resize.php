@@ -217,7 +217,7 @@ class Image_Resize {
 		if ( ! empty( $args['size'] ) ) {
 			global $_wp_additional_image_sizes, $content_width;
 
-			// if is array, put width and height indivudually
+			// if is array, put width and height individually.
 			if ( is_array( $args['size'] ) ) {
 				$width = $args['size'][0];
 				$height = $args['size'][1];
@@ -237,9 +237,9 @@ class Image_Resize {
 				// standard sizes of WordPress
 
 				// thumbnail
-			} elseif ( $args['size'] == 'thumb' || $args['size'] == 'thumbnail' ) {
-				$width = intval( get_option( 'thumbnail_size_w' ) );
-				$height = intval( get_option( 'thumbnail_size_h' ) );
+			} elseif ( 'thumb' === $args['size'] || 'thumbnail' === $args['size'] ) {
+				$width = (int) get_option( 'thumbnail_size_w' );
+				$height = (int) get_option( 'thumbnail_size_h' );
 				// last chance thumbnail size defaults
 				if ( ! $width && ! $height ) {
 					$width = 128;
@@ -248,21 +248,21 @@ class Image_Resize {
 				$crop = (bool) get_option( 'thumbnail_crop' );
 
 				// medium
-			} elseif ( $args['size'] == 'medium' ) {
-				$width = intval( get_option( 'medium_size_w' ) );
-				$height = intval( get_option( 'medium_size_h' ) );
+			} elseif ( 'medium' === $args['size'] ) {
+				$width = (int) get_option( 'medium_size_w' );
+				$height = (int) get_option( 'medium_size_h' );
 				// if no width is set, default to the theme content width if available
 
 				// large
-			} elseif ( $args['size'] == 'large' ) {
+			} elseif ( 'large' === $args['size'] ) {
 				// We're inserting a large size image into the editor. If it's a really
 				// big image we'll scale it down to fit reasonably within the editor
 				// itself, and within the theme's content width if it's known. The user
 				// can resize it in the editor if they wish.
-				$width = intval( get_option( 'large_size_w' ) );
-				$height = intval( get_option( 'large_size_h' ) );
-				if ( intval( $content_width ) > 0 ) {
-					$width = min( intval( $content_width ), $width );
+				$width = (int) get_option( 'large_size_w' );
+				$height = (int) get_option( 'large_size_h' );
+				if ( (int) $content_width > 0 ) {
+					$width = min( (int) $content_width, $width );
 				}
 			}
 		}
@@ -270,6 +270,9 @@ class Image_Resize {
 		// maybe need resize
 		if ( ! empty( $width ) || ! empty( $height ) ) {
 			$image = $this->resize( $image_id, $image_url, $width, $height, $crop );
+			if ( empty( $image ) ) {
+				return null;
+			}
 			$image_url = $image['url'];
 			$width = $image['width'];
 			$height = $image['height'];
@@ -282,14 +285,15 @@ class Image_Resize {
 			return null;
 		}
 
-
 		if ( $args['output'] === 'url' ) {
 			if ( $echo ) {
 				echo $image_url;
 			}
 			return $image_url;
 
-		} elseif ( $args['output'] === 'array' ) {
+		}
+
+		if ( $args['output'] === 'array' ) {
 			//@todo set the alt and title from findings above
 			return [
 				'src'    => $image_url,
@@ -298,7 +302,9 @@ class Image_Resize {
 				'alt'    => $alt,
 				'title'  => $title,
 			];
-		} elseif ( $args['output'] === 'numeric_array' ) {
+		}
+
+		if ( $args['output'] === 'numeric_array' ) {
 			return [
 				0 => $image_url,
 				1 => $width,
@@ -308,7 +314,7 @@ class Image_Resize {
 
 		if ( ! empty( $image_id ) ) {
 			$size = empty( $size ) ? $size = [ $width, $height ] : $size;
-			if ( $args['output'] != 'a' ) {
+			if ( 'a' === $args['output'] ) {
 				$class .= ' lipe/lib/util/resized-image';
 			}
 			$html_image = wp_get_attachment_image( $image_id, $size, false, [
