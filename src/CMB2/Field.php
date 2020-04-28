@@ -216,6 +216,27 @@ class Field {
 	public $after_display_wrap;
 
 	/**
+	 * Enable a character/word counter for a 'textarea', 'wysiwyg', or 'text' type field.
+	 *
+	 * @var bool|string - true | 'words'
+	 */
+	public $char_counter;
+
+	/**
+	 * Used in conjunction with `char_counter` to count character/words remaining.
+	 *
+	 * @var int
+	 */
+	public $char_max;
+
+	/**
+	 * Used in conjunction with `char_max` to enforce length when counting characters.
+	 *
+	 * @var bool
+	 */
+	public $char_max_enforce;
+
+	/**
 	 * This property allows you to optionally add classes to the CMB2 wrapper.
 	 * This property can take a string, or array.
 	 *
@@ -638,6 +659,55 @@ class Field {
 	 */
 	public function get_name() : string {
 		return $this->name;
+	}
+
+
+	/**
+	 * Enable a character/word counter for a 'textarea', 'wysiwyg', or 'text' type field.
+	 *
+	 * @param bool $count_words - Count words instead of characters.
+	 * @param null|int  $max - Show remaining character/words based on provided limit.
+	 * @param bool  $enforce - Enforce max length using `maxlength` attribute when
+	 *                       characters are counted.
+	 * @param array $labels  - Override the default text strings associated with these
+	 *                       parameters {
+	 *                          'words_left_text' - Default: "Words left"
+	 *                          'words_text' - Default: "Words"
+	 *                          'characters_left_text' - Default: "Characters left"
+	 *                          'characters_text' - Default: "Characters"
+	 *                          'characters_truncated_text' - Default: "Your text may be truncated."
+	 *                       }
+	 *
+	 * @notice Does not work with wysiwyg which are repeatable.
+	 *
+	 * @since CMB2 2.7.0
+	 *
+	 * @return Field
+	 */
+	public function char_counter( $count_words = false, $max = null, $enforce = false, $labels = [] ) : Field {
+		$this->char_counter = $count_words ? 'words' : true;
+
+		if ( $max ) {
+			$this->char_max = $max;
+			if ( $enforce ) {
+				if ( 'words' === $this->char_counter ) {
+					\_doing_it_wrong( 'char_counter', __( 'You cannot enforce max length when counting words', 'lipe' ), '2.17.0' );
+				}
+				$this->char_max_enforce = true;
+			}
+		}
+
+		if ( ! empty( $labels ) ) {
+			$this->text = array_merge( (array) $this->text, \array_intersect_key( $labels, array_flip( [
+				'words_left_text',
+				'words_text',
+				'characters_left_text',
+				'characters_text',
+				'characters_truncated_text',
+			] ) ) );
+		}
+
+		return $this;
 	}
 
 
