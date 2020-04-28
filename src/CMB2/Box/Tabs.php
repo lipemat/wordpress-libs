@@ -309,20 +309,6 @@ class Tabs {
 				display: block;
 			}
 
-			.cmb-tabs .cmb-remove-row-button {
-				background-color: #e60000;
-				border: medium none;
-				border-radius: 25px;
-				color: #fff;
-				height: 20px;
-				padding: 0;
-				text-indent: -999em;
-				width: 20px;
-				position: relative;
-				-webkit-box-shadow: none;
-				box-shadow: none;
-			}
-
 			.cmb-tabs .cmb-repeat-row {
 				position: relative;
 			}
