@@ -470,10 +470,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function text_medium() : Field {
-		return $this->set( [
-			'char_counter' => true,
-			'type' => $this->text_medium
-		], Repo::DEFAULT );
+		return $this->set( [ 'type' => $this->text_medium ], Repo::DEFAULT );
 	}
 
 
