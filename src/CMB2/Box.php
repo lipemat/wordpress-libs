@@ -156,6 +156,20 @@ class Box {
 	public $hookup;
 
 	/**
+	 * Override the rendering of the box on rest api responses.
+	 * Used to create an entirely custom response.
+	 *
+	 * @link https://gist.github.com/jtsternberg/a70e845aca44356b8fbf05aafff4d0c8
+	 *
+	 * @since CMB2 2.7.0
+	 *
+	 * @todo Add link to docs once they exist.
+	 *
+	 * @var callable
+	 */
+	public $register_rest_field_cb;
+
+	/**
 	 * This parameter is for post alternate-context metaboxes only.
 	 * To output the fields 'naked' (without a postbox wrapper/style)
 	 *

@@ -321,6 +321,16 @@ class Field {
 	public $display_cb;
 
 	/**
+	 * Entirely replace the class to used to display the field (in admin columns, etc)
+	 * @since CMB2 2.7.0
+	 *
+	 * @todo Add link to docs once they exist.
+	 *
+	 * @var \CMB2_Field_Display
+	 */
+	public $display_class;
+
+	/**
 	 * Bypass the CMB escaping (escapes before display) methods with your own callback.
 	 * Set to false if you do not want any escaping (not recommended).
 	 *
