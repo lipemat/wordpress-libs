@@ -648,18 +648,20 @@ class Field {
 	 * @param int      $position
 	 * @param string   $name       - defaults to field name
 	 * @param callable $display_cb - optional display callback
+	 * @param bool $disable_sorting     - Set to true to prevent this column from being
+	 *                                  sortable in post list.
 	 *
 	 * @return Field
 	 */
-	public function column( int $position = null, string $name = null, $display_cb = null ) : Field {
+	public function column( int $position = null, string $name = null, $display_cb = null, $disable_sorting = null ) : Field {
 		$this->column = [
-			'position' => $position,
-			'name'     => $name ?? $this->name,
+			'disable_sortable' => $disable_sorting ?? false,
+			'name'             => $name ?? $this->name,
+			'position'         => $position,
 		];
-		if ( null === $position && null === $name ) {
+		if ( null === $position && null === $name && null === $disable_sorting ) {
 			$this->column = true;
 		}
-
 		if ( null !== $display_cb ) {
 			$this->display_cb = $display_cb;
 		}
