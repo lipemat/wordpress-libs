@@ -273,6 +273,17 @@ class Field_Type {
 	protected $taxonomy_select;
 
 	/**
+	 * A select field pre-populated with taxonomy terms and display hierarchical.
+	 *
+	 * @todo Add a link once docs are available.
+	 *
+	 * @since CMB2 2.7.0
+	 *
+	 * @var string
+	 */
+	protected $taxonomy_select_hierarchical;
+
+	/**
 	 * A field with checkboxes with taxonomy terms, and multiple terms can be selected.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
@@ -361,7 +372,7 @@ class Field_Type {
 	/**
 	 * field
 	 *
-	 * @var \Lipe\Lib\CMB2\Field
+	 * @var Field
 	 */
 	protected $field;
 
@@ -955,7 +966,26 @@ class Field_Type {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_select, $taxonomy, $no_terms_text, $remove_default );
 
 		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
+	}
 
+
+	/**
+	 * A select field pre-populated with taxonomy terms and displayed hierarchical.
+	 *
+	 * @param string $taxonomy       - slug
+	 * @param string $no_terms_text
+	 * @param bool   $remove_default - remove default WP terms metabox
+	 *
+	 * @todo Add links once docs become available.
+	 *
+	 * @since CMB2 2.7.0
+	 *
+	 * @return Field
+	 */
+	public function taxonomy_select_hierarchical( $taxonomy, $no_terms_text = null, $remove_default = null ) : Field {
+		$_args = $this->field_type_taxonomy( $this->taxonomy_select_hierarchical, $taxonomy, $no_terms_text, $remove_default );
+
+		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
 	}
 
 
@@ -973,7 +1003,7 @@ class Field_Type {
 	 *
 	 * @see Term_Select_2
 	 *
-	 * @return \Lipe\Lib\CMB2\Field
+	 * @return Field
 	 */
 	public function taxonomy_select_2( $taxonomy, $create_new_terms = false, $save_as_terms = false, $no_terms_text = null, $remove_default = null ) : Field {
 		Term_Select_2::init_once();
