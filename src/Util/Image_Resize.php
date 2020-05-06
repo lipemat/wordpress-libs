@@ -11,7 +11,7 @@ use Lipe\Lib\Traits\Singleton;
  *
  * Pretty much automatic - use standard WP add_image_size() and this will pick it up
  *
- * @author   Mat Lipe <mat@matlipe.com>
+ * @author   Mat Lipe <mat@onpointplugins.com>
  * @example  Image_Resize::init();
  * @example  may be tapped in using the public methods as well - however probably not necessary
  *
