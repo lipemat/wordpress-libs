@@ -106,7 +106,7 @@ class Styles {
 			\wp_enqueue_script( 'google-webfonts', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js' ); //phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 			\wp_add_inline_script( 'google-webfonts', 'WebFont.load({
 				google: {
-					families:' . json_encode( $families, JSON_THROW_ON_ERROR, 512 ) . '
+					families:' . json_encode( $families ) . '
 				}
 			})' );
 		} );

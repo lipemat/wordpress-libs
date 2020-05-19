@@ -624,7 +624,7 @@ class Field_Type {
 		}
 		if ( ! empty( $code_editor_arguments ) ) {
 			$this->field->attributes( [
-				'data-codeeditor' => json_encode( $code_editor_arguments, JSON_THROW_ON_ERROR, 512 ),
+				'data-codeeditor' => json_encode( $code_editor_arguments ),
 			] );
 		}
 
