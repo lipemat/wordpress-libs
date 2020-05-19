@@ -215,7 +215,7 @@ class Zip {
 	 * @return string
 	 */
 	public static function get_url_for_endpoint() : string {
-		return Api::in()->get_api_url( self::ACTION );
+		return Api::in()->get_url( self::ACTION );
 	}
 
 
