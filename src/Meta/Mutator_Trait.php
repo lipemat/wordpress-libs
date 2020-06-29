@@ -44,7 +44,7 @@ trait Mutator_Trait {
 			throw new \ErrorException( 'Direct access to object properties is only available for objects with `get_object`: ' . __CLASS__ . ":{$key}" );
 		}
 		$object = $this->get_object();
-		if ( null !== $object && \property_exists( $object, $key ) ) {
+		if ( null !== $object && ( \property_exists( $object, $key ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $key ) ) ) ) {
 			return $object->{$key};
 		}
 		throw new \ErrorException( 'Undefined property: ' . __CLASS__ . ":{$key}" );
