@@ -103,6 +103,10 @@ class Api {
 	public function get_url( ?string $endpoint = null, array $data = [] ) : string {
 		$url = \trailingslashit( $this->get_root_url() . $endpoint );
 
+		if ( empty( $data ) ) {
+			return $url;
+		}
+
 		if ( array_values( $data ) === $data ) {
 			$url .= trailingslashit( implode( '/', $data ) );
 
@@ -128,7 +132,7 @@ class Api {
 	 * @return string
 	 */
 	public function get_root_url() : string {
-		return trailingslashit( trailingslashit( get_home_url() ) . static::ENDPOINT  );
+		return \trailingslashit( trailingslashit( get_home_url() ) . static::ENDPOINT  );
 
 	}
 
