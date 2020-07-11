@@ -170,4 +170,31 @@ class Actions {
 		}, -1 );
 	}
 
+
+	/**
+	 * Add a filter to run between a specified start action and stop
+	 * at a specified end action.
+	 *
+	 * Used to filter only during a specific stack or section of code.
+	 * Useful for targeting things like a widget or a template but may
+	 * be use when any starting and endpoint point is avialble via actions.
+	 *
+	 * @param string   $filter   - Filter we are adding.
+	 * @param callable $callable - Callback.
+	 * @param string   $start    - Action which starts the filter.
+	 * @param string   $end      - Action which removphpes the filter.
+	 * @param int      $priority - Priority of the filter we are adding.
+	 * @param int      $accepted_args - Number of arguments to pass to filter.
+	 *
+	 * @return void
+	 */
+	public function add_filter_during( string $filter, callable $callable, string $start, string $end, int $priority = 10, int $accepted_args = 1 ) : void {
+		add_action( $start, function () use ( $filter, $callable, $priority, $accepted_args ) {
+			add_filter( $filter, $callable, $priority, $accepted_args );
+		}, - 1 );
+
+		add_action( $end, function () use ( $filter, $callable, $priority ) {
+			remove_filter( $filter, $callable, $priority );
+		}, - 1 );
+	}
 }
