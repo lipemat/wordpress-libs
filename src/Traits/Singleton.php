@@ -46,7 +46,6 @@ trait Singleton {
 	public static function init_once() : void {
 		if ( ! static::$inited ) {
 			static::init();
-			static::$inited = true;
 		}
 	}
 
