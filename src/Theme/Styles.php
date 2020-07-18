@@ -11,9 +11,12 @@ class Styles {
 	use Memoize;
 
 	protected static $async = [];
+
 	protected static $body_class = [];
+
 	protected static $deffer = [];
 
+	protected static $integrity = [];
 
 
 	/**
@@ -67,11 +70,11 @@ class Styles {
 	 */
 	public function live_reload( bool $admin_also = false ) : void {
 		if ( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
-			\add_action( 'wp_enqueue_scripts', function () {
+			\add_action( 'wp_enqueue_scripts', static function () {
 				\wp_enqueue_script( 'livereload', 'http://localhost:35729/livereload.js', [], \time(), true );
 			} );
 			if ( $admin_also ) {
-				\add_action( 'admin_enqueue_scripts', function () {
+				\add_action( 'admin_enqueue_scripts', static function () {
 					\wp_enqueue_script( 'livereload', 'http://localhost:35729/livereload.js', [], \time(), true );
 				} );
 			}
@@ -102,7 +105,7 @@ class Styles {
 		Actions::in()->add_action_all( [
 			'wp_enqueue_scripts',
 			'admin_enqueue_scripts',
-		], function () use ( $families ) {
+		], static function () use ( $families ) {
 			\wp_enqueue_script( 'google-webfonts', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js' ); //phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 			\wp_add_inline_script( 'google-webfonts', 'WebFont.load({
 				google: {
@@ -119,14 +122,15 @@ class Styles {
 	 * Must be called before `get_body_class` which is most likely called
 	 * in the theme's "header.php".
 	 *
+	 * @param string $class
+	 *
 	 * @since 2.13.0
 	 *
-	 * @param string $class
 	 */
 	public function add_body_class( string $class ) : void {
 		static::$body_class[] = $class;
-		$this->once( function () {
-			add_filter( 'body_class', function ( $classes ) {
+		$this->once( static function () {
+			add_filter( 'body_class', static function ( $classes ) {
 				return array_unique( array_merge( static::$body_class, $classes ) );
 			}, 11 );
 		}, __METHOD__ );
@@ -148,17 +152,17 @@ class Styles {
 	 *
 	 * A positive effect of this attribute is that the DOM will be available for your script.
 	 *
-	 * @since 2.13.0
-	 *
 	 * @param string $handle - The handle used to enqueued this script.
 	 *
+	 *
+	 * @since 2.13.0
 	 *
 	 * @return void
 	 */
 	public function defer_javascript( string $handle ) : void {
 		static::$deffer[] = $handle;
-		$this->once( function () {
-			add_filter( 'script_loader_tag', function ( $tag, $handle ) {
+		$this->once( static function () {
+			add_filter( 'script_loader_tag', static function ( $tag, $handle ) {
 				if ( in_array( $handle, static::$deffer, true ) ) {
 					return str_replace( '<script', '<script defer="defer"', $tag );
 				}
@@ -180,16 +184,16 @@ class Styles {
 	 * Executes at an unpredictable time so must be self contained.
 	 * Good for scripts such as Google Analytics.
 	 *
-	 * @since 2.13.0
-	 *
 	 * @param string $handle - The handle used to enqueued this script.
+	 *
+	 * @since 2.13.0
 	 *
 	 * @return void
 	 */
 	public function async_javascript( string $handle ) : void {
 		static::$async[] = $handle;
-		$this->once( function () {
-			add_filter( 'script_loader_tag', function ( $tag, $handle ) {
+		$this->once( static function () {
+			add_filter( 'script_loader_tag', static function ( $tag, $handle ) {
 				if ( in_array( $handle, static::$async, true ) ) {
 					return str_replace( '<script', '<script async="async"', $tag );
 				}
@@ -206,7 +210,7 @@ class Styles {
 	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
 	 * on if enqueued for footer of header.
 	 *
-	 * @param string $handle - The handle used to enqueued this script.
+	 * @param string $handle    - The handle used to enqueued this script.
 	 *
 	 * @param string $integrity - Integrity hash to add
 	 *
@@ -215,11 +219,11 @@ class Styles {
 	 * @return void
 	 */
 	public function integrity_javascript( string $handle, string $integrity ) : void {
-		static::$async[] = $handle;
-		$this->once( function () use ( $integrity ) {
-			add_filter( 'script_loader_tag', function ( $tag, $handle ) use ( $integrity ) {
-				if ( in_array( $handle, static::$async, true ) ) {
-					return str_replace( '<script', '<script integrity="' . $integrity . '" crossorigin="anonymous"', $tag );
+		static::$integrity[ $handle ] = $integrity;
+		$this->once( static function () {
+			add_filter( 'script_loader_tag', static function ( $tag, $handle ) {
+				if ( isset( static::$integrity[ $handle ] ) ) {
+					return str_replace( '<script', '<script integrity="' . static::$integrity[ $handle ] . '" crossorigin="anonymous"', $tag );
 				}
 				return $tag;
 			}, 11, 2 );
