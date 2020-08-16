@@ -74,46 +74,7 @@ trait Site_Trait {
 	public function get_id() : int {
 		return (int) $this->site_id;
 	}
-
-
-	/**
-	 * Get a value from the `blogmeta` table for this site.
-	 *
-	 * @param string     $key
-	 * @param null|mixed $default
-	 *
-	 * @return mixed|null
-	 */
-	public function get_meta( string $key, $default = null ) {
-		$value = \get_site_meta( $this->site_id, $key, true );
-		if ( null !== $default && empty( $value ) ) {
-			return $default;
-		}
-
-		return $value;
-	}
-
-
-	/**
-	 * Update a value in the `blogmeta` table for this site.
-	 *
-	 * @param string $key
-	 * @param mixed  $value
-	 */
-	public function update_meta( string $key, $value ) : void {
-		\update_site_meta( $this->site_id, $key, $value );
-	}
-
-
-	/**
-	 * Delete a value from the `blogmeta` table for this site.
-	 *
-	 * @param string $key
-	 */
-	public function delete_meta( string $key ) : void {
-		\delete_site_meta( $this->site_id, $key );
-	}
-
+	
 
 	/**
 	 * @return string
