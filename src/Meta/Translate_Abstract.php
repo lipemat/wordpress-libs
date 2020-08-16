@@ -307,7 +307,7 @@ abstract class Translate_Abstract {
 	 */
 	protected function update_group_sub_field_value( $object_id, string $key, $value, string $meta_type ) {
 		$group = $this->get_meta_value( $object_id, $this->fields[ $key ]->group, $meta_type );
-		if ( ! is_array( $group ) ) {
+		if ( ! \is_array( $group ) ) {
 			$group = [];
 		}
 		$group[ $this->group_row ][ $key ] = $value;
@@ -355,9 +355,11 @@ abstract class Translate_Abstract {
 	public function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : array {
 		$taxonomy = $this->get_field( $field_id )->taxonomy;
 		if ( 'post' !== $meta_type ) {
-			return array_filter( array_map( function ( $slug ) use ( $taxonomy ) {
-				return \get_term_by( 'slug', $slug, $taxonomy );
-			}, (array) $this->get_meta_value( $object_id, $field_id, $meta_type ) ) );
+			return $this->maybe_use_main_blog( $field_id, function () use( $object_id, $field_id, $taxonomy, $meta_type ) {
+				return array_filter( array_map( function ( $slug ) use ( $taxonomy ) {
+					return \get_term_by( 'slug', $slug, $taxonomy );
+				}, (array) $this->get_meta_value( $object_id, $field_id, $meta_type ) ) );
+			} );
 		}
 
 		return array_filter( (array) get_the_terms( $object_id, $taxonomy ) );
@@ -429,5 +431,36 @@ abstract class Translate_Abstract {
 		$terms = $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type );
 
 		return empty( $terms ) ? false : array_shift( $terms );
+	}
+
+
+	/**
+	 * Certain values types are retrieve and stored from main blog when
+	 * using network settings.
+	 *
+	 * When using categories in network settings, the categories are retrieved
+	 * and saved relative to the main blog.
+	 *
+	 * If we are working with a network setting, we switch to main blog before
+	 * retrieval, otherwise we use the standard retrieval.
+	 *
+	 * @param callable $callback - Any callback.
+	 *
+	 * @param string   $field_id
+	 *
+	 * @since 2.18.1
+	 *
+	 * @return mixed;
+	 */
+	protected function maybe_use_main_blog( string $field_id, callable $callback ) {
+		$is_network = 'network_admin_menu' === \cmb2_get_metabox( $this->get_field( $field_id )->box_id )->meta_box['admin_menu_hook'];
+		if ( $is_network ) {
+			\switch_to_blog( 1 );
+		}
+		$result = $callback();
+		if ( $is_network ) {
+			\restore_current_blog();
+		}
+		return $result;
 	}
 }
