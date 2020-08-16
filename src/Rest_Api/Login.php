@@ -30,8 +30,9 @@ class Login {
 
 	public function register_routes() : void {
 		register_rest_route( 'auth/v1', '/login/', [
-			'methods'  => 'POST',
-			'callback' => [ $this, 'basic_auth_handler' ],
+			'methods'             => 'POST',
+			'callback'            => [ $this, 'basic_auth_handler' ],
+			'permission_callback' => '__return_true',
 		] );
 	}
 
