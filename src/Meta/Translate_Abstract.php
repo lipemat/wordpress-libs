@@ -453,13 +453,13 @@ abstract class Translate_Abstract {
 	 * @return mixed;
 	 */
 	protected function maybe_use_main_blog( string $field_id, callable $callback ) {
-		$is_network = 'network_admin_menu' === \cmb2_get_metabox( $this->get_field( $field_id )->box_id )->meta_box['admin_menu_hook'];
+		$is_network = 'network_admin_menu' === cmb2_get_metabox( $this->get_field( $field_id )->box_id )->meta_box['admin_menu_hook'];
 		if ( $is_network ) {
-			\switch_to_blog( 1 );
+			switch_to_blog( get_main_site_id() );
 		}
 		$result = $callback();
 		if ( $is_network ) {
-			\restore_current_blog();
+			restore_current_blog();
 		}
 		return $result;
 	}

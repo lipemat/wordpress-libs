@@ -3,7 +3,6 @@
 namespace Lipe\Lib\Network;
 
 use Lipe\Lib\Meta\Mutator_Trait;
-use Lipe\Lib\Site\Site_Trait;
 
 /**
  * Interact with a single network on a multi-network install
@@ -16,11 +15,12 @@ use Lipe\Lib\Site\Site_Trait;
  * @since    2.19.0
  *
  * @property int    $id
- * @property string $domain
- * @property string path
+ * @property int    $site_id
  * @property string $blog_id
  * @property string $cookie_domain
+ * @property string $domain
  * @property string $site_name
+ * @property string path
  *
  */
 trait Network_Trait {

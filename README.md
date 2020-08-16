@@ -4,7 +4,7 @@
 <a href="https://github.com/lipemat/wordpress-libs/releases/latest">
 <img src="https://img.shields.io/packagist/v/lipemat/wordpress-libs.svg?label=version" />
 </a>
-    <img alt="" src="https://img.shields.io/badge/wordpress->=4.8.0-green.svg">
+    <img alt="" src="https://img.shields.io/badge/wordpress->=4.9.0-green.svg">
     <img src="https://img.shields.io/packagist/php-v/lipemat/wordpress-libs.svg?color=brown" />
     <img alt="Packagist" src="https://img.shields.io/packagist/l/lipemat/wordpress-libs.svg">
 </p>
@@ -48,6 +48,8 @@ require __DIR__ . '/vendor/autoload.php'
 * Memoize Trait (@since 2.6.0)
 * Site Object Trait (@since 2.8.0)
 * Class Version Trait (@since 2.10.0)
+* Network Object Trait (@since 2.19.0)
+
 
 ##### Changelog may be found in [releases](https://github.com/lipemat/wordpress-libs/releases) (non exhaustive)
 
