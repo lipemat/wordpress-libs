@@ -178,6 +178,9 @@ class Options_Page extends Box {
 		if ( null === $this->option_key ) {
 			$this->option_key = $id;
 		}
+
+		add_action( "cmb2_init_hookup_{$id}", [ $this, 'run_options_hookup_on_front_end' ] );
+
 		parent::__construct( $id, [ 'options-page' ], $title );
 	}
 
@@ -229,6 +232,25 @@ class Options_Page extends Box {
 				<?php
 			} );
 		}
+	}
 
+
+	/**
+	 * The options hookups translate options to sitemeta for the network
+	 * options, among other things.
+	 *
+	 * The CMB2 plugin only runs these hookups in the admin because
+	 * it expects direct calls to `get_site_option`. We mimic the admin
+	 * functionality here, so we get the correct values when using the Repo.
+	 *
+	 * @param \CMB2 $cmb
+	 *
+	 * @since 2.18.1
+	 */
+	public function run_options_hookup_on_front_end( \CMB2 $cmb ) : void {
+		if ( ! is_admin() ) {
+			$hookup = new \CMB2_Hookup( $cmb );
+			$hookup->options_page_hooks();
+		}
 	}
 }
