@@ -38,11 +38,13 @@ trait Network_Trait {
 
 
 	/**
-	 * @param int|\WP_Network $network
+	 * @param int|null|\WP_Network $network
 	 *
 	 */
-	public function __construct( $network ) {
-		if ( is_a( $network, \WP_Network::class ) ) {
+	public function __construct( $network = null ) {
+		if ( null === $network ) {
+			$this->network_id  = get_current_network_id();
+		} elseif ( is_a( $network, \WP_Network::class ) ) {
 			$this->network = $network;
 			$this->network_id = $this->network->id;
 		} else {
@@ -53,7 +55,7 @@ trait Network_Trait {
 
 	public function get_object() : ?\WP_Network {
 		if ( null === $this->network ) {
-			$this->network = \get_network( $this->network_id );
+			$this->network = get_network( $this->network_id );
 		}
 
 		return $this->network;
@@ -77,7 +79,7 @@ trait Network_Trait {
 	 * @return mixed|null
 	 */
 	public function get_meta( string $key, $default = null ) {
-		return \get_network_option( $this->network_id, $key, $default );
+		return get_network_option( $this->network_id, $key, $default );
 	}
 
 
@@ -91,7 +93,7 @@ trait Network_Trait {
 		if ( \is_callable( $value[0] ) ) {
 			$value[0] = $value[0]( $this->get_meta( $key, $value[1] ?? null ) );
 		}
-		\update_network_option( $this->network_id, $key, $value[0] );
+		update_network_option( $this->network_id, $key, $value[0] );
 	}
 
 
@@ -101,7 +103,7 @@ trait Network_Trait {
 	 * @param string $key
 	 */
 	public function delete_meta( string $key ) : void {
-		\delete_network_option( $this->network_id, $key );
+		delete_network_option( $this->network_id, $key );
 	}
 
 
@@ -115,13 +117,13 @@ trait Network_Trait {
 
 	/**
 	 *
-	 * @param int|\WP_Network $network
+	 * @param int|null|\WP_Network $network
 	 *
 	 * @static
 	 *
 	 * @return static
 	 */
-	public static function factory( $network ) {
+	public static function factory( $network = null ) {
 		return new static( $network );
 	}
 
