@@ -39,17 +39,47 @@ trait Mutator_Trait {
 	abstract public function get_meta_type() : string;
 
 
-	public function __get( $key ) {
+	/**
+	 * Access any property which exists on the child Object.
+	 *
+	 * @param string $property - Property to retrieve.
+	 *
+	 * @throws \ErrorException
+	 * @return mixed
+	 */
+	public function __get( $property ) {
 		if ( ! \method_exists( $this, 'get_object' ) ) {
-			throw new \ErrorException( 'Direct access to object properties is only available for objects with `get_object`: ' . __CLASS__ . ":{$key}" );
+			throw new \ErrorException( 'Direct access to object properties is only available for objects with `get_object`: ' . __CLASS__ . ":{$property}" );
 		}
 		$object = $this->get_object();
-		if ( null !== $object && ( \property_exists( $object, $key ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $key ) ) ) ) {
-			return $object->{$key};
+		if ( null !== $object && ( \property_exists( $object, $property ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $property ) ) ) ) {
+			return $object->{$property};
 		}
-		throw new \ErrorException( 'Undefined property: ' . __CLASS__ . ":{$key}" );
+		throw new \ErrorException( 'Undefined property: ' . __CLASS__ . ":{$property}" );
 	}
 
+
+	/**
+	 * Call any method which exists on the child Object
+	 *
+	 * @param string $name - Name of the method.
+	 * @param array $arguments - Passed arguments
+	 *
+	 * @since 2.19.0
+	 *
+	 * @throws \ErrorException
+	 * @return mixed
+	 */
+	public function __call( $name, $arguments ) {
+		if ( ! \method_exists( $this, 'get_object' ) ) {
+			throw new \ErrorException( 'Direct access to object methods is only available for objects with `get_object`: ' . __CLASS__ . ":{$name}" );
+		}
+		$object = $this->get_object();
+		if ( null !== $object && ( \method_exists( $object, $name ) ) ) {
+			return $object->{$name}( ...$arguments );
+		}
+		throw new \ErrorException( 'Method does not exist: ' . __CLASS__ . ":{$name}" );
+	}
 
 
 	/**
