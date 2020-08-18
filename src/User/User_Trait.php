@@ -27,6 +27,23 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @property string $locale
  * @property string $rich_editing
  * @property string $syntax_highlighting
+ *
+ * @method bool exists()
+ * @method bool[] get_role_caps()
+ * @method void add_role( string $role )
+ * @method void remove_role( string $role )
+ * @method void set_role( string $role )
+ * @method int level_reduction( int $max, string $item )
+ * @method void update_user_level_from_caps()
+ * @method void add_cap( string $cap, bool $grant = true )
+ * @method void remove_cap( string $cap )
+ * @method void remove_all_caps()
+ * @method bool has_cap( string $cap, ...$args )
+ * @method string translate_level_to_cap( int $level )
+ * @method void for_site( int $site_id = '' )
+ * @method int get_site_id()
+ *
+ *
  */
 trait User_Trait {
 	use Mutator_Trait;
