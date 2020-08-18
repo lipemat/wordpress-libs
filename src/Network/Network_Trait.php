@@ -15,7 +15,6 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @since    2.19.0
  *
  * @property int    $id
- * @property int    $site_id
  * @property string $blog_id
  * @property string $cookie_domain
  * @property string $domain
