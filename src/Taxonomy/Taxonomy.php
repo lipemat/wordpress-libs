@@ -3,12 +3,8 @@
 namespace Lipe\Lib\Taxonomy;
 
 use Lipe\Lib\Util\Actions;
-use function sanitize_key;
-use function sanitize_text_field;
 
 /**
- * Taxonomy
- *
  * Register taxonomies
  *
  * @notice Must be constructed before the init hook runs
@@ -20,7 +16,6 @@ use function sanitize_text_field;
  * $tax->set_label( %singular%, %plural%  );
  * $tax->post_types = array( self::NAME );
  * $tax->slug = %slug;
- *
  *
  */
 class Taxonomy {
@@ -76,7 +71,7 @@ class Taxonomy {
 	 * menu provided.
 	 *
 	 * If an array is provided, the taxonomy will show under the menu
-	 * provided by the array key and the order provided by the array value.
+	 * provided by the array key, and the order provided by the array value.
 	 *
 	 * @example 'tools.php'
 	 * @example [ 'tools.php' => 6 ]
@@ -203,8 +198,8 @@ class Taxonomy {
 	public $query_var;
 
 	/**
-	 * Assign special rewrite args. Send only the ones wanted to change.
-	 * Set to false to disable URL rewriting.
+	 * Assign a special rewrite args. Send only the ones wanted to change.
+	 * Set too false to disable URL rewriting.
 	 *
 	 * {
 	 * 'slug' - Used as pretty permalink text (i.e. /tag/) - defaults to $this->taxonomy
@@ -233,6 +228,20 @@ class Taxonomy {
 	 * @var array
 	 */
 	public $capabilities = [];
+
+	/**
+	 * The default term added to new posts.
+	 * Replaces "Uncategorized"
+	 *
+	 * @requires WP 5.5.0+
+	 *
+	 * @var string|array {
+	 *          @type string       $name         Name of default term.
+	 *          @type string       $slug         Slug for default term. Default empty.
+	 *          @type string       $description  Description for default term. Default empty.
+	 *     }
+	 */
+	public $default_term;
 
 	/**
 	 * Whether this taxonomy should remember the order in which terms
@@ -268,7 +277,13 @@ class Taxonomy {
 
 	protected $label_menu = '';
 
-	protected $default_terms = [];
+	/**
+	 * Terms to be automatically added to a taxonomy when
+	 * it's registered.
+	 *
+	 * @var array
+	 */
+	protected $initial_terms = [];
 
 	/**
 	 * Set to true during __construct() auto generate a post list filter
@@ -310,7 +325,6 @@ class Taxonomy {
 	public function hook() : void {
 		//so we can add and edit stuff on init hook
 		add_action( 'wp_loaded', [ $this, 'register' ], 8, 0 );
-		add_action( 'wp_loaded', [ $this, 'register_default_terms' ], 9, 0 );
 		add_action( 'admin_menu', [ $this, 'add_as_submenu' ] );
 
 		if ( $this->_post_list_filter ) {
@@ -351,20 +365,14 @@ class Taxonomy {
 	 * @return Taxonomy_Extended|Taxonomy|null
 	 */
 	public static function get_taxonomy( $taxonomy ) {
-		if ( isset( self::$registry[ $taxonomy ] ) ) {
-			return self::$registry[ $taxonomy ];
-		}
-
-		return null;
+		return self::$registry[ $taxonomy ] ?? null;
 	}
 
 
 	/**
-	 * Post List Query Filters
-	 *
 	 * Filters to query to match the taxonomy drop-downs on the post list page
 	 *
-	 * @uses added to the parse_tax_query action by $this->hook()
+	 * @uses added to parse_tax_query action by $this->hook()
 	 *
 	 * @param \WP_Query $query
 	 *
@@ -401,11 +409,9 @@ class Taxonomy {
 
 
 	/**
-	 * Post List Filter
+	 * Creates the drop-downs to filter the post list by this taxonomy
 	 *
-	 * Creates the drop-downs to filter the post list by taxonomy
-	 *
-	 * @uses added to the restrict_manage_posts hook by $this->hook()
+	 * @uses added to restrict_manage_posts hook by $this->hook()
 	 *
 	 * @return void
 	 */
@@ -439,7 +445,7 @@ class Taxonomy {
 		wp_dropdown_categories( $args );
 
 		if ( $been_filtered && isset($_GET['post_type'] ) ) {
-			$post_type = sanitize_key( $_GET['post_type'] );
+			$post_type = \sanitize_key( $_GET['post_type'] );
 			?>
 			<a style="float: left; margin-top: 1px"
 			   href="<?php echo esc_url( admin_url( 'edit.php?post_type=' . esc_attr( $post_type ) ) ); ?>"
@@ -453,31 +459,25 @@ class Taxonomy {
 
 
 	/**
-	 * Set Default Terms
+	 * Specify terms to be added automatically when a taxonomy is created.
 	 *
-	 * Specify terms to be registered automatically when a taxonomy is created
-	 *
-	 * @param array $terms = array( slug' => term, slug => term );
+	 * @param array $terms = array( <slug> => <name> );
 	 *
 	 * @return void
 	 */
-	public function set_default_terms( array $terms = [] ) : void {
-		$this->default_terms = $terms;
+	public function add_initial_terms( array $terms = [] ) : void {
+		$this->initial_terms = $terms;
 	}
 
 
 	/**
-	 * Register any specified terms for a new taxonomy.
+	 * Inserts any specified terms for a new taxonomy.
 	 * Will run only once when term is first registered.
 	 * Will only run on fresh taxonomies with no existing terms.
 	 *
 	 * @return void
 	 */
-	public function register_default_terms() : void {
-		if ( empty( $this->default_terms ) ) {
-			return;
-		}
-
+	protected function insert_initial_terms() : void {
 		$already_defaulted = get_option( 'lipe/lib/taxonomy/defaults-registry', [] );
 
 		if ( ! isset( $already_defaulted[ $this->get_slug() ] ) ) {
@@ -486,9 +486,9 @@ class Taxonomy {
 				'hide_empty' => false,
 				'number'     => 1,
 			] ) ) {
-				foreach ( $this->default_terms as $slug => $term ) {
+				foreach ( $this->initial_terms as $slug => $term ) {
 					$args = [];
-					if ( ! is_numeric( $slug ) ) {
+					if ( ! \is_numeric( $slug ) ) {
 						$args['slug'] = $slug;
 					}
 					wp_insert_term( $term, $this->taxonomy, $args );
@@ -535,20 +535,49 @@ class Taxonomy {
 		$edit_tags_file = 'edit-tags.php?taxonomy=%s';
 
 		if ( ! \is_bool( $this->show_in_menu ) && ! empty( $this->show_in_menu ) ) {
-			$tax = \get_taxonomy( $this->taxonomy );
+			$tax = get_taxonomy( $this->taxonomy );
+			$parent = $this->show_in_menu;
+			$order = 100;
 			if ( null !== $tax ) {
-				$parent                       = \is_array( $this->show_in_menu ) ? key( $this->show_in_menu ) : $this->show_in_menu;
-				$order                        = \is_array( $this->show_in_menu ) ? $this->show_in_menu[ $parent ] : 100;
-				$submenu[ $parent ][ $order ] = [ //phpcs:disable WordPress.WP.GlobalVariablesOverride.OverrideProhibited
+				if ( \is_array( $parent ) ) {
+					$parent = \key( $this->show_in_menu );
+					$order = \reset( $this->show_in_menu );
+				}
+				$submenu[ $parent ][ $order ] = [ //phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 					esc_attr( $tax->labels->menu_name ),
 					$tax->cap->manage_terms,
-					sprintf( $edit_tags_file, $tax->name ),
+					\sprintf( $edit_tags_file, $tax->name ),
 				];
-				ksort( $submenu[ $parent ] );
+				\ksort( $submenu[ $parent ] );
 			}
 		}
 		//set the current parent menu for the custom location
 		add_filter( 'parent_file', [ $this, 'set_current_menu' ] );
+	}
+
+
+	/**
+	 * Set the default term which will be added to new posts which
+	 * use this taxonomy.
+	 *
+	 * If the term does not exist, it will be created automatically.
+	 *
+	 * @requires WP 5.5.0+
+	 *
+	 * @param string $slug
+	 * @param string $name
+	 * @param string $description
+	 *
+	 * @since    2.19.0
+	 *
+	 * @return void
+	 */
+	public function set_default_term( string $slug, string $name, string $description = '' ) : void {
+		$this->default_term = [
+			'description' => $description,
+			'name'        => $name,
+			'slug'        => $slug,
+		];
 	}
 
 
@@ -589,6 +618,9 @@ class Taxonomy {
 	public function register() : void {
 		$this->register_taxonomy();
 		self::$registry[ $this->taxonomy ] = $this;
+		if ( $this->initial_terms ) {
+			$this->insert_initial_terms();
+		}
 	}
 
 	/**
@@ -634,6 +666,7 @@ class Taxonomy {
 			'rewrite'               => $this->rewrites(),
 			'capabilities'          => $this->capabilities,
 			'sort'                  => $this->sort,
+			'default_term'          => $this->default_term,
 		];
 
 		$args = apply_filters( 'lipe/lib/taxonomy/args', $args, $this->taxonomy );
@@ -646,8 +679,8 @@ class Taxonomy {
 	/**
 	 * Build the labels array for the post type definition
 	 *
-	 * @param string $single
-	 * @param string $plural
+	 * @param null|string $single
+	 * @param null|string $plural
 	 *
 	 * @return array
 	 */
@@ -734,7 +767,7 @@ class Taxonomy {
 			$singular = ucwords( str_replace( '_', ' ', $this->taxonomy ) );
 		}
 		if ( ! $plural ) {
-			if ( substr( $singular, - 1 ) === 'y' ) {
+			if ( 'y' === substr( $singular, - 1 ) ) {
 				$plural = substr( $singular, 0, - 1 ) . 'ies';
 			} else {
 				$plural = $singular . 's';
@@ -793,4 +826,26 @@ class Taxonomy {
 	public function set_menu_label( $label ) : void {
 		$this->label_menu = $label;
 	}
+
+
+
+	/**
+	 * @deprecated 2.19.0 in favor of `add_initial_terms`.
+	 */
+	public function set_default_terms( $terms ) : void {
+		\_deprecated_function( __METHOD__, '2.19.0', 'add_initial_terms' );
+		$this->add_initial_terms( $terms );
+	}
+
+
+	/**
+	 * @deprecated 2.19.0 without a replacement.
+	 */
+	public function register_default_terms() : void {
+		\_deprecated_function( __METHOD__, '2.19.0' );
+		if ( $this->initial_terms ) {
+			$this->insert_initial_terms();
+		}
+	}
+
 }

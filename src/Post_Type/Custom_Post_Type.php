@@ -300,7 +300,7 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	private function handle_block_editor_support() : void {
+	protected function handle_block_editor_support() : void {
 		if ( false === $this->gutenberg_compatible ) {
 			add_filter( 'use_block_editor_for_post_type', function ( $use, $post_type ) {
 				if ( $post_type === $this->post_type ) {
