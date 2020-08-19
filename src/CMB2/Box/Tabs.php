@@ -290,7 +290,7 @@ class Tabs {
 			--------------------------------------------------------------*/
 			.cmb-tabs .cmb-th label {
 				color: #555;
-				font-size: 12px;
+				font-size: 13px;
 			}
 
 			.cmb2-options-page .cmb-tabs .cmb-th label {
@@ -507,7 +507,7 @@ class Tabs {
 				width: 100%;
 			}
 
-			.cmb-tabs.cmb-tabs-horizontal .cmb-tab-panel {
+			.cmb-tabs .cmb-tab-panel {
 				/*background: #ebebeb none repeat scroll 0 0;*/
 				padding-top: 10px;
 			}

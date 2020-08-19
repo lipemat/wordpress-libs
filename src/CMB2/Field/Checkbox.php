@@ -92,6 +92,10 @@ class Checkbox {
 				padding: 0 0 1em !important;
 			}
 
+			.cmb-tab-panel .checkbox-compact {
+				padding: 0 2% 1em !important;
+			}
+
 			.checkbox-compact label {
 				display: inline-block !important;
 			}
