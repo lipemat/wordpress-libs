@@ -5,8 +5,6 @@ namespace Lipe\Lib\Post_Type\Extended_CPTS;
 use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
 
 /**
- * Query_Var
- *
  * Extended CPTs provides a mechanism for registering public query vars
  * which allow users to filter your post type archives by various fields.
  * This also works in WP_Query,
@@ -26,55 +24,57 @@ use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
  * @example test.loc/articles/?{$query_var}=bar
  *
  * @author  Mat Lipe
- * @since   7/29/2017
  *
  * @link    https://github.com/johnbillion/extended-cpts/wiki/Query-vars-for-filtering#example
  *
  * @package Lipe\Lib\Post_Type\Custom_Post_Type_Extended
  */
 class Query_Var extends Argument_Abstract {
-	protected $CPTS;
+	/**
+	 * @var Custom_Post_Type_Extended
+	 */
+	protected $object;
 
 	/**
+	 * The current query variable.
 	 *
-	 * @see \Lipe\Lib\Post_Type\Extended_CPTS\Query_var::set()
+	 * @see Query_var::set()
 	 * @var string
 	 */
-	protected $query_vars_array_key;
+	protected $query_var;
 
 
 	/**
 	 * Query_var constructor.
 	 *
-	 * @param \Lipe\Lib\Post_Type\Custom_Post_Type_Extended $CPTS
+	 * @param Custom_Post_Type_Extended $object
 	 */
-	public function __construct( Custom_Post_Type_Extended $CPTS ) {
-		$this->CPTS = $CPTS;
+	public function __construct( Custom_Post_Type_Extended $object ) {
+		$this->object = $object;
 	}
 
 
 	/**
 	 * Store args to cpt object
-	 * This must be called from every method that is saving args
-	 *
+	 * This must be called from every method that is saving args,
 	 * or they will go nowhere
+	 *
+	 * @param array $args
 	 *
 	 * @internal
 	 *
-	 * @param [] $args
-	 *
 	 * @return void
 	 */
-	public function set( array $args ) {
-		if ( ! isset( $this->CPTS->site_filters[ $this->query_vars_array_key ] ) ) {
-			$this->query_vars_array_key = $args['query_var'];
-			$this->CPTS->site_filters[ $this->query_vars_array_key ] = [];
+	public function set( array $args ) : void {
+		if ( ! isset( $this->object->site_filters[ $this->query_var ] ) ) {
+			$this->query_var = $args['query_var'];
+			$this->object->site_filters[ $this->query_var ] = [];
 		}
 
-		$existing = $this->CPTS->site_filters[ $this->query_vars_array_key ];
+		$existing = $this->object->site_filters[ $this->query_var ];
 
-		$existing = array_merge( $existing, $args );
-		$this->CPTS->site_filters[ $this->query_vars_array_key ] = $existing;
+		$existing = \array_merge( $existing, $args );
+		$this->object->site_filters[ $this->query_var ] = $existing;
 	}
 
 
@@ -84,9 +84,9 @@ class Query_Var extends Argument_Abstract {
 	 *
 	 * @param array $args
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Query_Var_Shared
+	 * @return Query_Var_Shared
 	 */
-	protected function return( array $args ) {
+	protected function return( array $args ) : Query_Var_Shared {
 		$this->set( $args );
 		return new Query_Var_Shared( $this, $args );
 	}
@@ -103,13 +103,13 @@ class Query_Var extends Argument_Abstract {
 	 * 'type'    => 'NUMERIC',
 	 * )
 	 *
-	 * @param string $query_var
-	 * @param string $meta_key
-	 * @param array  $meta_query
+	 * @param string     $query_var
+	 * @param string     $meta_key
+	 * @param array|null $meta_query
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Query_Var_Shared
+	 * @return Query_Var_Shared
 	 */
-	public function meta( $query_var, $meta_key, array $meta_query = null ) {
+	public function meta( $query_var, $meta_key, array $meta_query = null ) : Query_Var_Shared {
 		$_args = [
 			'query_var' => $query_var,
 			'meta_key'  => $meta_key,
@@ -130,9 +130,9 @@ class Query_Var extends Argument_Abstract {
 	 * @param string $query_var
 	 * @param string $meta_key
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Query_Var_Shared
+	 * @return Query_Var_Shared
 	 */
-	public function meta_search( $query_var, $meta_key ) {
+	public function meta_search( $query_var, $meta_key ) : Query_Var_Shared {
 		$_args = [
 			'query_var'       => $query_var,
 			'meta_search_key' => $meta_key,
@@ -176,11 +176,11 @@ class Query_Var extends Argument_Abstract {
 	 *
 	 * @throws \Exception
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Query_Var_Shared
+	 * @return Query_Var_Shared
 	 */
-	public function taxonomy( $query_var, $taxonomy ) {
+	public function taxonomy( $query_var, $taxonomy ) : Query_Var_Shared {
 		if ( taxonomy_exists( $query_var ) ) {
-			throw new \Exception( __( 'Your query var clashes with an existing taxonomy. You can probably just use default WP filtering', 'lipe' ) );
+			throw new \RuntimeException( __( 'Your query var clashes with an existing taxonomy. You can probably just use default WP filtering.', 'lipe' ) );
 		}
 		$_args = [
 			'query_var' => $query_var,
