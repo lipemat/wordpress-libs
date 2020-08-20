@@ -538,7 +538,11 @@ class Box {
 	 * Register the meta on all types or subtypes of this
 	 * box's object type.
 	 *
-	 * Adds the default value if provided as well.
+	 * 1. Adds the default value if provided.
+	 * 2. Translates long /namespaced names to API friendly.
+	 *    If you need the long names due to conflicts, they will still
+	 *    be available via /cmb2 values.
+	 * 3. Registers the provided 'show_in_rest' configuration.
 	 *
 	 * Support a default value for any `get_metadata()` calls.
 	 * Will add the values of all sub fields
@@ -554,6 +558,15 @@ class Box {
 		}
 		if ( ! isset( $config['default'] ) && ! isset( $config['show_in_rest'] ) ) {
 			return;
+		}
+
+		// Translate long /namespaced names to short ones.
+		if ( isset( $config['show_in_rest'] ) ) {
+			if ( ! \is_array( $config['show_in_rest'] ) ) {
+				$config['show_in_rest'] = [];
+			}
+			$name = explode( '/', $field->get_id() );
+			$config['show_in_rest']['name'] = end( $name );
 		}
 
 		$type = $this->get_object_type();
