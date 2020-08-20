@@ -3,10 +3,9 @@
 namespace Lipe\Lib\CMB2;
 
 /**
- * Term_Box
+ * Term meta box class.
  *
  * @author  Mat Lipe
- * @since   7/28/2017
  *
  * @package Lipe\Lib\CMB2
  */

@@ -200,9 +200,6 @@ class Group extends Field {
 	 * Register the meta field with WP core for things like
 	 * `show_in_rest` and `default.
 	 *
-	 * Supports a default value for any `get_metadata()` calls.
-	 * Will add the values of all sub fields
-	 *
 	 * @requires WP 5.5+ for default values.
 	 *
 	 * @since    2.19.0
@@ -243,14 +240,21 @@ class Group extends Field {
 				],
 			];
 		}
-		if ( null !== $this->default && ! \is_callable( $this->default ) ) {
-			$config['default'] = $this->default;
-		}
-		if ( isset( $config['default'] ) || isset( $config['show_in_rest'] ) ) {
-			foreach ( $this->box->get_object_types() as $_object_type ) {
-				register_meta( $_object_type, $this->get_id(), $config );
-			}
-		}
+
+		$this->box->register_meta_on_all_types( $this, $config );
+	}
+
+
+	/**
+	 * Get the full list of object types this box
+	 * is registered to.
+	 *
+	 * @since 2.19.0
+	 *
+	 * @return array
+	 */
+	public function get_object_types() : array {
+		return $this->box->get_object_types();
 	}
 
 

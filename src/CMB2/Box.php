@@ -39,16 +39,6 @@ class Box {
 	protected $context;
 
 	/**
-	 * An array containing post type slugs, or 'user', 'term', 'comment', or 'options-page'.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#object_types
-	 * @example [ 'page', 'post' ]
-	 *
-	 * @var array
-	 */
-	protected $object_types = [];
-
-	/**
 	 * Title display in the admin metabox.
 	 *
 	 * To keep from registering an actual post-screen metabox,
@@ -504,14 +494,6 @@ class Box {
 
 
 	/**
-	 * @return array
-	 */
-	public function get_object_types() : array {
-		return $this->object_types;
-	}
-
-
-	/**
 	 * Handle any massaging of callback arguments and return them
 	 *
 	 * Take care of the Gutenberg properties
@@ -549,6 +531,47 @@ class Box {
 		$field->box_id = $this->id;
 
 		Repo::in()->register_field( $field );
+	}
+
+
+	/**
+	 * Register the meta on all types or subtypes of this
+	 * box's object type.
+	 *
+	 * Adds the default value if provided as well.
+	 *
+	 * Support a default value for any `get_metadata()` calls.
+	 * Will add the values of all sub fields
+	 *
+	 * @param Field $field
+	 * @param array $config
+	 *
+	 * @since 2.19.0
+	 */
+	public function register_meta_on_all_types( Field $field, array $config ) : void {
+		if ( null !== $field->default && ! \is_callable( $field->default ) ) {
+			$config['default'] = $field->default;
+		}
+		if ( ! isset( $config['default'] ) && ! isset( $config['show_in_rest'] ) ) {
+			return;
+		}
+
+		$type = $this->get_object_type();
+		$sub_types = $this->object_types;
+		if ( 'term' === $this->get_object_type() ) {
+			$type = 'term';
+			$sub_types = $this->taxonomies ?? [];
+		} elseif ( \in_array( $this->get_object_type(), [ 'user', 'comment' ] ) ) {
+			$sub_types = [ false ];
+		}
+
+		foreach ( $sub_types as $_type ) {
+			$config['object_subtype'] = $_type;
+			register_meta( $type, $field->get_id(), $config );
+			if ( Repo::FILE === $field->data_type ) {
+				register_meta( $type, $field->get_id() . '_id', $config );
+			}
+		}
 	}
 
 

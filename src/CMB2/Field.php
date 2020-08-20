@@ -7,10 +7,9 @@ use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
 
 /**
- * Field
+ * Meta box or options page field.
  *
  * @author  Mat Lipe
- * @since   7/27/2017
  *
  * @package Lipe\Lib\CMB2
  */
@@ -658,7 +657,7 @@ class Field {
 	 *
 	 * @since 2.19.0
 	 *
-	 * @var Box_Trait|null
+	 * @var Box_Trait|Box|null
 	 */
 	protected $box;
 
@@ -668,7 +667,7 @@ class Field {
 	 *
 	 * @param string         $id
 	 * @param string|null    $name
-	 * @param Box_Trait|null $box - Parent class using this Field.
+	 * @param Box_Trait|Box|null $box - Parent class using this Field.
 	 *
 	 * @see     \Lipe\Lib\CMB2\Field_Type
 	 *

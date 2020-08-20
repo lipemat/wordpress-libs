@@ -15,6 +15,16 @@ trait Box_Trait {
 	 */
 	protected $fields = [];
 
+	/**
+	 * An array containing post type slugs, or 'user', 'term', 'comment', or 'options-page'.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#object_types
+	 * @example [ 'page', 'post' ]
+	 *
+	 * @var array
+	 */
+	protected $object_types = [];
+
 
 	/**
 	 * Hook into `cmb2_init` to register all the fields.
@@ -116,9 +126,6 @@ trait Box_Trait {
 	 * Register the meta field with WP core for things like
 	 * `show_in_rest` and `default.
 	 *
-	 * Supports a default value for any `get_metadata()` calls.
-	 * Supports the value showing in the standard REST api.
-	 *
 	 * Only supports simple data types.
 	 *
 	 * @requires WP 5.5+ for default values.
@@ -129,7 +136,7 @@ trait Box_Trait {
 	 *
 	 */
 	protected function register_meta( Field $field ) : void {
-		if ( ! $this->is_allowed_to_register( $field ) ) {
+		if ( ! $this->is_allowed_to_register_meta( $field ) ) {
 			return;
 		}
 		$config = [
@@ -151,17 +158,8 @@ trait Box_Trait {
 				];
 			}
 		}
-		if ( null !== $field->default && ! \is_callable( $field->default ) ) {
-			$config['default'] = $field->default;
-		}
-		if ( isset( $config['default'] ) || isset( $config['show_in_rest'] ) ) {
-			foreach ( (array) $this->object_types as $_object_type ) {
-				register_meta( $_object_type, $field->get_id(), $config );
-				if ( Repo::FILE === $field->data_type ) {
-					register_meta( $_object_type, $field->get_id() . '_id', $config );
-				}
-			}
-		}
+
+		$this->register_meta_on_all_types( $field, $config );
 	}
 
 
@@ -196,7 +194,7 @@ trait Box_Trait {
 	 *
 	 * @return bool
 	 */
-	protected function is_allowed_to_register( Field $field ) : bool {
+	protected function is_allowed_to_register_meta( Field $field ) : bool {
 		return \in_array( $field->data_type, [ Repo::CHECKBOX, Repo::DEFAULT, Repo::FILE ], true );
 	}
 
@@ -222,5 +220,38 @@ trait Box_Trait {
 	 */
 	public function is_group() : bool {
 		return self::class === Group::class;
+	}
+
+
+	/**
+	 * Get the type of object this box is registered to.
+	 *
+	 * @since 2.19.0
+	 *
+	 * @return string
+	 */
+	public function get_object_type() : string {
+		switch ( $this->object_types[0] ) {
+			case 'comment':
+			case 'options-page':
+			case 'user':
+			case 'term':
+				return $this->object_types[0];
+			default:
+				return 'post';
+		}
+	}
+
+
+	/**
+	 * Get the full list of object types this box
+	 * is registered to.
+	 *
+	 * @since 2.19.0
+	 *
+	 * @return array
+	 */
+	public function get_object_types() : array {
+		return $this->object_types;
 	}
 }
