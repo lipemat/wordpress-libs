@@ -6,15 +6,14 @@ use Lipe\Lib\CMB2\Box\Tabs;
 use Lipe\Lib\Meta\Repo;
 
 /**
- * Box
+ * Main meta box class.
  *
  * @author  Mat Lipe
- * @since   7/27/2017
  *
  * @package Lipe\Lib\CMB2
  */
 class Box {
-	use Shorthand_Fields;
+	use Box_Trait;
 
 	/**
 	 * The id of metabox
@@ -262,18 +261,23 @@ class Box {
 	/**
 	 * Determines if/how fields/metabox are available in the REST API.
 	 *
+	 * Only individual fields that are explicitly set to truthy will
+	 * be included in default WP response.
+	 * If the box is set to true and all fields are in the /cmb2 response.
+	 *
 	 * @link    https://github.com/WebDevStudios/CMB2/wiki/REST-API
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_in_rest
 	 *
-	 * @example WP_REST_Server::READABLE, // or
-	 * @example WP_REST_Server::ALLMETHODS/WP_REST_Server::EDITABLE
+	 * @example WP_REST_Server::READABLE // Same as `true`
+	 * @example WP_REST_Server::ALLMETHODS
+	 * @example WP_REST_Server::EDITABLE
 	 *
 	 * @notice Boxes must be registered on `cmb2_init` instead of `cmb2_admin_init`
 	 *         to use this property. Change in `Meta_Provider` if applicable
 	 *
 	 * @default false
 	 *
-	 * @var string
+	 * @var string|bool
 	 */
 	public $show_in_rest;
 
@@ -364,7 +368,7 @@ class Box {
 
 
 	/**
-	 * Display a description at the top of a meta box or an options page
+	 * Display a description at the top of a meta box, or an option's page
 	 *
 	 * @since 1.14.0
 	 *
@@ -373,15 +377,14 @@ class Box {
 	 * @return void
 	 */
 	public function description( string $description ) : void {
-		$types = $this->object_types;
 		$types[] = 'post';
-		foreach ( $types as $_type ) {
+		foreach ( $this->get_object_types() as $_type ) {
 			add_action( "cmb2_before_{$_type}_form_{$this->id}", function () use ( $description ) {
 				?>
 				<div class="cmb-row">
 					<p>
 						<span class="description">
-							<?= $description; ?>
+							<?= wp_kses_post( $description ) ?>
 						</span>
 					</p>
 				</div>
@@ -390,6 +393,32 @@ class Box {
 		}
 	}
 
+
+	/**
+	 * If the box's `show_in_rest` is false, and a non `false` parameter
+	 * is passed, the box's `show_in_rest` will be set to true and all
+	 * fields which do not have a `show_in_rest` specified will be set false.
+	 *
+	 * Only individual fields that are explicitly set to truthy will
+	 * be included in default WP response even if the box is set to true
+	 * and all fields are in the /cmb2 response.
+	 *
+	 *
+	 * @param string|bool $methods
+	 *
+	 * @see     Box_Trait::selectively_show_in_rest()
+	 *
+	 * @example WP_REST_Server::READABLE // Same as `true`
+	 * @example WP_REST_Server::ALLMETHODS
+	 * @example WP_REST_Server::EDITABLE
+	 *
+	 * @since   2.19.0
+	 *
+	 * @return void
+	 */
+	public function show_in_rest( $methods = \WP_REST_Server::READABLE ) : void {
+		$this->show_in_rest = $methods;
+	}
 
 	/**
 	 * Add a tab to this box which can later be assigned to fields via
@@ -440,8 +469,9 @@ class Box {
 		$this->tab_style = $layout;
 	}
 
+
 	/**
-	 *
+	 * Get teh CMB2 version of this box.
 	 *
 	 * @return \CMB2
 	 */
@@ -474,6 +504,14 @@ class Box {
 
 
 	/**
+	 * @return array
+	 */
+	public function get_object_types() : array {
+		return $this->object_types;
+	}
+
+
+	/**
 	 * Handle any massaging of callback arguments and return them
 	 *
 	 * Take care of the Gutenberg properties
@@ -499,18 +537,27 @@ class Box {
 	/**
 	 * 1. Add a field to this CMB2 box.
 	 * 2. Assign the box_id to the field.
-	 * 3. Register the field with the Meta\Repo
+	 * 3. Register the field with the Meta\Repo.
 	 *
 	 * @param Field $field
 	 *
 	 * @return void
 	 */
-	public function add_field( Field $field ) : void {
+	protected function add_field_to_box( Field $field ) : void {
 		$box = $this->get_box();
 		$box->add_field( $field->get_field_args(), $field->position );
 		$field->box_id = $this->id;
 
 		Repo::in()->register_field( $field );
+	}
+
+
+	/**
+	 * @deprecated in favor of always registering via shorthand.
+	 */
+	public function add_field( Field $field ) : void {
+		\_deprecated_function( __METHOD__, '2.19.0', 'field' );
+		$this->add_field_to_box( $field );
 	}
 
 }

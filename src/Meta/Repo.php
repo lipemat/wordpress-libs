@@ -23,14 +23,6 @@ class Repo extends Translate_Abstract {
 	public const TAXONOMY          = 'taxonomy';
 	public const TAXONOMY_SINGULAR = 'taxonomy-singular';
 
-	/**
-	 * All types of fields that have been registered
-	 * mapped to their data type.
-	 *
-	 * @var array
-	 */
-	protected $types = [];
-
 
 	/**
 	 * Store a field's id mapped to the field object
@@ -45,25 +37,7 @@ class Repo extends Translate_Abstract {
 
 
 	/**
-	 * When we call the type() method on a CMB2\Field we store that field type
-	 * and the type of data it returns here.
-	 *
-	 * This way we only store field types we are currently using and call the appropriate
-	 * data method for fields of this type.
-	 * Used to determine which get_<type>_field_value to call.
-	 *
-	 * @param string $field_type - a CMB2 field type
-	 * @param string $data_type  - a type of data to return [Repo::CHECKBOX, Repo::FILE, Repo::TAXONOMY ]
-	 *
-	 * @return void
-	 */
-	public function register_field_type( string $field_type, string $data_type ) : void {
-		$this->types[ $field_type ] = $data_type;
-	}
-
-
-	/**
-	 * Get a registered field by id.
+	 * Get a registered field by an id.
 	 *
 	 * @param string $field_id
 	 *
@@ -75,7 +49,7 @@ class Repo extends Translate_Abstract {
 
 
 	/**
-	 * Get the data type of a registered field by id
+	 * Get the data type of registered field by an id.
 	 *
 	 * @param string $field_id
 	 *
@@ -84,14 +58,14 @@ class Repo extends Translate_Abstract {
 	protected function get_field_data_type( string $field_id ) : string {
 		$field = $this->get_field( $field_id );
 		if ( null !== $field ) {
-			return $this->types[ $field->get_type() ];
+			return $field->data_type;
 		}
-		return self::DEFAULT;
+		return static::DEFAULT;
 	}
 
 
 	/**
-	 * Get a fields value
+	 * Get a field's value
 	 *
 	 * Use the registered fields and registered types to determine the appropriate method to
 	 * return the data.
@@ -125,7 +99,7 @@ class Repo extends Translate_Abstract {
 
 
 	/**
-	 * Update a fields value
+	 * Update a field's value
 	 *
 	 * Use the registered fields and registered types to determine the appropriate method to
 	 * set the data.
@@ -162,7 +136,7 @@ class Repo extends Translate_Abstract {
 
 
 	/**
-	 * Delete a fields value
+	 * Delete a field's value
 	 *
 	 * Use the registered fields and registered types to determine the appropriate method to
 	 * delete the data.
@@ -191,6 +165,5 @@ class Repo extends Translate_Abstract {
 
 		}
 	}
-
 
 }

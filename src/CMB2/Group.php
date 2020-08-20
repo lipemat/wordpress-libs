@@ -6,15 +6,15 @@ use Lipe\Lib\CMB2\Group\Layout;
 use Lipe\Lib\Meta\Repo;
 
 /**
- * Group
+ * Group field type which implement much of the
+ * logic of a Box and also a Field.
  *
  * @author  Mat Lipe
- * @since   7/27/2017
  *
  * @package Lipe\Lib\CMB2
  */
 class Group extends Field {
-	use Shorthand_Fields;
+	use Box_Trait;
 
 	/**
 	 * ONLY APPLIES TO GROUPS
@@ -81,26 +81,19 @@ class Group extends Field {
 	 */
 	protected $layout = 'block';
 
-	/**
-	 * box
-	 *
-	 * @var Box
-	 */
-	protected $box;
-
 
 	/**
 	 * Group constructor.
 	 *
-	 * @param string               $id
-	 * @param string               $title
-	 * @param Box|Shorthand_Fields $box
-	 * @param string               $group_title    - include a {#} to have replace with number
-	 * @param string               $add_button_text
-	 * @param string               $remove_button_text
-	 * @param bool                 $sortable
-	 * @param bool                 $closed
-	 * @param string               $remove_confirm - @since 2.7.0 -
+	 * @param string        $id
+	 * @param string        $title
+	 * @param Box|Box_Trait $box
+	 * @param string|null   $group_title           - include a {#} to have replaced with number
+	 * @param string|null   $add_button_text
+	 * @param string|null   $remove_button_text
+	 * @param bool          $sortable
+	 * @param bool          $closed
+	 * @param string|null   $remove_confirm        - @since 2.7.0 -
 	 *                                             A message to display when a user attempts
 	 *                                             to delete a group.
 	 *                                             (Defaults to null/false for no confirmation)
@@ -108,11 +101,9 @@ class Group extends Field {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 */
 	public function __construct( $id, $title, Box $box, $group_title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false, ?string $remove_confirm = null ) {
-		$this->box = $box;
-
 		$this->type()->group( $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
 
-		parent::__construct( $id, $title );
+		parent::__construct( $id, $title, $box );
 	}
 
 
@@ -147,10 +138,12 @@ class Group extends Field {
 	 *
 	 * @param Field $field
 	 *
-	 * @return void
+	 * @since 2.19.0
+	 *
 	 * @throws \LogicException
+	 * @return void
 	 */
-	public function add_field( Field $field ) : void {
+	protected function add_field_to_group( Field $field ) : void {
 		if ( null === $this->box->cmb ) {
 			throw new \LogicException( 'You must add the group to the box before you add fields to the group.' );
 		}
@@ -164,10 +157,10 @@ class Group extends Field {
 
 
 	/**
-	 * Retrieve an array of this fields args to be
-	 * submitted to CMB2 by way of
+	 * Retrieve this field's arguments to be registered
+	 * with CMB2.
 	 *
-	 * @see Box::add_field()
+	 * @see Box::add_field_to_box()
 	 *
 	 * @throws \LogicException
 	 *
@@ -182,12 +175,101 @@ class Group extends Field {
 
 
 	/**
+	 * Registers any fields which were adding using $this->field()
+	 * when the `cmb2_init` action fires.
+	 *
+	 * Allows for storing/appending a fields properties beyond
+	 * a basic return pattern.
+	 *
+	 * @since 2.19.0
+	 *
+	 * @internal
+	 *
+	 * @return void
+	 */
+	public function register_fields() : void {
+		$this->register_meta();
+		$this->selectively_show_in_rest( $this );
+		array_map( function ( Field $field ) {
+			$this->add_field_to_group( $field );
+		}, $this->get_fields() );
+	}
+
+
+	/**
+	 * Register the meta field with WP core for things like
+	 * `show_in_rest` and `default.
+	 *
+	 * Supports a default value for any `get_metadata()` calls.
+	 * Will add the values of all sub fields
+	 *
+	 * @requires WP 5.5+ for default values.
+	 *
+	 * @since    2.19.0
+	 */
+	protected function register_meta() : void {
+		$config = [
+			'single' => true,
+			'type'   => 'array',
+		];
+		if ( $this->show_in_rest ) {
+			$properties = [];
+			foreach ( $this->get_fields() as $field ) {
+				if ( $this->show_in_rest ) {
+					$properties[ $field->get_id() ] = [
+						'type' => 'string',
+					];
+					if ( $field->is_using_array_data() ) {
+						$properties[ $field->get_id() ] = [
+							'type'  => 'array',
+							'items' => [
+								'type' => 'string',
+							],
+						];
+					}
+					if ( Repo::FILE === $field->data_type ) {
+						$properties[ $field->get_id() . '_id' ] = [
+							'type' => 'number',
+						];
+					}
+				}
+			}
+			$config['show_in_rest'] = [
+				'schema' => [
+					'items' => [
+						'type'       => 'object',
+						'properties' => $properties,
+					],
+				],
+			];
+		}
+		if ( null !== $this->default && ! \is_callable( $this->default ) ) {
+			$config['default'] = $this->default;
+		}
+		if ( isset( $config['default'] ) || isset( $config['show_in_rest'] ) ) {
+			foreach ( $this->box->get_object_types() as $_object_type ) {
+				register_meta( $_object_type, $this->get_id(), $config );
+			}
+		}
+	}
+
+
+	/**
 	 * @override
 	 *
 	 * @throws \LogicException
 	 */
 	public function group() : void {
 		throw new \LogicException( 'You cannot add a group to another group.' );
+	}
+
+
+	/**
+	 * @deprecated in favor of always registering via shorthand.
+	 */
+	public function add_field( Field $field ) : void {
+		\_deprecated_function( __METHOD__, '2.19.0', 'group' );
+		$this->add_field_to_group( $field );
 	}
 
 }

@@ -17,7 +17,7 @@ use Lipe\Lib\Util\Arrays;
 class Field {
 	/**
 	 * The data key. If using for posts, will be the post-meta key.
-	 * If using for an options page, will be the array key.
+	 * If using for an option's page, will be the array key.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#id
 	 *
@@ -73,6 +73,21 @@ class Field {
 	 * @var string;
 	 */
 	protected $type;
+
+	/**
+	 * Used by the Repo to determine the data type of this field.
+	 *
+	 * @interal
+	 *
+	 * @var string {
+	 *      @type Repo::DEFAULT
+	 *      @type Repo::CHECKBOX
+	 *      @type Repo::FILE
+	 *      @type Repo::GROUP
+	 *      @type Repo::TAXONOMY
+	 * }
+	 */
+	public $data_type = Repo::DEFAULT;
 
 	/**
 	 * Will modify default attributes (class, input type, rows, etc),
@@ -529,8 +544,18 @@ class Field {
 	/**
 	 * To override the box's `show_in_rest` for this field.
 	 *
+	 * Only individual fields that are explicitly set to truthy will
+	 * be included in default WP response even if the box is set to true
+	 * and all fields are in the /cmb2 response.
+	 *
+	 * CMB2 honors the WP_REST_SERVER methods of transport
+	 * for including fields in the /cmb2 endpoint.
+	 * WP does not so, this field will either be included
+	 * or not to default WP response based on truthy.
+	 *
 	 * @example WP_REST_Server::READABLE
 	 * @example WP_REST_Server::ALLMETHODS
+	 * @example WP_REST_Server::EDITABLE
 	 *
 	 * @var string|bool
 	 */
@@ -626,20 +651,33 @@ class Field {
 	 */
 	public $query_args;
 
+	/**
+	 * Parent class calling this Field.
+	 * For any conditional logic where we need to know
+	 * which class is currently using this.
+	 *
+	 * @since 2.19.0
+	 *
+	 * @var Box_Trait|null
+	 */
+	protected $box;
+
 
 	/**
 	 * Field constructor.
 	 *
+	 * @param string         $id
+	 * @param string|null    $name
+	 * @param Box_Trait|null $box - Parent class using this Field.
+	 *
 	 * @see     \Lipe\Lib\CMB2\Field_Type
 	 *
 	 * @example $field = new Field( self::FEATURED_TAG, __( 'Featured Tag', 'tribe' ), Field_Type::types()->checkbox );
-	 *
-	 * @param string $id
-	 * @param string $name
 	 */
-	public function __construct( $id, $name ) {
+	public function __construct( string $id, ?string $name, $box = null ) {
 		$this->id   = $id;
 		$this->name = $name;
+		$this->box = $box;
 	}
 
 
@@ -701,7 +739,7 @@ class Field {
 			$this->char_max = $max;
 			if ( $enforce ) {
 				if ( 'words' === $this->char_counter ) {
-					\_doing_it_wrong( 'char_counter', __( 'You cannot enforce max length when counting words', 'lipe' ), '2.17.0' );
+					\_doing_it_wrong( 'char_counter', esc_html__( 'You cannot enforce max length when counting words', 'lipe' ), '2.17.0' );
 				}
 				$this->char_max_enforce = true;
 			}
@@ -725,10 +763,10 @@ class Field {
 	 * Add this field as a post list column on the attached
 	 * posts, comments, users, terms
 	 *
-	 * @param int      $position
-	 * @param string   $name       - defaults to field name
-	 * @param callable $display_cb - optional display callback
-	 * @param bool $disable_sorting     - Set to true to prevent this column from being
+	 * @param int|null      $position
+	 * @param string|null   $name       - defaults to field name
+	 * @param callable|null $display_cb - optional display callback
+	 * @param bool|null $disable_sorting - Set to true to prevent this column from being
 	 *                                  sortable in post list.
 	 *
 	 * @return Field
@@ -776,8 +814,8 @@ class Field {
 
 
 	/**
-	 * Specify a default value for the field
-	 * or a function which will return a default value.
+	 * Specify a default value for the field, or a
+	 * function which will return a default value.
 	 *
 	 * @notice  The default will only be used when rendering form and not on retrieving value.
 	 *
@@ -964,22 +1002,36 @@ class Field {
 	/**
 	 * Override the box's `show_in_rest` value for this field.
 	 *
-	 * If the box's `show_in_rest` is false and a non `false` parameter
+	 * If the box's `show_in_rest` is false, and a non `false` parameter
 	 * is passed, the box's `show_in_rest` will be set to true and all
-	 * fields which do not have a `show_in_rest` specified will be set to false.
+	 * fields which do not have a `show_in_rest` specified will be set false.
 	 *
-	 * @see Shorthand_Fields::selectively_show_in_rest()
+	 * Only individual fields that are explicitly set to truthy will
+	 * be included in default WP response even if the box is set to true
+	 * and all fields are in the /cmb2 response.
+	 *
+	 * CMB2 honors the WP_REST_SERVER methods of transport
+	 * for including fields in the /cmb2 endpoint.
+	 * WP does not so, this field will either be included
+	 * or not to default WP response based on truthy.
+	 *
 	 *
 	 * @param string|bool $methods
 	 *
-	 * @example WP_REST_Server::READABLE
+	 * @see Box_Trait::selectively_show_in_rest()
+	 *
+	 * @example WP_REST_Server::READABLE // Same as `true`
 	 * @example WP_REST_Server::ALLMETHODS
+	 * @example WP_REST_Server::EDITABLE
 	 *
 	 * @since 2.15.0
 	 *
 	 * @return Field
 	 */
-	public function show_in_rest( $methods ) : Field {
+	public function show_in_rest( $methods = \WP_REST_Server::READABLE ) : Field {
+		if ( null !== $this->box && $this->box->is_group() ) {
+			\_doing_it_wrong( __METHOD__, "Show in rest may only be added to whole group. Not a group's field .", '2.19.0' );
+		}
 		$this->show_in_rest = $methods;
 		return $this;
 
@@ -1099,8 +1151,16 @@ class Field {
 	/**
 	 * Set a Fields Type and register the type with Meta\Repo
 	 *
-	 * @param string $type
-	 * @param string $data_type - a type of data to return [Repo::DEFAULT, Repo::CHECKBOX, Repo::FILE, Repo::GROUP, Repo::TAXONOMY ]
+	 * @param string $type - CMB2 field type.
+	 * @param string $data_type {
+	 *      // Type of data to return from the repo.
+	 *      @type Repo::DEFAULT
+	 *      @type Repo::CHECKBOX
+	 *      @type Repo::FILE
+	 *      @type Repo::GROUP
+	 *      @type Repo::TAXONOMY
+	 * }
+	 *
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
@@ -1112,7 +1172,21 @@ class Field {
 	 */
 	public function set_type( string $type, string $data_type ) : void {
 		$this->type = $type;
-		Repo::in()->register_field_type( $this->type, $data_type );
+		$this->data_type = $data_type;
+	}
+
+
+	/**
+	 * Does this field return a value of array type.
+	 *
+	 * @since 2.19.0
+	 *
+	 * @internal
+	 *
+	 * @return bool
+	 */
+	public function is_using_array_data() : bool {
+		return $this->repeatable || 'multicheck' === $this->get_type() || 'multicheck_inline' === $this->get_type();
 	}
 
 
@@ -1136,7 +1210,7 @@ class Field {
 	 * Retrieve an array of this fields args to be
 	 * submitted to CMB2 by way of
 	 *
-	 * @see Box::add_field()
+	 * @see Box::add_field_to_box()
 	 *
 	 * @throws \LogicException
 	 *

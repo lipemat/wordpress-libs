@@ -6,7 +6,6 @@ namespace Lipe\Lib\CMB2;
  * Options_Page
  *
  * @author  Mat Lipe
- * @since   7/27/2017
  *
  * @package Lipe\Lib\CMB2
  */
@@ -171,8 +170,8 @@ class Options_Page extends Box {
 	/**
 	 * Options Page constructor.
 	 *
-	 * @param  string $id
-	 * @param  string $title
+	 * @param string $id
+	 * @param string $title
 	 */
 	public function __construct( $id, $title ) {
 		if ( null === $this->option_key ) {
@@ -188,9 +187,9 @@ class Options_Page extends Box {
 	/**
 	 * Is this a network level settings page?
 	 *
-	 * @since 2.4.0
-	 *
 	 * @param bool $is_network
+	 *
+	 * @since 2.4.0
 	 *
 	 * @return void
 	 */
@@ -201,6 +200,7 @@ class Options_Page extends Box {
 			$this->admin_menu_hook = 'admin_menu'; //default
 		}
 	}
+
 
 	/**
 	 * Specify the save button text.
@@ -225,9 +225,9 @@ class Options_Page extends Box {
 					}
 				</style>
 				<script>
-					jQuery(function ($) {
-						$('[id="<?= esc_js( $this->id ); ?>"] .submit').remove();
-					});
+					jQuery( function( $ ) {
+						$( '[id="<?= esc_js( $this->id ); ?>"] .submit' ).remove();
+					} );
 				</script>
 				<?php
 			} );
@@ -253,4 +253,20 @@ class Options_Page extends Box {
 			$hookup->options_page_hooks();
 		}
 	}
+
+
+	/**
+	 * Option pages are stored in one big blog which means we
+	 * are not able to register the settings individually.
+	 *
+	 * This is here to prevent the code from doing extra registering
+	 * during load.
+	 *
+	 * @param Field $field
+	 */
+	protected function register_meta( Field $field ) : void {
+		$what = 'huy';
+		// Do nothing.
+	}
+
 }
