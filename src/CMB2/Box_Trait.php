@@ -186,6 +186,31 @@ trait Box_Trait {
 
 
 	/**
+	 * Translates long /namespaced names to API friendly.
+	 * If you need the long names due to conflicts, they will still
+	 * be available via /cmb2 values.
+	 *
+	 * @param Field $field
+	 * @param array $config
+	 *
+	 * @since 2.19.0
+	 *
+	 * @notice This can never be changed or it will break sites!!
+	 *
+	 * @return array
+	 */
+	public function translate_rest_keys( Field $field, array $config ) : array {
+		if ( isset( $config['show_in_rest'] ) ) {
+			if ( ! \is_array( $config['show_in_rest'] ) ) {
+				$config['show_in_rest'] = [];
+			}
+			$name = explode( '/', $field->get_id() );
+			$config['show_in_rest']['name'] = end( $name );
+		}
+		return $config;
+	}
+
+	/**
 	 * Is this field allowed to be registered with meta?
 	 *
 	 * @param Field $field

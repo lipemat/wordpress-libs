@@ -189,7 +189,6 @@ class Group extends Field {
 	 */
 	public function register_fields() : void {
 		$this->register_meta();
-		$this->selectively_show_in_rest( $this );
 		array_map( function ( Field $field ) {
 			$this->add_field_to_group( $field );
 		}, $this->get_fields() );

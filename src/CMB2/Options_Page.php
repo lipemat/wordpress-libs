@@ -256,17 +256,38 @@ class Options_Page extends Box {
 
 
 	/**
-	 * Option pages are stored in one big blog which means we
-	 * are not able to register the settings individually.
+	 * Option pages are stored in one big blob which means we
+	 * must implement logic to separate the fields when registering.
 	 *
-	 * This is here to prevent the code from doing extra registering
-	 * during load.
+	 * The only thing that makes sense to support is `show_in_rest`
+	 * because the other configurations won't work against the blob
+	 * of data. However, we do support setting a default value to
+	 * be provided to rest api responses.
+	 *
+	 *
+	 *
+	 * Gives a universal place for amended the config.
 	 *
 	 * @param Field $field
+	 * @param array $config
+	 *
+	 * @since 2.19.0
 	 */
-	protected function register_meta( Field $field ) : void {
-		$what = 'huy';
-		// Do nothing.
-	}
+	public function register_meta_on_all_types( Field $field, array $config ) : void {
+		unset( $config['single'] );
 
+		if ( $field->show_in_rest ) {
+			$config = $this->translate_rest_keys( $field, $config );
+			add_filter( 'rest_pre_get_setting', function ( $pre, $option ) use ( $field, $config ) {
+				return $option === $config['show_in_rest']['name'] ? \cmb2_options( $field->box_id )->get( $field->get_id(), $field->default ) : $pre;
+			}, 9, 2 );
+		}
+
+		// Nothing to register.
+		if ( 2 > \count( $config ) ) {
+			return;
+		}
+
+		register_setting( 'options', $field->get_id(), $config );
+	}
 }

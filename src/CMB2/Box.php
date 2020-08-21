@@ -560,13 +560,19 @@ class Box {
 			return;
 		}
 
-		// Translate long /namespaced names to short ones.
 		if ( isset( $config['show_in_rest'] ) ) {
-			if ( ! \is_array( $config['show_in_rest'] ) ) {
-				$config['show_in_rest'] = [];
-			}
-			$name = explode( '/', $field->get_id() );
-			$config['show_in_rest']['name'] = end( $name );
+			$config = $this->translate_rest_keys( $field, $config );
+		}
+
+		if ( $field->sanitization_cb ) {
+			$config['sanitize_callback'] = function ( $value ) use ( $field ) {
+				return cmb2_get_field( $field->box_id, $field->get_id() )->sanitization_cb( $value );
+			};
+		}
+
+		// Nothing to register.
+		if ( 3 > \count( $config ) ) {
+			return;
 		}
 
 		$type = $this->get_object_type();
