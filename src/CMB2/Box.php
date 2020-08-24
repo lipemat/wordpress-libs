@@ -556,9 +556,6 @@ class Box {
 		if ( null !== $field->default && ! \is_callable( $field->default ) ) {
 			$config['default'] = $field->default;
 		}
-		if ( ! isset( $config['default'] ) && ! isset( $config['show_in_rest'] ) ) {
-			return;
-		}
 
 		if ( isset( $config['show_in_rest'] ) ) {
 			$config = $this->translate_rest_keys( $field, $config );
