@@ -2,6 +2,8 @@
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\Util\Actions;
+
 /**
  * Options_Page
  *
@@ -166,6 +168,16 @@ class Options_Page extends Box {
 	 */
 	public $tab_group;
 
+	/**
+	 * Holds default values specified on individual fields
+	 * for use with the get filter.
+	 * CMB2 saves options as a single blob so we use the
+	 * filter to inject the default on retrieve.
+	 *
+	 * @var array
+	 */
+	protected $default_values = [];
+
 
 	/**
 	 * Options Page constructor.
@@ -259,13 +271,6 @@ class Options_Page extends Box {
 	 * Option pages are stored in one big blob which means we
 	 * must implement logic to separate the fields when registering.
 	 *
-	 * The only thing that makes sense to support is `show_in_rest`
-	 * because the other configurations won't work against the blob
-	 * of data. However, we do support setting a default value to
-	 * be provided to rest api responses.
-	 *
-	 *
-	 *
 	 * Gives a universal place for amended the config.
 	 *
 	 * @param Field $field
@@ -279,8 +284,13 @@ class Options_Page extends Box {
 		if ( $field->show_in_rest ) {
 			$config = $this->translate_rest_keys( $field, $config );
 			add_filter( 'rest_pre_get_setting', function ( $pre, $option ) use ( $field, $config ) {
-				return $option === $config['show_in_rest']['name'] ? \cmb2_options( $field->box_id )->get( $field->get_id(), $field->default ) : $pre;
+				return $option === $config['show_in_rest']['name'] ? \cmb2_options( $this->id )->get( $field->get_id(), $field->default ) : $pre;
 			}, 9, 2 );
+		}
+
+		if ( null !== $field->default && ! \is_callable( $field->default ) ) {
+			$this->default_values[ $field->get_id() ] = $field->default;
+			Actions::in()->add_single_filter( "cmb2_override_option_get_{$this->id}", [ $this, 'inject_defaults' ] );
 		}
 
 		// Nothing to register.
@@ -289,5 +299,35 @@ class Options_Page extends Box {
 		}
 
 		register_setting( 'options', $field->get_id(), $config );
+	}
+
+
+	/**
+	 * Inject the individual field's default values in the
+	 * blob of data during retrieval of options.
+	 *
+	 * CMB2 saves options as a single blob so we use the
+	 * filter to inject the default on retrieve.
+	 * Only works through the meta repo or calling `cmb2_options`
+	 * directly.
+	 *
+	 * @since  2.19.1
+	 *
+	 * @filter cmb2_override_option_get_{$this->id} 10 0
+	 *
+	 * @return string|array
+	 */
+	public function inject_defaults() {
+		// Get values either from network or regular options.
+		$values = \cmb2_options( $this->id )->get_options();
+		foreach ( $this->default_values as $field => $default ) {
+			if ( empty( $values[ $field ] ) ) {
+				$values[ $field ] = $default;
+			}
+		}
+		// Add the filter back in case of subsequent calls to get_option.
+		Actions::in()->add_single_filter( "cmb2_override_option_get_{$this->id}", [ $this, 'inject_defaults' ] );
+
+		return $values;
 	}
 }
