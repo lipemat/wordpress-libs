@@ -68,7 +68,7 @@ class Initial_Data {
 	 * Mimic response from the REST server for the provided controller.
 	 *
 	 * @param \WP_REST_Controller  $controller
-	 * @param \WP_Post|\WP_Comment $item
+	 * @param \WP_Post|\WP_Comment|object $item
 	 * @param bool                 $with_links - To include links inside the response.
 	 * @param bool                 $embed      - To embed the links inside the response.
 	 *
