@@ -38,11 +38,13 @@ trait Site_Trait {
 
 
 	/**
-	 * @param int|\WP_Site $site
+	 * @param int|null|\WP_Site $site
 	 *
 	 */
-	public function __construct( $site ) {
-		if ( is_a( $site, \WP_Site::class ) ) {
+	public function __construct( $site = null ) {
+		if ( null === $site ) {
+			$this->site_id = \get_current_blog_id();
+		} elseif ( is_a( $site, \WP_Site::class ) ) {
 			$this->site = $site;
 			$this->site_id = $this->site->site_id;
 		} else {
@@ -74,7 +76,7 @@ trait Site_Trait {
 	public function get_id() : int {
 		return (int) $this->site_id;
 	}
-	
+
 
 	/**
 	 * @return string
@@ -86,13 +88,13 @@ trait Site_Trait {
 
 	/**
 	 *
-	 * @param int|\WP_Site $site
+	 * @param int|null|\WP_Site $site
 	 *
 	 * @static
 	 *
 	 * @return static
 	 */
-	public static function factory( $site ) {
+	public static function factory( $site = null ) {
 		return new static( $site );
 	}
 
