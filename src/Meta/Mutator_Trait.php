@@ -42,12 +42,16 @@ trait Mutator_Trait {
 	/**
 	 * Access any property which exists on the child Object.
 	 *
+	 * Extended properties may be accessed by providing a
+	 * `get_extended_properties` method which returns a list
+	 * of additional properties.
+	 *
 	 * @param string $property - Property to retrieve.
 	 *
 	 * @throws \ErrorException
 	 * @return mixed
 	 */
-	public function __get( $property ) {
+	public function __get( string $property ) {
 		if ( ! \method_exists( $this, 'get_object' ) ) {
 			throw new \ErrorException( 'Direct access to object properties is only available for objects with `get_object`: ' . __CLASS__ . ":{$property}" );
 		}
@@ -55,6 +59,10 @@ trait Mutator_Trait {
 		if ( null !== $object && ( \property_exists( $object, $property ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $property ) ) ) ) {
 			return $object->{$property};
 		}
+		if ( \method_exists( $this, 'get_extended_properties' ) && \in_array( $property, $this->get_extended_properties(), true ) ) {
+			return $object->{$property};
+		}
+
 		throw new \ErrorException( 'Undefined property: ' . __CLASS__ . ":{$property}" );
 	}
 

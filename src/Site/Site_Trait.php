@@ -15,12 +15,23 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @author   Mat Lipe
  * @since    2.8.0
  *
- * @property int    $id
- * @property int    $network_id
- * @property string $blogname
- * @property string $siteurl
- * @property int    $post_count
- * @property string $home
+ * @property int    id
+ * @property int    network_id
+ * @property string $archived
+ * @property string $deleted
+ * @property string $domain
+ * @property string $lang_id
+ * @property string $last_updated
+ * @property string $mature
+ * @property string $path
+ * @property string $public
+ * @property string $registered
+ * @property string $site_id
+ * @property string $spam
+ * @property string blogname
+ * @property string home
+ * @property int    post_count
+ * @property string siteurl
  *
  */
 trait Site_Trait {
@@ -29,7 +40,7 @@ trait Site_Trait {
 	/**
 	 * @var int
 	 */
-	protected $site_id;
+	protected $blog_id;
 
 	/**
 	 * @var \WP_Site
@@ -43,12 +54,12 @@ trait Site_Trait {
 	 */
 	public function __construct( $site = null ) {
 		if ( null === $site ) {
-			$this->site_id = \get_current_blog_id();
+			$this->blog_id = \get_current_blog_id();
 		} elseif ( is_a( $site, \WP_Site::class ) ) {
 			$this->site = $site;
-			$this->site_id = $this->site->site_id;
+			$this->blog_id = $this->site->blog_id;
 		} else {
-			$this->site_id = $site;
+			$this->blog_id = $site;
 		}
 	}
 
@@ -57,13 +68,14 @@ trait Site_Trait {
 	 * @deprecated In favor of $this->get_object()
 	 */
 	public function get_site() : ?\WP_Site {
+		\_deprecated_function( __METHOD__, '2.0.0', 'get_object' );
 		return $this->get_object();
 	}
 
 
 	public function get_object() : ?\WP_Site {
 		if ( null === $this->site ) {
-			$this->site = \get_site( $this->site_id );
+			$this->site = \get_site( $this->blog_id );
 		}
 
 		return $this->site;
@@ -74,7 +86,7 @@ trait Site_Trait {
 	 * @return int
 	 */
 	public function get_id() : int {
-		return (int) $this->site_id;
+		return (int) $this->blog_id;
 	}
 
 
@@ -85,6 +97,25 @@ trait Site_Trait {
 		return 'blog';
 	}
 
+
+	/**
+	 * Access to extended properties from WP_Site.
+	 *
+	 * @see \WP_Site::__get
+	 * @see Mutator_Trait::__get
+	 *
+	 * @return array
+	 */
+	protected function get_extended_properties() : array {
+		return [
+			'id',
+			'network_id',
+			'blogname',
+			'siteurl',
+			'post_count',
+			'home',
+		];
+	}
 
 	/**
 	 *
