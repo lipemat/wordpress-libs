@@ -22,7 +22,7 @@ class Initial_Data {
 	 *
 	 * @param \WP_Comment[] $comments
 	 * @param bool          $with_links - To include links inside the response.
-	 * @param bool          $embed      - To embed the links inside the response.
+	 * @param bool|string[] $embed - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
 	 * @since 2.12.0
 	 * @since 2.19.0 - Support excluding the entire '_links' data.
@@ -30,7 +30,7 @@ class Initial_Data {
 	 * @return array
 	 *
 	 */
-	public function get_comments_data( array $comments, bool $with_links = false, bool $embed = false ) : array {
+	public function get_comments_data( array $comments, bool $with_links = false, $embed = false ) : array {
 		$controller = new \WP_REST_Comments_Controller();
 
 		return array_map( function ( $comment ) use ( $controller, $with_links, $embed ) {
@@ -45,13 +45,13 @@ class Initial_Data {
 	 *
 	 * @param \WP_Post[]|null $posts      - Array of post objects (defaults to global WP_Query->posts)
 	 * @param bool            $with_links - To include links inside the response.
-	 * @param bool            $embed      - To embed the links inside the response.
+	 * @param bool|string[] $embed - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
 	 * @since 2.19.0 - Support excluding the entire '_links' data.
 	 *
 	 * @return array
 	 */
-	public function get_post_data( ?array $posts = null, bool $with_links = false, bool $embed = false ) : array {
+	public function get_post_data( ?array $posts = null, bool $with_links = false, $embed = false ) : array {
 		if ( null === $posts && ! is_404() ) {
 			$posts = $GLOBALS['wp_query']->posts;
 		}
@@ -70,8 +70,9 @@ class Initial_Data {
 	 * @param \WP_REST_Controller  $controller
 	 * @param \WP_Post|\WP_Comment|object $item
 	 * @param bool                 $with_links - To include links inside the response.
-	 * @param bool                 $embed      - To embed the links inside the response.
+	 * @param bool|string[] $embed - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
+	 * @link https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_embed
 	 * @link  https://developer.wordpress.org/rest-api/using-the-rest-api/linking-and-embedding/#embedding
 	 *
 	 * @since 2.12.0
@@ -80,7 +81,7 @@ class Initial_Data {
 	 * @return array
 	 *
 	 */
-	protected function get_response( \WP_REST_Controller $controller, $item, bool $with_links = false, bool $embed = false ) : array {
+	protected function get_response( \WP_REST_Controller $controller, $item, bool $with_links = false, $embed = false ) : array {
 		$data = rest_get_server()->response_to_data(
 			$controller->prepare_item_for_response( $item, $this->get_request() ),
 			$embed
