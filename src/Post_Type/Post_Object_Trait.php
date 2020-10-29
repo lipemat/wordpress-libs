@@ -44,9 +44,12 @@ trait Post_Object_Trait {
 
 
 	/**
-	 * @param int|\WP_Post $post
+	 * @param int|\WP_Post|null $post
 	 */
-	public function __construct( $post ) {
+	public function __construct( $post = null ) {
+		if ( null === $post ) {
+			$post = get_post();
+		}
 		if ( is_a( $post, \WP_Post::class ) ) {
 			$this->post    = $post;
 			$this->post_id = $this->post->ID;
@@ -85,13 +88,13 @@ trait Post_Object_Trait {
 
 	/**
 	 *
-	 * @param int|\WP_Post $post
+	 * @param int|\WP_Post|null $post
 	 *
 	 * @static
 	 *
 	 * @return static
 	 */
-	public static function factory( $post ) {
+	public static function factory( $post = null ) {
 		return new static( $post );
 	}
 
