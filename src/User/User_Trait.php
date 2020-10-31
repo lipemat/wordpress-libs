@@ -27,6 +27,7 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @property string $locale
  * @property string $rich_editing
  * @property string $syntax_highlighting
+ * @property string[] $roles
  *
  * @method bool exists()
  * @method bool[] get_role_caps()
