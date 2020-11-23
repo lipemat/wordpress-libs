@@ -595,6 +595,18 @@ class Field {
 	protected $tab_content_cb;
 
 	/**
+	 * Used for date/timestamp fields.
+	 *
+	 * Optional to specify a timezone to use when
+	 * calculating the timestamp offset.
+	 *
+	 * Defaults to timezone stored in WP options.
+	 *
+	 * @var string;
+	 */
+	public $timezone;
+
+	/**
 	 * Used for date/time fields
 	 *
 	 * Optionally make this field honor the timezone selected
