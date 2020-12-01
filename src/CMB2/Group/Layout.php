@@ -49,15 +49,14 @@ class Layout {
 		echo '<div class="cmb-row cmb-repeat-group-wrap cmb-group-table cmb-group-display-' . esc_attr( $field_group->args( 'layout' ) ) . ' ' . esc_attr( $field_group->row_classes() ), '" data-fieldtype="group"><div class="cmb-td"><div data-groupid="' . esc_attr( $field_group->id() ) . '" id="' . esc_attr( $field_group->id() ) . '_repeat" ' . $cmb->group_wrap_attributes( $field_group ) . '>'; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		if ( $desc || $label ) {
-			$class = $desc ? ' cmb-group-description' : '';
-			echo '<div class="cmb-row' . esc_attr( $class ) . '"><div class="cmb-th">';
+			echo '<div class="' . esc_attr( $desc ? ' cmb-group-description' : '' ) . '">';
 			if ( $label ) {
 				echo '<h2 class="cmb-group-name cmb-layout-header">' . esc_html( $label ) . '</h2>';
 			}
 			if ( $desc ) {
-				echo '<p class="cmb2-metabox-description">' . esc_html( $desc ) . '</p>';
+				echo '<p class="cmb2-metabox-description cmb-layout-description">' . esc_html( $desc ) . '</p>';
 			}
-			echo '</div></div>';
+			echo '</div>';
 		}
 
 		echo '<table class="cmb-table" cellpadding="0" cellspacing="0">';
@@ -251,10 +250,6 @@ class Layout {
 					padding-bottom: 0 !important;
 				}
 
-				.cmb-group-table.cmb-group-display-row .cmb-table {
-					border-top: #DFDFDF solid 1px;
-				}
-
 				.cmb-group-table .cmb-th {
 					width: 50%;
 					padding: 0 10px;
@@ -347,12 +342,14 @@ class Layout {
 
 				.cmb2-options-page .cmb-repeatable-group .cmb-group-name,
 				#poststuff .cmb-repeatable-group h2.cmb-group-name {
-					font-size: 19px;
-					font-weight: 600;
-					margin: 0 0 3px 0;
+					font-size: 18px;
+					font-weight: 500;
+					margin: -10px 0 0 -10px;
 				}
-				#poststuff .cmb-repeatable-group h2.cmb-group-name {
-					margin: 0 0 3px -13px;
+
+				.cmb-layout-description {
+					margin: -10px 0 0 0 !important;
+					padding: 0 0 3px 3px !important;
 				}
 			</style>
 			<?php
