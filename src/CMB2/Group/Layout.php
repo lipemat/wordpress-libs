@@ -307,8 +307,14 @@ class Layout {
 				}
 
 				.cmb-group-table .cmb-group-table-control .cmb-remove-group-row {
-					color: #F55E4F !important;
+
 					margin-top: 12px !important;
+				}
+
+				.cmb-group-table .cmb-group-table-control .cmb-remove-group-row span {
+					color: #F55E4F !important;
+					font-size: 23px;
+					margin: 3px 0 0 -1px;
 				}
 
 				.cmb-repeatable-group.sortable .cmb-group-table-control:first-child {
@@ -332,6 +338,7 @@ class Layout {
 
 				.cmb-group-table .cmb-repeat-group-field {
 					padding: 0 !important;
+					margin: 0 0 0.5em !important;
 				}
 
 				.cmb2-options-page .cmb-repeatable-group .cmb-group-name,
