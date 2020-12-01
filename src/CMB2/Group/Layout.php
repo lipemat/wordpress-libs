@@ -273,6 +273,10 @@ class Layout {
 					border-bottom: #EEEEEE solid 1px !important;
 				}
 
+				.cmb-group-row-fields tr:last-of-type td {
+					border-bottom: none !important;
+				}
+
 				.cmb-group-row-fields th {
 					width: 20%;
 					vertical-align: top;
