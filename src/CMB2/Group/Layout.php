@@ -3,6 +3,7 @@
 namespace Lipe\Lib\CMB2\Group;
 
 use Lipe\Lib\CMB2\Group;
+use Lipe\Lib\Theme\Class_Names;
 use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
 
@@ -17,6 +18,10 @@ class Layout {
 
 	protected function is_table( \CMB2_Field $field_group ) : bool {
 		return ( 'table' === $field_group->args( 'layout' ) );
+	}
+
+	protected function is_repeatable( \CMB2_Field $field_group ) : bool {
+		return (bool) $field_group->args( 'repeatable' );
 	}
 
 
@@ -49,7 +54,12 @@ class Layout {
 		echo '<div class="cmb-row cmb-repeat-group-wrap cmb-group-table cmb-group-display-' . esc_attr( $field_group->args( 'layout' ) ) . ' ' . esc_attr( $field_group->row_classes() ), '" data-fieldtype="group"><div class="cmb-td"><div data-groupid="' . esc_attr( $field_group->id() ) . '" id="' . esc_attr( $field_group->id() ) . '_repeat" ' . $cmb->group_wrap_attributes( $field_group ) . '>'; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		if ( $desc || $label ) {
-			echo '<div class="' . esc_attr( $desc ? ' cmb-group-description' : '' ) . '">';
+			$classnames = new Class_Names( [
+				'cmb-group-description' => $desc,
+				'cmb-row'               => ! $this->is_table( $field_group ),
+			] );
+			echo '<div class="' . $classnames . '">';
+
 			if ( $label ) {
 				echo '<h2 class="cmb-group-name cmb-layout-header">' . esc_html( $label ) . '</h2>';
 			}
@@ -59,7 +69,12 @@ class Layout {
 			echo '</div>';
 		}
 
-		echo '<table class="cmb-table" cellpadding="0" cellspacing="0">';
+		$classnames = new Class_Names( [
+			'cmb-table'                 => true,
+			'cmb-layout-non-repeatable' => ! $this->is_table( $field_group ) && ! $this->is_repeatable( $field_group ),
+		] );
+
+		echo '<table class="' . $classnames . '" cellpadding="0" cellspacing="0">';
 
 		if ( $this->is_table( $field_group ) && $field_group->args( 'show_names' ) ) {
 			$this->render_group_table_header( $field_group );
@@ -76,7 +91,7 @@ class Layout {
 
 		echo '</table>';
 
-		if ( $field_group->args( 'repeatable' ) ) {
+		if ( $this->is_repeatable( $field_group ) ) {
 			echo '<div class="cmb-row"><div class="cmb-td"><p class="cmb-add-row"><button type="button" data-selector="' . esc_attr( $field_group->id() ) . '_repeat" data-grouptitle="{#}" class="cmb-add-group-row button-secondary">' . esc_html( $field_group->options( 'add_button' ) ) . '</button></p></div></div>';
 		}
 
@@ -99,13 +114,21 @@ class Layout {
 	public function render_group_table_header( $field_group ) : void {
 		?>
 		<tr class="cmb-row">
-			<th>&nbsp;</th>
 			<?php
+			if ( $this->is_repeatable( $field_group ) ) {
+				?>
+				<th> </th>
+				<?php
+			}
 			foreach ( $field_group->args( 'fields' ) as $_field ) {
 				echo '<th>' . esc_html( $_field['name'] ) . '</th>';
 			}
+			if ( $this->is_repeatable( $field_group ) ) {
+				?>
+				<th> </th>
+				<?php
+			}
 			?>
-			<th>&nbsp;</th>
 		</tr>
 		<?php
 	}
@@ -134,7 +157,7 @@ class Layout {
 		    class="cmb-row cmb-repeatable-grouping<?= esc_attr( $closed_class ) ?>"
 		    data-iterator="<?= esc_attr( $field_group->index ) ?>">
 			<?php
-			if ( $field_group->args( 'repeatable' ) ) {
+			if ( $this->is_repeatable( $field_group ) ) {
 				?>
 				<td class="cmb-group-table-control">
 					<h3 class="cmb-group-title cmbhandle-title">
@@ -179,7 +202,7 @@ class Layout {
 				<?php
 			}
 
-			if ( $field_group->args( 'repeatable' ) ) {
+			if ( $this->is_repeatable( $field_group ) ) {
 				?>
 				<td class="cmb-remove-field-row cmb-group-table-control">
 					<div class="cmb-remove-row">
@@ -224,6 +247,7 @@ class Layout {
 					width: 100%;
 				}
 
+				.cmb-layout-non-repeatable,
 				.cmb-group-table th {
 					border-top: #DFDFDF solid 1px;
 				}
