@@ -430,7 +430,7 @@ class Taxonomy {
 			'hide_empty'   => true,
 		];
 
-		$args['show_option_all'] = __( 'Show All', 'lipe' );
+		$args['show_option_all'] = sprintf( __( 'All %s', 'lipe' ), $this->get_label( 'plural' ) );
 		$args['taxonomy']        = $this->taxonomy;
 		$args['name']            = $this->taxonomy;
 
