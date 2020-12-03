@@ -68,12 +68,12 @@ class Taxonomy_Extended extends Taxonomy {
 	 * Return an object that you can follow along with
 	 * to enter in all params without memorizing any of them
 	 *
-	 * @example admin_cols()->p2p( 'p2p title', 'p_to_o', 'view' )->set_as_default_sort_column( 'DESC' )
+	 * @example admin_cols()->meta( 'Custom Title', 'custom-meta-key' )->set_as_default_sort_column( 'DESC' )
 	 *
 	 *
 	 * @return Column
 	 */
-	public function admin_cols(){
+	public function admin_cols() : Column {
 		return new Column( $this );
 	}
 

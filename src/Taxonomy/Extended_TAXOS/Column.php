@@ -30,7 +30,7 @@ class Column extends Argument_Abstract {
 	/**
 	 * Column constructor.
 	 *
-	 * @param \Lipe\Lib\Taxonomy\Taxonomy_Extended $TAXOS
+	 * @param Taxonomy_Extended $TAXOS
 	 */
 	public function __construct( Taxonomy_Extended $TAXOS ) {
 		$this->TAXOS = $TAXOS;
@@ -43,13 +43,13 @@ class Column extends Argument_Abstract {
 	 *
 	 * or they will go nowhere
 	 *
-	 * @internal
+	 * @param array $args
 	 *
-	 * @param [] $args
+	 * @internal
 	 *
 	 * @return void
 	 */
-	public function set( array $args ) {
+	public function set( array $args ) : void {
 		if ( ! isset( $this->cols_array_key ) ) {
 			$this->cols_array_key = sanitize_title_with_dashes( $args['title'] );
 			$this->TAXOS->admin_cols[ $this->cols_array_key ] = [];
@@ -66,28 +66,30 @@ class Column extends Argument_Abstract {
 	 *
 	 * @param array $args
 	 *
-	 * @return \Lipe\Lib\Taxonomy\Extended_TAXOS\Column_Shared
+	 * @return Column_Shared
 	 */
-	protected function return( array $args ) {
+	protected function return( array $args ) : Column_Shared {
 		$this->set( $args );
 		return new Column_Shared( $this, $args );
 	}
 
 
 	/**
-	 * If you don't want to use one of Extended CPT's built-in column types,
+	 * If you don't want to use one of Extended CPTS built-in column types,
 	 * you can use a callback function to output your column value by using the function parameter.
 	 * Anything callable can be passed as the value, such as a function name or a closure.
 	 *
-	 * @param string   $title
-	 * @param callable $callback
+	 * @param string      $title
+	 * @param callable    $callback
+	 * @param string|null $cap - Capability required to see this column.
 	 *
-	 * @return \Lipe\Lib\Taxonomy\Extended_TAXOS\Column_Shared
+	 * @return Column_Shared
 	 */
-	public function custom( $title, $callback ) {
+	public function custom( string $title, callable $callback, ?string $cap = null ) : Column_Shared {
 		$_args = [
 			'title'    => $title,
 			'function' => $callback,
+			'cap'      => $cap,
 		];
 		return $this->return( $_args );
 	}
@@ -104,14 +106,16 @@ class Column extends Argument_Abstract {
 	 *
 	 * @param string $title
 	 * @param string $meta_key
-	 * @param string $date_format
+	 * @param string|null   $date_format
+	 * @param null|string   $cap - Capability required to see this meta.
 	 *
-	 * @return \Lipe\Lib\Taxonomy\Extended_TAXOS\Column_Shared
+	 * @return Column_Shared
 	 */
-	public function meta( $title, $meta_key, $date_format = null ) {
+	public function meta( string $title, string $meta_key, ?string $date_format = null, ?string $cap = null ) : Column_Shared {
 		$_args = [
 			'title'    => $title,
 			'meta_key' => $meta_key,
+			'cap'      => $cap,
 		];
 		if ( null !== $date_format ) {
 			$_args['date_format'] = $date_format;

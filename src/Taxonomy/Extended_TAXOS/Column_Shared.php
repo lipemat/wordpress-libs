@@ -21,10 +21,10 @@ class Column_Shared extends Shared_Abstract {
 	/**
 	 * Column_Shared constructor.
 	 *
-	 * @param \Lipe\Lib\Taxonomy\Extended_TAXOS\Column $column
-	 * @param array                                    $args
+	 * @param Column $column
+	 * @param array  $args
 	 */
-	function __construct( Column $column, array $args ) {
+	public function __construct( Column $column, array $args ) {
 		$this->args = $args;
 		$this->column = $column;
 	}
@@ -34,9 +34,9 @@ class Column_Shared extends Shared_Abstract {
 	 *
 	 * @param array $args
 	 *
-	 * @return \Lipe\Lib\Taxonomy\Extended_TAXOS\Column_Shared
+	 * @return Column_Shared
 	 */
-	protected function return( array $args ) {
+	protected function return( array $args ) : Column_Shared {
 		$this->column->set( $args );
 		return $this;
 
@@ -49,9 +49,9 @@ class Column_Shared extends Shared_Abstract {
 	 *
 	 * @param string $direction - 'ASC', 'DESC' (default 'ASC' )
 	 *
-	 * @return \Lipe\Lib\Taxonomy\Extended_TAXOS\Column_Shared
+	 * @return Column_Shared
 	 */
-	public function set_as_default_sort_column( $direction = 'ASC' ) {
+	public function set_as_default_sort_column( $direction = 'ASC' ) : Column_Shared {
 		return $this->return( [ 'default' => $direction ] );
 	}
 
