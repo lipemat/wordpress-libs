@@ -782,6 +782,26 @@ class Custom_Post_Type {
 
 
 	/**
+	 * Removes a column from the posts list in the admin.
+	 *
+	 * Default WP columns are
+	 * 1. 'author'
+	 * 2. 'date'
+	 *
+	 * @param string $column
+	 *
+	 * @since 2.21.0
+	 *
+	 */
+	public function remove_column( string $column ) : void {
+		add_filter( "manage_edit-{$this->post_type}_columns", function ( $columns ) use ( $column ) {
+			unset( $columns[ $column ] );
+			return $columns;
+		} );
+	}
+
+
+	/**
 	 * @param string $post_type
 	 *
 	 * @static
