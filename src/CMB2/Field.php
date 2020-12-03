@@ -786,7 +786,7 @@ class Field {
 		$this->column = [
 			'disable_sortable' => $disable_sorting ?? false,
 			'name'             => $name ?? $this->name,
-			'position'         => $position,
+			'position'         => $position ?: false,
 		];
 		if ( null === $position && null === $name && null === $disable_sorting ) {
 			$this->column = true;
