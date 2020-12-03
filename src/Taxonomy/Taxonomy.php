@@ -430,7 +430,7 @@ class Taxonomy {
 			'hide_empty'   => true,
 		];
 
-		$args['show_option_all'] = sprintf( __( 'All %s', 'lipe' ), $this->get_label( 'plural' ) );
+		$args['show_option_all'] = sprintf( __( 'All %s' ), $this->get_label( 'plural' ) );
 		$args['taxonomy']        = $this->taxonomy;
 		$args['name']            = $this->taxonomy;
 
@@ -444,13 +444,14 @@ class Taxonomy {
 		}
 		wp_dropdown_categories( $args );
 
-		if ( $been_filtered && isset($_GET['post_type'] ) ) {
+		if ( $been_filtered && isset( $_GET['post_type'] ) ) {
 			$post_type = \sanitize_key( $_GET['post_type'] );
 			?>
-			<a style="float: left; margin-top: 1px"
-			   href="<?php echo esc_url( admin_url( 'edit.php?post_type=' . esc_attr( $post_type ) ) ); ?>"
-			   class="button">
-				<?php esc_html_e( 'Clear Filters', 'lipe' ); ?>
+			<a
+				style="margin: 0 4px 0 1px;"
+				href="<?php echo esc_url( admin_url( 'edit.php?post_type=' . esc_attr( $post_type ) ) ); ?>"
+				class="button">
+				<?php esc_html_e( 'Clear Filters' ); ?>
 			</a>
 			<?php
 		}
