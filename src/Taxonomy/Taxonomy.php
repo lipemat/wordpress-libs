@@ -301,19 +301,24 @@ class Taxonomy {
 	 *
 	 * @notice set the class vars to edit arguments
 	 *
-	 * @param string $taxonomy - Taxonomy Slug ( will convert a title to a slug as well )
-	 * @param string|array     [$post_types] - may also be set by $this->post_types = array
-	 * @param        bool      [$show_admin_column]- generate a post list column
-	 * @param        bool      [$_post_list_filter] - generate a post list filter
-	 *
+	 * @param string       $taxonomy          - Taxonomy Slug ( will convert a title to a slug as well )
+	 * @param string|array $post_types        - may also be set by $this->post_types = array
+	 * @param string|bool  $show_admin_column - Whether to generate a post list column or not.
+	 *                                        If a `string is passed` it wil be used for the
+	 *                                        column label
+	 * @param bool         $post_list_filter
 	 */
-	public function __construct( $taxonomy, $post_types = '', $show_admin_column = false, $post_list_filter = false ) {
+	public function __construct( string $taxonomy, $post_types = '', $show_admin_column = false, $post_list_filter = false ) {
 		$this->post_types = (array) $post_types;
 
-		$this->show_admin_column = $show_admin_column;
+		$this->show_admin_column = (bool) $show_admin_column;
 		$this->_post_list_filter = $post_list_filter;
 		$this->taxonomy          = strtolower( str_replace( ' ', '_', $taxonomy ) );
 		$this->hook();
+
+		if ( \is_string( $show_admin_column ) ) {
+			$this->show_admin_column( $show_admin_column );
+		}
 	}
 
 
@@ -576,6 +581,30 @@ class Taxonomy {
 		add_filter( 'parent_file', [ $this, 'set_current_menu' ] );
 	}
 
+
+	/**
+	 * Change the admin column's label to a provided string.
+	 *
+	 * Add support for specifying the label to use instead of just
+	 * generating the column or not.
+	 *
+	 * Automatically called within __construct() but may be called
+	 * directly if desired.
+	 *
+	 * @param string $label
+	 *
+	 * @see Taxonomy::__construct()
+	 *
+	 * @since 2.21.1
+	 */
+	public function show_admin_column( string $label ) : void {
+		Actions::in()->add_filter_all( array_map( function ( $post_type ) {
+			return "manage_{$post_type}_posts_columns";
+		}, $this->post_types ), function ( array $columns ) use ( $label ) {
+			$columns["taxonomy-{$this->taxonomy}"] = $label;
+			return $columns;
+		} );
+	}
 
 	/**
 	 * Set the default term which will be added to new posts which
