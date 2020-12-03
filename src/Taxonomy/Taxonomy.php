@@ -472,6 +472,26 @@ class Taxonomy {
 
 
 	/**
+	 * Removes a column from the terms list in the admin.
+	 *
+	 * Default WP columns are
+	 * 1. 'description'
+	 * 2. 'slug'
+	 * 3. 'posts'
+	 *
+	 * @since 2.21.0
+	 *
+	 * @param string $column
+	 */
+	public function remove_column( string $column ) : void {
+		add_filter( "manage_edit-{$this->taxonomy}_columns", function ( $columns ) use ( $column ) {
+			unset( $columns[ $column ]);
+			return $columns;
+		} );
+	}
+
+
+	/**
 	 * Inserts any specified terms for a new taxonomy.
 	 * Will run only once when term is first registered.
 	 * Will only run on fresh taxonomies with no existing terms.
