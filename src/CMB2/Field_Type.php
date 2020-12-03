@@ -669,6 +669,34 @@ class Field_Type {
 
 
 	/**
+	 * Shortcut for using the "file" field with type of image.
+	 *
+	 * By default it will store the file url and allow either attachments or URLs.
+	 * This field type will also store the attachment ID
+	 * (useful for getting different image sizes).
+	 * It will store it in $id . '_id', so if your field id is wiki_test_image
+	 * the ID is stored in wiki_test_image_id.
+	 * You can also limit it to only allowing attachments
+	 * (can't manually type in a URL) by setting `$show_text_input` to false.
+	 *
+	 * @param string      $button_text     - (default 'Add Image' )
+	 * @param bool|null   $show_text_input - (default true) *May not be turned off for required fields*.
+	 * @param string|null $preview_size    - (default full)
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#file
+	 *
+	 * @since 2.21.0
+	 *
+	 * @see Field_Type::file()
+	 *
+	 * @return Field
+	 */
+	public function image( $button_text = 'Add Image', ?bool $show_text_input = null, ?string $preview_size = null ) : Field {
+		return $this->file( $button_text, 'image', $show_text_input, $preview_size );
+	}
+
+
+	/**
 	 * Standard checkbox.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#checkbox
@@ -1129,7 +1157,6 @@ class Field_Type {
 		$_args = $this->field_type_file( $this->file, $button_text, $file_mime_type, $show_text_input, $preview_size );
 
 		return $this->set( $_args, Repo::FILE );
-
 	}
 
 
