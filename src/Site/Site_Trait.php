@@ -15,9 +15,9 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @author   Mat Lipe
  * @since    2.8.0
  *
- * @property int    id
- * @property int    network_id
- * @property string $archived
+ * @property int $id
+ * @property int $network_id
+ * @property string $$archived
  * @property string $deleted
  * @property string $domain
  * @property string $lang_id
@@ -28,10 +28,10 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @property string $registered
  * @property string $site_id
  * @property string $spam
- * @property string blogname
- * @property string home
- * @property int    post_count
- * @property string siteurl
+ * @property string $blogname
+ * @property string $home
+ * @property int $post_count
+ * @property string $siteurl
  *
  */
 trait Site_Trait {

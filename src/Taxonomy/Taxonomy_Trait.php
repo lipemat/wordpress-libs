@@ -5,16 +5,16 @@ namespace Lipe\Lib\Taxonomy;
 use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
- * @property int    count
- * @property string description
- * @property string filter
- * @property string name
- * @property int    parent
- * @property string slug
- * @property string taxonomy
- * @property int    term_group
- * @property int    term_id
- * @property int    term_taxonomy_id
+ * @property int $count
+ * @property string $description
+ * @property string $filter
+ * @property string $name
+ * @property int $parent
+ * @property string $slug
+ * @property string $taxonomy
+ * @property int $term_group
+ * @property int $term_id
+ * @property int $term_taxonomy_id
  */
 trait Taxonomy_Trait {
 	use Mutator_Trait;
