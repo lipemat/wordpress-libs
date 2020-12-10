@@ -26,30 +26,30 @@ class Taxonomy_Extended extends Taxonomy {
 	/**
 	 * All this does currently is disable hierarchy in the taxonomy's rewrite rules
 	 *
-	 * @var null
+	 * @var bool
 	 */
-	public $allow_hierarchy = null;
+	public $allow_hierarchy;
 
 	/**
 	 * Whether to always show checked terms at the top of the meta box
 	 *
-	 * @var null
+	 * @var bool
 	 */
-	public $checked_ontop = null;
+	public $checked_ontop;
 
 	/**
 	 * Whether to show this taxonomy on the 'At a Glance' section of the admin dashboard
 	 *
-	 * @var null
+	 * @var bool
 	 */
-	public $dashboard_glance = null;
+	public $dashboard_glance;
 
 	/**
 	 * allow only one to be set
 	 *
-	 * @var null
+	 * @var bool
 	 */
-	public $exclusive = null;
+	public $exclusive;
 
 	/**
 	 * Use a special meta box structure
@@ -58,9 +58,9 @@ class Taxonomy_Extended extends Taxonomy {
 	 * @field 'dropdown'
 	 * @field 'simple'
 	 *
-	 * @var null
+	 * @var bool
 	 */
-	public $meta_box = null;
+	public $meta_box;
 
 	/**
 	 * Add a column pragmatically
