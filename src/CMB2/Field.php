@@ -1241,4 +1241,16 @@ class Field {
 
 		return $args;
 	}
+
+
+	/**
+	 * Override to allow static scans when using groups like PHPStan.
+	 *
+	 * @internal
+	 *
+	 * @return Field_Type
+	 */
+	public function field( $id, $name ) : Field_Type {
+		throw new \LogicException( 'You cannot add a field to another field.' );
+	}
 }
