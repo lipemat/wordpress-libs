@@ -543,14 +543,14 @@ class Field {
 	/**
 	 * To override the box's `show_in_rest` for this field.
 	 *
-	 * Only individual fields that are explicitly set to truthy will
-	 * be included in default WP response even if the box is set to true
+	 * Only individual fields that are explicitly set to WP_REST_Server::ALLMETHODS will
+	 * be included in default WP `meta` response even if the box is set to true
 	 * and all fields are in the /cmb2 response.
 	 *
 	 * CMB2 honors the WP_REST_SERVER methods of transport
 	 * for including fields in the /cmb2 endpoint.
 	 * WP does not so, this field will either be included
-	 * or not to default WP response based on truthy.
+	 * or not to default WP `meta` response based on WP_REST_Server::ALLMETHODS.
 	 *
 	 * @example WP_REST_Server::READABLE
 	 * @example WP_REST_Server::ALLMETHODS
@@ -1017,29 +1017,30 @@ class Field {
 	 * is passed, the box's `show_in_rest` will be set to true and all
 	 * fields which do not have a `show_in_rest` specified will be set false.
 	 *
-	 * Only individual fields that are explicitly set to truthy will
-	 * be included in default WP response even if the box is set to true
+	 * Only individual fields that are explicitly set to WP_REST_Server::ALLMETHODS will
+	 * be included in default WP `meta` response even if the box is set to true
 	 * and all fields are in the /cmb2 response.
 	 *
 	 * CMB2 honors the WP_REST_SERVER methods of transport
 	 * for including fields in the /cmb2 endpoint.
 	 * WP does not so, this field will either be included
-	 * or not to default WP response based on truthy.
+	 * or not to default WP `meta` response based on WP_REST_Server::ALLMETHODS.
 	 *
 	 *
 	 * @param string|bool $methods
 	 *
 	 * @see Box_Trait::selectively_show_in_rest()
 	 *
-	 * @example WP_REST_Server::READABLE // Same as `true`
-	 * @example WP_REST_Server::ALLMETHODS
+	 * @example WP_REST_Server::READABLE // Same as `true`.
+	 * @example WP_REST_Server::ALLMETHODS // All Methods must be used for the field
+	 *          show up under `meta`, otherwise will just show up under `cmb2`.
 	 * @example WP_REST_Server::EDITABLE
 	 *
 	 * @since 2.15.0
 	 *
 	 * @return Field
 	 */
-	public function show_in_rest( $methods = \WP_REST_Server::READABLE ) : Field {
+	public function show_in_rest( $methods = \WP_REST_Server::ALLMETHODS ) : Field {
 		if ( null !== $this->box && $this->box->is_group() ) {
 			\_doing_it_wrong( __METHOD__, "Show in rest may only be added to whole group. Not a group's field .", '2.19.0' );
 		}

@@ -146,18 +146,18 @@ trait Box_Trait {
 		if ( $field->is_using_array_data() ) {
 			$config['type'] = 'array';
 		}
-		if ( $field->show_in_rest ) {
-			$config['show_in_rest'] = $field->show_in_rest;
-			if ( $field->is_using_array_data() ) {
-				$config['show_in_rest'] = [
-					'schema' => [
-						'items' => [
-							'type' => 'string',
+		if ( $field->show_in_rest && $this->is_public_rest_data( $field ) ) {
+				$config['show_in_rest'] = $field->show_in_rest;
+				if ( $field->is_using_array_data() ) {
+					$config['show_in_rest'] = [
+						'schema' => [
+							'items' => [
+								'type' => 'string',
+							],
 						],
-					],
-				];
+					];
+				}
 			}
-		}
 
 		$this->register_meta_on_all_types( $field, $config );
 	}
@@ -230,6 +230,23 @@ trait Box_Trait {
 		return \in_array( $field->data_type, [ Repo::CHECKBOX, Repo::DEFAULT, Repo::FILE ], true );
 	}
 
+
+	/**
+	 * Should the field be added to the GET endpoint?
+	 *
+	 * If we register the meta, it will be available for all methods
+	 * so if a method other than `ALLMETHODS` is specified, we
+	 * can't add it to the REST api via meta.
+	 *
+	 * @since 2.21.0
+	 *
+	 * @param Field $field
+	 *
+	 * @return bool
+	 */
+	protected function is_public_rest_data( Field $field ) : bool {
+		return  $field->show_in_rest && $field->show_in_rest === \WP_REST_Server::ALLMETHODS;
+	}
 
 	/**
 	 * Get all fields registered to this box.

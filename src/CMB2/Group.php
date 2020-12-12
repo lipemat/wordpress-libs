@@ -208,7 +208,7 @@ class Group extends Field {
 			'single' => true,
 			'type'   => 'array',
 		];
-		if ( $this->show_in_rest ) {
+		if ( $this->show_in_rest && $this->is_public_rest_data( $this ) ) {
 			$properties = [];
 			foreach ( $this->get_fields() as $field ) {
 				if ( $this->show_in_rest ) {
