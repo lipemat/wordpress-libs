@@ -58,7 +58,7 @@ class Taxonomy_Extended extends Taxonomy {
 	 * @field 'dropdown'
 	 * @field 'simple'
 	 *
-	 * @var bool
+	 * @var string
 	 */
 	public $meta_box;
 
