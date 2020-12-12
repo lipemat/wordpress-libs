@@ -828,7 +828,8 @@ class Field {
 	 * Specify a default value for the field, or a
 	 * function which will return a default value.
 	 *
-	 * @notice  The default will only be used when rendering form and not on retrieving value.
+	 * @notice  If a callback is provided, the default will only be used
+	 *          when rendering form and in REST and standard meta retrieval.
 	 *
 	 * @param string|callable $default_value
 	 *

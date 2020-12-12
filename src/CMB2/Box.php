@@ -501,7 +501,7 @@ class Box {
 			}
 			$args[ $_var ] = $this->{$_var};
 		}
-		
+
 		if ( isset( $args['show_in_rest'] ) && $args['show_in_rest'] === static::EXCLUDE_CMB2_REST_ENDPOINT ){
 			$args['show_in_rest'] = false;
 		}
@@ -576,8 +576,12 @@ class Box {
 			$config['default'] = $field->default;
 		}
 
+
 		if ( isset( $config['show_in_rest'] ) ) {
 			$config = $this->translate_rest_keys( $field, $config );
+			if ( \is_callable( $field->default ) ) {
+				$config = $this->pass_default_callback_to_rest( $config, $field );
+			}
 		}
 
 		if ( $field->sanitization_cb ) {
@@ -607,6 +611,36 @@ class Box {
 				register_meta( $type, $field->get_id() . '_id', $config );
 			}
 		}
+	}
+
+
+	/**
+	 * We can't register a default meta value via a callback, but
+	 * we can register a `prepare_value` for REST which will use the
+	 * default value on REST responses.
+	 *
+	 * CMB2 will handle the callback for meta boxes. This takes care of REST.
+	 *
+	 * @since 2.21.1
+	 *
+	 * @param array $config
+	 * @param Field $field
+	 *
+	 * @return array
+	 */
+	public function pass_default_callback_to_rest( array $config, Field $field ) : array {
+		$config['show_in_rest']['prepare_callback'] = function ( $value, $request, $args ) use ( $field ) {
+			if ( ! empty( $value ) ) {
+				return \WP_REST_Post_Meta_Fields::prepare_value( $value, $request, $args );
+			}
+			$cmb2_field = cmb2_get_field( $field->box_id, $field->get_id() );
+			if ( null === $cmb2_field ) {
+				return null;
+			}
+			return \call_user_func( $field->default, $cmb2_field->properties, $cmb2_field );
+		};
+
+		return $config;
 	}
 
 
