@@ -112,13 +112,20 @@ trait Box_Trait {
 	 * @return void
 	 */
 	public function register_fields() : void {
-		array_map( function ( Field $field ) {
+		$fields = $this->get_fields();
+		$show_in_rest = $this->show_in_rest;
+
+		// Run through the fields first for adjustments to box config.
+		array_walk( $fields, function ( Field $field ) use ( $show_in_rest ) {
 			$this->register_meta( $field );
-			if ( empty( $this->show_in_rest ) ) {
+			if ( empty( $show_in_rest ) ) {
 				$this->selectively_show_in_rest( $field );
 			}
+		} );
+
+		array_walk( $fields, function ( Field $field ) {
 			$this->add_field_to_box( $field );
-		}, $this->get_fields() );
+		} );
 	}
 
 
