@@ -607,7 +607,13 @@ class Box {
 		foreach ( $sub_types as $_type ) {
 			$config['object_subtype'] = $_type;
 			register_meta( $type, $field->get_id(), $config );
+
+			// Secondary field for file ids.
 			if ( Repo::FILE === $field->data_type ) {
+				if ( ! empty( $config['show_in_rest']['name'] ) ) {
+					$config['show_in_rest']['name'] .= '_id';
+					unset( $config['show_in_rest']['prepare_callback'] );
+				}
 				register_meta( $type, $field->get_id() . '_id', $config );
 			}
 		}
