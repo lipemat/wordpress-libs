@@ -16,6 +16,15 @@ class Box {
 	use Box_Trait;
 
 	/**
+	 * Used as a flag to allow REST fields to be added
+	 * to the `meta` response without the `cmb2` REST
+	 * endpoint being added.
+	 *
+	 * @since 2.21.1
+	 */
+	public const EXCLUDE_CMB2_REST_ENDPOINT = 'lipe/lib/cmb2/box/exclude-cmb2-rest-endpoint';
+
+	/**
 	 * The id of metabox
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#id
@@ -401,13 +410,19 @@ class Box {
 	 * @example WP_REST_Server::READABLE // Same as `true`
 	 * @example WP_REST_Server::ALLMETHODS
 	 * @example WP_REST_Server::EDITABLE
+	 * @example false // Will allow fields to show
+	 *          up under the `meta` key without also showing in `cmb2`.
 	 *
 	 * @since   2.19.0
 	 *
 	 * @return void
 	 */
 	public function show_in_rest( $methods = \WP_REST_Server::READABLE ) : void {
-		$this->show_in_rest = $methods;
+		if ( false === $methods ) {
+			$this->show_in_rest = static::EXCLUDE_CMB2_REST_ENDPOINT;
+		} else {
+			$this->show_in_rest = $methods;
+		}
 	}
 
 	/**
@@ -485,6 +500,10 @@ class Box {
 				continue;
 			}
 			$args[ $_var ] = $this->{$_var};
+		}
+		
+		if ( isset( $args['show_in_rest'] ) && $args['show_in_rest'] === static::EXCLUDE_CMB2_REST_ENDPOINT ){
+			$args['show_in_rest'] = false;
 		}
 
 		$args['mb_callback_args'] = $this->get_meta_box_callback_args();
