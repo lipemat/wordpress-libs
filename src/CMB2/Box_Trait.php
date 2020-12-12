@@ -201,6 +201,13 @@ trait Box_Trait {
 	 */
 	public function translate_rest_keys( Field $field, array $config ) : array {
 		if ( isset( $config['show_in_rest'] ) ) {
+			if ( 'post' === $this->get_object_type() ) {
+				// Post type must support 'custom-fields' to allow REST meta.
+				array_walk( $this->object_types, function ( $type ) {
+					add_post_type_support( $type, 'custom-fields' );
+				} );
+			}
+
 			if ( ! \is_array( $config['show_in_rest'] ) ) {
 				$config['show_in_rest'] = [];
 			}
