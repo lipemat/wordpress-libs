@@ -312,6 +312,15 @@ class Field {
 	public $default;
 
 	/**
+	 * Specify a callback to retrieve default value for the field.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#default_cb
+	 *
+	 * @var callable
+	 */
+	public $default_cb;
+
+	/**
 	 * Field description. Usually under or adjacent to the field input.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#desc
@@ -700,7 +709,7 @@ class Field {
 	 *
 	 * @required
 	 *
-	 * @example 'lipe/project/meta/category-fields',
+	 * @example 'lipe/project/meta/category-fields/caption',
 	 *
 	 * @return string
 	 */
@@ -828,13 +837,10 @@ class Field {
 	 * Specify a default value for the field, or a
 	 * function which will return a default value.
 	 *
-	 * @notice  If a callback is provided, the default will only be used
-	 *          when rendering form and in REST and standard meta retrieval.
-	 *
 	 * @param string|callable $default_value
 	 *
 	 * @example = 'John'
-	 * @example function prefix_set_test_default( $field_args, $field ) {
+	 * @example function prefix_set_test_default( $field_args, \CMB2_Field $field ) {
 	 *                      return 'Post ID: '. $field->object_id
 	 *                  }
 	 *
@@ -844,8 +850,21 @@ class Field {
 	 * @return Field
 	 */
 	public function default( $default_value ) : Field {
-		$this->default = $default_value;
-
+		if ( \is_callable( $default_value ) ) {
+			$this->default_cb = $default_value;
+			if ( 'options-page' === $this->box->get_object_type() ) {
+				add_filter( "cmb2_default_option_{$this->box->get_id()}_{$this->get_id()}", [ $this, 'default_option_callback' ], 11 );
+			} else {
+				add_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11, 3 );
+			}
+		} else {
+			$this->default = $default_value;
+			if ( 'options-page' === $this->box->get_object_type() ) {
+				add_filter( "cmb2_default_option_{$this->box->get_id()}_{$this->get_id()}", function () {
+					return $this->default;
+				} );
+			}
+		}
 		return $this;
 	}
 
@@ -1216,6 +1235,77 @@ class Field {
 	public function sanitization_cb( callable $callback ) : Field {
 		$this->sanitization_cb = $callback;
 		return $this;
+	}
+
+
+	/**
+	 * Support default meta using a callback.
+	 *
+	 * Register meta only support static values to be used as default
+	 * although we may pass a callback when registering the CMB2 field.
+	 * CMB2 only support defaults in the meta box, not when retrieving
+	 * data, so we tap into core WP default meta filter to support
+	 * the callback.
+	 *
+	 * @filter default_{$meta_type}_metadata 11, 3
+	 *
+	 * @param $value - Empty or a value set by another filter.
+	 * @param $object_id - Current post/term/user id.
+	 * @param $meta_key - Meta key being filtered.
+	 *
+	 * @internal
+	 *
+	 * @return mixed
+	 */
+	public function default_meta_callback( $value, $object_id, $meta_key ) {
+		if ( $this->get_id() !== $meta_key ) {
+			return $value;
+		}
+
+		// Will create an infinite loop if filter is intact.
+		remove_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11 );
+		$cmb2_field = $this->get_cmb2_field();
+		$cmb2_field->object_id( $object_id );
+		add_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11, 3 );
+
+		return \call_user_func( $this->default_cb, $cmb2_field->properties, $cmb2_field );
+	}
+
+
+	/**
+	 * Support default options using a callback.
+	 *
+	 * CMB2 takes care of rendering default values on the
+	 * options pages, this takes care of returning default
+	 * values when retrieving options.
+	 *
+	 * CMB2 stores options data a one big blog so we
+	 * can't tap into WP core default option filters.
+	 * Instead we tap into the custom filters added to
+	 * lipemat/cmb2.
+	 *
+	 * @filter cmb2_default_option_{$this->key}_{$field_id} 11 0
+	 *
+	 * @internal
+	 *
+	 * @return mixed
+	 */
+	public function default_option_callback() {
+		$cmb2_field = $this->get_cmb2_field();
+		$cmb2_field->object_id( $this->box->get_id() );
+		return \call_user_func( $this->default_cb, $cmb2_field->properties, $cmb2_field );
+	}
+
+
+	/**
+	 * Retrieve the CMB2 version of this field.
+	 *
+	 * Since 2.22.1
+	 *
+	 * @return \CMB2_Field
+	 */
+	public function get_cmb2_field() : \CMB2_Field {
+		return cmb2_get_field( $this->box->get_id(), $this->get_id() );
 	}
 
 

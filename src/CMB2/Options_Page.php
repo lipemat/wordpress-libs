@@ -2,8 +2,6 @@
 
 namespace Lipe\Lib\CMB2;
 
-use Lipe\Lib\Util\Actions;
-
 /**
  * Options_Page
  *
@@ -271,7 +269,7 @@ class Options_Page extends Box {
 	 * Option pages are stored in one big blob which means we
 	 * must implement logic to separate the fields when registering.
 	 *
-	 * Gives a universal place for amended the config.
+	 * Gives a universal place for ammending the config.
 	 *
 	 * @param Field $field
 	 * @param array $config
@@ -288,9 +286,12 @@ class Options_Page extends Box {
 			}, 9, 2 );
 		}
 
-		if ( null !== $field->default && ! \is_callable( $field->default ) ) {
+		// Legacy, prior to lipemat/cmb2 2.7.0.7.
+		if ( \defined( 'CMB2_VERSION' ) && null !== $field->default && version_compare( CMB2_VERSION ?? '9.9.9.9', '2.7.0.7', '<' ) ) {
 			$this->default_values[ $field->get_id() ] = $field->default;
-			Actions::in()->add_single_filter( "cmb2_override_option_get_{$this->id}", [ $this, 'inject_defaults' ] );
+			$this->once( function() {
+				add_filter( "cmb2_override_option_get_{$this->id}", [ $this, 'inject_defaults' ] );
+			}, __METHOD__ );
 		}
 
 		// Nothing to register.
@@ -303,30 +304,22 @@ class Options_Page extends Box {
 
 
 	/**
-	 * Inject the individual field's default values in the
-	 * blob of data during retrieval of options.
-	 *
-	 * CMB2 saves options as a single blob so we use the
-	 * filter to inject the default on retrieve.
-	 * Only works through the meta repo or calling `cmb2_options`
-	 * directly.
-	 *
-	 * @since  2.19.1
-	 *
-	 * @filter cmb2_override_option_get_{$this->id} 10 0
-	 *
-	 * @return string|array
+	 * @deprecated 2.23.0
 	 */
 	public function inject_defaults() {
+		_deprecated_function( 'cmb2_override_option_get_{$this->id}', '2.7.0.7', 'Version 2.7.0.7 of lipemat/cmb2 has more reliable filters.' );
+		// Leaving the filter intact, creates infinite loops.
+		remove_filter( "cmb2_override_option_get_{$this->id}", [ $this, 'inject_defaults' ] );
 		// Get values either from network or regular options.
-		$values = \cmb2_options( $this->id )->get_options();
+		$values = cmb2_options( $this->id )->get_options();
+
 		foreach ( $this->default_values as $field => $default ) {
 			if ( empty( $values[ $field ] ) ) {
 				$values[ $field ] = $default;
 			}
 		}
-		// Add the filter back in case of subsequent calls to get_option.
-		Actions::in()->add_single_filter( "cmb2_override_option_get_{$this->id}", [ $this, 'inject_defaults' ] );
+		// Add filter back in for subsequent calls.
+		add_filter( "cmb2_override_option_get_{$this->id}", [ $this, 'inject_defaults' ] );
 
 		return $values;
 	}
