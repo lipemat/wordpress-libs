@@ -2,6 +2,7 @@
 
 namespace Lipe\Lib\Schema;
 
+use Lipe\Lib\Traits\Singleton;
 use Lipe\Lib\Traits\Version;
 
 /**
@@ -18,10 +19,12 @@ use Lipe\Lib\Traits\Version;
 abstract class Db {
 	use Version;
 
-	protected $table;
-
 	/**
 	 *
+	 */
+	public const DB_VERSION = 1;
+
+	/**
 	 * Db columns with corresponding data type
 	 * Used to sanitize queries
 	 *
@@ -40,8 +43,24 @@ abstract class Db {
 	 */
 	public const COLUMNS = [];
 
+	/**
+	 * Holds the database name with prefix included.
+	 *
+	 * @internal
+	 *
+	 * @var string
+	 */
+	protected $table;
+
+
+	/**
+	 * Db constructor.
+	 *
+	 * @see Db::NAME
+	 */
 	public function __construct() {
 		if ( ! \defined( 'static::NAME' ) ) {
+			_doing_it_wrong( __METHOD__, 'The Db class requires a `static::NAME`.', '2.23.0' );
 			return;
 		}
 		global $wpdb;
@@ -52,15 +71,7 @@ abstract class Db {
 
 
 	/**
-	 *
-	 * @return string
-	 */
-	public function get_id_field() : string {
-		return static::ID_FIELD ?? $this->id_field;
-	}
-
-
-	/**
+	 * Get the name of the database table with prefix included.
 	 *
 	 * @return string
 	 */
@@ -152,33 +163,6 @@ abstract class Db {
 
 
 	/**
-	 *
-	 * Get the sprintf style formats matching an array of columns
-	 *
-	 * @uses Db::COLUMNS
-	 *
-	 * @param array $columns
-	 *
-	 * @return array
-	 */
-	protected function get_formats( array $columns ) : array {
-		$formats = [];
-		foreach ( $columns as $column => $value ) {
-			if ( $column === $this->get_id_field() ) {
-				$formats[] = '%d';
-			} elseif ( ! empty( $this->get_columns()[ $column ] ) ) {
-				$formats[] = $this->get_columns()[ $column ];
-			} else {
-				$formats[] = '%s';
-			}
-		}
-
-		return $formats;
-	}
-
-
-	/**
-	 *
 	 * Add a row to the table
 	 *
 	 * @param array $columns
@@ -197,35 +181,6 @@ abstract class Db {
 		}
 
 		return false;
-	}
-
-
-	/**
-	 * Sort Columns
-	 *
-	 * Sorts columns to match $this->columns for use with query sanitization
-	 *
-	 * @uses Db::COLUMNS
-	 *
-	 * @param array $columns
-	 *
-	 * @return array
-	 */
-	protected function sort_columns( $columns ) : array {
-		$clean = [];
-
-		foreach ( $this->get_columns() as $column => $type ) {
-			if ( array_key_exists( $column, $columns ) ) {
-				$clean[ $column ] = $columns[ $column ];
-
-				//because we usually let mysql handle default dates
-			} elseif ( 'date' !== $column ) {
-				$clean[ $column ] = null;
-
-			}
-		}
-
-		return $clean;
 	}
 
 	/**
@@ -259,7 +214,7 @@ abstract class Db {
 	 *
 	 * @return int|bool - number of rows updated or false on error
 	 */
-	public function update( $id_or_wheres, $columns ) {
+	public function update( $id_or_wheres, array $columns ) {
 		global $wpdb;
 
 		if ( is_numeric( $id_or_wheres ) ) {
@@ -276,22 +231,88 @@ abstract class Db {
 
 
 	/**
+	 * Get the sprintf style formats matching an array of columns
 	 *
-	 * @since 1.6.1
+	 * @param array $columns
 	 *
 	 * @return array
 	 */
+	protected function get_formats( array $columns ) : array {
+		$formats = [];
+		foreach ( $columns as $column => $value ) {
+			if ( $column === $this->get_id_field() ) {
+				$formats[] = '%d';
+			} elseif ( ! empty( $this->get_columns()[ $column ] ) ) {
+				$formats[] = $this->get_columns()[ $column ];
+			} else {
+				$formats[] = '%s';
+			}
+		}
+
+		return $formats;
+	}
+
+
+	/**
+	 * Sorts columns to match $this->columns for use with query sanitization
+	 *
+	 * @param array $columns
+	 *
+	 * @uses Db::COLUMNS
+	 *
+	 * @return array
+	 */
+	protected function sort_columns( array $columns ) : array {
+		$clean = [];
+
+		foreach ( $this->get_columns() as $column => $type ) {
+			if ( array_key_exists( $column, $columns ) ) {
+				$clean[ $column ] = $columns[ $column ];
+				//because we usually let mysql handle default dates
+			} elseif ( 'date' !== $column ) {
+				$clean[ $column ] = null;
+			}
+		}
+
+		return $clean;
+	}
+
+
+	/**
+	 * Deprecated in favor of using the constant directly.
+	 *
+	 * @deprecated
+	 */
+	public function get_id_field() : string {
+		if ( empty( static::ID_FIELD ) ) {
+			_deprecated_argument( 'id_field', '2.23.0', 'Using a variable for id field is deprecated. Use the `static::ID_FIELD)` const.' );
+		}
+		return static::ID_FIELD ?? $this->id_field;
+	}
+
+
+	/**
+	 * Deprecated in favor of using the constant directly.
+	 *
+	 * @deprecated
+	 */
 	public function get_columns() : array {
+		if ( empty( static::COLUMNS ) ) {
+			_deprecated_argument( 'columns', '2.23.0', 'Using a variable for columns is deprecated. Use the `static::COLUMNS` const.' );
+		}
 		return static::COLUMNS ?? $this->columns;
 	}
 
+
 	/**
+	 * Deprecated in favor of using the constant directly.
 	 *
-	 * @since 1.6.1
-	 *
-	 * @return string
+	 * @deprecated
 	 */
 	protected function get_db_version() : string {
+		if ( empty( static::COLUMNS ) ) {
+			_deprecated_argument( 'db_version', '2.23.0', 'Using a variable for db version is deprecated. Use the `static::DB_VERSION` const.' );
+		}
 		return static::DB_VERSION ?? $this->db_version;
 	}
 
