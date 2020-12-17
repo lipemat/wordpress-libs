@@ -4,6 +4,7 @@ namespace Lipe\Lib\Rest_Api;
 
 use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
+use Lipe\Lib\Util\Arrays;
 
 /**
  * Generate JSON data which mimics the return of wp-json api.
@@ -87,7 +88,7 @@ class Initial_Data {
 			$embed
 		);
 		if ( ! $with_links ) {
-			unset( $data['_links'] );
+			return Arrays::in()->array_recursive_unset( '_links', $data );
 		}
 		return $data;
 	}
