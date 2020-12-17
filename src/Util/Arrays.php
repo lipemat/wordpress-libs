@@ -28,7 +28,7 @@ class Arrays {
 	public function array_chunk_to_associative( array $array ) : array {
 		$assoc = [];
 		foreach ( array_chunk( $array, 2 ) as $pair ) {
-			if ( count( $pair ) === 2 ) {
+			if ( 2 === count( $pair ) ) {
 				[ $key, $value ] = $pair;
 				$assoc[ $key ] = $value;
 			} else {
@@ -107,5 +107,26 @@ class Arrays {
 	 */
 	public function array_map_assoc( callable $callback, array $array ) : array {
 		return array_combine( array_keys( $array ), array_map( $callback, $array, array_keys( $array ) ) );
+	}
+
+
+	/**
+	 * Removes a key from an array recursively.
+	 *
+	 * @param string $key - Key to remove.
+	 * @param array  $array - Array to recursively remove keys from.
+	 *
+	 * @since 2.23.1
+	 *
+	 * @return array
+	 */
+	public function array_recursive_unset( string $key, array $array ) : array {
+		unset( $array[ $key ] );
+		foreach ( $array as $_key => $_values ) {
+			if ( \is_array( $_values ) ) {
+				$array[ $_key ] = $this->array_recursive_unset( $key, $_values );
+			}
+		}
+		return $array;
 	}
 }
