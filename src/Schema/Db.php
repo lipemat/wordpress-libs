@@ -2,7 +2,6 @@
 
 namespace Lipe\Lib\Schema;
 
-use Lipe\Lib\Traits\Singleton;
 use Lipe\Lib\Traits\Version;
 
 /**
@@ -81,27 +80,28 @@ abstract class Db {
 
 
 	/**
-	 * Retrieve data from this db table
+	 * Retrieve data from this db table.
 	 *
-	 * @param array|string $columns   - array or csv of columns we want to return
-	 *                                If only one column is specified this will return
-	 *                                either a single value or an array of single values
-	 *                                depending on what $count is set to
+	 * Automatically maps the results to a single value or row if the
+	 * `$count` is set to 1.
 	 *
-	 * @param array|string [$id_or_wheres] - row id or array or where column => value
-	 *                     Adding a % within the value will turn the query into a Like query
+	 * @param array<string>|string $columns    - Array or CSV of columns we want to return.
+	 *                                         Pass '*' to return all columns.
 	 *
-	 * @param              bool       [$count] - number of rows to return.
-	 *                                If set to 1 this will return a single var or
-	 *                                row depending on the number of columns set in
-	 *                                $columns, instead of an array of results
+	 * @param array|int [$id_or_wheres] - Row id or array or where column => value.
+	 *                                         Adding a % within the value will turn the query
+	 *                                         into a `LIKE` query
 	 *
-	 * @param              string     [ $order_by ] - an orderby value used verbatim in query
+	 * @param bool       [$count] - Number of rows to return.
+	 *                                         If set to 1 this will return a single value
+	 *                                         or row depending on the number of columns
+	 *                                         set in `$columns`.
 	 *
-	 * @since 1.9.2 - Support passing an empty '' value
-	 * @since 1.9.2 - Support like queries
+	 * @param string               $order_by   - An ORDERBY column and direction.
+	 *                                         Optionally pass `ASC` or `DESC` after the
+	 *                                         column to specify direction.
 	 *
-	 * @return array|string
+	 * @return array<object>|object|string|int
 	 *
 	 */
 	public function get( $columns, $id_or_wheres = null, $count = null, $order_by = null ) {
@@ -130,7 +130,7 @@ abstract class Db {
 				}
 				$values[] = $value;
 			}
-            // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$where = ' WHERE ' . implode( ' AND ', $wheres );
 			$sql   .= $wpdb->prepare( $where, $values );
 		}
@@ -157,7 +157,6 @@ abstract class Db {
 		}
 
 		return $wpdb->get_col( $sql );
-		// phpcs:enable
 
 	}
 
@@ -310,7 +309,7 @@ abstract class Db {
 	 * @deprecated
 	 */
 	protected function get_db_version() : string {
-		if ( empty( static::COLUMNS ) ) {
+		if ( empty( static::DB_VERSION ) ) {
 			_deprecated_argument( 'db_version', '2.23.0', 'Using a variable for db version is deprecated. Use the `static::DB_VERSION` const.' );
 		}
 		return static::DB_VERSION ?? $this->db_version;
@@ -352,6 +351,9 @@ abstract class Db {
 	 * );";
 	 *
 	 * dbDelta( $sql );
+	 *
+	 * @notice dbDelta expects the "CREATE" etc. to be capitalized
+	 *         and will not run if not capitalized.
 	 *
 	 * @return void
 	 */
