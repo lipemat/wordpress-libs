@@ -162,6 +162,20 @@ abstract class Db {
 
 
 	/**
+	 * Get a row by it's id.
+	 *
+	 * @param int $id - Primary key value.
+	 *
+	 * @since 2.23.2
+	 *
+	 * @return object|null
+	 */
+	public function get_by_id( int $id ) : ?object {
+		return $this->get( '*', $id, 1 );
+	}
+
+
+	/**
 	 * Add a row to the table
 	 *
 	 * @param array $columns
