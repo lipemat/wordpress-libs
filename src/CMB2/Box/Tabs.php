@@ -464,7 +464,7 @@ class Tabs {
 			.cmb-tabs .cmb-th + .cmb-td,
 			.cmb-tabs .cmb-th + .cmb-td {
 				float: right;
-				width: 82%;
+				width: calc( 100% - 200px );
 			}
 
 			.cmb2-wrap-tabs .cmb-tab-panel {
