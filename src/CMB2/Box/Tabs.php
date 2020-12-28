@@ -483,13 +483,15 @@ class Tabs {
 				float: none;
 				background-color: #fafafa;
 				border-right: medium none;
-				padding: 0;
+				padding: 15px 0 0 0;
 				border-bottom: 1px solid #dedede;
-				padding-top: 15px;
+
 			}
 
 			.cmb2-options-page .cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav {
-				margin-bottom: -10px;
+				margin-bottom: -8px;
+				padding: 0 0 0 0;
+				border-bottom: none;
 			}
 
 			.cmb-tabs.cmb-tabs-horizontal .cmb-tab-nav li {
@@ -500,6 +502,10 @@ class Tabs {
 
 			.cmb-tabs.cmb-tabs-horizontal .cmb-tab-nav li:first-of-type {
 				margin-left: 18px;
+			}
+
+			.cmb2-options-page .cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav li:first-of-type {
+				margin-left: 0;
 			}
 
 			.cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav::after {
@@ -521,6 +527,10 @@ class Tabs {
 				border-bottom: 1px solid #dedede;
 			}
 
+			.cmb2-options-page .cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav li a {
+				border: none;
+			}
+
 			.cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav li.cmb-tab-active a {
 				background-color: #fff;
 				border-color: #fff;
@@ -528,6 +538,11 @@ class Tabs {
 				border-top: 2px solid #00a0d2;
 				border-bottom: 1px solid #fff;
 			}
+
+			 .cmb2-options-page .cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav li.cmb-tab-active a {
+			    border-bottom: 2px solid #fff;
+			    margin-bottom: -1px;
+			 }
 
 			/*--------------------------------------------------------------
 			Media Query
