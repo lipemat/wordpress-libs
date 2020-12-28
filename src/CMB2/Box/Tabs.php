@@ -288,6 +288,9 @@ class Tabs {
 			/*--------------------------------------------------------------
 			Base style
 			--------------------------------------------------------------*/
+			.cmb-tabs {
+				background: #fff;
+			}
 			.cmb-tabs .cmb-th label {
 				color: #555;
 				font-size: 13px;
@@ -507,8 +510,7 @@ class Tabs {
 				width: 100%;
 			}
 
-			.cmb-tabs .cmb-tab-panel {
-				/*background: #ebebeb none repeat scroll 0 0;*/
+			.cmb-tabs.cmb-tabs-horizontal .cmb-tab-panel {
 				padding-top: 10px;
 			}
 
