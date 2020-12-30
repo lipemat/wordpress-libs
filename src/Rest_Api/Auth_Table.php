@@ -6,11 +6,9 @@ use Lipe\Lib\Schema\Db;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * Auth_Table
+ * @link https://make.wordpress.org/core/2020/11/05/application-passwords-integration-guide/
  *
- * @see     Login
- *
- * @example Auth_Table::init();
+ * @deprecated in favor of native WP Rest Auth.
  *
  */
 class Auth_Table extends Db {
@@ -18,8 +16,20 @@ class Auth_Table extends Db {
 
 	public const NAME = 'auth';
 
-	protected const DB_VERSION = 1;
+	public const DB_VERSION = 1;
 	protected const ID_FIELD = 'id';
+
+
+	/**
+	 * @link https://make.wordpress.org/core/2020/11/05/application-passwords-integration-guide/
+	 *
+	 * @deprecated in favor of native WP Rest Auth.
+	 */
+	public function __construct() {
+		_deprecated_constructor( __CLASS__, '2.23.3' );
+		parent::__construct();
+	}
+
 
 	public const COLUMNS = [
 		'id'      => '%d',

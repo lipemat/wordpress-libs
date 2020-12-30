@@ -5,24 +5,20 @@ namespace Lipe\Lib\Rest_Api;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * Login to the Rest Api via standard authentication.
+ * @link https://make.wordpress.org/core/2020/11/05/application-passwords-integration-guide/
  *
- * @notice on fast cgi install, this must be in the .htaccess for this to work
- * ### HTTP Basic Authorization for REST api
- * <IfModule mod_fcgid.c>
- * CGIPassAuth on
- * </IfModule>
- *
- * @notice DO NOT use this if you are not on https!
- *
- * @see    Auth_Table
- * @see    _Login.md
+ * @deprecated in favor of native WP Rest Auth.
  */
 class Login {
 	use Singleton;
 
-
+	/**
+	 * @link       https://make.wordpress.org/core/2020/11/05/application-passwords-integration-guide/
+	 *
+	 * @deprecated in favor of native WP Rest Auth.
+	 */
 	public function hook() : void {
+		_deprecated_constructor( __CLASS__, '2.23.3' );
 		add_filter( 'determine_current_user', [ $this, 'login_via_token' ], 20 );
 		add_action( 'rest_api_init', [ $this, 'register_routes' ], 10 );
 	}
