@@ -18,7 +18,7 @@ class Auth_Table extends Db {
 
 	public const NAME = 'auth';
 
-	protected const DB_VERSION = 1;
+	public const DB_VERSION = 1;
 	protected const ID_FIELD = 'id';
 
 	public const COLUMNS = [
