@@ -17,7 +17,7 @@ class Template {
 	public function esc_attr( array $attributes ) : string {
 		$e = [];
 		foreach ( $attributes as $k => $v ) {
-			if ( \ is_array( $v ) || \is_object( $v ) ) {
+			if ( \is_array( $v ) || \is_object( $v ) ) {
 				$v = \json_encode( $v );
 			} elseif ( \is_bool( $v ) ) {
 				$v = $v ? 1 : 0;
