@@ -8,6 +8,7 @@ namespace Lipe\Lib\Cron;
  *
  */
 abstract class Cron_Abstract {
+	public const NAME = __CLASS__;
 
 	/**
 	 * Run the Task
@@ -36,6 +37,11 @@ abstract class Cron_Abstract {
 	 * @return void
 	 */
 	public function init() : void {
+		if ( __CLASS__ === static::NAME ) {
+			_doing_it_wrong( __CLASS__, 'Cron_Abstract::NAME must be overridden by the child class.', '2.23.0' );
+			return;
+		}
+
 		$this->schedule_task();
 		$this->hook();
 	}

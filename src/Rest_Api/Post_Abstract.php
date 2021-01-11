@@ -10,6 +10,8 @@ namespace Lipe\Lib\Rest_Api;
  */
 abstract class Post_Abstract {
 
+	public const POST_TYPE = 'post';
+
 	/**
 	 * which taxonomies will show in object
 	 *

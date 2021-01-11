@@ -613,7 +613,9 @@ class Box {
 		$sub_types = $this->object_types;
 		if ( 'term' === $this->get_object_type() ) {
 			$type = 'term';
-			$sub_types = $this->taxonomies ?? [];
+			if ( isset( $this->taxonomies ) ) {
+				$sub_types = $this->taxonomies;
+			}
 		} elseif ( \in_array( $this->get_object_type(), [ 'user', 'comment' ] ) ) {
 			$sub_types = [ false ];
 		}

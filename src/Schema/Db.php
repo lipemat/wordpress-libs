@@ -18,6 +18,9 @@ use Lipe\Lib\Traits\Version;
 abstract class Db {
 	use Version;
 
+	public const NAME = __CLASS__;
+	protected const ID_FIELD = __CLASS__;
+
 	/**
 	 *
 	 */
@@ -58,10 +61,11 @@ abstract class Db {
 	 * @see Db::NAME
 	 */
 	public function __construct() {
-		if ( ! \defined( 'static::NAME' ) ) {
+		if ( __CLASS__ === static::NAME ) {
 			_doing_it_wrong( __METHOD__, 'The Db class requires a `static::NAME`.', '2.23.0' );
 			return;
 		}
+
 		global $wpdb;
 		$this->table = $wpdb->prefix . static::NAME;
 
@@ -130,8 +134,8 @@ abstract class Db {
 				}
 				$values[] = $value;
 			}
-            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$where = ' WHERE ' . implode( ' AND ', $wheres );
+			//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 			$sql   .= $wpdb->prepare( $where, $values );
 		}
 
@@ -157,6 +161,7 @@ abstract class Db {
 		}
 
 		return $wpdb->get_col( $sql );
+		//phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 
 	}
 
@@ -170,7 +175,7 @@ abstract class Db {
 	 *
 	 * @return object|null
 	 */
-	public function get_by_id( int $id ) : ?object {
+	public function get_by_id( int $id ) {
 		return $this->get( '*', $id, 1 );
 	}
 
@@ -297,10 +302,13 @@ abstract class Db {
 	 * @deprecated
 	 */
 	public function get_id_field() : string {
-		if ( empty( static::ID_FIELD ) ) {
+		if ( __CLASS__ === static::ID_FIELD ) {
 			_deprecated_argument( 'id_field', '2.23.0', 'Using a variable for id field is deprecated. Use the `static::ID_FIELD)` const.' );
+
+			return isset( $this->id_field ) ? $this->id_field : '';
 		}
-		return static::ID_FIELD ?? $this->id_field;
+
+		return static::ID_FIELD;
 	}
 
 
@@ -312,8 +320,9 @@ abstract class Db {
 	public function get_columns() : array {
 		if ( empty( static::COLUMNS ) ) {
 			_deprecated_argument( 'columns', '2.23.0', 'Using a variable for columns is deprecated. Use the `static::COLUMNS` const.' );
+			return isset( $this->columns ) ? $this->columns : [];
 		}
-		return static::COLUMNS ?? $this->columns;
+		return static::COLUMNS;
 	}
 
 
@@ -325,8 +334,10 @@ abstract class Db {
 	protected function get_db_version() : string {
 		if ( empty( static::DB_VERSION ) ) {
 			_deprecated_argument( 'db_version', '2.23.0', 'Using a variable for db version is deprecated. Use the `static::DB_VERSION` const.' );
+			return isset( $this->db_version ) ? $this->db_version : '1';
 		}
-		return static::DB_VERSION ?? $this->db_version;
+
+		return static::DB_VERSION;
 	}
 
 

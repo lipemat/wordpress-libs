@@ -26,7 +26,7 @@ class Term_Box extends Box {
 	public $new_term_section;
 
 	/**
-	 * if object_types is set to 'term',
+	 * If object_types is set to 'term',
 	 * it is required to provide a the taxonomies property,
 	 * which should be an array of Taxonomies.
 	 *
@@ -34,7 +34,7 @@ class Term_Box extends Box {
 	 *
 	 * @example array( 'category', 'post_tag' ),
 	 *
-	 * @var  []
+	 * @var string[]
 	 */
 	public $taxonomies;
 

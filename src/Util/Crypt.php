@@ -91,7 +91,7 @@ class Crypt {
 			'salt'       => bin2hex( $salt ),
 			'iterations' => static::ITERATIONS,
 		];
-		unset( $encrypted, $iterations, $iv, $salt, $hash_key );
+		unset( $iv, $salt, $hash_key );
 
 		return base64_encode( json_encode( $output ) );
 	}
