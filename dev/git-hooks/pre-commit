@@ -5,7 +5,7 @@
 # Test our code against various unit test systems and linters and prevent commit
 # if any of them fail.
 #
-# @uses PHP 7.4
+# @uses PHP 7.3
 #
 # @version 2.1.0
 #
@@ -20,10 +20,9 @@ RESET_COLOR="$(tput sgr0)"
 
 #-- On Mat's machines point to a specific version of PHP.
 if [[ "mat" == "$USERNAME" ]]; then
-	PHP='php 7.1'
+	PHP='php 7.3'
 else
 	PHP='php'
-	PHPUNIT="phpunit"
 fi
 PROJECT=$(${PHP} -r "echo dirname(realpath('$0'), 3);")
 ## Fix windows paths

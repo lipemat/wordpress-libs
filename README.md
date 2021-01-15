@@ -4,7 +4,7 @@
 <a href="https://github.com/lipemat/wordpress-libs/releases/latest">
 <img src="https://img.shields.io/packagist/v/lipemat/wordpress-libs.svg?label=version" />
 </a>
-    <img alt="" src="https://img.shields.io/badge/wordpress->=4.9.0-green.svg">
+    <img alt="" src="https://img.shields.io/badge/wordpress->=5.5.0-green.svg">
     <img src="https://img.shields.io/packagist/php-v/lipemat/wordpress-libs.svg?color=brown" />
     <img alt="Packagist" src="https://img.shields.io/packagist/l/lipemat/wordpress-libs.svg">
 </p>
@@ -22,33 +22,32 @@ require __DIR__ . '/vendor/autoload.php'
 ```
 
 ### Current Features (non exhaustive)
-* CMB2 mapping
-* Meta Data repository
-* Custom Post Type registration object
-* Extended CPTS mapping
-* Rest Api endpoint registration mapping
-* Rest Api authentication
-* Database interaction object
-* Meta Box registration object
-* Post List Column registration object
-* Settings Page registration object
-* Taxonomy registration object
-* Extended TAXOS mapping
-* Pagination generation object
-* Script and Styles helpers
-* Singleton Trait
-* Api endpoint
-* Autoloader helper
-* Object Cache helper
-* PostCSS Modules helper
-* On Demand Image Resizing
-* Url Route registration object
-* Version management helper
-* Comment Object Trait
-* Memoize Trait (@since 2.6.0)
-* Site Object Trait (@since 2.8.0)
-* Class Version Trait (@since 2.10.0)
-* Network Object Trait (@since 2.19.0)
+* Api endpoint.
+* Autoloader helper.
+* CMB2 mapping.
+* Class Version Trait.
+* Comment Object Trait.
+* Custom Post Type registration object.
+* Database interaction object.
+* Extended CPTS mapping.
+* Extended TAXOS mapping.
+* Memoize Trait.
+* Meta Box registration object.
+* Meta Data repository.
+* Network Object Trait.
+* Object Cache helper.
+* On Demand Image Resizing.
+* Pagination generation object.
+* Post List Column registration object.
+* PostCSS Modules helper.
+* REST API initial data rendered.  
+* Script and Styles helpers.
+* Settings Page registration object.
+* Singleton Trait.
+* Site Object Trait.
+* Taxonomy registration object.
+* Url Route registration object.
+* Version management helper.
 
 
 ##### Changelog may be found in [releases](https://github.com/lipemat/wordpress-libs/releases) (non exhaustive)
