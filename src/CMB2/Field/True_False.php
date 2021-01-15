@@ -23,7 +23,7 @@ class True_False extends \CMB2_Type_Checkbox {
 			'desc'  => '',
 		];
 
-		$meta_value = $this->field->escaped_value();
+		$meta_value = $this->field->escaped_value(); // @phpstan-ignore-line
 
 		$is_checked = $this->is_checked ?? ! empty( $meta_value );
 
@@ -35,6 +35,7 @@ class True_False extends \CMB2_Type_Checkbox {
 			sprintf(
 				'%s %s',
 				$this->render_toggle_field( $defaults ),
+				/* @phpstan-ignore-next-line */
 				$this->_desc()
 			)
 		);
@@ -51,7 +52,7 @@ class True_False extends \CMB2_Type_Checkbox {
 		ob_start();
 		$args['class'] .= ' checkbox-toggle-checkbox';
 		$args = $this->parse_args( 'checkbox', $args );
-		$for = $this->_id();
+		$for = $this->_id(); // @phpstan-ignore-line
 		if ( ( isset( $args['readonly'] ) && ! empty( $args['readonly'] ) ) || ( isset( $args['disabled'] ) && ! empty( $args['disabled'] ) ) ) {
 			// Labels not matching field id won't toggle the checkbox when clicked.
 			// We set one that does not match but we can target via CSS.

@@ -5,11 +5,10 @@ namespace Lipe\Lib\Util;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * Cache
+ * Ability to use arrays or objects as cache keys
+ * and simplifies the flushing of groups.
  *
- * Ability to manage cache a little easier for groups etc
- *
- * @example Cache::init(); To setup the clear cache button and save post actions
+ * @example Cache::init(); To optionally generate the clear cache button.
  * @example Cache::set( $key, $value );
  *
  */
@@ -35,7 +34,7 @@ class Cache {
 		$group = $this->get_group_key( $group );
 
 		if ( null === $value ) {
-			//store an empty value that memcache can handle
+			// Store an empty value that memcache can handle.
 			$value = '';
 		}
 
@@ -43,12 +42,18 @@ class Cache {
 	}
 
 
-
+	/**
+	 * Get an item from the cache.
+	 *
+	 * @param mixed  $key
+	 * @param string $group
+	 *
+	 * @return false|mixed
+	 */
 	public function get( $key, $group = self::DEFAULT_GROUP ) {
 		$group = $this->get_group_key( $group );
 
 		return wp_cache_get( $this->filter_key( $key ), $group );
-
 	}
 
 
@@ -97,13 +102,13 @@ class Cache {
 	 * Group key with a custom "last_change" appended to it to handle
 	 * flushing an entire group by changing a "last_changed" cache key.
 	 *
-	 * @param $group
+	 * @param string $group
 	 *
 	 * @return string
 	 */
-	protected function get_group_key( $group ) : string {
+	protected function get_group_key( string $group ) : string {
 		if ( self::FLUSH_ON_SAVE_POST_GROUP === $group ) {
-			//Tap into the existing last_changed for posts group so we can flush automatically.
+			// Tap into the existing last_changed for posts group so we can flush automatically.
 			$last_changed = wp_cache_get_last_changed( 'posts' );
 		} else {
 			$last_changed = wp_cache_get_last_changed( $group );

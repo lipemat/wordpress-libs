@@ -64,7 +64,7 @@ abstract class Translate_Abstract {
 		}
 
 		if ( isset( $this->fields[ $key ] ) && null !== $this->fields[ $key ]->escape_cb ) {
-			return \cmb2_get_field( $this->fields[ $key ]->box_id, $key )->escaped_value( null, $value );
+			return \cmb2_get_field( $this->fields[ $key ]->box_id, $key )->escaped_value( 'esc_attr', $value );
 		}
 		return $value;
 	}
@@ -168,14 +168,14 @@ abstract class Translate_Abstract {
 	 * @param string     $key
 	 * @param string     $meta_type
 	 *
-	 * @return array|false
+	 * @return ?array
 	 */
 	public function get_file_field_value( $object_id, string $key, string $meta_type ) : ?array {
 		$url = $this->get_meta_value( $object_id, $key, $meta_type );
 		if ( ! empty( $url ) ) {
 			//Add the extra field so groups meta will be translated properly.
 			if ( null !== $this->fields[ $key ]->group ) {
-				$this->fields[ "{$key}_id" ] = $this->fields[ $key ];
+				$this->fields[ $key . '_id' ] = $this->fields[ $key ];
 			}
 
 			return [
@@ -202,7 +202,7 @@ abstract class Translate_Abstract {
 	public function update_file_field_value( $object_id, string $key, int $attachment_id, string $meta_type ) : void {
 		//Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->fields[ $key ]->group ) {
-			$this->fields[ "{$key}_id" ] = $this->fields[ $key ];
+			$this->fields[ $key . '_id' ] = $this->fields[ $key ];
 		}
 		$this->update_meta_value( $object_id, $key, \wp_get_attachment_url( $attachment_id ), $meta_type );
 		$this->update_meta_value( $object_id, "{$key}_id", $attachment_id, $meta_type );
@@ -222,10 +222,10 @@ abstract class Translate_Abstract {
 	public function delete_file_field_value( $object_id, string $key, string $meta_type ) : void {
 		//Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->fields[ $key ]->group ) {
-			$this->fields[ "{$key}_id" ] = $this->fields[ $key ];
+			$this->fields[ $key . '_id' ] = $this->fields[ $key ];
 		}
 		$this->delete_meta_value( $object_id, $key, $meta_type );
-		$this->delete_meta_value( $object_id, "{$key}_id", $meta_type );
+		$this->delete_meta_value( $object_id, $key . '_id', $meta_type );
 	}
 
 
@@ -261,10 +261,10 @@ abstract class Translate_Abstract {
 	/**
 	 * Update all the field values within a group.
 	 *
-	 * @param        $object_id
-	 * @param string $group_id
-	 * @param array  $values
-	 * @param string $meta_type
+	 * @param int|string $object_id
+	 * @param string     $group_id
+	 * @param array      $values
+	 * @param string     $meta_type
 	 */
 	public function update_group_field_values( $object_id, string $group_id, array $values, string $meta_type ) : void {
 		foreach ( $values as $_row => $_values ) {
@@ -310,7 +310,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @internal
 	 *
-	 * @return Field[]
+	 * @return string[]
 	 */
 	protected function get_group_fields( string $group ) : array {
 		$groups = $this->once( function () {
@@ -355,10 +355,10 @@ abstract class Translate_Abstract {
 	 * CMB2 saves taxonomy fields as terms or meta value for options.
 	 * We do the same here.
 	 *
-	 * @param        $object_id
-	 * @param string $field_id
-	 * @param array  $terms - Term ids, or term slugs
-	 * @param string $meta_type
+	 * @param string|int $object_id
+	 * @param string     $field_id
+	 * @param array      $terms - Term ids, or term slugs
+	 * @param string     $meta_type
 	 *
 	 * @return void
 	 */
@@ -384,9 +384,9 @@ abstract class Translate_Abstract {
 	 *
 	 * Does not delete the actual terms, just the assignment of them.
 	 *
-	 * @param        $object_id
-	 * @param string $field_id
-	 * @param string $meta_type
+	 * @param string|int $object_id
+	 * @param string     $field_id
+	 * @param string     $meta_type
 	 *
 	 * @return void
 	 */
@@ -434,7 +434,7 @@ abstract class Translate_Abstract {
 	 * @return mixed;
 	 */
 	protected function maybe_use_main_blog( string $field_id, callable $callback ) {
-		$is_network = 'network_admin_menu' === cmb2_get_metabox( $this->get_field( $field_id )->box_id )->meta_box['admin_menu_hook'];
+		$is_network = 'network_admin_menu' === cmb2_get_metabox( $this->get_field( $field_id )->box_id )->meta_box['admin_menu_hook']; // @phpstan-ignore-line
 		if ( $is_network ) {
 			switch_to_blog( get_main_site_id() );
 		}

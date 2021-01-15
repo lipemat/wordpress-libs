@@ -5,11 +5,11 @@ namespace Lipe\Lib\Theme;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * CSS_Modules
+ * CSS Modules handling in PHP templates.
  *
- * @author  Mat Lipe
+ * @example $styles = CSS_Modules()->instance()->styles( 'home/header' );
+ *          <div class="<?= $styles['wrap'] ?>" />
  *
- * @package Lipe\Lib\Util
  */
 class CSS_Modules {
 	use Singleton;

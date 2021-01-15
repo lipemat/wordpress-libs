@@ -35,9 +35,9 @@ class Layout {
 	 * @return \CMB2_Field|null Group field object.
 	 */
 	public function render_group_callback( $field_args, \CMB2_Field $field_group ) : ?\CMB2_Field {
-		$cmb = \CMB2_Boxes::get( $field_group->cmb_id );
+		$cmb = \CMB2_Boxes::get( $field_group->cmb_id ); // @phpstan-ignore-line
 		// If field is requesting to be conditionally shown.
-		if ( ! $field_group || ! $field_group->should_show() ) {
+		if ( ! $field_group->should_show() ) {
 			return null;
 		}
 
@@ -219,12 +219,12 @@ class Layout {
 
 		$field_group->peform_param_callback( 'after_group_row' );
 
-		return \CMB2_Boxes::get( $field_group->cmb_id );
+		return \CMB2_Boxes::get( $field_group->cmb_id ); // @phpstan-ignore-line
 	}
 
 
 	protected function render_field( array $field_args, \CMB2_Field $field_group ) : void {
-		$cmb = \CMB2_Boxes::get( $field_group->cmb_id );
+		$cmb = \CMB2_Boxes::get( $field_group->cmb_id ); // @phpstan-ignore-line
 		if ( 'hidden' === $field_args['type'] ) {
 			// Save rendering for after the metabox.
 			$cmb->add_hidden_field( $field_args, $field_group );

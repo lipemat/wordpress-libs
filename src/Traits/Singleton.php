@@ -51,7 +51,7 @@ trait Singleton {
 	 *
 	 * @static
 	 *
-	 * @return static
+	 * @return self
 	 */
 	public static function in() {
 		return static::instance();
@@ -62,7 +62,7 @@ trait Singleton {
 	 *
 	 * @static
 	 *
-	 * @return static
+	 * @return self
 	 */
 	public static function instance() {
 		if ( ! is_a( static::$instance, __CLASS__ ) ) {

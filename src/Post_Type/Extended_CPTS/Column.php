@@ -34,9 +34,9 @@ class Column extends Argument_Abstract {
 	 * This must be called from every method that is saving args
 	 * or they will go nowhere.
 	 *
-	 * @internal
-	 *
 	 * @param array $args
+	 *
+	 * @internal
 	 *
 	 * @return void
 	 */
@@ -98,11 +98,11 @@ class Column extends Argument_Abstract {
 	 * 'edit' links to the edit screen for the connected post.
 	 * 'list' links to the post type list screen for the connection_type.
 	 *
-	 * @param string $title
-	 * @param string $connection_type
-	 * @param string $link_to - 'view', 'edit', 'list' (default 'edit')
-	 * @param null|string   $meta_field
-	 * @param null|string   $meta_value
+	 * @param string      $title
+	 * @param string      $connection_type
+	 * @param string      $link_to - 'view', 'edit', 'list' (default 'edit')
+	 * @param null|string $meta_field
+	 * @param null|string $meta_value
 	 *
 	 * @return Column_Shared
 	 */
@@ -122,7 +122,6 @@ class Column extends Argument_Abstract {
 		}
 
 		return $this->return( $_args );
-
 	}
 
 
@@ -154,10 +153,10 @@ class Column extends Argument_Abstract {
 	 * If necessary, you can set the image's width and/or height
 	 * in pixels if you need to scale down the image in the browser.
 	 *
-	 * @param string $title
-	 * @param string $image_size
-	 * @param null|int   $width
-	 * @param null|int   $height
+	 * @param string   $title
+	 * @param string   $image_size
+	 * @param null|int $width
+	 * @param null|int $height
 	 *
 	 * @return Column_Shared
 	 */
@@ -206,17 +205,18 @@ class Column extends Argument_Abstract {
 	 *
 	 * If the meta field represents a Unix or MySQL timestamp,
 	 * you can format the output as such using the date_format parameter.
+	 *
 	 * The value gets passed to PHP's date() function,
 	 * so any standard date format is accepted.
 	 *
 	 *
-	 * @param string $title
-	 * @param string $meta_key
-	 * @param null   $date_format
+	 * @param string      $title
+	 * @param string      $meta_key
+	 * @param string|null $date_format
 	 *
 	 * @return Column_Shared
 	 */
-	public function meta( string $title, string $meta_key, $date_format = null ) : Column_Shared {
+	public function meta( string $title, string $meta_key, ?string $date_format = null ) : Column_Shared {
 		$_args = compact( 'title', 'meta_key' );
 		if ( null !== $date_format ) {
 			$_args['date_format'] = $date_format;

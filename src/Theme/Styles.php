@@ -20,21 +20,19 @@ class Styles {
 
 
 	/**
-	 * You can set it in the wp-config or some dynamic way using grunt like so
-	 * define( 'SCRIPTS_VERSION', '9999' );
-	 *
-	 * OR
-	 *
 	 * Beanstalk adds a .revision file to deployments. This grabs that
 	 * revision and returns it.
+	 *
 	 * You will find a 'post-commit' script in the /dev
 	 * folder which may be added to your .git/hooks directory to automatically generate
-	 * this .revision file locally on each commit. In which case you will likely want to
-	 * git ignore it.
+	 * this .revision file locally on each commit.
 	 *
 	 * If neither the constant nor the .revision is available this will
 	 * return null which false back to the WP version when queuing scripts
-	 * and styles
+	 * and styles.
+	 *
+	 * You can set the revision manually in the wp-config or some dynamic way
+	 * define( 'SCRIPTS_VERSION', '9999' );
 	 *
 	 * @return null|string
 	 */
@@ -70,12 +68,12 @@ class Styles {
 	 */
 	public function live_reload( bool $admin_also = false ) : void {
 		if ( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
-			\add_action( 'wp_enqueue_scripts', static function () {
-				\wp_enqueue_script( 'livereload', 'http://localhost:35729/livereload.js', [], \time(), true );
+			add_action( 'wp_enqueue_scripts', static function () {
+				wp_enqueue_script( 'livereload', 'http://localhost:35729/livereload.js', [], (string) \time(), true );
 			} );
 			if ( $admin_also ) {
-				\add_action( 'admin_enqueue_scripts', static function () {
-					\wp_enqueue_script( 'livereload', 'http://localhost:35729/livereload.js', [], \time(), true );
+				add_action( 'admin_enqueue_scripts', static function () {
+					wp_enqueue_script( 'livereload', 'http://localhost:35729/livereload.js', [], (string) \time(), true );
 				} );
 			}
 			$this->async_javascript( 'livereload' );
@@ -85,17 +83,16 @@ class Styles {
 
 	/**
 	 * Add a google font the head of the page in the front end and admin
-	 * To use other providers such as typekit see @param string|array $families - the family to include
 	 *
 	 * @link    https://github.com/typekit/webfontloader
 	 *
-	 * @link    and create custom
-	 * This method is for google fonts only
+	 * @notice  This method is for google fonts only
+	 * @notice  Must called before the `wp_enqueue_scripts` hook completes.
+	 *
+	 * @param string|array $families - the family to include
 	 *
 	 * @example 'Droid Serif,Oswald'
 	 * @example [ 'Oswald','Source+Sans+Pro' ]
-	 *
-	 * @notice  Must called before the `wp_enqueue_scripts` hook completes.
 	 */
 	public function add_font( $families ) : void {
 		if ( ! \is_array( $families ) ) {
@@ -158,7 +155,7 @@ class Styles {
 		static::$deffer[] = $handle;
 		$this->once( static function () {
 			add_filter( 'script_loader_tag', static function ( $tag, $handle ) {
-				if ( in_array( $handle, static::$deffer, true ) ) {
+				if ( \in_array( $handle, static::$deffer, true ) ) {
 					return str_replace( '<script', '<script defer="defer"', $tag );
 				}
 				return $tag;
@@ -187,7 +184,7 @@ class Styles {
 		static::$async[] = $handle;
 		$this->once( static function () {
 			add_filter( 'script_loader_tag', static function ( $tag, $handle ) {
-				if ( in_array( $handle, static::$async, true ) ) {
+				if ( \in_array( $handle, static::$async, true ) ) {
 					return str_replace( '<script', '<script async="async"', $tag );
 				}
 				return $tag;

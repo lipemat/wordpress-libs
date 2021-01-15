@@ -13,7 +13,8 @@ use Lipe\Lib\Traits\Singleton;
  * Use once() for items with no prerequisites and just need to be run once.
  *
  * For tracking for a single class
- * @see \Lipe\Lib\Traits\Version
+ *
+ * @see     \Lipe\Lib\Traits\Version
  *
  * @example Versions::in()->add_update( $version, function(){}, [ data ] );
  * @example Versions::in()->once( $key, function(){}, [ data ] );
@@ -23,7 +24,7 @@ class Versions {
 	use Singleton;
 
 	protected const OPTION = 'lipe/lib/util/versions_version';
-	protected const ONCE = 'lipe/lib/util/versions/once';
+	protected const ONCE   = 'lipe/lib/util/versions/once';
 
 	/**
 	 * Keeps track of version in db
@@ -48,7 +49,7 @@ class Versions {
 	 *
 	 * @static
 	 *
-	 * @var array
+	 * @var array<array{version:string, callable:callable, args:array}>>
 	 */
 	protected static $updates = [];
 
@@ -57,7 +58,7 @@ class Versions {
 	 *
 	 * @static
 	 *
-	 * @var callable[]
+	 * @var array<array{callable:callable, args:array}>>
 	 */
 	protected static $once = [];
 
@@ -83,7 +84,6 @@ class Versions {
 	 */
 	public function get_version() : string {
 		return self::$version;
-
 	}
 
 
@@ -115,7 +115,7 @@ class Versions {
 	 * To be used when items have pre-requisites that must be run in a particular order.
 	 *
 	 * @param string|float $version  - the version to check against
-	 * @param mixed        $callable - method or function to run if the version checks out
+	 * @param callable     $callable - method or function to run if the version checks out
 	 * @param mixed        $args     - args to pass to the function
 	 *
 	 * @uses self::$updates
@@ -132,7 +132,6 @@ class Versions {
 				'args'     => $args,
 			];
 		}
-
 	}
 
 
@@ -150,42 +149,27 @@ class Versions {
 	public function run_updates() : void {
 		if ( ! empty( self::$once ) ) {
 			foreach ( self::$once as $_key => $_item ) {
-				if ( ! isset( $run_before[ $_key ] ) ) {
+				if ( ! isset( self::$once_run_before[ $_key ] ) ) {
 					self::$once_run_before[ $_key ] = 1;
 					\call_user_func( $_item['callable'], $_item['args'] );
 					unset( self::$once[ $_key ] );
 				}
 			}
-			\update_option( self::ONCE, self::$once_run_before );
+			update_option( self::ONCE, self::$once_run_before );
 		}
 
 		if ( ! empty( self::$updates ) ) {
-			\usort( self::$updates, [ $this, 'sort_by_version' ] );
+			\usort( self::$updates, function ( $a, $b ) {
+				return version_compare( $a['version'], $b['version'], '>' );
+			} );
 
 			foreach ( self::$updates as $i => $func ) {
 				self::$version = $func['version'];
 				\call_user_func( $func['callable'], $func['args'] );
 				unset( self::$updates[ $i ] );
-
 			}
-			\update_option( self::OPTION, self::$version );
+			update_option( self::OPTION, self::$version );
 		}
-
 	}
 
-
-	/**
-	 * Sort By Version
-	 *
-	 * Make sure the updates run in order by version
-	 *
-	 * @param array $a
-	 * @param array $b
-	 *
-	 * @return bool
-	 *
-	 */
-	public function sort_by_version( $a, $b ) : bool {
-		return version_compare( $a['version'], $b['version'], '>' );
-	}
 }

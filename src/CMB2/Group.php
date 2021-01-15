@@ -85,15 +85,15 @@ class Group extends Field {
 	/**
 	 * Group constructor.
 	 *
-	 * @param string        $id
-	 * @param string|null   $title
-	 * @param Box|Box_Trait $box
-	 * @param string|null   $group_title           - include a {#} to have replaced with number
-	 * @param string|null   $add_button_text
-	 * @param string|null   $remove_button_text
-	 * @param bool          $sortable
-	 * @param bool          $closed
-	 * @param string|null   $remove_confirm        - A message to display when a user attempts
+	 * @param string      $id
+	 * @param string|null $title
+	 * @param Box         $box
+	 * @param string|null $group_title             - include a {#} to have replaced with number
+	 * @param string|null $add_button_text
+	 * @param string|null $remove_button_text
+	 * @param bool        $sortable
+	 * @param bool        $closed
+	 * @param string|null $remove_confirm          - A message to display when a user attempts
 	 *                                             to delete a group.
 	 *                                             (Defaults to null/false for no confirmation)
 	 *
@@ -244,6 +244,16 @@ class Group extends Field {
 	 */
 	public function get_object_types() : array {
 		return $this->box->get_object_types();
+	}
+
+
+	/**
+	 * Are we currently working with a Group?
+	 *
+	 * @return bool
+	 */
+	public function is_group() : bool {
+		return true;
 	}
 
 

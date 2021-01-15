@@ -16,7 +16,7 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @property string $cookie_domain
  * @property string $domain
  * @property string $site_name
- * @property string path
+ * @property string $path
  *
  */
 trait Network_Trait {

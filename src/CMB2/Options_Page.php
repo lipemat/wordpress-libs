@@ -53,13 +53,11 @@ class Options_Page extends Box {
 	 * This parameter is for options-page metaboxes only
 	 * and allows overriding the options page form output.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
-	 *
-	 * @example 'my_callback_function_to_display_output'
+	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
 	 *
 	 * @var callable
 	 */
-	public $display_cb = false;
+	public $display_cb;
 
 	/**
 	 * This parameter is for options-page metaboxes only,
@@ -162,7 +160,7 @@ class Options_Page extends Box {
 	 *          Both will display on the same settings page with different menus
 	 *          to get there.
 	 *
-	 * @var
+	 * @var string
 	 */
 	public $tab_group;
 

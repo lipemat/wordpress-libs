@@ -12,7 +12,7 @@ use Lipe\Lib\Meta\Mutator_Trait;
  *
  * @property int $id
  * @property int $network_id
- * @property string $$archived
+ * @property string $archived
  * @property string $deleted
  * @property string $domain
  * @property string $lang_id

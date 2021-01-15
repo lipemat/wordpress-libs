@@ -51,16 +51,15 @@ trait Box_Trait {
 
 	/**
 	 * Add a field to this box.
-	 * For shorthand calls where no special setting is necessary.
 	 *
-	 * @param $id
-	 * @param $name
+	 * @param string $id
+	 * @param string $name
 	 *
 	 * @example $box->field( $id, $name )->checkbox();
 	 *
 	 * @return Field_Type
 	 */
-	public function field( $id, $name ) : Field_Type {
+	public function field( string $id, string $name ) : Field_Type {
 		$this->hook();
 		$this->fields[ $id ] = new Field( $id, $name, $this );
 
@@ -69,7 +68,8 @@ trait Box_Trait {
 
 
 	/**
-	 * Add a group to this box
+	 * Add a group to this box.
+	 *
 	 * For shorthand calls where no special setting is necessary.
 	 *
 	 * @param string      $id
@@ -90,10 +90,9 @@ trait Box_Trait {
 	 */
 	public function group( string $id, ?string $title = null, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, bool $sortable = true, bool $closed = false, ?string $remove_confirm = null ) : Group {
 		$this->hook();
-		$this->fields[ $id ] =
-			new Group( $id, $title, $this, $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
-
-		return $this->fields[ $id ];
+		$group = new Group( $id, $title, $this, $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
+		$this->fields[ $id ] = $group;
+		return $group;
 	}
 
 
@@ -257,7 +256,7 @@ trait Box_Trait {
 	 * @return bool
 	 */
 	public function is_group() : bool {
-		return self::class === Group::class;
+		return false;
 	}
 
 

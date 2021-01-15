@@ -296,7 +296,7 @@ class Field {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#date_format
 	 * @link php.net/manual/en/function.date.php.
 	 *
-	 * @var
+	 * @var string
 	 */
 	public $date_format;
 
@@ -388,15 +388,17 @@ class Field {
 
 	/**
 	 * For fields that take an options array.
+	 *
 	 * These include select, radio, multicheck, wysiwyg and group.
 	 * Should be a an array where the keys are the option value,
 	 * and the values are the option text.
+	 *
 	 * If you are doing any kind of database querying or logic/conditional checking,
 	 * you're almost always better off using the options_cb parameter.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#options
 	 *
-	 * @var  []
+	 * @var  array
 	 */
 	public $options;
 
@@ -456,7 +458,7 @@ class Field {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#render_row_cb
 	 * @link https://github.com/WebDevStudios/CMB2/issues/596#issuecomment-187941343
 	 *
-	 * @var callable
+	 * @var callable|null
 	 */
 	public $render_row_cb;
 
@@ -648,7 +650,7 @@ class Field {
 	 * )
 	 *
 	 *
-	 * @var     []
+	 * @var  array
 	 */
 	public $text;
 
@@ -669,7 +671,7 @@ class Field {
 	 * For any conditional logic where we need to know
 	 * which class is currently using this.
 	 *
-	 * @var Box_Trait|Box|null
+	 * @var Box|Group|null
 	 */
 	protected $box;
 
@@ -679,11 +681,10 @@ class Field {
 	 *
 	 * @param string             $id
 	 * @param string|null        $name
-	 * @param Box_Trait|Box|null $box - Parent class using this Field.
+	 * @param Box|Group|null $box - Parent class using this Field.
 	 *
-	 * @see     \Lipe\Lib\CMB2\Field_Type
+	 * @see \Lipe\Lib\CMB2\Field_Type
 	 *
-	 * @example $field = new Field( self::FEATURED_TAG, __( 'Featured Tag', 'tribe' ), Field_Type::types()->checkbox );
 	 */
 	public function __construct( string $id, ?string $name, $box = null ) {
 		$this->id = $id;
@@ -1233,15 +1234,15 @@ class Field {
 	 *
 	 * @filter default_{$meta_type}_metadata 11, 3
 	 *
-	 * @param $value     - Empty or a value set by another filter.
-	 * @param $object_id - Current post/term/user id.
-	 * @param $meta_key  - Meta key being filtered.
+	 * @param mixed      $value     - Empty or a value set by another filter.
+	 * @param string|int $object_id - Current post/term/user id.
+	 * @param string     $meta_key  - Meta key being filtered.
 	 *
 	 * @internal
 	 *
 	 * @return mixed
 	 */
-	public function default_meta_callback( $value, $object_id, $meta_key ) {
+	public function default_meta_callback( $value, $object_id, string $meta_key ) {
 		if ( $this->get_id() !== $meta_key ) {
 			return $value;
 		}
@@ -1252,6 +1253,7 @@ class Field {
 		$cmb2_field->object_id( $object_id );
 		add_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11, 3 );
 
+		/* @phpstan-ignore-next-line */
 		return \call_user_func( $this->default_cb, $cmb2_field->properties, $cmb2_field );
 	}
 
@@ -1276,7 +1278,8 @@ class Field {
 	 */
 	public function default_option_callback() {
 		$cmb2_field = $this->get_cmb2_field();
-		$cmb2_field->object_id( $this->box->get_id() );
+		$cmb2_field->object_id( $this->box->get_id() ); // @phpstan-ignore-line
+		/* @phpstan-ignore-next-line */
 		return \call_user_func( $this->default_cb, $cmb2_field->properties, $cmb2_field );
 	}
 
@@ -1320,13 +1323,16 @@ class Field {
 
 
 	/**
-	 * Override to allow static scans when using groups like PHPStan.
+	 * Override to allow static scans when using tools like PHPStan.
+	 *
+	 * @param string $id
+	 * @param string $name
 	 *
 	 * @internal
 	 *
 	 * @return Field_Type
 	 */
-	public function field( $id, $name ) : Field_Type {
+	public function field( string $id, string $name ) : Field_Type {
 		throw new \LogicException( 'You cannot add a field to another field.' );
 	}
 }

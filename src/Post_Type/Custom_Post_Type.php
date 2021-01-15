@@ -5,7 +5,7 @@ namespace Lipe\Lib\Post_Type;
 use Lipe\Lib\Util\Actions;
 
 class Custom_Post_Type {
-	protected const REGISTRY_OPTION = 'lipe/lib/post-type/custom-post-type/registry';
+	protected const REGISTRY_OPTION    = 'lipe/lib/post-type/custom-post-type/registry';
 	protected const CUSTOM_CAPS_OPTION = 'lipe/lib/post-type/custom-post-type/caps';
 
 	protected static $registry = [];
@@ -158,7 +158,7 @@ class Custom_Post_Type {
 	 *
 	 * @notice Must be set to true to support Gutenberg
 	 *
-	 * @link https://make.wordpress.org/core/2018/10/30/block-editor-filters/
+	 * @link   https://make.wordpress.org/core/2018/10/30/block-editor-filters/
 	 *
 	 * @var bool
 	 */
@@ -239,7 +239,6 @@ class Custom_Post_Type {
 		if ( is_admin() ) { // In case there are posts types not registered on front end.
 			Actions::in()->add_single_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 1000 );
 		}
-
 	}
 
 
@@ -285,6 +284,7 @@ class Custom_Post_Type {
 		\register_post_type( $this->post_type, $this->post_type_args() );
 	}
 
+
 	/**
 	 * Turn on and off Gutenberg block editor support based on
 	 * WP core requirements and $this->gutenberg_compatible
@@ -306,9 +306,10 @@ class Custom_Post_Type {
 			}, 10, 2 );
 		} elseif ( true === $this->gutenberg_compatible ) {
 			$this->show_in_rest = true;
-			$this->supports[]   = 'editor';
+			$this->supports[] = 'editor';
 		}
 	}
+
 
 	/**
 	 * Build the args array for the post type definition
@@ -371,30 +372,30 @@ class Custom_Post_Type {
 
 		// phpcs:disable WordPress.WP.I18n
 		$labels = [
-			'name'                  => $plural,
-			'singular_name'         => $single,
-			'add_new'               => __( 'Add New' ),
-			'add_new_item'          => sprintf( __( 'Add New %s' ), $single ),
-			'edit_item'             => sprintf( __( 'Edit %s' ), $single ),
-			'new_item'              => sprintf( __( 'New %s' ), $single ),
-			'view_item'             => sprintf( __( 'View %s' ), $single ),
-			'view_items'            => sprintf( __( 'View %s' ), $plural ),
-			'search_items'          => sprintf( __( 'Search %s' ), $plural ),
-			'not_found'             => sprintf( __( 'No %s Found' ), $plural ),
-			'not_found_in_trash'    => sprintf( __( 'No %s Found in Trash' ), $plural ),
-			'parent_item_colon'     => sprintf( __( 'Parent %s:' ), $single ),
-			'all_items'             => sprintf( __( 'All %s' ), $plural ),
-			'archives'              => sprintf( __( '%s Archives' ), $single ),
-			'attributes'            => sprintf( __( '%s Attributes' ), $single ),
-			'insert_into_item'      => sprintf( __( 'INSERT INTO %s' ), $single ),
-			'uploaded_to_this_item' => sprintf( __( 'Uploaded to this %s' ), $single ),
-			'featured_image'        => __( 'Featured Image' ),
-			'set_featured_image'    => __( 'Set featured image' ),
-			'remove_featured_image' => __( 'Remove featured image' ),
-			'use_featured_image'    => __( 'Use as featured image' ),
-			'filter_items_list'     => sprintf( __( 'Filter %s list' ), $plural ),
-			'items_list_navigation' => sprintf( __( '%s list navigation' ), $plural ),
-			'items_list'            => sprintf( __( '%s list' ), $plural ),
+			'name'                     => $plural,
+			'singular_name'            => $single,
+			'add_new'                  => __( 'Add New' ),
+			'add_new_item'             => sprintf( __( 'Add New %s' ), $single ),
+			'edit_item'                => sprintf( __( 'Edit %s' ), $single ),
+			'new_item'                 => sprintf( __( 'New %s' ), $single ),
+			'view_item'                => sprintf( __( 'View %s' ), $single ),
+			'view_items'               => sprintf( __( 'View %s' ), $plural ),
+			'search_items'             => sprintf( __( 'Search %s' ), $plural ),
+			'not_found'                => sprintf( __( 'No %s Found' ), $plural ),
+			'not_found_in_trash'       => sprintf( __( 'No %s Found in Trash' ), $plural ),
+			'parent_item_colon'        => sprintf( __( 'Parent %s:' ), $single ),
+			'all_items'                => sprintf( __( 'All %s' ), $plural ),
+			'archives'                 => sprintf( __( '%s Archives' ), $single ),
+			'attributes'               => sprintf( __( '%s Attributes' ), $single ),
+			'insert_into_item'         => sprintf( __( 'INSERT INTO %s' ), $single ),
+			'uploaded_to_this_item'    => sprintf( __( 'Uploaded to this %s' ), $single ),
+			'featured_image'           => __( 'Featured Image' ),
+			'set_featured_image'       => __( 'Set featured image' ),
+			'remove_featured_image'    => __( 'Remove featured image' ),
+			'use_featured_image'       => __( 'Use as featured image' ),
+			'filter_items_list'        => sprintf( __( 'Filter %s list' ), $plural ),
+			'items_list_navigation'    => sprintf( __( '%s list navigation' ), $plural ),
+			'items_list'               => sprintf( __( '%s list' ), $plural ),
 			'item_published'           => sprintf( __( '%s published.' ), $single ),
 			'item_published_privately' => sprintf( __( '%s published privately.' ), $single ),
 			'item_reverted_to_draft'   => sprintf( __( '%s reverted to draft.' ), $single ),
@@ -437,8 +438,8 @@ class Custom_Post_Type {
 		}
 
 		return $this->post_type_label_singular;
-
 	}
+
 
 	/**
 	 * Text which replaces the 'Featured Image' phrase for this post type
@@ -488,7 +489,7 @@ class Custom_Post_Type {
 			}
 		}
 		$this->post_type_label_singular = $singular;
-		$this->post_type_label_plural   = $plural;
+		$this->post_type_label_plural = $plural;
 	}
 
 
@@ -526,8 +527,6 @@ class Custom_Post_Type {
 
 
 	/**
-	 * Add Administrator Capabilities
-	 *
 	 * If the capability_type is not post it has custom capabilities
 	 * We need to add these to the administrators of the site
 	 *
@@ -535,12 +534,12 @@ class Custom_Post_Type {
 	 *
 	 * Checks to make sure we have not done this already
 	 *
-	 * @param \WP_Post_Type $post_type
+	 * @param \WP_Post_Type|null $post_type
 	 *
 	 * @return void
 	 */
-	protected function add_administrator_capabilities( $post_type ) : void {
-		if ( ! $this->auto_admin_caps || 'post' === $post_type->capability_type || is_wp_error( $post_type ) ) {
+	protected function add_administrator_capabilities( ?\WP_Post_Type $post_type ) : void {
+		if ( ! $this->auto_admin_caps || null === $post_type || 'post' === $post_type->capability_type ) {
 			return;
 		}
 
@@ -559,12 +558,19 @@ class Custom_Post_Type {
 
 		$previous[ $post_type->capability_type ] = 1;
 		update_option( self::CUSTOM_CAPS_OPTION, $previous );
-
 	}
 
 
 	/**
 	 * Set a Gutenberg template for this post type.
+	 *
+	 * @param array       $template
+	 * @param string|null $template_lock [ 'all', 'insert' ]
+	 *                                   all — prevents all operations. It is not possible to insert new blocks, move
+	 *                                   existing blocks, or delete blocks. insert — prevents inserting or removing
+	 *                                   blocks, but allows moving existing blocks.
+	 *
+	 * @link    https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#custom-post-types
 	 *
 	 * @example array(
 	 *        array( 'core/image', array(
@@ -578,31 +584,24 @@ class Custom_Post_Type {
 	 *        ) ),
 	 *    )
 	 *
-	 * @link    https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#custom-post-types
-	 *
-	 * @param array       $template
-	 * @param string|null $template_lock [ 'all', 'insert' ]
-	 *                                   all — prevents all operations. It is not possible to insert new blocks, move
-	 *                                   existing blocks, or delete blocks. insert — prevents inserting or removing
-	 *                                   blocks, but allows moving existing blocks.
-	 *
 	 * @return Custom_Post_Type
 	 */
 	public function gutenberg_template( array $template, ?string $template_lock = null ) : Custom_Post_Type {
-		$this->template      = $template;
+		$this->template = $template;
 		$this->template_lock = $template_lock;
 
 		return $this;
 	}
 
+
 	/**
-	 * Get a registered post type object
+	 * Get a registered post type object.
 	 *
 	 * @param string $post_type
 	 *
 	 * @return Custom_Post_Type|Custom_Post_Type_Extended|null
 	 */
-	public function get_post_type( $post_type ) {
+	public function get_post_type( string $post_type ) {
 		return self::$registry[ $post_type ] ?? null;
 	}
 
@@ -670,9 +669,9 @@ class Custom_Post_Type {
 		$preview_link = false;
 		// phpcs:disable WordPress.WP.I18n
 		if ( false !== $this->public && false !== $this->publicly_queryable ) {
-			$url          = esc_url( get_permalink( $post_ID ) );
-			$preview_url  = add_query_arg( 'preview', 'true', $url );
-			$view_link    = '<a href="' . $url . '">' . sprintf( __( 'View the %s...' ), $this->get_post_type_label(), $lower_label ) . '</a>';
+			$url = esc_url( get_permalink( $post_ID ) );
+			$preview_url = add_query_arg( 'preview', 'true', $url );
+			$view_link = '<a href="' . $url . '">' . sprintf( __( 'View the %s...' ), $this->get_post_type_label(), $lower_label ) . '</a>';
 			$preview_link = '<a target="_blank" href="' . $preview_url . '">' . sprintf( 'Preview %s', $lower_label ) . '</a>';
 		}
 
@@ -693,7 +692,6 @@ class Custom_Post_Type {
 		// phpcs:enable
 
 		return $messages;
-
 	}
 
 
@@ -710,18 +708,16 @@ class Custom_Post_Type {
 
 
 	/**
-	 * Get Post Type Archive Label
-	 *
 	 * Used when retrieving the post type archive title
 	 * Makes it match any customization done here
 	 *
-	 * Automatically added to the get_post_type_archive_label filter
+	 * @param string $title
 	 *
-	 * @param $title
+	 * @filter get_post_type_archive_label 10 1
 	 *
 	 * @return string
 	 */
-	public function get_post_type_archive_label( $title ) : string {
+	public function get_post_type_archive_label( string $title ) : string {
 		if ( is_post_type_archive( $this->post_type ) ) {
 			if ( $this->archive_label ) {
 				$title = $this->archive_label;
@@ -745,9 +741,8 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	public function add_support( $features ) : void {
-		$features       = (array) $features;
+		$features = (array) $features;
 		$this->supports = array_unique( array_merge( $this->supports, $features ) );
-
 	}
 
 
@@ -762,7 +757,7 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	public function remove_support( $features ) : void {
-		$features       = (array) $features;
+		$features = (array) $features;
 		$this->supports = array_diff( $this->supports, $features );
 	}
 

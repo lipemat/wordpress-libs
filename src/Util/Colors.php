@@ -14,22 +14,23 @@ class Colors {
 	/**
 	 * Convert a hexadecimal color to an rgba version.
 	 *
-	 * @param       $color - Hexadecimal version of color with leading #
-	 * @param float [$transparency] - Adds an alpha value to make the color transparent.
-	 *                     Will return `rgba` version of color if provided, `rgb` if not.
+	 * @param string $color - Hexadecimal version of color with leading #
+	 * @param float $transparency - Adds an alpha value to make the color transparent.
+	 *                            Will return `rgba` version of color if transparent
+	 *                            is provided, `rgb` if not.
 	 *
 	 * @return string
 	 */
-	public function hex_to_rgba( $color, float $transparency = 1.0 ) : string {
+	public function hex_to_rgba( string $color, float $transparency = 1.0 ) : string {
 		if ( '#' === $color[0] ) {
 			$color = substr( $color, 1 );
 		} else {
 			return $color;
 		}
 
-		if ( 6 === strlen( $color ) ) {
+		if ( 6 === \strlen( $color ) ) {
 			$hex = [ $color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5] ];
-		} elseif ( 3 === strlen( $color ) ) {
+		} elseif ( 3 === \strlen( $color ) ) {
 			$hex = [ $color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2] ];
 		} else {
 			// Something is not right.
@@ -52,7 +53,7 @@ class Colors {
 	 * @return string
 	 */
 	public function rgba_to_hex( string $rgba ) : string {
-		if ( strpos( $rgba, '#' ) === 0 ) {
+		if ( 0 === strpos( $rgba, '#' ) ) {
 			return $rgba;
 		}
 
