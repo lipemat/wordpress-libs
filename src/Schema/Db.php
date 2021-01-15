@@ -302,6 +302,8 @@ abstract class Db {
 	 * @deprecated
 	 */
 	public function get_id_field() : string {
+		_deprecated_function( __METHOD__, '2.24.0', 'static::ID_FIELD' );
+
 		if ( __CLASS__ === static::ID_FIELD ) {
 			_deprecated_argument( 'id_field', '2.23.0', 'Using a variable for id field is deprecated. Use the `static::ID_FIELD)` const.' );
 
@@ -318,6 +320,7 @@ abstract class Db {
 	 * @deprecated
 	 */
 	public function get_columns() : array {
+		_deprecated_function( __METHOD__, '2.24.0', 'static::COLUMNS' );
 		if ( empty( static::COLUMNS ) ) {
 			_deprecated_argument( 'columns', '2.23.0', 'Using a variable for columns is deprecated. Use the `static::COLUMNS` const.' );
 			return isset( $this->columns ) ? $this->columns : [];
@@ -332,6 +335,8 @@ abstract class Db {
 	 * @deprecated
 	 */
 	protected function get_db_version() : string {
+		_deprecated_function( __METHOD__, '2.24.0', 'static::DB_VERSION' );
+
 		if ( empty( static::DB_VERSION ) ) {
 			_deprecated_argument( 'db_version', '2.23.0', 'Using a variable for db version is deprecated. Use the `static::DB_VERSION` const.' );
 			return isset( $this->db_version ) ? $this->db_version : '1';

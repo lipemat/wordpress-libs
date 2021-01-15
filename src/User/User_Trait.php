@@ -102,6 +102,8 @@ trait User_Trait {
 	 * @deprecated In favor of $this->get_object()
 	 */
 	public function get_user() {
+		_deprecated_function( __METHOD__, '2.24.0', 'get_object' );
+
 		return $this->get_object();
 	}
 

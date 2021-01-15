@@ -48,6 +48,8 @@ trait Taxonomy_Trait {
 	 * @deprecated In favor of $this->get_object()
 	 */
 	public function get_term() : ?\WP_Term {
+		_deprecated_function( __METHOD__, '2.24.0', 'get_object' );
+
 		return $this->get_object();
 	}
 

@@ -54,6 +54,8 @@ trait Comment_Trait {
 	 * @deprecated In favor of $this->get_object()
 	 */
 	public function get_comment() : ?\WP_Comment {
+		_deprecated_function( __METHOD__, '2.24.0', 'get_object' );
+
 		return $this->get_object();
 	}
 

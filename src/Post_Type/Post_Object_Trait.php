@@ -63,6 +63,8 @@ trait Post_Object_Trait {
 	 * @deprecated In favor of $this->get_object()
 	 */
 	public function get_post() : ?\WP_Post {
+		_deprecated_function( __METHOD__, '2.24.0', 'get_object' );
+
 		return $this->get_object();
 	}
 
