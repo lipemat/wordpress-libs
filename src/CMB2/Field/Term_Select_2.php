@@ -109,8 +109,6 @@ class Term_Select_2 {
 	 * @param \CMB2_Field $field
 	 * @param \CMB2_Types $field_type_object
 	 *
-	 * @todo clean this up and move to assets/js file
-	 *
 	 * @return void
 	 */
 	private function js_inline( CMB2_Field $field, CMB2_Types $field_type_object ) : void {

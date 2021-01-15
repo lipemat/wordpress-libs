@@ -254,7 +254,7 @@ class Field_Type {
 	/**
 	 * Hierarchical radio buttons pre-populated with taxonomy terms.
 	 *
-	 * @todo add a link to docs because they don't exist at time of writing
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio_hierarchical
 	 *
 	 * @var string
 	 */
@@ -299,7 +299,7 @@ class Field_Type {
 	/**
 	 * Hierarchical checkboxes with taxonomy terms.
 	 *
-	 * @todo add a link to docs because they don't exist at time of writing
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_hierarchical
 	 *
 	 * @var string
 	 */
@@ -1058,7 +1058,7 @@ class Field_Type {
 	 * @param bool   $remove_default - remove default WP terms metabox
 	 * @param bool   $select_all     - display the select all button
 	 *
-	 * @todo update with links to docs once they exist
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_hierarchical
 	 *
 	 * @return Field
 	 */

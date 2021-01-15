@@ -26,11 +26,8 @@ namespace Lipe\Lib\Schema;
  * it will be passed the ( %value%, %field% ) as its argument.
  *
  * To run a method when the settings are saved create one named on_settings_save() and it
- * will be called automatically
+ * will be called automatically.
  *
- *
- *
- * @todo integration new 4.7 register settings params
  */
 abstract class Settings {
 
