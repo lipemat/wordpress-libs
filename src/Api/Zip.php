@@ -17,13 +17,6 @@ use Lipe\Lib\Traits\Singleton;
  * $js_config = Zip::in()->get_post_data_to_send( array $urls );
  * $.post( $js_endpoint, $js_config);
  *
- *
- * @author  Mat Lipe
- *
- * @example Zip::in()->build_zip( [ $url, $url ], $zip_name );
- *
- *
- * @package Lipe\Lib\Util
  */
 class Zip {
 	use Singleton {
@@ -32,13 +25,16 @@ class Zip {
 
 	public const ACTION = 'zip';
 
-	public const KEY = 'lipe/lib/util/zip/key';
+	public const KEY  = 'lipe/lib/util/zip/key';
 	public const NAME = 'lipe/lib/util/zip/name';
 	public const URLS = 'lipe/lib/util/zip/urls';
 
 	private $file_name;
+
 	private $file_path;
+
 	private $zip_name;
+
 	private $zip_path;
 
 
@@ -49,40 +45,53 @@ class Zip {
 
 	/**
 	 * Calculate the paths and file names and initiate everything
-	 * Called when the endpoint is hit
-	 *
+	 * Called when the endpoint is hit.
 	 *
 	 * @return void
 	 */
 	public function handle_request() : void {
 		$this->validate_request();
-		$this->build_zip( (array) $_POST[ self::URLS ], $_POST[ self::NAME ] ?? null );
+
+		//phpcs:disable WordPress.Security.NonceVerification.Missing
+		if ( empty( $_POST[ self::NAME ] ) ) {
+			$name = null;
+		} else {
+			$name = sanitize_text_field( wp_unslash( $_POST[ self::NAME ] ) );
+		}
+
+		if ( isset( $_POST[ self::URLS ] ) ) {
+			$this->build_zip( array_map( 'esc_url_raw', (array) wp_unslash( $_POST[ self::URLS ] ) ), $name );
+		}
+		//phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
 
 	/**
-	 * Set all the paths we are going to work with
+	 * Set all the paths we are going to work with.
 	 *
-	 * @param array  $files
-	 * @param string $zip_name - optional name for the zip folder
+	 * @param array       $files
+	 * @param string|null $zip_name - optional name for the zip folder
 	 *
 	 * @return void
 	 */
 	protected function set_paths( array $files, ?string $zip_name = null ) : void {
 		$this->file_name = md5( implode( '|', $files ) );
 		$this->file_path = sys_get_temp_dir() . '/' . $this->file_name;
-		$this->zip_path  = $this->file_path . '/' . $this->file_name;
+		$this->zip_path = $this->file_path . '/' . $this->file_name;
 
 		$this->zip_name = $zip_name ?? $this->file_name;
 	}
 
 
 	/**
-	 * Create a zip file from the specified urls
-	 * Serve the file if everything is good
+	 * Create and serve zip file from the specified urls.
 	 *
-	 * @param array  $files    - urls of files to add
-	 * @param string $zip_name - optional name for the zip folder
+	 * At first glance, this might appear like a security hole, but
+	 * it will only serve files accessible via http request which
+	 * technically would already be available publicly.
+	 *
+	 * @param array       $files    - urls of files to add
+	 * @param string|null $zip_name - optional name for the zip folder
 	 *
 	 * @return void
 	 */
@@ -100,7 +109,7 @@ class Zip {
 		$zip->open( $this->zip_path, \ZipArchive::CREATE );
 
 		foreach ( $files as $file ) {
-			if ( strpos( $file, 'http' ) !== 0 ) {
+			if ( 0 !== strncmp( $file, 'http', 4 ) ) {
 				if ( is_ssl() ) {
 					$file = 'https:' . $file;
 				} else {
@@ -110,14 +119,14 @@ class Zip {
 
 			$parts = parse_url( $file );
 			$parts = pathinfo( $parts['path'] );
-			$temp  = $this->file_path . '/' . $parts['basename'];
+			$temp = $this->file_path . '/' . $parts['basename'];
 
 			if ( copy( $file, $temp ) ) {
 				if ( $zip->addFile( $temp, $parts['basename'] ) ) {
 					$success[] = $temp;
 				}
 			} else {
-				echo esc_html( "failed to copy $file...\n" );
+				echo esc_html( "Failed to copy $file...\n" );
 			}
 		}
 
@@ -133,23 +142,24 @@ class Zip {
 		}
 
 		die( 'Failed to create zip file' );
-
 	}
 
 
 	/**
-	 * Check to make sure the request is valid and kill the script if not
+	 * Check to make sure the request is valid and kill the script if not.
 	 *
 	 * @return void
 	 */
 	private function validate_request() : void {
+		//phpcs:disable WordPress.Security.NonceVerification.Missing
 		if ( empty( $_POST[ self::KEY ] ) || ( self::get_key() !== $_POST[ self::KEY ] ) ) {
-			die( 'Incorrect Key Sent' );
+			die( 'Incorrect key sent.' );
 		}
 
 		if ( empty( $_POST[ self::URLS ] ) ) {
-			die( 'No Urls Specified' );
+			die( 'No URL specified.' );
 		}
+		//phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
 
@@ -171,12 +181,11 @@ class Zip {
 
 			die();
 		}
-
 	}
 
 
 	/**
-	 * Get the key to check the request against
+	 * Get the key to check the request against.
 	 *
 	 * @static
 	 *
@@ -190,12 +199,12 @@ class Zip {
 	/**
 	 * Get an array of data to send to this zip service to render a zip file
 	 *
-	 * @param array  $urls - array of urls to be added to the zip file
-	 * @param string $name - name of the zip when downloaded
-	 *
-	 * @static
+	 * @param array       $urls - array of urls to be added to the zip file
+	 * @param string|null $name - name of the zip when downloaded
 	 *
 	 * @return array
+	 * @static
+	 *
 	 */
 	public static function get_post_data_to_send( array $urls, ?string $name = null ) : array {
 		return [

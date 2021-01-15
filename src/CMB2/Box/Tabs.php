@@ -101,11 +101,10 @@ class Tabs {
 
 
 	/**
-	 *
-	 * @param       $cmb_id
-	 * @param       $object_id
-	 * @param       $object_type
-	 * @param \CMB2 $cmb
+     * @param string $cmb_id
+	 * @param int    $object_id
+	 * @param string $object_type
+	 * @param \CMB2  $cmb
 	 *
 	 * @return void
 	 */
@@ -118,7 +117,7 @@ class Tabs {
 			if ( empty( $_REQUEST[ self::TAB_FIELD ] ) ) {
 				$active_nav = key( $tabs );
 			} else {
-				$active_nav = esc_attr( $_REQUEST[ self::TAB_FIELD ] );
+				$active_nav = esc_attr( sanitize_text_field( wp_unslash( $_REQUEST[ self::TAB_FIELD ] ) ) );
 			}
 
 			foreach ( $tabs as $key => $label ) {
@@ -182,10 +181,9 @@ class Tabs {
 
 
 	/**
-	 *
-	 * @param       $cmb_id
-	 * @param       $object_id
-	 * @param       $object_type
+	 * @param string $cmb_id
+	 * @param int    $object_id
+	 * @param string $object_type
 	 * @param \CMB2 $cmb
 	 *
 	 * @return void
@@ -244,7 +242,7 @@ class Tabs {
 						url = new URL( $redirect.val() ),
 						$panel = $wrapper.find( '[class*="cmb-tab-panel-' + panel + '"]' );
 
-					url.searchParams.set( '<?= self::TAB_FIELD ?>', panel );
+					url.searchParams.set( '<?= esc_js( self::TAB_FIELD ) ?>', panel );
 					$redirect.val( url.toString() );
 
 					$li.addClass( 'cmb-tab-active' ).siblings().removeClass( 'cmb-tab-active' );
@@ -430,8 +428,6 @@ class Tabs {
 			}
 
 			.cmb-tabs .cmb-tabs-panel.cmb2-wrap-tabs {
-				display: -webkit-inline-box !important;
-				display: -ms-inline-flexbox !important;
 				display: inline-flex !important;
 			}
 

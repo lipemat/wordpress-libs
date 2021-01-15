@@ -5,7 +5,6 @@ namespace Lipe\Lib\Schema;
 /**
  * Settings
  *
- * @todo integration new 4.7 register settings params
  * @link https://make.wordpress.org/core/2016/10/26/registering-your-settings-in-wordpress-4-7/
  *
  * Abstract starting point for a settings page
@@ -31,6 +30,7 @@ namespace Lipe\Lib\Schema;
  *
  *
  *
+ * @todo integration new 4.7 register settings params
  */
 abstract class Settings {
 
@@ -71,13 +71,11 @@ abstract class Settings {
 	protected $slug;
 
 	/**
-	 * Namespace
-	 *
 	 * Auto namespace the options during rendering, saving, and retrieval
 	 *
-	 * @var bool
+	 * @var string
 	 */
-	protected $namespace = null;
+	protected $namespace;
 
 	/**
 	 * Parent menu Slug
@@ -168,19 +166,6 @@ abstract class Settings {
 
 
 	/**
-	 * Construct
-	 *
-	 */
-	public function __construct() {
-		$this->add_settings();
-		$this->set_vars();
-		$this->fill_class_vars();
-		$this->hook();
-
-	}
-
-
-	/**
 	 * Add Settings
 	 *
 	 * Method used to set the settings
@@ -207,8 +192,6 @@ abstract class Settings {
 
 
 	/**
-	 * Set Vars
-	 *
 	 * Use this method to set the necessary class vars
 	 *
 	 * @see This classes vars
@@ -220,30 +203,37 @@ abstract class Settings {
 
 
 	/**
-	 * Fill Class Vars
+	 * Construct
 	 *
+	 */
+	public function __construct() {
+		$this->add_settings();
+		$this->set_vars();
+		$this->fill_class_vars();
+		$this->hook();
+	}
+
+
+	/**
 	 * Did you forget something? Oh well, this will fix it
 	 *
 	 * @return void
 	 */
-	private function fill_class_vars() {
-
+	private function fill_class_vars() : void {
 		if ( empty( $this->title ) ) {
 			$this->title = __( 'Settings', 'lipe' );
 		}
 
 		if ( empty( $this->slug ) ) {
-			$this->slug = strtolower( str_replace( '\\', '-', get_class( $this ) ) );
+			$this->slug = strtolower( str_replace( '\\', '-', \get_class( $this ) ) );
 		}
 
 		if ( empty( $this->menu_title ) ) {
 			$this->menu_title = $this->title;
 		}
 
-		if ( $this->network ) {
-			if ( 'options-general.php' == $this->parent_menu_slug ) {
-				$this->parent_menu_slug = 'settings.php';
-			}
+		if ( $this->network && 'options-general.php' === $this->parent_menu_slug ) {
+			$this->parent_menu_slug = 'settings.php';
 		}
 
 		if ( $this->network ) {
@@ -251,76 +241,54 @@ abstract class Settings {
 		} else {
 			$this->form_url = admin_url( 'options.php' );
 		}
-
 	}
 
 
-	public function hook() {
+	public function hook() : void {
 		if ( $this->network ) {
 			add_action( 'network_admin_menu', [ $this, 'register_settings_page' ], 10, 0 );
 			add_action( 'network_admin_edit_' . $this->slug, [ $this, 'save_network_settings' ], 10, 0 );
-
 		} else {
 			add_action( 'admin_menu', [ $this, 'register_settings_page' ], 10, 0 );
 			add_action( 'admin_action_update', [ $this, 'maybe_run_settings_save' ] );
-
 		}
-
 	}
 
 
 	/**
-	 * Call
-	 *
-	 */
-	function __call( $name, $args ) {
-
-	}
-
-
-	/**
-	 * maybe_run_settings_save
-	 *
 	 * Run a method when the settings are saved
 	 * To use create a method title on_settings_saved() in the extending class
 	 *
 	 * @return void
 	 */
-	public function maybe_run_settings_save() {
-		if ( ! empty( $_POST['settings_page_slug'] ) ) {
-			if ( $_POST['settings_page_slug'] == $this->slug ) {
-				if ( method_exists( $this, 'on_settings_save' ) ) {
-					$this->on_settings_save();
-				}
-			}
+	public function maybe_run_settings_save() : void {
+		//phpcs:ignore
+		if ( ! empty( $_POST['settings_page_slug'] ) && ( $_POST['settings_page_slug'] === $this->slug ) && method_exists( $this, 'on_settings_save' ) ) {
+			$this->on_settings_save();
 		}
 	}
 
 
 	/**
-	 * set_default
-	 *
 	 * Set a default value for any field
 	 *
-	 * @param $field
-	 * @param $value
+	 * @param string $field
+	 * @param mixed  $value
 	 *
 	 * @return void
 	 */
-	public function set_default( $field, $value ) {
+	public function set_default( string $field, $value ) : void {
 		$this->defaults[ $field ] = $value;
 	}
 
 
 	/**
-	 * Save Network Settings
-	 *
 	 * Saves the settings if on a network page
 	 * Uses update_site_option() instead of update_site_option
 	 *
 	 * @return void
 	 */
-	public function save_network_settings() {
+	public function save_network_settings() : void {
 		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], $this->slug . '-options' ) ) {
 			return;
 		}
@@ -331,25 +299,20 @@ abstract class Settings {
 
 		foreach ( $this->settings as $section => $params ) {
 			foreach ( $params['fields'] as $field => $title ) {
-				$value = false;
-				if ( method_exists( $this, $field . "_sanitize" ) ) {
-					$value = $this->{$field . "_sanitize"}( $_POST[ $this->get_field_name( $field ) ] );
-
-				} elseif ( method_exists( $this, $this->get_field_name( $field ) . "_sanitize" ) ) {
-					$value = $this->{$this->get_field_name( $field ) . "_sanitize"}( $_POST[ $this->get_field_name( $field ) ] );
-				} else {
-					if ( isset( $_POST[ $this->get_field_name( $field ) ] ) ) {
-						$value = $_POST[ $this->get_field_name( $field ) ];
-					}               
-}
+				$value = wp_unslash( $_POST[ $this->get_field_name( $field ) ] ); //phpcs:ignore
+				if ( method_exists( $this, $field . '_sanitize' ) ) {
+					$value = $this->{$field . '_sanitize'}( $value );
+				} elseif ( method_exists( $this, $this->get_field_name( $field ) . '_sanitize' ) ) {
+					$value = $this->{$this->get_field_name( $field ) . '_sanitize'}( $value );
+				}
 				update_site_option( $this->get_field_name( $field ), $value );
 			}
 		}
 
-		if ( strpos( $this->parent_menu_slug, '.php' ) === false ) {
-			$parent_url = network_admin_url( 'admin.php' );
-		} else {
+		if ( false !== strpos( $this->parent_menu_slug, '.php' ) ) {
 			$parent_url = network_admin_url( $this->parent_menu_slug );
+		} else {
+			$parent_url = network_admin_url( 'admin.php' );
 		}
 		$url = add_query_arg( [
 			'page'    => $this->slug,
@@ -362,8 +325,6 @@ abstract class Settings {
 
 
 	/**
-	 * Get Field Name
-	 *
 	 * Return a field with the namespace prepended to the name
 	 * Will check if we have a namespace and if already appended
 	 *
@@ -371,12 +332,12 @@ abstract class Settings {
 	 *
 	 * @return string
 	 */
-	protected function get_field_name( $field ) {
+	protected function get_field_name( string $field ) : string {
 		if ( empty( $this->namespace ) ) {
 			return $field;
 		}
 
-		if ( strpos( $field, $this->namespace ) !== false ) {
+		if ( false !== strpos( $field, $this->namespace ) ) {
 			return $field;
 		}
 
@@ -385,8 +346,6 @@ abstract class Settings {
 
 
 	/**
-	 * Register Settings Page
-	 *
 	 * Build the settings page using the options framework
 	 *
 	 * @uses $this->settings
@@ -394,8 +353,7 @@ abstract class Settings {
 	 * @return void
 	 *
 	 */
-	public function register_settings_page() {
-
+	public function register_settings_page() : void {
 		if ( ! empty( $this->parent_menu_slug ) ) {
 			add_submenu_page(
 				$this->parent_menu_slug,
@@ -436,12 +394,12 @@ abstract class Settings {
 				);
 
 				if ( ! $this->network ) {
-					if ( method_exists( $this, $field . "_sanitize" ) ) {
+					if ( method_exists( $this, $field . '_sanitize' ) ) {
 						register_setting( $this->slug, $this->get_field_name( $field ), [
 							$this,
 							$field . '_sanitize',
 						] );
-					} elseif ( method_exists( $this, $this->get_field_name( $field ) . "_sanitize" ) ) {
+					} elseif ( method_exists( $this, $this->get_field_name( $field ) . '_sanitize' ) ) {
 						register_setting( $this->slug, $this->get_field_name( $field ), [
 							$this,
 							$this->get_field_name( $field ) . '_sanitize',
@@ -449,55 +407,44 @@ abstract class Settings {
 					} else {
 						register_setting( $this->slug, $this->get_field_name( $field ) );
 					}
-				}           
-}
+				}
+			}
 		}
-
 	}
 
 
 	/**
-	 * Field
-	 *
 	 * Will call a method matching the field name if exists
 	 * Otherwise outputs a standard text field
 	 *
-	 * @param array  $item
 	 * @param string $field
 	 *
 	 * @return void
-	 *
 	 */
-	public function field( $field ) {
-
+	public function field( string $field ) : void {
 		$field = $this->get_field_name( $field );
 
 		$value = $this->get_option( $field );
 
 		if ( method_exists( $this, $field ) ) {
 			$this->{$field}( $value, $field );
-
 		} elseif ( method_exists( $this, $this->get_non_namespaced_field( $field ) ) ) {
 			$this->{$this->get_non_namespaced_field( $field )}( $value, $field );
-
 		} else {
 			printf( '<input type="text" name="%1$s" value="%2$s" class="regular-text" />', esc_attr( $field ), esc_attr( $value ) );
 		}
 
 		if ( method_exists( $this, $this->get_non_namespaced_field( $field ) . '_description' ) ) {
 			?>
-            <p class="description">
+			<p class="description">
 				<?php $this->{$this->get_non_namespaced_field( $field ) . '_description'}( $value ); ?>
-            </p>
+			</p>
 			<?php
 		}
-
 	}
 
 
 	/**
-	 * Get Option
-	 *
 	 * Get a site option or regular depending if we are network or not
 	 * Will return the default value for this field if set and the option
 	 * has not been set
@@ -506,7 +453,7 @@ abstract class Settings {
 	 *
 	 * @return mixed|void
 	 */
-	public function get_option( $field ) {
+	public function get_option( string $field ) {
 		$field = $this->get_field_name( $field );
 		if ( $this->network ) {
 			$option = get_site_option( $field, null );
@@ -514,14 +461,14 @@ abstract class Settings {
 			$option = get_option( $field, null );
 		}
 
-		if ( $option === null ) {
+		if ( null === $option ) {
 			if ( ! empty( $this->defaults[ $field ] ) ) {
 				return $this->defaults[ $field ];
-			} else {
-				$non_namespaced = $this->get_non_namespaced_field( $field );
-				if ( ! empty( $this->defaults[ $non_namespaced ] ) ) {
-					return $this->defaults[ $non_namespaced ];
-				}
+			}
+
+			$non_namespaced = $this->get_non_namespaced_field( $field );
+			if ( ! empty( $this->defaults[ $non_namespaced ] ) ) {
+				return $this->defaults[ $non_namespaced ];
 			}
 		}
 
@@ -538,7 +485,7 @@ abstract class Settings {
 	 *
 	 * @return string
 	 */
-	protected function get_non_namespaced_field( $field ) {
+	protected function get_non_namespaced_field( string $field ) : string {
 		if ( empty( $this->namespace ) ) {
 			return $field;
 		}
@@ -554,44 +501,40 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	public function display_settings_page() {
+	public function display_settings_page() : void {
 		?>
-        <div class="wrap">
-            <h2><?php echo $this->title; ?></h2>
+		<div class="wrap">
+			<h2><?= esc_html( $this->title ) ?></h2>
 			<?php
 			if ( ! empty( $this->description ) ) {
 				?>
-                <p class="description">
-					<?php echo $this->description; ?>
-                </p>
+				<p class="description">
+					<?= esc_html( $this->description ) ?>
+				</p>
 				<?php
 			}
 
 			if ( $this->tabs ) {
 				$this->tabbed_form();
-
 			} else {
 				?>
-                <form action="<?php echo $this->form_url; ?>" method="post">
+				<form action="<?= esc_url( $this->form_url ) ?>" method="post">
 					<?php
 					settings_fields( $this->slug );
 					do_settings_sections( $this->slug );
 					submit_button();
 					?>
-                    <input type="hidden" name="settings_page_slug" value="<?php echo esc_attr( $this->slug ); ?>"/>
-                </form>
+					<input type="hidden" name="settings_page_slug" value="<?= esc_attr( $this->slug ) ?>" />
+				</form>
 				<?php
 			}
 			?>
-        </div>
+		</div>
 		<?php
-
 	}
 
 
 	/**
-	 * tabbed_form
-	 *
 	 * Generate a settings page with the settings sections placed into tabs
 	 * Set $this->tabs to true and it will happen automatically
 	 *
@@ -600,60 +543,60 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	private function tabbed_form() {
+	private function tabbed_form() : void {
 		reset( $this->settings );
 
-		$tab = isset( $_GET['tab'] ) ? $_GET['tab'] : key( $this->settings );
+		$tab = sanitize_text_field( wp_unslash( $_GET['tab'] ?? key( $this->settings ) ) );
 
 		?>
-        <h2 class="nav-tab-wrapper">
+		<h2 class="nav-tab-wrapper">
 			<?php
 			foreach ( $this->settings as $section => $params ) {
-				printf( '<a id="nav-%s" href="%s" class="nav-tab%s">%s</a>',
-					$section,
-					add_query_arg( 'tab', $section ),
-					$tab == $section ? ' nav-tab-active' : '',
-					$params['title']
-				);
+				?>
+				<a
+					id="nav-<?= esc_attr( $section ) ?>"
+					href="<?= esc_url( add_query_arg( 'tab', $section ) ) ?>"
+					class="nav-tab<?= esc_attr( $tab === $section ? ' nav-tab-active' : '' ) ?>"
+				>
+					<?= esc_html( $params['title'] ) ?>
+				</a>
+				<?php
 			}
 			?>
-        </h2>
+		</h2>
 
-        <form action="<?php echo $this->form_url; ?>" method="post">
+		<form action="<?= esc_url( $this->form_url ) ?>" method="post">
 			<?php
 			settings_fields( $this->slug );
 
 			foreach ( $this->settings as $section => $params ) {
 				printf( '<div class="tab-content" id="tab-%s" %s>',
 					$section,
-					$section != $tab ? 'style="display:none;"' : ''
+					$section !== $tab ? 'style="display:none;"' : ''
 				);
-
 				?>
-                <h3><?php echo $params['title']; ?></h3>
+				<h3><?= esc_html( $params['title'] ) ?></h3>
 
 				<?php
 				$func = $section . '_description';
 				$this->{$func}();
 				?>
 
-                <table class="form-table">
+				<table class="form-table">
 					<?php
 					do_settings_fields( $this->slug, $section );
 					?>
-                </table>
+				</table>
 				<?php
 
 				submit_button();
 
-				?>
-                </div>
-				<?php
+				echo '</div>';
 			}
 			?>
-        </form>
-        <script type="text/javascript">
-			jQuery( 'a.nav-tab' ).click( function( e ){
+		</form>
+		<script type="text/javascript">
+			jQuery( 'a.nav-tab' ).click( function( e ) {
 				e.preventDefault();
 				var id = e.target.id.substr( 4 );
 				jQuery( 'div.tab-content' ).hide();
@@ -661,38 +604,32 @@ abstract class Settings {
 				jQuery( 'a.nav-tab-active' ).removeClass( 'nav-tab-active' );
 				jQuery( e.target ).addClass( 'nav-tab-active' );
 			} );
-        </script>
+		</script>
 		<?php
-
 	}
 
 
 	/**
-	 * add_setting_section
-	 *
 	 * If you prefer the use the method approach vs the set class var approach
 	 * Use this method to create or update a section of settings
 	 *
 	 * @param string $slug
 	 * @param string $title
 	 *
-	 * @uses $this->settings ( may be set independently )
 	 * @see  $this->add_setting()
 	 *
+	 * @uses $this->settings ( may be set independently )
 	 * @return void
 	 */
-	protected function add_setting_section( $slug, $title ) {
+	protected function add_setting_section( string $slug, string $title ) : void {
 		$this->settings[ $slug ]['title'] = $title;
 		if ( empty( $this->settings[ $slug ]['fields'] ) ) {
 			$this->settings[ $slug ]['fields'] = [];
 		}
-
 	}
 
 
 	/**
-	 * add_setting
-	 *
 	 * If you prefer to use the method approach vs the set class var approach
 	 * Use this method to add a single setting to a section
 	 *
@@ -700,12 +637,12 @@ abstract class Settings {
 	 * @param string $field
 	 * @param string $label
 	 *
-	 * @uses $this->settings ( may be set independently )
 	 * @see  $this->add_settings_section()
 	 *
+	 * @uses $this->settings ( may be set independently )
 	 * @return void
 	 */
-	protected function add_setting( $section, $field, $label ) {
+	protected function add_setting( string $section, string $field, string $label ) : void {
 		$this->settings[ $section ]['fields'][ $field ] = $label;
 	}
 

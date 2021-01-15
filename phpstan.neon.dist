@@ -4,6 +4,7 @@ parameters:
     paths:
         - src
     scanFiles:
+        - dev/stubs/wp-smush.php
         - %rootDir%/../../../stubs/cmb2/cmb2-2.7.php
         - ../../johnbillion/extended-cpts/functions.php
     ignoreErrors:

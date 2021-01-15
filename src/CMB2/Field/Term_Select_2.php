@@ -26,8 +26,8 @@ class Term_Select_2 {
 
 	public const NAME = 'lipe/lib/cmb2/field-types/term-select-2';
 
-	public const GET_TERMS = 'lipe/lib/cmb2/field-types/term-select-2/ajax';
-	public const SAVE_AS_TERMS = 'save_as_terms';
+	public const GET_TERMS        = 'lipe/lib/cmb2/field-types/term-select-2/ajax';
+	public const SAVE_AS_TERMS    = 'save_as_terms';
 	public const CREATE_NEW_TERMS = 'create_terms';
 
 
@@ -37,37 +37,37 @@ class Term_Select_2 {
 	 * @return void
 	 */
 	protected function hook() : void {
-		\add_action( 'cmb2_render_' . self::NAME, [ $this, 'render' ], 10, 5 );
-		\add_filter( 'cmb2_sanitize_' . self::NAME, [ $this, 'assign_terms_during_save' ], 10, 4 );
-		\add_filter( 'cmb2_types_esc_' . self::NAME, [ $this, 'esc_repeater_values' ], 10, 4 );
+		add_action( 'cmb2_render_' . self::NAME, [ $this, 'render' ], 10, 5 );
+		add_filter( 'cmb2_sanitize_' . self::NAME, [ $this, 'assign_terms_during_save' ], 10, 4 );
+		add_filter( 'cmb2_types_esc_' . self::NAME, [ $this, 'esc_repeater_values' ], 10, 4 );
 
-		\add_action( 'admin_enqueue_scripts', [ $this, 'js' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'js' ] );
 		//remove subtle conflict with acf
-		\add_filter( 'acf/settings/select2_version', function () {
+		add_filter( 'acf/settings/select2_version', function () {
 			return 4;
 		} );
 
-		\add_action( 'wp_ajax_' . self::GET_TERMS, [ $this, 'ajax_get_terms' ] );
+		add_action( 'wp_ajax_' . self::GET_TERMS, [ $this, 'ajax_get_terms' ] );
 	}
 
 
 	public function ajax_get_terms() : void {
-		//phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-		$search = \sanitize_text_field( $_POST['q'] ?? '' );
-		$terms  = get_terms( [
+		//phpcs:disable
+		$search = sanitize_text_field( $_POST['q'] ?? '' );
+		$terms = get_terms( [
 			'number'     => 10,
-			'taxonomy'   => \sanitize_text_field( $_REQUEST['taxonomy'] ?? '' ),
+			'taxonomy'   => sanitize_text_field( $_REQUEST['taxonomy'] ?? '' ),
 			'search'     => $search,
 			'fields'     => 'id=>name',
 			'hide_empty' => false,
 		] );
-		if ( \sanitize_text_field( $_REQUEST[ self::CREATE_NEW_TERMS ] ?? '' ) ) {
-			//add a newly entered term as an option
+		if ( \is_array( $terms ) && sanitize_text_field( $_REQUEST[ self::CREATE_NEW_TERMS ] ?? '' ) ) {
+			// Add a newly entered term as an option.
 			$terms[ $search ] = $search;
 		}
 
 		\wp_send_json( $terms );
-		//phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		//phpcs:enable
 	}
 
 
@@ -106,10 +106,10 @@ class Term_Select_2 {
 	 * I know this sucks. One day I would like to figure this out properly.
 	 * The main issue is repeaters.
 	 *
-	 * @todo clean this up and move to assets/js file
-	 *
 	 * @param \CMB2_Field $field
 	 * @param \CMB2_Types $field_type_object
+	 *
+	 * @todo clean this up and move to assets/js file
 	 *
 	 * @return void
 	 */
@@ -120,12 +120,12 @@ class Term_Select_2 {
 		}
 		$rendered[ $field->id() ] = 1;
 
-		$url_args        = [
+		$url_args = [
 			'action'               => self::GET_TERMS,
 			'taxonomy'             => $this->get_taxonomy( $field->args ),
 			self::CREATE_NEW_TERMS => $field->args( self::CREATE_NEW_TERMS ),
 		];
-		$url             = \add_query_arg( $url_args, admin_url( 'admin-ajax.php' ) );
+		$url = \add_query_arg( $url_args, admin_url( 'admin-ajax.php' ) );
 		$no_results_text = $field->args( 'text' )['no_terms_text'] ?? get_taxonomy( $url_args['taxonomy'] )->labels->not_found;
 
 		$id = $field->id();
@@ -155,21 +155,21 @@ class Term_Select_2 {
 									$.each( data, function( index, text ) {
 										options.push( {
 											id: index,
-											text: text
+											text: text,
 										} );
 									} );
 								}
 								return {
-									results: options
+									results: options,
 								};
-							}
+							},
 						},
 						cache: true,
 						'language': {
 							'noResults': function() {
-								return "<?= esc_js( $no_results_text ); ?>";
-							}
-						}
+								return "<?= esc_js( $no_results_text ) ?>";
+							},
+						},
 					} );
 				}
 
@@ -193,13 +193,13 @@ class Term_Select_2 {
 	 * Return the list of options, with selected options at the top preserving their order. This also handles the
 	 * removal of selected options which no longer exist in the options array.
 	 *
-	 * @param CMB2_Types $field_type_object
-	 * @param array      $field_escaped_value
+	 * @param CMB2_Types $types_object
+	 * @param array|null $field_escaped_value
 	 *
 	 * @return string
 	 */
-	public function get_multi_select_options( CMB2_Types $field_type_object, ?array $field_escaped_value = [] ) : string {
-		$options = (array) $field_type_object->field->options();
+	protected function get_multi_select_options( CMB2_Types $types_object, ?array $field_escaped_value = [] ) : string {
+		$options = (array) $types_object->field->options();
 
 		// If we have selected items, we need to preserve their order
 		if ( ! empty( $field_escaped_value ) ) {
@@ -209,14 +209,16 @@ class Term_Select_2 {
 				$options = \get_terms( [
 					'include'    => array_map( '\intval', $field_escaped_value ),
 					'fields'     => 'id=>name',
-					'taxonomy'   => $field_type_object->field->args['taxonomy'] ?? 'category',
+					'taxonomy'   => $types_object->field->args['taxonomy'] ?? 'category',
 					'hide_empty' => false,
 				] );
 			}
 		}
 
 		$selected_items = '';
-		$other_items    = '';
+		$other_items = '';
+
+		$select = new \CMB2_Type_Select( $types_object );
 
 		foreach ( $options as $option_value => $option_label ) {
 			// Clone args & modify for just this item
@@ -225,12 +227,12 @@ class Term_Select_2 {
 				'label' => $option_label,
 			];
 
-			// Split options into those which are selected and the rest
+			// Split options into those which are selected and the rest.
 			if ( empty( $options ) || \in_array( $option_value, $field_escaped_value, false ) ) {
 				$option['checked'] = true;
-				$selected_items    .= $field_type_object->select_option( $option );
+				$selected_items .= $select->select_option( $option );
 			} else {
-				$other_items .= $field_type_object->select_option( $option );
+				$other_items .= $select->select_option( $option );
 			}
 		}
 
@@ -267,13 +269,13 @@ class Term_Select_2 {
 	 *
 	 * @param mixed $check
 	 * @param mixed $meta_value
-	 * @param array $field_args
 	 * @param int   $object_id
 	 *
-	 * @return mixed
+	 * @param array $field_args
 	 *
+	 * @return array|null
 	 */
-	public function assign_terms_during_save( $check, $meta_value, $object_id, array $field_args ) : ?array {
+	public function assign_terms_during_save( $check, $meta_value, int $object_id, array $field_args ) : ?array {
 		if ( ! \is_array( $meta_value ) || empty( $meta_value ) ) {
 			return $check;
 		}
@@ -289,8 +291,7 @@ class Term_Select_2 {
 		}
 
 		if ( ! empty( $object_id ) && $field_args[ self::SAVE_AS_TERMS ] ) {
-			\wp_add_object_terms( $object_id, \array_map( '\intval', $meta_value ), $this->get_taxonomy( $field_args ) );
-
+			wp_add_object_terms( $object_id, \array_map( '\intval', $meta_value ), $this->get_taxonomy( $field_args ) );
 		}
 
 		return $meta_value;
@@ -300,8 +301,8 @@ class Term_Select_2 {
 	private function create_terms( array $terms, string $taxonomy ) : array {
 		foreach ( $terms as $key => $val ) {
 			if ( ! \is_numeric( $val ) ) {
-				$term = \wp_create_term( $val, $taxonomy );
-				if ( ! \is_wp_error( $term ) ) {
+				$term = wp_create_term( $val, $taxonomy );
+				if ( ! is_wp_error( $term ) ) {
 					$terms [ $key ] = (string) $term['term_id'];
 				}
 			}
@@ -314,22 +315,22 @@ class Term_Select_2 {
 	/**
 	 * Handle repeatable data escaping
 	 *
-	 * @param       $check
-	 * @param       $meta_value
+	 * @param array $checked
+	 * @param array $values
 	 * @param array $field_args
 	 *
 	 * @return array|null
 	 */
-	public function esc_repeater_values( $check, $meta_value, array $field_args ) : ?array {
-		if ( ! \is_array( $meta_value ) || ! $field_args['repeatable'] ) {
-			return $check;
+	public function esc_repeater_values( array $checked, array $values, array $field_args ) : ?array {
+		if ( ! \is_array( $values ) || ! $field_args['repeatable'] ) {
+			return $checked;
 		}
 
-		foreach ( $meta_value as $key => $val ) {
-			$meta_value[ $key ] = \array_map( 'esc_attr', $val );
+		foreach ( $values as $key => $val ) {
+			$values[ $key ] = \array_map( 'esc_attr', $val );
 		}
 
-		return $meta_value;
+		return $values;
 	}
 
 

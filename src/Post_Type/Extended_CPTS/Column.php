@@ -9,11 +9,10 @@ use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
  */
 class Column extends Argument_Abstract {
 
-	protected $CPTS;
+	protected $cpts;
 
 	/**
-	 *
-	 * @see \Lipe\Lib\Post_Type\Extended_CPTS\Column::set()
+	 * @see self::set()
 	 * @var string
 	 */
 	protected $cols_array_key;
@@ -22,33 +21,34 @@ class Column extends Argument_Abstract {
 	/**
 	 * Column constructor.
 	 *
-	 * @param \Lipe\Lib\Post_Type\Custom_Post_Type_Extended $CPTS
+	 * @param Custom_Post_Type_Extended $cpts
 	 */
-	public function __construct( Custom_Post_Type_Extended $CPTS ) {
-		$this->CPTS = $CPTS;
+	public function __construct( Custom_Post_Type_Extended $cpts ) {
+		$this->cpts = $cpts;
 	}
 
 
 	/**
-	 * Store args to cpt object
+	 * Store args to cpt object.
+	 *
 	 * This must be called from every method that is saving args
-	 * or they will go nowhere
+	 * or they will go nowhere.
 	 *
 	 * @internal
 	 *
-	 * @param [] $args
+	 * @param array $args
 	 *
 	 * @return void
 	 */
-	public function set( array $args ) {
+	public function set( array $args ) : void {
 		if ( ! isset( $this->cols_array_key ) ) {
 			$this->cols_array_key = sanitize_title_with_dashes( $args['title'] );
-			$this->CPTS->admin_cols[ $this->cols_array_key ] = [];
+			$this->cpts->admin_cols[ $this->cols_array_key ] = [];
 		}
-		$existing = $this->CPTS->admin_cols[ $this->cols_array_key ];
+		$existing = $this->cpts->admin_cols[ $this->cols_array_key ];
 
 		$existing = array_merge( $existing, $args );
-		$this->CPTS->admin_cols[ $this->cols_array_key ] = $existing;
+		$this->cpts->admin_cols[ $this->cols_array_key ] = $existing;
 	}
 
 
@@ -60,7 +60,7 @@ class Column extends Argument_Abstract {
 	 *
 	 * @return Column_Shared
 	 */
-	protected function return( array $args ) {
+	protected function return( array $args ) : Column_Shared {
 		$this->set( $args );
 		return new Column_Shared( $this, $args );
 	}
@@ -76,7 +76,7 @@ class Column extends Argument_Abstract {
 	 *
 	 * @return Column_Shared
 	 */
-	public function custom( $title, $callback ) {
+	public function custom( string $title, callable $callback ) : Column_Shared {
 		$_args = [
 			'title'    => $title,
 			'function' => $callback,
@@ -101,12 +101,12 @@ class Column extends Argument_Abstract {
 	 * @param string $title
 	 * @param string $connection_type
 	 * @param string $link_to - 'view', 'edit', 'list' (default 'edit')
-	 * @param null   $meta_field
-	 * @param null   $meta_value
+	 * @param null|string   $meta_field
+	 * @param null|string   $meta_value
 	 *
 	 * @return Column_Shared
 	 */
-	public function p2p( $title, $connection_type, $link_to = 'edit', $meta_field = null, $meta_value = null ) {
+	public function p2p( string $title, string $connection_type, $link_to = 'edit', $meta_field = null, $meta_value = null ) : Column_Shared {
 		$_args = [
 			'title'      => $title,
 			'connection' => $connection_type,
@@ -138,7 +138,7 @@ class Column extends Argument_Abstract {
 	 *
 	 * @return Column_Shared
 	 */
-	public function post_field( $title, $field ) {
+	public function post_field( string $title, string $field ) : Column_Shared {
 		$_args = [
 			'title'      => $title,
 			'post_field' => $field,
@@ -156,12 +156,12 @@ class Column extends Argument_Abstract {
 	 *
 	 * @param string $title
 	 * @param string $image_size
-	 * @param int    $width
-	 * @param int    $height
+	 * @param null|int   $width
+	 * @param null|int   $height
 	 *
 	 * @return Column_Shared
 	 */
-	public function featured_image( $title, $image_size = 'thumbnail', $width = null, $height = null ) {
+	public function featured_image( string $title, $image_size = 'thumbnail', ?int $width = null, ?int $height = null ) : Column_Shared {
 		$_args = [
 			'title'          => $title,
 			'featured_image' => $image_size,
@@ -190,7 +190,7 @@ class Column extends Argument_Abstract {
 	 *
 	 * @return Column_Shared
 	 */
-	public function taxonomy( $title, $taxonomy, $link_to = 'edit' ) {
+	public function taxonomy( string $title, string $taxonomy, $link_to = 'edit' ) : Column_Shared {
 		$_args = [
 			'title'    => $title,
 			'taxonomy' => $taxonomy,
@@ -212,15 +212,12 @@ class Column extends Argument_Abstract {
 	 *
 	 * @param string $title
 	 * @param string $meta_key
-	 * @param string $date_format
+	 * @param null   $date_format
 	 *
 	 * @return Column_Shared
 	 */
-	public function meta( $title, $meta_key, $date_format = null ) {
-		$_args = [
-			'title'    => $title,
-			'meta_key' => $meta_key,
-		];
+	public function meta( string $title, string $meta_key, $date_format = null ) : Column_Shared {
+		$_args = compact( 'title', 'meta_key' );
 		if ( null !== $date_format ) {
 			$_args['date_format'] = $date_format;
 		}

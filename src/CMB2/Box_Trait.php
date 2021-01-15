@@ -238,7 +238,7 @@ trait Box_Trait {
 	 * @return bool
 	 */
 	protected function is_public_rest_data( Field $field ) : bool {
-		return  $field->show_in_rest && $field->show_in_rest === \WP_REST_Server::ALLMETHODS;
+		return  $field->show_in_rest && ( \WP_REST_Server::ALLMETHODS === $field->show_in_rest );
 	}
 
 	/**

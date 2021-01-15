@@ -11,7 +11,7 @@ use Lipe\Lib\Taxonomy\Taxonomy_Extended;
  */
 class Column extends Argument_Abstract {
 
-	protected $TAXOS;
+	protected $taxos;
 
 	/**
 	 * filters_array_key
@@ -26,10 +26,10 @@ class Column extends Argument_Abstract {
 	/**
 	 * Column constructor.
 	 *
-	 * @param Taxonomy_Extended $TAXOS
+	 * @param Taxonomy_Extended $taxos
 	 */
-	public function __construct( Taxonomy_Extended $TAXOS ) {
-		$this->TAXOS = $TAXOS;
+	public function __construct( Taxonomy_Extended $taxos ) {
+		$this->taxos = $taxos;
 	}
 
 
@@ -48,12 +48,12 @@ class Column extends Argument_Abstract {
 	public function set( array $args ) : void {
 		if ( ! isset( $this->cols_array_key ) ) {
 			$this->cols_array_key = sanitize_title_with_dashes( $args['title'] );
-			$this->TAXOS->admin_cols[ $this->cols_array_key ] = [];
+			$this->taxos->admin_cols[ $this->cols_array_key ] = [];
 		}
-		$existing = $this->TAXOS->admin_cols[ $this->cols_array_key ];
+		$existing = $this->taxos->admin_cols[ $this->cols_array_key ];
 
 		$existing = array_merge( $existing, $args );
-		$this->TAXOS->admin_cols[ $this->cols_array_key ] = $existing;
+		$this->taxos->admin_cols[ $this->cols_array_key ] = $existing;
 	}
 
 	/**

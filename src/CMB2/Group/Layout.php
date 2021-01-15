@@ -56,7 +56,7 @@ class Layout {
 				'cmb-group-description' => $desc,
 				'cmb-row'               => ! $this->is_table( $field_group ),
 			] );
-			echo '<div class="' . $classnames . '">';
+			echo '<div class="' . esc_attr( $classnames ) . '">';
 
 			if ( $label ) {
 				echo '<h2 class="cmb-group-name cmb-layout-header">' . esc_html( $label ) . '</h2>';
@@ -72,7 +72,7 @@ class Layout {
 			'cmb-layout-non-repeatable' => ! $this->is_table( $field_group ) && ! $this->is_repeatable( $field_group ),
 		] );
 
-		echo '<table class="' . $classnames . '" cellpadding="0" cellspacing="0">';
+		echo '<table class="' . esc_attr( $classnames ) . '" cellpadding="0" cellspacing="0">';
 
 		if ( $this->is_table( $field_group ) && $field_group->args( 'show_names' ) ) {
 			$this->render_group_table_header( $field_group );

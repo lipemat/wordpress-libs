@@ -5,8 +5,6 @@ namespace Lipe\Lib\Post_Type\Extended_CPTS;
 use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
 
 /**
- * Sortable
- *
  * Extended CPTs provides a mechanism for registering values for the public orderby query var,
  * which allows users to sort your post type archives by various fields.
  * This also works in WP_Query, which makes ordering custom post type listings very powerful and dead easy.
@@ -25,10 +23,9 @@ use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
  * ) );
  */
 class Sortable extends Argument_Abstract {
-	protected $CPTS;
+	protected $cpts;
 
 	/**
-	 *
 	 * @see \Lipe\Lib\Post_Type\Extended_CPTS\Sortable::set()
 	 * @var string
 	 */
@@ -38,37 +35,38 @@ class Sortable extends Argument_Abstract {
 	/**
 	 * Sortable constructor.
 	 *
-	 * @param \Lipe\Lib\Post_Type\Custom_Post_Type_Extended $CPTS
+	 * @param Custom_Post_Type_Extended $cpts
 	 */
-	public function __construct( Custom_Post_Type_Extended $CPTS ) {
-		$this->CPTS = $CPTS;
+	public function __construct( Custom_Post_Type_Extended $cpts ) {
+		$this->cpts = $cpts;
 	}
 
 
 	/**
-	 * Store args to cpt object
-	 * This must be called from every method that is saving args
+	 * Store args to cpt object.
 	 *
-	 * or they will go nowhere
+	 * This must be called from every method that is saving args
+	 * or they will go nowhere.
+	 *
+	 * @param array $args
 	 *
 	 * @internal
 	 *
-	 * @param [] $args
-	 *
 	 * @return void
 	 */
-	public function set( array $args ) {
-		if ( ! isset( $this->CPTS->site_sortables[ $this->sortables_array_key ] ) ) {
+	public function set( array $args ) : void {
+		if ( ! isset( $this->cpts->site_sortables[ $this->sortables_array_key ] ) ) {
 			$this->sortables_array_key = $args['sort_key'];
-			$this->CPTS->site_sortables[ $this->sortables_array_key ] = [];
+			$this->cpts->site_sortables[ $this->sortables_array_key ] = [];
 			unset( $args['sort_key'] );
 		}
 
-		$existing = $this->CPTS->site_sortables[ $this->sortables_array_key ];
+		$existing = $this->cpts->site_sortables[ $this->sortables_array_key ];
 
 		$existing = array_merge( $existing, $args );
-		$this->CPTS->site_sortables[ $this->sortables_array_key ] = $existing;
+		$this->cpts->site_sortables[ $this->sortables_array_key ] = $existing;
 	}
+
 
 	/**
 	 * Store args to cpt object
@@ -76,9 +74,9 @@ class Sortable extends Argument_Abstract {
 	 *
 	 * @param array $args
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Sortable_Shared
+	 * @return Sortable_Shared
 	 */
-	protected function return( array $args ) {
+	protected function return( array $args ) : Sortable_Shared {
 		$this->set( $args );
 		return new Sortable_Shared( $this, $args );
 	}
@@ -90,15 +88,10 @@ class Sortable extends Argument_Abstract {
 	 * @param string $sort_key
 	 * @param string $meta_key
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Sortable_Shared
+	 * @return Sortable_Shared
 	 */
-	public function meta( $sort_key, $meta_key ) {
-		$_args = [
-			'sort_key' => $sort_key,
-			'meta_key' => $meta_key,
-		];
-
-		return $this->return( $_args );
+	public function meta( string $sort_key, string $meta_key ) : Sortable_Shared {
+		return $this->return( compact( 'sort_key', 'meta_key' ) );
 	}
 
 
@@ -108,16 +101,10 @@ class Sortable extends Argument_Abstract {
 	 * @param string $sort_key
 	 * @param string $taxonomy
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Sortable_Shared
+	 * @return Sortable_Shared
 	 */
-	public function taxonomy( $sort_key, $taxonomy ) {
-		$_args = [
-			'sort_key' => $sort_key,
-			'taxonomy' => $taxonomy,
-		];
-
-		return $this->return( $_args );
-
+	public function taxonomy( string $sort_key, string $taxonomy ) : Sortable_Shared {
+		return $this->return( compact( 'sort_key', 'taxonomy' ) );
 	}
 
 
@@ -127,16 +114,10 @@ class Sortable extends Argument_Abstract {
 	 * @param string $sort_key
 	 * @param string $post_field
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Sortable_Shared
+	 * @return Sortable_Shared
 	 */
-	public function post_field( $sort_key, $post_field ) {
-		$_args = [
-			'sort_key'   => $sort_key,
-			'post_field' => $post_field,
-		];
-
-		return $this->return( $_args );
-
+	public function post_field( string $sort_key, string $post_field ) : Sortable_Shared {
+		return $this->return( compact( 'sort_key', 'post_field' ) );
 	}
 
 }

@@ -28,23 +28,18 @@ class Image_Resize {
 
 
 	public function hook() : void {
-		// convert other add_image_sizes from other plugin, to the attribute of the class
 		add_action( 'init', [ $this, 'add_other_image_sizes' ] );
-
-		// use this class to resize on the fly instead of making a copy of each image
 		add_filter( 'image_downsize', [ $this, 'convert_image_downsize' ], 10, 3 );
 	}
 
 
 	/**
-	 * get_image_sizes
-	 *
 	 * Get a list of the image sizes from here
 	 * because they no longer exist in standard WP global
 	 *
 	 * @return array
 	 */
-	public function get_image_sizes() {
+	public function get_image_sizes() : array {
 		return $this->_image_sizes;
 	}
 
@@ -53,7 +48,7 @@ class Image_Resize {
 	 * Convert other add_image_sizes from other plugin, to the attribute of the class.
 	 *
 	 */
-	public function add_other_image_sizes() {
+	public function add_other_image_sizes() : void {
 		global $_wp_additional_image_sizes;
 
 		do_action( 'lipe/lib/util/before_add_other_image_sizes' );
@@ -93,31 +88,32 @@ class Image_Resize {
 	 *
 	 */
 	public function convert_image_downsize( $out, $id, $size ) {
-		if ( $size === 'full' ) {
+		if ( 'full' === $size ) {
 			return $out;
 		}
 
-		$new_image = $this->image( [
+		$image = $this->image( [
 			'id'     => $id,
 			'size'   => $size,
 			'output' => 'numeric_array',
 		] );
 
-		if ( empty( $new_image ) ) {
+		if ( empty( $image ) ) {
 			return $out;
 		}
 
-		// is_intermediate
-		$new_image[] = true;
+		if ( \is_array( $image ) ) {
+			$image[] = true; // is_intermediate
+		}
 
-		return $new_image;
+		return $image;
 	}
 
 
 	/**
 	 * Get image
 	 *
-	 * @param array() $args = array(
+	 * @param array $args   = array(
 	 *                      'id' => null,   // the thumbnail ID
 	 *                      'post_id' => null,   // thumbnail of specified post ID
 	 *                      'src' => '',
@@ -136,6 +132,7 @@ class Image_Resize {
 	 *                      'link_class' => '',      // the class of <a> tag
 	 *                      'link_title' => '',      // the title of <a> tag. If empty, get it from "title" attribute.
 	 *                      );
+	 * @param bool  $echo
 	 *
 	 * @return string|null|array
 	 */
@@ -159,26 +156,27 @@ class Image_Resize {
 
 		];
 
-		$args = wp_parse_args( $args, $defaults );
+		$alt = '';
 		$class = '';
-		extract( $args );
-
+		$link = '';
+		$link_title = '';
+		$size = '';
+		$title = '';
+		$args = (array) wp_parse_args( $args, $defaults );
+		extract( $args, EXTR_OVERWRITE ); //phpcs:ignore
 
 		// from explicit thumbnail ID
 		if ( ! empty( $args['id'] ) ) {
 			$image_id = $args['id'];
-			$image_url = wp_get_attachment_url( $args['id']);
-
+			$image_url = wp_get_attachment_url( $args['id'] );
 			// thumbnail of specified post
 		} elseif ( ! empty( $args['post_id'] ) ) {
 			$image_id = get_post_thumbnail_id( $args['post_id'] );
 			$image_url = wp_get_attachment_url( $image_id );
-
 			// or from SRC
 		} elseif ( ! empty( $args['src'] ) ) {
 			$image_id = null;
 			$image_url = esc_url( $args['src'] );
-
 			// or the post thumbnail of current post
 		} elseif ( has_post_thumbnail() ) {
 			$image_id = get_post_thumbnail_id();
@@ -188,7 +186,6 @@ class Image_Resize {
 			global $post;
 			$image_id = $post->ID;
 			$image_url = wp_get_attachment_url( $image_id );
-
 		}
 
 		//get first image from content
@@ -197,8 +194,7 @@ class Image_Resize {
 			$image_url = $this->get_image_from_content( $args['post_id'] );
 		}
 
-
-		if ( empty( $image_url ) && empty( $image_id ) ) {
+		if ( ! isset( $image_url ) || ( empty( $image_url ) && empty( $image_id ) ) ) {
 			return null;
 		}
 
@@ -208,6 +204,9 @@ class Image_Resize {
 		// get the post attachment
 		if ( ! empty( $image_id ) ) {
 			$attachment = get_post( $image_id );
+			if ( empty( $alt ) ) {
+				$alt = esc_attr( $attachment->post_title );
+			}
 		}
 
 		// get size from add_image_size
@@ -215,24 +214,17 @@ class Image_Resize {
 			global $_wp_additional_image_sizes, $content_width;
 
 			// if is array, put width and height individually.
-			if ( is_array( $args['size'] ) ) {
-				$width = $args['size'][0];
-				$height = $args['size'][1];
+			if ( \is_array( $args['size'] ) ) {
+				[ $width, $height ] = $args['size'];
 				$crop = empty( $args['size'][2] ) ? false : $args['size'][2];
-
 			} elseif ( isset( $this->_image_sizes[ $args['size'] ] ) ) {
-
 				$width = $this->_image_sizes[ $args['size'] ]['width'];
 				$height = $this->_image_sizes[ $args['size'] ]['height'];
 				$crop = $this->_image_sizes[ $args['size'] ]['crop'];
-
 			} elseif ( isset( $_wp_additional_image_sizes[ $args['size'] ] ) ) {
 				$width = $_wp_additional_image_sizes[ $args['size'] ]['width'];
 				$height = $_wp_additional_image_sizes[ $args['size'] ]['height'];
 				$crop = $_wp_additional_image_sizes[ $args['size'] ]['crop'];
-
-				// standard sizes of WordPress
-
 				// thumbnail
 			} elseif ( 'thumb' === $args['size'] || 'thumbnail' === $args['size'] ) {
 				$width = (int) get_option( 'thumbnail_size_w' );
@@ -243,7 +235,6 @@ class Image_Resize {
 					$height = 96;
 				}
 				$crop = (bool) get_option( 'thumbnail_crop' );
-
 				// medium
 			} elseif ( 'medium' === $args['size'] ) {
 				$width = (int) get_option( 'medium_size_w' );
@@ -264,15 +255,19 @@ class Image_Resize {
 			}
 		}
 
-		// maybe need resize
+		// Maybe need resize.
 		if ( ! empty( $width ) || ! empty( $height ) ) {
-			$image = $this->resize( $image_id, $image_url, $width, $height, $crop );
+			if ( isset( $height, $width, $crop, $image_id ) ) {
+				$image = $this->resize( (int) $width, (int) $height, (int) $image_id, $image_url, $crop );
+			}
 			if ( empty( $image ) ) {
 				return null;
 			}
-			$image_url = $image['url'];
-			$width = $image['width'];
-			$height = $image['height'];
+			if ( \is_array( $image ) ) {
+				$image_url = $image['url'];
+				$width = $image['width'];
+				$height = $image['height'];
+			}
 		}
 
 		/* BEGIN OUTPUT */
@@ -282,16 +277,18 @@ class Image_Resize {
 			return null;
 		}
 
-		if ( $args['output'] === 'url' ) {
+		if ( 'url' === $args['output'] ) {
 			if ( $echo ) {
-				echo $image_url;
+				echo esc_url( $image_url );
 			}
 			return $image_url;
-
 		}
 
-		if ( $args['output'] === 'array' ) {
-			//@todo set the alt and title from findings above
+		if ( ! isset( $height, $width ) ) {
+			return null;
+		}
+
+		if ( 'array' === $args['output'] ) {
 			return [
 				'src'    => $image_url,
 				'width'  => $width,
@@ -301,7 +298,7 @@ class Image_Resize {
 			];
 		}
 
-		if ( $args['output'] === 'numeric_array' ) {
+		if ( 'numeric_array' === $args['output'] ) {
 			return [
 				0 => $image_url,
 				1 => $width,
@@ -309,27 +306,25 @@ class Image_Resize {
 			];
 		}
 
-		if ( ! empty( $image_id ) ) {
+		if ( ! empty( $attachment ) && ! empty( $image_id ) ) {
 			$size = empty( $size ) ? $size = [ $width, $height ] : $size;
 			if ( 'a' === $args['output'] ) {
 				$class .= ' lipe/lib/util/resized-image';
 			}
 			$html_image = wp_get_attachment_image( $image_id, $size, false, [
-				'class' => trim( "$class" . ( ! is_array( $size ) && ! empty( $size ) ? " attachment-$size" : '' ) ),
+				'class' => trim( $class . ( ! \is_array( $size ) && ! empty( $size ) ? " attachment-$size" : '' ) ),
 				'alt'   => empty( $alt ) ? trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) : $alt,
 				'title' => empty( $title ) ? $attachment->post_title : $title,
 			] );
-
 		} else {
-			$html_image = rtrim( "<img" );
-			if ( $args['output'] != 'a' ) {
+			$html_image = rtrim( '<img' );
+			if ( 'a' !== $args['output'] ) {
 				$class .= ' lipe/lib/util/resized-image';
 			}
-			if ( ! is_array( $args['size'] ) && ! empty( $args['size'] ) ) {
+			if ( ! \is_array( $args['size'] ) && ! empty( $args['size'] ) ) {
 				$class .= " attachment-$size";
 			}
 
-			//@todo set the alt and title from findings above
 			$attr = [
 				'src'    => $image_url,
 				'width'  => $width,
@@ -345,20 +340,20 @@ class Image_Resize {
 				}
 			}
 			$html_image .= ' />';
-
 		}
 
-		// return only image
-		if ( $args['output'] == 'img' ) {
+		// Return <img> tag.
+		if ( 'img' === $args['output'] ) {
 			if ( $echo ) {
-				echo $html_image;
+				echo $html_image; //phpcs:ignore
 			}
 
 			return $html_image;
+		}
 
-			// return the image wrapper in <a> tag
-		} elseif ( $args['output'] == 'a' ) {
-			$html_link = rtrim( "<a" );
+		// Return the image wrapped in <a> tag.
+		if ( 'a' === $args['output'] ) {
+			$html_link = rtrim( '<a' );
 			$link_class = 'lipe/lib/util/resized-image';
 			$attr = [
 				'href'  => empty( $link ) ? $full_image_url : $link,
@@ -374,11 +369,14 @@ class Image_Resize {
 			$html_link .= '>' . $html_image . '</a>';
 
 			if ( $echo ) {
-				echo $html_link;
+				echo $html_link; //phpcs:ignore
+				return null;
 			}
 
 			return $html_link;
 		}
+
+		return null;
 	}
 
 
@@ -386,69 +384,63 @@ class Image_Resize {
 	 * Resize images dynamically using wp built in functions
 	 * Will also run the images through smush.it if available
 	 *
-	 * @param int    $attach_id
-	 * @param string $img_url
-	 * @param int    $width
-	 * @param int    $height
-	 * @param bool   $crop
+	 * @param int         $width
+	 * @param int         $height
+	 * @param int         $attach_id
+	 * @param string|null $img_url
+	 * @param bool        $crop
 	 *
 	 *
 	 * @return array
 	 */
-	protected function resize( $attach_id = null, $img_url = null, $width, $height, $crop = false ) {
-
-		// Cast $width and $height to integer
-		$width = intval( $width );
-		$height = intval( $height );
-
-		// this is an attachment, so we have the ID
+	protected function resize( int $width, int $height, int $attach_id, ?string $img_url = null, $crop = false ) : array {
 		if ( $attach_id ) {
 			$image_src = wp_get_attachment_image_src( $attach_id, 'full' );
 			$file_path = get_attached_file( $attach_id );
 			// this is not an attachment, let's use the image url
 		} elseif ( $img_url ) {
 			$uploads_dir = wp_upload_dir();
-			if ( strpos( $img_url, $uploads_dir['baseurl'] ) === false ) {
-				$file_path = parse_url( esc_url( $img_url ) );
-				$file_path = $_SERVER['DOCUMENT_ROOT'] . $file_path['path'];
-			} else {
+			if ( false !== strpos( $img_url, $uploads_dir['baseurl'] ) ) {
 				$file_path = str_replace( $uploads_dir['baseurl'], $uploads_dir['basedir'], $img_url );
+			} else {
+				$file_path = parse_url( esc_url( $img_url ) );
+				if ( \is_array( $file_path ) ) {
+					$file_path = sanitize_text_field( wp_unslash($_SERVER['DOCUMENT_ROOT'] ?? '' ) ) . $file_path['path'];
+				}
 			}
 			if ( ! file_exists( $file_path ) ) {
-				return;
+				return [];
 			}
 			$orig_size = getimagesize( $file_path );
-
-			$image_src[0] = $img_url;
-			$image_src[1] = $orig_size[0];
-			$image_src[2] = $orig_size[1];
+			if ( $orig_size ) {
+				$image_src[0] = $img_url;
+				$image_src[1] = $orig_size[0];
+				$image_src[2] = $orig_size[1];
+			}
 		}
 
+		if ( empty( $file_path ) || empty( $image_src ) ) {
+			return [];
+		}
 		$file_info = pathinfo( $file_path );
-
-		// check if file exists
-		if ( ! isset( $file_info['dirname'] ) || ! isset( $file_info['filename'] ) || ! isset( $file_info['extension'] ) ) {
-			return;
+		if ( ! isset( $file_info['dirname'], $file_info['filename'], $file_info['extension'] ) ) {
+			return [];
 		}
 
 		$base_file = $file_info['dirname'] . '/' . $file_info['filename'] . '.' . $file_info['extension'];
 		if ( ! file_exists( $base_file ) ) {
-			return;
+			return [];
 		}
 
 		$extension = '.' . $file_info['extension'];
-
 		// the image path without the extension
 		$no_ext_path = $file_info['dirname'] . '/' . $file_info['filename'];
-
 		$cropped_img_path = $no_ext_path . '-' . $width . 'x' . $height . $extension;
 
 		// checking if the file size is larger than the target size
 		// if it is smaller or the same size, stop right here and return
-		if ( $image_src[1] > $width || $image_src[2] > $height ) {
-
-			// $crop = false or no height set
-			if ( $crop == false OR ! $height ) {
+		if ( \is_array( $image_src ) && ( $image_src[1] > $width || $image_src[2] > $height ) ) {
+			if ( false === $crop || ! $height ) {
 				// calculate the size proportionally
 				$proportional_size = wp_constrain_dimensions( $image_src[1], $image_src[2], $width, $height );
 				$resized_img_path = $no_ext_path . '-' . $proportional_size[0] . 'x' . $proportional_size[1] . $extension;
@@ -456,44 +448,41 @@ class Image_Resize {
 				if ( file_exists( $resized_img_path ) ) {
 					$resized_img_url = str_replace( basename( $image_src[0] ), basename( $resized_img_path ), $image_src[0] );
 
-					$image = [
+					return [
 						'url'    => $resized_img_url,
 						'width'  => $proportional_size[0],
 						'height' => $proportional_size[1],
 					];
-
-					return $image;
 				}
 			} elseif ( file_exists( $cropped_img_path ) ) {
 				$cropped_img_url = str_replace( basename( $image_src[0] ), basename( $cropped_img_path ), $image_src[0] );
 
-				$image = [
+				return [
 					'url'    => $cropped_img_url,
 					'width'  => $width,
 					'height' => $height,
 				];
-
-				return $image;
 			}
 
 			//-- file does not exist so lets check the cache and create it
 
 			// check if image width is smaller than set width
 			$img_size = getimagesize( $file_path );
-			if ( $img_size[0] <= $width ) {
+			if ( \is_array( $img_size ) && $img_size[0] <= $width ) {
 				$width = $img_size[0];
 			}
 
 			// Check if GD Library installed
-			if ( ! function_exists( 'imagecreatetruecolor' ) ) {
-				echo 'GD Library Error: imagecreatetruecolor does not exist - please contact your webhost and ask them to install the GD library';
-
-				return false;
+			if ( ! \function_exists( 'imagecreatetruecolor' ) ) {
+				_doing_it_wrong( __METHOD__, 'GD Library Error: imagecreatetruecolor does not exist - please contact your webhost and ask them to install the GD library', '3.0.0' );
+				return [];
 			}
 
 			// no cache files - let's finally resize it
 			$image = wp_get_image_editor( $file_path );
-			if ( ! is_wp_error( $image ) ) {
+			if ( is_wp_error( $image ) ) {
+				$new_img_path = false;
+			} else {
 				$image->resize( $width, $height, $crop );
 				$save_data = $image->save();
 				if ( is_wp_error( $save_data ) || empty( $save_data['path'] ) ) {
@@ -501,12 +490,10 @@ class Image_Resize {
 				} else {
 					$new_img_path = $save_data['path'];
 				}
-			} else {
-				$new_img_path = false;
 			}
 
-			if ( ! file_exists( $new_img_path ) ) {
-				return false;
+			if ( ! \file_exists( $new_img_path ) ) {
+				return [];
 			}
 
 			$new_img_size = getimagesize( $new_img_path );
@@ -521,60 +508,46 @@ class Image_Resize {
 
 			//If using Wp Smushit
 			if ( class_exists( 'WpSmush' ) ) {
+				// phpcs:disable WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 				global $WpSmush;
-				/** @var \WpSmush $WpSmush */
-				if ( method_exists( $WpSmush, 'validate_install' ) ) {
-					//new version of wp smush
-					$max_size = $WpSmush->validate_install() ? WP_SMUSH_PREMIUM_MAX_BYTES : WP_SMUSH_MAX_BYTES;
-				} else {
-					$max_size = $WpSmush->is_pro() ? WP_SMUSH_PREMIUM_MAX_BYTES : WP_SMUSH_MAX_BYTES;
-				}
+				$max_size = $WpSmush->validate_install() ? WP_SMUSH_PREMIUM_MAX_BYTES : WP_SMUSH_MAX_BYTES; //phpcs:ignore
 				if ( filesize( $new_img_path ) < $max_size ) {
 					$WpSmush->do_smushit( $new_img_path );
 				}
+				// phpcs:enable WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 			}
 
 			return $image;
 		}
 
 		// default output - without resizing
-		$image = [
+		return [
 			'url'    => $image_src[0],
 			'width'  => $image_src[1],
 			'height' => $image_src[2],
 		];
-
-		return $image;
 	}
 
 
 	public function get_image_from_content( $post_id = 0 ) {
-
 		if ( empty( $post_id ) ) {
-			$post_id = get_the_ID();
+			$post_id = (int) get_the_ID();
 			if ( empty( $post_id ) ) {
 				return null;
 			}
 		}
 
 		$first_img = wp_cache_get( __METHOD__ . ':' . $post_id, 'default' );
-		if ( $first_img !== false ) {
+		if ( false !== $first_img ) {
 			return $first_img;
 		}
 
 		$content = get_post_field( 'post_content', $post_id );
-
-		if ( is_wp_error( $content ) || empty( $content ) ) {
+		if ( empty( $content ) ) {
 			$first_img = '';
-
 		} else {
-
 			preg_match_all( '/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $content, $matches );
-			if ( isset( $matches[1][0] ) ) {
-				$first_img = $matches[1][0];
-			} else {
-				$first_img = '';
-			}
+			$first_img = $matches[1][0] ?? '';
 		}
 
 		wp_cache_set( __METHOD__ . ':' . $post_id, $first_img, 'default', DAY_IN_SECONDS );

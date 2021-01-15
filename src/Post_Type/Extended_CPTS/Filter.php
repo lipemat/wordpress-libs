@@ -9,10 +9,9 @@ use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
  *
  */
 class Filter extends Argument_Abstract {
-	protected $CPTS;
+	protected $cpts;
 
 	/**
-	 *
 	 * @see \Lipe\Lib\Post_Type\Extended_CPTS\Filter::set()
 	 * @var string
 	 */
@@ -22,10 +21,10 @@ class Filter extends Argument_Abstract {
 	/**
 	 * Filter constructor.
 	 *
-	 * @param \Lipe\Lib\Post_Type\Custom_Post_Type_Extended $CPTS
+	 * @param Custom_Post_Type_Extended $cpts
 	 */
-	public function __construct( Custom_Post_Type_Extended $CPTS ) {
-		$this->CPTS = $CPTS;
+	public function __construct( Custom_Post_Type_Extended $cpts ) {
+		$this->cpts = $cpts;
 	}
 
 
@@ -35,22 +34,23 @@ class Filter extends Argument_Abstract {
 	 *
 	 * or they will go nowhere
 	 *
-	 * @internal
+	 * @param array $args
 	 *
-	 * @param [] $args
+	 * @internal
 	 *
 	 * @return void
 	 */
-	public function set( array $args ) {
+	public function set( array $args ) : void {
 		if ( ! isset( $this->filters_array_key ) ) {
 			$this->filters_array_key = sanitize_title_with_dashes( $args['title'] );
-			$this->CPTS->admin_filters[ $this->filters_array_key ] = [];
+			$this->cpts->admin_filters[ $this->filters_array_key ] = [];
 		}
-		$existing = $this->CPTS->admin_filters[ $this->filters_array_key ];
+		$existing = $this->cpts->admin_filters[ $this->filters_array_key ];
 
 		$existing = array_merge( $existing, $args );
-		$this->CPTS->admin_filters[ $this->filters_array_key ] = $existing;
+		$this->cpts->admin_filters[ $this->filters_array_key ] = $existing;
 	}
+
 
 	/**
 	 * Store args to cpt object
@@ -58,9 +58,9 @@ class Filter extends Argument_Abstract {
 	 *
 	 * @param array $args
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
+	 * @return Filter_Shared
 	 */
-	protected function return( array $args ) {
+	protected function return( array $args ) : Filter_Shared {
 		$this->set( $args );
 		return new Filter_Shared( $this, $args );
 	}
@@ -78,30 +78,32 @@ class Filter extends Argument_Abstract {
 	 * @param string $title
 	 * @param array  $meta_fields - [ $meta_key => $label ]
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
+	 * @return Filter_Shared
 	 */
-	public function meta_exists( $title, array $meta_fields ) {
+	public function meta_exists( string $title, array $meta_fields ) : Filter_Shared {
 		$_args = [
 			'title'       => $title,
 			'meta_exists' => $meta_fields,
 		];
 
 		return $this->return( $_args );
-
 	}
 
 
 	/**
-	 * Displays a text input for searching for posts that have that value for the given meta key.
-	 * Uses a LIKE '%{value}%' query in SQL.
+	 * Displays a text input for searching for posts that have that value
+	 * for the given meta key.
 	 *
-	 * @param $meta_key
+	 * Uses a LIKE '%{value}%' query in SQL.
 	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Admin-filters#post-meta-field-search-box
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
+	 * @param string $title
+	 * @param string $meta_key
+	 *
+	 * @return Filter_Shared
 	 */
-	public function meta_search( $title, $meta_key ) {
+	public function meta_search( string $title, string $meta_key ) : Filter_Shared {
 		$_args = [
 			'title'           => $title,
 			'meta_search_key' => $meta_key,
@@ -118,17 +120,14 @@ class Filter extends Argument_Abstract {
 	 * or as a callback function:
 	 *
 	 *
-	 * @param string         $title
-	 * @param string         $meta_key
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function()
+	 * @param string              $title
+	 * @param string              $meta_key
+	 * @param null|array|callable $options_or_callback - [ $key => $label ] || function()
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
+	 * @return Filter_Shared
 	 */
-	public function meta( $title, $meta_key, $options_or_callback = null ) {
-		$_args = [
-			'title'    => $title,
-			'meta_key' => $meta_key,
-		];
+	public function meta( string $title, string $meta_key, $options_or_callback = null ) : Filter_Shared {
+		$_args = compact( 'title', 'meta_key' );
 		if ( null !== $options_or_callback ) {
 			$_args['options'] = $options_or_callback;
 		}
@@ -145,15 +144,10 @@ class Filter extends Argument_Abstract {
 	 * @param string $title
 	 * @param string $taxonomy
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
+	 * @return Filter_Shared
 	 */
-	public function taxonomy( $title, $taxonomy ) {
-		$_args = [
-			'title'    => $title,
-			'taxonomy' => $taxonomy,
-		];
-
-		return $this->return( $_args );
+	public function taxonomy( string $title, string $taxonomy ) : Filter_Shared {
+		return $this->return( compact( 'title', 'taxonomy' ) );
 	}
 
 }
