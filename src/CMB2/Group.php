@@ -265,14 +265,4 @@ class Group extends Field {
 	public function group() : void {
 		throw new \LogicException( 'You cannot add a group to another group.' );
 	}
-
-
-	/**
-	 * @deprecated in favor of always registering via shorthand.
-	 */
-	public function add_field( Field $field ) : void {
-		\_deprecated_function( __METHOD__, '2.19.0', 'group' );
-		$this->add_field_to_group( $field );
-	}
-
 }

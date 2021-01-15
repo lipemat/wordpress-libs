@@ -180,10 +180,10 @@ class Options_Page extends Box {
 	/**
 	 * Options Page constructor.
 	 *
-	 * @param string $id
-	 * @param string $title
+	 * @param string      $id
+	 * @param string|null $title
 	 */
-	public function __construct( $id, $title ) {
+	public function __construct( string $id, ?string $title = null ) {
 		if ( null === $this->option_key ) {
 			$this->option_key = $id;
 		}
@@ -269,7 +269,7 @@ class Options_Page extends Box {
 	 * Option pages are stored in one big blob which means we
 	 * must implement logic to separate the fields when registering.
 	 *
-	 * Gives a universal place for ammending the config.
+	 * Gives a universal place for amending the config.
 	 *
 	 * @param Field $field
 	 * @param array $config
@@ -286,41 +286,11 @@ class Options_Page extends Box {
 			}, 9, 2 );
 		}
 
-		// Legacy, prior to lipemat/cmb2 2.7.0.7.
-		if ( \defined( 'CMB2_VERSION' ) && null !== $field->default && version_compare( CMB2_VERSION ?? '9.9.9.9', '2.7.0.7', '<' ) ) {
-			$this->default_values[ $field->get_id() ] = $field->default;
-			$this->once( function() {
-				add_filter( "cmb2_override_option_get_{$this->id}", [ $this, 'inject_defaults' ] );
-			}, __METHOD__ );
-		}
-
 		// Nothing to register.
 		if ( 2 > \count( $config ) ) {
 			return;
 		}
 
 		register_setting( 'options', $field->get_id(), $config );
-	}
-
-
-	/**
-	 * @deprecated 2.23.0
-	 */
-	public function inject_defaults() {
-		_deprecated_function( 'cmb2_override_option_get_{$this->id}', '2.7.0.7', 'Version 2.7.0.7 of lipemat/cmb2 has more reliable filters.' );
-		// Leaving the filter intact, creates infinite loops.
-		remove_filter( "cmb2_override_option_get_{$this->id}", [ $this, 'inject_defaults' ] );
-		// Get values either from network or regular options.
-		$values = cmb2_options( $this->id )->get_options();
-
-		foreach ( $this->default_values as $field => $default ) {
-			if ( empty( $values[ $field ] ) ) {
-				$values[ $field ] = $default;
-			}
-		}
-		// Add filter back in for subsequent calls.
-		add_filter( "cmb2_override_option_get_{$this->id}", [ $this, 'inject_defaults' ] );
-
-		return $values;
 	}
 }

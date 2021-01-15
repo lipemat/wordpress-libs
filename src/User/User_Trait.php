@@ -5,28 +5,28 @@ namespace Lipe\Lib\User;
 use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
- * @property string $nickname
- * @property string $description
- * @property string $user_description
- * @property string $first_name
- * @property string $user_firstname
- * @property string $last_name
- * @property string $user_lastname
- * @property string $user_login
- * @property string $user_pass
- * @property string $user_nicename
- * @property string $user_email
- * @property string $user_url
- * @property string $user_registered
- * @property string $user_activation_key
- * @property string $user_status
- * @property int    $user_level
- * @property string $display_name
- * @property string $spam
- * @property string $deleted
- * @property string $locale
- * @property string $rich_editing
- * @property string $syntax_highlighting
+ * @property string   $nickname
+ * @property string   $description
+ * @property string   $user_description
+ * @property string   $first_name
+ * @property string   $user_firstname
+ * @property string   $last_name
+ * @property string   $user_lastname
+ * @property string   $user_login
+ * @property string   $user_pass
+ * @property string   $user_nicename
+ * @property string   $user_email
+ * @property string   $user_url
+ * @property string   $user_registered
+ * @property string   $user_activation_key
+ * @property string   $user_status
+ * @property int      $user_level
+ * @property string   $display_name
+ * @property string   $spam
+ * @property string   $deleted
+ * @property string   $locale
+ * @property string   $rich_editing
+ * @property string   $syntax_highlighting
  * @property string[] $roles
  *
  * @method bool exists()
@@ -83,28 +83,6 @@ trait User_Trait {
 
 	public function get_id() : int {
 		return (int) $this->user_id;
-	}
-
-
-	/**
-	 * @return int
-	 * @deprecated
-	 *
-	 */
-	public function get_user_id() : int {
-		\_deprecated_function( 'get_user_id', '2.5.0', 'get_id' );
-
-		return $this->get_id();
-	}
-
-
-	/**
-	 * @deprecated In favor of $this->get_object()
-	 */
-	public function get_user() {
-		_deprecated_function( __METHOD__, '2.24.0', 'get_object' );
-
-		return $this->get_object();
 	}
 
 

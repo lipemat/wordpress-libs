@@ -37,11 +37,11 @@ class Box {
 	 * The context within the screen where the boxes should display.
 	 * Available contexts vary from screen to screen.
 	 *
-	 * @example 'normal', 'side', 'advanced' 'form_top',
-	 *          'before_permalink', 'after_title', 'after_editor'
+	 * @see     \Lipe\Lib\CMB2\Box::$remove_box_wrap
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#context
-	 * @see     \Lipe\Lib\CMB2\Box::$remove_box_wrap
+	 * @example 'normal', 'side', 'advanced' 'form_top',
+	 *          'before_permalink', 'after_title', 'after_editor'
 	 *
 	 * @var string
 	 */
@@ -58,7 +58,7 @@ class Box {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#title
 	 *
-	 * @var string
+	 * @var string|false
 	 */
 	protected $title = '';
 
@@ -157,11 +157,11 @@ class Box {
 	 * Override the rendering of the box on rest api responses.
 	 * Used to create an entirely custom response.
 	 *
-	 * @link https://gist.github.com/jtsternberg/a70e845aca44356b8fbf05aafff4d0c8
+	 * @link  https://gist.github.com/jtsternberg/a70e845aca44356b8fbf05aafff4d0c8
 	 *
 	 * @since CMB2 2.7.0
 	 *
-	 * @todo Add link to docs once they exist.
+	 * @todo  Add link to docs once they exist.
 	 *
 	 * @var callable
 	 */
@@ -171,13 +171,13 @@ class Box {
 	 * This parameter is for post alternate-context metaboxes only.
 	 * To output the fields 'naked' (without a postbox wrapper/style)
 	 *
-	 * @note Must set title of box to false
+	 * @note    Must set title of box to false
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#context
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#remove_box_wrap
 	 *
-	 * @see Box::$context
-	 * @see Box::remove_box_wrap();
+	 * @see     Box::$context
+	 * @see     Box::remove_box_wrap();
 	 *
 	 * @example true
 	 * @default false
@@ -214,12 +214,12 @@ class Box {
 	 * If set to false, WP will automatically fall back to the classic editor when
 	 * this box is loaded.
 	 *
-	 * @uses sets the `__block_editor_compatible_meta_box` meta box flag
-	 *
-	 * @see Box::get_args()
-	 * @see Box::$display_when_gutenberg_active
+	 * @see  Box::get_args()
+	 * @see  Box::$display_when_gutenberg_active
 	 *
 	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
+	 *
+	 * @uses sets the `__block_editor_compatible_meta_box` meta box flag
 	 *
 	 * @var bool
 	 */
@@ -232,12 +232,12 @@ class Box {
 	 * When the classic editor is loaded this meta box will load no matter what
 	 * this is set to.
 	 *
-	 * @uses sets the `__back_compat_meta_box` meta box flag
-	 *
-	 * @see Box::get_args()
-	 * @see Box::$gutenberg_compatible
+	 * @see  Box::get_args()
+	 * @see  Box::$gutenberg_compatible
 	 *
 	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
+	 *
+	 * @uses sets the `__back_compat_meta_box` meta box flag
 	 *
 	 * @var bool
 	 */
@@ -271,7 +271,7 @@ class Box {
 	 * @example WP_REST_Server::ALLMETHODS
 	 * @example WP_REST_Server::EDITABLE
 	 *
-	 * @notice Boxes must be registered on `cmb2_init` instead of `cmb2_admin_init`
+	 * @notice  Boxes must be registered on `cmb2_init` instead of `cmb2_admin_init`
 	 *         to use this property. Change in `Meta_Provider` if applicable
 	 *
 	 * @default false
@@ -302,7 +302,7 @@ class Box {
 	 * @example array( 'key' => 'page-template', 'value' => 'template-contact.php' )
 	 * @example array( 'key' => 'id', 'value' => array( 50, 24 ) )
 	 *
-	 * @var     []
+	 * @var  array{key:string,value:string|array<int>}
 	 */
 	public $show_on;
 
@@ -322,7 +322,7 @@ class Box {
 	/**
 	 * Tabs for this box
 	 *
-	 * @see \Lipe\Lib\CMB2\Box::add_tab()
+	 * @see     \Lipe\Lib\CMB2\Box::add_tab()
 	 * @since   1.2.0
 	 *
 	 * @var array
@@ -332,7 +332,7 @@ class Box {
 	/**
 	 * Tabs to display either vertical or horizontal
 	 *
-	 * @see Box::tabs_style()
+	 * @see     Box::tabs_style()
 	 * @since   1.2.0
 	 *
 	 * @var string
@@ -350,15 +350,15 @@ class Box {
 	/**
 	 * Box constructor.
 	 *
-	 * @param        $id
-	 * @param array  $object_types - [post type slugs], or 'user', 'term',
-	 *                             'comment', or 'options-page'
-	 * @param        $title
-	 * @param string $context      - 'normal', 'side', 'advanced', 'form_top',
-	 *                             'before_permalink', 'after_title',
-	 *                             'after_editor'
+	 * @param string      $id           - Id of this box.
+	 * @param array       $object_types - [post type slugs], or 'user', 'term',
+	 *                                  'comment', or 'options-page'
+	 * @param string|null $title        - Title of this box.
+	 * @param string      $context      - 'normal', 'side', 'advanced', 'form_top',
+	 *                                  'before_permalink', 'after_title',
+	 *                                  'after_editor'
 	 */
-	public function __construct( $id, array $object_types, $title, $context = 'normal' ) {
+	public function __construct( string $id, array $object_types, ?string $title = null, $context = 'normal' ) {
 		$this->id = $id;
 		$this->object_types = $object_types;
 		$this->title = $title;
@@ -368,8 +368,6 @@ class Box {
 
 	/**
 	 * Display a description at the top of a meta box, or an option's page
-	 *
-	 * @since 1.14.0
 	 *
 	 * @param string $description
 	 *
@@ -425,14 +423,15 @@ class Box {
 		}
 	}
 
+
 	/**
 	 * Add a tab to this box which can later be assigned to fields via
 	 * Field::tab( $id );
 	 *
-	 * @see \Lipe\Lib\CMB2\Field::tab();
-	 *
 	 * @param string $id
 	 * @param string $label
+	 *
+	 * @see     \Lipe\Lib\CMB2\Field::tab();
 	 *
 	 * @since   1.2.0
 	 *
@@ -443,15 +442,16 @@ class Box {
 		Tabs::init_once();
 	}
 
+
 	/**
 	 * Remove meta box wrap for alternate-context meta-boxes
 	 *
 	 * Takes care of setting the title to false which is required
 	 * by the native `remove_box_wrap` property
 	 *
-	 * @since 1.18.0
+	 * @link  https://github.com/CMB2/CMB2/wiki/Box-Properties#context
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#context
+	 * @since 1.18.0
 	 *
 	 * @return void
 	 */
@@ -459,6 +459,7 @@ class Box {
 		$this->title = false;
 		$this->remove_box_wrap = true;
 	}
+
 
 	/**
 	 * Should the tabs display vertical or horizontal?
@@ -482,7 +483,7 @@ class Box {
 	 *
 	 * @required
 	 *
-	 * @since 2.22.1
+	 * @since   2.22.1
 	 *
 	 * @example 'lipe/project/meta/category-fields',
 	 *
@@ -507,7 +508,6 @@ class Box {
 		$this->cmb = new_cmb2_box( $args );
 
 		return $this->cmb;
-
 	}
 
 
@@ -633,15 +633,6 @@ class Box {
 				register_meta( $type, $field->get_id() . '_id', $config );
 			}
 		}
-	}
-
-
-	/**
-	 * @deprecated in favor of always registering via shorthand.
-	 */
-	public function add_field( Field $field ) : void {
-		\_deprecated_function( __METHOD__, '2.19.0', 'field' );
-		$this->add_field_to_box( $field );
 	}
 
 }

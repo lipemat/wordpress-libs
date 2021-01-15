@@ -97,7 +97,7 @@ class Taxonomy {
 	/**
 	 * Whether to include the taxonomy in the REST API
 	 *
-	 * @notice Must be set to true to show in the Gutenberg editor
+	 * @notice  Must be set to true to show in the Gutenberg editor
 	 *
 	 * @default false
 	 *
@@ -236,9 +236,9 @@ class Taxonomy {
 	 * @requires WP 5.5.0+
 	 *
 	 * @var string|array {
-	 *          @type string       $name         Name of default term.
-	 *          @type string       $slug         Slug for default term. Default empty.
-	 *          @type string       $description  Description for default term. Default empty.
+	 * @type string $name        Name of default term.
+	 * @type string $slug        Slug for default term. Default empty.
+	 * @type string $description Description for default term. Default empty.
 	 *     }
 	 */
 	public $default_term;
@@ -251,9 +251,7 @@ class Taxonomy {
 	 */
 	public $sort;
 
-
 	public $slug;
-
 
 	/**
 	 * The taxonomy slug
@@ -302,18 +300,18 @@ class Taxonomy {
 	 * @notice set the class vars to edit arguments
 	 *
 	 * @param string       $taxonomy          - Taxonomy Slug ( will convert a title to a slug as well )
-	 * @param string|array $post_types        - may also be set by $this->post_types = array
+	 * @param string|array $post_types        - May also be set by $this->post_types = array
 	 * @param string|bool  $show_admin_column - Whether to generate a post list column or not.
 	 *                                        If a `string is passed` it wil be used for the
 	 *                                        column label
 	 * @param bool         $post_list_filter
 	 */
-	public function __construct( string $taxonomy, $post_types = '', $show_admin_column = false, $post_list_filter = false ) {
+	public function __construct( string $taxonomy, $post_types = [], $show_admin_column = false, $post_list_filter = false ) {
 		$this->post_types = (array) $post_types;
 
 		$this->show_admin_column = (bool) $show_admin_column;
 		$this->_post_list_filter = $post_list_filter;
-		$this->taxonomy          = strtolower( str_replace( ' ', '_', $taxonomy ) );
+		$this->taxonomy = strtolower( str_replace( ' ', '_', $taxonomy ) );
 		$this->hook();
 
 		if ( \is_string( $show_admin_column ) ) {
@@ -365,11 +363,11 @@ class Taxonomy {
 	 *
 	 * @static
 	 *
-	 * @param $taxonomy
+	 * @param string $taxonomy
 	 *
 	 * @return Taxonomy_Extended|Taxonomy|null
 	 */
-	public static function get_taxonomy( $taxonomy ) {
+	public static function get_taxonomy( string $taxonomy ) {
 		return self::$registry[ $taxonomy ] ?? null;
 	}
 
@@ -377,9 +375,9 @@ class Taxonomy {
 	/**
 	 * Filters to query to match the taxonomy drop-downs on the post list page
 	 *
-	 * @uses added to parse_tax_query action by $this->hook()
-	 *
 	 * @param \WP_Query $query
+	 *
+	 * @uses added to parse_tax_query action by $this->hook()
 	 *
 	 * @return void
 	 *
@@ -403,13 +401,11 @@ class Taxonomy {
 				'terms'    => $query->query_vars[ $this->taxonomy ],
 				'field'    => $field,
 			];
-
 		}
 
 		if ( ! empty( $tax_query ) ) {
 			$query->tax_query = new \WP_Tax_Query( $tax_query );
 		}
-
 	}
 
 
@@ -435,15 +431,16 @@ class Taxonomy {
 			'hide_empty'   => true,
 		];
 
-		$args['show_option_all'] = sprintf( __( 'All %s' ), $this->get_label( 'plural' ) );
-		$args['taxonomy']        = $this->taxonomy;
-		$args['name']            = $this->taxonomy;
+		/* translators: Plural label of taxonomy. */
+		$args['show_option_all'] = sprintf( __( 'All %s' ), $this->get_label( 'plural' ) ); //phpcs:ignore WordPress.WP.I18n.MissingArgDomain
+		$args['taxonomy'] = $this->taxonomy;
+		$args['name'] = $this->taxonomy;
 
 		if ( ! empty( $wp_query->query[ $this->taxonomy ] ) ) {
-			if ( ! is_numeric( $wp_query->query[ $this->taxonomy ] ) ) {
-				$args['selected'] = get_term_by( 'slug', $wp_query->query[ $this->taxonomy ], $this->taxonomy )->term_id;
-			} else {
+			if ( is_numeric( $wp_query->query[ $this->taxonomy ] ) ) {
 				$args['selected'] = $wp_query->query[ $this->taxonomy ];
+			} else {
+				$args['selected'] = get_term_by( 'slug', $wp_query->query[ $this->taxonomy ], $this->taxonomy )->term_id;
 			}
 			$been_filtered = true;
 		}
@@ -456,11 +453,10 @@ class Taxonomy {
 				style="margin: 0 4px 0 1px;"
 				href="<?php echo esc_url( admin_url( 'edit.php?post_type=' . esc_attr( $post_type ) ) ); ?>"
 				class="button">
-				<?php esc_html_e( 'Clear Filters' ); ?>
+				<?php esc_html_e( 'Clear Filters', 'lipe' ); ?>
 			</a>
 			<?php
 		}
-
 	}
 
 
@@ -484,13 +480,14 @@ class Taxonomy {
 	 * 2. 'slug'
 	 * 3. 'posts'
 	 *
+	 * @param string $column
+	 *
 	 * @since 2.21.0
 	 *
-	 * @param string $column
 	 */
 	public function remove_column( string $column ) : void {
 		add_filter( "manage_edit-{$this->taxonomy}_columns", function ( $columns ) use ( $column ) {
-			unset( $columns[ $column ]);
+			unset( $columns[ $column ] );
 			return $columns;
 		} );
 	}
@@ -550,9 +547,9 @@ class Taxonomy {
 	 *
 	 * @see   Taxonomy::$show_in_menu
 	 *
-	 * @internal
-	 *
 	 * @since 1.6.0
+	 *
+	 * @internal
 	 *
 	 * @return void
 	 */
@@ -570,9 +567,9 @@ class Taxonomy {
 					$order = \reset( $this->show_in_menu );
 				}
 				$submenu[ $parent ][ $order ] = [ //phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-					esc_attr( $tax->labels->menu_name ),
-					$tax->cap->manage_terms,
-					\sprintf( $edit_tags_file, $tax->name ),
+				                                  esc_attr( $tax->labels->menu_name ),
+				                                  $tax->cap->manage_terms,
+				                                  \sprintf( $edit_tags_file, $tax->name ),
 				];
 				\ksort( $submenu[ $parent ] );
 			}
@@ -593,7 +590,7 @@ class Taxonomy {
 	 *
 	 * @param string $label
 	 *
-	 * @see Taxonomy::__construct()
+	 * @see   Taxonomy::__construct()
 	 *
 	 * @since 2.21.1
 	 */
@@ -601,10 +598,11 @@ class Taxonomy {
 		Actions::in()->add_filter_all( array_map( function ( $post_type ) {
 			return "manage_{$post_type}_posts_columns";
 		}, $this->post_types ), function ( array $columns ) use ( $label ) {
-			$columns["taxonomy-{$this->taxonomy}"] = $label;
+			$columns[ 'taxonomy-' . $this->taxonomy ] = $label;
 			return $columns;
 		} );
 	}
+
 
 	/**
 	 * Set the default term which will be added to new posts which
@@ -623,11 +621,7 @@ class Taxonomy {
 	 * @return void
 	 */
 	public function set_default_term( string $slug, string $name, string $description = '' ) : void {
-		$this->default_term = [
-			'description' => $description,
-			'name'        => $name,
-			'slug'        => $slug,
-		];
+		$this->default_term = compact( 'description', 'name', 'slug' );
 	}
 
 
@@ -657,6 +651,7 @@ class Taxonomy {
 		return $parent_file;
 	}
 
+
 	/**
 	 * Handles any calls which need to run to register this taxnomy
 	 *
@@ -672,6 +667,7 @@ class Taxonomy {
 			$this->insert_initial_terms();
 		}
 	}
+
 
 	/**
 	 * Register this taxonomy with WordPress
@@ -799,7 +795,6 @@ class Taxonomy {
 		}
 
 		return $this->label_singular;
-
 	}
 
 
@@ -825,7 +820,7 @@ class Taxonomy {
 		}
 
 		$this->label_singular = $singular;
-		$this->label_plural   = $plural;
+		$this->label_plural = $plural;
 	}
 
 
@@ -861,7 +856,6 @@ class Taxonomy {
 		}
 
 		return $this->rewrite;
-
 	}
 
 
@@ -871,31 +865,9 @@ class Taxonomy {
 	 * @param string $label - the label to set it to
 	 *
 	 * @return void
-	 *
 	 */
-	public function set_menu_label( $label ) : void {
+	public function set_menu_label( string $label ) : void {
 		$this->label_menu = $label;
-	}
-
-
-
-	/**
-	 * @deprecated 2.19.0 in favor of `add_initial_terms`.
-	 */
-	public function set_default_terms( $terms ) : void {
-		\_deprecated_function( __METHOD__, '2.19.0', 'add_initial_terms' );
-		$this->add_initial_terms( $terms );
-	}
-
-
-	/**
-	 * @deprecated 2.19.0 without a replacement.
-	 */
-	public function register_default_terms() : void {
-		\_deprecated_function( __METHOD__, '2.19.0' );
-		if ( $this->initial_terms ) {
-			$this->insert_initial_terms();
-		}
 	}
 
 }

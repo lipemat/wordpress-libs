@@ -3,8 +3,6 @@
 namespace Lipe\Lib\Schema;
 
 /**
- * Meta Box
- *
  * The base meta box class. To extend this, implement the
  * render() and save() functions.
  *
@@ -91,6 +89,7 @@ abstract class Meta_Box {
 
 	public $post_type;
 
+
 	/**
 	 * @abstract
 	 *
@@ -98,7 +97,8 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	abstract public function render( $post ) : void;
+	abstract public function render( \WP_Post $post ) : void;
+
 
 	/**
 	 * @abstract
@@ -108,7 +108,7 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	abstract protected function save( $post_id, $post ) : void;
+	abstract protected function save( int $post_id, \WP_Post $post ) : void;
 
 
 	/**
@@ -140,7 +140,7 @@ abstract class Meta_Box {
 
 		self::$registry[ $post_type ][ $this->id ] = $this;
 
-		$args = wp_parse_args( $args, [
+		$args = (array) wp_parse_args( $args, [
 			'title'         => null,
 			'context'       => 'advanced',
 			'priority'      => 'default',
@@ -181,9 +181,9 @@ abstract class Meta_Box {
 	 *
 	 * @return string A unique identifier for this meta box
 	 */
-	protected static function build_id( $post_type, $class ) : string {
+	protected static function build_id( string $post_type, string $class ) : string {
+		static $append = 0;
 		$id = $post_type . '-' . $class;
-		$append = 0;
 		$appended = $id . ( $append ? '-' . $append : '' );
 		if ( isset( self::$registry[ $post_type ][ $appended ] ) ) {
 			$append ++;
@@ -201,7 +201,7 @@ abstract class Meta_Box {
 	 * @return void
 	 */
 	public static function display_nonce() : void {
-		if ( ! empty( self::$registry[ get_post_type() ] ) ) {
+		if ( ! empty( self::$registry[ (string) get_post_type() ] ) ) {
 			wp_nonce_field( self::NONCE_ACTION, self::NONCE_NAME );
 		}
 	}
@@ -215,7 +215,7 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	public static function save_meta_boxes( $post_id, $post ) : void {
+	public static function save_meta_boxes( int $post_id, \WP_Post $post ) : void {
 		if ( ! self::should_meta_boxes_be_saved( $post_id, $post ) ) {
 			return;
 		}
@@ -240,14 +240,14 @@ abstract class Meta_Box {
 	 *
 	 * @return bool
 	 */
-	protected static function should_meta_boxes_be_saved( $post_id, $post ) : bool {
+	protected static function should_meta_boxes_be_saved( int $post_id, \WP_Post $post ) : bool {
 		// make sure this is a valid submission
 		if ( ! isset( $_POST[ self::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_NAME ], self::NONCE_ACTION ) ) {
 			return false;
 		}
 
 		// don't do anything on autosave, auto-draft, bulk edit, or quick edit
-		if ( 'auto-draft' === $post->post_status || isset( $_GET['bulk_edit'] ) || wp_is_post_autosave( $post_id ) || \wp_doing_ajax() || wp_is_post_revision( $post_id ) ) {
+		if ( 'auto-draft' === $post->post_status || isset( $_GET['bulk_edit'] ) || wp_is_post_autosave( $post_id ) || wp_doing_ajax() || wp_is_post_revision( $post_id ) ) {
 			return false;
 		}
 
@@ -265,7 +265,7 @@ abstract class Meta_Box {
 	 *
 	 * @return Meta_Box|null
 	 */
-	public static function get_meta_box_by_id( $post_type, $id ) : ?Meta_Box {
+	public static function get_meta_box_by_id( string $post_type, string $id ) : ?Meta_Box {
 		return self::$registry[ $post_type ][ $id ] ?? null;
 	}
 
@@ -279,7 +279,7 @@ abstract class Meta_Box {
 	 * @return bool Whether a meta box with the given class has been
 	 *              registered for the given post type
 	 */
-	public static function has_meta_box( $post_type, $class ) : bool {
+	public static function has_meta_box( string $post_type, string $class ) : bool {
 		return null !== self::get_meta_box( $post_type, $class );
 	}
 
@@ -297,7 +297,7 @@ abstract class Meta_Box {
 	 *
 	 * @return Meta_Box|null
 	 */
-	public static function get_meta_box( $post_type, $class ) : ?Meta_Box {
+	public static function get_meta_box( string $post_type, string $class ) : ?Meta_Box {
 		if ( ! isset( self::$registry[ $post_type ] ) ) {
 			return null;
 		}
@@ -427,25 +427,8 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	public function set_callback_args( $args ) : void {
+	public function set_callback_args( ?array $args ) : void {
 		$this->callback_args = $args;
-	}
-
-
-	/**
-	 * @deprecated Impossible to sanitize, don't use this
-	 */
-	public function save_meta_field( $post_id, $field ) : void {
-		\_deprecated_function( 'save_meta_field', '1.13.0', 'Handle sanitization and saving yourself!!' );
-		// phpcs:disable
-		foreach ( (array) $field as $this_field ) {
-			if ( ! empty( $_POST[ $this_field ] ) ) {
-				update_post_meta( $post_id, $this_field, $_POST[ $this_field ] );
-			} else {
-				update_post_meta( $post_id, $this_field, null );
-			}
-		}
-		//phpcs:enable
 	}
 
 
@@ -455,9 +438,9 @@ abstract class Meta_Box {
 	 * @param int          $post_id
 	 * @param string|array $fields
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-	public function get_values( $post_id, $fields ) {
+	public function get_values( int $post_id, $fields ) : array {
 		$meta = [];
 
 		foreach ( (array) $fields as $this_field ) {

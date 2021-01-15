@@ -64,15 +64,6 @@ trait Site_Trait {
 	}
 
 
-	/**
-	 * @deprecated In favor of $this->get_object()
-	 */
-	public function get_site() : ?\WP_Site {
-		\_deprecated_function( __METHOD__, '2.0.0', 'get_object' );
-		return $this->get_object();
-	}
-
-
 	public function get_object() : ?\WP_Site {
 		if ( null === $this->site ) {
 			$this->site = \get_site( $this->blog_id );

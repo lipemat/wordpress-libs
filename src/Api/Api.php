@@ -14,12 +14,6 @@ use Lipe\Lib\Util\Arrays;
  * 1. `get_action`
  * 2. `get_url`
  *
- * For JS requests you will need to pass the following parameters to your JS App.
- * This is assuming you want to use this instead of the default WP AJAX functionality.
- * 1. ENDPOINT - OR Pass full URL via `get_root_url` or URLS specific to endpoints via `get_url`.
- * 2. FORMAT (optional if using ASSOC arrays) - $_REQUEST key
- * 3. FORMAT_ASSOC (optional if using ASSOC arrays) - $_REQUEST value
- *
  *
  * @example Api::init();
  *          add_action( Api::in()->get_action( 'space' ), 'print_r' )
@@ -32,13 +26,11 @@ class Api {
 
 	public const NAME = 'lipe/lib/api/api';
 
-	public const ENDPOINT = 'api';
+	public const ENDPOINT     = 'api';
 	public const FORMAT       = '_format';
 	public const FORMAT_ASSOC = 'assoc';
 
-	protected const VERSION  = '2.1.0';
-
-
+	protected const VERSION = '2.1.0';
 
 	/**
 	 * Are we currently handling an api request?
@@ -84,32 +76,32 @@ class Api {
 	/**
 	 * Get the url used to hit the api endpoint.
 	 *
-	 * @param string $endpoint - Same action provided to the `get_action` method of this class
-	 *                         when calling `add_action()`.
-	 *                         Should be a url friendly slug which is unique to this API system.
+	 * @param string|null $endpoint - Same action provided to the `get_action` method
+	 *                              of this class when calling `add_action()`.
+	 *                              Should be a url friendly slug which is unique to
+	 *                              this API system.
 	 *
-	 * @param array  $data     - Data passed via the url separated by '/'.
-	 *                         Numeric arrays will have values spread in order.
-	 *                         Associative arrays will resolve to an
-	 *                         array of key values, just as provided.
-	 *
-	 * @since   2.11.0
+	 * @param array       $data     - Data passed via the url separated by '/'.
+	 *                              Numeric arrays will have values spread in order.
+	 *                              Associative arrays will resolve to an
+	 *                              array of key values, just as provided.
 	 *
 	 * @example get_api_url( 'load_more', [ 'page => 2 ] );
 	 *
 	 * @example get_api_url( 'load_more', [ 'page', 2 ] );
+	 * @since   2.11.0
+	 *
 	 * @return string
 	 */
 	public function get_url( ?string $endpoint = null, array $data = [] ) : string {
-		$url = \trailingslashit( $this->get_root_url() . $endpoint );
+		$url = trailingslashit( $this->get_root_url() . $endpoint );
 
 		if ( empty( $data ) ) {
 			return $url;
 		}
 
-		if ( array_values( $data ) === $data ) {
+		if ( \array_values( $data ) === $data ) {
 			$url .= trailingslashit( implode( '/', $data ) );
-
 		} else {
 			\array_walk_recursive( $data, function ( $value, $param ) use ( &$url ) {
 				$url .= "{$param}/{$value}/";
@@ -132,9 +124,9 @@ class Api {
 	 * @return string
 	 */
 	public function get_root_url() : string {
-		return \trailingslashit( trailingslashit( get_home_url() ) . static::ENDPOINT  );
-
+		return trailingslashit( trailingslashit( get_home_url() ) . static::ENDPOINT );
 	}
+
 
 	/**
 	 * Register the 'api' endpoint on the root of the site.
@@ -167,28 +159,13 @@ class Api {
 
 		$this->doing_api = true;
 
-		$args     = array_filter( explode( '/', $wp->query_vars[ self::NAME ] ) );
-		$endpoint = array_shift( $args );
+		$args = \array_filter( \explode( '/', $wp->query_vars[ self::NAME ] ) );
+		$endpoint = \array_shift( $args );
 
 		if ( ! empty( $_REQUEST[ static::FORMAT ] ) && static::FORMAT_ASSOC === $_REQUEST[ static::FORMAT ] ) {
 			$args = Arrays::in()->array_chunk_to_associative( $args );
 		}
 
 		do_action( $this->get_action( $endpoint ), $args );
-
-		if ( has_action( "lipe/lib/util/api_{$endpoint}" ) ) {
-			\_deprecated_hook( esc_html( "lipe/lib/util/api_{$endpoint}" ), '2.1.1', esc_html( $this->get_action( $endpoint ) ) );
-			do_action( "lipe/lib/util/api_{$endpoint}", $args );
-		}
-	}
-
-
-	/**
-	 * @deprecated 2.11.0
-	 */
-	public function get_api_url( ?string $action = null, array $data = [] ) : string {
-		_deprecated_function( 'Api::get_api_url', '2.11.0', 'Api::get_url' );
-
-		return $this->get_url( $action, array_values( $data ) );
 	}
 }

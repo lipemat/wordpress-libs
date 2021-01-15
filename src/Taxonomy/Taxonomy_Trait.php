@@ -5,16 +5,16 @@ namespace Lipe\Lib\Taxonomy;
 use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
- * @property int $count
+ * @property int    $count
  * @property string $description
  * @property string $filter
  * @property string $name
- * @property int $parent
+ * @property int    $parent
  * @property string $slug
  * @property string $taxonomy
- * @property int $term_group
- * @property int $term_id
- * @property int $term_taxonomy_id
+ * @property int    $term_group
+ * @property int    $term_id
+ * @property int    $term_taxonomy_id
  */
 trait Taxonomy_Trait {
 	use Mutator_Trait;
@@ -41,16 +41,6 @@ trait Taxonomy_Trait {
 		} else {
 			$this->term_id = $term;
 		}
-	}
-
-
-	/**
-	 * @deprecated In favor of $this->get_object()
-	 */
-	public function get_term() : ?\WP_Term {
-		_deprecated_function( __METHOD__, '2.24.0', 'get_object' );
-
-		return $this->get_object();
 	}
 
 

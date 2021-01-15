@@ -7,9 +7,9 @@ use Lipe\Lib\Traits\Version;
 /**
  * Interact with custom Database Tables
  *
- * Set the necessary class constants in the child class like so
+ * Set the necessary class constants in the child class like so:
  *
- * protected const NAME = 'personal'; //table name without prefix (prefix is set during construct)
+ * protected const NAME = 'personal'; // Table name without prefix (prefix is set during construct)
  * protected const ID_FIELD = 'personal_id';
  * protected const DB_VERSION = 1;
  *
@@ -18,28 +18,32 @@ use Lipe\Lib\Traits\Version;
 abstract class Db {
 	use Version;
 
-	public const NAME = __CLASS__;
+	public const    NAME     = __CLASS__;
 	protected const ID_FIELD = __CLASS__;
 
 	/**
+	 * Version of the table scheme.
 	 *
+	 * Bump to run `create_table` again when the table scheme changes.
 	 */
 	public const DB_VERSION = 1;
 
 	/**
-	 * Db columns with corresponding data type
-	 * Used to sanitize queries
+	 * Database columns with corresponding data type.
+	 * Used to sanitize queries with any of the built in sprintf specifiers.
 	 *
-	 * @see     May exclude the primary key from this list if it is auto increment
-	 * @see     Date should be added to this list even if default current timestamp
+	 * @notice     May exclude the primary key from this list if it is auto increment
+	 * @notice     Date should be added to this list even if default current timestamp
 	 *
-	 * @example array(
+	 * @link       https://www.php.net/manual/en/function.sprintf.php
+	 *
+	 * @example    array(
 	 * 'user_id'      => "%d",
 	 * 'content_id'   => "%s",
 	 * 'content_type' => "%s",
+	 * 'amount'       => "%f",
 	 * 'date'         => "%d"
 	 * );
-	 *
 	 *
 	 * @var array
 	 */
@@ -61,15 +65,10 @@ abstract class Db {
 	 * @see Db::NAME
 	 */
 	public function __construct() {
-		if ( __CLASS__ === static::NAME ) {
-			_doing_it_wrong( __METHOD__, 'The Db class requires a `static::NAME`.', '2.23.0' );
-			return;
-		}
-
 		global $wpdb;
 		$this->table = $wpdb->prefix . static::NAME;
 
-		$this->run_for_version( [ $this, 'run_updates' ], $this->get_db_version() );
+		$this->run_for_version( [ $this, 'run_updates' ], static::DB_VERSION );
 	}
 
 
@@ -89,21 +88,21 @@ abstract class Db {
 	 * Automatically maps the results to a single value or row if the
 	 * `$count` is set to 1.
 	 *
-	 * @param array<string>|string $columns    - Array or CSV of columns we want to return.
-	 *                                         Pass '*' to return all columns.
+	 * @param array<string>|string $columns      - Array or CSV of columns we want to return.
+	 *                                           Pass '*' to return all columns.
 	 *
-	 * @param array|int [$id_or_wheres] - Row id or array or where column => value.
-	 *                                         Adding a % within the value will turn the query
-	 *                                         into a `LIKE` query
+	 * @param array|int            $id_or_wheres - Row id or array or where column => value.
+	 *                                           Adding a % within the value will turn the
+	 *                                           query into a `LIKE` query.
 	 *
-	 * @param bool       [$count] - Number of rows to return.
-	 *                                         If set to 1 this will return a single value
-	 *                                         or row depending on the number of columns
-	 *                                         set in `$columns`.
+	 * @param int                  $count        - Number of rows to return.
+	 *                                           If set to 1 this will return a single value
+	 *                                           or row depending on the number of columns
+	 *                                           set in `$columns`.
 	 *
-	 * @param string               $order_by   - An ORDERBY column and direction.
-	 *                                         Optionally pass `ASC` or `DESC` after the
-	 *                                         column to specify direction.
+	 * @param string               $order_by     - An ORDERBY column and direction.
+	 *                                           Optionally pass `ASC` or `DESC` after the
+	 *                                           column to specify direction.
 	 *
 	 * @return array<object>|object|string|int
 	 *
@@ -116,15 +115,15 @@ abstract class Db {
 		}
 
 		if ( is_numeric( $id_or_wheres ) ) {
-			$id_or_wheres = [ $this->get_id_field() => $id_or_wheres ];
-			$count        = 1;
+			$id_or_wheres = [ static::ID_FIELD => $id_or_wheres ];
+			$count = 1;
 		}
 
 		$sql = "SELECT $columns FROM {$this->get_table()}";
 
 		if ( null !== $id_or_wheres ) {
-			$wheres        = [];
-			$values        = [];
+			$wheres = [];
+			$values = [];
 			$where_formats = $this->get_formats( $id_or_wheres );
 			foreach ( $id_or_wheres as $column => $value ) {
 				if ( false !== strpos( $value, '%' ) ) {
@@ -136,7 +135,7 @@ abstract class Db {
 			}
 			$where = ' WHERE ' . implode( ' AND ', $wheres );
 			//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-			$sql   .= $wpdb->prepare( $where, $values );
+			$sql .= $wpdb->prepare( $where, $values );
 		}
 
 		if ( null !== $order_by ) {
@@ -147,14 +146,12 @@ abstract class Db {
 			$sql .= " LIMIT $count";
 		}
 
-
 		if ( '*' === $columns || \substr_count( $columns, ',' ) > 1 ) {
 			if ( 1 === $count ) {
 				return $wpdb->get_row( $sql );
 			}
 
 			return $wpdb->get_results( $sql );
-
 		}
 		if ( 1 === $count ) {
 			return $wpdb->get_var( $sql );
@@ -171,7 +168,6 @@ abstract class Db {
 	 *
 	 * @param int $id - Primary key value.
 	 *
-	 * @since 2.23.2
 	 *
 	 * @return object|null
 	 */
@@ -185,8 +181,6 @@ abstract class Db {
 	 *
 	 * @param array $columns
 	 *
-	 * @see Db::COLUMNS
-	 *
 	 * @return int|bool - insert id on success or false
 	 */
 	public function add( array $columns ) {
@@ -194,17 +188,19 @@ abstract class Db {
 
 		$columns = $this->sort_columns( $columns );
 
-		if ( $wpdb->insert( $this->get_table(), $columns, $this->get_columns() ) ) {
+		if ( $wpdb->insert( $this->get_table(), $columns, static::COLUMNS ) ) {
 			return $wpdb->insert_id;
 		}
 
 		return false;
 	}
 
+
 	/**
 	 * Delete a row from the database
 	 *
 	 * @param int|array $id_or_wheres - row id or array or column => values to use as where
+	 *
 	 * @since 1.6.1
 	 *
 	 * @return int|false
@@ -213,13 +209,12 @@ abstract class Db {
 		global $wpdb;
 
 		if ( is_numeric( $id_or_wheres ) ) {
-			$id_or_wheres = [ $this->get_id_field() => $id_or_wheres ];
+			$id_or_wheres = [ static::ID_FIELD => $id_or_wheres ];
 		}
 
 		$formats = $this->get_formats( $id_or_wheres );
 
 		return $wpdb->delete( $this->get_table(), $id_or_wheres, $formats );
-
 	}
 
 
@@ -228,15 +223,13 @@ abstract class Db {
 	 * @param int|array $id_or_wheres - row id or array or column => values to use as where
 	 * @param array     $columns      - data to change
 	 *
-	 * @see Db::COLUMNS
-	 *
 	 * @return int|bool - number of rows updated or false on error
 	 */
 	public function update( $id_or_wheres, array $columns ) {
 		global $wpdb;
 
 		if ( is_numeric( $id_or_wheres ) ) {
-			$id_or_wheres = [ $this->get_id_field() => $id_or_wheres ];
+			$id_or_wheres = [ static::ID_FIELD => $id_or_wheres ];
 		}
 
 		$column_formats = $this->get_formats( $columns );
@@ -244,12 +237,13 @@ abstract class Db {
 		$formats = $this->get_formats( $id_or_wheres );
 
 		return $wpdb->update( $this->get_table(), $columns, $id_or_wheres, $column_formats, $formats );
-
 	}
 
 
 	/**
 	 * Get the sprintf style formats matching an array of columns
+	 *
+	 * @link https://www.php.net/manual/en/function.sprintf.php
 	 *
 	 * @param array $columns
 	 *
@@ -258,10 +252,10 @@ abstract class Db {
 	protected function get_formats( array $columns ) : array {
 		$formats = [];
 		foreach ( $columns as $column => $value ) {
-			if ( $column === $this->get_id_field() ) {
+			if ( static::ID_FIELD === $column ) {
 				$formats[] = '%d';
-			} elseif ( ! empty( $this->get_columns()[ $column ] ) ) {
-				$formats[] = $this->get_columns()[ $column ];
+			} elseif ( ! empty( static::COLUMNS[ $column ] ) ) {
+				$formats[] = static::COLUMNS[ $column ];
 			} else {
 				$formats[] = '%s';
 			}
@@ -272,77 +266,27 @@ abstract class Db {
 
 
 	/**
-	 * Sorts columns to match $this->columns for use with query sanitization
+	 * Sorts columns to match `static::COLUMNS` for use with query sanitization.
 	 *
 	 * @param array $columns
 	 *
-	 * @uses Db::COLUMNS
+	 * @see Db::COLUMNS
 	 *
 	 * @return array
 	 */
 	protected function sort_columns( array $columns ) : array {
 		$clean = [];
 
-		foreach ( $this->get_columns() as $column => $type ) {
-			if ( array_key_exists( $column, $columns ) ) {
+		foreach ( static::COLUMNS as $column => $type ) {
+			if ( \array_key_exists( $column, $columns ) ) {
 				$clean[ $column ] = $columns[ $column ];
-				//because we usually let mysql handle default dates
+				// Because we usually let MySQL handle default dates.
 			} elseif ( 'date' !== $column ) {
 				$clean[ $column ] = null;
 			}
 		}
 
 		return $clean;
-	}
-
-
-	/**
-	 * Deprecated in favor of using the constant directly.
-	 *
-	 * @deprecated
-	 */
-	public function get_id_field() : string {
-		_deprecated_function( __METHOD__, '2.24.0', 'static::ID_FIELD' );
-
-		if ( __CLASS__ === static::ID_FIELD ) {
-			_deprecated_argument( 'id_field', '2.23.0', 'Using a variable for id field is deprecated. Use the `static::ID_FIELD)` const.' );
-
-			return isset( $this->id_field ) ? $this->id_field : '';
-		}
-
-		return static::ID_FIELD;
-	}
-
-
-	/**
-	 * Deprecated in favor of using the constant directly.
-	 *
-	 * @deprecated
-	 */
-	public function get_columns() : array {
-		_deprecated_function( __METHOD__, '2.24.0', 'static::COLUMNS' );
-		if ( empty( static::COLUMNS ) ) {
-			_deprecated_argument( 'columns', '2.23.0', 'Using a variable for columns is deprecated. Use the `static::COLUMNS` const.' );
-			return isset( $this->columns ) ? $this->columns : [];
-		}
-		return static::COLUMNS;
-	}
-
-
-	/**
-	 * Deprecated in favor of using the constant directly.
-	 *
-	 * @deprecated
-	 */
-	protected function get_db_version() : string {
-		_deprecated_function( __METHOD__, '2.24.0', 'static::DB_VERSION' );
-
-		if ( empty( static::DB_VERSION ) ) {
-			_deprecated_argument( 'db_version', '2.23.0', 'Using a variable for db version is deprecated. Use the `static::DB_VERSION` const.' );
-			return isset( $this->db_version ) ? $this->db_version : '1';
-		}
-
-		return static::DB_VERSION;
 	}
 
 

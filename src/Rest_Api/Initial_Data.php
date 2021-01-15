@@ -109,13 +109,4 @@ class Initial_Data {
 			return $request;
 		}, __METHOD__ );
 	}
-
-
-	/**
-	 * @deprecated 2.19.0
-	 */
-	protected function get_server() : \WP_REST_Server {
-		\_deprecated_function( __METHOD__, '2.19.0', '\rest_get_server' );
-		return rest_get_server();
-	}
 }

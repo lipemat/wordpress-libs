@@ -34,6 +34,13 @@
         <exclude name="Generic" />
         <exclude name="Squiz" />
     </rule>
+	<rule ref="WordPress.Security.ValidatedSanitizedInput">
+		<properties>
+			<property name="customUnslashingSanitizingFunctions" type="array">
+				<element value="wp_verify_nonce" />
+			</property>
+		</properties>
+	</rule>
     <rule ref="WordPress.WP.I18n">
         <properties>
             <property name="text_domain" type="array" value="lipe" />
