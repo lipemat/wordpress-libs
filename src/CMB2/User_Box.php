@@ -3,12 +3,7 @@
 namespace Lipe\Lib\CMB2;
 
 /**
- * User_Box
- *
- * @author  Mat Lipe
- * @since   7/28/2017
- *
- * @package Lipe\Lib\CMB2
+ * CMB2 meta box for users
  */
 class User_Box extends Box {
 	/**

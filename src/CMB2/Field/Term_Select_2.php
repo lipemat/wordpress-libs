@@ -8,10 +8,7 @@ use Lipe\Lib\Theme\Styles;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * Select 2 Field for Terms
- *
- * @author  Mat Lipe
- * @since   1.2.0
+ * Select 2 Field for Terms.
  *
  *
  * @example $field = new Field( self::DISPLAYED_TAG, 'Displayed Tags' );

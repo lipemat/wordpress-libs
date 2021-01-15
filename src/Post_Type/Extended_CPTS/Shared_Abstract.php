@@ -3,12 +3,8 @@
 namespace Lipe\Lib\Post_Type\Extended_CPTS;
 
 /**
- * Shared_Abstract
+ * Base class for an Extended CPT shared.
  *
- * @author  Mat Lipe
- * @since   7/30/2017
- *
- * @package Lipe\Lib\Post_Type\Extended_CPTS
  */
 abstract class Shared_Abstract {
 	/**

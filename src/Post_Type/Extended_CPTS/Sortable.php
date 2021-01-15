@@ -23,11 +23,6 @@ use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
  * 'orderby'   => $sort_key,
  * 'order'     => 'DESC',
  * ) );
- *
- * @author  Mat Lipe
- * @since   7/29/2017
- *
- * @package Lipe\Lib\Post_Type\Custom_Post_Type_Extended
  */
 class Sortable extends Argument_Abstract {
 	protected $CPTS;

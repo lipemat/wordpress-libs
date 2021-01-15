@@ -124,8 +124,6 @@ class Styles {
 	 *
 	 * @param string $class
 	 *
-	 * @since 2.13.0
-	 *
 	 */
 	public function add_body_class( string $class ) : void {
 		static::$body_class[] = $class;
@@ -153,9 +151,6 @@ class Styles {
 	 * A positive effect of this attribute is that the DOM will be available for your script.
 	 *
 	 * @param string $handle - The handle used to enqueued this script.
-	 *
-	 *
-	 * @since 2.13.0
 	 *
 	 * @return void
 	 */
@@ -186,8 +181,6 @@ class Styles {
 	 *
 	 * @param string $handle - The handle used to enqueued this script.
 	 *
-	 * @since 2.13.0
-	 *
 	 * @return void
 	 */
 	public function async_javascript( string $handle ) : void {
@@ -213,8 +206,6 @@ class Styles {
 	 * @param string $handle    - The handle used to enqueued this script.
 	 *
 	 * @param string $integrity - Integrity hash to add
-	 *
-	 * @since 2.13.1
 	 *
 	 * @return void
 	 */

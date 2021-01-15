@@ -11,7 +11,6 @@ trait Singleton {
 
 	/**
 	 * @static
-	 * @since 1.2.0
 	 *
 	 * @var bool
 	 */
@@ -38,8 +37,6 @@ trait Singleton {
 	 * class will only init() one time.
 	 *
 	 * @static
-	 *
-	 * @since 1.2.0
 	 *
 	 * @return void
 	 */

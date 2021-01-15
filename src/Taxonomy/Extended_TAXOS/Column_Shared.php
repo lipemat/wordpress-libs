@@ -5,12 +5,8 @@ namespace Lipe\Lib\Taxonomy\Extended_TAXOS;
 use Lipe\Lib\Post_Type\Extended_CPTS\Shared_Abstract;
 
 /**
- * Column_Shared
+ * Base class for an Extended TAXOS shared column.
  *
- * @author  Mat Lipe
- * @since   7/29/2017
- *
- * @package Lipe\Lib\Taxonomy\Taxonomy_Extended
  */
 class Column_Shared extends Shared_Abstract {
 	protected $column;

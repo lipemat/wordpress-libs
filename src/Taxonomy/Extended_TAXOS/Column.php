@@ -6,12 +6,8 @@ use Lipe\Lib\Post_Type\Extended_CPTS\Argument_Abstract;
 use Lipe\Lib\Taxonomy\Taxonomy_Extended;
 
 /**
- * Column
+ * Base class for an Extended TAXOS argument.
  *
- * @author  Mat Lipe
- * @since   7/29/2017
- *
- * @package Lipe\Lib\Taxonomy\Taxonomy_Extended
  */
 class Column extends Argument_Abstract {
 

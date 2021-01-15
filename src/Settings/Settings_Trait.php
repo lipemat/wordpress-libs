@@ -5,10 +5,7 @@ namespace Lipe\Lib\Settings;
 use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
- * CMB2 registered settings pages
- *
- * @author Mat Lipe
- * @since  2.0.0
+ * CMB2 registered settings pages.
  *
  */
 trait Settings_Trait {
@@ -46,8 +43,6 @@ trait Settings_Trait {
 	 *                              previous value as the only argument.
 	 * @param mixed                 If a callable is passed with an additional argument,
 	 *                              it be be used as the default value for `$this->get_meta()`.
-	 *
-	 * @since 2.17.0 (Support passing a callback as the second argument)
 	 *
 	 * @return void
 	 */

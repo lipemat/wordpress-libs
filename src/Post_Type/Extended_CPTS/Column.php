@@ -5,12 +5,7 @@ namespace Lipe\Lib\Post_Type\Extended_CPTS;
 use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
 
 /**
- * Column
- *
- * @author  Mat Lipe
- * @since   7/29/2017
- *
- * @package Lipe\Lib\Post_Type\Custom_Post_Type_Extended
+ * Base class for an Extended CPT column.
  */
 class Column extends Argument_Abstract {
 
@@ -63,7 +58,7 @@ class Column extends Argument_Abstract {
 	 *
 	 * @param array $args
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 * @return Column_Shared
 	 */
 	protected function return( array $args ) {
 		$this->set( $args );
@@ -79,7 +74,7 @@ class Column extends Argument_Abstract {
 	 * @param string   $title
 	 * @param callable $callback
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 * @return Column_Shared
 	 */
 	public function custom( $title, $callback ) {
 		$_args = [
@@ -109,7 +104,7 @@ class Column extends Argument_Abstract {
 	 * @param null   $meta_field
 	 * @param null   $meta_value
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 * @return Column_Shared
 	 */
 	public function p2p( $title, $connection_type, $link_to = 'edit', $meta_field = null, $meta_value = null ) {
 		$_args = [
@@ -141,7 +136,7 @@ class Column extends Argument_Abstract {
 	 * @param string $title
 	 * @param string $field - any \WP_Post field
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 * @return Column_Shared
 	 */
 	public function post_field( $title, $field ) {
 		$_args = [
@@ -164,7 +159,7 @@ class Column extends Argument_Abstract {
 	 * @param int    $width
 	 * @param int    $height
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 * @return Column_Shared
 	 */
 	public function featured_image( $title, $image_size = 'thumbnail', $width = null, $height = null ) {
 		$_args = [
@@ -193,7 +188,7 @@ class Column extends Argument_Abstract {
 	 * @param string $taxonomy
 	 * @param string $link_to - 'view', 'edit', 'list' (Default 'edit' )
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 * @return Column_Shared
 	 */
 	public function taxonomy( $title, $taxonomy, $link_to = 'edit' ) {
 		$_args = [
@@ -219,7 +214,7 @@ class Column extends Argument_Abstract {
 	 * @param string $meta_key
 	 * @param string $date_format
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 * @return Column_Shared
 	 */
 	public function meta( $title, $meta_key, $date_format = null ) {
 		$_args = [

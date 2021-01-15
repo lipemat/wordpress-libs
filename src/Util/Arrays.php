@@ -5,8 +5,7 @@ namespace Lipe\Lib\Util;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * @author Mat Lipe
- * @since  December, 2018
+ * Array helpers.
  *
  */
 class Arrays {
@@ -21,14 +20,12 @@ class Arrays {
 	 *
 	 * @example ['page', 3, 'category', 6 ] becomes [ 'page' => 3, 'category' => 6 ]
 	 *
-	 * @since   2.11.0
-	 *
 	 * @return array
 	 */
 	public function array_chunk_to_associative( array $array ) : array {
 		$assoc = [];
 		foreach ( array_chunk( $array, 2 ) as $pair ) {
-			if ( 2 === count( $pair ) ) {
+			if ( 2 === \count( $pair ) ) {
 				[ $key, $value ] = $pair;
 				$assoc[ $key ] = $value;
 			} else {
@@ -49,8 +46,6 @@ class Arrays {
 	 *
 	 * @param callable $callback
 	 * @param array    $array
-	 *
-	 * @since 2.5.0
 	 *
 	 * @return array
 	 */
@@ -76,8 +71,6 @@ class Arrays {
 	 * @param array $args
 	 * @param array $defaults
 	 *
-	 * @since 2.1.0
-	 *
 	 * @return array
 	 */
 	public function array_merge_recursive( array $args, array $defaults ) : array {
@@ -97,11 +90,8 @@ class Arrays {
 	 * Works the same as `array_map` except the array key is passed as the
 	 * second argument to the callback and original keys are preserved.
 	 *
-	 *
 	 * @param callable $callback
 	 * @param array    $array
-	 *
-	 * @since 2.17.0
 	 *
 	 * @return array
 	 */
@@ -115,8 +105,6 @@ class Arrays {
 	 *
 	 * @param string $key - Key to remove.
 	 * @param array  $array - Array to recursively remove keys from.
-	 *
-	 * @since 2.23.1
 	 *
 	 * @return array
 	 */

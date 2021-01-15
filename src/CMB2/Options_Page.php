@@ -199,8 +199,6 @@ class Options_Page extends Box {
 	 *
 	 * @param bool $is_network
 	 *
-	 * @since 2.4.0
-	 *
 	 * @return void
 	 */
 	public function network( bool $is_network = true ) : void {
@@ -217,8 +215,6 @@ class Options_Page extends Box {
 	 * Set to `null` to create a read-only form which has no save button.
 	 *
 	 * @param null|string $text
-	 *
-	 * @since 1.18.0
 	 *
 	 * @return void
 	 */
@@ -254,8 +250,6 @@ class Options_Page extends Box {
 	 * functionality here, so we get the correct values when using the Repo.
 	 *
 	 * @param \CMB2 $cmb
-	 *
-	 * @since 2.18.1
 	 */
 	public function run_options_hookup_on_front_end( \CMB2 $cmb ) : void {
 		if ( ! is_admin() ) {
@@ -273,8 +267,6 @@ class Options_Page extends Box {
 	 *
 	 * @param Field $field
 	 * @param array $config
-	 *
-	 * @since 2.19.0
 	 */
 	public function register_meta_on_all_types( Field $field, array $config ) : void {
 		unset( $config['single'] );

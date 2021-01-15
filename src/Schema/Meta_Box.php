@@ -452,17 +452,21 @@ abstract class Meta_Box {
 
 
 	/**
-	 * @since 1.2.2
+	 * Special init handler for this class to prevent
+	 * things from being registered twice.
+	 *
+	 * We don't use Singleton as it could accidentally cause issue
+	 * if a user calls `init`.
 	 *
 	 * @static
 	 *
 	 * @return void
 	 */
 	private static function init_once() : void {
-		static $inited = false;
-		if ( ! $inited ) {
+		static $is_init = false;
+		if ( ! $is_init ) {
 			static::hook();
-			$inited = true;
+			$is_init = true;
 		}
 	}
 

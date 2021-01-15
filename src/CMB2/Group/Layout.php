@@ -8,9 +8,7 @@ use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * @author Mat Lipe
- * @since  1.10.1
- *
+ * Custom group layouts for tables and lists.
  */
 class Layout {
 	use Singleton;
@@ -138,8 +136,6 @@ class Layout {
 	 * Render a repeatable group row as a table
 	 *
 	 * Used when a group is given the 'display_as_table' property.
-	 *
-	 * @since  2.5.0
 	 *
 	 * @param  \CMB2_Field $field_group CMB2_Field group field object.
 	 *

@@ -8,8 +8,6 @@ namespace Lipe\Lib\Util;
  *
  * Compatible with JS encryption/decryption via `crypto-js`.
  *
- * @since  2.12.0
- *
  * @link   https://gist.github.com/ve3/0f77228b174cf92a638d81fddb17189d
  *       Reference
  * @see `js/src/helpers/crypt`

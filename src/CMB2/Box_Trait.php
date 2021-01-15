@@ -73,23 +73,22 @@ trait Box_Trait {
 	 * For shorthand calls where no special setting is necessary.
 	 *
 	 * @param string      $id
-	 * @param string      $title
+	 * @param string|null      $title
 	 * @param string|null $group_title           - include a {#} to have replaced with number
 	 * @param string|null $add_button_text
 	 * @param string|null $remove_button_text
 	 * @param bool        $sortable
 	 * @param bool        $closed
-	 * @param string|null $remove_confirm        - @since 2.7.0 -
-	 *                                           A message to display when a user attempts
-	 *                                           to delete a group.
-	 *                                           (Defaults to null/false for no confirmation)
+	 * @param string|null $remove_confirm - A message to display when a user attempts
+	 *                                      to delete a group.
+	 *                                      (Defaults to null/false for no confirmation)
 	 *
 	 *
 	 * @example $group = $box->group( $id, $name );
 	 *
 	 * @return Group
 	 */
-	public function group( $id, $title, $group_title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false, ?string $remove_confirm = null ) : Group {
+	public function group( string $id, ?string $title = null, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, bool $sortable = true, bool $closed = false, ?string $remove_confirm = null ) : Group {
 		$this->hook();
 		$this->fields[ $id ] =
 			new Group( $id, $title, $this, $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
@@ -104,8 +103,6 @@ trait Box_Trait {
 	 *
 	 * Allows for storing/appending a fields properties beyond
 	 * a basic return pattern.
-	 *
-	 * @since 2.19.0
 	 *
 	 * @internal
 	 *
@@ -138,8 +135,6 @@ trait Box_Trait {
 	 * @requires WP 5.5+ for default values.
 	 *
 	 * @param Field $field
-	 *
-	 * @since    2.19.0
 	 *
 	 */
 	protected function register_meta( Field $field ) : void {
@@ -178,10 +173,7 @@ trait Box_Trait {
 	 *
 	 * @param Field $field
 	 *
-	 * @since 2.15.0
-	 *
 	 * @internal
-	 *
 	 */
 	protected function selectively_show_in_rest( Field $field ) : void {
 		if ( ! empty( $field->show_in_rest ) ) {
@@ -199,8 +191,6 @@ trait Box_Trait {
 	 *
 	 * @param Field $field
 	 * @param array $config
-	 *
-	 * @since 2.19.0
 	 *
 	 * @notice This can never be changed or it will break sites!!
 	 *
@@ -229,8 +219,6 @@ trait Box_Trait {
 	 *
 	 * @param Field $field
 	 *
-	 * @since 2.19.0
-	 *
 	 * @return bool
 	 */
 	protected function is_allowed_to_register_meta( Field $field ) : bool {
@@ -245,8 +233,6 @@ trait Box_Trait {
 	 * so if a method other than `ALLMETHODS` is specified, we
 	 * can't add it to the REST api via meta.
 	 *
-	 * @since 2.21.0
-	 *
 	 * @param Field $field
 	 *
 	 * @return bool
@@ -258,8 +244,6 @@ trait Box_Trait {
 	/**
 	 * Get all fields registered to this box.
 	 *
-	 * @since 2.19.0
-	 *
 	 * @return Field[]|Group[]
 	 */
 	protected function get_fields() : array {
@@ -270,8 +254,6 @@ trait Box_Trait {
 	/**
 	 * Are we currently working with a Group?
 	 *
-	 * @since 2.19.0
-	 *
 	 * @return bool
 	 */
 	public function is_group() : bool {
@@ -281,8 +263,6 @@ trait Box_Trait {
 
 	/**
 	 * Get the type of object this box is registered to.
-	 *
-	 * @since 2.19.0
 	 *
 	 * @return string
 	 */
@@ -302,8 +282,6 @@ trait Box_Trait {
 	/**
 	 * Get the full list of object types this box
 	 * is registered to.
-	 *
-	 * @since 2.19.0
 	 *
 	 * @return array
 	 */

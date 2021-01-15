@@ -20,7 +20,6 @@ class Box {
 	 * to the `meta` response without the `cmb2` REST
 	 * endpoint being added.
 	 *
-	 * @since 2.21.1
 	 */
 	public const EXCLUDE_CMB2_REST_ENDPOINT = 'lipe/lib/cmb2/box/exclude-cmb2-rest-endpoint';
 
@@ -158,8 +157,6 @@ class Box {
 	 * Used to create an entirely custom response.
 	 *
 	 * @link  https://gist.github.com/jtsternberg/a70e845aca44356b8fbf05aafff4d0c8
-	 *
-	 * @since CMB2 2.7.0
 	 *
 	 * @todo  Add link to docs once they exist.
 	 *
@@ -323,7 +320,6 @@ class Box {
 	 * Tabs for this box
 	 *
 	 * @see     \Lipe\Lib\CMB2\Box::add_tab()
-	 * @since   1.2.0
 	 *
 	 * @var array
 	 */
@@ -333,7 +329,6 @@ class Box {
 	 * Tabs to display either vertical or horizontal
 	 *
 	 * @see     Box::tabs_style()
-	 * @since   1.2.0
 	 *
 	 * @var string
 	 */
@@ -411,7 +406,6 @@ class Box {
 	 * @example false // Will allow fields to show
 	 *          up under the `meta` key without also showing in `cmb2`.
 	 *
-	 * @since   2.19.0
 	 *
 	 * @return void
 	 */
@@ -433,7 +427,6 @@ class Box {
 	 *
 	 * @see     \Lipe\Lib\CMB2\Field::tab();
 	 *
-	 * @since   1.2.0
 	 *
 	 * @return void
 	 */
@@ -451,7 +444,6 @@ class Box {
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Box-Properties#context
 	 *
-	 * @since 1.18.0
 	 *
 	 * @return void
 	 */
@@ -467,7 +459,6 @@ class Box {
 	 *
 	 * @param string $layout - vertical, horizontal
 	 *
-	 * @since   1.2.0
 	 *
 	 * @return void
 	 */
@@ -480,10 +471,6 @@ class Box {
 	 * Id of the CMB2 meta box, also stored as the id of this class.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#id
-	 *
-	 * @required
-	 *
-	 * @since   2.22.1
 	 *
 	 * @example 'lipe/project/meta/category-fields',
 	 *
@@ -587,7 +574,6 @@ class Box {
 	 * @param Field $field
 	 * @param array $config
 	 *
-	 * @since 2.19.0
 	 */
 	public function register_meta_on_all_types( Field $field, array $config ) : void {
 		if ( null !== $field->default ) {

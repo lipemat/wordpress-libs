@@ -3,9 +3,7 @@
 namespace Lipe\Lib\Cron;
 
 /**
- * @author Mat Lipe
- * @since  1.19.0
- *
+ * Base class for a single cron.
  */
 abstract class Cron_Abstract {
 	public const NAME = __CLASS__;

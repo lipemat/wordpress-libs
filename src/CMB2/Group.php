@@ -86,21 +86,20 @@ class Group extends Field {
 	 * Group constructor.
 	 *
 	 * @param string        $id
-	 * @param string        $title
+	 * @param string|null   $title
 	 * @param Box|Box_Trait $box
 	 * @param string|null   $group_title           - include a {#} to have replaced with number
 	 * @param string|null   $add_button_text
 	 * @param string|null   $remove_button_text
 	 * @param bool          $sortable
 	 * @param bool          $closed
-	 * @param string|null   $remove_confirm        - @since 2.7.0 -
-	 *                                             A message to display when a user attempts
+	 * @param string|null   $remove_confirm        - A message to display when a user attempts
 	 *                                             to delete a group.
 	 *                                             (Defaults to null/false for no confirmation)
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 */
-	public function __construct( $id, $title, Box $box, $group_title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false, ?string $remove_confirm = null ) {
+	public function __construct( string $id, ?string $title, Box $box, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, bool $sortable = true, bool $closed = false, ?string $remove_confirm = null ) {
 		$this->type()->group( $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
 
 		parent::__construct( $id, $title, $box );
@@ -137,8 +136,6 @@ class Group extends Field {
 	 * Assign a field to a group, then register it.
 	 *
 	 * @param Field $field
-	 *
-	 * @since 2.19.0
 	 *
 	 * @throws \LogicException
 	 * @return void
@@ -181,8 +178,6 @@ class Group extends Field {
 	 * Allows for storing/appending a fields properties beyond
 	 * a basic return pattern.
 	 *
-	 * @since 2.19.0
-	 *
 	 * @internal
 	 *
 	 * @return void
@@ -199,9 +194,6 @@ class Group extends Field {
 	 * Register the meta field with WP core for things like
 	 * `show_in_rest` and `default.
 	 *
-	 * @requires WP 5.5+ for default values.
-	 *
-	 * @since    2.19.0
 	 */
 	protected function register_meta() : void {
 		$config = [
@@ -247,8 +239,6 @@ class Group extends Field {
 	/**
 	 * Get the full list of object types this box
 	 * is registered to.
-	 *
-	 * @since 2.19.0
 	 *
 	 * @return array
 	 */

@@ -5,8 +5,7 @@ namespace Lipe\Lib\Util;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * @author Mat Lipe
- * @since  2.14.0
+ * Color helpers.
  *
  */
 class Colors {

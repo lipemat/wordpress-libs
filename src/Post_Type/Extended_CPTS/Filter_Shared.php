@@ -3,12 +3,8 @@
 namespace Lipe\Lib\Post_Type\Extended_CPTS;
 
 /**
- * Filter_Shared
+ * Base class for an Extended CPT shared filter.
  *
- * @author  Mat Lipe
- * @since   7/29/2017
- *
- * @package Lipe\Lib\Post_Type\Custom_Post_Type_Extended
  */
 class Filter_Shared extends Shared_Abstract{
 	protected $filter;

@@ -5,12 +5,8 @@ namespace Lipe\Lib\Post_Type\Extended_CPTS;
 use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
 
 /**
- * Filter
+ * Base class for an Extended CPT Filter.
  *
- * @author  Mat Lipe
- * @since   7/29/2017
- *
- * @package Lipe\Lib\Post_Type\Custom_Post_Type_Extended
  */
 class Filter extends Argument_Abstract {
 	protected $CPTS;

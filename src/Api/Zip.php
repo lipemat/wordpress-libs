@@ -19,7 +19,6 @@ use Lipe\Lib\Traits\Singleton;
  *
  *
  * @author  Mat Lipe
- * @since   1.7.0
  *
  * @example Zip::in()->build_zip( [ $url, $url ], $zip_name );
  *

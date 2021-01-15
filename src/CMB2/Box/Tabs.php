@@ -11,12 +11,6 @@ use Lipe\Lib\CMB2\Field;use Lipe\Lib\Theme\Class_Names;use Lipe\Lib\Traits\Singl
  *        via the Lipe\Lib\CMB2\Box::add_tab() method.
  *        Then use the Lipe\Lib\CMB2\Field::tab() method to assign each field to a particular tab.
  *        Every field a box has must be assigned to a tab or none will display.
- *
- *
- * @author  Mat Lipe
- * @since   1.2.0
- *
- * @package Lipe\Lib\CMB2\Field_Types
  */
 class Tabs {
 	use Singleton;
@@ -124,7 +118,7 @@ class Tabs {
 			if ( empty( $_REQUEST[ self::TAB_FIELD ] ) ) {
 				$active_nav = key( $tabs );
 			} else {
-				$active_nav = esc_attr( $_REQUEST[self::TAB_FIELD ] );
+				$active_nav = esc_attr( $_REQUEST[ self::TAB_FIELD ] );
 			}
 
 			foreach ( $tabs as $key => $label ) {

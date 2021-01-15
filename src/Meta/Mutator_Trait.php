@@ -13,10 +13,6 @@ namespace Lipe\Lib\Meta;
  * not work
  *
  * All methods will manipulate data in the database directly.
- *
- * @author Mat Lipe
- * @since  2.5.0
- *
  */
 trait Mutator_Trait {
 	/**
@@ -73,8 +69,6 @@ trait Mutator_Trait {
 	 * @param string $name - Name of the method.
 	 * @param array $arguments - Passed arguments
 	 *
-	 * @since 2.19.0
-	 *
 	 * @throws \ErrorException
 	 * @return mixed
 	 */
@@ -119,8 +113,6 @@ trait Mutator_Trait {
 	 * @param mixed                 If a callable is passed with an additional argument,
 	 *                              it be be used as the default value for `$this->get_meta()`.
 	 *
-	 * @since 2.12.0 (Support passing a callback as the second argument)
-	 *
 	 * @return void
 	 */
 	public function update_meta( string $key, ...$value ) : void {
@@ -154,7 +146,6 @@ trait Mutator_Trait {
 	 * @param mixed|callable $value - If a callable is passed it will be called with the
 	 *                              previous value as the only argument.
 	 *
-	 * @since 2.12.0 (Support passing a callback as the second argument)
 	 */
 	public function offsetSet( $field_id, $value ) : void {
 		$this->update_meta( $field_id, $value );

@@ -8,9 +8,6 @@ namespace Lipe\Lib\Post_Type;
  * Make all capabilities of a post type to methods which we may
  * interact with.
  *
- * @author  Mat Lipe
- * @since   1.6.0
- *
  * @internal
  *
  * @package Lipe\Lib\Post_Type

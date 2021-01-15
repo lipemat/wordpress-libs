@@ -8,7 +8,6 @@ use Lipe\Lib\Util\Cache;
  * Support simple memoization for class methods which respond
  * with different caches based on the arguments provided.
  *
- * @author  Mat Lipe
  * @example public function heavy( $text ) {
  *              return $this->memoize( function ( $text ) {
  *                   echo 'called' . "\n";
@@ -19,9 +18,6 @@ use Lipe\Lib\Util\Cache;
  *          $test->heavy( 'as can be x2' . "\n"); //called
  *          $test->heavy( 'as can be X3'. "\n" ); // called
  *          $test->heavy( 'as can be x2' . "\n"); //Not called
- *
- * @since   2.6.0
- *
  */
 trait Memoize {
 	protected $memoize_cache = [];
@@ -40,14 +36,12 @@ trait Memoize {
 	 *                             so we can determine the difference in the cache.
 	 *                             `__METHOD__` works nicely here.
 	 * @param int      $expire     - Expire in seconds (defaults to never).
-	 * @param mixed    ...$args    - Arguments will be passed to the callback..
-	 *
-	 * @since 2.16.0
+	 * @param mixed    ...$args    - Arguments will be passed to the callback.
 	 *
 	 * @return mixed
 	 */
 	public function persistent( callable $fn, string $identifier, $expire = 0, ...$args ) {
-		$data = Cache::in()->get( [ $identifier, $args  ], __CLASS__ );
+		$data = Cache::in()->get( [ $identifier, $args ], __CLASS__ );
 		if ( false === $data ) {
 			$data = $fn( ...$args );
 			Cache::in()->set( [ $identifier, $args ], $data, __CLASS__, $expire );
@@ -63,8 +57,6 @@ trait Memoize {
 	 * The passed function will only be called once no matter where it called from
 	 * and what the arguments are.
 	 * I will always return the value received from the callback on its first run.
-	 *
-	 * @since 2.6.1
 	 *
 	 * @param callable $fn
 	 * @param string   $identifier - Something unique to identify the the method being used
@@ -90,8 +82,6 @@ trait Memoize {
 	 * If the arguments change, I will return a result matching the change.
 	 * I will only call the callback one time for the same set of arguments.
 	 *
-	 * @since 2.6.0
-	 *
 	 * @param callable $fn
 	 * @param string   $identifier - Something unique to identify the the method being used
 	 *                             so we can determine the difference in the cache.
@@ -114,8 +104,6 @@ trait Memoize {
 	/**
 	 * Clear all caches on this class.
 	 * Typically used during unit testing.
-	 *
-	 * @since 2.8.1
 	 *
 	 */
 	public function clear_memoize_cache() : void {

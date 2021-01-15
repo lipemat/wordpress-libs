@@ -5,12 +5,8 @@ namespace Lipe\Lib\Util;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * Actions
+ * Action and filter helpers.
  *
- * @author  Mat Lipe
- * @since   1.3.0
- *
- * @package Lipe\Lib\Util
  */
 class Actions {
 	use Singleton;
@@ -26,8 +22,6 @@ class Actions {
 	 * @param callable $callable
 	 * @param int      $priority
 	 * @param int      $accepted_args
-	 *
-	 * @since 1.12.0
 	 *
 	 * @return void
 	 */
@@ -48,8 +42,6 @@ class Actions {
 	 * @param int      $priority
 	 * @param int      $accepted_args
 	 *
-	 * @since 1.9.0
-	 *
 	 * @return void
 	 */
 	public function add_action_all( array $actions, callable $callable, int $priority = 10, int $accepted_args = 1 ) : void {
@@ -66,8 +58,6 @@ class Actions {
 	 * @param callable $callable
 	 * @param int      $priority
 	 * @param int      $accepted_args
-	 *
-	 * @since 1.9.0
 	 *
 	 * @return void
 	 */
@@ -89,8 +79,6 @@ class Actions {
 	 * @param callable $callable
 	 * @param int      $priority
 	 * @param int      $accepted_args
-	 *
-	 * @since 1.8.0
 	 *
 	 * @return void
 	 */
@@ -116,9 +104,6 @@ class Actions {
 	 * @param callable $callable
 	 * @param int      $priority
 	 * @param int      $accepted_args
-	 *
-	 * @since 1.8.0
-	 *
 	 *
 	 * @return void
 	 */

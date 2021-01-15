@@ -89,7 +89,6 @@ class Api {
 	 * @example get_api_url( 'load_more', [ 'page => 2 ] );
 	 *
 	 * @example get_api_url( 'load_more', [ 'page', 2 ] );
-	 * @since   2.11.0
 	 *
 	 * @return string
 	 */
@@ -118,8 +117,6 @@ class Api {
 	 *
 	 * Could be used independently to pass to a JS APP if you have a lot
 	 * of endpoints and don't want provided a full URL From `get_url`.
-	 *
-	 * @since 2.11.0
 	 *
 	 * @return string
 	 */

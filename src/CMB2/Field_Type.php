@@ -9,10 +9,7 @@ use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
 
 /**
- * Field_Type
- *
- * @author  Mat Lipe
- * @since   7/27/2017
+ * Type of CMB2 field.
  *
  * @link    https://github.com/CMB2/CMB2/wiki/Field-Types
  *
@@ -277,8 +274,6 @@ class Field_Type {
 	 *
 	 * @todo Add a link once docs are available.
 	 *
-	 * @since CMB2 2.7.0
-	 *
 	 * @var string
 	 */
 	protected $taxonomy_select_hierarchical;
@@ -422,11 +417,9 @@ class Field_Type {
 
 
 	/**
-	 * True false switch like checkbox
+	 * True false switch like checkbox.
 	 *
-	 * Custom to WP-Libs
-	 *
-	 * @since 1.17.0
+	 * Custom to WP-Libs.
 	 *
 	 * @return Field
 	 */
@@ -491,11 +484,8 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_url
 	 *
-	 * @param array $protocols - Specify the supported URL protocols.
-	 *                          Defaults to return value of wp_allowed_protocols()
-	 *
-	 * @since 2.6.1 (Support passing protocols)
-	 * @since 2.6.1 (Set type and classes to match regular text and type="url")
+	 * @param array|null $protocols - Specify the supported URL protocols.
+	 *                              Defaults to return value of wp_allowed_protocols()
 	 *
 	 * @return Field
 	 */
@@ -592,16 +582,19 @@ class Field_Type {
 	 * The defaults are most likely what you want to use, but just in case
 	 * there are arguments for specialize fine tuning
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea_code
-	 * @link https://www.ibenic.com/wordpress-code-editor#file-code-editor-js
+	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#textarea_code
+	 * @link    https://www.ibenic.com/wordpress-code-editor#file-code-editor-js
 	 *
 	 * @param bool   $disable_codemirror    - disable code mirror handling in favor or a basic textbox
-	 * @param string $language  - Language mode to use (example: php)
-	 * @link https://codemirror.net/doc/manual.html#option_mode
-	 * @link https://codemirror.net/mode/
+	 * @param string $language              - Language mode to use (example: php)
+	 *
+	 * @link    https://codemirror.net/doc/manual.html#option_mode
+	 * @link    https://codemirror.net/mode/
 	 *
 	 * @param array  $code_editor_arguments - The arguments are then passed to `wp.codeEditor.initialize` method.
-	 * @example textarea_code( false, 'javascript', [ 'codemirror' => [ 'lineNumbers' => false, 'theme' => 'cobalt' ] ] );
+	 *
+	 * @example textarea_code( false, 'javascript', [ 'codemirror' => [ 'lineNumbers' => false, 'theme' => 'cobalt' ] ]
+	 *          );
 	 *
 	 *
 	 * @return Field
@@ -683,11 +676,9 @@ class Field_Type {
 	 * @param bool|null   $show_text_input - (default true) *May not be turned off for required fields*.
 	 * @param string|null $preview_size    - (default full)
 	 *
+	 * @see     Field_Type::file()
+	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#file
-	 *
-	 * @since 2.21.0
-	 *
-	 * @see Field_Type::file()
 	 *
 	 * @return Field
 	 */
@@ -846,7 +837,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function multicheck( $options_or_callback, $select_all = true ) : Field {
-		$_args                      = $this->field_type_options( $this->multicheck, $options_or_callback );
+		$_args = $this->field_type_options( $this->multicheck, $options_or_callback );
 		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args, Repo::DEFAULT );
@@ -864,7 +855,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function multicheck_inline( $options_or_callback, $select_all = true ) : Field {
-		$_args                      = $this->field_type_options( $this->multicheck_inline, $options_or_callback );
+		$_args = $this->field_type_options( $this->multicheck_inline, $options_or_callback );
 		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args, Repo::DEFAULT );
@@ -937,7 +928,6 @@ class Field_Type {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_radio, $taxonomy, $no_terms_text, $remove_default );
 
 		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
-
 	}
 
 
@@ -956,7 +946,6 @@ class Field_Type {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_radio_hierarchical, $taxonomy, $no_terms_text, $remove_default );
 
 		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
-
 	}
 
 
@@ -975,7 +964,6 @@ class Field_Type {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_radio_inline, $taxonomy, $no_terms_text, $remove_default );
 
 		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
-
 	}
 
 
@@ -1001,16 +989,14 @@ class Field_Type {
 	 * A select field pre-populated with taxonomy terms and displayed hierarchical.
 	 *
 	 * @param string $taxonomy       - slug
-	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox
+	 * @param null   $no_terms_text
+	 * @param null   $remove_default - remove default WP terms metabox
 	 *
 	 * @todo Add links once docs become available.
 	 *
-	 * @since CMB2 2.7.0
-	 *
 	 * @return Field
 	 */
-	public function taxonomy_select_hierarchical( $taxonomy, $no_terms_text = null, $remove_default = null ) : Field {
+	public function taxonomy_select_hierarchical( string $taxonomy, $no_terms_text = null, $remove_default = null ) : Field {
 		$_args = $this->field_type_taxonomy( $this->taxonomy_select_hierarchical, $taxonomy, $no_terms_text, $remove_default );
 
 		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
@@ -1036,8 +1022,8 @@ class Field_Type {
 	public function taxonomy_select_2( $taxonomy, $create_new_terms = false, $save_as_terms = false, $no_terms_text = null, $remove_default = null ) : Field {
 		Term_Select_2::init_once();
 
-		$_args                                    = $this->field_type_taxonomy( Term_Select_2::NAME, $taxonomy, $no_terms_text, $remove_default );
-		$_args[ Term_Select_2::SAVE_AS_TERMS ]    = $save_as_terms;
+		$_args = $this->field_type_taxonomy( Term_Select_2::NAME, $taxonomy, $no_terms_text, $remove_default );
+		$_args[ Term_Select_2::SAVE_AS_TERMS ] = $save_as_terms;
 		$_args[ Term_Select_2::CREATE_NEW_TERMS ] = $create_new_terms;
 
 		return $this->set( $_args, Repo::TAXONOMY );
@@ -1057,11 +1043,10 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function taxonomy_multicheck( $taxonomy, $no_terms_text = null, $remove_default = null, $select_all = true ) : Field {
-		$_args                      = $this->field_type_taxonomy( $this->taxonomy_multicheck, $taxonomy, $no_terms_text, $remove_default );
+		$_args = $this->field_type_taxonomy( $this->taxonomy_multicheck, $taxonomy, $no_terms_text, $remove_default );
 		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args, Repo::TAXONOMY );
-
 	}
 
 
@@ -1078,7 +1063,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function taxonomy_multicheck_hierarchical( $taxonomy, $no_terms_text = null, $remove_default = null, $select_all = true ) : Field {
-		$_args                      = $this->field_type_taxonomy( $this->taxonomy_multicheck_hierarchical, $taxonomy, $no_terms_text, $remove_default );
+		$_args = $this->field_type_taxonomy( $this->taxonomy_multicheck_hierarchical, $taxonomy, $no_terms_text, $remove_default );
 		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args, Repo::TAXONOMY );
@@ -1098,11 +1083,10 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function taxonomy_multicheck_inline( $taxonomy, $no_terms_text = null, $remove_default = null, $select_all = true ) : Field {
-		$_args                      = $this->field_type_taxonomy( $this->taxonomy_multicheck_inline, $taxonomy, $no_terms_text, $remove_default );
+		$_args = $this->field_type_taxonomy( $this->taxonomy_multicheck_inline, $taxonomy, $no_terms_text, $remove_default );
 		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args, Repo::TAXONOMY );
-
 	}
 
 
@@ -1146,11 +1130,11 @@ class Field_Type {
 	 * @param bool   $show_text_input - (default true) *May not be turned off for required fields*
 	 * @param string $preview_size    - (default full)
 	 *
-	 * @example file( 'Add Image', 'image', false );
-	 * @example file( 'Add PDF', 'application/pdf', true );
-	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#file
 	 *
+	 * @example file( 'Add PDF', 'application/pdf', true );
+	 *
+	 * @example file( 'Add Image', 'image', false );
 	 * @return Field
 	 */
 	public function file( $button_text = null, $file_mime_type = null, $show_text_input = null, $preview_size = null ) : Field {
@@ -1188,21 +1172,20 @@ class Field_Type {
 	/**
 	 * Hybrid field that supports adding other fields as a repeatable group.
 	 *
-	 * @param string $title                      - include a {#} to have replace with number
-	 * @param string $add_button_text
-	 * @param string $remove_button_text
-	 * @param bool   $sortable
-	 * @param bool   $closed
-	 * @param string $remove_confirm             - @since 2.7.0 -
-	 *                                           A message to display when a user attempts
+	 * @param string|null $title                 - include a {#} to have replace with number
+	 * @param string|null $add_button_text
+	 * @param string|null $remove_button_text
+	 * @param bool        $sortable
+	 * @param bool        $closed
+	 * @param string|null $remove_confirm        - A message to display when a user attempts
 	 *                                           to delete a group.
 	 *                                           (Defaults to null/false for no confirmation)
 	 *
+	 * @return Field
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 *
-	 * @return Field
 	 */
-	public function group( $title = null, $add_button_text = null, $remove_button_text = null, $sortable = true, $closed = false, ?string $remove_confirm = null ) : Field {
+	public function group( ?string $title = null, ?string $add_button_text = null, ?string $remove_button_text = null, bool $sortable = true, bool $closed = false, ?string $remove_confirm = null ) : Field {
 		$_args = [
 			'type'    => $this->group,
 			'options' => [
@@ -1253,7 +1236,7 @@ class Field_Type {
 		}
 		if ( null !== $remove_item_text ) {
 			$_args['text']['remove_image_text'] = $remove_item_text;
-			$_args['text']['remove_item_text']  = $remove_item_text;
+			$_args['text']['remove_item_text'] = $remove_item_text;
 		}
 		if ( null !== $file_text ) {
 			$_args['text']['file_text'] = $file_text;
@@ -1276,7 +1259,6 @@ class Field_Type {
 		}
 
 		return $_args;
-
 	}
 
 
@@ -1302,7 +1284,6 @@ class Field_Type {
 		}
 
 		return $_args;
-
 	}
 
 
@@ -1357,7 +1338,6 @@ class Field_Type {
 		}
 
 		return $_args;
-
 	}
 
 }

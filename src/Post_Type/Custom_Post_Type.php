@@ -264,9 +264,6 @@ class Custom_Post_Type {
 	/**
 	 * Handles any calls which need to run to register this post type
 	 *
-	 * @since 1.6.0
-	 *
-	 *
 	 * @return void
 	 */
 	public function register() : void {
@@ -282,8 +279,6 @@ class Custom_Post_Type {
 	 *
 	 * Allow using a different process for registering post types via
 	 * child classes.
-	 *
-	 * @since 1.6.0
 	 *
 	 */
 	protected function register_post_type() : void {
@@ -453,8 +448,6 @@ class Custom_Post_Type {
 	 *
 	 * @param string $label - Text to use.
 	 *
-	 * @since 2.7.0
-	 *
 	 */
 	public function set_featured_image_labels( string $label ) : void {
 		$lowercase = strtolower( $label );
@@ -607,8 +600,6 @@ class Custom_Post_Type {
 	 *
 	 * @param string $post_type
 	 *
-	 * @since 1.6.0
-	 *
 	 * @return Custom_Post_Type|Custom_Post_Type_Extended|null
 	 */
 	public function get_post_type( $post_type ) {
@@ -623,8 +614,6 @@ class Custom_Post_Type {
 	 *
 	 * @param array $bulk_messages
 	 * @param array $bulk_counts
-	 *
-	 * @since  1.6.0
 	 *
 	 * @return array
 	 */
@@ -671,10 +660,7 @@ class Custom_Post_Type {
 	 *
 	 * @param array $messages
 	 *
-	 * @since  1.6.0
-	 *
 	 * @return array
-	 *
 	 */
 	public function adjust_post_updated_messages( array $messages = [] ) : array {
 		global $post, $post_ID;
@@ -789,8 +775,6 @@ class Custom_Post_Type {
 	 * 2. 'date'
 	 *
 	 * @param string $column
-	 *
-	 * @since 2.21.0
 	 *
 	 */
 	public function remove_column( string $column ) : void {

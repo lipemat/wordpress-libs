@@ -9,9 +9,6 @@ use Lipe\Lib\Traits\Singleton;
  * Repo to hold the different field types for our meta keys
  * and return the appropriate data based on field type.
  *
- * @author Mat Lipe
- * @since  2.0.0
- *
  */
 class Repo extends Translate_Abstract {
 	use Singleton;
@@ -74,9 +71,6 @@ class Repo extends Translate_Abstract {
 	 * @param string     $field_id  - field id to return
 	 * @param string     $meta_type - user, term, post, <custom> (defaults to 'post')
 	 *
-	 * @since 2.4.0 - Will return term objects for taxonomy field within options.
-	 * @since 2.4.0 - Support singular taxonomy fields which return a single term.
-	 *
 	 * @return mixed
 	 */
 	public function get_value( $object_id, string $field_id, string $meta_type = 'post' ) {
@@ -108,8 +102,6 @@ class Repo extends Translate_Abstract {
 	 * @param string     $field_id  - field id to set.
 	 * @param mixed      $value     - Value to save.
 	 * @param string     $meta_type - user, term, post, <custom> (defaults to 'post')
-	 *
-	 * @since 2.5.0
 	 *
 	 * @return void
 	 */
@@ -144,8 +136,6 @@ class Repo extends Translate_Abstract {
 	 * @param int|string $object_id - id of post, term, user, <custom>
 	 * @param string     $field_id  - field id to set.
 	 * @param string     $meta_type - user, term, post, <custom> (defaults to 'post')
-	 *
-	 * @since 2.5.0
 	 *
 	 * @return void
 	 */

@@ -17,13 +17,6 @@ namespace Lipe\Lib\Theme;
  *          //conditionally add an active class as we go
  *          $class[ 'active' ] = isset( $_POST['domain_list'] );
  *
- *
- * @author  Mat Lipe
- * @since   1.4.0 - added
- * @since   1.9.0 - support for adding/removing classes as we go
- * @since   2.3.1 - support multilayer arrays of classes
- *
- * @package Lipe\Lib\Util
  */
 class Class_Names implements \ArrayAccess {
 
@@ -52,9 +45,7 @@ class Class_Names implements \ArrayAccess {
 	 * Allows us to pass any combination of arrays or strings
 	 * and still get the appropriate classes
 	 *
-	 * @since 2.3.1
-	 *
-	 * @param $classes
+	 * @param string|array $classes
 	 *
 	 * @return void
 	 */

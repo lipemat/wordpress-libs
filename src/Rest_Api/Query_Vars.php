@@ -16,12 +16,6 @@ use Lipe\Lib\Traits\Singleton;
  *
  * @example /wp-json/wp/v2/posts?cat=4
  * @example /wp-json/wp/v2/posts?filter[cat]=4
- *
- *
- * @author  Mat Lipe
- * @since   1.7.0
- *
- * @package Resignation\Rest_Api
  */
 class Query_Vars {
 	use Singleton;

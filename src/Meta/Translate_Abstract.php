@@ -8,9 +8,6 @@ use Lipe\Lib\Traits\Memoize;
 /**
  * Translate the fields into the correct data types.
  *
- * @author Mat Lipe
- * @since  2.5.0
- *
  */
 abstract class Translate_Abstract {
 	use Memoize;
@@ -54,10 +51,6 @@ abstract class Translate_Abstract {
 	 * @param string     $key
 	 * @param string     $meta_type
 	 *
-	 * @since 2.9.0 - Use a fields group to get meta value if field is
-	 *                is a group field.
-	 * @since 2.15.0 - Use `escape_cb` if defined for this field.
-	 *
 	 * @return mixed
 	 */
 	protected function get_meta_value( $object_id, string $key, string $meta_type ) {
@@ -84,8 +77,6 @@ abstract class Translate_Abstract {
 	 * @param string     $key
 	 * @param mixed      $value
 	 * @param string     $meta_type
-	 *
-	 * @since 2.15.0 - Use `sanitization_cb` if defined for this field.
 	 *
 	 * @return bool|int
 	 */
@@ -184,7 +175,7 @@ abstract class Translate_Abstract {
 		if ( ! empty( $url ) ) {
 			//Add the extra field so groups meta will be translated properly.
 			if ( null !== $this->fields[ $key ]->group ) {
-				$this->fields["{$key}_id"] = $this->fields[ $key ];
+				$this->fields[ "{$key}_id" ] = $this->fields[ $key ];
 			}
 
 			return [
@@ -211,7 +202,7 @@ abstract class Translate_Abstract {
 	public function update_file_field_value( $object_id, string $key, int $attachment_id, string $meta_type ) : void {
 		//Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->fields[ $key ]->group ) {
-			$this->fields["{$key}_id"] = $this->fields[ $key ];
+			$this->fields[ "{$key}_id" ] = $this->fields[ $key ];
 		}
 		$this->update_meta_value( $object_id, $key, \wp_get_attachment_url( $attachment_id ), $meta_type );
 		$this->update_meta_value( $object_id, "{$key}_id", $attachment_id, $meta_type );
@@ -231,7 +222,7 @@ abstract class Translate_Abstract {
 	public function delete_file_field_value( $object_id, string $key, string $meta_type ) : void {
 		//Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->fields[ $key ]->group ) {
-			$this->fields["{$key}_id"] = $this->fields[ $key ];
+			$this->fields[ "{$key}_id" ] = $this->fields[ $key ];
 		}
 		$this->delete_meta_value( $object_id, $key, $meta_type );
 		$this->delete_meta_value( $object_id, "{$key}_id", $meta_type );
@@ -246,8 +237,6 @@ abstract class Translate_Abstract {
 	 * @param int|string $object_id
 	 * @param string     $group_id
 	 * @param string     $meta_type
-	 *
-	 * @since 2.9.0
 	 *
 	 * @return array
 	 */
@@ -299,8 +288,6 @@ abstract class Translate_Abstract {
 	 * @param mixed      $value
 	 * @param string     $meta_type
 	 *
-	 * @since 2.9.0
-	 *
 	 * @internal
 	 *
 	 * @return bool|int
@@ -348,14 +335,12 @@ abstract class Translate_Abstract {
 	 * @param string     $field_id
 	 * @param string     $meta_type
 	 *
-	 * @since 2.4.0 - Will return term objects from option fields
-	 *
 	 * @return \WP_Term[]
 	 */
 	public function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : array {
 		$taxonomy = $this->get_field( $field_id )->taxonomy;
 		if ( 'post' !== $meta_type ) {
-			return $this->maybe_use_main_blog( $field_id, function () use( $object_id, $field_id, $taxonomy, $meta_type ) {
+			return $this->maybe_use_main_blog( $field_id, function () use ( $object_id, $field_id, $taxonomy, $meta_type ) {
 				return array_filter( array_map( function ( $slug ) use ( $taxonomy ) {
 					return \get_term_by( 'slug', $slug, $taxonomy );
 				}, (array) $this->get_meta_value( $object_id, $field_id, $meta_type ) ) );
@@ -423,8 +408,6 @@ abstract class Translate_Abstract {
 	 * @param string     $field_id
 	 * @param string     $meta_type
 	 *
-	 * @since 2.4.0
-	 *
 	 * @return \WP_Term|false
 	 */
 	public function get_taxonomy_singular_field_value( $object_id, string $field_id, string $meta_type ) {
@@ -447,8 +430,6 @@ abstract class Translate_Abstract {
 	 * @param callable $callback - Any callback.
 	 *
 	 * @param string   $field_id
-	 *
-	 * @since 2.18.1
 	 *
 	 * @return mixed;
 	 */

@@ -10,11 +10,6 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * Gives quick access to the `blogmeta` table and any
  * other properties available in the `WP_Site` class.
  *
- * @requires WP version 5.1+
- *
- * @author   Mat Lipe
- * @since    2.8.0
- *
  * @property int $id
  * @property int $network_id
  * @property string $$archived

@@ -50,9 +50,8 @@ class Image_Resize {
 
 
 	/**
-	 * Convert other add_image_sizes from other plugin, to the attribute of the class
+	 * Convert other add_image_sizes from other plugin, to the attribute of the class.
 	 *
-	 * @since 9.13.13
 	 */
 	public function add_other_image_sizes() {
 		global $_wp_additional_image_sizes;
@@ -75,11 +74,10 @@ class Image_Resize {
 
 
 	/**
-	 * Populate image sizes
+	 * Populate image sizes.
 	 *
-	 * @since 9.13.13
 	 */
-	public function add_image_size( $name, $width, $height, $crop = false ) {
+	public function add_image_size( $name, $width, $height, $crop = false ) : void {
 		$this->_image_sizes[ $name ] = [
 			'width'  => absint( $width ),
 			'height' => absint( $height ),
@@ -92,7 +90,6 @@ class Image_Resize {
 	 * Uses this class to resize an image instead of default wp
 	 *
 	 * @uses  added to the image_downsize filter by self::__construct()
-	 * @since 9.13.13
 	 *
 	 */
 	public function convert_image_downsize( $out, $id, $size ) {

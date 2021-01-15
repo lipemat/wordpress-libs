@@ -25,11 +25,7 @@ class Initial_Data {
 	 * @param bool          $with_links - To include links inside the response.
 	 * @param bool|string[] $embed - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
-	 * @since 2.12.0
-	 * @since 2.19.0 - Support excluding the entire '_links' data.
-	 *
 	 * @return array
-	 *
 	 */
 	public function get_comments_data( array $comments, bool $with_links = false, $embed = false ) : array {
 		$controller = new \WP_REST_Comments_Controller();
@@ -47,8 +43,6 @@ class Initial_Data {
 	 * @param \WP_Post[]|null $posts      - Array of post objects (defaults to global WP_Query->posts)
 	 * @param bool            $with_links - To include links inside the response.
 	 * @param bool|string[] $embed - Whether to embed all links, a filtered list of link relations, or no links.
-	 *
-	 * @since 2.19.0 - Support excluding the entire '_links' data.
 	 *
 	 * @return array
 	 */
@@ -76,11 +70,7 @@ class Initial_Data {
 	 * @link https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_embed
 	 * @link  https://developer.wordpress.org/rest-api/using-the-rest-api/linking-and-embedding/#embedding
 	 *
-	 * @since 2.12.0
-	 * @since 2.19.0 - Support excluding the entire '_links' data.
-	 *
 	 * @return array
-	 *
 	 */
 	protected function get_response( \WP_REST_Controller $controller, $item, bool $with_links = false, $embed = false ) : array {
 		$data = rest_get_server()->response_to_data(
@@ -98,7 +88,6 @@ class Initial_Data {
 	 * Get an instance of the WP_REST_Request setup with
 	 * the 'view' context.
 	 *
-	 * @since 2.12.0
 	 * @return \WP_REST_Request
 	 */
 	protected function get_request() : \WP_REST_Request {

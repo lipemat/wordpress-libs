@@ -261,9 +261,7 @@ class Taxonomy {
 	protected $taxonomy = '';
 
 	/**
-	 * Override any generated labels here.
-	 *
-	 * @since 2.6.1
+	 * Override any generated labels.
 	 *
 	 * @var array
 	 */
@@ -481,9 +479,6 @@ class Taxonomy {
 	 * 3. 'posts'
 	 *
 	 * @param string $column
-	 *
-	 * @since 2.21.0
-	 *
 	 */
 	public function remove_column( string $column ) : void {
 		add_filter( "manage_edit-{$this->taxonomy}_columns", function ( $columns ) use ( $column ) {
@@ -547,8 +542,6 @@ class Taxonomy {
 	 *
 	 * @see   Taxonomy::$show_in_menu
 	 *
-	 * @since 1.6.0
-	 *
 	 * @internal
 	 *
 	 * @return void
@@ -591,8 +584,6 @@ class Taxonomy {
 	 * @param string $label
 	 *
 	 * @see   Taxonomy::__construct()
-	 *
-	 * @since 2.21.1
 	 */
 	public function show_admin_column( string $label ) : void {
 		Actions::in()->add_filter_all( array_map( function ( $post_type ) {
@@ -615,8 +606,6 @@ class Taxonomy {
 	 * @param string $slug
 	 * @param string $name
 	 * @param string $description
-	 *
-	 * @since    2.19.0
 	 *
 	 * @return void
 	 */
@@ -653,10 +642,7 @@ class Taxonomy {
 
 
 	/**
-	 * Handles any calls which need to run to register this taxnomy
-	 *
-	 * @since 1.6.0
-	 *
+	 * Handles any calls which need to run to register this taxonomy.
 	 *
 	 * @return void
 	 */
@@ -674,8 +660,6 @@ class Taxonomy {
 	 *
 	 * Allow using a different process for registering taxonomies via
 	 * child classes.
-	 *
-	 * @since 1.6.0
 	 *
 	 */
 	protected function register_taxonomy() : void {

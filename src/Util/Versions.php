@@ -18,10 +18,6 @@ use Lipe\Lib\Traits\Singleton;
  * @example Versions::in()->add_update( $version, function(){}, [ data ] );
  * @example Versions::in()->once( $key, function(){}, [ data ] );
  *
- * @author  Mat Lipe
- * @since   2/7/2018
- *
- * @package Lipe\Lib\Util
  */
 class Versions {
 	use Singleton;
@@ -98,8 +94,6 @@ class Versions {
 	 * @param callable $callable
 	 * @param string   $key - unique identifier
 	 * @param mixed    $args
-	 *
-	 * @since 1.2.0
 	 *
 	 * @return void
 	 */

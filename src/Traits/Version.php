@@ -10,9 +10,6 @@ namespace Lipe\Lib\Traits;
  *
  * For global version tracking
  *
- * @author Mat Lipe
- * @since  2.10.0
- *
  * @see    \Lipe\Lib\Util\Versions
  *
  */

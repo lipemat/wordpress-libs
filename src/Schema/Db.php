@@ -201,8 +201,6 @@ abstract class Db {
 	 *
 	 * @param int|array $id_or_wheres - row id or array or column => values to use as where
 	 *
-	 * @since 1.6.1
-	 *
 	 * @return int|false
 	 */
 	public function delete( $id_or_wheres ) {

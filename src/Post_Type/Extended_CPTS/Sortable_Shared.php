@@ -3,12 +3,8 @@
 namespace Lipe\Lib\Post_Type\Extended_CPTS;
 
 /**
- * Sortable_Shared
+ * Base class for an Extended CPT shared sortable.
  *
- * @author  Mat Lipe
- * @since   7/29/2017
- *
- * @package Lipe\Lib\Post_Type\Custom_Post_Type_Extended
  */
 class Sortable_Shared extends Shared_Abstract {
 

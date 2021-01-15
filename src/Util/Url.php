@@ -5,12 +5,7 @@ namespace Lipe\Lib\Util;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * Url
- *
- * @author  Mat Lipe
- * @since   0.0.1
- *
- * @package Lipe\Lib\Util
+ * Url helpers.
  */
 class Url {
 	use Singleton;
@@ -33,8 +28,6 @@ class Url {
 	 *
 	 * @param string $url - URL to retrieve from.
 	 * @param string $key - Name of URL key to retrieve.
-	 *
-	 * @since 2.20.0
 	 *
 	 * @return string|array|null
 	 */

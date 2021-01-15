@@ -11,9 +11,6 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * Gives quick access to the `sitemeta` table and any
  * other properties available in the `WP_Network` class.
  *
- * @author   Mat Lipe
- * @since    2.19.0
- *
  * @property int    $id
  * @property string $blog_id
  * @property string $cookie_domain

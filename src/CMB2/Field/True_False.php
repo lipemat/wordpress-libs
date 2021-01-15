@@ -3,11 +3,7 @@
 namespace Lipe\Lib\CMB2\Field;
 
 /**
- * A True/False checkbox toggle field
- *
- * @author Mat Lipe
- * @since  1.17.0
- *
+ * True/False checkbox toggle field.
  */
 class True_False extends \CMB2_Type_Checkbox {
 

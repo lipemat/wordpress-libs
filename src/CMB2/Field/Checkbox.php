@@ -9,10 +9,6 @@ use Lipe\Lib\Traits\Singleton;
  * Overrides for the checkbox field
  *
  * @see    Field_Type::checkbox()
- *
- * @author Mat Lipe
- * @since  1.11.0
- *
  */
 class Checkbox {
 	use Singleton;

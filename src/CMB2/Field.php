@@ -33,8 +33,6 @@ class Field {
 	 *
 	 * @internal
 	 *
-	 * @since 2.15.0
-	 *
 	 * @var string
 	 */
 	public $box_id;
@@ -79,11 +77,11 @@ class Field {
 	 * @interal
 	 *
 	 * @var string {
-	 *      @type Repo::DEFAULT
-	 *      @type Repo::CHECKBOX
-	 *      @type Repo::FILE
-	 *      @type Repo::GROUP
-	 *      @type Repo::TAXONOMY
+	 * @type Repo::DEFAULT
+	 * @type Repo::CHECKBOX
+	 * @type Repo::FILE
+	 * @type Repo::GROUP
+	 * @type Repo::TAXONOMY
 	 * }
 	 */
 	public $data_type = Repo::DEFAULT;
@@ -345,7 +343,6 @@ class Field {
 
 	/**
 	 * Entirely replace the class to used to display the field (in admin columns, etc)
-	 * @since CMB2 2.7.0
 	 *
 	 * @todo Add link to docs once they exist.
 	 *
@@ -359,7 +356,7 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#escape_cb
 	 *
-	 * @see Field::escape_cb()
+	 * @see  Field::escape_cb()
 	 *
 	 * @var callable|false
 	 *
@@ -371,8 +368,6 @@ class Field {
 	 * the group id.
 	 *
 	 * @internal
-	 *
-	 * @since 2.9.0
 	 *
 	 * @var string|null
 	 */
@@ -486,10 +481,10 @@ class Field {
 	/**
 	 * Filter the value which is returned in the rest api responses
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#rest_value_cb
-	 * @link https://github.com/CMB2/CMB2/wiki/REST-API#overriding-a-returned-value-for-a-individual-field
+	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#rest_value_cb
+	 * @link    https://github.com/CMB2/CMB2/wiki/REST-API#overriding-a-returned-value-for-a-individual-field
 	 *
-	 * @see Field::rest_value_cb()
+	 * @see     Field::rest_value_cb()
 	 *
 	 * @example 'intval'
 	 *
@@ -516,7 +511,7 @@ class Field {
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
 	 *
-	 * @see Field::sanitization_cb()
+	 * @see     Field::sanitization_cb()
 	 *
 	 * @example sanitize_function( $value, $field_args, $field ){ return string }
 	 *
@@ -597,8 +592,6 @@ class Field {
 	 * Stored here so we can set the `render_row_cb` to the tab's
 	 * method an keep outside `render_row_cb` intact.
 	 *
-	 * @since 2.10.0
-	 *
 	 * @var callable
 	 */
 	protected $tab_content_cb;
@@ -676,8 +669,6 @@ class Field {
 	 * For any conditional logic where we need to know
 	 * which class is currently using this.
 	 *
-	 * @since 2.19.0
-	 *
 	 * @var Box_Trait|Box|null
 	 */
 	protected $box;
@@ -686,8 +677,8 @@ class Field {
 	/**
 	 * Field constructor.
 	 *
-	 * @param string         $id
-	 * @param string|null    $name
+	 * @param string             $id
+	 * @param string|null        $name
 	 * @param Box_Trait|Box|null $box - Parent class using this Field.
 	 *
 	 * @see     \Lipe\Lib\CMB2\Field_Type
@@ -695,7 +686,7 @@ class Field {
 	 * @example $field = new Field( self::FEATURED_TAG, __( 'Featured Tag', 'tribe' ), Field_Type::types()->checkbox );
 	 */
 	public function __construct( string $id, ?string $name, $box = null ) {
-		$this->id   = $id;
+		$this->id = $id;
 		$this->name = $name;
 		$this->box = $box;
 	}
@@ -733,22 +724,20 @@ class Field {
 	/**
 	 * Enable a character/word counter for a 'textarea', 'wysiwyg', or 'text' type field.
 	 *
-	 * @param bool $count_words - Count words instead of characters.
-	 * @param null|int  $max - Show remaining character/words based on provided limit.
-	 * @param bool  $enforce - Enforce max length using `maxlength` attribute when
-	 *                       characters are counted.
-	 * @param array $labels  - Override the default text strings associated with these
-	 *                       parameters {
-	 *                          'words_left_text' - Default: "Words left"
-	 *                          'words_text' - Default: "Words"
-	 *                          'characters_left_text' - Default: "Characters left"
-	 *                          'characters_text' - Default: "Characters"
-	 *                          'characters_truncated_text' - Default: "Your text may be truncated."
-	 *                       }
+	 * @param bool     $count_words - Count words instead of characters.
+	 * @param null|int $max         - Show remaining character/words based on provided limit.
+	 * @param bool     $enforce     - Enforce max length using `maxlength` attribute when
+	 *                              characters are counted.
+	 * @param array    $labels      - Override the default text strings associated with these
+	 *                              parameters {
+	 *                              'words_left_text' - Default: "Words left"
+	 *                              'words_text' - Default: "Words"
+	 *                              'characters_left_text' - Default: "Characters left"
+	 *                              'characters_text' - Default: "Characters"
+	 *                              'characters_truncated_text' - Default: "Your text may be truncated."
+	 *                              }
 	 *
-	 * @notice Does not work with wysiwyg which are repeatable.
-	 *
-	 * @since CMB2 2.7.0
+	 * @notice Does not work with repeatable wysiwyg.
 	 *
 	 * @return Field
 	 */
@@ -784,10 +773,10 @@ class Field {
 	 * posts, comments, users, terms
 	 *
 	 * @param int|null      $position
-	 * @param string|null   $name       - defaults to field name
-	 * @param callable|null $display_cb - optional display callback
-	 * @param bool|null $disable_sorting - Set to true to prevent this column from being
-	 *                                  sortable in post list.
+	 * @param string|null   $name            - defaults to field name
+	 * @param callable|null $display_cb      - optional display callback
+	 * @param bool|null     $disable_sorting - Set to true to prevent this column from being
+	 *                                       sortable in post list.
 	 *
 	 * @return Field
 	 */
@@ -853,9 +842,15 @@ class Field {
 		if ( \is_callable( $default_value ) ) {
 			$this->default_cb = $default_value;
 			if ( 'options-page' === $this->box->get_object_type() ) {
-				add_filter( "cmb2_default_option_{$this->box->get_id()}_{$this->get_id()}", [ $this, 'default_option_callback' ], 11 );
+				add_filter( "cmb2_default_option_{$this->box->get_id()}_{$this->get_id()}", [
+					$this,
+					'default_option_callback',
+				], 11 );
 			} else {
-				add_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11, 3 );
+				add_filter( "default_{$this->box->get_object_type()}_metadata", [
+					$this,
+					'default_meta_callback',
+				], 11, 3 );
 			}
 		} else {
 			$this->default = $default_value;
@@ -886,9 +881,7 @@ class Field {
 
 
 	/**
-	 * Mark this field as 'disabled'
-	 *
-	 * @since 1.18.0
+	 * Mark this field as 'disabled'.
 	 *
 	 * @return Field
 	 */
@@ -897,6 +890,7 @@ class Field {
 
 		return $this;
 	}
+
 
 	/**
 	 * Bypass the CMB escaping (escapes before display) methods with your own callback.
@@ -927,7 +921,9 @@ class Field {
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ) : Field {
 		// Ugh! Hack so I can use a method from that class
 		$mock = new class() extends \CMB2_Field {
-			public function __construct() {}
+			public function __construct() {
+			}
+
 
 			public function allowed( $type ) : bool {
 				if ( parent::repeatable_exception( $type ) ) {
@@ -940,18 +936,19 @@ class Field {
 		if ( ! $mock->allowed( $this->get_type() ) ) {
 			trigger_error( esc_html( "Fields of `{$this->get_type()}` type do not support repeating" ) );
 		}
-		$this->repeatable           = $repeatable;
+		$this->repeatable = $repeatable;
 		$this->text['add_row_text'] = $add_row_text;
 
 		return $this;
 	}
 
+
 	/**
 	 * Callback to filter the return value for this field in
 	 * the rest api responses.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#rest_value_cb
-	 * @link https://github.com/CMB2/CMB2/wiki/REST-API#overriding-a-returned-value-for-a-individual-field
+	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#rest_value_cb
+	 * @link    https://github.com/CMB2/CMB2/wiki/REST-API#overriding-a-returned-value-for-a-individual-field
 	 *
 	 * @param callable $callback
 	 *
@@ -963,6 +960,7 @@ class Field {
 		$this->rest_value_cb = $callback;
 		return $this;
 	}
+
 
 	/**
 	 * Set the position of the field in the meta box
@@ -981,9 +979,7 @@ class Field {
 
 
 	/**
-	 * Mark this field as 'readonly'
-	 *
-	 * @since 1.18.0
+	 * Mark this field as 'readonly'.
 	 *
 	 * @return Field
 	 */
@@ -1012,11 +1008,9 @@ class Field {
 	/**
 	 * Mark this field as 'required'
 	 *
-	 * @notice As of WP 5.1.1 this has not effect on meta box fields with
+	 * @notice As of WP 5.1.1 this has no effect on meta box fields with
 	 *         Gutenberg enabled. Possibly will be changed in a future version
 	 *         of WP?
-	 *
-	 * @since 2.7.2
 	 *
 	 * @return Field
 	 */
@@ -1049,14 +1043,13 @@ class Field {
 	 *
 	 * @param string|bool $methods
 	 *
-	 * @see Box_Trait::selectively_show_in_rest()
+	 * @see     Box_Trait::selectively_show_in_rest()
 	 *
 	 * @example WP_REST_Server::READABLE // Same as `true`.
 	 * @example WP_REST_Server::ALLMETHODS // All Methods must be used for the field
 	 *          show up under `meta`, otherwise will just show up under `cmb2`.
 	 * @example WP_REST_Server::EDITABLE
 	 *
-	 * @since 2.15.0
 	 *
 	 * @return Field
 	 */
@@ -1066,8 +1059,8 @@ class Field {
 		}
 		$this->show_in_rest = $methods;
 		return $this;
-
 	}
+
 
 	/**
 	 * To show this field or not based on the result of a function.
@@ -1094,9 +1087,7 @@ class Field {
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
 	 *
-	 * @var array $args ;
-	 *
-	 * @since 1.7.0
+	 * @var array $args
 	 *
 	 * @return $this
 	 */
@@ -1111,17 +1102,17 @@ class Field {
 	 * Add this field to a tab.
 	 * The tab must be first registered with the box.
 	 *
-	 * @see \Lipe\Lib\CMB2\Box::add_tab()
-	 * @see Tabs::render_field()
-	 *
 	 * @param string $id
 	 *
+	 * @see Tabs::render_field()
+	 *
+	 * @see \Lipe\Lib\CMB2\Box::add_tab()
 	 * @return $this
 	 */
 	public function tab( string $id ) : Field {
 		Tabs::init_once();
 
-		$this->tab           = $id;
+		$this->tab = $id;
 		if ( $this->render_row_cb ) {
 			$this->tab_content_cb = $this->render_row_cb;
 		}
@@ -1146,6 +1137,7 @@ class Field {
 		return new Field_Type( $this );
 	}
 
+
 	/**
 	 * The type of field
 	 *
@@ -1164,39 +1156,33 @@ class Field {
 
 
 	/**
-	 *
 	 * @param callable $callback
-	 *
-	 * @since 2.10.0
 	 *
 	 * @return Field
 	 */
 	public function render_row_cb( callable $callback ) : Field {
-
 		$this->render_row_cb = $callback;
 
 		return $this;
-
 	}
 
 
 	/**
 	 * Set a Fields Type and register the type with Meta\Repo
 	 *
-	 * @param string $type - CMB2 field type.
+	 * @param string $type      - CMB2 field type.
 	 * @param string $data_type {
-	 *      // Type of data to return from the repo.
-	 *      @type Repo::DEFAULT
-	 *      @type Repo::CHECKBOX
-	 *      @type Repo::FILE
-	 *      @type Repo::GROUP
-	 *      @type Repo::TAXONOMY
+	 *                          // Type of data to return from the repo.
+	 *
+	 * @type Repo::DEFAULT
+	 * @type Repo::CHECKBOX
+	 * @type Repo::FILE
+	 * @type Repo::GROUP
+	 * @type Repo::TAXONOMY
 	 * }
 	 *
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types
-	 *
-	 * @since 2.0.0
 	 *
 	 * @internal
 	 *
@@ -1210,8 +1196,6 @@ class Field {
 
 	/**
 	 * Does this field return a value of array type.
-	 *
-	 * @since 2.19.0
 	 *
 	 * @internal
 	 *
@@ -1249,9 +1233,9 @@ class Field {
 	 *
 	 * @filter default_{$meta_type}_metadata 11, 3
 	 *
-	 * @param $value - Empty or a value set by another filter.
+	 * @param $value     - Empty or a value set by another filter.
 	 * @param $object_id - Current post/term/user id.
-	 * @param $meta_key - Meta key being filtered.
+	 * @param $meta_key  - Meta key being filtered.
 	 *
 	 * @internal
 	 *
