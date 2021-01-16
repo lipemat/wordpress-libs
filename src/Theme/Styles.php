@@ -10,12 +10,29 @@ class Styles {
 	use Singleton;
 	use Memoize;
 
+	/**
+	 * @var string[]
+	 */
 	protected static $async = [];
 
+	/**
+	 * @var string[]
+	 */
 	protected static $body_class = [];
 
+	/**
+	 * @var array<null|string>
+	 */
+	protected static $crossorigin = [];
+
+	/**
+	 * @var string[]
+	 */
 	protected static $deffer = [];
 
+	/**
+	 * @var string[]
+	 */
 	protected static $integrity = [];
 
 
@@ -153,7 +170,7 @@ class Styles {
 	 */
 	public function defer_javascript( string $handle ) : void {
 		static::$deffer[] = $handle;
-		$this->once( static function () {
+		$this->once( function () {
 			add_filter( 'script_loader_tag', static function ( $tag, $handle ) {
 				if ( \in_array( $handle, static::$deffer, true ) ) {
 					return str_replace( '<script', '<script defer="defer"', $tag );
@@ -165,7 +182,7 @@ class Styles {
 
 
 	/**
-	 * Defer an enqueued script by handle.
+	 * Async an enqueued script by handle.
 	 *
 	 * May be called before or after `wp_enqueue_script` but must be called
 	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
@@ -182,10 +199,41 @@ class Styles {
 	 */
 	public function async_javascript( string $handle ) : void {
 		static::$async[] = $handle;
-		$this->once( static function () {
-			add_filter( 'script_loader_tag', static function ( $tag, $handle ) {
+		$this->once( function () {
+			add_filter( 'script_loader_tag', function ( $tag, $handle ) {
 				if ( \in_array( $handle, static::$async, true ) ) {
 					return str_replace( '<script', '<script async="async"', $tag );
+				}
+				return $tag;
+			}, 11, 2 );
+		}, __METHOD__ );
+	}
+
+
+	/**
+	 * Crossorigin an enqueued script by handle.
+	 *
+	 * Adds a "crossorigin" attribute to a script tag.
+	 *
+	 * May be called before or after `wp_enqueue_script` but must be called
+	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
+	 * on if enqueued for footer of header.
+	 *
+	 * @param string      $handle - The handle used to enqueued this script.
+	 *
+	 * @param string|null $value - Optional value of the attribute.
+	 *
+	 * @return void
+	 */
+	public function crossorigin_javascript( string $handle, ?string $value = null ) : void {
+		static::$crossorigin[ $handle ] = $value;
+		$this->once( function () {
+			add_filter( 'script_loader_tag', function ( $tag, $handle ) {
+				if ( \array_key_exists( $handle, static::$crossorigin ) ) {
+					if ( null === static::$crossorigin[ $handle ] ) {
+						return \str_replace( '<script', '<script crossorigin', $tag );
+					}
+					return \str_replace( '<script', '<script crossorigin="' . static::$crossorigin[ $handle ] . '"', $tag );
 				}
 				return $tag;
 			}, 11, 2 );
@@ -208,7 +256,7 @@ class Styles {
 	 */
 	public function integrity_javascript( string $handle, string $integrity ) : void {
 		static::$integrity[ $handle ] = $integrity;
-		$this->once( static function () {
+		$this->once( function () {
 			add_filter( 'script_loader_tag', static function ( $tag, $handle ) {
 				if ( isset( static::$integrity[ $handle ] ) ) {
 					return str_replace( '<script', '<script integrity="' . static::$integrity[ $handle ] . '" crossorigin="anonymous"', $tag );
