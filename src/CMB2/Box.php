@@ -598,9 +598,9 @@ class Box {
 			$config = $this->translate_rest_keys( $field, $config );
 		}
 
-		if ( $field->sanitization_cb ) {
+		if ( $field->sanitize_callback ) {
 			$config['sanitize_callback'] = function ( $value ) use ( $field ) {
-				return $field->get_cmb2_field()->sanitization_cb( $value );
+				return \call_user_func( $field->sanitize_callback, $value, $field->get_field_args(), $field->get_cmb2_field() );
 			};
 		}
 

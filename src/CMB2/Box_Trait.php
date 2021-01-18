@@ -233,7 +233,7 @@ trait Box_Trait {
 	 *
 	 * @return bool
 	 */
-	protected function is_allowed_to_register_meta( Field $field ) : bool {
+	public function is_allowed_to_register_meta( Field $field ) : bool {
 		return \in_array( $field->data_type, [ Repo::CHECKBOX, Repo::DEFAULT, Repo::FILE ], true );
 	}
 

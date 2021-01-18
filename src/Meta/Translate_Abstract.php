@@ -70,9 +70,11 @@ abstract class Translate_Abstract {
 			$value = get_metadata( $meta_type, $object_id, $key, true );
 		}
 
-		if ( isset( $this->fields[ $key ] ) && null !== $this->fields[ $key ]->escape_cb ) {
-			return \cmb2_get_field( $this->fields[ $key ]->box_id, $key )->escaped_value( null, $value );
+		$field = $this->get_field( $key );
+		if ( null !== $field && null !== $field->escape_cb ) {
+			return $field->get_cmb2_field()->escaped_value( null, $value );
 		}
+
 		return $value;
 	}
 
@@ -90,11 +92,12 @@ abstract class Translate_Abstract {
 	 * @return bool|int
 	 */
 	protected function update_meta_value( $object_id, string $key, $value, string $meta_type ) {
-		if ( isset( $this->fields[ $key ] ) ) {
-			if ( null !== $this->fields[ $key ]->sanitization_cb ) {
-				$value = \cmb2_get_field( $this->fields[ $key ]->box_id, $key )->sanitization_cb( $value );
+		$field = $this->get_field( $key );
+		if ( null !== $field ) {
+			if ( null !== $field->sanitization_cb ) {
+				$value = $field->get_cmb2_field()->sanitization_cb( $value );
 			}
-			if ( null !== $this->fields[ $key ]->group ) {
+			if ( null !== $field->group ) {
 				return $this->update_group_sub_field_value( $object_id, $key, $value, $meta_type );
 			}
 		}
@@ -126,7 +129,7 @@ abstract class Translate_Abstract {
 		if ( 'option' === $meta_type ) {
 			cmb2_options( $object_id )->remove( $key );
 		} else {
-			\delete_metadata( $meta_type, $object_id, $key );
+			delete_metadata( $meta_type, $object_id, $key );
 		}
 	}
 
@@ -356,13 +359,13 @@ abstract class Translate_Abstract {
 		$taxonomy = $this->get_field( $field_id )->taxonomy;
 		if ( 'post' !== $meta_type ) {
 			return $this->maybe_use_main_blog( $field_id, function () use( $object_id, $field_id, $taxonomy, $meta_type ) {
-				return array_filter( array_map( function ( $slug ) use ( $taxonomy ) {
-					return \get_term_by( 'slug', $slug, $taxonomy );
+				return \array_filter( \array_map( function ( $slug ) use ( $taxonomy ) {
+					return get_term_by( 'slug', $slug, $taxonomy );
 				}, (array) $this->get_meta_value( $object_id, $field_id, $meta_type ) ) );
 			} );
 		}
 
-		return array_filter( (array) get_the_terms( $object_id, $taxonomy ) );
+		return \array_filter( (array) get_the_terms( $object_id, $taxonomy ) );
 	}
 
 
@@ -371,24 +374,30 @@ abstract class Translate_Abstract {
 	 * We do the same here.
 	 *
 	 * @param        $object_id
-	 * @param string $field_id
+	 * @param string $key
 	 * @param array  $terms - Term ids, or term slugs
 	 * @param string $meta_type
 	 *
 	 * @return void
 	 */
-	public function update_taxonomy_field_value( $object_id, string $field_id, array $terms, string $meta_type ) : void {
-		$taxonomy = $this->get_field( $field_id )->taxonomy;
-		if ( 'post' !== $meta_type ) {
-			$this->update_meta_value( $object_id, $field_id, array_map( function ( $slug ) use ( $taxonomy ) {
-				if ( is_numeric( $slug ) ) {
-					return get_term( $slug, $taxonomy )->slug;
-				}
+	public function update_taxonomy_field_value( $object_id, string $key, array $terms, string $meta_type ) : void {
+		$field = $this->get_field( $key );
+		if ( null !== $field ) {
+			if ( null !== $field->sanitization_cb ) {
+				$terms = $field->get_cmb2_field()->sanitization_cb( $terms );
+			}
 
-				return $slug;
-			}, $terms ), $meta_type );
-		} else {
-			wp_set_object_terms( $object_id, $terms, $taxonomy );
+			if ( 'post' !== $meta_type ) {
+				$this->update_meta_value( $object_id, $key, array_map( function ( $slug ) use ( $field ) {
+					if ( is_numeric( $slug ) ) {
+						return get_term( $slug, $field->taxonomy )->slug;
+					}
+
+					return $slug;
+				}, $terms ), $meta_type );
+			} else {
+				wp_set_object_terms( $object_id, $terms, $field->taxonomy );
+			}
 		}
 	}
 
