@@ -69,7 +69,7 @@ abstract class Db {
 		global $wpdb;
 		$this->table = $wpdb->prefix . static::NAME;
 
-		$this->run_for_version( [ $this, 'run_updates' ], $this->get_db_version() );
+		$this->run_for_version( [ $this, 'run_updates' ], $this->get_db_version( true ) );
 	}
 
 
@@ -116,7 +116,7 @@ abstract class Db {
 		}
 
 		if ( is_numeric( $id_or_wheres ) ) {
-			$id_or_wheres = [ $this->get_id_field() => $id_or_wheres ];
+			$id_or_wheres = [ $this->get_id_field( true ) => $id_or_wheres ];
 			$count        = 1;
 		}
 
@@ -194,7 +194,7 @@ abstract class Db {
 
 		$columns = $this->sort_columns( $columns );
 
-		if ( $wpdb->insert( $this->get_table(), $columns, $this->get_columns() ) ) {
+		if ( $wpdb->insert( $this->get_table(), $columns, $this->get_columns( true ) ) ) {
 			return $wpdb->insert_id;
 		}
 
@@ -213,7 +213,7 @@ abstract class Db {
 		global $wpdb;
 
 		if ( is_numeric( $id_or_wheres ) ) {
-			$id_or_wheres = [ $this->get_id_field() => $id_or_wheres ];
+			$id_or_wheres = [ $this->get_id_field( true ) => $id_or_wheres ];
 		}
 
 		$formats = $this->get_formats( $id_or_wheres );
@@ -236,7 +236,7 @@ abstract class Db {
 		global $wpdb;
 
 		if ( is_numeric( $id_or_wheres ) ) {
-			$id_or_wheres = [ $this->get_id_field() => $id_or_wheres ];
+			$id_or_wheres = [ $this->get_id_field( true ) => $id_or_wheres ];
 		}
 
 		$column_formats = $this->get_formats( $columns );
@@ -258,10 +258,10 @@ abstract class Db {
 	protected function get_formats( array $columns ) : array {
 		$formats = [];
 		foreach ( $columns as $column => $value ) {
-			if ( $column === $this->get_id_field() ) {
+			if ( $column === $this->get_id_field( true ) ) {
 				$formats[] = '%d';
-			} elseif ( ! empty( $this->get_columns()[ $column ] ) ) {
-				$formats[] = $this->get_columns()[ $column ];
+			} elseif ( ! empty( $this->get_columns( true )[ $column ] ) ) {
+				$formats[] = $this->get_columns( true )[ $column ];
 			} else {
 				$formats[] = '%s';
 			}
@@ -283,7 +283,7 @@ abstract class Db {
 	protected function sort_columns( array $columns ) : array {
 		$clean = [];
 
-		foreach ( $this->get_columns() as $column => $type ) {
+		foreach ( $this->get_columns( true ) as $column => $type ) {
 			if ( array_key_exists( $column, $columns ) ) {
 				$clean[ $column ] = $columns[ $column ];
 				//because we usually let mysql handle default dates
@@ -301,8 +301,10 @@ abstract class Db {
 	 *
 	 * @deprecated
 	 */
-	public function get_id_field() : string {
-		_deprecated_function( __METHOD__, '2.24.0', 'static::ID_FIELD' );
+	public function get_id_field( $internal = false ) : string {
+		if ( ! $internal ) {
+			_deprecated_function( __METHOD__, '2.24.0', 'static::ID_FIELD' );
+		}
 
 		if ( __CLASS__ === static::ID_FIELD ) {
 			_deprecated_argument( 'id_field', '2.23.0', 'Using a variable for id field is deprecated. Use the `static::ID_FIELD)` const.' );
@@ -319,8 +321,10 @@ abstract class Db {
 	 *
 	 * @deprecated
 	 */
-	public function get_columns() : array {
-		_deprecated_function( __METHOD__, '2.24.0', 'static::COLUMNS' );
+	public function get_columns( $internal = false ) : array {
+		if ( ! $internal ) {
+			_deprecated_function( __METHOD__, '2.24.0', 'static::COLUMNS' );
+		}
 		if ( empty( static::COLUMNS ) ) {
 			_deprecated_argument( 'columns', '2.23.0', 'Using a variable for columns is deprecated. Use the `static::COLUMNS` const.' );
 			return isset( $this->columns ) ? $this->columns : [];
@@ -334,8 +338,10 @@ abstract class Db {
 	 *
 	 * @deprecated
 	 */
-	protected function get_db_version() : string {
-		_deprecated_function( __METHOD__, '2.24.0', 'static::DB_VERSION' );
+	protected function get_db_version( $internal = false ) : string {
+		if ( ! $internal ) {
+			_deprecated_function( __METHOD__, '2.24.0', 'static::DB_VERSION' );
+		}
 
 		if ( empty( static::DB_VERSION ) ) {
 			_deprecated_argument( 'db_version', '2.23.0', 'Using a variable for db version is deprecated. Use the `static::DB_VERSION` const.' );
