@@ -511,9 +511,12 @@ class Field {
 	 * Bypass the CMB sanitization (sanitizes before saving) methods with your own callback.
 	 * Set to false if you do not want any sanitization (not recommended).
 	 *
+	 * Only used when a field's data type cannot be registered with `register_meta`.
+	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
 	 *
-	 * @see     Field::sanitization_cb()
+	 * @see Field::sanitization_cb()
+	 * @see Field::$sanitize_callback
 	 *
 	 * @example sanitize_function( $value, $field_args, $field ){ return string }
 	 *
@@ -521,6 +524,22 @@ class Field {
 	 *
 	 */
 	public $sanitization_cb;
+
+	/**
+	 * Used internally to store the CMB sanitization callback used
+	 * with `register_meta`.
+	 *
+	 * If we register the `sanitization_cb` with `register_meta` it will be doubled
+	 * up every time CMB2 saves the field. Instead we set this property when a field
+	 * may be registered with `register_meta`.
+	 *
+	 * @internal
+	 *
+	 * @see Field::$sanitization_cb
+	 *
+	 * @var callable|null
+	 */
+	public $sanitize_callback;
 
 	/**
 	 * Whether to show select all button for items
@@ -912,12 +931,12 @@ class Field {
 	/**
 	 * Supported by most field types, and will make the individual field a repeatable one.
 	 *
-	 * @param bool   $repeatable
-	 * @param string $add_row_text
-	 *
-	 * @default true
+	 * @param bool        $repeatable
+	 * @param string|null $add_row_text
 	 *
 	 * @return $this
+	 * @default true
+	 *
 	 */
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ) : Field {
 		// Ugh! Hack so I can use a method from that class
@@ -927,7 +946,7 @@ class Field {
 
 
 			public function allowed( $type ) : bool {
-				if ( parent::repeatable_exception( $type ) ) {
+				if ( $this->repeatable_exception( $type ) ) {
 					return false;
 				}
 				// Cases not covered by CMB2
@@ -1208,17 +1227,23 @@ class Field {
 
 
 	/**
-	 * Bypass the CMB sanitization (sanitizes before saving) methods with your own callback.
-	 * Set to false if you do not want any sanitization (not recommended).
+	 * If this field supports using `register_meta` to do sanitization we
+	 * set the `sanitize_callback` property, if not use use the CMB2
+	 * `sanitize_cb` property to allow CMB2 and/or meta repo to handle sanitization.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
+	 * @link https://developer.wordpress.org/reference/functions/register_meta/
 	 *
 	 * @param callable $callback
 	 *
 	 * @return Field
 	 */
 	public function sanitization_cb( callable $callback ) : Field {
-		$this->sanitization_cb = $callback;
+		if ( [ 'options-page' ] !== $this->box->get_object_types() && $this->box->is_allowed_to_register_meta( $this ) ) {
+			$this->sanitize_callback = $callback;
+		} else {
+			$this->sanitization_cb = $callback;
+		}
 		return $this;
 	}
 
