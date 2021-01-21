@@ -42,24 +42,44 @@ trait Mutator_Trait {
 	 * `get_extended_properties` method which returns a list
 	 * of additional properties.
 	 *
-	 * @param string $property - Property to retrieve.
+	 * @param string $name - Property to retrieve.
 	 *
 	 * @throws \ErrorException
 	 * @return mixed
 	 */
-	public function __get( string $property ) {
+	public function __get( string $name ) {
 		if ( ! \method_exists( $this, 'get_object' ) ) {
-			throw new \ErrorException( 'Direct access to object properties is only available for objects with `get_object`: ' . __CLASS__ . ":{$property}" );
+			throw new \ErrorException( 'Direct access to object properties is only available for objects with `get_object`: ' . __CLASS__ . ":{$name}" );
 		}
 		$object = $this->get_object();
-		if ( null !== $object && ( \property_exists( $object, $property ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $property ) ) ) ) {
-			return $object->{$property};
+		if ( null !== $object && ( \property_exists( $object, $name ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $name ) ) ) ) {
+			return $object->{$name};
 		}
-		if ( \method_exists( $this, 'get_extended_properties' ) && \in_array( $property, $this->get_extended_properties(), true ) ) {
-			return $object->{$property};
+		if ( \method_exists( $this, 'get_extended_properties' ) && \in_array( $name, $this->get_extended_properties(), true ) ) {
+			return $object->{$name};
 		}
 
-		throw new \ErrorException( 'Undefined property: ' . __CLASS__ . ":{$property}" );
+		throw new \ErrorException( 'Undefined property: ' . __CLASS__ . ":{$name}" );
+	}
+
+
+	/**
+	 * Set value of any property which exists on the child Object.
+	 *
+	 * @param string $name - Property to set.
+	 * @param mixed  $value
+	 *
+	 * @return void
+	 * @throws \ErrorException
+	 */
+	public function __set( string $name, $value ) {
+		if ( ! \method_exists( $this, 'get_object' ) ) {
+			throw new \ErrorException( 'Direct access to object properties is only available for objects with `get_object`: ' . __CLASS__ . ":{$name}" );
+		}
+		$object = $this->get_object();
+		if ( null !== $object && ( \property_exists( $object, $name ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $name ) ) ) ) {
+			return $object->{$name} = $value;
+		}
 	}
 
 
