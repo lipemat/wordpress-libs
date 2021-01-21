@@ -5,7 +5,6 @@ namespace Lipe\Lib\Comment;
 use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
- * @property array $children
  * @property string $comment_agent
  * @property string $comment_approved
  * @property string $comment_author
@@ -15,14 +14,12 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @property string $comment_content
  * @property string $comment_date
  * @property string $comment_date_gmt
- * @property string $comment_ID
- * @property string $comment_karma
- * @property string $comment_parent
- * @property string $comment_post_ID
+ * @property int $comment_ID
+ * @property int $comment_karma
+ * @property int $comment_parent
+ * @property int $comment_post_ID
  * @property string $comment_type
- * @property bool $populate_children
- * @property array $post_fields
- * @property string $user_id
+ * @property int $user_id
  */
 trait Comment_Trait {
 	use Mutator_Trait;
