@@ -55,7 +55,7 @@ class Crypt {
 		try {
 			$salt     = hex2bin( $json['salt'] );
 			$iv       = hex2bin( $json['iv'] );
-			$hash_key = hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, $json['iterations'], $this->get_key_size() ) );
+			$hash_key = hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, static::ITERATIONS, $this->get_key_size() ) );
 		} catch ( \Exception $e ) {
 			return null;
 		}
@@ -86,8 +86,7 @@ class Crypt {
 		$output = [
 			'ciphertext' => base64_encode( openssl_encrypt( $string, static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv ) ),
 			'iv'         => bin2hex( $iv ),
-			'salt'       => bin2hex( $salt ),
-			'iterations' => static::ITERATIONS,
+			'salt'       => bin2hex( $salt )
 		];
 		unset( $iv, $salt, $hash_key );
 
