@@ -7,9 +7,9 @@ use Lipe\Lib\Traits\Singleton;
 use Lipe\Lib\Util\Arrays;
 
 /**
- * Generate JSON data which mimics the return of wp-json api.
+ * Generate JSON data which mimics the return of wp-json API.
  *
- * Use most commonly to get the json data without making a request to the api
+ * Use most commonly to get the json data without making a request to the API.
  * Thus preventing an anti-pattern when using React etc.
  *
  */
@@ -18,12 +18,32 @@ class Initial_Data {
 	use Memoize;
 
 	/**
+	 * Are we currently retrieving initial data?
+	 *
+	 * @var bool
+	 */
+	protected $retrieving = false;
+
+
+	/**
+	 * Are we currently retrieving initial data?
+	 *
+	 * Used within conditions which need apply to only initial data.
+	 *
+	 * @return bool
+	 */
+	public function is_retrieving() : bool {
+		return $this->retrieving;
+	}
+
+
+	/**
 	 * Turn an array of Comments into there matching data format
 	 * provided by the JSON API Server.
 	 *
 	 * @param \WP_Comment[] $comments
 	 * @param bool          $with_links - To include links inside the response.
-	 * @param bool|string[] $embed - Whether to embed all links, a filtered list of link relations, or no links.
+	 * @param bool|string[] $embed      - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
 	 * @return array
 	 */
@@ -42,7 +62,7 @@ class Initial_Data {
 	 *
 	 * @param \WP_Post[]|null $posts      - Array of post objects (defaults to global WP_Query->posts)
 	 * @param bool            $with_links - To include links inside the response.
-	 * @param bool|string[] $embed - Whether to embed all links, a filtered list of link relations, or no links.
+	 * @param bool|string[]   $embed      - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
 	 * @return array
 	 */
@@ -62,17 +82,19 @@ class Initial_Data {
 	/**
 	 * Mimic response from the REST server for the provided controller.
 	 *
-	 * @param \WP_REST_Controller  $controller
+	 * @param \WP_REST_Controller         $controller
 	 * @param \WP_Post|\WP_Comment|object $item
-	 * @param bool                 $with_links - To include links inside the response.
-	 * @param bool|string[] $embed - Whether to embed all links, a filtered list of link relations, or no links.
+	 * @param bool                        $with_links - To include links inside the response.
+	 * @param bool|string[]               $embed      - Whether to embed all links, a filtered list of link relations,
+	 *                                                or no links.
 	 *
-	 * @link https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_embed
+	 * @link  https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_embed
 	 * @link  https://developer.wordpress.org/rest-api/using-the-rest-api/linking-and-embedding/#embedding
 	 *
 	 * @return array
 	 */
 	protected function get_response( \WP_REST_Controller $controller, $item, bool $with_links = false, $embed = false ) : array {
+		$this->retrieving = true;
 		$data = rest_get_server()->response_to_data(
 			$controller->prepare_item_for_response( $item, $this->get_request() ),
 			$embed
@@ -80,6 +102,7 @@ class Initial_Data {
 		if ( ! $with_links ) {
 			return Arrays::in()->array_recursive_unset( '_links', $data );
 		}
+		$this->retrieving = false;
 		return $data;
 	}
 

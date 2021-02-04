@@ -86,7 +86,7 @@ class Crypt {
 		$output = [
 			'ciphertext' => base64_encode( openssl_encrypt( $string, static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv ) ),
 			'iv'         => bin2hex( $iv ),
-			'salt'       => bin2hex( $salt )
+			'salt'       => bin2hex( $salt ),
 		];
 		unset( $iv, $salt, $hash_key );
 
