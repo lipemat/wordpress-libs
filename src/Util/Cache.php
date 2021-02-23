@@ -18,7 +18,7 @@ class Cache {
 	protected const QUERY_ARG = 'lipe/lib/util/cache/cache';
 	public const DEFAULT_GROUP = 'lipe/lib/util/cache/group';
 
-	public const FLUSH_ON_SAVE_POST_GROUP = 'lipe/lib/util/cache/flush-save-post';
+	public const FLUSH_ON_SAVE_POST_GROUP = 'posts';
 
 
 	public function hook() : void {
@@ -107,14 +107,7 @@ class Cache {
 	 * @return string
 	 */
 	protected function get_group_key( string $group ) : string {
-		if ( self::FLUSH_ON_SAVE_POST_GROUP === $group ) {
-			// Tap into the existing last_changed for posts group so we can flush automatically.
-			$last_changed = wp_cache_get_last_changed( 'posts' );
-		} else {
-			$last_changed = wp_cache_get_last_changed( $group );
-		}
-
-		return $group . ':' . $last_changed;
+		return $group . ':' . wp_cache_get_last_changed( $group );
 	}
 
 
