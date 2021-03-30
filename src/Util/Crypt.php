@@ -2,6 +2,8 @@
 
 namespace Lipe\Lib\Util;
 
+use JetBrains\PhpStorm\Pure;
+
 /**
  * Encrypt/Decrypt a string using a custom key.
  * Objects may be encrypted using `json_encode` or `serialize` first.
@@ -102,7 +104,7 @@ class Crypt {
 	 * @return int
 	 */
 	protected function get_key_size() : int {
-		return (int) abs( filter_var( static::METHOD, FILTER_SANITIZE_NUMBER_INT ) ) / 4;
+		return (int) abs( (float) filter_var( static::METHOD, FILTER_SANITIZE_NUMBER_INT ) ) / 4;
 	}
 
 
