@@ -160,7 +160,7 @@ class Versions {
 
 		if ( ! empty( self::$updates ) ) {
 			\usort( self::$updates, function ( $a, $b ) {
-				return (int) version_compare( $a['version'], $b['version'], '>' );
+				return version_compare( $a['version'], $b['version'] );
 			} );
 
 			foreach ( self::$updates as $i => $func ) {
