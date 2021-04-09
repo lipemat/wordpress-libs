@@ -18,53 +18,50 @@ class Actions {
 	 * `apply_filters` as an `do_actions` and call a function
 	 * without actually changing the original value.
 	 *
-	 * @param string   $filter
-	 * @param callable $callable
-	 * @param int      $priority
-	 * @param int      $accepted_args
+	 * @param string   $filter   - Filter we are adding.
+	 * @param callable $callable - Callback.
+	 * @param int      $priority - Priority of the filter we are adding.
 	 *
 	 * @return void
 	 */
-	public function add_filter_as_action( string $filter, callable $callable, int $priority = 10, int $accepted_args = 1 ) : void {
-		\add_filter( $filter, function ( ...$args ) use ( $callable ) {
+	public function add_filter_as_action( string $filter, callable $callable, int $priority = 10 ) : void {
+		add_filter( $filter, function ( ...$args ) use ( $callable ) {
 			$callable( ...$args );
 
 			return reset( $args );
-		}, $priority, $accepted_args );
+		}, $priority, 10 );
 	}
 
 
 	/**
 	 * Add a callable to multiple actions at once
 	 *
-	 * @param array    $actions
-	 * @param callable $callable
-	 * @param int      $priority
-	 * @param int      $accepted_args
+	 * @param array    $actions - Actions to register.
+	 * @param callable $callable - Callback.
+	 * @param int      $priority - Priority of the filter we are adding.
 	 *
 	 * @return void
 	 */
-	public function add_action_all( array $actions, callable $callable, int $priority = 10, int $accepted_args = 1 ) : void {
-		array_map( function ( $action ) use ( $callable, $priority, $accepted_args ) {
-			add_action( $action, $callable, $priority, $accepted_args );
-		}, $actions );
+	public function add_action_all( array $actions, callable $callable, int $priority = 10 ) : void {
+		array_walk( $actions, function ( $action ) use ( $callable, $priority ) {
+			add_action( $action, $callable, $priority, 10 );
+		} );
 	}
 
 
 	/**
 	 * Add a callable to multiple filters at once
 	 *
-	 * @param array    $filters
-	 * @param callable $callable
-	 * @param int      $priority
-	 * @param int      $accepted_args
+	 * @param array    $filters - Filters to register.
+	 * @param callable $callable - Callback.
+	 * @param int      $priority - Priority of the filter we are adding.
 	 *
 	 * @return void
 	 */
-	public function add_filter_all( array $filters, callable $callable, int $priority = 10, int $accepted_args = 1 ) : void {
-		array_map( function ( $action ) use ( $callable, $priority, $accepted_args ) {
-			add_filter( $action, $callable, $priority, $accepted_args );
-		}, $filters );
+	public function add_filter_all( array $filters, callable $callable, int $priority = 10 ) : void {
+		array_walk(  $filters, function ( $action ) use ( $callable, $priority ) {
+			add_filter( $action, $callable, $priority, 10 );
+		} );
 	}
 
 
@@ -75,21 +72,20 @@ class Actions {
 	 * If you call this method multiple times with the same $action, $callable, $priority
 	 * the filter will also fire only once.
 	 *
-	 * @param string   $filter
-	 * @param callable $callable
-	 * @param int      $priority
-	 * @param int      $accepted_args
+	 * @param string   $filter   - Filter we are adding.
+	 * @param callable $callable - Callback.
+	 * @param int      $priority - Priority of the filter we are adding.
 	 *
 	 * @return void
 	 */
-	public function add_single_filter( string $filter, callable $callable, int $priority = 10, int $accepted_args = 1 ) : void {
+	public function add_single_filter( string $filter, callable $callable, int $priority = 10 ) : void {
 		$function = function ( ...$args ) use ( $filter, $callable, $priority, &$function ) {
-			\remove_filter( $filter, $function, $priority );
+			remove_filter( $filter, $function, $priority );
 
 			return $callable( ...$args );
 
 		};
-		\add_filter( $filter, $function, $priority, $accepted_args );
+		add_filter( $filter, $function, $priority, 10 );
 	}
 
 
@@ -100,19 +96,18 @@ class Actions {
 	 * If you call this method multiple times with the same $action, $callable, $priority
 	 * the action will also fire only once.
 	 *
-	 * @param string   $action
-	 * @param callable $callable
-	 * @param int      $priority
-	 * @param int      $accepted_args
+	 * @param string   $action - Action we are adding.
+	 * @param callable $callable - Callback.
+	 * @param int      $priority - Priority of the filter we are adding.
 	 *
 	 * @return void
 	 */
-	public function add_single_action( string $action, callable $callable, int $priority = 10, int $accepted_args = 1 ) : void {
+	public function add_single_action( string $action, callable $callable, int $priority = 10 ) : void {
 		$function = function ( ...$args ) use ( $action, $callable, $priority, &$function ) {
-			\remove_action( $action, $function, $priority );
+			remove_action( $action, $function, $priority );
 			$callable( ...$args );
 		};
-		\add_action( $action, $function, $priority, $accepted_args );
+		add_action( $action, $function, $priority, 10 );
 	}
 
 
@@ -121,15 +116,15 @@ class Actions {
 	 * This may be called before or after the add_action() is
 	 * called which is being removed.
 	 *
-	 * @param string   $action
-	 * @param callable $callable
-	 * @param int      $priority
+	 * @param string   $action   - Action we are adding.
+	 * @param callable $callable - Callback.
+	 * @param int      $priority - Priority of the filter we are adding.
 	 *
 	 * @return void
 	 */
 	public function remove_action_always( string $action, callable $callable, int $priority = 10 ) : void {
-		\add_action( $action, function () use ( $action, $callable, $priority ) {
-			\remove_action( $action, $callable, $priority );
+		add_action( $action, function () use ( $action, $callable, $priority ) {
+			remove_action( $action, $callable, $priority );
 		}, -1 );
 	}
 
@@ -139,17 +134,15 @@ class Actions {
 	 * This may be called before or after the add_filter() is
 	 * called which is being removed.
 	 *
-	 * @param string   $filter
-	 * @param callable $callable
-	 * @param int      $priority
-	 *
-	 * @see \remove_filter();
+	 * @param string   $filter   - Filter we are adding.
+	 * @param callable $callable - Callback.
+	 * @param int      $priority - Priority of the filter we are adding.
 	 *
 	 * @return void
 	 */
 	public function remove_filter_always( string $filter, callable $callable, int $priority = 10 ) : void {
-		\add_filter( $filter, function ( $value ) use ( $filter, $callable, $priority ) {
-			\remove_filter( $filter, $callable, $priority );
+		add_filter( $filter, function ( $value ) use ( $filter, $callable, $priority ) {
+			remove_filter( $filter, $callable, $priority );
 
 			return $value;
 		}, -1 );
@@ -167,15 +160,14 @@ class Actions {
 	 * @param string   $filter   - Filter we are adding.
 	 * @param callable $callable - Callback.
 	 * @param string   $start    - Action which starts the filter.
-	 * @param string   $end      - Action which removphpes the filter.
+	 * @param string   $end      - Action which removes the filter.
 	 * @param int      $priority - Priority of the filter we are adding.
-	 * @param int      $accepted_args - Number of arguments to pass to filter.
 	 *
 	 * @return void
 	 */
-	public function add_filter_during( string $filter, callable $callable, string $start, string $end, int $priority = 10, int $accepted_args = 1 ) : void {
-		add_action( $start, function () use ( $filter, $callable, $priority, $accepted_args ) {
-			add_filter( $filter, $callable, $priority, $accepted_args );
+	public function add_filter_during( string $filter, callable $callable, string $start, string $end, int $priority = 10 ) : void {
+		add_action( $start, function () use ( $filter, $callable, $priority ) {
+			add_filter( $filter, $callable, $priority, 10 );
 		}, - 1 );
 
 		add_action( $end, function () use ( $filter, $callable, $priority ) {
