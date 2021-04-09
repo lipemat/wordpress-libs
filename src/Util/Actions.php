@@ -182,4 +182,46 @@ class Actions {
 			remove_filter( $filter, $callable, $priority );
 		}, - 1 );
 	}
+
+
+	/**
+	 * Add an action which removes itself right before the callback
+	 * runs then adds itself back in after the callback has finished.
+	 *
+	 * Add an action which would otherwise cause infinite loops.
+	 *
+	 * @param string   $action - Action we are adding.
+	 * @param callable $callable - Callback.
+	 * @param int      $priority - Priority of the action we are adding.
+	 */
+	public function add_looping_action( string $action, callable $callable, int $priority = 10 ) : void {
+		$function = function ( ...$args ) use ( $action, $callable, $priority, &$function ) {
+			remove_action( $action, $function, $priority );
+			$callable( ...$args );
+			add_action( $action, $function, $priority, 10 );
+		};
+		add_action( $action, $function, $priority, 10 );
+	}
+
+
+	/**
+	 * Add an filter which removes itself right before the callback
+	 * runs then adds itself back in after the callback has finished.
+	 *
+	 * Add an filter which would otherwise cause infinite loops.
+	 *
+	 * @param string   $filter   - Filter we are adding.
+	 * @param callable $callable - Callback.
+	 * @param int      $priority - Priority of the filter we are adding.
+	 */
+	public function add_looping_filter( string $filter, callable $callable, int $priority = 10 ) : void {
+		$function = function ( ...$args ) use ( $filter, $callable, $priority, &$function ) {
+			remove_filter( $filter, $function, $priority );
+			$result = $callable( ...$args );
+			add_filter( $filter, $function, $priority, 10 );
+
+			return $result;
+		};
+		add_filter( $filter, $function, $priority, 10 );
+	}
 }
