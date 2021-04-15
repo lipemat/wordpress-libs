@@ -2,8 +2,6 @@
 
 namespace Lipe\Lib\Util;
 
-use JetBrains\PhpStorm\Pure;
-
 /**
  * Encrypt/Decrypt a string using a custom key.
  * Objects may be encrypted using `json_encode` or `serialize` first.
@@ -53,11 +51,12 @@ class Crypt {
 	 */
 	public function decrypt( string $message ) : ?string {
 		$json = json_decode( base64_decode( $message ), true );
+		$iterations = (int) abs( $json['iterations'] ?? static::ITERATIONS );
 
 		try {
 			$salt     = hex2bin( $json['salt'] );
 			$iv       = hex2bin( $json['iv'] );
-			$hash_key = hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, static::ITERATIONS, $this->get_key_size() ) );
+			$hash_key = hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, $iterations, $this->get_key_size() ) );
 		} catch ( \Exception $e ) {
 			return null;
 		}
@@ -89,6 +88,7 @@ class Crypt {
 			'ciphertext' => base64_encode( openssl_encrypt( $string, static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv ) ),
 			'iv'         => bin2hex( $iv ),
 			'salt'       => bin2hex( $salt ),
+			'iterations' => static::ITERATIONS,
 		];
 		unset( $iv, $salt, $hash_key );
 
