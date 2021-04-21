@@ -173,7 +173,7 @@ class Styles {
 		$this->once( function () {
 			add_filter( 'script_loader_tag', static function ( $tag, $handle ) {
 				if ( \in_array( $handle, static::$deffer, true ) ) {
-					return str_replace( '<script', '<script defer="defer"', $tag );
+					return str_replace( '<script', '<script defer', $tag );
 				}
 				return $tag;
 			}, 11, 2 );
