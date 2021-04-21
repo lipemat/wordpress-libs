@@ -265,4 +265,52 @@ class Styles {
 			}, 11, 2 );
 		}, __METHOD__ );
 	}
+
+
+	/**
+	 * Use a CDN for known resources instead of the bundle version in WP Core.
+	 *
+	 * The CDN is faster and more likely to already exist in the
+	 * users browser cache.
+	 *
+	 * @notice We exclude the `version=` from the URL to match other
+	 *         site's URL for browser caching purposes.
+	 *
+	 * @param array<'jquery-core' | 'react' | 'react-dom'> $handles - Resource handles to include.
+	 *
+	 * @since 3.2.0
+	 */
+	public function use_cdn_for_resources( array $handles ) : void {
+		$cdn = [
+			// WP Core uses `jquery-core` as a dependency of blank `jquery`.
+			'jquery-core' => [
+				'dev'    => 'https://unpkg.com/jquery@' . wp_scripts()->query( 'jquery' )->ver . '/dist/jquery.js',
+				'min'    => 'https://unpkg.com/jquery@' . wp_scripts()->query( 'jquery' )->ver . '/dist/jquery.min.js',
+				'footer' => false,
+			],
+			'react'       => [
+				'dev'    => 'https://unpkg.com/react@' . wp_scripts()->query( 'react' )->ver . 'umd/react.development.js',
+				'min'    => 'https://unpkg.com/react@' . wp_scripts()->query( 'react' )->ver . '/umd/react.production.min.js',
+				'footer' => true,
+			],
+			'react-dom'   => [
+				'dev'    => 'https://unpkg.com/react-dom@' . wp_scripts()->query( 'react-dom' )->ver . '/umd/react-dom.development.js',
+				'min'    => 'https://unpkg.com/react-dom@' . wp_scripts()->query( 'react-dom' )->ver . '/umd/react-dom.production.min.js',
+				'footer' => true,
+			],
+		];
+
+		foreach ( $handles as $handle ) {
+			wp_deregister_script( $handle );
+			if ( SCRIPT_DEBUG ) {
+				//phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+				wp_register_script( $handle, $cdn[ $handle ]['dev'], [], null, $cdn[ $handle ]['footer'] );
+			} else {
+				//phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+				wp_register_script( $handle, $cdn[ $handle ]['min'], [], null, $cdn[ $handle ]['footer'] );
+			}
+
+			Styles::in()->crossorigin_javascript( $handle );
+		}
+	}
 }
