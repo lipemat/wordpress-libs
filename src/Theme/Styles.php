@@ -202,7 +202,7 @@ class Styles {
 		$this->once( function () {
 			add_filter( 'script_loader_tag', function ( $tag, $handle ) {
 				if ( \in_array( $handle, static::$async, true ) ) {
-					return str_replace( '<script', '<script async="async"', $tag );
+					return str_replace( '<script', '<script async', $tag );
 				}
 				return $tag;
 			}, 11, 2 );
