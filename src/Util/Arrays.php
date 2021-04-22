@@ -11,7 +11,6 @@ use Lipe\Lib\Traits\Singleton;
 class Arrays {
 	use Singleton;
 
-
 	/**
 	 * Turn a numeric array of values into an associative array with
 	 * the odd values being keys for the even values.
@@ -103,7 +102,7 @@ class Arrays {
 	/**
 	 * Removes a key from an array recursively.
 	 *
-	 * @param string $key - Key to remove.
+	 * @param string $key   - Key to remove.
 	 * @param array  $array - Array to recursively remove keys from.
 	 *
 	 * @return array
@@ -114,6 +113,36 @@ class Arrays {
 			if ( \is_array( $_values ) ) {
 				$array[ $_key ] = $this->array_recursive_unset( $key, $_values );
 			}
+		}
+		return $array;
+	}
+
+
+	/**
+	 * Combine the results of a callback which returns `[ key => value ]` for
+	 * each element into a single associative array. Used to convert an array
+	 * of any structure into a finished `key => value` array.
+	 *
+	 * Supports both numeric and associate keys.
+	 *
+	 * @example `Arrays::in()->array_create_assoc(
+	 *              fn( $a ) => [ $a->ID => $a->post_name ],
+	 *          [ get_post( 1 ), get_post( 2 ) ] );
+	 *          // [ 1 => 'Hello World', 2 => 'Sample Page' ]
+	 *          `
+	 *
+	 * @param callable $callback
+	 * @param array    $array
+	 *
+	 * @since   3.3.0
+	 *
+	 * @return array
+	 */
+	public function array_flatten_assoc( callable $callback, array $array ) : array {
+		$pairs = array_map( $callback, $array );
+		$array = [];
+		foreach ( $pairs as $pair ) {
+			$array[ key( $pair ) ] = reset( $pair );
 		}
 		return $array;
 	}
