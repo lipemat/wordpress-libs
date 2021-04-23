@@ -289,7 +289,7 @@ class Styles {
 				'footer' => false,
 			],
 			'react'       => [
-				'dev'    => 'https://unpkg.com/react@' . wp_scripts()->query( 'react' )->ver . 'umd/react.development.js',
+				'dev'    => 'https://unpkg.com/react@' . wp_scripts()->query( 'react' )->ver . '/umd/react.development.js',
 				'min'    => 'https://unpkg.com/react@' . wp_scripts()->query( 'react' )->ver . '/umd/react.production.min.js',
 				'footer' => true,
 			],
