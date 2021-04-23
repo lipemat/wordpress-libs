@@ -221,7 +221,7 @@ class Styles {
 	 *
 	 * @param string      $handle - The handle used to enqueued this script.
 	 *
-	 * @param string|null $value - Optional value of the attribute.
+	 * @param string|null $value  - Optional value of the attribute.
 	 *
 	 * @return void
 	 */
@@ -276,9 +276,9 @@ class Styles {
 	 * @notice We exclude the `version=` from the URL to match other
 	 *         site's URL for browser caching purposes.
 	 *
-	 * @param array<'jquery-core' | 'react' | 'react-dom'> $handles - Resource handles to include.
+	 * @param array<'jquery-core' | 'react' | 'react-dom' | 'lodash'> $handles - Resource handles to include.
 	 *
-	 * @since 3.2.0
+	 * @since  3.2.0
 	 */
 	public function use_cdn_for_resources( array $handles ) : void {
 		$cdn = [
@@ -287,6 +287,12 @@ class Styles {
 				'dev'    => 'https://unpkg.com/jquery@' . wp_scripts()->query( 'jquery' )->ver . '/dist/jquery.js',
 				'min'    => 'https://unpkg.com/jquery@' . wp_scripts()->query( 'jquery' )->ver . '/dist/jquery.min.js',
 				'footer' => false,
+			],
+			'lodash'      => [
+				'dev'    => 'https://unpkg.com/lodash@' . wp_scripts()->query( 'lodash' )->ver . '/lodash.js',
+				'min'    => 'https://unpkg.com/lodash@' . wp_scripts()->query( 'lodash' )->ver . '/lodash.min.js',
+				'footer' => true,
+				'inline' => 'window.lodash = _.noConflict();',
 			],
 			'react'       => [
 				'dev'    => 'https://unpkg.com/react@' . wp_scripts()->query( 'react' )->ver . '/umd/react.development.js',
@@ -308,6 +314,10 @@ class Styles {
 			} else {
 				//phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 				wp_register_script( $handle, $cdn[ $handle ]['min'], [], null, $cdn[ $handle ]['footer'] );
+			}
+
+			if ( ! empty( $cdn[ $handle ]['inline'] ) ) {
+				wp_add_inline_script( $handle, $cdn[ $handle ]['inline'] );
 			}
 
 			Styles::in()->crossorigin_javascript( $handle );
