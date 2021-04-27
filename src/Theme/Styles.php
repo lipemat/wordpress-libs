@@ -320,7 +320,15 @@ class Styles {
 				wp_add_inline_script( $handle, $cdn[ $handle ]['inline'] );
 			}
 
-			Styles::in()->crossorigin_javascript( $handle );
+			self::in()->crossorigin_javascript( $handle );
 		}
+
+		// Adds `<link rel="dns-prefetch" href="//unpkg.com" />` to `<head>`.
+		Actions::in()->add_single_filter( 'wp_resource_hints', function ( array $urls, $type ) {
+			if ( 'dns-prefetch' === $type ) {
+				$urls[] = 'unpkg.com';
+			}
+			return $urls;
+		} );
 	}
 }
