@@ -319,7 +319,7 @@ class Term_Select_2 {
 	 *
 	 * @return array|null
 	 */
-	public function esc_repeater_values( array $checked, array $values, array $field_args ) : ?array {
+	public function esc_repeater_values( ?array $checked, array $values, array $field_args ) : ?array {
 		if ( ! \is_array( $values ) || ! $field_args['repeatable'] ) {
 			return $checked;
 		}
