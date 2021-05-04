@@ -10,6 +10,8 @@ class Styles {
 	use Singleton;
 	use Memoize;
 
+	public const INTEGRITY = 'lipe/lib/theme/styles/integrity';
+
 	/**
 	 * @var string[]
 	 */
@@ -62,7 +64,7 @@ class Styles {
 		if ( \defined( 'SCRIPTS_VERSION' ) ) {
 			$version = SCRIPTS_VERSION;
 		} else {
-			//beanstalk style
+			// Beanstalk style .version file.
 			$path = isset( $_SERVER['DOCUMENT_ROOT'] ) ? \sanitize_text_field( \wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) : '';
 			if ( \file_exists( $path . '/.revision' ) ) {
 				$version = \trim( \file_get_contents( $path . '/.revision' ) );
@@ -256,10 +258,11 @@ class Styles {
 	 */
 	public function integrity_javascript( string $handle, string $integrity ) : void {
 		static::$integrity[ $handle ] = $integrity;
+		$this->crossorigin_javascript( $handle, 'anonymous' );
 		$this->once( function () {
-			add_filter( 'script_loader_tag', static function ( $tag, $handle ) {
+			add_filter( 'script_loader_tag', function ( $tag, $handle ) {
 				if ( isset( static::$integrity[ $handle ] ) ) {
-					return str_replace( '<script', '<script integrity="' . static::$integrity[ $handle ] . '" crossorigin="anonymous"', $tag );
+					return str_replace( '<script', '<script integrity="' . static::$integrity[ $handle ] . '"', $tag );
 				}
 				return $tag;
 			}, 11, 2 );
@@ -272,6 +275,9 @@ class Styles {
 	 *
 	 * The CDN is faster and more likely to already exist in the
 	 * users browser cache.
+	 *
+	 * Script integrity and crossorigin are automatically retrieved and
+	 * added to `<script>` tags.
 	 *
 	 * @notice We exclude the `version=` from the URL to match other
 	 *         site's URL for browser caching purposes.
@@ -308,27 +314,69 @@ class Styles {
 
 		foreach ( $handles as $handle ) {
 			wp_deregister_script( $handle );
-			if ( SCRIPT_DEBUG ) {
-				//phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
-				wp_register_script( $handle, $cdn[ $handle ]['dev'], [], null, $cdn[ $handle ]['footer'] );
-			} else {
-				//phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
-				wp_register_script( $handle, $cdn[ $handle ]['min'], [], null, $cdn[ $handle ]['footer'] );
-			}
+			$url = SCRIPT_DEBUG ? $cdn[ $handle ]['dev'] : $cdn[ $handle ]['min'];
+
+			//phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+			wp_register_script( $handle, $url, [], null, $cdn[ $handle ]['footer'] );
 
 			if ( ! empty( $cdn[ $handle ]['inline'] ) ) {
 				wp_add_inline_script( $handle, $cdn[ $handle ]['inline'] );
 			}
 
-			self::in()->crossorigin_javascript( $handle );
+			// Add `crossorigin` to `<script>` tag.
+			$this->crossorigin_javascript( $handle );
+
+			// Add `integrity="<hash>"` to `<script>` tag.
+			$this->unpkg_integrity( $handle, $url );
 		}
 
 		// Adds `<link rel="dns-prefetch" href="//unpkg.com" />` to `<head>`.
-		Actions::in()->add_single_filter( 'wp_resource_hints', function ( array $urls, $type ) {
+		add_filter( 'wp_resource_hints', function ( array $urls, $type ) {
 			if ( 'dns-prefetch' === $type ) {
 				$urls[] = 'unpkg.com';
 			}
 			return $urls;
-		} );
+		}, 10, 2 );
+	}
+
+
+	/**
+	 * Given an "unpkg.com" URL, this will retrieve the integrity hash
+	 * and add it to the provided handle.
+	 *
+	 * The resulting integrity is cached in a network option as a script's
+	 * integrity will never change unless it's version changes.
+     * As versions of the script change, this will retrieve and
+	 * store new integrity hashes automatically.
+	 *
+	 * @param string $handle - Script handle.
+	 * @param string $url - Full unpkg.com URL. (required as versions change).
+	 *
+	 * @return bool
+	 */
+	public function unpkg_integrity( string $handle, string $url ) : bool {
+		$cached = get_network_option( 0, self::INTEGRITY, [] );
+
+		// Add `integrity="<hash>"` to `<script>` tag.
+		$integrity = null;
+		if ( \array_key_exists( $url, $cached ) ) {
+			if ( ! empty( $cached[ $url ] ) ) {
+				$integrity = $cached[ $url ];
+			}
+		} else {
+			try {
+				$meta = json_decode( wp_safe_remote_get( "{$url}?meta" )['body'], true, 512, JSON_THROW_ON_ERROR );
+				$integrity = $meta['integrity'] ?? null;
+			} catch ( \JsonException $e ) {}
+
+			$cached[ $url ] = $integrity;
+			update_network_option( 0, self::INTEGRITY, $cached );
+		}
+
+		if ( null !== $integrity ) {
+			$this->integrity_javascript( $handle, $integrity );
+			return true;
+		}
+		return false;
 	}
 }
