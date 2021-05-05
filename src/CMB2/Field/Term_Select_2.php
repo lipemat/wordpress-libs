@@ -173,7 +173,7 @@ class Term_Select_2 {
 
 				$( function() {
 					load_selects( false );
-					$( '.cmb-add-row-button' ).click( function() {
+					$( '.cmb-add-row-button' ).on( 'click', function() {
 						setTimeout( function() {
 							load_selects( true );
 						}, 0 );
