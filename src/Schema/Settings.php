@@ -593,7 +593,7 @@ abstract class Settings {
 			?>
 		</form>
 		<script type="text/javascript">
-			jQuery( 'a.nav-tab' ).click( function( e ) {
+			jQuery( 'a.nav-tab' ).on( 'click', function( e ) {
 				e.preventDefault();
 				var id = e.target.id.substr( 4 );
 				jQuery( 'div.tab-content' ).hide();
