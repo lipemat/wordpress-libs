@@ -4,11 +4,11 @@ namespace Lipe\Lib\Traits;
 
 /**
  * Allow running things specific to a class one time
- * based on it's internal version. Each class get's it's
+ * based on it's internal version. Each class gets it's
  * own unique identifier and all uses of `run_for_version` will
  * use the same identifier and previous version.
  *
- * For global version tracking
+ * For global version tracking.
  *
  * @see    \Lipe\Lib\Util\Versions
  *
@@ -35,6 +35,8 @@ trait Version {
 
 			return $func( ...$extra );
 		}
+
+		return null;
 	}
 
 
@@ -55,7 +57,7 @@ trait Version {
 	 *
 	 * @return bool
 	 */
-	private function update_required() : bool {
+	protected function update_required() : bool {
 		$versions = $this->get_versions();
 
 		return empty( $versions[ $this->get_version_identifier() ] ) || version_compare( $versions[ $this->get_version_identifier() ], $this->_version, '<' );
@@ -82,6 +84,6 @@ trait Version {
 			throw new \BadMethodCallException( 'You may not use the Version Trait with anonymous classes, you will have to implement what you need within your anonymous class.' );
 		}
 
-		return get_class( $this );
+		return \get_class( $this );
 	}
 }
