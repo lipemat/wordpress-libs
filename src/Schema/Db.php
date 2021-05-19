@@ -182,6 +182,50 @@ abstract class Db {
 
 
 	/**
+	 * Gets a paginated set of results with pagination information.
+	 *
+	 * @param array<string>|string $columns      Array or CSV of columns we want to return.
+	 *                                           Pass '*' to return all columns.
+	 * @param int                  $page         Page of paginated results to return.
+	 * @param int                  $per_page     Number of rows to return for this page.
+	 * @param array|int            $id_or_wheres Row id or array or where column => value.
+	 *                                           Adding a % within the value will turn the
+	 *                                           query into a `LIKE` query.
+	 * @param string|null          $order_by     An ORDERBY column and direction.
+	 *                                           Optionally pass `ASC` or `DESC` after the
+	 *                                           column to specify direction.
+	 *
+	 * @return array{'total': int, 'total_pages': int, 'items': array<object|string>|object|string|void|null}
+	 */
+	public function get_paginated( $columns, int $page, int $per_page, $id_or_wheres = null, string $order_by = null ) : array {
+		global $wpdb;
+
+		$count = $per_page;
+		// Generate a 'LIMIT <offset>, <count>' keyword.
+		if ( $page > 1 ) {
+			$count = ( $page - 1 ) * $per_page . ', ' . $per_page;
+		}
+
+		// Add query modifier to count total rows.
+		if ( \is_array( $columns ) ) {
+			$columns = \array_values( $columns );
+			$columns[0] = "SQL_CALC_FOUND_ROWS {$columns[0]}";
+		} else {
+			$columns = "SQL_CALC_FOUND_ROWS {$columns}";
+		}
+
+		$results = $this->get( $columns, $id_or_wheres, $count, $order_by );
+		$total = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
+
+		return [
+			'total'       => $total,
+			'total_pages' => (int) ceil( $total / $per_page ),
+			'items'       => $results,
+		];
+	}
+
+
+	/**
 	 * Add a row to the table
 	 *
 	 * @param array $columns
