@@ -143,11 +143,11 @@ abstract class Db {
 			}
 		}
 
-		if ( null !== $order_by ) {
+		if ( ! empty( $order_by ) ) {
 			$sql .= " ORDER BY $order_by";
 		}
 
-		if ( null !== $count ) {
+		if ( ! empty( $count ) ) {
 			$sql .= " LIMIT $count";
 		}
 
