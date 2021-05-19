@@ -88,26 +88,26 @@ abstract class Db {
 	 * Automatically maps the results to a single value or row if the
 	 * `$count` is set to 1.
 	 *
-	 * @param array<string>|string $columns      - Array or CSV of columns we want to return.
+	 * @param array<string>|string $columns      Array or CSV of columns we want to return.
 	 *                                           Pass '*' to return all columns.
 	 *
-	 * @param array|int            $id_or_wheres - Row id or array or where column => value.
+	 * @param array|int            $id_or_wheres Row id or array or where column => value.
 	 *                                           Adding a % within the value will turn the
 	 *                                           query into a `LIKE` query.
 	 *
-	 * @param int                  $count        - Number of rows to return.
-	 *                                           If set to 1 this will return a single value
-	 *                                           or row depending on the number of columns
-	 *                                           set in `$columns`.
+	 * @param int|string           $count        Number of rows to return. An offset may also be
+	 *                                           provided via `<offset>,<limit>` for pagination.
+	 *                                           If set to 1 this will return a single value or row
+	 *                                           instead of an array.
 	 *
-	 * @param string               $order_by     - An ORDERBY column and direction.
+	 * @param string|null          $order_by     An ORDERBY column and direction.
 	 *                                           Optionally pass `ASC` or `DESC` after the
 	 *                                           column to specify direction.
 	 *
-	 * @return array<object>|object|string|int
+	 * @return array<string>|object|array<object>|string|void|null
 	 *
 	 */
-	public function get( $columns, $id_or_wheres = null, $count = null, $order_by = null ) {
+	public function get( $columns, $id_or_wheres = null, $count = null, string $order_by = null ) {
 		global $wpdb;
 
 		if ( \is_array( $columns ) ) {
@@ -126,6 +126,9 @@ abstract class Db {
 			$values = [];
 			$where_formats = $this->get_formats( $id_or_wheres );
 			foreach ( $id_or_wheres as $column => $value ) {
+				if ( null === $value ) {
+					continue;
+				}
 				if ( false !== strpos( $value, '%' ) ) {
 					$wheres[ $column ] = "`$column` LIKE " . array_shift( $where_formats );
 				} else {
@@ -133,9 +136,11 @@ abstract class Db {
 				}
 				$values[] = $value;
 			}
-			$where = ' WHERE ' . implode( ' AND ', $wheres );
-			//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-			$sql .= $wpdb->prepare( $where, $values );
+			if ( ! empty( $wheres ) ) {
+				//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+				$where = ' WHERE ' . implode( ' AND ', $wheres );
+				$sql .= $wpdb->prepare( $where, $values );
+			}
 		}
 
 		if ( null !== $order_by ) {
