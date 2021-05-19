@@ -151,7 +151,7 @@ abstract class Db {
 			$sql .= " LIMIT $count";
 		}
 
-		if ( '*' === $columns || \substr_count( $columns, ',' ) > 1 ) {
+		if ( false !== \strpos( $columns, '*' ) || false !== \strpos( $columns, ',' ) ) {
 			if ( 1 === $count ) {
 				return $wpdb->get_row( $sql );
 			}
