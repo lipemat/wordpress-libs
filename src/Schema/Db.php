@@ -142,6 +142,13 @@ abstract class Db {
 				}
 				$values[] = $value;
 			}
+			// Allow filtering or adding of custom WHERE clauses.
+			[ $wheres, $values ] = apply_filters_ref_array( 'lipe/lib/schema/db/get/wheres', [
+				[ $wheres, $values ],
+				$id_or_wheres,
+				$columns,
+				$this,
+			] );
 			if ( ! empty( $wheres ) ) {
 				//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 				$where = ' WHERE ' . implode( ' AND ', $wheres );
