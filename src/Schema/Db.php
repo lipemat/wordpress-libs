@@ -7,33 +7,32 @@ use Lipe\Lib\Traits\Version;
 /**
  * Interact with custom Database Tables
  *
- * Set the necessary class constants in the child class like so:
+ * @notice You must set the necessary class constants in the child class.
+ * @const  NAME - Name of table without the prefix.
+ * @const  ID_FIELD - Primary key field.
+ * @const  COLUMNS - Table columns.
  *
- * protected const NAME = 'personal'; // Table name without prefix (prefix is set during construct)
- * protected const ID_FIELD = 'personal_id';
- * protected const DB_VERSION = 1;
- *
- * protected const COLUMNS = []
  */
 abstract class Db {
 	use Version;
 
-	public const    NAME     = __CLASS__;
-	protected const ID_FIELD = __CLASS__;
+	/**
+	 * Name of the table without prefix. Prefix is set
+	 * during construct.
+	 */
+	public const    NAME = __CLASS__;
 
 	/**
-	 * Version of the table scheme.
-	 *
-	 * Bump to run `create_table` again when the table scheme changes.
+	 * Primary key of the table. Typically auto increment.
 	 */
-	public const DB_VERSION = 1;
+	protected const ID_FIELD = __CLASS__;
 
 	/**
 	 * Database columns with corresponding data type.
 	 * Used to sanitize queries with any of the built in sprintf specifiers.
 	 *
-	 * @notice     May exclude the primary key from this list if it is auto increment
-	 * @notice     Date should be added to this list even if default current timestamp
+	 * @notice     May exclude the primary key from this list if it is auto increment.
+	 * @notice     Date should be added to this list even if default current timestamp.
 	 *
 	 * @link       https://www.php.net/manual/en/function.sprintf.php
 	 *
@@ -42,12 +41,19 @@ abstract class Db {
 	 * 'content_id'   => "%s",
 	 * 'content_type' => "%s",
 	 * 'amount'       => "%f",
-	 * 'date'         => "%d"
+	 * 'date'         => "%s"
 	 * );
 	 *
 	 * @var array
 	 */
 	public const COLUMNS = [];
+
+	/**
+	 * Version of the table scheme.
+	 *
+	 * Bump to run `create_table` again when the table scheme changes.
+	 */
+	public const DB_VERSION = 1;
 
 	/**
 	 * Holds the database name with prefix included.
