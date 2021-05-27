@@ -377,7 +377,7 @@ abstract class Db {
 	 * user_id bigint(20) NOT NULL,
 	 * content_id varchar(100) NOT NULL,
 	 * content_type varchar(100) NOT NULL,
-	 * date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,,
+	 * date TIMESTAMP DEFAULT UTC_TIMESTAMP ON UPDATE UTC_TIMESTAMP,
 	 * PRIMARY KEY  (uid),
 	 * KEY user_id (user_id),
 	 * KEY content_id (content_id),
