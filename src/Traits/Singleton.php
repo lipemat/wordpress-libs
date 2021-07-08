@@ -6,6 +6,8 @@ trait Singleton {
 
 	/**
 	 * Instance of this class for use as singleton
+	 *
+	 * @var static
 	 */
 	protected static $instance;
 
@@ -51,7 +53,7 @@ trait Singleton {
 	 *
 	 * @static
 	 *
-	 * @return self
+	 * @return static
 	 */
 	public static function in() {
 		return static::instance();
@@ -62,13 +64,13 @@ trait Singleton {
 	 *
 	 * @static
 	 *
-	 * @return self
+	 * @return static
 	 */
 	public static function instance() {
 		if ( ! is_a( static::$instance, __CLASS__ ) ) {
 			static::$instance = new static();
 		}
 
-		return static::$instance;
+		return static::$instance; // @phpstan-ignore-line
 	}
 }
