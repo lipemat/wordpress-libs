@@ -99,12 +99,14 @@ class Crypt {
 	/**
 	 * Get the key size based on the METHOD we are using.
 	 *
-	 * @notice This size is 8 times larger than the one used in `crypto-js`.
+	 * Strip all non numeric characters from method and devide by 4.
+	 *
+	 * @notice This size is 4 times larger than the one used in `crypto-js`.
 	 *
 	 * @return int
 	 */
 	protected function get_key_size() : int {
-		return (int) abs( (float) filter_var( static::METHOD, FILTER_SANITIZE_NUMBER_INT ) ) / 4;
+		return preg_replace( '/[\D]/', '', static::METHOD ) / 4;
 	}
 
 
