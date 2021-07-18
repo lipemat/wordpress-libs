@@ -38,7 +38,7 @@ class Initial_Data {
 
 
 	/**
-	 * Turn an array of Comments into there matching data format
+	 * Turn an array of comments into their matching data format
 	 * provided by the JSON API Server.
 	 *
 	 * @param \WP_Comment[] $comments
@@ -76,6 +76,50 @@ class Initial_Data {
 
 			return $this->get_response( $controller, $post, $with_links, $embed );
 		}, $posts );
+	}
+
+
+	/**
+	 * Turn an array of users into their matching data format
+	 * provided by the JSON API Server.
+	 *
+	 * @param \WP_User[]    $users      - Array of user objects.
+	 * @param bool          $with_links - To include links inside the response.
+	 * @param bool|string[] $embed      - Whether to embed all links, a filtered list of link relations,
+	 *                                  or no links.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @return array
+	 */
+	public function get_user_data( array $users, bool $with_links = false, $embed = false ) : array {
+		$controller = new \WP_REST_Users_Controller();
+
+		return array_map( function ( $user ) use ( $controller, $with_links, $embed ) {
+			return $this->get_response( $controller, $user, $with_links, $embed );
+		}, $users );
+	}
+
+
+	/**
+	 * Turn an array of terms into their matching data format
+	 * provided by the JSON API Server.
+	 *
+	 * @param \WP_Term[]    $terms                    - Array of term objects.
+	 * @param bool          $with_links               - To include links inside the response.
+	 * @param bool|string[] $embed                    - Whether to embed all links, a filtered list of link relations,
+	 *                                                or no links.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @return array
+	 */
+	public function get_term_data( array $terms, bool $with_links = false, $embed = false ) : array {
+		return array_map( function ( $term ) use ( $with_links, $embed ) {
+			$controller = new \WP_REST_Terms_Controller( $term->taxonomy );
+
+			return $this->get_response( $controller, $term, $with_links, $embed );
+		}, $terms );
 	}
 
 
