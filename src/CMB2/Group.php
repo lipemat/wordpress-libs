@@ -9,9 +9,6 @@ use Lipe\Lib\Meta\Repo;
  * Group field type which implement much of the
  * logic of a Box and also a Field.
  *
- * @author  Mat Lipe
- *
- * @package Lipe\Lib\CMB2
  */
 class Group extends Field {
 	use Box_Trait;
@@ -203,23 +200,21 @@ class Group extends Field {
 		if ( $this->show_in_rest && $this->is_public_rest_data( $this ) ) {
 			$properties = [];
 			foreach ( $this->get_fields() as $field ) {
-				if ( $this->show_in_rest ) {
+				$properties[ $field->get_id() ] = [
+					'type' => 'string',
+				];
+				if ( $field->is_using_array_data() ) {
 					$properties[ $field->get_id() ] = [
-						'type' => 'string',
+						'type'  => 'array',
+						'items' => [
+							'type' => 'string',
+						],
 					];
-					if ( $field->is_using_array_data() ) {
-						$properties[ $field->get_id() ] = [
-							'type'  => 'array',
-							'items' => [
-								'type' => 'string',
-							],
-						];
-					}
-					if ( Repo::FILE === $field->data_type ) {
-						$properties[ $field->get_id() . '_id' ] = [
-							'type' => 'number',
-						];
-					}
+				}
+				if ( Repo::FILE === $field->data_type ) {
+					$properties[ $field->get_id() . '_id' ] = [
+						'type' => 'number',
+					];
 				}
 			}
 			$config['show_in_rest'] = [

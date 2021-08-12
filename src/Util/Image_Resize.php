@@ -307,12 +307,12 @@ class Image_Resize {
 		}
 
 		if ( ! empty( $attachment ) && ! empty( $image_id ) ) {
-			$size = empty( $size ) ? $size = [ $width, $height ] : $size;
+			$size = empty( $size ) ? [ $width, $height ] : $size;
 			if ( 'a' === $args['output'] ) {
 				$class .= ' lipe/lib/util/resized-image';
 			}
 			$html_image = wp_get_attachment_image( $image_id, $size, false, [
-				'class' => trim( $class . ( ! \is_array( $size ) && ! empty( $size ) ? " attachment-$size" : '' ) ),
+				'class' => trim( $class . ( ! \is_array( $size ) ? " attachment-{$size}" : '' ) ),
 				'alt'   => empty( $alt ) ? trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) : $alt,
 				'title' => empty( $title ) ? $attachment->post_title : $title,
 			] );
