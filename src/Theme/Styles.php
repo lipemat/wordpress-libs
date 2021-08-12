@@ -287,6 +287,11 @@ class Styles {
 	 * @since  3.2.0
 	 */
 	public function use_cdn_for_resources( array $handles ) : void {
+		// The admin will throw errors when calling `wp_deregister_script` in other actions.
+		if ( is_admin() && 'admin_enqueue_scripts' !== current_filter() ) {
+			return;
+		}
+
 		$cdn = [
 			// WP Core uses `jquery-core` as a dependency of blank `jquery`.
 			'jquery-core' => [
