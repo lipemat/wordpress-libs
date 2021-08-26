@@ -40,9 +40,9 @@ trait Comment_Trait {
 	public function __construct( $comment ) {
 		if ( is_a( $comment, \WP_Comment::class ) ) {
 			$this->comment    = $comment;
-			$this->comment_id = $this->comment->comment_ID;
+			$this->comment_id = (int) $this->comment->comment_ID;
 		} else {
-			$this->comment_id = $comment;
+			$this->comment_id = (int) $comment;
 		}
 	}
 
@@ -57,7 +57,7 @@ trait Comment_Trait {
 
 
 	public function get_id() : int {
-		return (int) $this->comment_id;
+		return $this->comment_id;
 	}
 
 

@@ -54,7 +54,7 @@ trait Post_Object_Trait {
 			$this->post    = $post;
 			$this->post_id = $this->post->ID;
 		} else {
-			$this->post_id = $post;
+			$this->post_id = (int) $post;
 		}
 	}
 
@@ -69,7 +69,7 @@ trait Post_Object_Trait {
 
 
 	public function get_id() : int {
-		return (int) $this->post_id;
+		return $this->post_id;
 	}
 
 

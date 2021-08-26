@@ -76,13 +76,13 @@ trait User_Trait {
 			$this->user = $user;
 			$this->user_id = $user->ID;
 		} else {
-			$this->user_id = $user;
+			$this->user_id = (int) $user;
 		}
 	}
 
 
 	public function get_id() : int {
-		return (int) $this->user_id;
+		return $this->user_id;
 	}
 
 

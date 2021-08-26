@@ -34,12 +34,15 @@ trait Taxonomy_Trait {
 	protected $term;
 
 
+	/**
+	 * @param int|\WP_Term $term
+	 */
 	public function __construct( $term ) {
 		if ( is_a( $term, \WP_Term::class ) ) {
 			$this->term = $term;
 			$this->term_id = $this->term->term_id;
 		} else {
-			$this->term_id = $term;
+			$this->term_id = (int) $term;
 		}
 	}
 
@@ -55,7 +58,7 @@ trait Taxonomy_Trait {
 
 
 	public function get_id() : int {
-		return (int) $this->term_id;
+		return $this->term_id;
 	}
 
 

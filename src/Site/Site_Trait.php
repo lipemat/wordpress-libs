@@ -52,9 +52,9 @@ trait Site_Trait {
 			$this->blog_id = \get_current_blog_id();
 		} elseif ( is_a( $site, \WP_Site::class ) ) {
 			$this->site = $site;
-			$this->blog_id = $this->site->blog_id;
+			$this->blog_id = (int) $this->site->blog_id;
 		} else {
-			$this->blog_id = $site;
+			$this->blog_id = (int) $site;
 		}
 	}
 
@@ -72,7 +72,7 @@ trait Site_Trait {
 	 * @return int
 	 */
 	public function get_id() : int {
-		return (int) $this->blog_id;
+		return $this->blog_id;
 	}
 
 

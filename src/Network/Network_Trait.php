@@ -44,7 +44,7 @@ trait Network_Trait {
 			$this->network = $network;
 			$this->network_id = $this->network->id;
 		} else {
-			$this->network_id = $network;
+			$this->network_id = (int) $network;
 		}
 	}
 
@@ -62,7 +62,7 @@ trait Network_Trait {
 	 * @return int
 	 */
 	public function get_id() : int {
-		return (int) $this->network_id;
+		return $this->network_id;
 	}
 
 
