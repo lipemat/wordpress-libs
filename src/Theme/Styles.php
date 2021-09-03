@@ -56,22 +56,18 @@ class Styles {
 	 * @return null|string
 	 */
 	public function get_version() : ?string {
-		static $version = null;
-		if ( null !== $version ) {
-			return $version;
-		}
+		return $this->once( function () {
+			if ( \defined( 'SCRIPTS_VERSION' ) ) {
+				return SCRIPTS_VERSION;
+			}
 
-		if ( \defined( 'SCRIPTS_VERSION' ) ) {
-			$version = SCRIPTS_VERSION;
-		} else {
 			// Beanstalk style .version file.
 			$path = isset( $_SERVER['DOCUMENT_ROOT'] ) ? \sanitize_text_field( \wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) : '';
 			if ( \file_exists( $path . '/.revision' ) ) {
-				$version = \trim( \file_get_contents( $path . '/.revision' ) );
+				return \trim( \file_get_contents( $path . '/.revision' ) );
 			}
-		}
-
-		return $version;
+			return null;
+		}, __METHOD__ );
 	}
 
 
