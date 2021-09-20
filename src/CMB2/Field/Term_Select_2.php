@@ -313,13 +313,13 @@ class Term_Select_2 {
 	/**
 	 * Handle repeatable data escaping
 	 *
-	 * @param array $checked
-	 * @param array $values
-	 * @param array $field_args
+	 * @param ?array   $checked
+	 * @param array|string $values
+	 * @param array        $field_args
 	 *
 	 * @return array|null
 	 */
-	public function esc_repeater_values( ?array $checked, array $values, array $field_args ) : ?array {
+	public function esc_repeater_values( ?array $checked, $values, array $field_args ) : ?array {
 		if ( ! \is_array( $values ) || ! $field_args['repeatable'] ) {
 			return $checked;
 		}
