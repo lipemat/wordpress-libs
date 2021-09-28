@@ -143,6 +143,7 @@ class Group extends Field {
 		}
 
 		$field->group = $this->get_id();
+		$field->box_id = $this->box_id;
 		$box = $this->box->get_box();
 		$box->add_group_field( $this->id, $field->get_field_args(), $field->position );
 
