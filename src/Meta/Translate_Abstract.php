@@ -119,7 +119,7 @@ abstract class Translate_Abstract {
 		}
 
 		if ( 'option' === $meta_type ) {
-			cmb2_options( $object_id )->remove( $key );
+			cmb2_options( $object_id )->remove( $key, true );
 		} else {
 			delete_metadata( $meta_type, $object_id, $key );
 		}
