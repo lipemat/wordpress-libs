@@ -345,9 +345,12 @@ abstract class Translate_Abstract {
 		$taxonomy = $this->get_field( $field_id )->taxonomy;
 		if ( 'post' !== $meta_type ) {
 			return $this->maybe_use_main_blog( $field_id, function () use ( $object_id, $field_id, $taxonomy, $meta_type ) {
-				return \array_filter( \array_map( function ( $slug ) use ( $taxonomy ) {
-					return get_term_by( 'slug', $slug, $taxonomy );
-
+				return \array_filter( \array_map( function ( $term_id ) use ( $taxonomy ) {
+					// Legacy options used term slug.
+					if ( ! is_numeric( $term_id ) ) {
+						return get_term_by( 'slug', $term_id, $taxonomy );
+					}
+					return get_term( $term_id, $taxonomy );
 				}, (array) $this->get_meta_value( $object_id, $field_id, $meta_type ) ) );
 			} );
 		}
@@ -375,12 +378,13 @@ abstract class Translate_Abstract {
 			}
 
 			if ( 'post' !== $meta_type ) {
-				$this->update_meta_value( $object_id, $key, array_map( function ( $slug ) use ( $field ) {
-					if ( is_numeric( $slug ) ) {
-						return get_term( $slug, $field->taxonomy )->slug;
+				$this->update_meta_value( $object_id, $key, array_map( function ( $term_id ) use ( $field ) {
+					// Legacy options used term slug.
+					if ( ! is_numeric( $term_id ) ) {
+						return get_term_by( 'slug', $term_id, $field->taxonomy )->term_id;
 					}
 
-					return $slug;
+					return $term_id;
 				}, $terms ), $meta_type );
 			} else {
 				wp_set_object_terms( $object_id, $terms, $field->taxonomy );
