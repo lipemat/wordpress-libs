@@ -146,4 +146,30 @@ class Arrays {
 		}
 		return $array;
 	}
+
+
+	/**
+	 * Pluck a list of key from an array of objects or arrays.
+	 *
+	 * Works the same as `wp_list_pluck` except it supports multiple keys
+	 * and will return an array of arrays instead of a single array.
+	 *
+	 * @param array<array|object> $list - List of objects or arrays.
+	 * @param array               $keys - List of keys to return.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @return array
+	 */
+	public function list_pluck( array $list, array $keys ) : array {
+		return \array_map( function ( $item ) use ( $keys ) {
+			return $this->array_map_assoc( function ( $i, $key ) use ( $item ) {
+				if ( \is_object( $item ) ) {
+					return $item->{$key};
+				}
+
+				return $item[ $key ];
+			}, \array_flip( $keys ) );
+		}, $list );
+	}
 }
