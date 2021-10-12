@@ -50,16 +50,12 @@ trait User_Trait {
 	use Mutator_Trait;
 
 	/**
-	 * user_id
-	 *
 	 * @var int
 	 */
 	protected $user_id;
 
 	/**
-	 * user
-	 *
-	 * @var \WP_User
+	 * @var ?\WP_User
 	 */
 	protected $user;
 
@@ -88,7 +84,7 @@ trait User_Trait {
 
 	public function get_object() : ?\WP_User {
 		if ( null === $this->user ) {
-			$this->user = get_user_by( 'id', $this->user_id );
+			$this->user = get_user_by( 'id', $this->user_id ) ?: null;
 		}
 
 		return $this->user;
@@ -103,6 +99,7 @@ trait User_Trait {
 	/**
 	 *
 	 * @param int|null|\WP_User $user
+	 *w
 	 *
 	 * @static
 	 *
