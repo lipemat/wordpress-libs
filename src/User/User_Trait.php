@@ -87,7 +87,7 @@ trait User_Trait {
 			$this->user = get_user_by( 'id', $this->user_id ) ?: null;
 		}
 
-		return $this->user;
+		return $this->user ?: null;
 	}
 
 
