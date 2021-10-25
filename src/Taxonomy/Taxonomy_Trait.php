@@ -20,14 +20,14 @@ trait Taxonomy_Trait {
 	use Mutator_Trait;
 
 	/**
-	 * term_id
+	 * Term ID.
 	 *
 	 * @var int
 	 */
-	protected $term_id;
+	public $term_id;
 
 	/**
-	 * term
+	 * Term object.
 	 *
 	 * @var \WP_Term
 	 */
