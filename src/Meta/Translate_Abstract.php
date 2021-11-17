@@ -364,9 +364,9 @@ abstract class Translate_Abstract {
 	 * We do the same here.
 	 *
 	 * @param string|int $object_id
-	 * @param string $key
-	 * @param array  $terms - Term ids, or term slugs
-	 * @param string $meta_type
+	 * @param string     $key
+	 * @param int[]      $terms - Term ids.
+	 * @param string     $meta_type
 	 *
 	 * @return void
 	 */
@@ -387,6 +387,10 @@ abstract class Translate_Abstract {
 					return $term_id;
 				}, $terms ), $meta_type );
 			} else {
+				$terms = \array_map( function ( $term ) {
+					// Term ids are perceived as term slug when strings.
+					return is_numeric( $term ) ? (int) $term : $term;
+				}, $terms );
 				wp_set_object_terms( $object_id, $terms, $field->taxonomy );
 			}
 		}
