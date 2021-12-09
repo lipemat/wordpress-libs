@@ -17,18 +17,18 @@ class Arrays {
 	 *
 	 * @param array $array
 	 *
-	 * @example ['page', 3, 'category', 6 ] becomes [ 'page' => 3, 'category' => 6 ]
+	 * @example ['page', 3, 'category', 6 ] becomes ['page' => 3, 'category' => 6]
 	 *
 	 * @return array
 	 */
-	public function array_chunk_to_associative( array $array ) : array {
+	public function chunk_to_associative( array $array ) : array {
 		$assoc = [];
-		foreach ( array_chunk( $array, 2 ) as $pair ) {
+		foreach ( \array_chunk( $array, 2 ) as $pair ) {
 			if ( 2 === \count( $pair ) ) {
 				[ $key, $value ] = $pair;
 				$assoc[ $key ] = $value;
 			} else {
-				$assoc[] = array_shift( $pair );
+				$assoc[] = \array_shift( $pair );
 			}
 		}
 
@@ -39,7 +39,7 @@ class Arrays {
 	/**
 	 * Apply a callback to all elements of an array recursively.
 	 *
-	 * Similar to `array_walk_recursive` except this returns the result as
+	 * Like `array_walk_recursive` except returns the result as
 	 * a new array instead of requiring you pass the array element by reference
 	 * and alter it directly.
 	 *
@@ -48,11 +48,11 @@ class Arrays {
 	 *
 	 * @return array
 	 */
-	public function array_map_recursive( callable $callback, array $array ) : array {
+	public function map_recursive( callable $callback, array $array ) : array {
 		$output = [];
 		foreach ( $array as $key => $data ) {
 			if ( \is_array( $data ) ) {
-				$output[ $key ] = $this->array_map_recursive( $callback, $data );
+				$output[ $key ] = $this->map_recursive( $callback, $data );
 			} else {
 				$output[ $key ] = $callback( $data );
 			}
@@ -72,10 +72,10 @@ class Arrays {
 	 *
 	 * @return array
 	 */
-	public function array_merge_recursive( array $args, array $defaults ) : array {
+	public function merge_recursive( array $args, array $defaults ) : array {
 		foreach ( $args as $key => $val ) {
 			if ( \is_array( $val ) && isset( $defaults[ $key ] ) && \is_array( $defaults[ $key ] ) ) {
-				$defaults[ $key ] = $this->array_merge_recursive( $val, $defaults[ $key ] );
+				$defaults[ $key ] = $this->merge_recursive( $val, $defaults[ $key ] );
 			} else {
 				$defaults[ $key ] = $val;
 			}
@@ -94,8 +94,8 @@ class Arrays {
 	 *
 	 * @return array
 	 */
-	public function array_map_assoc( callable $callback, array $array ) : array {
-		return array_combine( array_keys( $array ), array_map( $callback, $array, array_keys( $array ) ) );
+	public function map_assoc( callable $callback, array $array ) : array {
+		return \array_combine( \array_keys( $array ), \array_map( $callback, $array, \array_keys( $array ) ) );
 	}
 
 
@@ -107,11 +107,11 @@ class Arrays {
 	 *
 	 * @return array
 	 */
-	public function array_recursive_unset( string $key, array $array ) : array {
+	public function recursive_unset( string $key, array $array ) : array {
 		unset( $array[ $key ] );
 		foreach ( $array as $_key => $_values ) {
 			if ( \is_array( $_values ) ) {
-				$array[ $_key ] = $this->array_recursive_unset( $key, $_values );
+				$array[ $_key ] = $this->recursive_unset( $key, $_values );
 			}
 		}
 		return $array;
@@ -134,11 +134,9 @@ class Arrays {
 	 * @param callable $callback
 	 * @param array    $array
 	 *
-	 * @since   3.3.0
-	 *
 	 * @return array
 	 */
-	public function array_flatten_assoc( callable $callback, array $array ) : array {
+	public function flatten_assoc( callable $callback, array $array ) : array {
 		$pairs = array_map( $callback, $array );
 		$array = [];
 		foreach ( $pairs as $pair ) {
@@ -163,7 +161,7 @@ class Arrays {
 	 */
 	public function list_pluck( array $list, array $keys ) : array {
 		return \array_map( function ( $item ) use ( $keys ) {
-			return $this->array_map_assoc( function ( $i, $key ) use ( $item ) {
+			return $this->map_assoc( function ( $i, $key ) use ( $item ) {
 				if ( \is_object( $item ) ) {
 					return $item->{$key};
 				}
@@ -172,4 +170,59 @@ class Arrays {
 			}, \array_flip( $keys ) );
 		}, $list );
 	}
+
+
+	/**
+	 * @deprecated
+	 */
+	public function array_map_recursive( callable $callback, array $array ) : array {
+		_deprecated_function( __METHOD__, '3.6.0', 'map_recursive' );
+		return $this->map_recursive( $callback, $array );
+	}
+
+
+	/**
+	 * @deprecated
+	 */
+	public function array_chunk_to_associative( array $array ) : array {
+		_deprecated_function( __METHOD__, '3.6.0', 'chunk_to_associative' );
+		return $this->chunk_to_associative( $array );
+	}
+
+
+	/**
+	 * @deprecated
+	 */
+	public function array_merge_recursive( array $args, array $defaults ) : array {
+		_deprecated_function( __METHOD__, '3.6.0', 'merge_recursive' );
+		return $this->merge_recursive( $args, $defaults );
+	}
+
+
+	/**
+	 * @deprecated
+	 */
+	public function array_map_assoc( callable $callback, array $array ) : array {
+		_deprecated_function( __METHOD__, '3.6.0', 'map_assoc' );
+		return $this->map_assoc( $callback, $array );
+	}
+
+
+	/**
+	 * @deprecated
+	 */
+	public function array_recursive_unset( string $key, array $array ) : array {
+		_deprecated_function( __METHOD__, '3.6.0', 'recursive_unset' );
+		return $this->recursive_unset( $key, $array );
+	}
+
+
+	/**
+	 * @deprecated
+	 */
+	public function array_flatten_assoc( callable $callback, array $array ) : array {
+		_deprecated_function( __METHOD__, '3.6.0', 'flatten_assoc' );
+		return $this->flatten_assoc( $callback, $array );
+	}
+
 }

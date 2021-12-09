@@ -160,7 +160,7 @@ class Api {
 		$endpoint = \array_shift( $args );
 
 		if ( ! empty( $_REQUEST[ static::FORMAT ] ) && static::FORMAT_ASSOC === $_REQUEST[ static::FORMAT ] ) {
-			$args = Arrays::in()->array_chunk_to_associative( $args );
+			$args = Arrays::in()->chunk_to_associative( $args );
 		}
 
 		do_action( $this->get_action( $endpoint ), $args );

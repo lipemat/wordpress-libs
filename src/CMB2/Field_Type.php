@@ -609,7 +609,7 @@ class Field_Type {
 			];
 		}
 		if ( null !== $language ) {
-			$code_editor_arguments = Arrays::in()->array_merge_recursive( $code_editor_arguments, [
+			$code_editor_arguments = Arrays::in()->merge_recursive( $code_editor_arguments, [
 				'codemirror' => [
 					'mode' => $language,
 				],

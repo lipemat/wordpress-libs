@@ -144,7 +144,7 @@ class Initial_Data {
 			$embed
 		);
 		if ( ! $with_links ) {
-			return Arrays::in()->array_recursive_unset( '_links', $data );
+			return Arrays::in()->recursive_unset( '_links', $data );
 		}
 		$this->retrieving = false;
 		return $data;

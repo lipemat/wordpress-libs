@@ -836,7 +836,7 @@ class Field {
 	 * @return Field
 	 */
 	public function attributes( array $attributes ) : Field {
-		$this->attributes = Arrays::in()->array_merge_recursive( $attributes, $this->attributes );
+		$this->attributes = Arrays::in()->merge_recursive( $attributes, $this->attributes );
 
 		return $this;
 	}
