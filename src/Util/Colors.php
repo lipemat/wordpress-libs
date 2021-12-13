@@ -22,11 +22,11 @@ class Colors {
 	 * @return string
 	 */
 	public function hex_to_rgba( string $color, float $transparency = 1.0 ) : string {
-		if ( '#' === $color[0] ) {
-			$color = substr( $color, 1 );
-		} else {
+		if ( empty( $color ) || '#' !== $color[0] ) {
 			return $color;
 		}
+		
+		$color = substr( $color, 1 );
 
 		if ( 6 === \strlen( $color ) ) {
 			$hex = [ $color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5] ];
@@ -46,14 +46,14 @@ class Colors {
 
 
 	/**
-	 * Convert an rgb(a) color to an hexadecimal version.
+	 * Convert a rgb(a) color to a hexadecimal version.
 	 *
 	 * @param string $rgba - Rgba version of color include leading `rgb` or `rgba`.
 	 *
 	 * @return string
 	 */
 	public function rgba_to_hex( string $rgba ) : string {
-		if ( 0 === strpos( $rgba, '#' ) ) {
+		if ( empty( $rgba ) || '#' === $rgba[0] ) {
 			return $rgba;
 		}
 
