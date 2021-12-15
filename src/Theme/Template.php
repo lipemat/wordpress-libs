@@ -30,4 +30,25 @@ class Template {
 		return \implode( ' ', $e );
 	}
 
+
+	/**
+	 * Render a template part and return its contents.
+	 *
+	 * Same as `get_template_part` but instead of echoing, it returns.
+	 *
+	 * @param string      $slug The slug name for the generic template.
+	 * @param string|null $name The name of the specialised template.
+	 * @param mixed       $args Optional. Additional arguments passed to the template.
+	 *                          Default empty array.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @return string
+	 *
+	 */
+	public function get_template_contents( string $slug, ?string $name = null, $args = [] ) : string {
+		ob_start();
+		get_template_part( $slug, $name, $args );
+		return ob_get_clean();
+	}
 }
