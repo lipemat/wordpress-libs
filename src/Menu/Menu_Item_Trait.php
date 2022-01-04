@@ -43,8 +43,13 @@ trait Menu_Item_Trait {
 		if ( null === $this->post ) {
 			$this->post = get_post( $this->post_id );
 		}
-		if ( ! empty( $this->post ) && ! property_exists( $this->post, 'db_id' ) ) {
-			$this->post = wp_setup_nav_menu_item( $this->post );
+		if ( ! empty( $this->post ) ) {
+			if ( ! property_exists( $this->post, 'db_id' ) ) {
+				$this->post = wp_setup_nav_menu_item( $this->post );
+			}
+			if ( ! _is_valid_nav_menu_item( $this->post ) ) {
+				$this->post = null;
+			}
 		}
 
 		return $this->post;
