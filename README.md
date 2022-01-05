@@ -24,7 +24,7 @@ require __DIR__ . '/vendor/autoload.php'
 ### Current Features (non exhaustive)
 * Api endpoint.
 * Autoloader helper.
-* CMB2 mapping.
+* CMB2 fluent interface.
 * Class Version Trait.
 * Comment Object Trait.
 * Custom Post Type registration object.
@@ -51,10 +51,3 @@ require __DIR__ . '/vendor/autoload.php'
 
 
 ##### Changelog may be found in [releases](https://github.com/lipemat/wordpress-libs/releases) (non exhaustive)
-
-
-
-
-
-
-

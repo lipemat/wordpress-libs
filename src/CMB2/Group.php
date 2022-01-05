@@ -6,8 +6,10 @@ use Lipe\Lib\CMB2\Group\Layout;
 use Lipe\Lib\Meta\Repo;
 
 /**
- * Group field type which implement much of the
- * logic of a Box and also a Field.
+ * Group field type, which implement much of the
+ * logic of a Box and a Field.
+ *
+ * A fluent interface for CMB2 group properties.
  *
  */
 class Group extends Field {

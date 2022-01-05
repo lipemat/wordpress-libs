@@ -3,11 +3,7 @@
 namespace Lipe\Lib\CMB2;
 
 /**
- * Term meta box class.
- *
- * @author  Mat Lipe
- *
- * @package Lipe\Lib\CMB2
+ * CMB2 taxonomy meta box fluent interface.
  */
 class Term_Box extends Box {
 

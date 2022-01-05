@@ -8,9 +8,8 @@ use Lipe\Lib\Meta\Repo;
 /**
  * Main meta box class.
  *
- * @author  Mat Lipe
+ * A fluent interface for CMB2 meta box properties.
  *
- * @package Lipe\Lib\CMB2
  */
 class Box {
 	use Box_Trait;

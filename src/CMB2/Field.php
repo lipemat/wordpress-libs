@@ -7,11 +7,7 @@ use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
 
 /**
- * Meta box or options page field.
- *
- * @author  Mat Lipe
- *
- * @package Lipe\Lib\CMB2
+ * CMB2 field fluent interface.
  */
 class Field {
 	/**

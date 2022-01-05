@@ -3,7 +3,7 @@
 namespace Lipe\Lib\CMB2;
 
 /**
- * Box for comments.
+ * CMB2 comments meta box fluent interface.
  */
 class Comment_Box extends Box {
 	public function __construct( $id,  $title ) {

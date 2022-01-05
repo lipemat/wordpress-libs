@@ -3,11 +3,8 @@
 namespace Lipe\Lib\CMB2;
 
 /**
- * Options_Page
+ * CMB2 Option Page fluent interface.
  *
- * @author  Mat Lipe
- *
- * @package Lipe\Lib\CMB2
  */
 class Options_Page extends Box {
 
