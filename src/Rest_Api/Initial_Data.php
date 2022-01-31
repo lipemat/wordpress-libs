@@ -7,7 +7,7 @@ use Lipe\Lib\Traits\Singleton;
 use Lipe\Lib\Util\Arrays;
 
 /**
- * Generate JSON data which mimics the return of wp-json API.
+ * Generate JSON data, which mimics the return of wp-json API.
  *
  * Use most commonly to get the json data without making a request to the API.
  * Thus preventing an anti-pattern when using React etc.
@@ -28,7 +28,7 @@ class Initial_Data {
 	/**
 	 * Are we currently retrieving initial data?
 	 *
-	 * Used within conditions which need apply to only initial data.
+	 * Used within conditions, which need apply to only initial data.
 	 *
 	 * @return bool
 	 */
