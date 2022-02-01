@@ -5,7 +5,7 @@ namespace Lipe\Lib\Traits;
 use Lipe\Lib\Util\Cache;
 
 /**
- * Support simple memoization for class methods which respond
+ * Support simple memoization for class methods, which respond
  * with different caches based on the arguments provided.
  *
  * @example public function heavy( $text ) {
@@ -32,7 +32,7 @@ trait Memoize {
 	 * If the result already exists in the cache, the callback will not be called.
 	 *
 	 * @param callable $fn
-	 * @param string   $identifier - Something unique to identify the the method being used
+	 * @param string   $identifier - Something unique to identify the method being used
 	 *                             so we can determine the difference in the cache.
 	 *                             `__METHOD__` works nicely here.
 	 * @param int      $expire     - Expire in seconds (defaults to never).
@@ -59,7 +59,7 @@ trait Memoize {
 	 * I will always return the value received from the callback on its first run.
 	 *
 	 * @param callable $fn
-	 * @param string   $identifier - Something unique to identify the the method being used
+	 * @param string   $identifier - Something unique to identify the method being used
 	 *                             so we can determine the difference in the cache.
 	 *                             `__METHOD__` works nicely here.
 	 * @param mixed    ...$args    - Arguments will be passed to the callback..
@@ -67,11 +67,12 @@ trait Memoize {
 	 * @return mixed
 	 */
 	public function once( callable $fn, string $identifier, ...$args ) {
-		if ( ! array_key_exists( "{$identifier}::once", $this->memoize_cache ) ) {
-			$this->memoize_cache[ "{$identifier}::once" ] = $fn( ...$args );
+		$key = "{$identifier}::once";
+		if ( ! \array_key_exists( $key, $this->memoize_cache ) ) {
+			$this->memoize_cache[ $key ] = $fn( ...$args );
 		}
 
-		return $this->memoize_cache[ "{$identifier}::once" ];
+		return $this->memoize_cache[ $key ];
 	}
 
 
@@ -83,7 +84,7 @@ trait Memoize {
 	 * I will only call the callback one time for the same set of arguments.
 	 *
 	 * @param callable $fn
-	 * @param string   $identifier - Something unique to identify the the method being used
+	 * @param string   $identifier - Something unique to identify the method being used
 	 *                             so we can determine the difference in the cache.
 	 *                             `__METHOD__` works nicely here.
 	 * @param mixed    ...$args    - Arguments will be passed to the callback as well as determine
@@ -92,8 +93,8 @@ trait Memoize {
 	 * @return mixed
 	 */
 	public function memoize( callable $fn, string $identifier, ...$args ) {
-		$key = md5( serialize( [ $args, $identifier ] ) );
-		if ( ! array_key_exists( $key, $this->memoize_cache ) ) {
+		$key = \md5( \serialize( [ $args, $identifier ] ) );
+		if ( ! \array_key_exists( $key, $this->memoize_cache ) ) {
 			$this->memoize_cache[ $key ] = $fn( ...$args );
 		}
 
@@ -103,7 +104,7 @@ trait Memoize {
 
 	/**
 	 * Clear all caches on this class.
-	 * Typically used during unit testing.
+	 * Typically, used during unit testing.
 	 *
 	 */
 	public function clear_memoize_cache() : void {
