@@ -136,8 +136,8 @@ class Image_Resize {
 	 *
 	 * @return string|null|array
 	 */
-	public function image( $args = [], $echo = true ) {
-		$defaults = [
+	public function image( array $args = [], bool $echo = true ) {
+		$args = (array) wp_parse_args( $args, [
 			'id'         => null,
 			'post_id'    => null,
 			'src'        => '',
@@ -153,10 +153,7 @@ class Image_Resize {
 			'link'       => '',
 			'link_class' => '',
 			'link_title' => '',
-		];
-
-		$class = $args['class'];
-		$args = (array) wp_parse_args( $args, $defaults );
+		] );
 
 		// from explicit thumbnail ID
 		if ( ! empty( $args['id'] ) ) {
@@ -302,20 +299,20 @@ class Image_Resize {
 		if ( ! empty( $attachment ) && ! empty( $image_id ) ) {
 			$size = empty( $args['size'] ) ? [ $width, $height ] : $args['size'];
 			if ( 'a' === $args['output'] ) {
-				$class .= ' lipe/lib/util/resized-image';
+				$args['class'] .= ' lipe/lib/util/resized-image';
 			}
 			$html_image = wp_get_attachment_image( $image_id, $size, false, [
-				'class' => trim( $class . ( ! \is_array( $size ) ? " attachment-{$size}" : '' ) ),
+				'class' => trim( $args['class'] . ( ! \is_array( $size ) ? " attachment-{$size}" : '' ) ),
 				'alt'   => empty( $args['alt'] ) ? trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) : $args['alt'],
 				'title' => empty( $args['title'] ) ? $attachment->post_title : $args['title'],
 			] );
 		} else {
 			$html_image = rtrim( '<img' );
 			if ( 'a' !== $args['output'] ) {
-				$class .= ' lipe/lib/util/resized-image';
+				$args['class'] .= ' lipe/lib/util/resized-image';
 			}
 			if ( ! \is_array( $args['size'] ) && ! empty( $args['size'] ) ) {
-				$class .= " attachment-{$args['size']}";
+				$args['class'] .= " attachment-{$args['size']}";
 			}
 
 			$attr = [
@@ -324,7 +321,7 @@ class Image_Resize {
 				'height' => $height,
 				'alt'    => $args['alt'],
 				'title'  => $args['title'],
-				'class'  => trim( $class ),
+				'class'  => trim( $args['class'] ),
 			];
 
 			foreach ( $attr as $name => $value ) {
