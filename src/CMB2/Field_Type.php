@@ -682,8 +682,10 @@ class Field_Type {
 	 *
 	 * @return Field
 	 */
-	public function image( $button_text = 'Add Image', ?bool $show_text_input = null, ?string $preview_size = null ) : Field {
-		return $this->file( $button_text, 'image', $show_text_input, $preview_size );
+	public function image( string $button_text = 'Add Image', ?bool $show_text_input = null, ?string $preview_size = null ) : Field {
+		$_args = $this->field_type_file( $this->file, $button_text, 'image', $show_text_input, $preview_size, null, null, null, 'Use Image' );
+
+		return $this->set( $_args, Repo::FILE );
 	}
 
 
@@ -1129,6 +1131,7 @@ class Field_Type {
 	 * @param string $file_mime_type  - (default all)
 	 * @param bool   $show_text_input - (default true) *May not be turned off for required fields*
 	 * @param string $preview_size    - (default full)
+	 * @param string $select_text     - Media manager button label (default: Use this file).
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#file
 	 *
@@ -1137,8 +1140,8 @@ class Field_Type {
 	 * @example file( 'Add Image', 'image', false );
 	 * @return Field
 	 */
-	public function file( $button_text = null, $file_mime_type = null, $show_text_input = null, $preview_size = null ) : Field {
-		$_args = $this->field_type_file( $this->file, $button_text, $file_mime_type, $show_text_input, $preview_size );
+	public function file( $button_text = null, $file_mime_type = null, $show_text_input = null, $preview_size = null, $select_text = null ) : Field {
+		$_args = $this->field_type_file( $this->file, $button_text, $file_mime_type, $show_text_input, $preview_size, null, null, null, $select_text );
 
 		return $this->set( $_args, Repo::FILE );
 	}
@@ -1150,20 +1153,21 @@ class Field_Type {
 	 * This is a repeatable field, and will store its data in an array,
 	 * with the attachment ID as the array key and the attachment url as the value
 	 *
-	 * @param string $button_text      - (default 'Add File' )
+	 * @param string $button_text      - (default 'Add File')
 	 * @param string $file_mime_type   - (default all)
 	 * @param string $preview_size     - (default full)
-	 * @param string $remove_item_text - (default 'Remove' )
-	 * @param string $file_text        - (default 'File' )
-	 * @param string $download_text    - (default 'Download' )
+	 * @param string $remove_item_text - (default 'Remove')
+	 * @param string $file_text        - (default 'File')
+	 * @param string $download_text    - (default 'Download')
+	 * @param string $select_text      - (default 'Use these files')
 	 *
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file_list
 	 *
 	 * @return Field
 	 */
-	public function file_list( $button_text = null, $file_mime_type = null, $preview_size = null, $remove_item_text = null, $file_text = null, $download_text = null ) : Field {
-		$_args = $this->field_type_file( $this->file_list, $button_text, $file_mime_type, null, $preview_size, $remove_item_text, $file_text, $download_text );
+	public function file_list( $button_text = null, $file_mime_type = null, $preview_size = null, $remove_item_text = null, $file_text = null, $download_text = null, $select_text = null ) : Field {
+		$_args = $this->field_type_file( $this->file_list, $button_text, $file_mime_type, null, $preview_size, $remove_item_text, $file_text, $download_text, $select_text );
 
 		return $this->set( $_args, Repo::FILE );
 	}
@@ -1223,10 +1227,11 @@ class Field_Type {
 	 * @param string $remove_item_text
 	 * @param string $file_text
 	 * @param string $download_text
+	 * @param string $select_text - Text on the button in the media manager (default: Use this file)
 	 *
 	 * @return array
 	 */
-	protected function field_type_file( $type, $button_text = null, $file_mime_type = null, $show_text_input = null, $preview_size = null, $remove_item_text = null, $file_text = null, $download_text = null ) : array {
+	protected function field_type_file( $type, $button_text = null, $file_mime_type = null, $show_text_input = null, $preview_size = null, $remove_item_text = null, $file_text = null, $download_text = null, $select_text = null ) : array {
 		$_args = [
 			'type' => $type,
 		];
@@ -1248,6 +1253,9 @@ class Field_Type {
 			$_args['query_args'] = [
 				'type' => $file_mime_type,
 			];
+		}
+		if ( null !== $select_text ) {
+			$_args['text']['add_upload_media_label'] = $select_text;
 		}
 		if ( null !== $show_text_input ) {
 			$_args['options'] = [
