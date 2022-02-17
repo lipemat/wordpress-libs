@@ -231,9 +231,8 @@ class Taxonomy {
 
 	/**
 	 * The default term added to new posts.
-	 * Replaces "Uncategorized"
 	 *
-	 * @requires WP 5.5.0+
+	 * Replaces "Uncategorized".
 	 *
 	 * @var string|array {
 	 * @type string $name        Name of default term.
@@ -244,8 +243,8 @@ class Taxonomy {
 	public $default_term;
 
 	/**
-	 * Whether this taxonomy should remember the order in which terms
-	 * are added to objects.
+	 * Whether terms in this taxonomy should be sorted in the
+	 * order they are provided to `wp_set_object_terms()`
 	 *
 	 * @var bool
 	 */
@@ -262,6 +261,14 @@ class Taxonomy {
 
 	/**
 	 * Override any generated labels.
+	 *
+	 * Usually calling `Taxonomy::set_label` covers any required changes.
+	 * Updating this property will fine tune existing or set special not included ones.
+	 *
+	 * @example  `['name_field_description' => [ $description, $description ]]`
+	 *
+	 * @see      get_taxonomy_labels
+	 * @see      Taxonomy::taxonomy_labels()
 	 *
 	 * @var array
 	 */
@@ -282,9 +289,7 @@ class Taxonomy {
 	protected $initial_terms = [];
 
 	/**
-	 * Set to true during __construct() auto generate a post list filter
-	 *
-	 * _post_list_filter
+	 * Auto generate a post list filter.
 	 *
 	 * @var bool
 	 */
@@ -292,24 +297,21 @@ class Taxonomy {
 
 
 	/**
+	 * Add hooks to register taxonomy.
 	 *
-	 * Takes care of the necessary hook and registering
-	 *
-	 * @notice set the class vars to edit arguments
-	 *
-	 * @param string       $taxonomy          - Taxonomy Slug ( will convert a title to a slug as well )
+	 * @param string       $taxonomy          - Taxonomy Slug (will convert a title to a slug as well)
 	 * @param string|array $post_types        - May also be set by $this->post_types = array
 	 * @param string|bool  $show_admin_column - Whether to generate a post list column or not.
 	 *                                        If a `string is passed` it wil be used for the
 	 *                                        column label
-	 * @param bool         $post_list_filter
+	 * @param bool         $post_list_filter  - Auto generate a post list filter for this taxonomy.
 	 */
-	public function __construct( string $taxonomy, $post_types = [], $show_admin_column = false, $post_list_filter = false ) {
+	public function __construct( string $taxonomy, $post_types = [], $show_admin_column = false, bool $post_list_filter = false ) {
 		$this->post_types = (array) $post_types;
 
 		$this->show_admin_column = (bool) $show_admin_column;
 		$this->_post_list_filter = $post_list_filter;
-		$this->taxonomy = strtolower( str_replace( ' ', '_', $taxonomy ) );
+		$this->taxonomy = \strtolower( \str_replace( ' ', '_', $taxonomy ) );
 		$this->hook();
 
 		if ( \is_string( $show_admin_column ) ) {
@@ -335,7 +337,7 @@ class Taxonomy {
 			}
 		}
 
-		if ( is_admin() ) { // In case there are some taxonomies not registered on front end.
+		if ( is_admin() ) { // If some taxonomies are not registered on the front end.
 			Actions::in()->add_single_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 1000 );
 		}
 	}
@@ -700,21 +702,19 @@ class Taxonomy {
 		];
 
 		$args = apply_filters( 'lipe/lib/taxonomy/args', $args, $this->taxonomy );
-		$args = apply_filters( "lipe/lib/taxonomy/args_{$this->taxonomy}", $args );
-
-		return $args;
+		return apply_filters( "lipe/lib/taxonomy/args_{$this->taxonomy}", $args );
 	}
 
 
 	/**
 	 * Build the labels array for the post type definition
 	 *
-	 * @param null|string $single
-	 * @param null|string $plural
+	 * @param string|null $single
+	 * @param string|null $plural
 	 *
 	 * @return array
 	 */
-	protected function taxonomy_labels( $single = null, $plural = null ) : array {
+	protected function taxonomy_labels( string $single = null, string $plural = null ) : array {
 		$single = $single ?? $this->get_label();
 		$plural = $plural ?? $this->get_label( 'plural' );
 
@@ -751,9 +751,7 @@ class Taxonomy {
 		}
 
 		$labels = apply_filters( 'lipe/lib/taxonomy/labels', $labels, $this->taxonomy );
-		$labels = apply_filters( "lipe/lib/taxonomy/labels_{$this->taxonomy}", $labels );
-
-		return $labels;
+		return apply_filters( "lipe/lib/taxonomy/labels_{$this->taxonomy}", $labels );
 	}
 
 
@@ -763,9 +761,9 @@ class Taxonomy {
 	 *
 	 * @param string $quantity - (plural,singular)
 	 *
-	 * @return null|string
+	 * @return string
 	 */
-	protected function get_label( $quantity = 'singular' ) : ?string {
+	protected function get_label( string $quantity = 'singular' ) : string {
 		if ( 'plural' === $quantity ) {
 			if ( ! $this->label_plural ) {
 				$this->set_label( $this->label_singular );
@@ -791,13 +789,13 @@ class Taxonomy {
 	 * @return void
 	 *
 	 */
-	public function set_label( $singular = '', $plural = '' ) : void {
+	public function set_label( string $singular = '', string $plural = '' ) : void {
 		if ( ! $singular ) {
-			$singular = ucwords( str_replace( '_', ' ', $this->taxonomy ) );
+			$singular = ucwords( \str_replace( '_', ' ', $this->taxonomy ) );
 		}
 		if ( ! $plural ) {
-			if ( 'y' === substr( $singular, - 1 ) ) {
-				$plural = substr( $singular, 0, - 1 ) . 'ies';
+			if ( 'y' === \substr( $singular, - 1 ) ) {
+				$plural = \substr( $singular, 0, - 1 ) . 'ies';
 			} else {
 				$plural = $singular . 's';
 			}
@@ -809,8 +807,7 @@ class Taxonomy {
 
 
 	/**
-	 *
-	 * Returns the set menu label or the plural label if not set
+	 * Returns the set menu label, or the plural label if not set
 	 *
 	 * @return string
 	 *
