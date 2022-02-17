@@ -13,7 +13,7 @@ class Filter extends Argument_Abstract {
 
 	/**
 	 * @see \Lipe\Lib\Post_Type\Extended_CPTS\Filter::set()
-	 * @var string
+	 * @var ?string
 	 */
 	protected $filters_array_key;
 

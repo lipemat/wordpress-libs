@@ -13,9 +13,7 @@ namespace Lipe\Lib\Util;
  */
 class Autoloader {
 	/**
-	 * instance
-	 *
-	 * @var Autoloader
+	 * @var ?Autoloader
 	 */
 	private static $instance;
 

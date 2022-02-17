@@ -1096,14 +1096,14 @@ class Field {
 
 
 	/**
-	 * Field parameter which can be used by the 'taxonomy_*' and the 'file_*' field types.
+	 * Field parameter, which can be used by the 'taxonomy_*', and the 'file_*' field types.
 	 * For the 'taxonomy_*' types, provides ability
 	 * to override the arguments passed to get_terms(), and for the 'file_*' field types,
 	 * allows overriding the media library query arguments.
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
 	 *
-	 * @var array $args
+	 * @param array $args
 	 *
 	 * @return $this
 	 */

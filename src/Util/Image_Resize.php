@@ -153,17 +153,10 @@ class Image_Resize {
 			'link'       => '',
 			'link_class' => '',
 			'link_title' => '',
-
 		];
 
-		$alt = '';
-		$class = '';
-		$link = '';
-		$link_title = '';
-		$size = '';
-		$title = '';
+		$class = $args['class'];
 		$args = (array) wp_parse_args( $args, $defaults );
-		extract( $args, EXTR_OVERWRITE ); //phpcs:ignore
 
 		// from explicit thumbnail ID
 		if ( ! empty( $args['id'] ) ) {
@@ -198,14 +191,14 @@ class Image_Resize {
 			return null;
 		}
 
-		// save original image url for the <a> tag
+		// Save the original image url for the <a> tag.
 		$full_image_url = $image_url;
 
-		// get the post attachment
+		// Get the post attachment.
 		if ( ! empty( $image_id ) ) {
 			$attachment = get_post( $image_id );
-			if ( empty( $alt ) ) {
-				$alt = esc_attr( $attachment->post_title );
+			if ( empty( $args['alt'] ) ) {
+				$args['alt'] = esc_attr( $attachment->post_title );
 			}
 		}
 
@@ -272,7 +265,7 @@ class Image_Resize {
 
 		/* BEGIN OUTPUT */
 
-		// return null, if there isn't $image_url
+		// Return null, if no $image_url.
 		if ( empty( $image_url ) ) {
 			return null;
 		}
@@ -293,8 +286,8 @@ class Image_Resize {
 				'src'    => $image_url,
 				'width'  => $width,
 				'height' => $height,
-				'alt'    => $alt,
-				'title'  => $title,
+				'alt'    => $args['alt'],
+				'title'  => $args['title'],
 			];
 		}
 
@@ -307,14 +300,14 @@ class Image_Resize {
 		}
 
 		if ( ! empty( $attachment ) && ! empty( $image_id ) ) {
-			$size = empty( $size ) ? [ $width, $height ] : $size;
+			$size = empty( $args['size'] ) ? [ $width, $height ] : $args['size'];
 			if ( 'a' === $args['output'] ) {
 				$class .= ' lipe/lib/util/resized-image';
 			}
 			$html_image = wp_get_attachment_image( $image_id, $size, false, [
 				'class' => trim( $class . ( ! \is_array( $size ) ? " attachment-{$size}" : '' ) ),
-				'alt'   => empty( $alt ) ? trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) : $alt,
-				'title' => empty( $title ) ? $attachment->post_title : $title,
+				'alt'   => empty( $args['alt'] ) ? trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) : $args['alt'],
+				'title' => empty( $args['title'] ) ? $attachment->post_title : $args['title'],
 			] );
 		} else {
 			$html_image = rtrim( '<img' );
@@ -322,15 +315,15 @@ class Image_Resize {
 				$class .= ' lipe/lib/util/resized-image';
 			}
 			if ( ! \is_array( $args['size'] ) && ! empty( $args['size'] ) ) {
-				$class .= " attachment-$size";
+				$class .= " attachment-{$args['size']}";
 			}
 
 			$attr = [
 				'src'    => $image_url,
 				'width'  => $width,
 				'height' => $height,
-				'alt'    => $alt,
-				'title'  => $title,
+				'alt'    => $args['alt'],
+				'title'  => $args['title'],
 				'class'  => trim( $class ),
 			];
 
@@ -356,8 +349,8 @@ class Image_Resize {
 			$html_link = rtrim( '<a' );
 			$link_class = 'lipe/lib/util/resized-image';
 			$attr = [
-				'href'  => empty( $link ) ? $full_image_url : $link,
-				'title' => empty( $link_title ) ? $title : $link_title,
+				'href'  => empty( $args['link'] ) ? $full_image_url : $args['link'],
+				'title' => empty( $args['link_title'] ) ? $args['title'] : $args['link_title'],
 				'class' => trim( $link_class ),
 			];
 
@@ -405,7 +398,7 @@ class Image_Resize {
 			} else {
 				$file_path = parse_url( esc_url( $img_url ) );
 				if ( \is_array( $file_path ) ) {
-					$file_path = sanitize_text_field( wp_unslash($_SERVER['DOCUMENT_ROOT'] ?? '' ) ) . $file_path['path'];
+					$file_path = sanitize_text_field( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ?? '' ) ) . $file_path['path'];
 				}
 			}
 			if ( ! file_exists( $file_path ) ) {
@@ -423,7 +416,7 @@ class Image_Resize {
 			return [];
 		}
 		$file_info = pathinfo( $file_path );
-		if ( ! isset( $file_info['dirname'], $file_info['filename'], $file_info['extension'] ) ) {
+		if ( empty( $file_info['filename'] ) ) {
 			return [];
 		}
 

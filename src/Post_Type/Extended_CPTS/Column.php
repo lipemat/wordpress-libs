@@ -13,7 +13,7 @@ class Column extends Argument_Abstract {
 
 	/**
 	 * @see self::set()
-	 * @var string
+	 * @var ?string
 	 */
 	protected $cols_array_key;
 
@@ -47,7 +47,7 @@ class Column extends Argument_Abstract {
 		}
 		$existing = $this->cpts->admin_cols[ $this->cols_array_key ];
 
-		$existing = array_merge( $existing, $args );
+		$existing = \array_merge( $existing, $args );
 		$this->cpts->admin_cols[ $this->cols_array_key ] = $existing;
 	}
 

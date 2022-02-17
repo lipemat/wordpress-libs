@@ -193,7 +193,7 @@ class Taxonomy {
 	 *
 	 * @default $this->taxonomy
 	 *
-	 * @var false|string
+	 * @var false|string|null
 	 */
 	public $query_var;
 

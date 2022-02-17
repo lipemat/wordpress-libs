@@ -14,11 +14,9 @@ class Column extends Argument_Abstract {
 	protected $taxos;
 
 	/**
-	 * filters_array_key
-	 *
 	 * @see \Lipe\Lib\Taxonomy\Extended_TAXOS\Column::set()
 	 *
-	 * @var string
+	 * @var ?string
 	 */
 	protected $cols_array_key;
 
