@@ -3,6 +3,7 @@
 namespace Lipe\Lib\CMB2\Field;
 
 use Lipe\Lib\CMB2\Field_Type;
+use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
 
 /**
@@ -12,6 +13,7 @@ use Lipe\Lib\Traits\Singleton;
  */
 class Checkbox {
 	use Singleton;
+	use Memoize;
 
 
 	/**
@@ -76,26 +78,18 @@ class Checkbox {
 
 
 	protected function styles() : void {
-		static $displayed = false;
-		if ( $displayed ) {
-			return;
-		}
-		$displayed = true;
+		$this->once( function() {
+			?>
+			<style>
+				.checkbox-compact {
+					padding: 0 0 1em !important;
+				}
 
-		?>
-		<style>
-			.checkbox-compact {
-				padding: 0 0 1em !important;
-			}
-
-			.cmb-tab-panel .checkbox-compact {
-				padding: 0 2% 1em !important;
-			}
-
-			.checkbox-compact label {
-				display: inline-block !important;
-			}
-		</style>
-		<?php
+				.checkbox-compact label {
+					display: inline-block !important;
+				}
+			</style>
+			<?php
+		}, __METHOD__, [] );
 	}
 }

@@ -287,9 +287,15 @@ class Tabs {
 			.cmb-tabs {
 				background: #fff;
 			}
+
+			.cmb-tabs .cmb-th {
+			    width: 150px !important;
+			}
+
 			.cmb-tabs .cmb-th label {
 				color: #555;
 				font-size: 13px;
+				padding: 0;
 			}
 
 			.cmb2-options-page .cmb-tabs .cmb-th label {
@@ -300,8 +306,8 @@ class Tabs {
 
 			.cmb-tabs .cmb-type-group .cmb-row,
 			.cmb-tabs .cmb2-postbox .cmb-row {
-				margin: 0 0 0.8em;
-				padding: 0 0 0.8em;
+				margin: 0 0 0.8em !important;
+				padding: 0 0 0.8em !important;
 			}
 
 			.cmb-tabs span.cmb2-metabox-description {
@@ -322,11 +328,19 @@ class Tabs {
 				display: inline-block;
 			}
 
+			.cmb-tab-panel .checkbox-compact {
+				padding: 10px 2% 10px !important;
+			}
+
+			.cmb-tabs .cmb-add-row {
+				margin: 0;
+			}
+
 			/*--------------------------------------------------------------
 			CMB2 Tabs
 			--------------------------------------------------------------*/
 			.cmb-tabs {
-				margin: -6px -12px -12px;
+				border: 1px solid #e9e9e9;
 				overflow: hidden;
 			}
 
@@ -433,6 +447,7 @@ class Tabs {
 
 			.cmb-tabs .cmb-tabs-panel.cmb2-wrap-tabs {
 				display: inline-flex !important;
+				padding: 0;
 			}
 
 			.cmb-tabs .cmb2-metabox {
@@ -444,11 +459,19 @@ class Tabs {
 				padding: 1.5em;
 			}
 
+			.cmb2-options-page .cmb-tabs .cmb-repeatable-group .cmb-group-name {
+				margin: 0 0 10px;
+			}
+
 			.cmb-tabs .cmb-th,
 			.cmb-tabs .cmb-td {
-				padding: 0 2%;
+				padding: 10px 2%;
 				-webkit-box-sizing: border-box;
 				box-sizing: border-box;
+			}
+
+			.cmb2-options-page .cmb-tabs .cmb-td {
+				padding: 10px 0;
 			}
 
 			.cmb-tabs .cmb-th {
@@ -458,7 +481,7 @@ class Tabs {
 			.cmb-tabs .cmb-th + .cmb-td,
 			.cmb-tabs .cmb-th + .cmb-td {
 				float: right;
-				width: calc( 100% - 200px );
+				width: calc( 100% - 175px );
 			}
 
 			.cmb2-wrap-tabs .cmb-tab-panel {
@@ -477,9 +500,11 @@ class Tabs {
 				float: none;
 				background-color: #fafafa;
 				border-right: medium none;
-				padding: 15px 0 0 0;
-				border-bottom: 1px solid #dedede;
+				padding: 0;
+			}
 
+			.cmb2-options-page .cmb-tabs .cmb2-metabox > .cmb-row {
+				border: none !important;
 			}
 
 			.cmb2-options-page .cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav {
@@ -536,6 +561,10 @@ class Tabs {
 			 .cmb2-options-page .cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav li.cmb-tab-active a {
 			    border-bottom: 2px solid #fff;
 			    margin-bottom: -1px;
+			 }
+
+			 .cmb2-options-page .cmb-tabs .cmb2-metabox > .cmb-row > .cmb-th + .cmb-td {
+			    margin-left: 175px;
 			 }
 
 			/*--------------------------------------------------------------
