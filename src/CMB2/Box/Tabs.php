@@ -238,12 +238,16 @@ class Tabs {
 					var $li = $( this ).parent(),
 						panel = $li.data( 'panel' ),
 						$wrapper = $li.parents( '.cmb-tabs' ).find( '.cmb2-wrap-tabs' ),
-						$redirect = $('[name="_wp_http_referer"]'),
-						url = new URL( $redirect.val() ),
 						$panel = $wrapper.find( '[class*="cmb-tab-panel-' + panel + '"]' );
 
-					url.searchParams.set( '<?= esc_js( self::TAB_FIELD ) ?>', panel );
-					$redirect.val( url.toString() );
+					try {
+						var $redirect = $('[name="_wp_http_referer"]'),
+						url = new URL( $redirect.val() );
+						url.searchParams.set( '<?= esc_js( self::TAB_FIELD ) ?>', panel );
+						$redirect.val( url.toString() );
+					} catch( e ) {
+						console.error( e );
+					}
 
 					$li.addClass( 'cmb-tab-active' ).siblings().removeClass( 'cmb-tab-active' );
 					$wrapper.find( '.cmb-tab-panel' ).removeClass( 'show' );
@@ -251,7 +255,7 @@ class Tabs {
 				} );
 			} );
 		</script>
-		<style type="text/css">
+		<style>
 			/* <?= __FILE__ ?> */
 			.clearfix:after {
 				visibility: hidden;
