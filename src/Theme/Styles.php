@@ -97,19 +97,11 @@ class Styles {
 
 
 	/**
-	 * Add a google font the head of the page in the front end and admin
-	 *
-	 * @link    https://github.com/typekit/webfontloader
-	 *
-	 * @notice  This method is for google fonts only
-	 * @notice  Must called before the `wp_enqueue_scripts` hook completes.
-	 *
-	 * @param string|array $families - the family to include
-	 *
-	 * @example 'Droid Serif,Oswald'
-	 * @example [ 'Oswald','Source+Sans+Pro' ]
+	 * @deprecated In favor of calling `wp_enqueue_style` directly.
 	 */
 	public function add_font( $families ) : void {
+		_deprecated_function( __METHOD__, '3.8.0' );
+
 		if ( ! \is_array( $families ) ) {
 			$families = \explode( ',', $families );
 		}
@@ -117,7 +109,7 @@ class Styles {
 		Actions::in()->add_action_all( [
 			'wp_enqueue_scripts',
 			'admin_enqueue_scripts',
-		], static function () use ( $families ) {
+		], static function() use ( $families ) {
 			\wp_enqueue_script( 'google-webfonts', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js' ); //phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 			\wp_add_inline_script( 'google-webfonts', 'WebFont.load({
 				google: {
