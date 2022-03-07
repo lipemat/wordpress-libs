@@ -265,15 +265,15 @@ class Term_Select_2 {
 	 *
 	 * Also needed for repeater fields
 	 *
-	 * @param mixed $check
-	 * @param mixed $meta_value
-	 * @param int   $object_id
+	 * @param mixed      $check
+	 * @param mixed      $meta_value
+	 * @param int|string $id - Post id on post screens, field key on settings screens.
 	 *
-	 * @param array $field_args
+	 * @param array      $field_args
 	 *
 	 * @return array|null
 	 */
-	public function assign_terms_during_save( $check, $meta_value, int $object_id, array $field_args ) : ?array {
+	public function assign_terms_during_save( $check, $meta_value, $id, array $field_args ) : ?array {
 		if ( ! \is_array( $meta_value ) || empty( $meta_value ) ) {
 			return $check;
 		}
@@ -288,8 +288,8 @@ class Term_Select_2 {
 			}
 		}
 
-		if ( ! empty( $object_id ) && $field_args[ self::SAVE_AS_TERMS ] ) {
-			wp_add_object_terms( $object_id, \array_map( '\intval', $meta_value ), $this->get_taxonomy( $field_args ) );
+		if ( ! empty( $id ) && $field_args[ self::SAVE_AS_TERMS ] ) {
+			wp_add_object_terms( $id, \array_map( '\intval', $meta_value ), $this->get_taxonomy( $field_args ) );
 		}
 
 		return $meta_value;
