@@ -178,7 +178,7 @@ class Image_Resize {
 			$image_url = wp_get_attachment_url( $image_id );
 		}
 
-		//get first image from content
+		// @deprecated Will be removed in V4.
 		if ( empty( $image_url ) && $args['image_scan'] ) {
 			$image_id = null;
 			$image_url = $this->get_image_from_content( $args['post_id'] );
@@ -519,7 +519,12 @@ class Image_Resize {
 	}
 
 
+	/**
+	 * @deprecated Will be removed in V4.
+	 */
 	public function get_image_from_content( $post_id = 0 ) {
+		_deprecated_function( __METHOD__, '3.8.0' );
+
 		if ( empty( $post_id ) ) {
 			$post_id = (int) get_the_ID();
 			if ( empty( $post_id ) ) {
