@@ -24,12 +24,18 @@ class Image_Resize {
 
 	use Singleton;
 
-	private $_image_sizes = []; //Keeps track of all theme and plugins image sizes
+	/**
+	 * Image sizes registered via `add_image_size`.
+	 *
+	 * @var array
+	 */
+	private $_image_sizes = [];
 
 
 	public function hook() : void {
 		add_action( 'init', [ $this, 'add_other_image_sizes' ] );
 		add_filter( 'image_downsize', [ $this, 'convert_image_downsize' ], 10, 3 );
+		add_filter( 'wp_calculate_image_srcset_meta', [ $this, 'populate_srcset_sizes' ], 10, 4 );
 	}
 
 
@@ -82,9 +88,52 @@ class Image_Resize {
 
 
 	/**
-	 * Uses this class to resize an image instead of default wp
+	 * Generates and populates image sizes during generation
+	 * of an image's srcset.
 	 *
-	 * @uses  added to the image_downsize filter by self::__construct()
+	 * Support image srcset with dynamic image generation.
+	 * Limited to only sizes, which would be used in the srcset to
+	 * prevent superfluous image generation.
+	 *
+	 * @param array  $meta          - Existing image sizes and information.
+	 * @param array  $size_array    - width,height.
+	 * @param string $src           - The image src.
+	 * @param int    $attachment_id - ID of attachment.
+	 *
+	 * @filter wp_calculate_image_srcset_meta 10 4
+	 *
+	 * @since  3.8.0
+	 *
+	 * @return array
+	 */
+	public function populate_srcset_sizes( array $meta, array $size_array, string $src, int $attachment_id ) : array {
+		$width = (int) $size_array[0];
+		$height = (int) $size_array[1];
+		if ( $width < 1 ) {
+			return $meta;
+		}
+		foreach ( $this->get_image_sizes() as $size => $dimensions ) {
+			if ( wp_image_matches_ratio( $width, $height, $dimensions['width'], $dimensions['height'] ) ) {
+				$image = $this->convert_image_downsize( null, $attachment_id, $size );
+				if ( ! empty( $image ) ) {
+					$meta['sizes'][ $size ] = [
+						'file'      => wp_basename( $image[0] ),
+						'width'     => $image[1],
+						'height'    => $image[2],
+						'mime-type' => wp_get_image_mime( get_attached_file( $attachment_id ) ),
+					];
+				}
+			}
+		}
+
+		return $meta;
+	}
+
+
+	/**
+	 * Uses this class to resize an image instead of default WP.
+	 *
+	 * @filter image_downsize 10 3
 	 *
 	 */
 	public function convert_image_downsize( $out, $id, $size ) {
