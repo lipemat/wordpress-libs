@@ -243,7 +243,7 @@ class Image_Resize {
 		// Get the post attachment.
 		if ( ! empty( $image_id ) ) {
 			$attachment = get_post( $image_id );
-			if ( empty( $args['alt'] ) ) {
+			if ( ! empty( $attachment ) && empty( $args['alt'] ) ) {
 				$args['alt'] = esc_attr( $attachment->post_title );
 			}
 		}
