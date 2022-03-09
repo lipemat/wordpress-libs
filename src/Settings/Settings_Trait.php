@@ -26,11 +26,11 @@ trait Settings_Trait {
 	 * Get an option from the Meta repo.
 	 *
 	 * @param string $key
-	 * @param null   $default
+	 * @param mixed  $default
 	 *
 	 * @return mixed
 	 */
-	public function get_option( $key, $default = null ) {
+	public function get_option( string $key, $default = null ) {
 		return $this->get_meta( $key, $default );
 	}
 
