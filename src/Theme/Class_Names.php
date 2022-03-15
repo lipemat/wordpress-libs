@@ -3,18 +3,17 @@
 namespace Lipe\Lib\Theme;
 
 /**
- * Conditionally add css classes to an element
+ * Conditionally add CSS classes to an element
  *
- * Mirrored after npm classnames and enhanced
+ * Mirrored after npm classnames and enhanced.
  *
  * @link    https://www.npmjs.com/package/classnames
  *
- * @example $class = new Class_Names( [ 'top' => false, 'bottom' => true ] ); //echo $class; outputs "bottom"
- *
- * @example $class = new Class_Names( [ 'top', 'bottom' ] ); //"echo $class; outputs top bottom"
- *
+ * @example new Class_Names( [ 'top' => false, 'bottom' => true ] );
+ * @example new Class_Names( [ 'top', 'bottom' ] );
+ * @example new Class_Names( 'top', [ 'bottom' => false ] );
  * @example $class  = new Class_Names( [ $styles['tab'] ] );
- *          //conditionally add an active class as we go
+ *          // Conditionally add an active class as we go.
  *          $class[ 'active' ] = isset( $_POST['domain_list'] );
  *
  */
@@ -23,13 +22,14 @@ class Class_Names implements \ArrayAccess {
 	private $classes = [];
 
 
-	public function __construct( array $classes ) {
-		$this->parse_classes( $classes );
+	public function __construct( ...$classes ) {
+		\array_walk( $classes, [ $this, 'parse_classes' ] );
 	}
 
 
 	/**
 	 * Used for unit testing.
+	 *
 	 * @see Class_Names::__toString
 	 * @interal
 	 *
@@ -38,6 +38,7 @@ class Class_Names implements \ArrayAccess {
 	public function get_classes() : array {
 		return $this->classes;
 	}
+
 
 	/**
 	 * Extract classes out of arrays, strings, or a combination.
@@ -74,38 +75,37 @@ class Class_Names implements \ArrayAccess {
 	 * @return int|false
 	 */
 	private function get_classes_key( string $class ) {
-		return array_search( $class, $this->classes, true );
+		return \array_search( $class, $this->classes, true );
 	}
 
 
 	public function __toString() {
-		return implode( ' ', $this->classes );
+		return \implode( ' ', $this->classes );
 	}
 
 
-	public function offsetExists( $class ) : bool {
-		return false !== $this->get_classes_key( $class );
+	public function offsetExists( $offset ) : bool {
+		return false !== $this->get_classes_key( $offset );
 	}
 
 
-	public function offsetGet( $class ) {
-		return $this->offsetExists( $class );
+	public function offsetGet( $offset ) {
+		return $this->offsetExists( $offset );
 	}
 
 
-	public function offsetSet( $class, $active ) : void {
-		if ( (bool) $active ) {
-			$this->parse_classes( $class );
+	public function offsetSet( $offset, $value ) : void {
+		if ( (bool) $value ) {
+			$this->parse_classes( $offset );
 		} else {
-			$this->offsetUnset( $class );
+			$this->offsetUnset( $offset );
 		}
 	}
 
 
-	public function offsetUnset( $class ) : void {
-		if ( $this->offsetExists( $class ) ) {
-			unset( $this->classes[ (int) $this->get_classes_key( $class ) ] );
+	public function offsetUnset( $offset ) : void {
+		if ( $this->offsetExists( $offset ) ) {
+			unset( $this->classes[ (int) $this->get_classes_key( $offset ) ] );
 		}
 	}
 }
-
