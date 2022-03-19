@@ -126,6 +126,16 @@ class Custom_Post_Type {
 
 	public $exclude_from_search;
 
+	/**
+	 * Enables post type archives.
+	 *
+	 * Will use post type slug if set to true, otherwise
+	 * will use provided string.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/register_post_type/#has_archive
+	 *
+	 * @var bool|string
+	 */
 	public $has_archive = true;
 
 	public $slug = '';
