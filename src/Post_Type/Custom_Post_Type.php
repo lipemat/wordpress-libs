@@ -183,18 +183,10 @@ class Custom_Post_Type {
 	 */
 	public $rest_controller_class;
 
-	public $rewrite;
-
 	/**
-	 * The default rewrite endpoint bitmasks
-	 *
-	 * @link    http://make.wordpress.org/plugins/2012/06/07/rewrite-endpoints-api/
-	 *
-	 * @default EP_PERMALINK
-	 *
-	 * @var int
+	 * @var array|boolean|null
 	 */
-	public $permalink_epmask = EP_PERMALINK;
+	public $rewrite;
 
 	public $can_export = true;
 
@@ -338,7 +330,6 @@ class Custom_Post_Type {
 			'taxonomies'            => $this->taxonomies,
 			'has_archive'           => $this->has_archive,
 			'rewrite'               => $this->rewrites(),
-			'permalink_epmask'      => $this->permalink_epmask,
 			'query_var'             => $this->query_var,
 			'can_export'            => $this->can_export,
 			'delete_with_user'      => $this->delete_with_user,
@@ -350,15 +341,11 @@ class Custom_Post_Type {
 		];
 
 		$args = apply_filters( 'lipe/lib/schema/post_type_args', $args, $this->post_type );
-		$args = apply_filters( "lipe/lib/schema/post_type_args_{$this->post_type}", $args );
-
-		return $args;
+		return apply_filters( "lipe/lib/schema/post_type_args_{$this->post_type}", $args );
 	}
 
 
 	/**
-	 * Post Type labels
-	 *
 	 * Build the labels array for the post type definition
 	 *
 	 * @param string $single
@@ -494,21 +481,26 @@ class Custom_Post_Type {
 
 
 	/**
-	 * Rewrites
+	 * Rewrites configuration.
 	 *
-	 * Build the rewrites param. Will send defaults if not set
+	 * Set to `false` to disable rewrites.
 	 *
-	 * @return array|null
+	 * @link    https://developer.wordpress.org/reference/functions/register_post_type/#rewrite
+	 *
+	 * @notice  The `ep_mask` parameter is mostly ignored and most likely
+	 *          never needed to change.
+	 *
+	 * @return array|null|boolean
 	 */
-	protected function rewrites() : ?array {
-		if ( empty( $this->rewrite ) ) {
-			return [
-				'slug'       => $this->get_slug(),
-				'with_front' => false,
-			];
+	protected function rewrites() {
+		if ( isset( $this->rewrite ) ) {
+			return $this->rewrite;
 		}
 
-		return $this->rewrite;
+		return [
+			'slug'       => $this->get_slug(),
+			'with_front' => false,
+		];
 	}
 
 
