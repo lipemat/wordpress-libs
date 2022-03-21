@@ -194,6 +194,12 @@ class Custom_Post_Type {
 	public $rest_controller_class;
 
 	/**
+	 * The default rewrite endpoint bitmasks
+	 *
+	 * @link    http://make.wordpress.org/plugins/2012/06/07/rewrite-endpoints-api/
+	 *
+	 * @default EP_PERMALINK
+	 *
 	 * @var array|boolean|null
 	 */
 	public $rewrite;
@@ -299,7 +305,7 @@ class Custom_Post_Type {
 	 */
 	protected function handle_block_editor_support() : void {
 		if ( false === $this->gutenberg_compatible ) {
-			add_filter( 'use_block_editor_for_post_type', function ( $use, $post_type ) {
+			add_filter( 'use_block_editor_for_post_type', function( $use, $post_type ) {
 				if ( $post_type === $this->post_type ) {
 					return false;
 				}
@@ -491,11 +497,19 @@ class Custom_Post_Type {
 
 
 	/**
+	 * <<<<<<< Updated upstream
 	 * Rewrites configuration.
 	 *
 	 * Set to `false` to disable rewrites.
 	 *
 	 * @link    https://developer.wordpress.org/reference/functions/register_post_type/#rewrite
+	 * ||||||| constructed merge base
+	 * Rewrites
+	 *
+	 * Build the rewrites param. Will send defaults if not set
+	 * =======
+	 * Build the rewrites param.
+	 * >>>>>>> Stashed changes
 	 *
 	 * @notice  The `ep_mask` parameter is mostly ignored and most likely
 	 *          never needed to change.
@@ -775,7 +789,7 @@ class Custom_Post_Type {
 	 *
 	 */
 	public function remove_column( string $column ) : void {
-		add_filter( "manage_edit-{$this->post_type}_columns", function ( $columns ) use ( $column ) {
+		add_filter( "manage_edit-{$this->post_type}_columns", function( $columns ) use ( $column ) {
 			unset( $columns[ $column ] );
 			return $columns;
 		} );
@@ -783,9 +797,35 @@ class Custom_Post_Type {
 
 
 	/**
-	 * @param string $post_type
+	 * Disable single template while leaving the archive intact.
 	 *
-	 * @static
+	 * @link     https://wordpress.stackexchange.com/a/403951/129914
+	 *
+	 * @requires WP 5.9.0+.
+	 *
+	 * @return void
+	 */
+	public function disable_single() : void {
+		add_filter( 'is_post_type_viewable', function( $is_viewable, $post_type ) {
+			if ( $this->post_type === $post_type->name ) {
+				return false;
+			}
+			return $is_viewable;
+		}, 10, 2 );
+
+		add_action( 'registered_post_type', function() {
+			$rewrites = $this->rewrites();
+			if ( \is_array( $rewrites ) && ! empty( $rewrites['slug'] ) ) {
+				remove_rewrite_tag( "%{$rewrites['slug' ]}%" );
+			} else {
+				remove_rewrite_tag( "%{$this->get_slug()}%" );
+			}
+		} );
+	}
+
+
+	/**
+	 * @param string $post_type
 	 *
 	 * @return Custom_Post_Type|Custom_Post_Type_Extended
 	 */
