@@ -274,7 +274,6 @@ class Route {
 	/**
 	 * Make a new placeholder post
 	 *
-	 * @static
 	 * @return int The ID of the new post
 	 */
 	private static function make_post() : int {
@@ -284,7 +283,7 @@ class Route {
 			'post_type'   => self::NAME,
 		];
 		$id = wp_insert_post( $post );
-		if ( is_wp_error( $id ) ) {
+		if ( is_wp_error( $id ) ) { //@phpstan-ignore-line
 			return 0;
 		}
 

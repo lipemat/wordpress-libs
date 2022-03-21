@@ -113,10 +113,10 @@ class Term_Select_2 {
 	 */
 	private function js_inline( CMB2_Field $field, CMB2_Types $field_type_object ) : void {
 		static $rendered = [];
-		if ( isset( $rendered[ $field->id() ] ) ) {
+		if ( isset( $rendered[ (string) $field->id() ] ) ) {
 			return;
 		}
-		$rendered[ $field->id() ] = 1;
+		$rendered[ (string) $field->id() ] = 1;
 
 		$url_args = [
 			'action'               => self::GET_TERMS,
@@ -225,8 +225,8 @@ class Term_Select_2 {
 				'label' => $option_label,
 			];
 
-			// Split options into those which are selected and the rest.
-			if ( empty( $options ) || \in_array( $option_value, $field_escaped_value, false ) ) {
+			// Split options into those, which are selected and the rest.
+			if ( empty( $option_value ) || \in_array( $option_value, $field_escaped_value, false ) ) {
 				$option['checked'] = true;
 				$selected_items .= $select->select_option( $option );
 			} else {
