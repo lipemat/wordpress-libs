@@ -39,19 +39,18 @@ class Styles {
 
 
 	/**
-	 * Beanstalk adds a .revision file to deployments. This grabs that
-	 * revision and returns it.
-	 *
 	 * You will find a 'post-commit' script in the /dev
-	 * folder which may be added to your .git/hooks directory to automatically generate
-	 * this .revision file locally on each commit.
+	 * folder, which may be added to your .git/hooks directory to automatically generate
+	 * this `.revision` file locally on each commit.
 	 *
-	 * If neither the constant nor the .revision is available this will
-	 * return null which false back to the WP version when queuing scripts
+	 * If neither the constant nor the `.revision` is available this will
+	 * return null, which false back to the WP version when queuing scripts
 	 * and styles.
 	 *
-	 * You can set the revision manually in the wp-config or some dynamic way
+	 * You can set the revision manually in the wp-config, or some dynamic way
 	 * define( 'SCRIPTS_VERSION', '9999' );
+	 *
+	 * Beanstalk adds a `.revision` file to deployments automatically.
 	 *
 	 * @return null|string
 	 */
@@ -61,7 +60,6 @@ class Styles {
 				return SCRIPTS_VERSION;
 			}
 
-			// Beanstalk style .version file.
 			$path = isset( $_SERVER['DOCUMENT_ROOT'] ) ? \sanitize_text_field( \wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) : '';
 			if ( \file_exists( $path . '/.revision' ) ) {
 				return \trim( \file_get_contents( $path . '/.revision' ) );
@@ -77,17 +75,17 @@ class Styles {
 	 *
 	 * @see https://github.com/gruntjs/grunt-contrib-watch#user-content-optionslivereload
 	 *
-	 * @param bool $admin_also - cue for admin as well (defaults to only FE)
+	 * @param bool $admin_also - Enqueue for the admin as well (defaults to only FE)
 	 *
 	 * @return void
 	 */
 	public function live_reload( bool $admin_also = false ) : void {
 		if ( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
-			add_action( 'wp_enqueue_scripts', static function () {
+			add_action( 'wp_enqueue_scripts', function() {
 				wp_enqueue_script( 'livereload', 'http://localhost:35729/livereload.js', [], (string) \time(), true );
 			} );
 			if ( $admin_also ) {
-				add_action( 'admin_enqueue_scripts', static function () {
+				add_action( 'admin_enqueue_scripts', function() {
 					wp_enqueue_script( 'livereload', 'http://localhost:35729/livereload.js', [], (string) \time(), true );
 				} );
 			}
@@ -123,7 +121,7 @@ class Styles {
 	/**
 	 * Add a class to the body.
 	 *
-	 * Must be called before `get_body_class` which is most likely called
+	 * Must be called before `get_body_class`. Most likely called
 	 * in the theme's "header.php".
 	 *
 	 * @param string $class
@@ -140,7 +138,7 @@ class Styles {
 
 
 	/**
-	 * Async an enqueued script by handle.
+	 * Async an enqueued script by its handle.
 	 *
 	 * May be called before or after `wp_enqueue_script` but must be called
 	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
@@ -148,7 +146,7 @@ class Styles {
 	 *
 	 * Downloads the file during HTML execution and executes it only after HTML parsing is completed.
 	 * Will not block the browser during download.
-	 * Good replacement for any script which uses a `jQuery(document).ready` or window.onload.
+	 * Good replacement for any script, which uses a `jQuery(document).ready` or window.onload.
 	 * Defer scripts are also guaranteed to execute in the order they appear in the document
 	 * but after any non defer script.
 	 *
@@ -172,15 +170,15 @@ class Styles {
 
 
 	/**
-	 * Async an enqueued script by handle.
+	 * Async an enqueued script by its handle.
 	 *
 	 * May be called before or after `wp_enqueue_script` but must be called
 	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
-	 * on if enqueued for footer of header.
+	 * on if enqueued for the footer or header.
 	 *
 	 * Downloads the file during HTML execution and executes it when finished downloading.
 	 * Will not block the browser during download.
-	 * Executes at an unpredictable time so must be self contained.
+	 * Executes at an unpredictable time so must be self-contained.
 	 * Good for scripts such as Google Analytics.
 	 *
 	 * @param string $handle - The handle used to enqueued this script.
@@ -201,13 +199,13 @@ class Styles {
 
 
 	/**
-	 * Crossorigin an enqueued script by handle.
+	 * Crossorigin an enqueued script by its handle.
 	 *
 	 * Adds a "crossorigin" attribute to a script tag.
 	 *
 	 * May be called before or after `wp_enqueue_script` but must be called
 	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
-	 * on if enqueued for footer of header.
+	 * on if enqueued for the footer or header.
 	 *
 	 * @param string      $handle - The handle used to enqueued this script.
 	 *
@@ -232,11 +230,11 @@ class Styles {
 
 
 	/**
-	 * Add script integrity to an enqueued script by handle.
+	 * Add script integrity to an enqueued script by its handle.
 	 *
 	 * May be called before or after `wp_enqueue_script` but must be called
 	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
-	 * on if enqueued for footer of header.
+	 * on if enqueued for the footer of header.
 	 *
 	 * @param string $handle    - The handle used to enqueued this script.
 	 *
@@ -307,7 +305,7 @@ class Styles {
 
 		foreach ( $handles as $handle ) {
 			wp_deregister_script( $handle );
-			$url = SCRIPT_DEBUG ? $cdn[ $handle ]['dev'] : $cdn[ $handle ]['min'];
+			$url = ( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? $cdn[ $handle ]['dev'] : $cdn[ $handle ]['min'];
 
 			//phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 			wp_register_script( $handle, $url, [], null, $cdn[ $handle ]['footer'] );

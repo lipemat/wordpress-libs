@@ -384,7 +384,7 @@ abstract class Meta_Box {
 	/**
 	 * Return the context in which to display the meta box
 	 *
-	 * @return string
+	 * @return 'advanced'|'normal'|'side'
 	 */
 	public function get_context() : string {
 		return $this->context;
@@ -394,7 +394,7 @@ abstract class Meta_Box {
 	/**
 	 * Return the priority in which to display the meta box
 	 *
-	 * @return string
+	 * @return 'core'|'default'|'high'|'low'
 	 */
 	public function get_priority() : string {
 		return $this->priority;
