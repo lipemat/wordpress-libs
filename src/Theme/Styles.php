@@ -70,24 +70,30 @@ class Styles {
 
 
 	/**
-	 * Quick adding of the livereload grunt watch script
-	 * Call before wp_enqueue_scripts fires
+	 * Quick adding of the livereload grunt watch script.
+	 *
+	 * Call before the `wp_enqueue_scripts` hook fires.
 	 *
 	 * @see https://github.com/gruntjs/grunt-contrib-watch#user-content-optionslivereload
 	 *
-	 * @param bool $admin_also - Enqueue for the admin as well (defaults to only FE)
+	 * @param bool    $admin_also - Enqueue for the admin as well (defaults to only FE)
+	 * @param ?string $domain     - If specified, will load via https using the provided
+	 *                            domain.
 	 *
 	 * @return void
 	 */
-	public function live_reload( bool $admin_also = false ) : void {
+	public function live_reload( bool $admin_also = false, ?string $domain = null ) : void {
 		if ( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
-			add_action( 'wp_enqueue_scripts', function() {
-				wp_enqueue_script( 'livereload', 'http://localhost:35729/livereload.js', [], (string) \time(), true );
-			} );
+			$enqueue = function() use ( $domain ) {
+				$url = 'http://localhost:35729/livereload.js';
+				if ( null !== $domain ) {
+					$url = "https://{$domain}:35729/livereload.js";
+				}
+				wp_enqueue_script( 'livereload', $url, [], (string) \time(), true );
+			};
+			add_action( 'wp_enqueue_scripts', $enqueue );
 			if ( $admin_also ) {
-				add_action( 'admin_enqueue_scripts', function() {
-					wp_enqueue_script( 'livereload', 'http://localhost:35729/livereload.js', [], (string) \time(), true );
-				} );
+				add_action( 'admin_enqueue_scripts', $enqueue );
 			}
 			$this->async_javascript( 'livereload' );
 		}
