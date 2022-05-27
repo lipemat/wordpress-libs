@@ -156,6 +156,7 @@ trait Mutator_Trait {
 	}
 
 
+	#[\ReturnTypeWillChange]
 	public function offsetGet( $field_id ) {
 		return $this->get_meta( $field_id );
 	}

@@ -89,6 +89,7 @@ class Class_Names implements \ArrayAccess {
 	}
 
 
+	#[\ReturnTypeWillChange]
 	public function offsetGet( $offset ) {
 		return $this->offsetExists( $offset );
 	}
