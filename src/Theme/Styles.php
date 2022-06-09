@@ -266,15 +266,15 @@ class Styles {
 	 * Use a CDN for known resources instead of the bundle version in WP Core.
 	 *
 	 * The CDN is faster and more likely to already exist in the
-	 * users browser cache.
+	 * user's browser cache.
 	 *
 	 * Script integrity and crossorigin are automatically retrieved and
 	 * added to `<script>` tags.
 	 *
-	 * @notice We exclude the `version=` from the URL to match other
+	 * @notice We exclude the `version=` from the URL to match external
 	 *         site's URL for browser caching purposes.
 	 *
-	 * @param array<'jquery-core' | 'react' | 'react-dom' | 'lodash'> $handles - Resource handles to include.
+	 * @param array<'jquery' | 'react' | 'react-dom' | 'lodash'> $handles - Resource handles to include.
 	 *
 	 * @since  3.2.0
 	 */
@@ -284,25 +284,37 @@ class Styles {
 			return;
 		}
 
+		// WP Core uses `jquery-core` as a dependency of a blank `jquery`.
+		$jquery = \array_search( 'jquery', $handles, true );
+		if ( false !== $jquery ) {
+			$handles[] = 'jquery-core';
+			$handles[] = 'jquery-migrate';
+			unset( $handles[ $jquery ] );
+		}
+
 		$cdn = [
-			// WP Core uses `jquery-core` as a dependency of blank `jquery`.
-			'jquery-core' => [
+			'jquery-core'    => [
 				'dev'    => 'https://unpkg.com/jquery@' . wp_scripts()->query( 'jquery' )->ver . '/dist/jquery.js',
 				'min'    => 'https://unpkg.com/jquery@' . wp_scripts()->query( 'jquery' )->ver . '/dist/jquery.min.js',
 				'footer' => false,
 			],
-			'lodash'      => [
+			'jquery-migrate' => [
+				'dev'    => 'https://unpkg.com/jquery-migrate@' . wp_scripts()->query( 'jquery-migrate' )->ver . '/dist/jquery-migrate.js',
+				'min'    => 'https://unpkg.com/jquery-migrate@' . wp_scripts()->query( 'jquery-migrate' )->ver . '/dist/jquery-migrate.min.js',
+				'footer' => false,
+			],
+			'lodash'         => [
 				'dev'    => 'https://unpkg.com/lodash@' . wp_scripts()->query( 'lodash' )->ver . '/lodash.js',
 				'min'    => 'https://unpkg.com/lodash@' . wp_scripts()->query( 'lodash' )->ver . '/lodash.min.js',
 				'footer' => true,
 				'inline' => 'window.lodash = _.noConflict();',
 			],
-			'react'       => [
+			'react'          => [
 				'dev'    => 'https://unpkg.com/react@' . wp_scripts()->query( 'react' )->ver . '/umd/react.development.js',
 				'min'    => 'https://unpkg.com/react@' . wp_scripts()->query( 'react' )->ver . '/umd/react.production.min.js',
 				'footer' => true,
 			],
-			'react-dom'   => [
+			'react-dom'      => [
 				'dev'    => 'https://unpkg.com/react-dom@' . wp_scripts()->query( 'react-dom' )->ver . '/umd/react-dom.development.js',
 				'min'    => 'https://unpkg.com/react-dom@' . wp_scripts()->query( 'react-dom' )->ver . '/umd/react-dom.production.min.js',
 				'footer' => true,
