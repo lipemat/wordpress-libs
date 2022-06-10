@@ -21,8 +21,10 @@ RESET_COLOR="$(tput sgr0)"
 #-- On Mat's machines point to a specific version of PHP.
 if [[ "mat" == "$USERNAME" ]]; then
 	PHP='php 7.3'
+	PHPUNIT="phpunit" # Composer has varying PHP version requirements.
 else
 	PHP='php'
+	PHPUNIT="phpunit"
 fi
 PROJECT=$(${PHP} -r "echo dirname(realpath('$0'), 3);")
 ## Fix windows paths
@@ -37,6 +39,26 @@ function exit_reset_colors() {
 	echo ${RESET_COLOR}
 	exit 1
 }
+
+function php_unit() {
+    if [[ "$PHP_FILES" ]]; then
+        if [[ ! -f ${PROJECT}/dev/wp-unit/phpunit.xml ]]; then
+            echo "${YELLOW}[pre-commit]${RED} ${PROJECT}/dev/wp-unit/phpunit.xml not found! (Probably not setup yet!).${WHITE}"
+        else
+            # Run phpunit.
+            echo "${YELLOW}[pre-commit]${BLUE} Running PHP Unit... ${WHITE}"
+            OUTPUT=$(${PHPUNIT} --configuration ${PROJECT}/dev/wp-unit/phpunit.xml)
+            if [[ $? != 0 ]]; then
+                echo
+                echo "${BLUE}PHP Unit Failed! Fix the error before commit!"
+                echo "${RED}$OUTPUT"
+                exit_reset_colors
+            fi
+            echo "${YELLOW}[pre-commit]${GREEN} PHP Unit Tests Passed!${WHITE}"
+        fi
+    fi
+}
+php_unit &
 
 function php_lint() {
 	if [[ "$PHP_FILES" ]]; then

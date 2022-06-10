@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Version 1.2.0 -->
+<phpunit backupGlobals="false"
+		 backupStaticAttributes="false"
+		 colors="true"
+		 convertDeprecationsToExceptions="true"
+		 convertErrorsToExceptions="true"
+		 convertNoticesToExceptions="true"
+		 convertWarningsToExceptions="true"
+		 processIsolation="false"
+		 stopOnFailure="true"
+		 bootstrap="bootstrap.php"
+>
+	<php>
+		<env name="HTTP_HOST" value="wp-libs.loc" />
+	</php>
+	<testsuites>
+		<testsuite name="WP Libs">
+			<directory>./tests</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>
