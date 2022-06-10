@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DependencyValidationManager">
+    <scope name="Core Files" pattern="file:wp-content/plugins/core/src//*||file:wp-content/themes/core//*" />
+    <scope name="WP Core / 3rd Party" pattern="!file:wp-content/plugins/core/src//*&amp;&amp;!file:wp-content/themes/core//*" />
+    <scope name="Theme Files" pattern="file[starting-point]:wp-content/themes/core//*" />
+    <scope name="WP-Libs" pattern="file:content/plugins/core/vendor/lipemat/wordpress-libs/src//*" />
+  </component>
+</project>
