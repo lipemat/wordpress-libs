@@ -7,3 +7,5 @@ parameters:
         - dev/stubs/wp-smush.php
         - %rootDir%/../../../stubs/cmb2/cmb2-2.9.php
         - ../../johnbillion/extended-cpts/functions.php
+    ignoreErrors:
+        - '#^Unsafe usage of new static#'
