@@ -1,8 +1,13 @@
-# PHPUnit
+# system/hidden files
+.phpcs.cache
 .phpunit.result.cache
-local-config.php
+
+# local configs
+local-config.json
+phpcs.xml
+phpstan.neon
 phpunit.xml
 
-# Composer
+# vendor files
 /vendor
 composer.lock
