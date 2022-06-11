@@ -1,6 +1,6 @@
 {
   "name": "lipemat/wordpress-libs",
-  "description": "WordPress library for a core plugin and theme",
+  "description": "A WordPress library for supporting a core plugin and theme",
   "license": "MIT",
   "require": {
     "php": ">=7.3.0",
@@ -12,6 +12,14 @@
       "email": "mat@onpointplugins.com"
     }
   ],
+  "archive": {
+    "exclude": [
+      ".*",
+      "/dev",
+      "phpcs.xml.dist",
+      "phpstan.neon.dist"
+    ]
+  },
   "autoload": {
     "psr-4": {
       "Lipe\\Lib\\": "src/"
