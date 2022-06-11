@@ -28,18 +28,11 @@ PROJECT=$(${PHP} -r "echo dirname(realpath('$0'), 3);")
 ## Fix windows paths
 PROJECT=${PROJECT//\\//}
 
-JS_FILES=$(git diff-index --cached --name-only --diff-filter=ACMR HEAD | grep "\.js$\|\.jsx$\|\.ts$\|\.tsx$")
 PHP_FILES=$(git diff-index --cached --name-only --diff-filter=ACMR HEAD | grep \\.php)
-if [[ ! "$PHP_FILES" ]] && [[ ! "$JS_FILES" ]]; then
-    echo "${YELLOW}[pre-commit]${BLUE} No Testable Files Changed ${RESET_COLOR}"
-    exit 0
-fi
 if [[ ! "$PHP_FILES" ]]; then
     echo "${YELLOW}[pre-commit]${BLUE} No PHP Files Changed ${WHITE}"
 fi
-if [[ ! "$JS_FILES" ]]; then
-    echo "${YELLOW}[pre-commit]${BLUE} No JS Files Changed ${WHITE}"
-fi
+
 
 function exit_reset_colors() {
     echo ${RESET_COLOR}
