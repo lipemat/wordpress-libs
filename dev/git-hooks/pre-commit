@@ -7,7 +7,7 @@
 #
 # @uses Global PHP version as different projects have different requirements.
 #
-# @version 3.2.1
+# @version 4.0.0
 #
 #####################################################################################
 
@@ -48,12 +48,13 @@ function exit_reset_colors() {
 
 function php_unit() {
     if [[ "$PHP_FILES" ]]; then
-        if [[ ! -f ${PROJECT}/dev/wp-unit/phpunit.xml ]]; then
-            echo "${YELLOW}[pre-commit]${RED} ${PROJECT}/dev/wp-unit/phpunit.xml not found! (Probably not setup yet!).${WHITE}"
+        if [[ ! -f ${PROJECT}/dev/wp-unit/phpunit.xml.dist ]]; then
+            echo "${YELLOW}[pre-commit]${RED} ${PROJECT}/dev/wp-unit/phpunit.xml.dist not found! (Probably not setup yet!).${WHITE}"
         else
             # Run phpunit.
             echo "${YELLOW}[pre-commit]${BLUE} Running PHP Unit... ${WHITE}"
-            OUTPUT=$(${PHPUNIT} --configuration ${PROJECT}/dev/wp-unit/phpunit.xml)
+            cd "${PROJECT}/dev/wp-unit" || exit
+            OUTPUT=$(${PHPUNIT})
             if [[ $? != 0 ]]; then
                 echo
                 echo "${BLUE}PHP Unit Failed! Fix the error before commit!"
