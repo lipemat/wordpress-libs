@@ -1,6 +1,8 @@
 /.editorconfig export-ignore
 /.gitattributes export-ignore
 /.gitignore export-ignore
-/phpcs.xml.dist export-ignore
-/phpunit.xml.dist export-ignore
+/.github export-ignore
 /dev export-ignore
+/phpcs.xml.dist export-ignore
+/phpstan.neon.dist
+/phpunit.xml.dist export-ignore
