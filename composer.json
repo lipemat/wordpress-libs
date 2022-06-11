@@ -12,14 +12,6 @@
       "email": "mat@onpointplugins.com"
     }
   ],
-  "archive": {
-    "exclude": [
-      ".*",
-      "/dev",
-      "phpcs.xml.dist",
-      "phpstan.neon.dist"
-    ]
-  },
   "autoload": {
     "psr-4": {
       "Lipe\\Lib\\": "src/"
