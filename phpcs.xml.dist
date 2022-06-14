@@ -3,7 +3,7 @@
 	<!-- See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml -->
 
 	<description>Ruleset for WordPress Libs</description>
-	<version>3.2.0</version>
+	<version>3.3.0</version>
 
 	<!-- Include when not specified -->
 	<file>./src</file>
@@ -34,6 +34,7 @@
 		<exclude name="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid" />
 		<exclude name="WordPress.NamingConventions.ValidHookName.UseUnderscores" />
 		<exclude name="WordPress.PHP.DisallowShortTernary.Found" />
+		<exclude name="WordPress.PHP.YodaConditions.NotYoda" />
 		<exclude name="Generic" />
 		<exclude name="Squiz" />
 	</rule>
