@@ -37,6 +37,28 @@ class Arrays {
 
 
 	/**
+	 * Return an array with the following removed:
+	 * 1. Duplicates.
+	 * 2. Empty items.
+	 * 3. Extra whitespace around values.
+	 *
+	 * Keys are preserved.
+	 *
+	 * @param array $array - Array to clean, numeric or associative.
+	 * @param bool $preserve_keys (optional) - Preserve the original array keys.
+	 *
+	 * @return array
+	 */
+	public function clean( array $array, bool $preserve_keys = true ) : array {
+		$clean = \array_unique( \array_filter( \array_map( 'trim', $array ) ) );
+		if ( ! $preserve_keys ) {
+			return \array_values( $clean );
+		}
+		return $clean;
+	}
+
+
+	/**
 	 * Apply a callback to all elements of an array recursively.
 	 *
 	 * Like `array_walk_recursive` except returns the result as
