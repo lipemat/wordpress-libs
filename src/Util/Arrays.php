@@ -50,7 +50,12 @@ class Arrays {
 	 * @return array
 	 */
 	public function clean( array $array, bool $preserve_keys = true ) : array {
-		$clean = \array_unique( \array_filter( \array_map( 'trim', $array ) ) );
+		$clean = \array_unique( \array_filter( \array_map( function( $value ) {
+			if ( \is_string( $value ) ) {
+				return \trim( $value );
+			}
+			return $value;
+		}, $array ) ) );
 		if ( ! $preserve_keys ) {
 			return \array_values( $clean );
 		}

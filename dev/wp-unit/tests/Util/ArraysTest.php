@@ -30,6 +30,7 @@ class ArraysTest extends \WP_UnitTestCase {
 		], Arrays::in()->chunk_to_associative( [ 'page', 3, 'category', 6, 'extra' ] ) );
 	}
 
+
 	public function test_clean() : void {
 		$source = [
 			0 => '',
@@ -40,30 +41,32 @@ class ArraysTest extends \WP_UnitTestCase {
 			5 => null,
 			6 => ' second ',
 			7 => 'second',
-			8 => 0
+			8 => 0,
 		];
 		$this->assertSame( [
 			2 => 'first',
-			6 => 'second'
-		], Arrays::in()->clean( $source ));
+			6 => 'second',
+		], Arrays::in()->clean( $source ) );
 		$this->assertSame( [
 			0 => 'first',
-			1 => 'second'
+			1 => 'second',
 		], Arrays::in()->clean( $source, false ) );
 
 		$this->assertSame( [
 			'f' => 'first',
-		    's' => 'second'
+			's' => 'second',
+			'x' => 5,
 		], Arrays::in()->clean( [
-			0 => '',
-			1 => false,
+			0   => '',
+			1   => false,
 			'f' => 'first ',
-			3 => 'first ',
-			4 => 'first',
-			5 => null,
+			3   => 'first ',
+			4   => 'first',
+			5   => null,
 			's' => ' second ',
-			7 => 'second',
-			8 => 0
+			7   => 'second',
+			'x' => 5,
+			8   => 0,
 		] ) );
 	}
 
