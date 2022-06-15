@@ -45,7 +45,7 @@ class Arrays {
 	 * Keys are preserved.
 	 *
 	 * @param array $array - Array to clean, numeric or associative.
-	 * @param bool $preserve_keys (optional) - Preserve the original array keys.
+	 * @param bool  $preserve_keys (optional) - Preserve the original array keys.
 	 *
 	 * @return array
 	 */

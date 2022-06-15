@@ -5,6 +5,8 @@ namespace Lipe\Lib\Post_Type;
 use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
+ * @note `@mixin` does not work in PHPStan with Traits.
+ *
  * @property string $comment_count
  * @property string $comment_status
  * @property string $filter
@@ -36,8 +38,6 @@ trait Post_Object_Trait {
 	protected $post_id;
 
 	/**
-	 * post
-	 *
 	 * @var \WP_Post
 	 */
 	protected $post;
