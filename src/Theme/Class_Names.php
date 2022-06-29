@@ -2,6 +2,8 @@
 
 namespace Lipe\Lib\Theme;
 
+use Lipe\Lib\Util\Arrays;
+
 /**
  * Conditionally add CSS classes to an element
  *
@@ -28,7 +30,7 @@ class Class_Names implements \ArrayAccess {
 
 
 	/**
-	 * Used for unit testing.
+	 * Return final list of class names.
 	 *
 	 * @see Class_Names::__toString
 	 * @interal
@@ -36,7 +38,7 @@ class Class_Names implements \ArrayAccess {
 	 * @return array
 	 */
 	public function get_classes() : array {
-		return $this->classes;
+		return Arrays::in()->clean( $this->classes, false );
 	}
 
 
@@ -80,7 +82,7 @@ class Class_Names implements \ArrayAccess {
 
 
 	public function __toString() {
-		return \implode( ' ', $this->classes );
+		return \implode( ' ', $this->get_classes() );
 	}
 
 
