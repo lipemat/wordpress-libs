@@ -51,4 +51,30 @@ class Template {
 		get_template_part( $slug, $name, $args );
 		return ob_get_clean();
 	}
+
+
+	/**
+	 * Like WP core's `sanitize_html_class` with the following differences.
+	 * 1. Prefix with `_` when leading digits exist.
+	 * 2. Prefix with `_` when leading hyphens exist.
+	 * 3. Unicode's characters are supported.
+	 *
+	 * We prefix instead of remove in case of a CSS class like '-1-234'
+	 * would become ''.
+	 *
+	 * @link  https://www.w3.org/TR/CSS21/syndata.html#characters
+	 * @link  https://core.trac.wordpress.org/ticket/33924
+	 *
+	 * @since 3.11.0
+	 *
+	 * @param string $class - Unsanitized CSS class.
+	 *
+	 * @return string
+	 */
+	public function sanitize_html_class( string $class ) : string {
+		// Strip out any %-encoded octets.
+		$sanitized = preg_replace( '/%[a-fA-F\d]{2}/', '', $class );
+		// Prefix any leading digits or hyphens with '_';
+		return \preg_replace( '/^([\d-])/', '_$1', $sanitized );
+	}
 }

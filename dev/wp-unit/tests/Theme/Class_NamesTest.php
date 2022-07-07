@@ -63,16 +63,16 @@ class Class_NamesTest extends \WP_UnitTestCase {
 			't' => false,
 			'x',
 			'u' => [
-				' '
+				' ',
 			],
 			'',
 			7   => [
-				'p',
-				'q',
+				// Classes requiring sanitization.
+				'2p',
+				'-q',
 			],
 		] );
-		$this->assertSame( [ 'x', 'p', 'q' ], $o->get_classes() );
-		$this->assertEquals( 'x p q', (string) $o );
-
+		$this->assertSame( [ 'x', '_2p', '_-q' ], $o->get_classes() );
+		$this->assertEquals( 'x _2p _-q', (string) $o );
 	}
 }
