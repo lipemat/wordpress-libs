@@ -804,6 +804,8 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	public function disable_single() : void {
+		$this->show_in_nav_menus = false;
+
 		add_filter( 'genesis_link_post_title', function( $is_link ) {
 			if ( get_post_type() === $this->post_type ) {
 				return false;
