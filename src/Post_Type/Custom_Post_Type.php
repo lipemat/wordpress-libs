@@ -804,6 +804,13 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	public function disable_single() : void {
+		add_filter( 'genesis_link_post_title', function( $is_link ) {
+			if ( get_post_type() === $this->post_type ) {
+				return false;
+			}
+			return $is_link;
+		});
+
 		add_filter( 'is_post_type_viewable', function( $is_viewable, $post_type ) {
 			if ( $this->post_type === $post_type->name ) {
 				return false;
