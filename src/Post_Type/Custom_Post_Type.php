@@ -497,19 +497,13 @@ class Custom_Post_Type {
 
 
 	/**
-	 * <<<<<<< Updated upstream
 	 * Rewrites configuration.
 	 *
 	 * Set to `false` to disable rewrites.
 	 *
 	 * @link    https://developer.wordpress.org/reference/functions/register_post_type/#rewrite
-	 * ||||||| constructed merge base
-	 * Rewrites
 	 *
 	 * Build the rewrites param. Will send defaults if not set
-	 * =======
-	 * Build the rewrites param.
-	 * >>>>>>> Stashed changes
 	 *
 	 * @notice  The `ep_mask` parameter is mostly ignored and most likely
 	 *          never needed to change.
