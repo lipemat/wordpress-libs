@@ -2,6 +2,8 @@
 
 namespace Lipe\Lib\Theme;
 
+use Lipe\Lib\Util\Arrays;
+
 /**
  * Conditionally add CSS classes to an element
  *
@@ -19,7 +21,7 @@ namespace Lipe\Lib\Theme;
  */
 class Class_Names implements \ArrayAccess {
 
-	private $classes = [];
+	protected $classes = [];
 
 
 	public function __construct( ...$classes ) {
@@ -28,7 +30,7 @@ class Class_Names implements \ArrayAccess {
 
 
 	/**
-	 * Used for unit testing.
+	 * Return final list of class names.
 	 *
 	 * @see Class_Names::__toString
 	 * @interal
@@ -36,7 +38,8 @@ class Class_Names implements \ArrayAccess {
 	 * @return array
 	 */
 	public function get_classes() : array {
-		return $this->classes;
+		$clean = Arrays::in()->clean( $this->classes );
+		return \array_values( \array_map( [ Template::in(), 'sanitize_html_class' ], $clean ) );
 	}
 
 
@@ -59,7 +62,7 @@ class Class_Names implements \ArrayAccess {
 			if ( \is_array( $_state ) ) {
 				$this->parse_classes( $_state );
 			} elseif ( \is_string( $_class ) ) {
-				if ( (bool) $_state ) {
+				if ( $_state ) {
 					$this->classes[] = $_class;
 				}
 			} else {
@@ -80,7 +83,7 @@ class Class_Names implements \ArrayAccess {
 
 
 	public function __toString() {
-		return \implode( ' ', $this->classes );
+		return \implode( ' ', $this->get_classes() );
 	}
 
 
@@ -89,14 +92,13 @@ class Class_Names implements \ArrayAccess {
 	}
 
 
-	#[\ReturnTypeWillChange]
 	public function offsetGet( $offset ) {
-		return $this->offsetExists( $offset );
+		return Template::in()->sanitize_html_class( $this->classes[ (int) $this->get_classes_key( $offset ) ] );
 	}
 
 
 	public function offsetSet( $offset, $value ) : void {
-		if ( (bool) $value ) {
+		if ( $value ) {
 			$this->parse_classes( $offset );
 		} else {
 			$this->offsetUnset( $offset );

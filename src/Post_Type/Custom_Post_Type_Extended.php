@@ -8,25 +8,19 @@ use Lipe\Lib\Post_Type\Extended_CPTS\Query_Var;
 use Lipe\Lib\Post_Type\Extended_CPTS\Sortable;
 
 /**
- * Extends our Custom_Post_Type class with support
- * for extended-cpts
+ * Extends our Custom_Post_Type class with a Fluent Interface
+ * the for Extended CPTs library.
  *
  * @author  Mat Lipe
  *
- * @package Lipe\Lib\Post_Type
  */
 class Custom_Post_Type_Extended extends Custom_Post_Type {
-
 	/**
-	 * admin_cols
-	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Admin-columns
 	 */
 	public $admin_cols = [];
 
 	/**
-	 * admin_filters
-	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Admin-filters
 	 */
 	public $admin_filters = [];
@@ -43,54 +37,98 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	public $archive = [];
 
 	/**
-	 * Force the use of the block editor for this post type.
+	 * Force the block editor for this post type.
 	 * Must be used in combination with the `show_in_rest` argument.
-	 * The primary use of this argument is to prevent the block editor
+	 * This argument is typically used to prevent the block editor
 	 * from being used by setting it to false when `show_in_rest` is set to true.
+	 *
+	 * @link https://github.com/johnbillion/extended-cpts/wiki/Other-admin-parameters#disable-quick-edit
 	 *
 	 * @var bool
 	 */
 	public $block_editor;
 
 	/**
+	 * Include post type in "Recently Publish" section of the Activity
+	 * widget on the dashboard.
+	 *
+	 * Defaults to false.
+	 *
+	 * @link https://github.com/johnbillion/extended-cpts/wiki/Other-admin-parameters#disable-quick-edit
+	 *
+	 * @var bool
+	 */
+	public $dashboard_activity;
+
+	/**
 	 * Whether to show this post type on the 'At a Glance' section of the admin
+	 *
+	 * @link https://github.com/johnbillion/extended-cpts/wiki/Other-admin-parameters#dashboard-at-a-glance-item
+	 *
+	 * @var bool
 	 */
 	public $dashboard_glance;
 
 	/**
+	 * Placeholder for title field on post edit screen.
 	 *
-	 * @link https://github.com/johnbillion/extended-cpts/wiki/Other-admin-parameters
+	 * @link https://github.com/johnbillion/extended-cpts/wiki/Other-admin-parameters#dashboard-at-a-glance-item
+	 *
+	 * @var string
 	 */
 	public $enter_title_here;
 
 	/**
-	 * rewrite
+	 * Does not work with our current structure.
+	 *
+	 * @see Custom_Post_Type::set_featured_image_labels()
+	 *
+	 * @depecated
+	 *
+	 * @var string
+	 */
+	public $featured_image;
+
+	/**
+	 * Custom Rewrite structures.
 	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Custom-permalink-structures
+	 *
+	 * @var array
 	 */
 	public $rewrite;
 
 	/**
-	 *
 	 * Whether to show Quick Edit links for this post type
+	 *
+	 * @link https://github.com/johnbillion/extended-cpts/wiki/Other-admin-parameters#disable-quick-edit
+	 *
+	 * @var bool
 	 */
 	public $quick_edit;
 
 	/**
 	 * Add the post type to the site's main RSS feed:
 	 *
+	 * @link https://github.com/johnbillion/extended-cpts/wiki/Registering-Post-Types
+	 *
+	 * @var bool
 	 */
 	public $show_in_feed;
 
 	/**
-	 * site_sortables
+	 * Register query vars for sorting of query results.
+	 *
+	 * @see Sortable
 	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Query-vars-for-sorting
 	 */
 	public $site_sortables = [];
 
 	/**
-	 * site_filters
+	 * Register query vars for filtering of query results.
+	 *
+	 * @see Sortable
 	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Query-vars-for-filtering
 	 */

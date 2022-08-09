@@ -31,6 +31,46 @@ class ArraysTest extends \WP_UnitTestCase {
 	}
 
 
+	public function test_clean() : void {
+		$source = [
+			0 => '',
+			1 => false,
+			2 => 'first ',
+			3 => 'first ',
+			4 => 'first',
+			5 => null,
+			6 => ' second ',
+			7 => 'second',
+			8 => 0,
+		];
+		$this->assertSame( [
+			2 => 'first',
+			6 => 'second',
+		], Arrays::in()->clean( $source ) );
+		$this->assertSame( [
+			0 => 'first',
+			1 => 'second',
+		], Arrays::in()->clean( $source, false ) );
+
+		$this->assertSame( [
+			'f' => 'first',
+			's' => 'second',
+			'x' => 5,
+		], Arrays::in()->clean( [
+			0   => '',
+			1   => false,
+			'f' => 'first ',
+			3   => 'first ',
+			4   => 'first',
+			5   => null,
+			's' => ' second ',
+			7   => 'second',
+			'x' => 5,
+			8   => 0,
+		] ) );
+	}
+
+
 	public function testArray_merge_recursive() : void {
 		$default = [
 			'h' => 'x',

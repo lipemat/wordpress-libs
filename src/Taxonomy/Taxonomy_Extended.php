@@ -5,11 +5,12 @@ namespace Lipe\Lib\Taxonomy;
 use Lipe\Lib\Taxonomy\Extended_TAXOS\Column;
 
 /**
- * Taxonomy_Extended
+ * Extended Taxonomies.
  *
- * Extends our Taxonomy class with support for
- * extended-taxos
+ * Extends our Taxonomy class with support for additional
+ * arguments provided by `extended-cpts`.
  *
+ * @link https://github.com/johnbillion/extended-cpts/wiki/Registering-taxonomies
  *
  * @see \register_extended_taxonomy()
  */
@@ -78,6 +79,13 @@ class Taxonomy_Extended extends Taxonomy {
 	}
 
 
+	/**
+	 * Special meta box UI.
+	 *
+	 * @param 'radio'|'dropdown'|'simple' $type - Type of meta box UI.
+	 *
+	 * @return void
+	 */
 	public function meta_box( string $type ) : void {
 		$this->meta_box = $type;
 	}

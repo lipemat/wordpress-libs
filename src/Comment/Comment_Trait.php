@@ -27,8 +27,6 @@ trait Comment_Trait {
 	protected $comment_id;
 
 	/**
-	 * comment
-	 *
 	 * @var \WP_Comment
 	 */
 	protected $comment;
@@ -39,7 +37,7 @@ trait Comment_Trait {
 	 */
 	public function __construct( $comment ) {
 		if ( is_a( $comment, \WP_Comment::class ) ) {
-			$this->comment    = $comment;
+			$this->comment = $comment;
 			$this->comment_id = (int) $this->comment->comment_ID;
 		} else {
 			$this->comment_id = (int) $comment;
@@ -61,19 +59,26 @@ trait Comment_Trait {
 	}
 
 
+	/**
+	 * Return the post this comment is assigned to.
+	 *
+	 * If the post is not assigned or does not exist
+	 * this will return null.
+	 *
+	 * @return \WP_Post|null
+	 */
+	public function get_comment_post() : ?\WP_Post {
+		return get_post( (int) $this->get_object()->comment_post_ID );
+	}
+
+
 	public function get_meta_type() : string {
 		return 'comment';
 	}
 
 
-
-	/********* static *******************/
-
 	/**
-	 *
 	 * @param int|\WP_Comment $comment
-	 *
-	 * @static
 	 *
 	 * @return static
 	 */

@@ -65,11 +65,9 @@ class Box {
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#priority
 	 *
-	 * @example 'high' || 'low' || 'default'
 	 * @default 'high'
 	 *
-	 *
-	 * @var string
+	 * @var 'high' | 'core' | 'default' | 'low'
 	 */
 	public $priority = 'high';
 
@@ -342,17 +340,17 @@ class Box {
 
 
 	/**
-	 * Box constructor.
+	 * Register a new meta box.
 	 *
-	 * @param string      $id           - Id of this box.
+	 * @template Location of 'normal'|'side'|'advanced'|'form_top'|'before_permalink'| 'after_title'|'after_editor'
+	 *
+	 * @param string      $id           - ID of this box.
 	 * @param array       $object_types - [post type slugs], or 'user', 'term',
 	 *                                  'comment', or 'options-page'
 	 * @param string|null $title        - Title of this box.
-	 * @param string      $context      - 'normal', 'side', 'advanced', 'form_top',
-	 *                                  'before_permalink', 'after_title',
-	 *                                  'after_editor'
+	 * @param Location    $context      - Location the meta box will display.
 	 */
-	public function __construct( string $id, array $object_types, ?string $title = null, $context = 'normal' ) {
+	public function __construct( string $id, array $object_types, ?string $title = null, string $context = 'normal' ) {
 		$this->id = $id;
 		$this->object_types = $object_types;
 		$this->title = $title;

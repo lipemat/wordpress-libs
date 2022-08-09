@@ -29,6 +29,7 @@ class Class_NamesTest extends \WP_UnitTestCase {
 			],
 		] );
 		$this->assertSame( [ 't', 'w', 'x', 'p', 'q', 'r', 'o' ], $o->get_classes() );
+		$this->assertEquals( 't w x p q r o', (string) $o );
 
 		$o = new Class_Names( 'a', [
 			'b' => false,
@@ -55,5 +56,23 @@ class Class_NamesTest extends \WP_UnitTestCase {
 				],
 			] );
 		$this->assertSame( [ 'a', 'c', 'd', 'e', 't', 'w', 'x', 'p', 'q', 'r', 'o' ], $o->get_classes() );
+		$this->assertEquals( 'a c d e t w x p q r o', (string) $o );
+
+		$o = new Class_Names( [
+			' ' => true,
+			't' => false,
+			'x',
+			'u' => [
+				' ',
+			],
+			'',
+			7   => [
+				// Classes requiring sanitization.
+				'2p',
+				'-q',
+			],
+		] );
+		$this->assertSame( [ 'x', '_2p', '_-q' ], $o->get_classes() );
+		$this->assertEquals( 'x _2p _-q', (string) $o );
 	}
 }

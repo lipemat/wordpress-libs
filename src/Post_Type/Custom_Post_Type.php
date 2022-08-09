@@ -413,9 +413,7 @@ class Custom_Post_Type {
 		}
 
 		$labels = apply_filters( 'lipe/lib/post-type/labels', $labels, $this->post_type );
-		$labels = apply_filters( "lipe/lib/post-type/labels_{$this->post_type}", $labels );
-
-		return $labels;
+		return apply_filters( "lipe/lib/post-type/labels_{$this->post_type}", $labels );
 	}
 
 
@@ -445,9 +443,9 @@ class Custom_Post_Type {
 
 
 	/**
-	 * Text which replaces the 'Featured Image' phrase for this post type
+	 * Text, which replaces the 'Featured Image' phrase for this post type
 	 *
-	 * @notice Replaces the `featured_image` property for extended-cpts which does
+	 * @notice Replaces the `featured_image` property for extended-cpts, which does
 	 *         not work with our current structure.
 	 *
 	 * @param string $label - Text to use.
@@ -800,6 +798,15 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	public function disable_single() : void {
+		$this->show_in_nav_menus = false;
+
+		add_filter( 'genesis_link_post_title', function( $is_link ) {
+			if ( get_post_type() === $this->post_type ) {
+				return false;
+			}
+			return $is_link;
+		});
+
 		add_filter( 'is_post_type_viewable', function( $is_viewable, $post_type ) {
 			if ( $this->post_type === $post_type->name ) {
 				return false;
