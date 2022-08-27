@@ -31,6 +31,15 @@ class ResourcesTest extends \WP_UnitTestCase {
 	}
 
 
+	public function test_get_content_hash() : void {
+		wp_register_script( __METHOD__, plugins_url( 'ResourcesTest.php', __FILE__ ) );
+		$this->assertEquals( md5_file( __FILE__ ), Resources::in()->get_content_hash( __METHOD__ ) );
+
+		wp_register_style( __METHOD__ . 'css', plugins_url( 'ResourcesTest.php', __FILE__ ) );
+		$this->assertEquals( md5_file( __FILE__ ), Resources::in()->get_content_hash( __METHOD__ . 'css' ) );
+	}
+
+
 	/**
 	 * Verify functionality of switching WP Core resources to
 	 * unpkg CDN.

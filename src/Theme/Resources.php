@@ -76,6 +76,56 @@ class Resources {
 
 
 	/**
+	 * Get the hash of the contents within a script/style based on its handle.
+	 *
+	 * Used to pass a version to browsers to tell them if a file has
+	 * changed based on the content within a file.
+	 *
+	 * Keeps a file in browser cache longer if the revision changes
+	 * frequently, but the file does not.
+	 *
+	 * Preferred method if not using `shortCssClasses` and releases include
+	 * PHP files more frequently than resource files.
+	 *
+	 * @see Resources::get_revision()
+	 *
+	 * @param string $handle
+	 *
+	 * @return string|null
+	 */
+	public function get_content_hash( string $handle ) : ?string {
+		if ( \array_key_exists( $handle, wp_scripts()->registered ) ) {
+			$resource = wp_scripts()->registered[ $handle ];
+		} elseif ( \array_key_exists( $handle, wp_styles()->registered ) ) {
+			$resource = wp_styles()->registered[ $handle ];
+		} else {
+			return null;
+		}
+		$path = wp_parse_url( $resource->src, PHP_URL_PATH );
+		if ( ! $path ) {
+			return null;
+		}
+
+		return md5_file( $this->get_site_root() . $path ) ?: null;
+	}
+
+
+	/**
+	 * Installs may be using a submodule like `wp` which changes
+	 * the path available in `ABSPATH`, so we don't have a reliable
+	 * constant to determine the actual root.
+	 *
+	 * We return on level above `WP_CONTENT_DIR`. Not perfect, but the most
+	 * reliable reference we have.
+	 *
+	 * @return string
+	 */
+	public function get_site_root() : string {
+		return trailingslashit( \dirname( WP_CONTENT_DIR ) );
+	}
+
+
+	/**
 	 * Quick adding of the livereload grunt watch script.
 	 *
 	 * Call before the `wp_enqueue_scripts` hook fires.
