@@ -49,11 +49,12 @@ class Resources {
 	 * folder, which may be added to your .git/hooks directory to automatically generate
 	 * this `.revision` file locally on each commit.
 	 *
-	 * Flushes browser cache for the file on every release. Provides an
-	 * easy reference to the commit revision during browser debugging.
+	 * 1. Flushes browser cache for the file on every release.
+	 * 2. Provides an easy reference to the commit revision during browser debugging.
+	 * 3. Lighter than `get_content_hash`.
 	 *
 	 * Preferred method if using `shortCssClasses`, or releases
-	 * frequently include resource file changes.
+	 * frequently include changes to this resource.
 	 *
 	 * @see Resources::get_content_hash()
 	 *
@@ -61,7 +62,9 @@ class Resources {
 	 */
 	public function get_revision() : ?string {
 		return $this->once( function() {
-			$version = \file_get_contents( $this->get_site_root() . '.revision' );
+			if ( file_exists( $this->get_site_root() . '.revision' ) ) {
+				$version = \file_get_contents( $this->get_site_root() . '.revision' );
+			}
 			if ( empty( $version ) ) {
 				return null;
 			}
@@ -71,7 +74,7 @@ class Resources {
 
 
 	/**
-	 * Get the hash of the contents within a script/style based on its handle.
+	 * Get the hash of the contents within a script/style based on its url.
 	 *
 	 * Used to pass a version to browsers to tell them if a file has
 	 * changed based on the content within a file.
@@ -79,29 +82,30 @@ class Resources {
 	 * Keeps a file in browser cache longer if the revision changes
 	 * frequently, but the file does not.
 	 *
-	 * Preferred method if not using `shortCssClasses` and releases include
-	 * PHP files more frequently than resource files.
+	 * 1. Keeps file in browser cache forever until it changes.
+	 * 2. Slower than `get_revision`.
+	 * 3. Pointless if `shortCssClasses` are enabled because resource files
+	 *    change on every release.
+	 *
+	 * Preferred method if not using `shortCssClasses` and releases occur
+	 * much more frequently than this resource changes.
 	 *
 	 * @see Resources::get_revision()
 	 *
-	 * @param string $handle
+	 * @param string $url - URL to a local script or style.
 	 *
 	 * @return string|null
 	 */
-	public function get_content_hash( string $handle ) : ?string {
-		if ( \array_key_exists( $handle, wp_scripts()->registered ) ) {
-			$resource = wp_scripts()->registered[ $handle ];
-		} elseif ( \array_key_exists( $handle, wp_styles()->registered ) ) {
-			$resource = wp_styles()->registered[ $handle ];
-		} else {
-			return null;
-		}
-		$path = wp_parse_url( $resource->src, PHP_URL_PATH );
+	public function get_content_hash( string $url ) : ?string {
+		$path = wp_parse_url( $url, PHP_URL_PATH );
 		if ( ! $path ) {
 			return null;
 		}
 
-		return md5_file( $this->get_site_root() . $path ) ?: null;
+		if ( \file_exists( $this->get_site_root() . $path ) ) {
+			return \md5_file( $this->get_site_root() . $path ) ?: null;
+		}
+		return null;
 	}
 
 

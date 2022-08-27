@@ -32,11 +32,9 @@ class ResourcesTest extends \WP_UnitTestCase {
 
 
 	public function test_get_content_hash() : void {
-		wp_register_script( __METHOD__, plugins_url( 'ResourcesTest.php', __FILE__ ) );
-		$this->assertEquals( md5_file( __FILE__ ), Resources::in()->get_content_hash( __METHOD__ ) );
-
-		wp_register_style( __METHOD__ . 'css', plugins_url( 'ResourcesTest.php', __FILE__ ) );
-		$this->assertEquals( md5_file( __FILE__ ), Resources::in()->get_content_hash( __METHOD__ . 'css' ) );
+		$this->assertEquals( md5_file( __FILE__ ), Resources::in()->get_content_hash( plugins_url( 'ResourcesTest.php', __FILE__ ) ) );
+		$this->assertEquals( md5_file( __FILE__ ), Resources::in()->get_content_hash( plugins_url( 'ResourcesTest.php', __FILE__ ) ) );
+		$this->assertNull( Resources::in()->get_content_hash( 'http://i-dont-exist/anywhere' ) );
 	}
 
 
