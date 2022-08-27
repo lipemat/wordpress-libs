@@ -10,6 +10,10 @@ if ( file_exists( __DIR__ . '/local-config.php' ) ) {
 
 define( 'WP_PHP_BINARY', 'php' );
 
+if ( ! defined( 'DOMAIN_CURRENT_SITE' ) ) {
+	define( 'DOMAIN_CURRENT_SITE', getenv( 'HTTP_HOST' ) );
+}
+
 $config_defaults = [
 	'ABSPATH'                   => $root . '/wp/',
 	'BLOG_ID_CURRENT_SITE'      => 1,
@@ -18,7 +22,8 @@ $config_defaults = [
 	'DB_NAME'                   => getenv( 'DB_NAME' ),
 	'DB_PASSWORD'               => getenv( 'DB_PASSWORD' ),
 	'DB_USER'                   => getenv( 'DB_USER' ),
-	'DOMAIN_CURRENT_SITE'       => getenv( 'HTTP_HOST' ),
+	'WP_CONTENT_URL'            => 'http://' . DOMAIN_CURRENT_SITE . '/wp-content',
+	'WP_CONTENT_DIR'            => $root . DIRECTORY_SEPARATOR . 'wp-content',
 	'WP_DEBUG'                  => true,
 	'WP_ENVIRONMENT_TYPE'       => 'local',
 	'WP_PHP_BINARY'             => 'php',
