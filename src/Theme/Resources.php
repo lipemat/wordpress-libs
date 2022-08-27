@@ -49,28 +49,23 @@ class Resources {
 	 * folder, which may be added to your .git/hooks directory to automatically generate
 	 * this `.revision` file locally on each commit.
 	 *
-	 * If neither the constant nor the `.revision` is available this will
-	 * return null, which false back to the WP version when queuing scripts
-	 * and styles.
+	 * Flushes browser cache for the file on every release. Provides an
+	 * easy reference to the commit revision during browser debugging.
 	 *
-	 * You can set the revision manually in the wp-config, or some dynamic way
-	 * define( 'SCRIPTS_VERSION', '9999' );
+	 * Preferred method if using `shortCssClasses`, or releases
+	 * frequently include resource file changes.
 	 *
-	 * Beanstalk adds a `.revision` file to deployments automatically.
+	 * @see Resources::get_content_hash()
 	 *
 	 * @return null|string
 	 */
-	public function get_version() : ?string {
+	public function get_revision() : ?string {
 		return $this->once( function() {
-			if ( \defined( 'SCRIPTS_VERSION' ) ) {
-				return SCRIPTS_VERSION;
+			$version = \file_get_contents( $this->get_site_root() . '.revision' );
+			if ( empty( $version ) ) {
+				return null;
 			}
-
-			$path = isset( $_SERVER['DOCUMENT_ROOT'] ) ? \sanitize_text_field( \wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) : '';
-			if ( \file_exists( $path . '/.revision' ) ) {
-				return \trim( \file_get_contents( $path . '/.revision' ) );
-			}
-			return null;
+			return \trim( $version );
 		}, __METHOD__ );
 	}
 

@@ -16,11 +16,17 @@ class Styles extends Resources {
 
 
 	/**
-	 * @deprecated In favor of `Resources::get_version`.
+	 * @deprecated In favor of `Resources::get_revision`.
 	 */
 	public function get_version() : ?string {
-		_deprecated_function( __METHOD__, '3.12.0', 'Resources::get_version' );
-		return parent::get_version();
+		_deprecated_function( __METHOD__, '3.12.0', 'Resources::get_revision' );
+
+		if ( \defined( 'SCRIPTS_VERSION' ) ) {
+			_deprecated_hook( 'SCRIPTS_VERSION', '3.12.0', '', 'SCRIPTS_VERSION is not supported by Resources.' );
+			return SCRIPTS_VERSION;
+		}
+
+		return parent::get_revision();
 	}
 
 
