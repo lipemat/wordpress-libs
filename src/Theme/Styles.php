@@ -26,7 +26,11 @@ class Styles extends Resources {
 			return SCRIPTS_VERSION;
 		}
 
-		return parent::get_revision();
+		$path = isset( $_SERVER['DOCUMENT_ROOT'] ) ? \sanitize_text_field( \wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) : '';
+		if ( \file_exists( $path . '/.revision' ) ) {
+			return \trim( \file_get_contents( $path . '/.revision' ) );
+		}
+		return null;
 	}
 
 
