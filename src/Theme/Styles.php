@@ -128,4 +128,25 @@ class Styles extends Resources {
 		_deprecated_function( __METHOD__, '3.12.0', 'Resources::unpkg_integrity' );
 		return parent::unpkg_integrity( $handle, $url );
 	}
+
+
+	/**
+	 * @depecated
+	 */
+	public static function in() {
+		return static::instance();
+	}
+
+
+	/**
+	 * @depecated
+	 */
+	public static function instance() {
+		static $instance;
+		if ( ! is_a( $instance, __CLASS__ ) ) {
+			$instance = new static();
+		}
+
+		return $instance; // @phpstan-ignore-line
+	}
 }
