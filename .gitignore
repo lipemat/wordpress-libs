@@ -3,6 +3,7 @@
 .phpunit.result.cache
 
 # local configs
+local-config.php
 local-config.json
 phpcs.xml
 phpstan.neon

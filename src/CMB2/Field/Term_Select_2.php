@@ -72,8 +72,8 @@ class Term_Select_2 {
 
 
 	public function js() : void {
-		\wp_enqueue_style( 'select2-css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css', [], Styles::in()->get_version() );
-		\wp_enqueue_script( 'select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js', [], Styles::in()->get_version() );
+		wp_enqueue_style( 'select2-css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css', [], null ); //phpcs:ignore
+		wp_enqueue_script( 'select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js', [], null ); //phpcs:ignore
 	}
 
 
