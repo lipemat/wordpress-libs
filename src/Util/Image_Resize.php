@@ -6,22 +6,20 @@ use Lipe\Lib\Traits\Singleton;
 
 /**
  * Manage Image resizing on the fly to prevent a bunch of unneeded image sizes for every image uploaded
- * Includes support for the Wp Smush.it plugin and will run the smush on all image sizes when generating the
+ * Includes support for the Wp Smush plugin and will run smush on all image sizes when generating the
  * thumbnails. This also allow for smushing image larger than 1mb when using cropped sizes less than 1MB
  *
- * Pretty much automatic - use standard WP add_image_size() and this will pick it up
+ * Pretty much automatic - use standard WP add_image_size() and this will pick it up.
  *
- * @author   Mat Lipe <mat@onpointplugins.com>
  * @example  Image_Resize::init();
  * @example  may be tapped in using the public methods as well - however probably not necessary
  *
- * @notice   The image sizes can not be relied on in wp.media when using this.
- *         If you need a custom resized image using normal js wp conventions you will have
- *         to do an ajax call which uses php to retrieve.
+ * @notice   The image sizes cannot be relied on in wp.media when using this.
+ *         If you need a custom resized image using normal JS wp conventions you will have
+ *         to do an ajax call, which uses php to retrieve.
  *
  */
 class Image_Resize {
-
 	use Singleton;
 
 	/**
@@ -51,7 +49,7 @@ class Image_Resize {
 
 
 	/**
-	 * Convert other add_image_sizes from other plugin, to the attribute of the class.
+	 * Convert other add_image_sizes from other plugins to the attribute of the class.
 	 *
 	 */
 	public function add_other_image_sizes() : void {
@@ -174,10 +172,10 @@ class Image_Resize {
 	 *                      'width' => null,
 	 *                      'height' => null,
 	 *                      'crop' => false,
-	 *                      'output' => 'img',   // how print: 'a', with anchor; 'img' without anchor; 'url' only url;
+	 *                      'output' => 'img',   // how print: 'a', with an anchor; 'img' without an anchor; 'url' only url;
 	 *                      'array' array width 'url', 'width' and 'height'
 	 *                      'numeric_array' default way wp expects it
-	 *                      'link' => '',      // the link of <a> tag. If empty, get from original image url
+	 *                      'link' => '',      // the link of <a> tag. If empty, get from the original image url
 	 *                      'link_class' => '',      // the class of <a> tag
 	 *                      'link_title' => '',      // the title of <a> tag. If empty, get it from "title" attribute.
 	 *                      );
@@ -186,7 +184,7 @@ class Image_Resize {
 	 * @return string|null|array
 	 */
 	public function image( array $args = [], bool $echo = true ) {
-		$args = (array) wp_parse_args( $args, [
+		$args = wp_parse_args( $args, [
 			'id'         => null,
 			'post_id'    => null,
 			'src'        => '',
@@ -352,7 +350,7 @@ class Image_Resize {
 			}
 			$html_image = wp_get_attachment_image( $image_id, $size, false, [
 				'class' => trim( $args['class'] . ( ! \is_array( $size ) ? " attachment-{$size}" : '' ) ),
-				'alt'   => empty( $args['alt'] ) ? trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) : $args['alt'],
+				'alt'   => empty( $args['alt'] ) ? trim( wp_strip_all_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) : $args['alt'],
 				'title' => empty( $args['title'] ) ? $attachment->post_title : $args['title'],
 			] );
 		} else {
@@ -420,8 +418,8 @@ class Image_Resize {
 
 
 	/**
-	 * Resize images dynamically using wp built in functions
-	 * Will also run the images through smush.it if available
+	 * Resize images dynamically using wp built-in functions.
+	 * Will also run the images through smush.it if available.
 	 *
 	 * @param int         $width
 	 * @param int         $height
@@ -432,7 +430,7 @@ class Image_Resize {
 	 *
 	 * @return array
 	 */
-	protected function resize( int $width, int $height, int $attach_id, ?string $img_url = null, $crop = false ) : array {
+	protected function resize( int $width, int $height, int $attach_id, ?string $img_url = null, bool $crop = false ) : array {
 		if ( $attach_id ) {
 			$image_src = wp_get_attachment_image_src( $attach_id, 'full' );
 			$file_path = get_attached_file( $attach_id );
@@ -442,7 +440,7 @@ class Image_Resize {
 			if ( false !== strpos( $img_url, $uploads_dir['baseurl'] ) ) {
 				$file_path = str_replace( $uploads_dir['baseurl'], $uploads_dir['basedir'], $img_url );
 			} else {
-				$file_path = parse_url( esc_url( $img_url ) );
+				$file_path = wp_parse_url( esc_url( $img_url ) );
 				if ( \is_array( $file_path ) ) {
 					$file_path = sanitize_text_field( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ?? '' ) ) . $file_path['path'];
 				}
@@ -477,7 +475,7 @@ class Image_Resize {
 		$cropped_img_path = $no_ext_path . '-' . $width . 'x' . $height . $extension;
 
 		// checking if the file size is larger than the target size
-		// if it is smaller or the same size, stop right here and return
+		// if it is smaller, or the same size, stop right here and return
 		if ( \is_array( $image_src ) && ( $image_src[1] > $width || $image_src[2] > $height ) ) {
 			if ( false === $crop || ! $height ) {
 				// calculate the size proportionally
@@ -513,7 +511,7 @@ class Image_Resize {
 
 			// Check if GD Library installed
 			if ( ! \function_exists( 'imagecreatetruecolor' ) ) {
-				_doing_it_wrong( __METHOD__, 'GD Library Error: imagecreatetruecolor does not exist - please contact your webhost and ask them to install the GD library', '3.0.0' );
+				_doing_it_wrong( __METHOD__, 'GD Library Error: imagecreatetruecolor does not exist - please contact your web host and ask them to install the GD library', '3.0.0' );
 				return [];
 			}
 
@@ -535,7 +533,7 @@ class Image_Resize {
 				return [];
 			}
 
-			$new_img_size = getimagesize( $new_img_path );
+			$new_img_size = (array) getimagesize( $new_img_path );
 			$new_img = str_replace( basename( $image_src[0] ), basename( $new_img_path ), $image_src[0] );
 
 			// resized output
@@ -545,11 +543,11 @@ class Image_Resize {
 				'height' => $new_img_size[1],
 			];
 
-			//If using Wp Smushit
+			// If using Wp Smush.it.
 			if ( class_exists( 'WpSmush' ) ) {
 				// phpcs:disable WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 				global $WpSmush;
-				$max_size = $WpSmush->validate_install() ? WP_SMUSH_PREMIUM_MAX_BYTES : WP_SMUSH_MAX_BYTES; //phpcs:ignore
+				$max_size = $WpSmush->validate_install() ? WP_SMUSH_PREMIUM_MAX_BYTES : WP_SMUSH_MAX_BYTES; //@phpstan-ignore-line
 				if ( filesize( $new_img_path ) < $max_size ) {
 					$WpSmush->do_smushit( $new_img_path );
 				}
@@ -559,7 +557,7 @@ class Image_Resize {
 			return $image;
 		}
 
-		// default output - without resizing
+		// Default output - without resizing.
 		return [
 			'url'    => $image_src[0],
 			'width'  => $image_src[1],

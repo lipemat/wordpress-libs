@@ -2,6 +2,9 @@
 
 namespace Lipe\Lib\Util;
 
+//phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+//phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+
 /**
  * Encrypt/Decrypt a string using a custom key.
  * Objects may be encrypted using `json_encode` or `serialize` first.
@@ -10,7 +13,7 @@ namespace Lipe\Lib\Util;
  *
  * @link   https://gist.github.com/ve3/0f77228b174cf92a638d81fddb17189d
  *       Reference
- * @see `js/src/helpers/crypt`
+ * @see    `js/src/helpers/crypt`
  *
  */
 class Crypt {
@@ -20,7 +23,7 @@ class Crypt {
 	/**
 	 * Recommended AES-128-CBC, AES-192-CBC, AES-256-CBC
 	 * due to there is no `openssl_cipher_iv_length()` function in JavaScript
-	 * and all of these methods are known as 16 in iv_length.
+	 * and these methods are known as 16 in iv_length.
 	 */
 	protected const METHOD = 'AES-256-CBC';
 
@@ -35,7 +38,7 @@ class Crypt {
 	 *
 	 * @param string $key - The encryption key.
 	 */
-	public function __construct( string $key ) {
+	final public function __construct( string $key ) {
 		$this->key = $key;
 	}
 
@@ -92,21 +95,21 @@ class Crypt {
 		];
 		unset( $iv, $salt, $hash_key );
 
-		return base64_encode( json_encode( $output ) );
+		return base64_encode( wp_json_encode( $output ) );
 	}
 
 
 	/**
 	 * Get the key size based on the METHOD we are using.
 	 *
-	 * Strip all non numeric characters from method and devide by 4.
+	 * Strip all non-numeric characters from method and divide by 4.
 	 *
 	 * @notice This size is 4 times larger than the one used in `crypto-js`.
 	 *
 	 * @return int
 	 */
 	protected function get_key_size() : int {
-		return preg_replace( '/[\D]/', '', static::METHOD ) / 4;
+		return preg_replace( '/\D/', '', static::METHOD ) / 4;
 	}
 
 

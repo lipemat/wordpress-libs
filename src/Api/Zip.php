@@ -5,7 +5,7 @@ namespace Lipe\Lib\Api;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * Zip Service
+ * Zip Service.
  *
  * May be used directly with PHP via
  * Zip::in()->build_zip( [ $url, $url ], $zip_name );
@@ -87,7 +87,7 @@ class Zip {
 	 * Create and serve zip file from the specified urls.
 	 *
 	 * At first glance, this might appear like a security hole, but
-	 * it will only serve files accessible via http request which
+	 * it will only serve files accessible via http request, which
 	 * technically would already be available publicly.
 	 *
 	 * @param array       $files    - urls of files to add
@@ -99,7 +99,7 @@ class Zip {
 		$this->set_paths( $files, $zip_name );
 		$this->serve_existing_file();
 
-		if ( ! @mkdir( $this->file_path ) && ! is_dir( $this->file_path ) ) {
+		if ( ! is_dir( $this->file_path ) && ! mkdir( $this->file_path ) && ! is_dir( $this->file_path ) ) {
 			die( 'Unable to create zip file' );
 		}
 
@@ -117,7 +117,7 @@ class Zip {
 				}
 			}
 
-			$parts = parse_url( $file );
+			$parts = wp_parse_url( $file );
 			$parts = pathinfo( $parts['path'] );
 			$temp = $this->file_path . '/' . $parts['basename'];
 
@@ -164,7 +164,9 @@ class Zip {
 
 
 	/**
-	 * If the file exists, serve it, and kill the script
+	 * If the file exists, serve it, and kill the script.
+	 *
+	 * @todo Convert to `WP_Filesystem` calls.
 	 *
 	 * @return void
 	 */
@@ -177,7 +179,7 @@ class Zip {
 			header( 'Content-Type: application/zip' );
 			header( 'Content-disposition: attachment; filename="' . $this->zip_name . '.zip";' );
 			header( 'Content-Length: ' . filesize( $this->zip_path ) );
-			readfile( $this->zip_path );
+			readfile( $this->zip_path ); //phpcs:ignore
 
 			die();
 		}

@@ -133,11 +133,11 @@ class Layout {
 
 
 	/**
-	 * Render a repeatable group row as a table
+	 * Render a repeatable group row as a table.
 	 *
 	 * Used when a group is given the 'display_as_table' property.
 	 *
-	 * @param  \CMB2_Field $field_group CMB2_Field group field object.
+	 * @param \CMB2_Field $field_group CMB2_Field group field object.
 	 *
 	 * @return \CMB2
 	 */
@@ -157,37 +157,33 @@ class Layout {
 				?>
 				<td class="cmb-group-table-control">
 					<h3 class="cmb-group-title cmbhandle-title">
-						<span><?= esc_html( $field_group->replace_hash( '{#}' ) ); ?></span>
+						<span><?= esc_html( $field_group->replace_hash( '{#}' ) ) ?></span>
 					</h3>
 				</td>
 				<?php
 			}
 
 			if ( $this->is_table( $field_group ) ) {
-				foreach ( array_values( $field_group->args( 'fields' ) ) as $field_args ) {
+				foreach ( $field_group->args( 'fields' ) as $field_args ) {
 					?>
 					<td class="inside cmb-nested cmb-field-list">
-						<?php
-						$this->render_field( $field_args, $field_group );
-						?>
+						<?php $this->render_field( $field_args, $field_group ); ?>
 					</td>
 					<?php
 				}
 			} else {
 				?>
 				<td class="cmb-group-row-fields">
-					<table border="0" cellpadding="0" cellspacing="0">
+					<table>
 						<?php
-						foreach ( array_values( $field_group->args( 'fields' ) ) as $field_args ) {
+						foreach ( $field_group->args( 'fields' ) as $field_args ) {
 							?>
 							<tr>
 								<th>
 									<?= esc_html( $field_args['name'] ); ?>
 								</th>
 								<td>
-									<?php
-									$this->render_field( $field_args, $field_group );
-									?>
+									<?php $this->render_field( $field_args, $field_group ); ?>
 								</td>
 							</tr>
 							<?php
@@ -202,12 +198,15 @@ class Layout {
 				?>
 				<td class="cmb-remove-field-row cmb-group-table-control">
 					<div class="cmb-remove-row">
-						<a href="javascript:void(0)" type="button"
-						   data-selector="<?= esc_attr( $field_group->id() ); ?>_repeat"
-						   class="cmb-remove-group-row cmb-remove-group-row-button button-secondary cmb-shift-rows"
-						   data-confirm="<?= esc_attr( $confirm_deletion ) ?>"
-						   title="<?= esc_attr( $field_group->options( 'remove_button' ) ); ?>">
-							<span class="dashicons dashicons-no-alt"/>
+						<a
+							href="javascript:void(0)"
+							type="button"
+							data-selector="<?= esc_attr( $field_group->id() ) ?>_repeat"
+							class="cmb-remove-group-row cmb-remove-group-row-button button-secondary cmb-shift-rows"
+							data-confirm="<?= esc_attr( $confirm_deletion ) ?>"
+							title="<?= esc_attr( $field_group->options( 'remove_button' ) ) ?>"
+						>
+							<span class="dashicons dashicons-no-alt" />
 						</a>
 					</div>
 				</td>

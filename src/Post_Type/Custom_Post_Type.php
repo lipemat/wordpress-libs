@@ -225,7 +225,7 @@ class Custom_Post_Type {
 	 *
 	 * @param string $post_type
 	 */
-	public function __construct( $post_type ) {
+	final public function __construct( string $post_type ) {
 		$this->post_type = $post_type;
 		$this->hook();
 	}
@@ -320,7 +320,7 @@ class Custom_Post_Type {
 
 
 	/**
-	 * Build the args array for the post type definition
+	 * Build the args array for the post type definition.
 	 *
 	 * @return array
 	 */
@@ -362,14 +362,14 @@ class Custom_Post_Type {
 
 
 	/**
-	 * Build the labels array for the post type definition
+	 * Build the labels array for the post type definition.
 	 *
-	 * @param string $single
-	 * @param string $plural
+	 * @param string|null $single
+	 * @param string|null $plural
 	 *
 	 * @return array
 	 */
-	protected function post_type_labels( $single = null, $plural = null ) : array {
+	protected function post_type_labels( string $single = null, string $plural = null ) : array {
 		$single = $single ?? $this->get_post_type_label();
 		$plural = $plural ?? $this->get_post_type_label( 'plural' );
 
@@ -390,7 +390,7 @@ class Custom_Post_Type {
 			'all_items'                => sprintf( __( 'All %s' ), $plural ),
 			'archives'                 => sprintf( __( '%s Archives' ), $single ),
 			'attributes'               => sprintf( __( '%s Attributes' ), $single ),
-			'insert_into_item'         => sprintf( __( 'INSERT INTO %s' ), $single ),
+			'insert_into_item'         => sprintf( __( 'Insert into %s' ), $single ),
 			'uploaded_to_this_item'    => sprintf( __( 'Uploaded to this %s' ), $single ),
 			'featured_image'           => __( 'Featured Image' ),
 			'set_featured_image'       => __( 'Set featured image' ),
@@ -406,7 +406,7 @@ class Custom_Post_Type {
 			'item_updated'             => sprintf( __( '%s updated.' ), $single ),
 			'menu_name'                => $this->menu_name ?? $plural,
 		];
-		// phpcs:enable
+		// phpcs:enable WordPress.WP.I18n
 
 		if ( ! empty( $this->labels ) ) {
 			$labels = wp_parse_args( $this->labels, $labels );
@@ -418,15 +418,13 @@ class Custom_Post_Type {
 
 
 	/**
-	 * Get Post Type Label
-	 *
-	 * Get a post type label
+	 * Get the post type's label.
 	 *
 	 * @param string $quantity - (singular,plural)
 	 *
 	 * @return string
 	 */
-	public function get_post_type_label( $quantity = 'singular' ) : string {
+	public function get_post_type_label( string $quantity = 'singular' ) : string {
 		if ( 'plural' === $quantity ) {
 			if ( empty( $this->post_type_label_plural ) ) {
 				$this->set_post_type_label( $this->post_type_label_singular );
@@ -464,16 +462,14 @@ class Custom_Post_Type {
 
 
 	/**
-	 * Set Post Type Label
-	 *
-	 * Set the labels for the post type
+	 * Set the labels for the post type.
 	 *
 	 * @param string $singular
 	 * @param string $plural
 	 *
 	 * @return void
 	 */
-	public function set_post_type_label( $singular = '', $plural = '' ) : void {
+	public function set_post_type_label( string $singular = '', string $plural = '' ) : void {
 		if ( ! $singular ) {
 			$singular = str_replace( '_', ' ', $this->post_type );
 			$singular = ucwords( $singular );
@@ -509,11 +505,7 @@ class Custom_Post_Type {
 	 * @return array|null|boolean
 	 */
 	protected function rewrites() {
-		if ( isset( $this->rewrite ) ) {
-			return $this->rewrite;
-		}
-
-		return [
+		return $this->rewrite ?? [
 			'slug'       => $this->get_slug(),
 			'with_front' => false,
 		];
@@ -689,7 +681,7 @@ class Custom_Post_Type {
 			2  => __( 'Custom field updated.' ),
 			3  => __( 'Custom field deleted.' ),
 			4  => sprintf( __( '%s updated.' ), $this->get_post_type_label() ),
-			5  => isset( $_GET['revision'] ) ? sprintf( __( '%1$s restored to revision from %2$s' ), $this->get_post_type_label(), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			5  => isset( $_GET['revision'] ) ? sprintf( __( '%1$s restored to revision from %2$s' ), $this->get_post_type_label(), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false, //phpcs:ignore
 			6  => sprintf( __( '%1$s published. %2$s' ), $this->get_post_type_label(), $view_link ),
 			7  => sprintf( __( '%s saved.' ), $this->get_post_type_label() ),
 			8  => sprintf( __( '%1$s submitted. %2$s' ), $this->get_post_type_label(), $preview_link ),

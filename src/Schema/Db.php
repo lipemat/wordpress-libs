@@ -4,6 +4,8 @@ namespace Lipe\Lib\Schema;
 
 use Lipe\Lib\Traits\Version;
 
+//phpcs:disable WordPress.DB.DirectDatabaseQuery
+
 /**
  * Interact with custom Database Tables
  *

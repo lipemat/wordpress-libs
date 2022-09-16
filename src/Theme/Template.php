@@ -8,7 +8,7 @@ class Template {
 	use Singleton;
 
 	/**
-	 * Render of an array of attributes to be used in markup
+	 * Render of an array of attributes to be used in HTML markup.
 	 *
 	 * @param array $attributes
 	 *
@@ -18,7 +18,7 @@ class Template {
 		$e = [];
 		foreach ( $attributes as $k => $v ) {
 			if ( \is_array( $v ) || \is_object( $v ) ) {
-				$v = \json_encode( $v );
+				$v = wp_json_encode( $v );
 			} elseif ( \is_bool( $v ) ) {
 				$v = $v ? 1 : 0;
 			} elseif ( \is_string( $v ) ) {

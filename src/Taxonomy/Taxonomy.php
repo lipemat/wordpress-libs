@@ -446,8 +446,8 @@ class Taxonomy {
 		}
 		wp_dropdown_categories( $args );
 
-		if ( $been_filtered && isset( $_GET['post_type'] ) ) {
-			$post_type = \sanitize_key( $_GET['post_type'] );
+		if ( $been_filtered && ! empty( $_GET['post_type'] ) ) { //phpcs:ignore
+			$post_type = \sanitize_key( $_GET['post_type'] ); //phpcs:ignore
 			?>
 			<a
 				style="margin: 0 4px 0 1px;"
@@ -561,15 +561,16 @@ class Taxonomy {
 					$parent = \key( $this->show_in_menu );
 					$order = \reset( $this->show_in_menu );
 				}
-				$submenu[ $parent ][ $order ] = [ //phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-				                                  esc_attr( $tax->labels->menu_name ),
-				                                  $tax->cap->manage_terms,
-				                                  \sprintf( $edit_tags_file, $tax->name ),
+				//phpcs:ignore
+				$submenu[ $parent ][ $order ] = [
+					esc_attr( $tax->labels->menu_name ),
+					$tax->cap->manage_terms,
+					\sprintf( $edit_tags_file, $tax->name ),
 				];
 				\ksort( $submenu[ $parent ] );
 			}
 		}
-		//set the current parent menu for the custom location
+		// Set the current parent menu for the custom location.
 		add_filter( 'parent_file', [ $this, 'set_current_menu' ] );
 	}
 

@@ -108,7 +108,7 @@ class Column extends Argument_Abstract {
 	public function meta( string $title, string $meta_key, ?string $date_format = null, ?string $cap = null ) : Column_Shared {
 		$_args = [
 			'title'    => $title,
-			'meta_key' => $meta_key,
+			'meta_key' => $meta_key, //phpcs:ignore
 			'cap'      => $cap,
 		];
 		if ( null !== $date_format ) {

@@ -93,7 +93,7 @@ trait Memoize {
 	 * @return mixed
 	 */
 	public function memoize( callable $fn, string $identifier, ...$args ) {
-		$key = \md5( \serialize( [ $args, $identifier ] ) );
+		$key = \md5( wp_json_encode( [ $args, $identifier ] ) );
 		if ( ! \array_key_exists( $key, $this->memoize_cache ) ) {
 			$this->memoize_cache[ $key ] = $fn( ...$args );
 		}

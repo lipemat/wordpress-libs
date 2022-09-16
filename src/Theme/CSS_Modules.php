@@ -28,8 +28,8 @@ class CSS_Modules {
 
 
 	public function styles( string $file ) : array {
-		$json = file_get_contents( trailingslashit( $this->path ) . "{$file}.pcss.json" );
-		$classes = json_decode( $json );
+		$json = file_get_contents( trailingslashit( $this->path ) . "{$file}.pcss.json" ); //phpcs:ignore
+		$classes = json_decode( $json, true );
 
 		return (array) $classes;
 	}

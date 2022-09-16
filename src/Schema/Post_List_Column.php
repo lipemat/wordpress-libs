@@ -2,6 +2,8 @@
 
 namespace Lipe\Lib\Schema;
 
+//phpcs:disable WordPress.Security.NonceVerification.Recommended
+
 abstract class Post_List_Column {
 	protected $column_label;
 
@@ -194,7 +196,6 @@ abstract class Post_List_Column {
 		</select>
 
 		<?php
-
 	}
 
 

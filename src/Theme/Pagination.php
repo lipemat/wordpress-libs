@@ -32,7 +32,7 @@ class Pagination {
 
 
 	/**
-	 * Send me some items and i'll create the pagination.
+	 * Send me some items, and I'll create the pagination.
 	 * If no wp_query is used I will split the list and return the items within that range
 	 * If a wp_query is used, I will return the same items you sent me
 	 *
@@ -40,7 +40,7 @@ class Pagination {
 	 *                                    page's posts when using a wp_query.
 	 * @param ?\WP_Query $wp_query        - Send a wp_query to use that for handling
 	 *                                    calculations instead of an independent list
-	 * @param int        $per_page        - defaults to 10 ( ignored if using a $wp_query )
+	 * @param int        $per_page        - defaults to 10 (ignored if using a `$wp_query`).
 	 */
 	public function __construct( array $items, ?\WP_Query $wp_query = null, int $per_page = 10 ) {
 		$this->items = $items;
@@ -51,9 +51,9 @@ class Pagination {
 			$page = $this->wp_query->is_paged() ? $wp_query->get( 'paged' ) : 1;
 		} else {
 			$this->per_page = $per_page;
-			$page = empty( $_REQUEST['page'] ) ? 1 : sanitize_text_field( wp_unslash( $_REQUEST['page'] ) );
+			$page = empty( $_REQUEST['page'] ) ? 1 : sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ); //phpcs:ignore
 		}
-		//certain areas of the admin pass page in url
+		// Certain areas of the admin pass page in url.
 		if ( ! is_numeric( $page ) ) {
 			$page = 1;
 		}
@@ -124,11 +124,7 @@ class Pagination {
 
 
 	public function get_total_pages() {
-		if ( $this->wp_query ) {
-			$count = (int) $this->wp_query->found_posts;
-		} else {
-			$count = \count( $this->items );
-		}
+		$count = $this->wp_query->found_posts ?? \count( $this->items );
 		if ( 0 === $count ) {
 			return 0;
 		}
@@ -138,10 +134,10 @@ class Pagination {
 
 
 	/**
-	 * Generates the html based on links /page/%number%
+	 * Generates the HTML based on links /page/%number%.
 	 * Used by standard wp queries.
 	 *
-	 * Used when we do have a wp_query
+	 * Used when we do have a `WP_Query`.
 	 *
 	 * @param int $page
 	 * @param int $total
@@ -224,7 +220,7 @@ class Pagination {
 	 *
 	 * @return void
 	 */
-	private function ajax_html( int $page, int $total, int $top, int $bottom ) {
+	private function ajax_html( int $page, int $total, int $top, int $bottom ) : void {
 		?>
 		<ul class="pagination navigation">
 			<?php
@@ -232,7 +228,7 @@ class Pagination {
 				?>
 				<li>
 					<a data-page="1">
-						<?= apply_filters( 'lipe/lib/theme/paginate_double_back', '&laquo' ) //phpcs:ignore ?>
+						<?= apply_filters( 'lipe/lib/theme/paginate_double_back', '&laquo' ) //phpcs:ignore  ?>
 					</a>
 				</li>
 				<li>

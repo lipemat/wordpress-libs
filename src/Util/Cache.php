@@ -50,7 +50,7 @@ class Cache {
 	 *
 	 * @return false|mixed
 	 */
-	public function get( $key, $group = self::DEFAULT_GROUP ) {
+	public function get( $key, string $group = self::DEFAULT_GROUP ) {
 		$group = $this->get_group_key( $group );
 
 		return wp_cache_get( $this->filter_key( $key ), $group );
@@ -82,7 +82,7 @@ class Cache {
 		}
 		wp_cache_flush();
 		do_action( 'lipe/lipe/util/cache/flush' );
-		wp_redirect( remove_query_arg( [ self::QUERY_ARG, '_wpnonce' ] ) );
+		wp_safe_redirect( remove_query_arg( [ self::QUERY_ARG, '_wpnonce' ] ) );
 		die();
 	}
 
@@ -123,9 +123,7 @@ class Cache {
 		if ( empty( $key ) ) {
 			return false;
 		}
-		$key = ( \is_array( $key ) || \is_object( $key ) ) ? md5( serialize( $key ) ) : $key;
-
-		return $key;
+		return ( \is_array( $key ) || \is_object( $key ) ) ? md5( wp_json_encode( $key ) ) : $key;
 	}
 
 }
