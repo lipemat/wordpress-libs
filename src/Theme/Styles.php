@@ -8,7 +8,7 @@ use Lipe\Lib\Util\Actions;
  * @depecated
  */
 class Styles extends Resources {
-	public function __construct() {
+	final public function __construct() {
 		if ( \get_class( $this ) === __CLASS__ ) {
 			_deprecated_file( __CLASS__, '3.12.0', esc_html( Resources::class ) );
 		}

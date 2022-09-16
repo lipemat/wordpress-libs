@@ -12,17 +12,14 @@ trait Singleton {
 	protected static $instance;
 
 	/**
-	 * @static
-	 *
 	 * @var bool
 	 */
 	protected static $inited = false;
 
 
 	/**
-	 * Create the instance of the class
+	 * Create the instance of the class.
 	 *
-	 * @static
 	 * @return void
 	 */
 	public static function init() : void {
@@ -35,7 +32,7 @@ trait Singleton {
 
 
 	/**
-	 * Call this method as many times as needed and the
+	 * Call this method as many times as needed, and the
 	 * class will only init() one time.
 	 *
 	 * @static
@@ -50,9 +47,6 @@ trait Singleton {
 
 
 	/**
-	 *
-	 * @static
-	 *
 	 * @return static
 	 */
 	public static function in() {
@@ -61,14 +55,11 @@ trait Singleton {
 
 
 	/**
-	 *
-	 * @static
-	 *
 	 * @return static
 	 */
 	public static function instance() {
 		if ( ! is_a( static::$instance, __CLASS__ ) ) {
-			static::$instance = new static();
+			static::$instance = new static(); // @phpstan-ignore-line
 		}
 
 		return static::$instance; // @phpstan-ignore-line

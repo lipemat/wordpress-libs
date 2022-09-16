@@ -5,10 +5,8 @@ namespace Lipe\Lib\Util;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * Versions
- *
  * Run callable based on a version or simply run an item only once.
- * Use add_update() for items which may depend on previously run items or to run
+ * Use add_update() for items, which may depend on previously run items or to run
  * items in order.
  * Use once() for items with no prerequisites and just need to be run once.
  *
@@ -89,7 +87,7 @@ class Versions {
 
 	/**
 	 * Run a function one time only
-	 * To be use for items with no pre-requisites which just need to be run once.
+	 * To be use for items with no pre-requisites, which just need to be run once.
 	 *
 	 * @param callable $callable
 	 * @param string   $key - unique identifier
@@ -171,5 +169,4 @@ class Versions {
 			update_option( self::OPTION, self::$version );
 		}
 	}
-
 }
