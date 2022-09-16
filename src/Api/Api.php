@@ -159,6 +159,7 @@ class Api {
 		$args = \array_filter( \explode( '/', $wp->query_vars[ self::NAME ] ) );
 		$endpoint = \array_shift( $args );
 
+		//phpcs:ignore
 		if ( ! empty( $_REQUEST[ static::FORMAT ] ) && static::FORMAT_ASSOC === $_REQUEST[ static::FORMAT ] ) {
 			$args = Arrays::in()->chunk_to_associative( $args );
 		}

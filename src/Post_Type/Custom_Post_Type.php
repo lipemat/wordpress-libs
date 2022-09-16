@@ -681,7 +681,7 @@ class Custom_Post_Type {
 			2  => __( 'Custom field updated.' ),
 			3  => __( 'Custom field deleted.' ),
 			4  => sprintf( __( '%s updated.' ), $this->get_post_type_label() ),
-			5  => isset( $_GET['revision'] ) ? sprintf( __( '%1$s restored to revision from %2$s' ), $this->get_post_type_label(), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			5  => isset( $_GET['revision'] ) ? sprintf( __( '%1$s restored to revision from %2$s' ), $this->get_post_type_label(), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false, //phpcs:ignore
 			6  => sprintf( __( '%1$s published. %2$s' ), $this->get_post_type_label(), $view_link ),
 			7  => sprintf( __( '%s saved.' ), $this->get_post_type_label() ),
 			8  => sprintf( __( '%1$s submitted. %2$s' ), $this->get_post_type_label(), $preview_link ),

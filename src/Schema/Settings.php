@@ -3,14 +3,12 @@
 namespace Lipe\Lib\Schema;
 
 /**
- * Settings
+ * Abstract starting point for a settings page.
+ * Retrieve option from proper location by using $this->get_option()
  *
  * @link https://make.wordpress.org/core/2016/10/26/registering-your-settings-in-wordpress-4-7/
  *
- * Abstract starting point for a settings page
- * Retrieve option from proper location by using $this->get_option()
- *
- * Extend this with another class that does not have a __construct method or call parent::__construct()
+ * Extend this with another class, which does not have a __construct method or call parent::__construct()
  * Implement the abstract methods and set appropriate class vars. This will do the rest.
  *
  * To have a description for a section create a public method %section_slug%_description and
@@ -294,7 +292,7 @@ abstract class Settings {
 			$this->on_settings_save();
 		}
 
-		foreach ( $this->settings as $section => $params ) {
+		foreach ( $this->settings as $params ) {
 			foreach ( $params['fields'] as $field => $title ) {
 				$value = wp_unslash( $_POST[ $this->get_field_name( $field ) ] ); //phpcs:ignore
 				if ( method_exists( $this, $field . '_sanitize' ) ) {
@@ -316,7 +314,7 @@ abstract class Settings {
 			'updated' => 'true',
 		], $parent_url );
 
-		wp_redirect( $url );
+		wp_safe_redirect( $url );
 		die();
 	}
 
@@ -442,9 +440,9 @@ abstract class Settings {
 
 
 	/**
-	 * Get a site option or regular depending if we are network or not
-	 * Will return the default value for this field if set and the option
-	 * has not been set
+	 * Get a site option or regular depending on if we are a network or not.
+	 * Will return the default value for this field if set, and the option
+	 * has not been set.
 	 *
 	 * @param string $field
 	 *
@@ -474,9 +472,9 @@ abstract class Settings {
 
 
 	/**
-	 * Get Non Namespaced Field
+	 * Get Non Namespaced Field.
 	 *
-	 * Remove the namespace if exists from a field and return the value
+	 * Remove the namespace if exists from a field and return the value.
 	 *
 	 * @param string $field - possibly namespaced field
 	 *
@@ -492,9 +490,9 @@ abstract class Settings {
 
 
 	/**
-	 * Display Settings Page
+	 * Display Settings Page.
 	 *
-	 * Outputs the settings page
+	 * Outputs the settings page.
 	 *
 	 * @return void
 	 */
@@ -532,8 +530,8 @@ abstract class Settings {
 
 
 	/**
-	 * Generate a settings page with the settings sections placed into tabs
-	 * Set $this->tabs to true and it will happen automatically
+	 * Generate a settings page with the settings sections placed into tabs.
+	 * Set $this->tabs to true, and it will happen automatically.
 	 *
 	 * @uses $this->settings
 	 * @uses $this->tabs
@@ -543,6 +541,7 @@ abstract class Settings {
 	private function tabbed_form() : void {
 		reset( $this->settings );
 
+		//phpcs:ignore
 		$tab = sanitize_text_field( wp_unslash( $_GET['tab'] ?? key( $this->settings ) ) );
 
 		?>
@@ -607,15 +606,15 @@ abstract class Settings {
 
 
 	/**
-	 * If you prefer the use the method approach vs the set class var approach
-	 * Use this method to create or update a section of settings
+	 * If you prefer the use the method approach vs the set class var approach.
+	 * Use this method to create or update a section of settings.
 	 *
 	 * @param string $slug
 	 * @param string $title
 	 *
 	 * @see  $this->add_setting()
 	 *
-	 * @uses $this->settings ( may be set independently )
+	 * @uses $this->settings (may be set independently)
 	 * @return void
 	 */
 	protected function add_setting_section( string $slug, string $title ) : void {
@@ -627,8 +626,8 @@ abstract class Settings {
 
 
 	/**
-	 * If you prefer to use the method approach vs the set class var approach
-	 * Use this method to add a single setting to a section
+	 * If you prefer to use the method approach vs the set class var approach.
+	 * Use this method to add a single setting to a section.
 	 *
 	 * @param string $section
 	 * @param string $field
@@ -636,7 +635,7 @@ abstract class Settings {
 	 *
 	 * @see  $this->add_settings_section()
 	 *
-	 * @uses $this->settings ( may be set independently )
+	 * @uses $this->settings (may be set independently)
 	 * @return void
 	 */
 	protected function add_setting( string $section, string $field, string $label ) : void {

@@ -63,7 +63,7 @@ class Resources {
 	public function get_revision() : ?string {
 		return $this->once( function() {
 			if ( file_exists( $this->get_site_root() . '.revision' ) ) {
-				$version = \file_get_contents( $this->get_site_root() . '.revision' );
+				$version = \file_get_contents( $this->get_site_root() . '.revision' ); //phpcs:ignore
 			}
 			if ( empty( $version ) ) {
 				return null;

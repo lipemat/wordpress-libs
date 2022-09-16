@@ -5,7 +5,7 @@ namespace Lipe\Lib\CMB2\Box;
 use Lipe\Lib\CMB2\Field;use Lipe\Lib\Theme\Class_Names;use Lipe\Lib\Traits\Singleton;use Lipe\Lib\Util\Url;
 
 /**
- * Support Tabs in meta boxes
+ * Support Tabs in meta boxes.
  *
  * @usage Assign and array of tabs to a box when registering it
  *        via the Lipe\Lib\CMB2\Box::add_tab() method.
@@ -114,9 +114,10 @@ class Tabs {
 		if ( $tabs ) {
 			echo '<ul class="cmb-tab-nav">';
 
-			if ( empty( $_REQUEST[ self::TAB_FIELD ] ) ) {
+			if ( empty( $_REQUEST[ self::TAB_FIELD ] ) ) { //phpcs:ignore
 				$active_nav = key( $tabs );
 			} else {
+				//phpcs:ignore
 				$active_nav = esc_attr( sanitize_text_field( wp_unslash( $_REQUEST[ self::TAB_FIELD ] ) ) );
 			}
 
@@ -558,14 +559,14 @@ class Tabs {
 				border-bottom: 1px solid #fff;
 			}
 
-			 .cmb2-options-page .cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav li.cmb-tab-active a {
+			.cmb2-options-page .cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav li.cmb-tab-active a {
 			    border-bottom: 2px solid #fff;
 			    margin-bottom: -1px;
-			 }
+			}
 
-			 .cmb2-options-page .cmb-tabs .cmb2-metabox > .cmb-row > .cmb-th + .cmb-td {
+			.cmb2-options-page .cmb-tabs .cmb2-metabox > .cmb-row > .cmb-th + .cmb-td {
 			    margin-left: 175px;
-			 }
+			}
 
 			/*--------------------------------------------------------------
 			Media Query

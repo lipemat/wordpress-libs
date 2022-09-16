@@ -5,7 +5,7 @@ namespace Lipe\Lib\Post_Type\Extended_CPTS;
 use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
 
 /**
- * Extended CPTs provides a mechanism for registering public query vars
+ * Extended CPTs provides a mechanism for registering public query vars,
  * which allow users to filter your post type archives by various fields.
  * This also works in WP_Query,
  * although the main advantage is the fact these are public query vars
@@ -14,20 +14,17 @@ use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
  * Think of these as the front-end equivalent of list table filters in the admin area,
  * minus the UI.
  *
- * It also allows you to filter posts in WP_Query thusly:
+ * It also allows you to filter posts in WP_Query.
  *
- * @example new WP_Query( array(
+ * @example new WP_Query(array(
  * 'post_type' => 'article',
  * $query_var    => 'bar',
  * ) );
  *
  * @example test.loc/articles/?{$query_var}=bar
  *
- * @author  Mat Lipe
- *
  * @link    https://github.com/johnbillion/extended-cpts/wiki/Query-vars-for-filtering#example
  *
- * @package Lipe\Lib\Post_Type\Custom_Post_Type_Extended
  */
 class Query_Var extends Argument_Abstract {
 	/**
@@ -109,14 +106,14 @@ class Query_Var extends Argument_Abstract {
 	 *
 	 * @return Query_Var_Shared
 	 */
-	public function meta( $query_var, $meta_key, array $meta_query = null ) : Query_Var_Shared {
+	public function meta( string $query_var, string $meta_key, array $meta_query = null ) : Query_Var_Shared {
 		$_args = [
 			'query_var' => $query_var,
-			'meta_key'  => $meta_key,
+			'meta_key'  => $meta_key, //phpcs:ignore
 		];
 
 		if ( null !== $meta_query ) {
-			$_args['meta_query'] = $meta_query;
+			$_args['meta_query'] = $meta_query; //phpcs:ignore
 		}
 
 		return $this->return( $_args );
@@ -132,7 +129,7 @@ class Query_Var extends Argument_Abstract {
 	 *
 	 * @return Query_Var_Shared
 	 */
-	public function meta_search( $query_var, $meta_key ) : Query_Var_Shared {
+	public function meta_search( string $query_var, string $meta_key ) : Query_Var_Shared {
 		$_args = [
 			'query_var'       => $query_var,
 			'meta_search_key' => $meta_key,
@@ -143,9 +140,9 @@ class Query_Var extends Argument_Abstract {
 
 
 	/**
-	 * Allow posts to be filtered by posts which contain a meta field with the given meta key,
-	 * regardless of its value
-	 * (more specifically, if its value isn't empty-like, such as 0 or false),
+	 * Allow posts to be filtered by posts, which contain a meta field with the given meta key,
+	 * regardless of its value.
+	 * More specifically, if its value isn't empty-like, such as 0 or false.
 	 *
 	 *
 	 * @param string $query_var
@@ -153,7 +150,7 @@ class Query_Var extends Argument_Abstract {
 	 *
 	 * @return Query_Var_Shared
 	 */
-	public function meta_exists( $query_var, $meta_key ) : Query_Var_Shared {
+	public function meta_exists( string $query_var, string $meta_key ) : Query_Var_Shared {
 		$_args = [
 			'query_var'   => $query_var,
 			'meta_exists' => $meta_key,
@@ -178,7 +175,7 @@ class Query_Var extends Argument_Abstract {
 	 *
 	 * @return Query_Var_Shared
 	 */
-	public function taxonomy( $query_var, $taxonomy ) : Query_Var_Shared {
+	public function taxonomy( string $query_var, string $taxonomy ) : Query_Var_Shared {
 		if ( taxonomy_exists( $query_var ) ) {
 			throw new \RuntimeException( __( 'Your query var clashes with an existing taxonomy. You can probably just use default WP filtering.', 'lipe' ) );
 		}

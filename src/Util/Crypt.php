@@ -2,6 +2,9 @@
 
 namespace Lipe\Lib\Util;
 
+//phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+//phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+
 /**
  * Encrypt/Decrypt a string using a custom key.
  * Objects may be encrypted using `json_encode` or `serialize` first.
@@ -92,7 +95,7 @@ class Crypt {
 		];
 		unset( $iv, $salt, $hash_key );
 
-		return base64_encode( json_encode( $output ) );
+		return base64_encode( wp_json_encode( $output ) );
 	}
 
 
@@ -106,7 +109,7 @@ class Crypt {
 	 * @return int
 	 */
 	protected function get_key_size() : int {
-		return preg_replace( '/[\D]/', '', static::METHOD ) / 4;
+		return preg_replace( '/\D/', '', static::METHOD ) / 4;
 	}
 
 

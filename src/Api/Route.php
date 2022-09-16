@@ -5,8 +5,6 @@ namespace Lipe\Lib\Api;
 use Lipe\Lib\Traits\Singleton;
 
 /**
- * Route
- *
  * Routes a custom url to a page template
  *
  * @example Route::init();
@@ -25,9 +23,7 @@ class Route {
 	protected const POST_ID_OPTION  = 'lipe/lib/util/route_post_id';
 
 	/**
-	 * post_id
-	 *
-	 * The id of the placeholder post
+	 * The id of the placeholder post.
 	 *
 	 * @static
 	 * @var int
@@ -35,9 +31,6 @@ class Route {
 	protected static $post_id = 0;
 
 	/**
-	 * routes
-	 *
-	 * @static
 	 * @var array
 	 */
 	private static $routes = [];
@@ -60,7 +53,7 @@ class Route {
 
 
 	/**
-	 * Setup a special post type to be used in the queries so we return
+	 * Setup a special post type to be used in the queries, so we return
 	 * an actual post and not a 404.
 	 *
 	 * A single post of this type is created to be queried
@@ -188,17 +181,15 @@ class Route {
 
 
 	/**
-	 * Maybe Flush Rules
-	 *
 	 * Adding rewrite rules requires a flush of all rules
-	 * This checks for new ones then flushes as needed
+	 * This checks for new ones then flushes as needed.
 	 *
 	 * @return void
 	 */
 	public function maybe_flush_rules() : void {
-		if ( get_option( self::OPTION ) !== md5( serialize( self::$routes ) ) ) {
+		if ( get_option( self::OPTION ) !== md5( wp_json_encode( self::$routes ) ) ) {
 			flush_rewrite_rules();
-			update_option( self::OPTION, md5( serialize( self::$routes ) ) );
+			update_option( self::OPTION, md5( wp_json_encode( self::$routes ) ) );
 		}
 	}
 

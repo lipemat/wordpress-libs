@@ -566,7 +566,7 @@ class Box {
 	 * 3. Registers the provided 'show_in_rest' configuration.
 	 *
 	 * Support a default value for any `get_metadata()` calls.
-	 * Will add the values of all sub fields
+	 * Will add the values of all subfields.
 	 *
 	 * @param Field $field
 	 * @param array $config
@@ -599,7 +599,7 @@ class Box {
 			if ( isset( $this->taxonomies ) ) {
 				$sub_types = $this->taxonomies;
 			}
-		} elseif ( \in_array( $this->get_object_type(), [ 'user', 'comment' ] ) ) {
+		} elseif ( \in_array( $this->get_object_type(), [ 'user', 'comment' ], true ) ) {
 			$sub_types = [ false ];
 		}
 
@@ -607,7 +607,7 @@ class Box {
 			$config['object_subtype'] = $_type;
 			register_meta( $type, $field->get_id(), $config );
 
-			// Secondary field for file ids.
+			// A secondary field for file ids.
 			if ( Repo::FILE === $field->data_type ) {
 				if ( ! empty( $config['show_in_rest']['name'] ) ) {
 					$config['show_in_rest']['name'] .= '_id';

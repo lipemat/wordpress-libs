@@ -7,7 +7,7 @@ use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
 
 /**
- * CMB2 field fluent interface.
+ * A fluent interface for a CMB2 field.
  */
 class Field {
 	/**
@@ -935,7 +935,7 @@ class Field {
 	 *
 	 */
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ) : Field {
-		// Ugh! Hack so I can use a method from that class
+		// Ugh! Hack, so I can use a method from that class
 		$mock = new class() extends \CMB2_Field {
 			public function __construct() {
 			}
@@ -950,7 +950,7 @@ class Field {
 			}
 		};
 		if ( ! $mock->allowed( $this->get_type() ) ) {
-			trigger_error( esc_html( "Fields of `{$this->get_type()}` type do not support repeating" ) );
+			trigger_error( esc_html( "Fields of `{$this->get_type()}` type do not support repeating" ) ); //phpcs:ignore
 		}
 		$this->repeatable = $repeatable;
 		$this->text['add_row_text'] = $add_row_text;

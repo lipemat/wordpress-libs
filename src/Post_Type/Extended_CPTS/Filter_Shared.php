@@ -20,10 +20,10 @@ class Filter_Shared extends Shared_Abstract{
 	/**
 	 * Filter_Shared constructor.
 	 *
-	 * @param \Lipe\Lib\Post_Type\Extended_CPTS\Filter $filter
-	 * @param array                                    $args
+	 * @param Filter $filter
+	 * @param array  $args
 	 */
-	function __construct( Filter $filter, array $args ) {
+	public function __construct( Filter $filter, array $args ) {
 		$this->args = $args;
 		$this->filter = $filter;
 	}
@@ -33,25 +33,25 @@ class Filter_Shared extends Shared_Abstract{
 	 *
 	 * @param array $args
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
+	 * @return Filter_Shared
 	 */
-	protected function return( array $args ) {
+	protected function return( array $args ) : Filter_Shared {
 		$this->filter->set( $args );
 		return $this;
 	}
 
 
 	/**
-	 * Any filter can be restricted so it's only shown to users
-	 * with a given capability by using the cap parameter:
+	 * Any filter can be restricted, so it's only shown to users
+	 * with a given capability by using the cap parameter.
 	 *
-	 * @param  string $capability
+	 * @param string $capability
 	 *
 	 * @example 'manage_options'
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
+	 * @return Filter_Shared
 	 */
-	public function capability( $capability ) {
+	public function capability( $capability ) : Filter_Shared {
 		return $this->return( [ 'cap' => $capability ] );
 	}
 
@@ -62,10 +62,10 @@ class Filter_Shared extends Shared_Abstract{
 	 *
 	 * @param array $query
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Filter_Shared
+	 * @return Filter_Shared
 	 */
-	public function meta_query( array $query ) {
-		return $this->return( [ 'meta_query' => $query ] );
+	public function meta_query( array $query ) : Filter_Shared {
+		return $this->return( [ 'meta_query' => $query ] ); //phpcs:ignore
 	}
 
 }

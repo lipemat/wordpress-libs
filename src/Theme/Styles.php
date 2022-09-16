@@ -28,7 +28,7 @@ class Styles extends Resources {
 
 		$path = isset( $_SERVER['DOCUMENT_ROOT'] ) ? \sanitize_text_field( \wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) : '';
 		if ( \file_exists( $path . '/.revision' ) ) {
-			return \trim( \file_get_contents( $path . '/.revision' ) );
+			return \trim( \file_get_contents( $path . '/.revision' ) ); //phpcs:ignore
 		}
 		return null;
 	}
@@ -56,11 +56,11 @@ class Styles extends Resources {
 		Actions::in()->add_action_all( [
 			'wp_enqueue_scripts',
 			'admin_enqueue_scripts',
-		], static function() use ( $families ) {
-			\wp_enqueue_script( 'google-webfonts', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js' ); //phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
-			\wp_add_inline_script( 'google-webfonts', 'WebFont.load({
+		], function() use ( $families ) {
+			wp_enqueue_script( 'google-webfonts', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js' ); //phpcs:ignore
+			wp_add_inline_script( 'google-webfonts', 'WebFont.load({
 				google: {
-					families:' . json_encode( $families ) . '
+					families:' . wp_json_encode( $families ) . '
 				}
 			})' );
 		} );

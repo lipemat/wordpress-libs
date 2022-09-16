@@ -9,11 +9,9 @@ use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
 
 /**
- * Type of CMB2 field.
+ * CMB2 field types.
  *
  * @link    https://github.com/CMB2/CMB2/wiki/Field-Types
- *
- * @package Lipe\Lib\CMB2
  */
 class Field_Type {
 	/**
@@ -617,7 +615,7 @@ class Field_Type {
 		}
 		if ( ! empty( $code_editor_arguments ) ) {
 			$this->field->attributes( [
-				'data-codeeditor' => json_encode( $code_editor_arguments ),
+				'data-codeeditor' => wp_json_encode( $code_editor_arguments ),
 			] );
 		}
 
@@ -816,7 +814,7 @@ class Field_Type {
 	public function colorpicker( array $iris_options = [], bool $transparency = false ) : Field {
 		$_args = [ 'type' => $this->colorpicker ];
 		if ( ! empty( $iris_options ) ) {
-			$this->field->attributes( [ 'data-colorpicker' => json_encode( $iris_options ) ] );
+			$this->field->attributes( [ 'data-colorpicker' => wp_json_encode( $iris_options ) ] );
 		}
 		if ( $transparency ) {
 			$_args['options'] = [
@@ -1342,7 +1340,7 @@ class Field_Type {
 		}
 
 		if ( ! empty( $date_picker_options ) ) {
-			$_args['date_picker_options']['data-datepicker'] = json_encode( $date_picker_options );
+			$_args['date_picker_options']['data-datepicker'] = wp_json_encode( $date_picker_options );
 		}
 
 		return $_args;
