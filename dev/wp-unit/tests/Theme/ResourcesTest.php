@@ -1,13 +1,7 @@
 <?php
 
 namespace Lipe\Lib\Theme;
-/**
- * @author Mat Lipe
- * @since  September, 2018
- *
- */
 
-use Lipe\Lib\Theme\Styles;
 use Lipe\Lib\Util\Actions;
 
 class ResourcesTest extends \WP_UnitTestCase {
@@ -45,8 +39,12 @@ class ResourcesTest extends \WP_UnitTestCase {
 	public function test_use_cdn_for_resources() : void {
 		$react_version = wp_scripts()->query( 'react' )->ver;
 		$lodash_version = wp_scripts()->query( 'lodash' )->ver;
+		$jquery_version = wp_scripts()->query( 'jquery-core' )->ver;
+		$jquery_migrate_version = wp_scripts()->query( 'jquery-migrate' )->ver;
 		$this->assertNotEmpty( $react_version );
 		$this->assertNotEmpty( $lodash_version );
+		$this->assertNotEmpty( $jquery_version );
+		$this->assertNotEmpty( $jquery_migrate_version );
 
 		Resources::in()->use_cdn_for_resources( [ 'react', 'lodash' ] );
 		$this->assertEquals( 'https://unpkg.com/react@' . $react_version . '/umd/react.production.min.js', wp_scripts()->query( 'react' )->src );
@@ -55,19 +53,20 @@ class ResourcesTest extends \WP_UnitTestCase {
 		ob_start();
 		wp_scripts()->do_item( 'react' );
 		$script = ob_get_clean();
-		$this->assertStringContainsString( "src='https://unpkg.com/react@" . $react_version . "/umd/react.production.min.js'", $script );
-		$this->assertStringContainsString( 'integrity="', $script );
-		$this->assertStringContainsString( 'crossorigin="anonymous"', $script );
+		self::assertStringContainsString( "src='https://unpkg.com/react@" . $react_version . "/umd/react.production.min.js'", $script );
+		self::assertStringContainsString( 'integrity="', $script );
+		self::assertStringContainsString( 'crossorigin="anonymous"', $script );
 
 		// Simulate admin screens.
 		set_current_screen( 'widgets.php' );
-		$jquery_version = wp_scripts()->query( 'jquery-core' )->ver;
-		Resources::in()->use_cdn_for_resources( [ 'jquery-core' ] );
+		Resources::in()->use_cdn_for_resources( [ 'jquery' ] );
 		// Not replace on non admin_enqueue_scripts calls.
 		$this->assertEquals( '/wp-includes/js/jquery/jquery.min.js', wp_scripts()->query( 'jquery-core' )->src );
+		$this->assertEquals( '/wp-includes/js/jquery/jquery-migrate.min.js', wp_scripts()->query( 'jquery-migrate' )->src );
 		$GLOBALS['wp_current_filter'][] = 'admin_enqueue_scripts';
-		Resources::in()->use_cdn_for_resources( [ 'jquery-core' ] );
+		Resources::in()->use_cdn_for_resources( [ 'jquery' ] );
 		$this->assertEquals( 'https://unpkg.com/jquery@' . $jquery_version . '/dist/jquery.min.js', wp_scripts()->query( 'jquery-core' )->src );
+		$this->assertEquals( 'https://unpkg.com/jquery-migrate@' . $jquery_migrate_version . '/dist/jquery-migrate.min.js', wp_scripts()->query( 'jquery-migrate' )->src );
 		unset( $GLOBALS['current_screen'] );
 	}
 
