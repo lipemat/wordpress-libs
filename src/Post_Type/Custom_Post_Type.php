@@ -418,9 +418,7 @@ class Custom_Post_Type {
 
 
 	/**
-	 * Get Post Type Label
-	 *
-	 * Get a post type label
+	 * Get the post type's label.
 	 *
 	 * @param string $quantity - (singular,plural)
 	 *
