@@ -127,7 +127,7 @@ abstract class Meta_Box {
 	 * }
 	 *
 	 */
-	protected function __construct( string $post_type, array $args = [] ) {
+	final protected function __construct( string $post_type, array $args = [] ) {
 		$this->post_type = $post_type;
 
 		self::init_once();
