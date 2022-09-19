@@ -76,7 +76,7 @@ class ResourcesTest extends \WP_UnitTestCase {
 	 * using the unpkg integrity.
 	 */
 	public function test_unpkg_integrity() : void {
-		$this->assertArrayNotHasKey( 'https://unpkg.com/jquery@3.1.1/dist/jquery.min.js', get_network_option( null, Resources::INTEGRITY, [] ) );
+		$this->assertArrayNotHasKey( 'https://unpkg.com/jquery@3.1.1/dist/jquery.min.js', get_network_option( 0, Resources::INTEGRITY, [] ) );
 		$this->assertEmpty( $this->requests );
 
 		wp_register_script( __METHOD__, 'https://unpkg.com/jquery@3.1.1/dist/jquery.min.js', [], null );
@@ -87,8 +87,10 @@ class ResourcesTest extends \WP_UnitTestCase {
 		ob_start();
 		wp_scripts()->do_item( __METHOD__ );
 		$this->assertEquals( '<script integrity="sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7" crossorigin="anonymous" src=\'https://unpkg.com/jquery@3.1.1/dist/jquery.min.js\' id=\'Lipe\Lib\Theme\ResourcesTest::test_unpkg_integrity-js\'></script>' . "\n", ob_get_clean() );
-		$cache = get_network_option( null, Resources::INTEGRITY, [] );
+		$cache = get_network_option( 0, Resources::INTEGRITY, [] );
 		$this->assertEquals( 'sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7', $cache['https://unpkg.com/jquery@3.1.1/dist/jquery.min.js'] );
 		$this->assertCount( 1, $this->requests );
+
+		$this->assertFalse( Resources::in()->unpkg_integrity( 'not-exits', 'https://unpkg.com/not-exists/script' ) );
 	}
 }

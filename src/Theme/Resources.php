@@ -401,12 +401,16 @@ class Resources {
 				$integrity = $cached[ $url ];
 			}
 		} else {
-			try {
-				$meta = json_decode( wp_safe_remote_get( "{$url}?meta" )['body'], true, 512, JSON_THROW_ON_ERROR );
-				$integrity = $meta['integrity'] ?? null;
-			} catch ( \JsonException $e ) {
+			$response = wp_safe_remote_get( "{$url}?meta" );
+			if ( is_wp_error( $response ) ) {
+				return false;
 			}
-
+			try {
+				$meta = json_decode( $response['body'], true, 512, JSON_THROW_ON_ERROR );
+			} catch ( \JsonException ) {
+				return false;
+			}
+			$integrity = $meta['integrity'] ?? null;
 			$cached[ $url ] = $integrity;
 			update_network_option( 0, self::INTEGRITY, $cached );
 		}
