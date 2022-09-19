@@ -37,9 +37,16 @@ class Styles extends Resources {
 	/**
 	 * @deprecated In favor of `Resources::live_reload`.
 	 */
-	public function live_reload( bool $admin_also = false, ?string $domain = null ) : void {
+	public function live_reload( $admin_also = null, $domain = false ) : void {
 		_deprecated_function( __METHOD__, '3.12.0', 'Resources::live_reload' );
-		parent::live_reload( $admin_also, $domain );
+		if ( false === $domain ) {
+			$domain = null;
+		}
+		if ( null === $admin_also ) {
+			$admin_also = false;
+		}
+		/* @phpstan-ignore-next-line */
+		parent::live_reload( $domain, $admin_also );
 	}
 
 
@@ -131,7 +138,7 @@ class Styles extends Resources {
 
 
 	/**
-	 * @depecated
+	 * @deprecated
 	 */
 	public static function in() {
 		return static::instance();
@@ -139,7 +146,7 @@ class Styles extends Resources {
 
 
 	/**
-	 * @depecated
+	 * @deprecated
 	 */
 	public static function instance() {
 		static $instance;

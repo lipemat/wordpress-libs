@@ -131,13 +131,12 @@ class Resources {
 	 *
 	 * @see https://github.com/gruntjs/grunt-contrib-watch#user-content-optionslivereload
 	 *
-	 * @param bool    $admin_also - Enqueue for the admin as well (defaults to only FE)
-	 * @param ?string $domain     - If specified, will load via https using the provided
-	 *                            domain.
+	 * @param string|null $domain     - If specified, will load via https using the provided domain.
+	 * @param bool        $admin_also - Enqueue for the admin as well (defaults to only front end).
 	 *
 	 * @return void
 	 */
-	public function live_reload( bool $admin_also = false, ?string $domain = null ) : void {
+	public function live_reload( ?string $domain = null, bool $admin_also = false ) : void {
 		if ( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			$enqueue = function() use ( $domain ) {
 				$url = 'http://localhost:35729/livereload.js';
@@ -402,12 +401,16 @@ class Resources {
 				$integrity = $cached[ $url ];
 			}
 		} else {
-			try {
-				$meta = json_decode( wp_safe_remote_get( "{$url}?meta" )['body'], true, 512, JSON_THROW_ON_ERROR );
-				$integrity = $meta['integrity'] ?? null;
-			} catch ( \JsonException $e ) {
+			$response = wp_safe_remote_get( "{$url}?meta" );
+			if ( is_wp_error( $response ) ) {
+				return false;
 			}
-
+			try {
+				$meta = json_decode( $response['body'], true, 512, JSON_THROW_ON_ERROR );
+			} catch ( \JsonException ) {
+				return false;
+			}
+			$integrity = $meta['integrity'] ?? null;
 			$cached[ $url ] = $integrity;
 			update_network_option( 0, self::INTEGRITY, $cached );
 		}
