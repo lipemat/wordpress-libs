@@ -120,7 +120,10 @@ class Resources {
 	 * @return string
 	 */
 	public function get_site_root() : string {
-		return trailingslashit( \dirname( WP_CONTENT_DIR ) );
+		if ( \defined( 'WP_CONTENT_DIR' ) ) {
+			return trailingslashit( \dirname( \WP_CONTENT_DIR ) );
+		}
+		return ABSPATH;
 	}
 
 
@@ -137,7 +140,7 @@ class Resources {
 	 * @return void
 	 */
 	public function live_reload( ?string $domain = null, bool $admin_also = false ) : void {
-		if ( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+		if ( \defined( 'SCRIPT_DEBUG' ) && \SCRIPT_DEBUG ) {
 			$enqueue = function() use ( $domain ) {
 				$url = 'http://localhost:35729/livereload.js';
 				if ( null !== $domain ) {
@@ -351,7 +354,7 @@ class Resources {
 
 		foreach ( $handles as $handle ) {
 			wp_deregister_script( $handle );
-			$url = ( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? $cdn[ $handle ]['dev'] : $cdn[ $handle ]['min'];
+			$url = ( \defined( 'SCRIPT_DEBUG' ) && \SCRIPT_DEBUG ) ? $cdn[ $handle ]['dev'] : $cdn[ $handle ]['min'];
 
 			//phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 			wp_register_script( $handle, $url, [], null, $cdn[ $handle ]['footer'] );
