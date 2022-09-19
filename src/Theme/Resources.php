@@ -131,13 +131,12 @@ class Resources {
 	 *
 	 * @see https://github.com/gruntjs/grunt-contrib-watch#user-content-optionslivereload
 	 *
-	 * @param bool    $admin_also - Enqueue for the admin as well (defaults to only FE)
-	 * @param ?string $domain     - If specified, will load via https using the provided
-	 *                            domain.
+	 * @param string|null $domain     - If specified, will load via https using the provided domain.
+	 * @param bool        $admin_also - Enqueue for the admin as well (defaults to only front end).
 	 *
 	 * @return void
 	 */
-	public function live_reload( bool $admin_also = false, ?string $domain = null ) : void {
+	public function live_reload( ?string $domain = null, bool $admin_also = false ) : void {
 		if ( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			$enqueue = function() use ( $domain ) {
 				$url = 'http://localhost:35729/livereload.js';
