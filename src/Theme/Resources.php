@@ -62,8 +62,9 @@ class Resources {
 	 */
 	public function get_revision() : ?string {
 		return $this->once( function() {
-			if ( file_exists( $this->get_site_root() . '.revision' ) ) {
-				$version = \file_get_contents( $this->get_site_root() . '.revision' ); //phpcs:ignore
+			$file = apply_filters( 'lipe/lib/theme/resources/revision-path', $this->get_site_root() . '.revision' );
+			if ( file_exists( $file ) ) {
+				$version = \file_get_contents( $file ); //phpcs:ignore
 			}
 			if ( empty( $version ) ) {
 				return null;
