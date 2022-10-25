@@ -501,8 +501,9 @@ class Taxonomy {
 		$already_defaulted = get_option( 'lipe/lib/taxonomy/defaults-registry', [] );
 
 		if ( ! isset( $already_defaulted[ $this->get_slug() ] ) ) {
-			// don't do anything if the taxonomy already has terms
-			if ( ! get_terms( $this->taxonomy, [
+			// Don't do anything if the taxonomy already has terms.
+			if ( ! get_terms( [
+				'taxonomy'   => $this->taxonomy,
 				'hide_empty' => false,
 				'number'     => 1,
 			] ) ) {
