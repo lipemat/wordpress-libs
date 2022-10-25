@@ -63,6 +63,10 @@ class Resources {
 	public function get_revision() : ?string {
 		return $this->once( function() {
 			$file = apply_filters( 'lipe/lib/theme/resources/revision-path', $this->get_site_root() . '.revision' );
+			if ( ! file_exists( $file ) ) {
+				// Not available in root, so we try the wp-content directory.
+				$file = trailingslashit( WP_CONTENT_DIR ) . '.revision';
+			}
 			if ( file_exists( $file ) ) {
 				$version = \file_get_contents( $file ); //phpcs:ignore
 			}
