@@ -25,6 +25,33 @@ class ResourcesTest extends \WP_UnitTestCase {
 	}
 
 
+	public function test_get_revision() : void {
+		file_put_contents( Resources::in()->get_site_root() . '.revision', 'XX' );
+		$this->assertEquals( 'XX', Resources::in()->get_revision() );
+
+		file_put_contents( trailingslashit( WP_CONTENT_DIR ) . '.revision', 'VV' );
+		$this->assertEquals( 'XX', Resources::in()->get_revision() );
+
+		unlink( Resources::in()->get_site_root() . '.revision' );
+		$this->assertEquals( 'XX', Resources::in()->get_revision() );
+		Resources::in()->clear_memoize_cache();
+		$this->assertEquals( 'VV', Resources::in()->get_revision() );
+
+		unlink( trailingslashit( WP_CONTENT_DIR ) . '.revision' );
+		$this->assertEquals( 'VV', Resources::in()->get_revision() );
+		Resources::in()->clear_memoize_cache();
+		$this->assertNull( Resources::in()->get_revision() );
+
+		add_filter( 'lipe/lib/theme/resources/revision-path', function() {
+			return Resources::in()->get_site_root() . 'other';
+		} );
+		Resources::in()->clear_memoize_cache();
+		file_put_contents( Resources::in()->get_site_root() . 'other', 'YY' );
+		$this->assertEquals( 'YY', Resources::in()->get_revision() );
+		unlink( Resources::in()->get_site_root() . 'other' );
+	}
+
+
 	public function test_get_content_hash() : void {
 		$this->assertEquals( md5_file( __FILE__ ), Resources::in()->get_content_hash( plugins_url( 'ResourcesTest.php', __FILE__ ) ) );
 		$this->assertEquals( md5_file( __FILE__ ), Resources::in()->get_content_hash( plugins_url( 'ResourcesTest.php', __FILE__ ) ) );

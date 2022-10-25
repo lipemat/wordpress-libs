@@ -82,7 +82,7 @@ class Custom_Post_Type {
 	 *
 	 * @link https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#locking
 	 *
-	 * @var string
+	 * @var 'all' | 'contentOnly' | 'insert' | null
 	 */
 	protected $template_lock;
 
@@ -157,7 +157,7 @@ class Custom_Post_Type {
 	 * If false, posts of this type belonging to the user will not be
 	 * trashed or deleted.
 	 * If not set (the default), posts are trashed if post_type_supports('author').
-	 * Otherwise posts are not trashed or deleted.
+	 * Otherwise, posts are not trashed or deleted.
 	 *
 	 * @var bool
 	 */
@@ -565,10 +565,9 @@ class Custom_Post_Type {
 	 * Set a Gutenberg template for this post type.
 	 *
 	 * @param array       $template
-	 * @param string|null $template_lock [ 'all', 'insert' ]
-	 *                                   all — prevents all operations. It is not possible to insert new blocks, move
-	 *                                   existing blocks, or delete blocks. insert — prevents inserting or removing
-	 *                                   blocks, but allows moving existing blocks.
+	 * @param 'all' | 'contentOnly' | 'insert' | null $template_lock
+	 *
+	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-templates/#locking
 	 *
 	 * @link    https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#custom-post-types
 	 *

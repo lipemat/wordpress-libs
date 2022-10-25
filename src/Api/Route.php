@@ -73,12 +73,7 @@ class Route {
 			'show_in_nav_menus'   => false,
 			'supports'            => [ 'title' ],
 			'has_archive'         => false,
-			'rewrite'             => [
-				'slug'       => false,
-				'with_front' => false,
-				'feeds'      => false,
-				'pages'      => false,
-			],
+			'rewrite'             => false,
 		];
 		register_post_type( self::NAME, $args );
 	}

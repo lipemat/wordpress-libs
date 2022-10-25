@@ -62,8 +62,13 @@ class Resources {
 	 */
 	public function get_revision() : ?string {
 		return $this->once( function() {
-			if ( file_exists( $this->get_site_root() . '.revision' ) ) {
-				$version = \file_get_contents( $this->get_site_root() . '.revision' ); //phpcs:ignore
+			$file = apply_filters( 'lipe/lib/theme/resources/revision-path', $this->get_site_root() . '.revision' );
+			if ( ! file_exists( $file ) ) {
+				// Not available in root, so we try the wp-content directory.
+				$file = trailingslashit( WP_CONTENT_DIR ) . '.revision';
+			}
+			if ( file_exists( $file ) ) {
+				$version = \file_get_contents( $file ); //phpcs:ignore
 			}
 			if ( empty( $version ) ) {
 				return null;
@@ -120,7 +125,10 @@ class Resources {
 	 * @return string
 	 */
 	public function get_site_root() : string {
-		return trailingslashit( \dirname( WP_CONTENT_DIR ) );
+		if ( \defined( 'WP_CONTENT_DIR' ) ) {
+			return trailingslashit( \dirname( \WP_CONTENT_DIR ) );
+		}
+		return ABSPATH;
 	}
 
 
@@ -137,7 +145,7 @@ class Resources {
 	 * @return void
 	 */
 	public function live_reload( ?string $domain = null, bool $admin_also = false ) : void {
-		if ( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+		if ( \defined( 'SCRIPT_DEBUG' ) && \SCRIPT_DEBUG ) {
 			$enqueue = function() use ( $domain ) {
 				$url = 'http://localhost:35729/livereload.js';
 				if ( null !== $domain ) {
@@ -351,7 +359,7 @@ class Resources {
 
 		foreach ( $handles as $handle ) {
 			wp_deregister_script( $handle );
-			$url = ( \defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? $cdn[ $handle ]['dev'] : $cdn[ $handle ]['min'];
+			$url = ( \defined( 'SCRIPT_DEBUG' ) && \SCRIPT_DEBUG ) ? $cdn[ $handle ]['dev'] : $cdn[ $handle ]['min'];
 
 			//phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 			wp_register_script( $handle, $url, [], null, $cdn[ $handle ]['footer'] );
