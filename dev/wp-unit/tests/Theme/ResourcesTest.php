@@ -53,6 +53,7 @@ class ResourcesTest extends \WP_UnitTestCase {
 
 
 	public function test_get_content_hash() : void {
+		echo plugins_url( 'ResourcesTest.php', __FILE__ );
 		$this->assertEquals( md5_file( __FILE__ ), Resources::in()->get_content_hash( plugins_url( 'ResourcesTest.php', __FILE__ ) ) );
 		$this->assertEquals( md5_file( __FILE__ ), Resources::in()->get_content_hash( plugins_url( 'ResourcesTest.php', __FILE__ ) ) );
 		$this->assertNull( Resources::in()->get_content_hash( 'http://i-dont-exist/anywhere' ) );

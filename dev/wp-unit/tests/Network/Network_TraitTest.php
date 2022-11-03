@@ -12,6 +12,10 @@ use Lipe\Lib\Network\Network_Trait;
 class Network_TraitTest extends \WP_UnitTestCase {
 
 	public function test_interactions() : void {
+		if ( \function_exists( 'wpe_oc_staging_delete' ) ) {
+			$this->markTestSkipped( 'We cannot test network options on WPE due to cache clearing issues.' );
+		}
+
 		$class = new class( 1 ) implements \ArrayAccess {
 			use Network_Trait;
 		};

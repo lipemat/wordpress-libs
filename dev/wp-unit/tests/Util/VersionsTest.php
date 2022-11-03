@@ -52,9 +52,15 @@ class VersionsTest extends \WP_UnitTestCase {
 		$version = (float) Versions::in()->get_version();
 		$this->run = 10;
 
-		Versions::in()->add_update( $version + 1, fn() => $this->run *= 3 );
-		Versions::in()->add_update( "{$version}.2", fn() => $this->run /= 2 );
-		Versions::in()->add_update( "{$version}.1", fn() => $this->run += 2 );
+		Versions::in()->add_update( $version + 1, function() {
+			return $this->run *= 3;
+		} );
+		Versions::in()->add_update( "{$version}.2", function() {
+			return $this->run /= 2;
+		} );
+		Versions::in()->add_update( "{$version}.1", function() {
+			return $this->run += 2;
+		} );
 		Versions::in()->run_updates();
 
 		$this->assertEquals( 18, $this->run );

@@ -415,7 +415,7 @@ class Resources {
 			}
 			try {
 				$meta = json_decode( $response['body'], true, 512, JSON_THROW_ON_ERROR );
-			} catch ( \JsonException ) {
+			} catch ( \JsonException $e ) {
 				return false;
 			}
 			$integrity = $meta['integrity'] ?? null;
