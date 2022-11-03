@@ -63,20 +63,27 @@ php_unit &
 function php_lint() {
     if [[ "$PHP_FILES" ]]; then
         # Run php lint.
-        echo "${YELLOW}[pre-commit]${BLUE} Checking PHP Lint... ${WHITE}"
+        echo "${YELLOW}[pre-commit]${BLUE} Checking ${1} Lint... ${WHITE}"
         for FILE in ${PHP_FILES}; do
-            OUTPUT=$(${PHP} -l -d display_errors=0 ${PROJECT}/${FILE})
+            OUTPUT=$(${1} -l -d display_errors=0 ${PROJECT}/${FILE})
             if [[ $? != 0 ]]; then
                 echo
-                echo "${BLUE}PHP Lint Failed. Fix the error before commit."
+                echo "${BLUE}${1} Lint Failed. Fix the error before commit."
                 echo "${RED}$OUTPUT"
                 exit_reset_colors
             fi
         done
-        echo "${YELLOW}[pre-commit]${GREEN} PHP Lint Passed!${WHITE}"
+        echo "${YELLOW}[pre-commit]${GREEN} ${1} Lint Passed!${WHITE}"
     fi
 }
-php_lint &
+
+#-- On Mat's machines run lint against 7.3 and 8.1.
+if [[ "mat" == "$USERNAME" ]]; then
+	php_lint 'php 7.3' &
+    php_lint 'php 8.1' &
+else
+    php_lint 'php' &
+fi
 
 function php_code_sniffer() {
     if [[ "$PHP_FILES" != "" ]]; then
