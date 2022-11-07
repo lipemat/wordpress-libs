@@ -7,7 +7,7 @@
 #
 # @uses Global PHP version as different projects have different requirements.
 #
-# @version 4.2.0
+# @version 4.3.0
 #
 #####################################################################################
 
@@ -75,8 +75,8 @@ function php_lint() {
 	fi
 }
 
-#-- On Mat's machines run lint against 7.3 and 8.1.
-if [[ "mat" == "$USERNAME" ]]; then
+# Lint multiple versions of PHP if supported via environmental variables.
+if [[ "true" == "$PHP_MULTI_VERSION_SUPPORT" ]]; then
 	php_lint 'php 7.3' &
 	php_lint 'php 8.1' &
 else
