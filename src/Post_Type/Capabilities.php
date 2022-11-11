@@ -3,18 +3,15 @@
 namespace Lipe\Lib\Post_Type;
 
 /**
- * Capabilities
+ * A fluent interface for setting post type capabilities.
  *
- * Make all capabilities of a post type to methods which we may
- * interact with.
+ * @link https://developer.wordpress.org/reference/functions/register_post_type/#capabilities
  *
  * @internal
- *
- * @package Lipe\Lib\Post_Type
  */
 class Capabilities {
 	/**
-	 * post_type
+	 * Post type object.
 	 *
 	 * @var Custom_Post_Type_Extended|Custom_Post_Type
 	 */
@@ -22,7 +19,7 @@ class Capabilities {
 
 
 	public function __construct( Custom_Post_Type $post_type ) {
-		$this->post_type               = $post_type;
+		$this->post_type = $post_type;
 		$this->post_type->map_meta_cap = true;
 	}
 

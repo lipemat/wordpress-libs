@@ -5,14 +5,12 @@ namespace Lipe\Lib\Taxonomy;
 use Lipe\Lib\Taxonomy\Extended_TAXOS\Column;
 
 /**
- * Extended Taxonomies.
- *
  * Extends our Taxonomy class with support for additional
  * arguments provided by `extended-cpts`.
  *
  * @link https://github.com/johnbillion/extended-cpts/wiki/Registering-taxonomies
  *
- * @see \register_extended_taxonomy()
+ * @see  \register_extended_taxonomy()
  */
 class Taxonomy_Extended extends Taxonomy {
 
@@ -63,14 +61,14 @@ class Taxonomy_Extended extends Taxonomy {
 	 */
 	public $meta_box;
 
+
 	/**
-	 * Add a column pragmatically
+	 * Add a column programmatically.
 	 *
 	 * Return an object that you can follow along with
-	 * to enter in all params without memorizing any of them
+	 * to enter all params without memorizing any of them.
 	 *
 	 * @example admin_cols()->meta( 'Custom Title', 'custom-meta-key' )->set_as_default_sort_column( 'DESC' )
-	 *
 	 *
 	 * @return Column
 	 */
@@ -109,7 +107,6 @@ class Taxonomy_Extended extends Taxonomy {
 		}
 
 		return $args;
-
 	}
 
 

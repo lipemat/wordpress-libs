@@ -42,7 +42,7 @@ class Custom_Post_Type {
 	public $capability_type = 'post';
 
 	/**
-	 * @link   https://codex.wordpress.org/Function_Reference/register_post_type#capabilities
+	 * @link   https://developer.wordpress.org/reference/functions/register_post_type/#capabilities
 	 *
 	 * @notice if you set only some of these you probably want to
 	 *         set $this->map_meta_cap = true
@@ -82,7 +82,7 @@ class Custom_Post_Type {
 	 *
 	 * @link https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#locking
 	 *
-	 * @var 'all' | 'contentOnly' | 'insert' | null
+	 * @var  'all' | 'contentOnly' | 'insert' | null
 	 */
 	protected $template_lock;
 
@@ -564,10 +564,10 @@ class Custom_Post_Type {
 	/**
 	 * Set a Gutenberg template for this post type.
 	 *
-	 * @param array       $template
-	 * @param 'all' | 'contentOnly' | 'insert' | null $template_lock
+	 * @param array $template
+	 * @param   'all' | 'contentOnly' | 'insert' | null $template_lock
 	 *
-	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-templates/#locking
+	 * @link    https://developer.wordpress.org/block-editor/reference-guides/block-api/block-templates/#locking
 	 *
 	 * @link    https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#custom-post-types
 	 *
@@ -796,7 +796,7 @@ class Custom_Post_Type {
 				return false;
 			}
 			return $is_link;
-		});
+		} );
 
 		add_filter( 'is_post_type_viewable', function( $is_viewable, $post_type ) {
 			if ( $this->post_type === $post_type->name ) {
