@@ -85,8 +85,12 @@ abstract class Translate_Abstract {
 	protected function update_meta_value( $object_id, string $key, $value, string $meta_type ) {
 		$field = $this->get_field( $key );
 		if ( null !== $field ) {
-			if ( null !== $field->sanitization_cb ) {
-				$value = $field->get_cmb2_field()->sanitization_cb( $value );
+			$cmb2_field = $field->get_cmb2_field();
+			if ( null !== $cmb2_field ) {
+				$cmb2_field->object_id( $object_id ); // Store object id for later use.
+				if ( null !== $field->sanitization_cb ) {
+					$value = $cmb2_field->sanitization_cb( $value );
+				}
 			}
 			if ( null !== $field->group ) {
 				return $this->update_group_sub_field_value( $object_id, $key, $value, $meta_type );

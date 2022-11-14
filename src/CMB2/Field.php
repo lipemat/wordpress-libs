@@ -1224,7 +1224,7 @@ class Field {
 
 	/**
 	 * If this field supports using `register_meta` to do sanitization we
-	 * set the `sanitize_callback` property, if not use use the CMB2
+	 * set the `sanitize_callback` property. If not, we use the CMB2
 	 * `sanitize_cb` property to allow CMB2 and/or meta repo to handle sanitization.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
@@ -1299,6 +1299,9 @@ class Field {
 	 */
 	public function default_option_callback() {
 		$cmb2_field = $this->get_cmb2_field();
+		if ( null === $cmb2_field ) {
+			return false;
+		}
 		$cmb2_field->object_id( $this->box->get_id() ); // @phpstan-ignore-line
 		/* @phpstan-ignore-next-line */
 		return \call_user_func( $this->default_cb, $cmb2_field->properties, $cmb2_field );
@@ -1310,9 +1313,9 @@ class Field {
 	 *
 	 * Since 2.22.1
 	 *
-	 * @return \CMB2_Field
+	 * @return ?\CMB2_Field
 	 */
-	public function get_cmb2_field() : \CMB2_Field {
+	public function get_cmb2_field() : ?\CMB2_Field {
 		return cmb2_get_field( $this->box->get_id(), $this->get_id() );
 	}
 
