@@ -238,7 +238,7 @@ class Taxonomy {
 	 * @type string $name        Name of default term.
 	 * @type string $slug        Slug for default term. Default empty.
 	 * @type string $description Description for default term. Default empty.
-	 *     }
+	 *                           }
 	 */
 	public $default_term;
 
@@ -463,7 +463,7 @@ class Taxonomy {
 	/**
 	 * Specify terms to be added automatically when a taxonomy is created.
 	 *
-	 * @param array $terms = array( <slug> => <name> );
+	 * @param array $terms = array( <slug> => <name> ) || array( <name> )
 	 *
 	 * @return void
 	 */
@@ -483,7 +483,7 @@ class Taxonomy {
 	 * @param string $column
 	 */
 	public function remove_column( string $column ) : void {
-		add_filter( "manage_edit-{$this->taxonomy}_columns", function ( $columns ) use ( $column ) {
+		add_filter( "manage_edit-{$this->taxonomy}_columns", function( $columns ) use ( $column ) {
 			unset( $columns[ $column ] );
 			return $columns;
 		} );
@@ -590,9 +590,9 @@ class Taxonomy {
 	 * @see   Taxonomy::__construct()
 	 */
 	public function show_admin_column( string $label ) : void {
-		Actions::in()->add_filter_all( array_map( function ( $post_type ) {
+		Actions::in()->add_filter_all( array_map( function( $post_type ) {
 			return "manage_{$post_type}_posts_columns";
-		}, $this->post_types ), function ( array $columns ) use ( $label ) {
+		}, $this->post_types ), function( array $columns ) use ( $label ) {
 			$columns[ 'taxonomy-' . $this->taxonomy ] = $label;
 			return $columns;
 		} );
