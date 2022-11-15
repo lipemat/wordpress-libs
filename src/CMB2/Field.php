@@ -4,6 +4,7 @@ namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
 use Lipe\Lib\Meta\Repo;
+use Lipe\Lib\Meta\Translate_Abstract;
 use Lipe\Lib\Util\Arrays;
 
 /**
@@ -690,6 +691,16 @@ class Field {
 	 */
 	protected $box;
 
+	/**
+	 * Internal property to hold a callback function when
+	 * a meta key is deleted.
+	 *
+	 * @internal
+	 *
+	 * @var callable
+	 */
+	public $delete_cb;
+
 
 	/**
 	 * Field constructor.
@@ -1219,6 +1230,30 @@ class Field {
 	 */
 	public function is_using_array_data() : bool {
 		return $this->repeatable || 'multicheck' === $this->get_type() || 'multicheck_inline' === $this->get_type();
+	}
+
+
+	/**
+	 * Callback to be fired when a meta item is deleted.
+	 *
+	 * Fired when:
+	 * 1. A meta key is deleted using the repo.
+	 * 2. An empty meta value is passed when CMB2 is saving a post.
+	 *
+	 * @since 3.13.0
+	 *
+	 * @see Translate_Abstract::handle_delete_callback()
+	 *
+	 * @param callable $callback
+	 *
+	 * @return Field
+	 */
+	public function delete_cb( callable $callback ) : Field {
+		$this->delete_cb = $callback;
+		add_filter( "cmb2_override_{$this->get_id()}_meta_remove", function( $_, $value, array $args, \CMB2_Field $field ) {
+			Repo::in()->handle_delete_callback( $field->object_id(), $this->get_id(), $this->box->get_object_type() );
+		}, 10, 4 );
+		return $this;
 	}
 
 
