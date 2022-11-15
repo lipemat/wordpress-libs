@@ -122,6 +122,8 @@ abstract class Translate_Abstract {
 			$this->update_meta_value( $object_id, $key, $group, $meta_type );
 		}
 
+		$this->handle_delete_callback( $object_id, $key, $meta_type );
+
 		if ( 'option' === $meta_type ) {
 			cmb2_options( $object_id )->remove( $key, true );
 		} else {
@@ -417,6 +419,7 @@ abstract class Translate_Abstract {
 		if ( 'post' !== $meta_type ) {
 			$this->delete_meta_value( $object_id, $field_id, $meta_type );
 		} else {
+			$this->handle_delete_callback( $object_id, $field_id, $meta_type );
 			$taxonomy = $this->get_field( $field_id )->taxonomy;
 			wp_delete_object_term_relationships( $object_id, $taxonomy );
 		}
@@ -466,5 +469,35 @@ abstract class Translate_Abstract {
 			restore_current_blog();
 		}
 		return $result;
+	}
+
+
+	/**
+	 * If a delete callback exists, call it.
+	 *
+	 * We mimic the same arguments as the cmb2 filter as the `delete_cb`
+	 * will also be called when saving an empty value to meta in the admin.
+	 *
+	 * @since 3.13.0
+	 *
+	 * @see "cmb2_override_{$a['field_id']}_meta_remove"
+	 *
+	 * @see \Lipe\Lib\CMB2\Field::delete_cb
+	 *
+	 * @param string|int $object_id
+	 * @param string     $key
+	 * @param string     $meta_type
+	 *
+	 * @return void
+	 */
+	public function handle_delete_callback( $object_id, string $key, string $meta_type ) : void {
+		$field = $this->get_field( $key );
+		if ( null === $field ) {
+			return;
+		}
+		$cmb2_field = $field->get_cmb2_field();
+		if ( null !== $field->delete_cb && null !== $cmb2_field ) {
+			\call_user_func( $field->delete_cb, $object_id, $key, $meta_type );
+		}
 	}
 }
