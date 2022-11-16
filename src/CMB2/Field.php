@@ -1223,7 +1223,7 @@ class Field {
 
 
 	/**
-	 * Does this field return a value of array type.
+	 * Does this field return a value of array type?
 	 *
 	 * @internal
 	 *
@@ -1231,6 +1231,18 @@ class Field {
 	 */
 	public function is_using_array_data() : bool {
 		return $this->repeatable || 'multicheck' === $this->get_type() || 'multicheck_inline' === $this->get_type();
+	}
+
+
+	/**
+	 * Does this field return a value of object type?
+	 *
+	 * @internal
+	 *
+	 * @return bool
+	 */
+	public function is_using_object_data() : bool {
+		return ! $this->repeatable && 'file_list' === $this->get_type();
 	}
 
 

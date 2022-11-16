@@ -147,18 +147,32 @@ trait Box_Trait {
 		if ( $field->is_using_array_data() ) {
 			$config['type'] = 'array';
 		}
+		if ( $field->is_using_object_data() ) {
+			$config['type'] = 'object';
+		}
+
 		if ( $field->show_in_rest && $this->is_public_rest_data( $field ) ) {
-				$config['show_in_rest'] = $field->show_in_rest;
-				if ( $field->is_using_array_data() ) {
-					$config['show_in_rest'] = [
-						'schema' => [
-							'items' => [
-								'type' => 'string',
-							],
+			$config['show_in_rest'] = $field->show_in_rest;
+			if ( $field->is_using_array_data() ) {
+				$config['show_in_rest'] = [
+					'schema' => [
+						'items' => [
+							'type' => 'string',
 						],
-					];
-				}
+					],
+				];
 			}
+
+			if ( $field->is_using_object_data() ) {
+				$config['show_in_rest'] = [
+					'schema' => [
+						'additionalProperties' => [
+							'type' => 'string',
+						],
+					],
+				];
+			}
+		}
 
 		$this->register_meta_on_all_types( $field, $config );
 	}

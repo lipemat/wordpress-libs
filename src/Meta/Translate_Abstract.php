@@ -173,7 +173,7 @@ abstract class Translate_Abstract {
 
 	/**
 	 * CMB2 saves file fields as 2 separate meta keys.
-	 * This returns an array of both of them.
+	 * This returns an array of both.
 	 *
 	 * @param int|string $object_id
 	 * @param string     $key

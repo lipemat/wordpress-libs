@@ -1167,7 +1167,7 @@ class Field_Type {
 	public function file_list( $button_text = null, $file_mime_type = null, $preview_size = null, $remove_item_text = null, $file_text = null, $download_text = null, $select_text = null ) : Field {
 		$_args = $this->field_type_file( $this->file_list, $button_text, $file_mime_type, null, $preview_size, $remove_item_text, $file_text, $download_text, $select_text );
 
-		return $this->set( $_args, Repo::FILE );
+		return $this->set( $_args, Repo::DEFAULT );
 	}
 
 
