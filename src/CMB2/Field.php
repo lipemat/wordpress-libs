@@ -1250,9 +1250,19 @@ class Field {
 	 */
 	public function delete_cb( callable $callback ) : Field {
 		$this->delete_cb = $callback;
-		add_filter( "cmb2_override_{$this->get_id()}_meta_remove", function( $_, $value, array $args, \CMB2_Field $field ) {
-			Repo::in()->handle_delete_callback( $field->object_id(), $this->get_id(), $this->box->get_object_type() );
-		}, 10, 4 );
+
+		if ( $this->box->is_allowed_to_register_meta( $this) ) {
+			add_action( "delete_{$this->box->get_object_type()}_meta", function( $_, $object_id, $key ) {
+				if ( $key === $this->get_id() ) {
+					Repo::in()->handle_delete_callback( $object_id, $key, $this->box->get_object_type() );
+				}
+			}, 10, 4 );
+		} else {
+			add_filter( "cmb2_override_{$this->get_id()}_meta_remove", function( $_, $value, array $args, \CMB2_Field $field ) {
+				Repo::in()->handle_delete_callback( $field->object_id(), $this->get_id(), $this->box->get_object_type() );
+			}, 10, 4 );
+		}
+
 		return $this;
 	}
 
