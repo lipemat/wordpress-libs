@@ -122,9 +122,10 @@ abstract class Translate_Abstract {
 			$this->update_meta_value( $object_id, $key, $group, $meta_type );
 		}
 
-		$this->handle_delete_callback( $object_id, $key, $meta_type );
 
 		if ( 'option' === $meta_type ) {
+			$this->handle_delete_callback( $object_id, $key, $meta_type );
+
 			cmb2_options( $object_id )->remove( $key, true );
 		} else {
 			delete_metadata( $meta_type, $object_id, $key );
@@ -416,11 +417,11 @@ abstract class Translate_Abstract {
 	 * @return void
 	 */
 	public function delete_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : void {
-		$this->handle_delete_callback( $object_id, $field_id, $meta_type );
 
 		if ( 'post' !== $meta_type ) {
 			$this->delete_meta_value( $object_id, $field_id, $meta_type );
 		} else {
+			$this->handle_delete_callback( $object_id, $field_id, $meta_type );
 			$taxonomy = $this->get_field( $field_id )->taxonomy;
 			wp_delete_object_term_relationships( $object_id, $taxonomy );
 		}
