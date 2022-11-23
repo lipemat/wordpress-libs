@@ -780,6 +780,23 @@ class Custom_Post_Type {
 
 
 	/**
+	 * Exclude this post type from sitemaps.
+	 *
+	 * If the post type is publicly viewable, this does nothing.
+	 *
+	 * @since 13.14.0
+	 *
+	 * @return void
+	 */
+	public function exclude_from_sitemaps() : void {
+		add_filter( 'wp_sitemaps_post_types', function( $types ) {
+			unset( $types[ $this->post_type ] );
+			return $types;
+		} );
+	}
+
+
+	/**
 	 * Disable single template while leaving the archive intact.
 	 *
 	 * @link     https://wordpress.stackexchange.com/a/403951/129914
