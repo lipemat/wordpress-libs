@@ -750,6 +750,16 @@ class Field {
 
 
 	/**
+	 * Get the box this field is assigned to.
+	 *
+	 * @return Box|Group|null
+	 */
+	public function get_box() {
+		return $this->box;
+	}
+
+
+	/**
 	 * Enable a character/word counter for a 'textarea', 'wysiwyg', or 'text' type field.
 	 *
 	 * @param bool     $count_words - Count words instead of characters.
