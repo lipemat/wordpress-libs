@@ -303,6 +303,32 @@ abstract class Db {
 
 
 	/**
+	 * Replace a row in the table.
+	 *
+	 * Works exactly like `add` except if an old row in the table
+	 * has the same value in a unique index, the old row is deleted
+	 * before the new row is added.
+	 *
+	 * @since 3.14.0
+	 *
+	 * @param array $columns
+	 *
+	 * @return int|bool - insert id on success or false
+	 */
+	public function replace( array $columns ) : bool | int {
+		global $wpdb;
+
+		$columns = $this->sort_columns( $columns );
+
+		if ( $wpdb->replace( $this->get_table(), $columns, self::COLUMNS ) ) { //phpcs:ignore
+			return $wpdb->insert_id;
+		}
+
+		return false;
+	}
+
+
+	/**
 	 * Get the sprintf style formats matching an array of columns
 	 *
 	 * @link https://www.php.net/manual/en/function.sprintf.php

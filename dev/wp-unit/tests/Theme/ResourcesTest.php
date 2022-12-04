@@ -53,10 +53,19 @@ class ResourcesTest extends \WP_UnitTestCase {
 
 
 	public function test_get_content_hash() : void {
-		echo plugins_url( 'ResourcesTest.php', __FILE__ );
 		$this->assertEquals( md5_file( __FILE__ ), Resources::in()->get_content_hash( plugins_url( 'ResourcesTest.php', __FILE__ ) ) );
 		$this->assertEquals( md5_file( __FILE__ ), Resources::in()->get_content_hash( plugins_url( 'ResourcesTest.php', __FILE__ ) ) );
 		$this->assertNull( Resources::in()->get_content_hash( 'http://i-dont-exist/anywhere' ) );
+	}
+
+	public function test_get_file_modified_time() : void {
+		$this->assertEquals( filemtime( __FILE__ ), Resources::in()->get_file_modified_time( plugins_url( 'ResourcesTest.php', __FILE__ ) ) );
+		$this->assertNull( Resources::in()->get_content_hash( 'http://i-dont-exist/anywhere' ) );
+
+		$time = time();
+		touch( __FILE__, $time );
+	    filemtime( __FILE__ ); //prime the time.
+		$this->assertEquals( $time, Resources::in()->get_file_modified_time( plugins_url( 'ResourcesTest.php', __FILE__ ) ) );
 	}
 
 

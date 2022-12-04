@@ -34,7 +34,6 @@
 		<exclude name="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid" />
 		<exclude name="WordPress.NamingConventions.ValidHookName.UseUnderscores" />
 		<exclude name="WordPress.PHP.DisallowShortTernary.Found" />
-		<exclude name="WordPress.PHP.YodaConditions.NotYoda" />
 		<exclude name="Generic" />
 		<exclude name="Squiz" />
 	</rule>

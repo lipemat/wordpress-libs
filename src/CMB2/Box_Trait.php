@@ -112,15 +112,27 @@ trait Box_Trait {
 		$show_in_rest = $this->show_in_rest;
 
 		// Run through the fields first for adjustments to box config.
-		array_walk( $fields, function ( Field $field ) use ( $show_in_rest ) {
+		\array_walk( $fields, function( Field $field ) use ( $show_in_rest ) {
 			$this->register_meta( $field );
 			if ( empty( $show_in_rest ) ) {
 				$this->selectively_show_in_rest( $field );
 			}
 		} );
 
-		array_walk( $fields, function ( Field $field ) {
+		\array_walk( $fields, function( Field $field ) {
 			$this->add_field_to_box( $field );
+
+			/**
+			 * Provide a deprecated message for assistance with configuring user
+			 * term fields in version 4.
+			 */
+			if (
+				null === $field->store_user_terms_in_meta &&
+				\in_array( $field->data_type, [ Repo::TAXONOMY, Repo::TAXONOMY_SINGULAR ], true ) &&
+				\in_array( 'user', $this->get_object_types(), true )
+			) {
+				_deprecated_argument( 'store_user_terms_in_meta', '4.0.0', 'User terms will be stored in meta by default in version 4. Call `store_user_terms_in_meta( false )` before updating to version 4.' );
+			}
 		} );
 	}
 
@@ -147,18 +159,32 @@ trait Box_Trait {
 		if ( $field->is_using_array_data() ) {
 			$config['type'] = 'array';
 		}
+		if ( $field->is_using_object_data() ) {
+			$config['type'] = 'object';
+		}
+
 		if ( $field->show_in_rest && $this->is_public_rest_data( $field ) ) {
-				$config['show_in_rest'] = $field->show_in_rest;
-				if ( $field->is_using_array_data() ) {
-					$config['show_in_rest'] = [
-						'schema' => [
-							'items' => [
-								'type' => 'string',
-							],
+			$config['show_in_rest'] = $field->show_in_rest;
+			if ( $field->is_using_array_data() ) {
+				$config['show_in_rest'] = [
+					'schema' => [
+						'items' => [
+							'type' => 'string',
 						],
-					];
-				}
+					],
+				];
 			}
+
+			if ( $field->is_using_object_data() ) {
+				$config['show_in_rest'] = [
+					'schema' => [
+						'additionalProperties' => [
+							'type' => 'string',
+						],
+					],
+				];
+			}
+		}
 
 		$this->register_meta_on_all_types( $field, $config );
 	}

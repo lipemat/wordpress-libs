@@ -53,10 +53,11 @@ class Resources {
 	 * 2. Provides an easy reference to the commit revision during browser debugging.
 	 * 3. Lighter than `get_content_hash`.
 	 *
-	 * Preferred method if using `shortCssClasses`, or releases
-	 * frequently include changes to this resource.
+	 * Preferred method if using `shortCssClasses`, or releases frequently include changes
+	 * to this resource or update the file modified time of this resource.
 	 *
 	 * @see Resources::get_content_hash()
+	 * @see Resources::get_file_modified_time()
 	 *
 	 * @return null|string
 	 */
@@ -85,17 +86,18 @@ class Resources {
 	 * changed based on the content within a file.
 	 *
 	 * Keeps a file in browser cache longer if the revision changes
-	 * frequently, but the file does not.
+	 * frequently, but the file content does not.
 	 *
-	 * 1. Keeps file in browser cache forever until it changes.
+	 * 1. Keeps file in browser cache forever until the content within the file changes.
 	 * 2. Slower than `get_revision`.
 	 * 3. Pointless if `shortCssClasses` are enabled because resource files
 	 *    change on every release.
 	 *
 	 * Preferred method if not using `shortCssClasses` and releases occur
-	 * much more frequently than this resource changes.
+	 * much more frequently, or the file is touched more frequently than the content of this resource changes.
 	 *
 	 * @see Resources::get_revision()
+	 * @see Resources::get_file_modified_time()
 	 *
 	 * @param string $url - URL to a local script or style.
 	 *
@@ -109,6 +111,49 @@ class Resources {
 
 		if ( \file_exists( $this->get_site_root() . $path ) ) {
 			return \md5_file( $this->get_site_root() . $path ) ?: null;
+		}
+		return null;
+	}
+
+
+	/**
+	 * Get the modified time of a script/style based on its url.
+	 *
+	 * Used to pass a version to browsers to tell them if a file has
+	 * changed based on last time a file was modified.
+	 *
+	 * Keeps a file in browser cache longer if a file revision changes
+	 * frequently, but a file is not modified often by the deployment
+	 * process nor content changes.
+	 *
+	 * 1. Keeps file in browser cache forever until it changes.
+	 * 2. 16x faster than `Resources::get_content_hash`.
+	 * 3. If a file is touched often without modified the content,
+	 *    `get_content_hash` is preferred.
+	 * 4. Pointless if `shortCssClasses` are enabled because resource files
+	 *    change on every release.
+	 *
+	 * Preferred method if not using `shortCssClasses` and releases occur
+	 * much more frequently than this file is touched by release or
+	 * other processes.
+	 *
+	 * @see Resources::get_revision()
+	 * @see Resources::get_content_hash()
+	 *
+	 * @since 3.14.0
+	 *
+	 * @param string $url - URL to a local script or style.
+	 *
+	 * @return int|null
+	 */
+	public function get_file_modified_time( string $url ) : ?int {
+		$path = wp_parse_url( $url, PHP_URL_PATH );
+		if ( ! $path ) {
+			return null;
+		}
+
+		if ( \file_exists( $this->get_site_root() . $path ) ) {
+			return \filemtime( $this->get_site_root() . $path ) ?: null;
 		}
 		return null;
 	}

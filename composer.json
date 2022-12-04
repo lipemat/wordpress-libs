@@ -12,6 +12,9 @@
       "email": "mat@onpointplugins.com"
     }
   ],
+  "scripts": {
+    "git-hooks": "dev/bin/git-hooks.sh"
+  },
   "autoload": {
     "psr-4": {
       "Lipe\\Lib\\": "src/"

@@ -214,6 +214,15 @@ class Group extends Field {
 						],
 					];
 				}
+				if ( $field->is_using_object_data() ) {
+					$properties[ $field->get_id() ] = [
+						'type'                 => 'object',
+						'additionalProperties' => [
+							'type' => 'string',
+						],
+					];
+				}
+
 				if ( Repo::FILE === $field->data_type ) {
 					$properties[ $field->get_id() . '_id' ] = [
 						'type' => 'number',

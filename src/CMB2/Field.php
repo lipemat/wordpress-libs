@@ -5,6 +5,7 @@ namespace Lipe\Lib\CMB2;
 use Lipe\Lib\CMB2\Box\Tabs;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Meta\Translate_Abstract;
+use Lipe\Lib\Util\Actions;
 use Lipe\Lib\Util\Arrays;
 
 /**
@@ -595,6 +596,19 @@ class Field {
 	public $show_on_cb;
 
 	/**
+	 * Save terms assigned to users as meta instead of the default
+	 * object terms system.
+	 *
+	 * Prevent conflicts with User ID and Post ID in the same
+	 * `term_relationship` table.
+	 *
+	 * @notice As of version 4, the default will be `true`.
+	 *
+	 * @var bool
+	 */
+	public $store_user_terms_in_meta;
+
+	/**
 	 * Id of boxes tab which this field should display in.
 	 * The tab must be first registered with the box
 	 *
@@ -745,6 +759,16 @@ class Field {
 	 */
 	public function get_name() : string {
 		return $this->name;
+	}
+
+
+	/**
+	 * Get the box this field is assigned to.
+	 *
+	 * @return Box|Group|null
+	 */
+	public function get_box() {
+		return $this->box;
 	}
 
 
@@ -1107,6 +1131,32 @@ class Field {
 
 
 	/**
+	 * Save terms assigned to users as meta instead of the default
+	 * object terms system.
+	 *
+	 * Prevent conflicts with User ID and Post ID in the same
+	 * `term_relationship` table.
+	 *
+	 * @note   The meta repo has never supported using object terms so setting
+	 *         this to false will not change the behavior of the meta repo.
+	 *
+	 * @notice As of version 4, the default will be `true` so this need only
+	 *         be called with `false`.
+	 *
+	 *
+	 * @return Field
+	 */
+	public function store_user_terms_in_meta( bool $use_meta = true ) : Field {
+		if ( ! \in_array( $this->data_type, [ Repo::TAXONOMY, Repo::TAXONOMY_SINGULAR ], true ) || ! \in_array( 'user', $this->get_box()->get_object_types(), true ) ) {
+			_doing_it_wrong( __METHOD__, 'Storing user terms in meta only applies to taxonomy fields registered on users.', '3.14.0' );
+		}
+		$this->store_user_terms_in_meta = $use_meta;
+
+		return $this;
+	}
+
+
+	/**
 	 * Field parameter, which can be used by the 'taxonomy_*', and the 'file_*' field types.
 	 * For the 'taxonomy_*' types, provides ability
 	 * to override the arguments passed to get_terms(), and for the 'file_*' field types,
@@ -1222,7 +1272,7 @@ class Field {
 
 
 	/**
-	 * Does this field return a value of array type.
+	 * Does this field return a value of array type?
 	 *
 	 * @internal
 	 *
@@ -1230,6 +1280,18 @@ class Field {
 	 */
 	public function is_using_array_data() : bool {
 		return $this->repeatable || 'multicheck' === $this->get_type() || 'multicheck_inline' === $this->get_type();
+	}
+
+
+	/**
+	 * Does this field return a value of object type?
+	 *
+	 * @internal
+	 *
+	 * @return bool
+	 */
+	public function is_using_object_data() : bool {
+		return ! $this->repeatable && 'file_list' === $this->get_type();
 	}
 
 
@@ -1250,9 +1312,19 @@ class Field {
 	 */
 	public function delete_cb( callable $callback ) : Field {
 		$this->delete_cb = $callback;
-		add_filter( "cmb2_override_{$this->get_id()}_meta_remove", function( $_, $value, array $args, \CMB2_Field $field ) {
-			Repo::in()->handle_delete_callback( $field->object_id(), $this->get_id(), $this->box->get_object_type() );
-		}, 10, 4 );
+
+		if ( $this->box->is_allowed_to_register_meta( $this ) ) {
+			add_action( "delete_{$this->box->get_object_type()}_meta", function( $_, $object_id, $key ) {
+				if ( $key === $this->get_id() ) {
+					Repo::in()->handle_delete_callback( $object_id, $key, $this->box->get_object_type() );
+				}
+			}, 10, 4 );
+		} else {
+			Actions::in()->add_filter_as_action( "cmb2_override_{$this->get_id()}_meta_remove", function( $_, $value, array $args, \CMB2_Field $field ) {
+				Repo::in()->handle_delete_callback( $field->object_id(), $this->get_id(), $this->box->get_object_type() );
+			} );
+		}
+
 		return $this;
 	}
 

@@ -122,9 +122,10 @@ abstract class Translate_Abstract {
 			$this->update_meta_value( $object_id, $key, $group, $meta_type );
 		}
 
-		$this->handle_delete_callback( $object_id, $key, $meta_type );
 
 		if ( 'option' === $meta_type ) {
+			$this->handle_delete_callback( $object_id, $key, $meta_type );
+
 			cmb2_options( $object_id )->remove( $key, true );
 		} else {
 			delete_metadata( $meta_type, $object_id, $key );
@@ -172,7 +173,7 @@ abstract class Translate_Abstract {
 
 	/**
 	 * CMB2 saves file fields as 2 separate meta keys.
-	 * This returns an array of both of them.
+	 * This returns an array of both.
 	 *
 	 * @param int|string $object_id
 	 * @param string     $key
@@ -416,6 +417,7 @@ abstract class Translate_Abstract {
 	 * @return void
 	 */
 	public function delete_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : void {
+
 		if ( 'post' !== $meta_type ) {
 			$this->delete_meta_value( $object_id, $field_id, $meta_type );
 		} else {
