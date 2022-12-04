@@ -602,11 +602,9 @@ class Field {
 	 * Prevent conflicts with User ID and Post ID in the same
 	 * `term_relationship` table.
 	 *
-	 * @notice As of version 4, the default will be `true`.
-	 *
 	 * @var bool
 	 */
-	public $store_user_terms_in_meta;
+	public $store_user_terms_in_meta = true;
 
 	/**
 	 * Id of boxes tab which this field should display in.
@@ -1140,9 +1138,10 @@ class Field {
 	 * @note   The meta repo has never supported using object terms so setting
 	 *         this to false will not change the behavior of the meta repo.
 	 *
-	 * @notice As of version 4, the default will be `true` so this need only
-	 *         be called with `false`.
+	 * @notice The default value is `true` so this need only be called with `false`.
 	 *
+	 *
+	 * @param bool $use_meta
 	 *
 	 * @return Field
 	 */

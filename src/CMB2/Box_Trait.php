@@ -121,18 +121,6 @@ trait Box_Trait {
 
 		\array_walk( $fields, function( Field $field ) {
 			$this->add_field_to_box( $field );
-
-			/**
-			 * Provide a deprecated message for assistance with configuring user
-			 * term fields in version 4.
-			 */
-			if (
-				null === $field->store_user_terms_in_meta &&
-				\in_array( $field->data_type, [ Repo::TAXONOMY, Repo::TAXONOMY_SINGULAR ], true ) &&
-				\in_array( 'user', $this->get_object_types(), true )
-			) {
-				_deprecated_argument( 'store_user_terms_in_meta', '4.0.0', 'User terms will be stored in meta by default in version 4. Call `store_user_terms_in_meta( false )` before updating to version 4.' );
-			}
 		} );
 	}
 
