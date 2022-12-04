@@ -1279,9 +1279,8 @@ class Field_Type {
 	 */
 	protected function field_type_taxonomy( $type, $taxonomy, $no_terms_text = null, $remove_default = null ) : array {
 		$_args = [
-			'type'                     => $type,
-			'taxonomy'                 => $taxonomy,
-			'store_user_terms_in_meta' => true,
+			'type'     => $type,
+			'taxonomy' => $taxonomy,
 		];
 		if ( null !== $remove_default ) {
 			$_args['remove_default'] = $remove_default;

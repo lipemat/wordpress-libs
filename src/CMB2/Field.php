@@ -596,6 +596,19 @@ class Field {
 	public $show_on_cb;
 
 	/**
+	 * Save terms assigned to users as meta instead of the default
+	 * object terms system.
+	 *
+	 * Prevent conflicts with User ID and Post ID in the same
+	 * `term_relationship` table.
+	 *
+	 * @notice As of version 4, the default will be `true`.
+	 *
+	 * @var bool
+	 */
+	public $store_user_terms_in_meta;
+
+	/**
 	 * Id of boxes tab which this field should display in.
 	 * The tab must be first registered with the box
 	 *
@@ -1112,6 +1125,32 @@ class Field {
 	 */
 	public function show_on_cb( callable $func ) : Field {
 		$this->show_on_cb = $func;
+
+		return $this;
+	}
+
+
+	/**
+	 * Save terms assigned to users as meta instead of the default
+	 * object terms system.
+	 *
+	 * Prevent conflicts with User ID and Post ID in the same
+	 * `term_relationship` table.
+	 *
+	 * @note   The meta repo has never supported using object terms so setting
+	 *         this to false will not change the behavior of the meta repo.
+	 *
+	 * @notice As of version 4, the default will be `true` so this need only
+	 *         be called with `false`.
+	 *
+	 *
+	 * @return Field
+	 */
+	public function store_user_terms_in_meta( bool $use_meta = true ) : Field {
+		if ( ! \in_array( $this->data_type, [ Repo::TAXONOMY, Repo::TAXONOMY_SINGULAR ], true ) || ! \in_array( 'user', $this->get_box()->get_object_types(), true ) ) {
+			_doing_it_wrong( __METHOD__, 'Storing user terms in meta only applies to taxonomy fields registered on users.', '3.14.0' );
+		}
+		$this->store_user_terms_in_meta = $use_meta;
 
 		return $this;
 	}
