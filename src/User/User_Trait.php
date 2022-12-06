@@ -67,7 +67,11 @@ trait User_Trait {
 	 */
 	public function __construct( $user = null ) {
 		if ( null === $user ) {
-			$this->user_id = get_current_user_id();
+			if ( is_user_logged_in() ) {
+				$this->user_id = get_current_user_id();
+			} else {
+				_doing_it_wrong( __CLASS__, "You can't use the `User` object without a user id available.", '3.14.0' );
+			}
 		} elseif ( is_a( $user, \WP_User::class ) ) {
 			$this->user = $user;
 			$this->user_id = $user->ID;
