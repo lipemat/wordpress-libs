@@ -80,11 +80,11 @@ class Taxonomy_Extended extends Taxonomy {
 	/**
 	 * Special meta box UI.
 	 *
-	 * @param 'radio'|'dropdown'|'simple' $type - Type of meta box UI.
+	 * @param 'radio'|'dropdown'|'simple'| callable $type - Type of meta box UI.
 	 *
 	 * @return void
 	 */
-	public function meta_box( string $type ) : void {
+	public function meta_box( $type ) : void {
 		$this->meta_box = $type;
 	}
 
