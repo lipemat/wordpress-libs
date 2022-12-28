@@ -10,7 +10,6 @@ use Lipe\Lib\Traits\Singleton;
 class Url {
 	use Singleton;
 
-
 	/**
 	 * Returns the url of the page you are currently on
 	 *
@@ -19,7 +18,7 @@ class Url {
 	public function get_current_url() : string {
 		$prefix = is_ssl() ? 'https://' : 'http://';
 
-		return $prefix .$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; //phpcs:ignore
+		return esc_url_raw( $prefix . wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) . wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) );
 	}
 
 
