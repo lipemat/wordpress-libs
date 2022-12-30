@@ -344,6 +344,19 @@ class Taxonomy {
 
 
 	/**
+	 * Set capabilities for the taxonomy using the methods
+	 * of the Capabilities class.
+	 *
+	 * @since 3.15.0
+	 *
+	 * @return Capabilities
+	 */
+	public function capabilities() : Capabilities {
+		return new Capabilities( $this );
+	}
+
+
+	/**
 	 * If the taxonomies registered through this API have changed,
 	 * rewrite rules need to be flushed.
 	 *
