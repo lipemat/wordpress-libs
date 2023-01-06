@@ -43,8 +43,6 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @method string translate_level_to_cap( int $level )
  * @method void for_site( int $site_id = '' )
  * @method int get_site_id()
- *
- *
  */
 trait User_Trait {
 	use Mutator_Trait;
@@ -97,6 +95,35 @@ trait User_Trait {
 
 	public function get_meta_type() : string {
 		return 'user';
+	}
+
+
+	/**
+	 * Access to extended properties from WP_User which
+	 * are not available on `WP_User::$data`.
+	 *
+	 * @see \WP_User::__get
+	 * @see Mutator_Trait::__get
+	 *
+	 * @return array
+	 */
+	protected function get_extended_properties() : array {
+		return [
+			'deleted',
+			'description',
+			'first_name',
+			'last_name',
+			'locale',
+			'nickname',
+			'rich_editing',
+			'spam',
+			'syntax_highlighting',
+			'use_ssl',
+			'user_description',
+			'user_firstname',
+			'user_lastname',
+			'user_level',
+		];
 	}
 
 
