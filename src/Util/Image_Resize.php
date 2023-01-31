@@ -168,7 +168,6 @@ class Image_Resize {
 	 *                      'class' => '',
 	 *                      'title' => '',
 	 *                      'size' => '',
-	 *                      'image_scan' => false, //grab image from content if nothing else available
 	 *                      'width' => null,
 	 *                      'height' => null,
 	 *                      'crop' => false,
@@ -195,7 +194,6 @@ class Image_Resize {
 			'width'      => null,
 			'height'     => null,
 			'crop'       => false,
-			'image_scan' => false,
 			'output'     => 'img',
 			'link'       => '',
 			'link_class' => '',
@@ -223,12 +221,6 @@ class Image_Resize {
 			global $post;
 			$image_id = $post->ID;
 			$image_url = wp_get_attachment_url( $image_id );
-		}
-
-		// @deprecated Will be removed in V4.
-		if ( empty( $image_url ) && $args['image_scan'] ) {
-			$image_id = null;
-			$image_url = $this->get_image_from_content( $args['post_id'] );
 		}
 
 		if ( ! isset( $image_url ) || ( empty( $image_url ) && empty( $image_id ) ) ) {
@@ -564,37 +556,4 @@ class Image_Resize {
 			'height' => $image_src[2],
 		];
 	}
-
-
-	/**
-	 * @deprecated Will be removed in V4.
-	 */
-	public function get_image_from_content( $post_id = 0 ) {
-		_deprecated_function( __METHOD__, '3.8.0' );
-
-		if ( empty( $post_id ) ) {
-			$post_id = (int) get_the_ID();
-			if ( empty( $post_id ) ) {
-				return null;
-			}
-		}
-
-		$first_img = wp_cache_get( __METHOD__ . ':' . $post_id, 'default' );
-		if ( false !== $first_img ) {
-			return $first_img;
-		}
-
-		$content = get_post_field( 'post_content', $post_id );
-		if ( empty( $content ) ) {
-			$first_img = '';
-		} else {
-			preg_match_all( '/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $content, $matches );
-			$first_img = $matches[1][0] ?? '';
-		}
-
-		wp_cache_set( __METHOD__ . ':' . $post_id, $first_img, 'default', DAY_IN_SECONDS );
-
-		return $first_img;
-	}
-
 }
