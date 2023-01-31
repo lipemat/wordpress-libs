@@ -47,7 +47,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public bool $public;
+	public $public;
 
 	/**
 	 * Whether the taxonomy is publicly queryable.
@@ -56,7 +56,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public bool $publicly_queryable;
+	public $publicly_queryable;
 
 	/**
 	 * Whether to generate a default UI for managing this taxonomy.
@@ -65,7 +65,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public bool $show_ui;
+	public $show_ui;
 
 	/**
 	 * Show this taxonomy in the admin menu.
@@ -97,7 +97,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public bool $show_in_nav_menus;
+	public $show_in_nav_menus;
 
 	/**
 	 * Whether to include the taxonomy in the REST API
@@ -253,7 +253,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public bool $sort;
+	public $sort;
 
 	/**
 	 * The taxonomy slug.
@@ -786,7 +786,7 @@ class Taxonomy {
 	 * Retrieve a singular or plural label.
 	 * Auto generate the label if necessary.
 	 *
-	 * @param 'plural' | 'singular' - $quantity
+	 * @param 'plural' | 'singular' $quantity
 	 *
 	 * @return string
 	 */

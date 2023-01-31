@@ -161,12 +161,12 @@ class Custom_Post_Type {
 	/**
 	 * @var bool
 	 */
-	public bool $publicly_queryable;
+	public $publicly_queryable;
 
 	/**
 	 * @var bool
 	 */
-	public bool $exclude_from_search;
+	public $exclude_from_search;
 
 	/**
 	 * Enables post type archives.
@@ -193,22 +193,22 @@ class Custom_Post_Type {
 	/**
 	 * @var bool
 	 */
-	public bool $show_ui;
+	public $show_ui;
 
 	/**
 	 * @var bool
 	 */
-	public bool $show_in_menu;
+	public $show_in_menu;
 
 	/**
 	 * @var bool
 	 */
-	public bool $show_in_nav_menus;
+	public $show_in_nav_menus;
 
 	/**
 	 * @var bool
 	 */
-	public bool $show_in_admin_bar;
+	public $show_in_admin_bar;
 
 	/**
 	 * Whether to delete posts of this type when deleting a user.
@@ -471,7 +471,7 @@ class Custom_Post_Type {
 			'item_reverted_to_draft'   => sprintf( __( '%s reverted to draft.' ), $single ),
 			'item_scheduled'           => sprintf( __( '%s scheduled.' ), $single ),
 			'item_updated'             => sprintf( __( '%s updated.' ), $single ),
-			'menu_name'                => $this->menu_name ?? $plural,
+			'menu_name'                => $this->menu_name ?: $plural,
 		];
 		// phpcs:enable WordPress.WP.I18n
 

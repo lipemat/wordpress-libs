@@ -484,7 +484,7 @@ class Box {
 	 * @return \CMB2
 	 */
 	public function get_box() : \CMB2 {
-		if ( null !== $this->cmb ) {
+		if ( ! empty( $this->cmb ) ) {
 			return $this->cmb;
 		}
 

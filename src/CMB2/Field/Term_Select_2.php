@@ -39,7 +39,7 @@ class Term_Select_2 {
 	protected function hook() : void {
 		add_action( 'cmb2_render_' . self::NAME, [ $this, 'render' ], 10, 5 );
 		add_filter( 'cmb2_sanitize_' . self::NAME, [ $this, 'assign_terms_during_save' ], 10, 4 );
-		add_filter( 'cmb2_types_esc_' . self::NAME, [ $this, 'esc_repeater_values' ], 10, 4 );
+		add_filter( 'cmb2_types_esc_' . self::NAME, [ $this, 'esc_repeater_values' ], 10, 3 );
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'js' ] );
 		// remove subtle conflict with acf.

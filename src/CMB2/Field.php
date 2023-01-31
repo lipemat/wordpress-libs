@@ -1319,7 +1319,7 @@ class Field {
 				if ( $key === $this->get_id() ) {
 					Repo::in()->handle_delete_callback( $object_id, $key, $this->box->get_object_type() );
 				}
-			}, 10, 4 );
+			}, 10, 3 );
 		} else {
 			Actions::in()->add_filter_as_action( "cmb2_override_{$this->get_id()}_meta_remove", function( $_, $value, array $args, \CMB2_Field $field ) {
 				Repo::in()->handle_delete_callback( $field->object_id(), $this->get_id(), $this->box->get_object_type() );

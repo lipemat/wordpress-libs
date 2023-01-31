@@ -67,7 +67,7 @@ abstract class Post_List_Column {
 			add_action( 'restrict_manage_posts', [ $this, 'render_filter' ] );
 			add_action( 'parse_query', [ $this, 'maybe_filter_query' ] );
 			foreach ( $this->post_types as $post_type ) {
-				add_action( "manage_{$post_type}_posts_columns", [ $this, 'add_column' ] );
+				add_filter( "manage_{$post_type}_posts_columns", [ $this, 'add_column' ] );
 				add_action( "manage_{$post_type}_posts_custom_column", [ $this, 'maybe_render_column' ], 10, 2 );
 			}
 		}

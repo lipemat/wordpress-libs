@@ -32,7 +32,7 @@ class Sortable extends Argument_Abstract {
 	 * @see Sortable::set
 	 * @var string
 	 */
-	protected string $sortables_array_key;
+	protected $sortables_array_key;
 
 
 	/**

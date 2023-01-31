@@ -52,12 +52,12 @@ class Tabs {
 	 */
 	protected function hook() : void {
 		add_action( 'cmb2_before_form', [ $this, 'opening_div' ], 10, 4 );
-		add_action( 'cmb2_after_form', [ $this, 'closing_div' ], 20, 4 );
+		add_action( 'cmb2_after_form', [ $this, 'closing_div' ], 20, 0 );
 
 		add_action( 'cmb2_before_form', [ $this, 'render_nav' ], 20, 4 );
 		add_action( 'cmb2_after_form', [ $this, 'show_panels' ], 10, 4 );
 
-		add_filter( 'cmb2_wrap_classes', [ $this, 'add_wrap_class' ], 10, 2 );
+		add_filter( 'cmb2_wrap_classes', [ $this, 'add_wrap_class' ] );
 	}
 
 
@@ -155,7 +155,7 @@ class Tabs {
 			}
 		}
 
-		return array_unique( $classes );
+		return \array_unique( $classes );
 	}
 
 

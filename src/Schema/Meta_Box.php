@@ -44,9 +44,9 @@ abstract class Meta_Box {
 	public string $context;
 
 	/**
-	 * @var int
+	 * @var 'core'|'default'|'high'|'low'
 	 */
-	public int $priority;
+	public string $priority;
 
 	/**
 	 * The following parameter is any additional arguments passed as $callback_args
