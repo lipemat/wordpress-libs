@@ -20,7 +20,7 @@
 	<!-- Exclude paths -->
 	<exclude-pattern>*/dev/*</exclude-pattern>
 
-	<config name="minimum_supported_wp_version" value="5.5" />
+	<config name="minimum_supported_wp_version" value="5.8" />
 
 	<!-- @see https://github.com/PHPCompatibility/PHPCompatibility#using-a-custom-ruleset -->
 	<config name="testVersion" value="7.4-" />
