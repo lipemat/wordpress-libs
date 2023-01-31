@@ -3,8 +3,7 @@
   "description": "A WordPress library for supporting a core plugin and theme",
   "license": "MIT",
   "require": {
-    "php": ">=7.3.0",
-    "ext-zip": "*"
+    "php": ">=7.4.0"
   },
   "authors": [
     {
