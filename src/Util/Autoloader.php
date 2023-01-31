@@ -2,76 +2,96 @@
 
 namespace Lipe\Lib\Util;
 
+use Lipe\Lib\Traits\Singleton;
+
 /**
  * Autoload class files from namespaced folders
  *
- * load a namespaced folder from root dir
+ * load a namespaced folder from a specified directory.
  *
  * @example load a namespaced folder from root dir
  *          Autoloader::add( "Products\\", __DIR__ . '/Products' );
  *
  */
 class Autoloader {
-	/**
-	 * @var ?Autoloader
-	 */
-	private static $instance;
+	use Singleton;
 
 	/**
-	 * @var array
+	 * Map of registered namespaces and their path.
+	 *
+	 * Stored as `[ [<namespace>, <path>] ]` to allow the same namespace to be
+	 * registered multiple times with different paths.
+	 *
+	 * @var array<array<string>>
 	 */
-	private $prefixes = [];
+	protected array $namespaces = [];
 
 
-	public static function add( $prefix, $path ) : void {
-		$instance = self::get_loader();
-		$instance->addPrefix( $prefix, $path );
+	/**
+	 * Registers the autoloader on the first construct.
+	 */
+	public function __construct() {
+		$this->register();
 	}
 
 
 	/**
-	 * @static
+	 * Add a namespace to the shared autoloader.
 	 *
-	 * @return Autoloader
+	 * @param string $name_space - Namespace classes belong to.
+	 * @param string $path       - Path of the classes.
+	 *
+	 * @return void
 	 */
-	private static function get_loader() : Autoloader {
-		if ( empty( self::$instance ) ) {
-			self::$instance = new self();
-			self::$instance->register( true );
-		}
-
-		return self::$instance;
+	public static function add( string $name_space, string $path ) : void {
+		self::instance()->add_namespace( $name_space, $path );
 	}
 
 
 	/**
 	 * Registers this instance as an autoloader.
 	 *
-	 * @param bool $prepend
+	 * @param bool $prepend - Add the autoloader to beginning of stack.
+	 *
+	 * @return void
 	 */
-	public function register( $prepend = false ) : void {
-		/** @phpstan-ignore-next-line */
-		spl_autoload_register( [ $this, 'loadClass' ], true, $prepend );
+	public function register( bool $prepend = true ) : void {
+		spl_autoload_register( [ $this, 'maybe_load_class' ], true, $prepend );
 	}
 
 
 	/**
-	 * @param string $prefix
-	 * @param string $base_directory
+	 * Removes this instance from the registered autoloader.
 	 */
-	public function addPrefix( string $prefix, string $base_directory ) : void {
-		$prefix = trim( $prefix, '\\' ) . '\\';
-		$base_directory = rtrim( $base_directory, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR;
-		$this->prefixes[] = [ $prefix, $base_directory ];
+	public function unregister() : void {
+		spl_autoload_unregister( [ $this, 'maybe_load_class' ] );
 	}
 
 
 	/**
-	 * @param string $class_name
+	 * Add a namespace to the autoloader lookup.
+	 *
+	 * @param string $name_space - Namespace classes belong to.
+	 * @param string $path       - Path of the classes.
+	 *
+	 * @return void
+	 */
+	protected function add_namespace( string $name_space, string $path ) : void {
+		$name_space = trim( $name_space, '\\' ) . '\\';
+		$path = rtrim( $path, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR;
+		$this->namespaces[] = [ $name_space, $path ];
+	}
+
+
+	/**
+	 * Load a class if its namespace is registered, and the
+	 * class file is found.
+	 *
+	 * @param string $class_name - Name of the class to attempt to load.
 	 *
 	 * @return bool
 	 */
-	public function loadClass( string $class_name ) : bool {
+	protected function maybe_load_class( string $class_name ) : bool {
 		$file = $this->find_file( $class_name );
 		if ( null !== $file ) {
 			require $file;
@@ -84,32 +104,29 @@ class Autoloader {
 
 
 	/**
-	 * @param string $class_name
+	 * Look through the registered namespaces and path to
+	 * see if we have a class file we can load.
 	 *
-	 * @return string|null
+	 * @param string $class_name - Name of the class we are looking for.
+	 *
+	 * @return ?string
 	 */
-	public function find_file( string $class_name ) : ?string {
-		$class_name = ltrim( $class_name, '\\' );
+	protected function find_file( string $class_name ) : ?string {
+		$class_name = \ltrim( $class_name, '\\' );
 
-		foreach ( $this->prefixes as $current ) {
+		foreach ( $this->namespaces as $current ) {
 			[ $prefix, $base_dir ] = $current;
-			if ( 0 === strpos( $class_name, $prefix ) ) {
-				$name = substr( $class_name, \strlen( $prefix ) );
-				$file = $base_dir . str_replace( '\\', DIRECTORY_SEPARATOR, $name ) . '.php';
-				if ( file_exists( $file ) ) {
+
+			if ( \str_starts_with( $class_name, $prefix ) ) {
+				$name = \substr( $class_name, \strlen( $prefix ) );
+				$file = $base_dir . \str_replace( '\\', DIRECTORY_SEPARATOR, $name ) . '.php';
+
+				if ( \file_exists( $file ) ) {
 					return $file;
 				}
 			}
 		}
+
 		return null;
 	}
-
-
-	/**
-	 * Removes this instance from the registered autoloader.
-	 */
-	public function unregister() : void {
-		spl_autoload_unregister( [ $this, 'loadClass' ] );
-	}
-
 }
