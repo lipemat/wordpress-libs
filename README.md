@@ -1,12 +1,12 @@
 # WordPress Libs
 
 <p>
-<a href="https://github.com/lipemat/wordpress-libs/releases/latest">
-<img src="https://img.shields.io/packagist/v/lipemat/wordpress-libs.svg?label=version" />
-</a>
-    <img alt="" src="https://img.shields.io/badge/wordpress->=5.5.0-green.svg">
-    <img src="https://img.shields.io/packagist/php-v/lipemat/wordpress-libs.svg?color=brown" />
-    <img alt="Packagist" src="https://img.shields.io/packagist/l/lipemat/wordpress-libs.svg">
+  <a href="https://github.com/lipemat/wordpress-libs/releases/latest">
+    <img alt="Version" src="https://img.shields.io/packagist/v/lipemat/wordpress-libs.svg?label=version" />
+  </a>
+  <img alt="WordPress" src="https://img.shields.io/badge/wordpress->=5.8.0-green.svg">
+  <img alt="PHP" src="https://img.shields.io/packagist/php-v/lipemat/wordpress-libs.svg?color=brown" />
+  <img alt="License" src="https://img.shields.io/packagist/l/lipemat/wordpress-libs.svg">
 </p>
 
 WordPress library which supports a core plugin and theme.
