@@ -37,7 +37,6 @@ require __DIR__ . '/vendor/autoload.php'
 * Network Object Trait.
 * Object Cache helper.
 * On Demand Image Resizing.
-* Pagination generation object.
 * Post List Column registration object.
 * PostCSS Modules helper.
 * REST API initial data rendered.  
