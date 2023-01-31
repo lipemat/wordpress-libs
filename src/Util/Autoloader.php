@@ -67,12 +67,12 @@ class Autoloader {
 
 
 	/**
-	 * @param string $class
+	 * @param string $class_name
 	 *
 	 * @return bool
 	 */
-	public function loadClass( string $class ) : bool {
-		$file = $this->find_file( $class );
+	public function loadClass( string $class_name ) : bool {
+		$file = $this->find_file( $class_name );
 		if ( null !== $file ) {
 			require $file;
 
@@ -84,17 +84,17 @@ class Autoloader {
 
 
 	/**
-	 * @param string $class
+	 * @param string $class_name
 	 *
 	 * @return string|null
 	 */
-	public function find_file( string $class ) : ?string {
-		$class = ltrim( $class, '\\' );
+	public function find_file( string $class_name ) : ?string {
+		$class_name = ltrim( $class_name, '\\' );
 
 		foreach ( $this->prefixes as $current ) {
 			[ $prefix, $base_dir ] = $current;
-			if ( 0 === strpos( $class, $prefix ) ) {
-				$name = substr( $class, \strlen( $prefix ) );
+			if ( 0 === strpos( $class_name, $prefix ) ) {
+				$name = substr( $class_name, \strlen( $prefix ) );
 				$file = $base_dir . str_replace( '\\', DIRECTORY_SEPARATOR, $name ) . '.php';
 				if ( file_exists( $file ) ) {
 					return $file;

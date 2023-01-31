@@ -29,12 +29,24 @@ class Zip {
 	public const NAME = 'lipe/lib/util/zip/name';
 	public const URLS = 'lipe/lib/util/zip/urls';
 
+	/**
+	 * @var string
+	 */
 	private $file_name;
 
+	/**
+	 * @var string
+	 */
 	private $file_path;
 
+	/**
+	 * @var string
+	 */
 	private $zip_name;
 
+	/**
+	 * @var string
+	 */
 	private $zip_path;
 
 
@@ -70,7 +82,7 @@ class Zip {
 	 * Set all the paths we are going to work with.
 	 *
 	 * @param array       $files
-	 * @param string|null $zip_name - optional name for the zip folder
+	 * @param string|null $zip_name - optional name for the zip folder.
 	 *
 	 * @return void
 	 */
@@ -90,8 +102,8 @@ class Zip {
 	 * it will only serve files accessible via http request, which
 	 * technically would already be available publicly.
 	 *
-	 * @param array       $files    - urls of files to add
-	 * @param string|null $zip_name - optional name for the zip folder
+	 * @param array       $files    - urls of files to add.
+	 * @param string|null $zip_name - optional name for the zip folder.
 	 *
 	 * @return void
 	 */
@@ -136,7 +148,7 @@ class Zip {
 			unlink( $file );
 		}
 
-		//if at least one file made it.
+		// if at least one file made it.
 		if ( $success ) {
 			$this->serve_existing_file();
 		}
@@ -201,8 +213,8 @@ class Zip {
 	/**
 	 * Get an array of data to send to this zip service to render a zip file
 	 *
-	 * @param array       $urls - array of urls to be added to the zip file
-	 * @param string|null $name - name of the zip when downloaded
+	 * @param array       $urls - array of urls to be added to the zip file.
+	 * @param string|null $name - name of the zip when downloaded.
 	 *
 	 * @return array
 	 * @static

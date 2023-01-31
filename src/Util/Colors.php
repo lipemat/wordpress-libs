@@ -14,10 +14,10 @@ class Colors {
 	/**
 	 * Convert a hexadecimal color to an rgba version.
 	 *
-	 * @param string $color - Hexadecimal version of color with leading #
-	 * @param float $transparency - Adds an alpha value to make the color transparent.
-	 *                            Will return `rgba` version of color if transparent
-	 *                            is provided, `rgb` if not.
+	 * @param string $color        - Hexadecimal version of color with leading #.
+	 * @param float  $transparency - Adds an alpha value to make the color transparent.
+	 *                             Will return `rgba` version of color if transparent
+	 *                             is provided, `rgb` if not.
 	 *
 	 * @return string
 	 */
@@ -25,7 +25,7 @@ class Colors {
 		if ( empty( $color ) || '#' !== $color[0] ) {
 			return $color;
 		}
-		
+
 		$color = substr( $color, 1 );
 
 		if ( 6 === \strlen( $color ) ) {

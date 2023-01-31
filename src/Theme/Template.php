@@ -4,6 +4,10 @@ namespace Lipe\Lib\Theme;
 
 use Lipe\Lib\Traits\Singleton;
 
+/**
+ * Template helpers for the theme.
+ *
+ */
 class Template {
 	use Singleton;
 
@@ -67,14 +71,14 @@ class Template {
 	 *
 	 * @since 3.11.0
 	 *
-	 * @param string $class - Unsanitized CSS class.
+	 * @param string $css_class - Unsanitized CSS class.
 	 *
 	 * @return string
 	 */
-	public function sanitize_html_class( string $class ) : string {
+	public function sanitize_html_class( string $css_class ) : string {
 		// Strip out any %-encoded octets.
-		$sanitized = preg_replace( '/%[a-fA-F\d]{2}/', '', $class );
-		// Prefix any leading digits or hyphens with '_';
+		$sanitized = preg_replace( '/%[a-fA-F\d]{2}/', '', $css_class );
+		// Prefix any leading digits or hyphens with '_'.
 		return \preg_replace( '/^([\d-])/', '_$1', $sanitized );
 	}
 }

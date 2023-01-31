@@ -35,7 +35,7 @@ class Checkbox {
 		if ( ! $field->should_show() || ( ! is_admin() && ! $field->args( 'on_front' ) ) ) {
 			return null;
 		}
-		//default layout, nothing to do here
+		// default layout, nothing to do here.
 		if ( 'block' === $field->args( 'layout' ) ) {
 			return $field->render_field_callback();
 		}

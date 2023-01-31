@@ -263,7 +263,7 @@ abstract class Db {
 	/**
 	 * Delete a row from the database
 	 *
-	 * @param int|array $id_or_wheres - row id or array or column => values to use as where
+	 * @param int|array $id_or_wheres - row id or array or column => values to use as where.
 	 *
 	 * @return int|false
 	 */
@@ -282,10 +282,10 @@ abstract class Db {
 
 	/**
 	 *
-	 * @param int|array $id_or_wheres - row id or array or column => values to use as where
-	 * @param array     $columns      - data to change
+	 * @param int|array $id_or_wheres - row id or array or column => values to use as where.
+	 * @param array     $columns      - data to change.
 	 *
-	 * @return int|bool - number of rows updated or false on error
+	 * @return int|bool - number of rows updated or false on error.
 	 */
 	public function update( $id_or_wheres, array $columns ) {
 		global $wpdb;

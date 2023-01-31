@@ -10,15 +10,17 @@ use Lipe\Lib\Taxonomy\Taxonomy_Extended;
  *
  */
 class Column extends Argument_Abstract {
-
-	protected $taxos;
+	/**
+	 * @var Taxonomy_Extended
+	 */
+	protected Taxonomy_Extended $taxos;
 
 	/**
-	 * @see \Lipe\Lib\Taxonomy\Extended_TAXOS\Column::set()
+	 * @see Column::set
 	 *
 	 * @var ?string
 	 */
-	protected $cols_array_key;
+	protected ?string $cols_array_key;
 
 
 	/**
@@ -98,10 +100,10 @@ class Column extends Argument_Abstract {
 	 * so any standard date format is accepted.
 	 *
 	 *
-	 * @param string $title
-	 * @param string $meta_key
-	 * @param string|null   $date_format
-	 * @param null|string   $cap - Capability required to see this meta.
+	 * @param string      $title
+	 * @param string      $meta_key
+	 * @param string|null $date_format
+	 * @param null|string $cap - Capability required to see this meta.
 	 *
 	 * @return Column_Shared
 	 */

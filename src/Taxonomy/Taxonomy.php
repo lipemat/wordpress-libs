@@ -21,7 +21,12 @@ use Lipe\Lib\Util\Actions;
 class Taxonomy {
 	protected const REGISTRY_OPTION = 'lipe/lib/schema/taxonomy_registry';
 
-	protected static $registry = [];
+	/**
+	 * Track the register taxonomies for later use.
+	 *
+	 * @var array
+	 */
+	protected static array $registry = [];
 
 	/**
 	 * The arguments for the taxonomy
@@ -42,7 +47,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public $public;
+	public bool $public;
 
 	/**
 	 * Whether the taxonomy is publicly queryable.
@@ -51,7 +56,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public $publicly_queryable;
+	public bool $publicly_queryable;
 
 	/**
 	 * Whether to generate a default UI for managing this taxonomy.
@@ -60,7 +65,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public $show_ui;
+	public bool $show_ui;
 
 	/**
 	 * Show this taxonomy in the admin menu.
@@ -92,7 +97,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public $show_in_nav_menus;
+	public bool $show_in_nav_menus;
 
 	/**
 	 * Whether to include the taxonomy in the REST API
@@ -201,12 +206,12 @@ class Taxonomy {
 	 * Assign a special rewrite args. Send only the ones wanted to change.
 	 * Set too false to disable URL rewriting.
 	 *
-	 * {
+	 * array{
 	 * 'slug' - Used as pretty permalink text (i.e. /tag/) - defaults to $this->taxonomy
 	 * 'with_front' - allowing permalinks to be prepended with front base - defaults to true
 	 * 'hierarchical' - true or false allow hierarchical urls -  defaults to false
 	 * 'ep_mask' - Assign an endpoint mask for this taxonomy - defaults to EP_NONE.
-	 *}
+	 * }
 	 *
 	 * @default true
 	 *
@@ -216,7 +221,7 @@ class Taxonomy {
 
 	/**
 	 * Capabilities for these terms
-	 *{
+	 * array{
 	 * 'manage_terms' - 'manage_categories'
 	 * 'edit_terms' - 'manage_categories'
 	 * 'delete_terms' - 'manage_categories'
@@ -227,7 +232,7 @@ class Taxonomy {
 	 *
 	 * @var array
 	 */
-	public $capabilities = [];
+	public array $capabilities = [];
 
 	/**
 	 * The default term added to new posts.
@@ -248,16 +253,14 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public $sort;
-
-	public $slug;
+	public bool $sort;
 
 	/**
-	 * The taxonomy slug
+	 * The taxonomy slug.
 	 *
 	 * @var string
 	 */
-	protected $taxonomy = '';
+	protected string $taxonomy = '';
 
 	/**
 	 * Override any generated labels.
@@ -274,11 +277,26 @@ class Taxonomy {
 	 */
 	public $labels = [];
 
-	protected $label_singular = '';
+	/**
+	 * The singular label for the taxonomy.
+	 *
+	 * @var string
+	 */
+	protected string $label_singular = '';
 
-	protected $label_plural = '';
+	/**
+	 * The plural label for the taxonomy.
+	 *
+	 * @var string
+	 */
+	protected string $label_plural = '';
 
-	protected $label_menu = '';
+	/**
+	 * Label used for the admin menu.
+	 *
+	 * @var string
+	 */
+	protected string $label_menu = '';
 
 	/**
 	 * Terms to be automatically added to a taxonomy when
@@ -293,24 +311,24 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	protected $_post_list_filter = false;
+	protected bool $post_list_filter = false;
 
 
 	/**
 	 * Add hooks to register taxonomy.
 	 *
-	 * @param string       $taxonomy          - Taxonomy Slug (will convert a title to a slug as well)
-	 * @param string|array $post_types        - May also be set by $this->post_types = array
+	 * @param string       $taxonomy          - Taxonomy Slug (will convert a title to a slug as well).
+	 * @param string|array $post_types        - May also be set by $this->post_types = array.
 	 * @param string|bool  $show_admin_column - Whether to generate a post list column or not.
 	 *                                        If a `string is passed` it wil be used for the
-	 *                                        column label
+	 *                                        column label.
 	 * @param bool         $post_list_filter  - Auto generate a post list filter for this taxonomy.
 	 */
 	public function __construct( string $taxonomy, $post_types = [], $show_admin_column = false, bool $post_list_filter = false ) {
 		$this->post_types = (array) $post_types;
 
 		$this->show_admin_column = (bool) $show_admin_column;
-		$this->_post_list_filter = $post_list_filter;
+		$this->post_list_filter = $post_list_filter;
 		$this->taxonomy = \strtolower( \str_replace( ' ', '_', $taxonomy ) );
 		$this->hook();
 
@@ -326,11 +344,11 @@ class Taxonomy {
 	 * @return void
 	 */
 	public function hook() : void {
-		//so we can add and edit stuff on init hook
+		// So we can add and edit stuff on init hook.
 		add_action( 'wp_loaded', [ $this, 'register' ], 8, 0 );
 		add_action( 'admin_menu', [ $this, 'add_as_submenu' ] );
 
-		if ( $this->_post_list_filter ) {
+		if ( $this->post_list_filter ) {
 			add_action( 'restrict_manage_posts', [ $this, 'post_list_filters' ] );
 			if ( is_admin() ) {
 				add_action( 'parse_tax_query', [ $this, 'post_list_query_filters' ] );
@@ -372,9 +390,7 @@ class Taxonomy {
 
 
 	/**
-	 * Get a registered taxonomy object
-	 *
-	 * @static
+	 * Get a registered taxonomy object.
 	 *
 	 * @param string $taxonomy
 	 *
@@ -476,7 +492,7 @@ class Taxonomy {
 	/**
 	 * Specify terms to be added automatically when a taxonomy is created.
 	 *
-	 * @param array $terms = array( <slug> => <name> ) || array( <name> )
+	 * @param array $terms = array( <slug> => <name> ) || array( <name> ).
 	 *
 	 * @return void
 	 */
@@ -540,11 +556,7 @@ class Taxonomy {
 	 * @return string
 	 */
 	public function get_slug() : string {
-		if ( empty( $this->slug ) ) {
-			$this->slug = strtolower( str_replace( ' ', '-', $this->taxonomy ) );
-		}
-
-		return $this->slug;
+		return \strtolower( \str_replace( ' ', '-', $this->taxonomy ) );
 	}
 
 
@@ -752,7 +764,7 @@ class Taxonomy {
 			'choose_from_most_used'      => sprintf( __( 'Choose from the most used %s' ), $plural ),
 			'not_found'                  => sprintf( __( 'No %s found' ), $plural ),
 			'no_terms'                   => sprintf( __( 'No %s' ), $plural ),
-			'no_item'                    => sprintf( __( 'No %s' ), strtolower( $plural ) ), //For extended taxos.
+			'no_item'                    => sprintf( __( 'No %s' ), strtolower( $plural ) ), // For extended taxos.
 			'items_list_navigation'      => sprintf( __( '%s list navigation' ), $plural ),
 			'items_list'                 => sprintf( __( '%s list' ), $plural ),
 			'most_used'                  => __( 'Most Used' ),
@@ -774,7 +786,7 @@ class Taxonomy {
 	 * Retrieve a singular or plural label.
 	 * Auto generate the label if necessary.
 	 *
-	 * @param string $quantity - (plural,singular)
+	 * @param 'plural' | 'singular' - $quantity
 	 *
 	 * @return string
 	 */
@@ -822,7 +834,7 @@ class Taxonomy {
 
 
 	/**
-	 * Returns the set menu label, or the plural label if not set
+	 * Returns the set menu label, or the plural label if not set.
 	 *
 	 * @return string
 	 *
@@ -837,8 +849,7 @@ class Taxonomy {
 
 
 	/**
-	 *
-	 * Build rewrite args or pass the the class var if set
+	 * Build rewrite args or pass the class var if set.
 	 *
 	 * @return array|null
 	 */
@@ -858,7 +869,7 @@ class Taxonomy {
 	/**
 	 * Sets the label for the menu
 	 *
-	 * @param string $label - the label to set it to
+	 * @param string $label - The label to set it to.
 	 *
 	 * @return void
 	 */

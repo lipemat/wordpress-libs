@@ -213,10 +213,10 @@ class Resources {
 	 * Must be called before `get_body_class`. Most likely called
 	 * in the theme's "header.php".
 	 *
-	 * @param string $class - Class to append.
+	 * @param string $css_class - Class to append.
 	 */
-	public function add_body_class( string $class ) : void {
-		static::$body_class[] = $class;
+	public function add_body_class( string $css_class ) : void {
+		static::$body_class[] = $css_class;
 		$this->once( function() {
 			add_filter( 'body_class', function( $classes ) {
 				return \array_unique( \array_merge( static::$body_class, $classes ) );
@@ -325,7 +325,7 @@ class Resources {
 	 *
 	 * @param string $handle    - The handle used to enqueued this script.
 	 *
-	 * @param string $integrity - Integrity hash to add
+	 * @param string $integrity - Integrity hash to add.
 	 *
 	 * @return void
 	 */

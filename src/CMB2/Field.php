@@ -785,7 +785,7 @@ class Field {
 	 *                              'characters_left_text' - Default: "Characters left"
 	 *                              'characters_text' - Default: "Characters"
 	 *                              'characters_truncated_text' - Default: "Your text may be truncated."
-	 *                              }
+	 *                              }.
 	 *
 	 * @notice Does not work with repeatable wysiwyg.
 	 *
@@ -823,8 +823,8 @@ class Field {
 	 * posts, comments, users, terms
 	 *
 	 * @param int|null      $position
-	 * @param string|null   $name            - defaults to field name
-	 * @param callable|null $display_cb      - optional display callback
+	 * @param string|null   $name            - defaults to field name.
+	 * @param callable|null $display_cb      - optional display callback.
 	 * @param bool|null     $disable_sorting - Set to true to prevent this column from being
 	 *                                       sortable in post list.
 	 *
@@ -969,7 +969,7 @@ class Field {
 	 *
 	 */
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ) : Field {
-		// Ugh! Hack, so I can use a method from that class
+		// Ugh! Hack, so I can use a method from that class.
 		$mock = new class() extends \CMB2_Field {
 			public function __construct() {
 			}
@@ -979,7 +979,7 @@ class Field {
 				if ( $this->repeatable_exception( $type ) ) {
 					return false;
 				}
-				// Cases not covered by CMB2
+				// Cases not covered by CMB2.
 				return 'file_list' !== $type;
 			}
 		};
@@ -1429,12 +1429,12 @@ class Field {
 
 
 	/**
-	 * Retrieve an array of this fields args to be
+	 * Retrieve an array of these fields args to be
 	 * submitted to CMB2 by way of
 	 *
 	 * @see Box::add_field_to_box()
 	 *
-	 * @throws \LogicException
+	 * @throws \LogicException - If a field has not been specified.
 	 *
 	 * @return array
 	 */
@@ -1457,12 +1457,12 @@ class Field {
 	/**
 	 * Override to allow static scans when using tools like PHPStan.
 	 *
+	 * @internal
+	 *
 	 * @param string $id
 	 * @param string $name
 	 *
-	 * @internal
-	 *
-	 * @return Field_Type
+	 * @throws \LogicException - When trying to add a field to another field.
 	 */
 	public function field( string $id, string $name ) : Field_Type {
 		throw new \LogicException( 'You cannot add a field to another field.' );

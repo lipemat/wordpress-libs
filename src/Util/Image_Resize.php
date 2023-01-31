@@ -27,7 +27,7 @@ class Image_Resize {
 	 *
 	 * @var array
 	 */
-	private $_image_sizes = [];
+	private array $image_sizes = [];
 
 
 	public function hook() : void {
@@ -44,7 +44,7 @@ class Image_Resize {
 	 * @return array
 	 */
 	public function get_image_sizes() : array {
-		return $this->_image_sizes;
+		return $this->image_sizes;
 	}
 
 
@@ -62,7 +62,7 @@ class Image_Resize {
 		}
 
 		foreach ( $_wp_additional_image_sizes as $size => $the_ ) {
-			if ( isset( $this->_image_sizes[ $size ] ) ) {
+			if ( isset( $this->image_sizes[ $size ] ) ) {
 				continue;
 			}
 
@@ -73,14 +73,20 @@ class Image_Resize {
 
 
 	/**
-	 * Populate image sizes.
+	 * Populate Image Sizes.
 	 *
+	 * @param string           $name
+	 * @param int|float|string $width
+	 * @param int|float|string $height
+	 * @param bool             $crop
+	 *
+	 * @return void
 	 */
-	public function add_image_size( $name, $width, $height, $crop = false ) : void {
-		$this->_image_sizes[ $name ] = [
+	public function add_image_size( string $name, $width, $height, bool $crop = false ) : void {
+		$this->image_sizes[ $name ] = [
 			'width'  => absint( $width ),
 			'height' => absint( $height ),
-			'crop'   => (bool) $crop,
+			'crop'   => $crop,
 		];
 	}
 
@@ -133,8 +139,13 @@ class Image_Resize {
 	 *
 	 * @filter image_downsize 10 3
 	 *
+	 * @param mixed  $out
+	 * @param int    $id
+	 * @param string $size
+	 *
+	 * @return mixed
 	 */
-	public function convert_image_downsize( $out, $id, $size ) {
+	public function convert_image_downsize( $out, int $id, string $size ) {
 		if ( 'full' === $size ) {
 			return $out;
 		}
@@ -150,7 +161,7 @@ class Image_Resize {
 		}
 
 		if ( \is_array( $image ) ) {
-			$image[] = true; // is_intermediate
+			$image[] = true; // Add `is_intermediate`.
 		}
 
 		return $image;
@@ -158,9 +169,9 @@ class Image_Resize {
 
 
 	/**
-	 * Get image
+	 * Get image.
 	 *
-	 * @param array $args   = array(
+	 * @param array $args   = array{
 	 *                      'id' => null,   // the thumbnail ID
 	 *                      'post_id' => null,   // thumbnail of specified post ID
 	 *                      'src' => '',
@@ -171,18 +182,19 @@ class Image_Resize {
 	 *                      'width' => null,
 	 *                      'height' => null,
 	 *                      'crop' => false,
-	 *                      'output' => 'img',   // how print: 'a', with an anchor; 'img' without an anchor; 'url' only url;
+	 *                      'output' => 'img',   // how print: 'a', with an anchor; 'img' without an anchor; 'url' only
+	 *                      url;
 	 *                      'array' array width 'url', 'width' and 'height'
 	 *                      'numeric_array' default way wp expects it
 	 *                      'link' => '',      // the link of <a> tag. If empty, get from the original image url
 	 *                      'link_class' => '',      // the class of <a> tag
 	 *                      'link_title' => '',      // the title of <a> tag. If empty, get it from "title" attribute.
-	 *                      );
-	 * @param bool  $echo
+	 *                      }.
+	 * @param bool  $echo_output
 	 *
 	 * @return string|null|array
 	 */
-	public function image( array $args = [], bool $echo = true ) {
+	public function image( array $args = [], bool $echo_output = true ) {
 		$args = wp_parse_args( $args, [
 			'id'         => null,
 			'post_id'    => null,
@@ -200,23 +212,23 @@ class Image_Resize {
 			'link_title' => '',
 		] );
 
-		// from explicit thumbnail ID
+		// From explicit thumbnail ID.
 		if ( ! empty( $args['id'] ) ) {
 			$image_id = $args['id'];
 			$image_url = wp_get_attachment_url( $args['id'] );
-			// thumbnail of specified post
+			// thumbnail of specified post.
 		} elseif ( ! empty( $args['post_id'] ) ) {
 			$image_id = get_post_thumbnail_id( $args['post_id'] );
 			$image_url = wp_get_attachment_url( $image_id );
-			// or from SRC
+			// or from SRC.
 		} elseif ( ! empty( $args['src'] ) ) {
 			$image_id = null;
 			$image_url = esc_url( $args['src'] );
-			// or the post thumbnail of current post
+			// or the post thumbnail of current post.
 		} elseif ( has_post_thumbnail() ) {
 			$image_id = get_post_thumbnail_id();
 			$image_url = wp_get_attachment_url( $image_id );
-			// if we are currently on an attachment
+			// if we are currently on an attachment.
 		} elseif ( is_attachment() ) {
 			global $post;
 			$image_id = $post->ID;
@@ -238,7 +250,7 @@ class Image_Resize {
 			}
 		}
 
-		// get size from add_image_size
+		// get size from add_image_size.
 		if ( ! empty( $args['size'] ) ) {
 			global $_wp_additional_image_sizes, $content_width;
 
@@ -246,35 +258,35 @@ class Image_Resize {
 			if ( \is_array( $args['size'] ) ) {
 				[ $width, $height ] = $args['size'];
 				$crop = empty( $args['size'][2] ) ? false : $args['size'][2];
-			} elseif ( isset( $this->_image_sizes[ $args['size'] ] ) ) {
-				$width = $this->_image_sizes[ $args['size'] ]['width'];
-				$height = $this->_image_sizes[ $args['size'] ]['height'];
-				$crop = $this->_image_sizes[ $args['size'] ]['crop'];
+			} elseif ( isset( $this->image_sizes[ $args['size'] ] ) ) {
+				$width = $this->image_sizes[ $args['size'] ]['width'];
+				$height = $this->image_sizes[ $args['size'] ]['height'];
+				$crop = $this->image_sizes[ $args['size'] ]['crop'];
 			} elseif ( isset( $_wp_additional_image_sizes[ $args['size'] ] ) ) {
 				$width = $_wp_additional_image_sizes[ $args['size'] ]['width'];
 				$height = $_wp_additional_image_sizes[ $args['size'] ]['height'];
 				$crop = $_wp_additional_image_sizes[ $args['size'] ]['crop'];
-				// thumbnail
+				// thumbnail.
 			} elseif ( 'thumb' === $args['size'] || 'thumbnail' === $args['size'] ) {
 				$width = (int) get_option( 'thumbnail_size_w' );
 				$height = (int) get_option( 'thumbnail_size_h' );
-				// last chance thumbnail size defaults
+				// last chance thumbnail size defaults.
 				if ( ! $width && ! $height ) {
 					$width = 128;
 					$height = 96;
 				}
 				$crop = (bool) get_option( 'thumbnail_crop' );
-				// medium
+				// medium.
 			} elseif ( 'medium' === $args['size'] ) {
 				$width = (int) get_option( 'medium_size_w' );
 				$height = (int) get_option( 'medium_size_h' );
-				// if no width is set, default to the theme content width if available
+				// if no width is set, default to the theme content width if available.
 
-				// large
+				// large.
 			} elseif ( 'large' === $args['size'] ) {
-				// We're inserting a large size image into the editor. If it's a really
-				// big image we'll scale it down to fit reasonably within the editor
-				// itself, and within the theme's content width if it's known. The user
+				// We're inserting a large size image into the editor. If it's a really.
+				// big image we'll scale it down to fit reasonably within the editor.
+				// itself, and within the theme's content width if it's known. The user.
 				// can resize it in the editor if they wish.
 				$width = (int) get_option( 'large_size_w' );
 				$height = (int) get_option( 'large_size_h' );
@@ -301,13 +313,13 @@ class Image_Resize {
 
 		/* BEGIN OUTPUT */
 
-		// Return null, if no $image_url.
+		// Return null, if no image URL.
 		if ( empty( $image_url ) ) {
 			return null;
 		}
 
 		if ( 'url' === $args['output'] ) {
-			if ( $echo ) {
+			if ( $echo_output ) {
 				echo esc_url( $image_url );
 			}
 			return $image_url;
@@ -373,7 +385,7 @@ class Image_Resize {
 
 		// Return <img> tag.
 		if ( 'img' === $args['output'] ) {
-			if ( $echo ) {
+			if ( $echo_output ) {
 				echo $html_image; //phpcs:ignore
 			}
 
@@ -397,7 +409,7 @@ class Image_Resize {
 			}
 			$html_link .= '>' . $html_image . '</a>';
 
-			if ( $echo ) {
+			if ( $echo_output ) {
 				echo $html_link; //phpcs:ignore
 				return null;
 			}
@@ -426,7 +438,7 @@ class Image_Resize {
 		if ( $attach_id ) {
 			$image_src = wp_get_attachment_image_src( $attach_id, 'full' );
 			$file_path = get_attached_file( $attach_id );
-			// this is not an attachment, let's use the image url
+			// this is not an attachment, let's use the image url.
 		} elseif ( $img_url ) {
 			$uploads_dir = wp_upload_dir();
 			if ( false !== strpos( $img_url, $uploads_dir['baseurl'] ) ) {
@@ -462,15 +474,15 @@ class Image_Resize {
 		}
 
 		$extension = '.' . $file_info['extension'];
-		// the image path without the extension
+		// the image path without the extension.
 		$no_ext_path = $file_info['dirname'] . '/' . $file_info['filename'];
 		$cropped_img_path = $no_ext_path . '-' . $width . 'x' . $height . $extension;
 
-		// checking if the file size is larger than the target size
-		// if it is smaller, or the same size, stop right here and return
+		// checking if the file size is larger than the target size.
+		// if it is smaller, or the same size, stop right here and return.
 		if ( \is_array( $image_src ) && ( $image_src[1] > $width || $image_src[2] > $height ) ) {
 			if ( false === $crop || ! $height ) {
-				// calculate the size proportionally
+				// calculate the size proportionally.
 				$proportional_size = wp_constrain_dimensions( $image_src[1], $image_src[2], $width, $height );
 				$resized_img_path = $no_ext_path . '-' . $proportional_size[0] . 'x' . $proportional_size[1] . $extension;
 
@@ -493,21 +505,21 @@ class Image_Resize {
 				];
 			}
 
-			//-- file does not exist so lets check the cache and create it
+			// -- file does not exist so lets check the cache and create it.
 
-			// check if image width is smaller than set width
+			// check if image width is smaller than set width.
 			$img_size = getimagesize( $file_path );
 			if ( \is_array( $img_size ) && $img_size[0] <= $width ) {
 				$width = $img_size[0];
 			}
 
-			// Check if GD Library installed
+			// Check if GD Library installed.
 			if ( ! \function_exists( 'imagecreatetruecolor' ) ) {
 				_doing_it_wrong( __METHOD__, 'GD Library Error: imagecreatetruecolor does not exist - please contact your web host and ask them to install the GD library', '3.0.0' );
 				return [];
 			}
 
-			// no cache files - let's finally resize it
+			// no cache files - let's finally resize it.
 			$image = wp_get_image_editor( $file_path );
 			if ( is_wp_error( $image ) ) {
 				$new_img_path = false;
@@ -528,7 +540,7 @@ class Image_Resize {
 			$new_img_size = (array) getimagesize( $new_img_path );
 			$new_img = str_replace( basename( $image_src[0] ), basename( $new_img_path ), $image_src[0] );
 
-			// resized output
+			// resized output.
 			$image = [
 				'url'    => $new_img,
 				'width'  => $new_img_size[0],
@@ -539,7 +551,7 @@ class Image_Resize {
 			if ( class_exists( 'WpSmush' ) ) {
 				// phpcs:disable WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 				global $WpSmush;
-				$max_size = $WpSmush->validate_install() ? WP_SMUSH_PREMIUM_MAX_BYTES : WP_SMUSH_MAX_BYTES; //@phpstan-ignore-line
+				$max_size = $WpSmush->validate_install() ? WP_SMUSH_PREMIUM_MAX_BYTES : WP_SMUSH_MAX_BYTES; // @phpstan-ignore-line
 				if ( filesize( $new_img_path ) < $max_size ) {
 					$WpSmush->do_smushit( $new_img_path );
 				}

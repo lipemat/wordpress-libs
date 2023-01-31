@@ -21,7 +21,12 @@ use Lipe\Lib\Util\Arrays;
  */
 class Class_Names implements \ArrayAccess {
 
-	protected $classes = [];
+	/**
+	 * Classes to parse.
+	 *
+	 * @var array
+	 */
+	protected array $classes = [];
 
 
 	public function __construct( ...$classes ) {
@@ -73,12 +78,12 @@ class Class_Names implements \ArrayAccess {
 
 
 	/**
-	 * @param string $class
+	 * @param string $css_class
 	 *
 	 * @return int|false
 	 */
-	private function get_classes_key( string $class ) {
-		return \array_search( $class, $this->classes, true );
+	private function get_classes_key( string $css_class ) {
+		return \array_search( $css_class, $this->classes, true );
 	}
 
 

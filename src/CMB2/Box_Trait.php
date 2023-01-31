@@ -38,7 +38,7 @@ trait Box_Trait {
 	 * @return void
 	 */
 	protected function hook() : void {
-		$this->once( function () {
+		$this->once( function() {
 			// Be sure to run register_shorthand fields on groups after the box.
 			if ( $this->is_group() ) {
 				add_action( 'cmb2_init', [ $this, 'register_fields' ], 12 );
@@ -73,15 +73,15 @@ trait Box_Trait {
 	 * For shorthand calls where no special setting is necessary.
 	 *
 	 * @param string      $id
-	 * @param string|null      $title
-	 * @param string|null $group_title           - include a {#} to have replaced with number
+	 * @param string|null $title
+	 * @param string|null $group_title      - include a {#} to have replaced with number.
 	 * @param string|null $add_button_text
 	 * @param string|null $remove_button_text
 	 * @param bool        $sortable
 	 * @param bool        $closed
-	 * @param string|null $remove_confirm - A message to display when a user attempts
+	 * @param string|null $remove_confirm   - A message to display when a user attempts
 	 *                                      to delete a group.
-	 *                                      (Defaults to null/false for no confirmation)
+	 *                                      (Defaults to null/false for no confirmation).
 	 *
 	 *
 	 * @example $group = $box->group( $id, $name );
@@ -213,7 +213,7 @@ trait Box_Trait {
 		if ( isset( $config['show_in_rest'] ) ) {
 			if ( 'post' === $this->get_object_type() ) {
 				// Post type must support 'custom-fields' to allow REST meta.
-				array_walk( $this->object_types, function ( $type ) {
+				array_walk( $this->object_types, function( $type ) {
 					add_post_type_support( $type, 'custom-fields' );
 				} );
 			}
@@ -226,6 +226,7 @@ trait Box_Trait {
 		}
 		return $config;
 	}
+
 
 	/**
 	 * Is this field allowed to be registered with meta?
@@ -251,8 +252,9 @@ trait Box_Trait {
 	 * @return bool
 	 */
 	protected function is_public_rest_data( Field $field ) : bool {
-		return  $field->show_in_rest && ( \WP_REST_Server::ALLMETHODS === $field->show_in_rest );
+		return $field->show_in_rest && ( \WP_REST_Server::ALLMETHODS === $field->show_in_rest );
 	}
+
 
 	/**
 	 * Get all fields registered to this box.

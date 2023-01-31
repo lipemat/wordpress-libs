@@ -4,6 +4,8 @@ namespace Lipe\Lib\Util;
 
 use Lipe\Lib\Traits\Singleton;
 
+//phpcs:disable Universal.NamingConventions.NoReservedKeywordParameterNames.arrayFound
+
 /**
  * Array helpers.
  *
@@ -179,22 +181,22 @@ class Arrays {
 	 * Works the same as `wp_list_pluck` except it supports multiple keys
 	 * and will return an array of arrays instead of a single array.
 	 *
-	 * @param array<array|object> $list - List of objects or arrays.
-	 * @param array               $keys - List of keys to return.
+	 * @param array<array|object> $array - List of objects or arrays.
+	 * @param array               $keys  - List of keys to return.
 	 *
 	 * @since 3.5.0
 	 *
 	 * @return array
 	 */
-	public function list_pluck( array $list, array $keys ) : array {
-		return \array_map( function ( $item ) use ( $keys ) {
-			return $this->map_assoc( function ( $i, $key ) use ( $item ) {
+	public function list_pluck( array $array, array $keys ) : array {
+		return \array_map( function( $item ) use ( $keys ) {
+			return $this->map_assoc( function( $i, $key ) use ( $item ) {
 				if ( \is_object( $item ) ) {
 					return $item->{$key};
 				}
 
 				return $item[ $key ];
 			}, \array_flip( $keys ) );
-		}, $list );
+		}, $array );
 	}
 }

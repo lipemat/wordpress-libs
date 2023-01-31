@@ -323,7 +323,7 @@ abstract class Settings {
 	 * Return a field with the namespace prepended to the name
 	 * Will check if we have a namespace and if already appended
 	 *
-	 * @param string $field - possibly non namespaced field
+	 * @param string $field - possibly non namespaced field.
 	 *
 	 * @return string
 	 */
@@ -476,7 +476,7 @@ abstract class Settings {
 	 *
 	 * Remove the namespace if exists from a field and return the value.
 	 *
-	 * @param string $field - possibly namespaced field
+	 * @param string $field - possibly namespaced field.
 	 *
 	 * @return string
 	 */

@@ -44,10 +44,10 @@ class Query_Var extends Argument_Abstract {
 	/**
 	 * Query_var constructor.
 	 *
-	 * @param Custom_Post_Type_Extended $object
+	 * @param Custom_Post_Type_Extended $extended
 	 */
-	public function __construct( Custom_Post_Type_Extended $object ) {
-		$this->object = $object;
+	public function __construct( Custom_Post_Type_Extended $extended ) {
+		$this->object = $extended;
 	}
 
 
@@ -171,7 +171,7 @@ class Query_Var extends Argument_Abstract {
 	 *
 	 * @notice Watch out for query var name clashes!
 	 *
-	 * @throws \Exception
+	 * @throws \RuntimeException - It taxonomy does not exist.
 	 *
 	 * @return Query_Var_Shared
 	 */

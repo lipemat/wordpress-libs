@@ -4,7 +4,7 @@ namespace Lipe\Lib\Traits;
 
 /**
  * Allow running things specific to a class one time
- * based on it's internal version. Each class gets it's
+ * based on its internal version. Each class gets its
  * own unique identifier and all uses of `run_for_version` will
  * use the same identifier and previous version.
  *
@@ -14,9 +14,19 @@ namespace Lipe\Lib\Traits;
  *
  */
 trait Version {
-	private $_option = 'lipe/lib/traits/versions';
+	/**
+	 * Option stored in the database to track versions.
+	 *
+	 * @var string
+	 */
+	protected string $option = 'lipe/lib/traits/versions';
 
-	private $_version = '0.0.1';
+	/**
+	 * Version requested to run an action for.
+	 *
+	 * @var string
+	 */
+	protected string $version = '0.0.1';
 
 
 	/**
@@ -29,7 +39,7 @@ trait Version {
 	 * @return mixed
 	 */
 	protected function run_for_version( callable $func, string $version, ...$extra ) {
-		$this->_version = $version;
+		$this->version = $version;
 		if ( $this->update_required() ) {
 			$this->update_version();
 
@@ -45,10 +55,10 @@ trait Version {
 	 *
 	 */
 	private function update_version() : void {
-		$versions                                    = $this->get_versions();
-		$versions[ $this->get_version_identifier() ] = $this->_version;
+		$versions = $this->get_versions();
+		$versions[ $this->get_version_identifier() ] = $this->version;
 
-		update_option( $this->_option, $versions );
+		update_option( $this->option, $versions );
 	}
 
 
@@ -60,7 +70,7 @@ trait Version {
 	protected function update_required() : bool {
 		$versions = $this->get_versions();
 
-		return empty( $versions[ $this->get_version_identifier() ] ) || version_compare( $versions[ $this->get_version_identifier() ], $this->_version, '<' );
+		return empty( $versions[ $this->get_version_identifier() ] ) || version_compare( $versions[ $this->get_version_identifier() ], $this->version, '<' );
 	}
 
 
@@ -70,12 +80,14 @@ trait Version {
 	 * @return array
 	 */
 	private function get_versions() : array {
-		return get_option( $this->_option, [] );
+		return get_option( $this->option, [] );
 	}
 
 
 	/**
 	 * @notice Anonymous classes do not have identifiers and may not be used.
+	 *
+	 * @throws \BadMethodCallException - Will throw if using an anonymous class.
 	 *
 	 * @return string
 	 */

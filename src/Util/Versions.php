@@ -75,8 +75,7 @@ class Versions {
 
 
 	/**
-	 *
-	 * Returns current version in db to know which version to supply
+	 * Returns the current version in the database.
 	 *
 	 * @return string
 	 */
@@ -86,19 +85,19 @@ class Versions {
 
 
 	/**
-	 * Run a function one time only
+	 * Run a function one time only.
 	 * To be use for items with no pre-requisites, which just need to be run once.
 	 *
-	 * @param callable $callable
-	 * @param string   $key - unique identifier
+	 * @param string   $key - Unique identifier.
+	 * @param callable $callback
 	 * @param mixed    $args
 	 *
 	 * @return void
 	 */
-	public function once( string $key, callable $callable, $args = null ) : void {
+	public function once( string $key, callable $callback, $args = null ) : void {
 		if ( ! isset( self::$once_run_before[ $key ] ) ) {
 			self::$once[ $key ] = [
-				'callable' => $callable,
+				'callable' => $callback,
 				'args'     => $args,
 			];
 		}
@@ -107,26 +106,24 @@ class Versions {
 
 	/**
 	 * Adds a callable to be run if the version is higher than the highest
-	 * item which was previously run.
+	 * item, which was previously run.
 	 * Multiple items will always be sorted and run in order of their version.
 	 *
 	 * To be used when items have pre-requisites that must be run in a particular order.
 	 *
-	 * @param string|float $version  - the version to check against
-	 * @param callable     $callable - method or function to run if the version checks out
-	 * @param mixed        $args     - args to pass to the function
+	 * @param string|float $version  - The version to check against.
+	 * @param callable     $callback - Method or function to run if the version checks out.
+	 * @param mixed        $args     - Args to pass to the function.
 	 *
 	 * @uses self::$updates
 	 *
 	 * @return void
-	 *
 	 */
-	public function add_update( $version, callable $callable, $args = null ) : void {
-		//if the version is higher than one in db, add to updates
+	public function add_update( $version, callable $callback, $args = null ) : void {
 		if ( version_compare( self::$version, (string) $version, '<' ) ) {
 			self::$updates[] = [
 				'version'  => (string) $version,
-				'callable' => $callable,
+				'callable' => $callback,
 				'args'     => $args,
 			];
 		}

@@ -24,10 +24,47 @@
 
 	<!-- @see https://github.com/PHPCompatibility/PHPCompatibility#using-a-custom-ruleset -->
 	<config name="testVersion" value="7.4-" />
+
 	<!-- @see https://github.com/PHPCompatibility/PHPCompatibilityWP#how-to-use -->
-	<rule ref="PHPCompatibilityWP" />
+	<rule ref="PHPCompatibilityWP">
+		<include-pattern>*\.php$</include-pattern>
+	</rule>
+
+	<!-- Rules available from PHPCSExtra -->
+	<!-- @link https://github.com/PHPCSStandards/PHPCSExtra#sniffs -->
+	<rule ref="Universal.Arrays.DuplicateArrayKey" />
+	<rule ref="Universal.Namespaces.DisallowCurlyBraceSyntax" />
+	<rule ref="Universal.NamingConventions.NoReservedKeywordParameterNames">
+		<exclude name="Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound" />
+	</rule>
+	<rule ref="Universal.Operators.DisallowLogicalAndOr" />
+	<rule ref="Universal.Operators.StrictComparisons" />
+	<rule ref="Universal.PHP.OneStatementInShortEchoTag" />
+	<rule ref="Universal.UseStatements.LowercaseFunctionConst" />
+	<rule ref="Universal.UseStatements.NoLeadingBackslash" />
+
+	<rule ref="Universal.Classes.DisallowFinalClass">
+		<type>error</type>
+	</rule>
 
 	<rule ref="WordPress">
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
+		<exclude name="Generic.Commenting" />
+		<exclude name="Generic.PHP.DisallowShortOpenTag.EchoFound" />
+		<exclude name="Generic.Formatting.MultipleStatementAlignment.NotSameWarning" />
+		<exclude name="Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed" />
+
+		<exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine" />
+		<exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket" />
+		<exclude name="PEAR.Functions.FunctionCallSignature.Indent" />
+		<exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments" />
+		<exclude name="PEAR.Functions.FunctionCallSignature.OpeningIndent" />
+
+		<exclude name="Squiz.Commenting.FileComment.Missing" />
+		<exclude name="Squiz.Commenting.FunctionComment.Missing" />
+		<exclude name="Squiz.Commenting.FunctionComment.MissingParamComment" />
+		<exclude name="Squiz.WhiteSpace.SuperfluousWhitespace.EndLine" />
+
 		<exclude name="WordPress.Variables.GlobalVariables.OverrideProhibited" />
 		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
@@ -35,6 +72,8 @@
 		<exclude name="WordPress.NamingConventions.ValidHookName.UseUnderscores" />
 		<exclude name="WordPress.PHP.DisallowShortTernary.Found" />
 	</rule>
+
+
 	<rule ref="WordPress.Security.ValidatedSanitizedInput">
 		<properties>
 			<property name="customUnslashingSanitizingFunctions" type="array">

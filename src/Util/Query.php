@@ -11,7 +11,7 @@ use Lipe\Lib\Traits\Singleton;
  * @since  3.15.0
  *
  */
-final class Query {
+class Query {
 	use Singleton;
 
 	/**

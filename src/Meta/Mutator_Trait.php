@@ -36,15 +36,15 @@ trait Mutator_Trait {
 
 
 	/**
-	 * Access any property which exists on the child Object.
+	 * Access any property, which exists on the child Object.
 	 *
 	 * Extended properties may be accessed by providing a
-	 * `get_extended_properties` method which returns a list
+	 * `get_extended_properties` method, which returns a list
 	 * of additional properties.
 	 *
 	 * @param string $name - Property to retrieve.
 	 *
-	 * @throws \ErrorException
+	 * @throws \ErrorException - If `get_object` method is not available.
 	 * @return mixed
 	 */
 	public function __get( string $name ) {
@@ -64,13 +64,14 @@ trait Mutator_Trait {
 
 
 	/**
-	 * Set value of any property which exists on the child Object.
+	 * Set value of any property, which exists on the child Object.
 	 *
 	 * @param string $name - Property to set.
 	 * @param mixed  $value
 	 *
+	 * @throws \ErrorException - If `get_object` method not available.
+	 *
 	 * @return void
-	 * @throws \ErrorException
 	 */
 	public function __set( string $name, $value ) {
 		if ( ! \method_exists( $this, 'get_object' ) ) {
@@ -78,21 +79,22 @@ trait Mutator_Trait {
 		}
 		$object = $this->get_object();
 		if ( null !== $object && ( \property_exists( $object, $name ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $name ) ) ) ) {
-			return $object->{$name} = $value;
+			$object->{$name} = $value;
 		}
 	}
 
 
 	/**
-	 * Call any method which exists on the child Object
+	 * Call any method, which exists on the child Object
 	 *
-	 * @param string $name - Name of the method.
-	 * @param array $arguments - Passed arguments
+	 * @param string $name      - Name of the method.
+	 * @param array  $arguments - Passed arguments.
 	 *
-	 * @throws \ErrorException
+	 * @throws \ErrorException - If method does not exist.
+	 *
 	 * @return mixed
 	 */
-	public function __call( $name, $arguments ) {
+	public function __call( string $name, array $arguments ) {
 		if ( ! \method_exists( $this, 'get_object' ) ) {
 			throw new \ErrorException( 'Direct access to object methods is only available for objects with `get_object`: ' . __CLASS__ . ":{$name}" );
 		}
@@ -128,10 +130,10 @@ trait Mutator_Trait {
 	 * using the meta repo to map the appropriate data type.
 	 *
 	 * @param string         $key
-	 * @param mixed|callable $value - If a callable is passed it will be called with the
-	 *                              previous value as the only argument.
-	 * @param mixed                 If a callable is passed with an additional argument,
-	 *                              it be be used as the default value for `$this->get_meta()`.
+	 * @param mixed|callable ...$value - If a callable is passed it will be called with the
+	 *                                 previous value as the only argument.
+	 *                                 If a callable is passed with an additional argument,
+	 *                                 it be used as the default value for `$this->get_meta()`.
 	 *
 	 * @return void
 	 */
@@ -163,7 +165,7 @@ trait Mutator_Trait {
 
 
 	/**
-	 * @param                $field_id
+	 * @param string         $field_id
 	 * @param mixed|callable $value - If a callable is passed it will be called with the
 	 *                              previous value as the only argument.
 	 *

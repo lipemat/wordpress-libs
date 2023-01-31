@@ -17,13 +17,17 @@ use Lipe\Lib\Post_Type\Extended_CPTS\Sortable;
 class Custom_Post_Type_Extended extends Custom_Post_Type {
 	/**
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Admin-columns
+	 *
+	 * @var array
 	 */
-	public $admin_cols = [];
+	public array $admin_cols = [];
 
 	/**
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Admin-filters
+	 *
+	 * @var array
 	 */
-	public $admin_filters = [];
+	public array $admin_filters = [];
 
 	/**
 	 * Add params the post type archive query
@@ -34,7 +38,7 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 *
 	 * @var array
 	 */
-	public $archive = [];
+	public array $archive = [];
 
 	/**
 	 * Force the block editor for this post type.
@@ -119,20 +123,24 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	/**
 	 * Register query vars for sorting of query results.
 	 *
-	 * @see Sortable
+	 * @see  Sortable
 	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Query-vars-for-sorting
+	 *
+	 * @var array
 	 */
-	public $site_sortables = [];
+	public array $site_sortables = [];
 
 	/**
 	 * Register query vars for filtering of query results.
 	 *
-	 * @see Sortable
+	 * @see  Sortable
 	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Query-vars-for-filtering
+	 *
+	 * @var array
 	 */
-	public $site_filters = [];
+	public array $site_filters = [];
 
 
 	/**
