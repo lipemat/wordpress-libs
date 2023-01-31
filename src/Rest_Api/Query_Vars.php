@@ -20,6 +20,10 @@ use Lipe\Lib\Traits\Singleton;
 class Query_Vars {
 	use Singleton;
 
+	public function __construct() {
+		_doing_it_wrong( __CLASS__, 'This class is deprecated and will be removed in version 4.', '3.15.0' );
+	}
+
 
 	protected function hook() : void {
 		add_action( 'rest_api_init', [ $this, 'add_filters' ] );

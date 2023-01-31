@@ -43,6 +43,8 @@ class Pagination {
 	 * @param int        $per_page        - defaults to 10 (ignored if using a `$wp_query`).
 	 */
 	public function __construct( array $items, ?\WP_Query $wp_query = null, int $per_page = 10 ) {
+		_doing_it_wrong( __CLASS__, 'This class is deprecated and will be removed in version 4.', '3.15.0' );
+
 		$this->items = $items;
 		$this->wp_query = $wp_query;
 
