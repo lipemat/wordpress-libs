@@ -1043,8 +1043,9 @@ class Field {
 			'taxonomy_select',
 		];
 
-		// These html inputs do not work as readonly and must be disabled
-		if ( in_array( $this->type, $disable_only, true ) ) {
+		// These HTML inputs do not work as readonly and must be disabled.
+		// @notice Any saved values will be cleared from these fields on save.
+		if ( \in_array( $this->type, $disable_only, true ) ) {
 			$this->disabled();
 		}
 
