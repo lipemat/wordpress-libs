@@ -370,6 +370,11 @@ class Field_Type {
 	protected $field;
 
 
+	/**
+	 * @internal
+	 *
+	 * @param Field $field
+	 */
 	public function __construct( Field $field ) {
 		$this->field = $field;
 

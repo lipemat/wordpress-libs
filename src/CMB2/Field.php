@@ -62,7 +62,7 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
-	 * @see  \Lipe\Lib\CMB2\Field_Type;
+	 * @see  Field_Type;
 	 * @see  \Lipe\Lib\CMB2\Field::type();
 	 *
 	 * @var string;
@@ -717,12 +717,13 @@ class Field {
 	/**
 	 * Field constructor.
 	 *
-	 * @param string             $id
-	 * @param string|null        $name
+	 * @interal
+	 *
+	 * @see Field_Type
+	 *
+	 * @param string         $id
+	 * @param string|null    $name
 	 * @param Box|Group|null $box - Parent class using this Field.
-	 *
-	 * @see \Lipe\Lib\CMB2\Field_Type
-	 *
 	 */
 	public function __construct( string $id, ?string $name, $box = null ) {
 		$this->id = $id;
@@ -1222,7 +1223,7 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
-	 * @see  \Lipe\Lib\CMB2\Field_Type;
+	 * @see  Field_Type;
 	 * @see  \Lipe\Lib\CMB2\Field::type();
 	 *
 	 * @return string

@@ -84,6 +84,8 @@ class Group extends Field {
 	/**
 	 * Group constructor.
 	 *
+	 * @internal
+	 *
 	 * @param string      $id
 	 * @param string|null $title
 	 * @param Box         $box
