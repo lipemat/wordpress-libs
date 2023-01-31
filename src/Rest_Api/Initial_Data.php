@@ -60,7 +60,7 @@ class Initial_Data {
 	 * Gets global posts data from the JSON API server
 	 * Alternatively an array of posts may be passed to be converted to json data
 	 *
-	 * @param \WP_Post[]|null $posts      - Array of post objects (defaults to global WP_Query->posts)
+	 * @param \WP_Post[]|null $posts      - Array of post objects (defaults to global WP_Query->posts).
 	 * @param bool            $with_links - To include links inside the response.
 	 * @param bool|string[]   $embed      - Whether to embed all links, a filtered list of link relations, or no links.
 	 *

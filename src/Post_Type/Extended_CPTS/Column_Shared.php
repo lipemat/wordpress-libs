@@ -7,35 +7,37 @@ namespace Lipe\Lib\Post_Type\Extended_CPTS;
  *
  */
 class Column_Shared extends Shared_Abstract {
-	protected $column;
+	/**
+	 * @var Column
+	 */
+	protected Column $column;
 
 	/**
 	 * For possible future use
 	 *
 	 * @var array
 	 */
-	protected $args;
+	protected array $args;
 
 
 	/**
 	 * Column_Shared constructor.
 	 *
-	 * @param \Lipe\Lib\Post_Type\Extended_CPTS\Column $column
-	 * @param array                                    $args
+	 * @param Column $column
+	 * @param array  $args
 	 */
-	function __construct( Column $column, array $args ) {
+	public function __construct( Column $column, array $args ) {
 		$this->args = $args;
 		$this->column = $column;
 	}
 
 
 	/**
-	 *
 	 * @param array $args
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 * @return Column_Shared
 	 */
-	protected function return( array $args ) {
+	protected function return( array $args ) : Column_Shared {
 		$this->column->set( $args );
 		return $this;
 	}
@@ -45,47 +47,47 @@ class Column_Shared extends Shared_Abstract {
 	 * Make this column the default sort column instead
 	 * of the default 'title'
 	 *
-	 * @param string $direction - 'ASC', 'DESC' (default 'ASC' )
+	 * @param string $direction - 'ASC', 'DESC' (default 'ASC' ).
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 * @return Column_Shared
 	 */
-	public function set_as_default_sort_column( $direction = 'ASC' ) {
+	public function set_as_default_sort_column( string $direction = 'ASC' ) : Column_Shared {
 		return $this->return( [ 'default' => $direction ] );
 	}
 
 
 	/**
-	 * Make a column sortable
-	 * Most columns are by default
+	 * Make a column sortable.
+	 * Most columns are by default.
 	 *
-	 * @notice feature_image can not be sortable
+	 * @notice feature_image cannot be sortable.
 	 *
-	 * @param bool $is_sortable - (default to false);
+	 * @param bool $is_sortable - (default to false).
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 * @return Column_Shared
 	 */
-	public function sortable( $is_sortable = false ) {
+	public function sortable( bool $is_sortable = false ) : Column_Shared {
 		return $this->return( [ 'sortable' => $is_sortable ] );
 	}
 
 
 	/**
-	 * Any column can be restricted so it's only shown to users
+	 * Any column can be restricted, so it's only shown to users
 	 * with a given capability by using the cap parameter:
 	 *
-	 * @param  string $capability
+	 * @param string $capability
 	 *
 	 * @example 'manage_options'
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 * @return Column_Shared
 	 */
-	public function column_capability( $capability ) {
+	public function column_capability( string $capability ) : Column_Shared {
 		return $this->return( [ 'cap' => $capability ] );
 	}
 
 
 	/**
-	 * Additionally, just the output of any column can be restricted so
+	 * Additionally, just the output of any column can be restricted, so
 	 * it's only shown to users with a given capability for the current row's post
 	 * by using the post_cap parameter.
 	 *
@@ -97,9 +99,9 @@ class Column_Shared extends Shared_Abstract {
 	 *
 	 * @example 'edit_post'
 	 *
-	 * @return \Lipe\Lib\Post_Type\Extended_CPTS\Column_Shared
+	 * @return Column_Shared
 	 */
-	public function post_capability( $capability ) {
+	public function post_capability( string $capability ) : Column_Shared {
 		return $this->return( [ 'post_cap' => $capability ] );
 	}
 

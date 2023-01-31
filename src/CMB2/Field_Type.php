@@ -370,10 +370,15 @@ class Field_Type {
 	protected $field;
 
 
+	/**
+	 * @internal
+	 *
+	 * @param Field $field
+	 */
 	public function __construct( Field $field ) {
 		$this->field = $field;
 
-		//set all properties to the values of matching field types
+		// set all properties to the values of matching field types.
 		foreach ( get_object_vars( $this ) as $_var => $_value ) {
 			if ( 'field' !== $_var && 'box' !== $_var ) {
 				$this->{$_var} = $_var;
@@ -386,8 +391,8 @@ class Field_Type {
 	 * Set the field properties based on an array or args.
 	 *
 	 *
-	 * @param array  $args      - [$key => $value]
-	 * @param string $data_type - a type of data to return [Repo::DEFAULT, Repo::CHECKBOX, Repo::FILE, Repo::TAXONOMY ]
+	 * @param array  $args      - [$key => $value].
+	 * @param string $data_type - a type of data to return [Repo::DEFAULT, Repo::CHECKBOX, Repo::FILE, Repo::TAXONOMY ].
 	 *
 	 * @return Field
 	 */
@@ -478,12 +483,12 @@ class Field_Type {
 
 
 	/**
-	 * Standard text field which enforces a url.
+	 * Standard text field, which enforces a url.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_url
 	 *
 	 * @param array|null $protocols - Specify the supported URL protocols.
-	 *                              Defaults to return value of wp_allowed_protocols()
+	 *                              Defaults to return value of wp_allowed_protocols().
 	 *
 	 * @return Field
 	 */
@@ -577,25 +582,25 @@ class Field_Type {
 	/**
 	 * Code textarea.
 	 *
-	 * The defaults are most likely what you want to use, but just in case
-	 * there are arguments for specialize fine tuning
+	 * The defaults are most likely what you want to use, but arguments are
+	 * available for specialize fine-tuning
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#textarea_code
 	 * @link    https://www.ibenic.com/wordpress-code-editor#file-code-editor-js
 	 *
-	 * @param bool   $disable_codemirror    - disable code mirror handling in favor or a basic textbox
-	 * @param string $language              - Language mode to use (example: php)
+	 * @param bool    $disable_codemirror    - disable code mirror handling in favor or a basic textbox.
+	 * @param ?string $language              - Language mode to use (example: php).
 	 *
+	 * @param array   $code_editor_arguments - The arguments are then passed to `wp.codeEditor.initialize` method.
+	 *
+	 * @return Field
 	 * @link    https://codemirror.net/doc/manual.html#option_mode
 	 * @link    https://codemirror.net/mode/
-	 *
-	 * @param array  $code_editor_arguments - The arguments are then passed to `wp.codeEditor.initialize` method.
 	 *
 	 * @example textarea_code( false, 'javascript', [ 'codemirror' => [ 'lineNumbers' => false, 'theme' => 'cobalt' ] ]
 	 *          );
 	 *
 	 *
-	 * @return Field
 	 */
 	public function textarea_code( bool $disable_codemirror = false, ?string $language = null, array $code_editor_arguments = [] ) : Field {
 		$set = [
@@ -662,7 +667,7 @@ class Field_Type {
 	/**
 	 * Shortcut for using the "file" field with type of image.
 	 *
-	 * By default it will store the file url and allow either attachments or URLs.
+	 * By default, it will store the file url and allow either attachments or URLs.
 	 * This field type will also store the attachment ID
 	 * (useful for getting different image sizes).
 	 * It will store it in $id . '_id', so if your field id is wiki_test_image
@@ -670,9 +675,9 @@ class Field_Type {
 	 * You can also limit it to only allowing attachments
 	 * (can't manually type in a URL) by setting `$show_text_input` to false.
 	 *
-	 * @param string      $button_text     - (default 'Add Image' )
-	 * @param bool|null   $show_text_input - (default true) *May not be turned off for required fields*.
-	 * @param string|null $preview_size    - (default full)
+	 * @param string      $button_text     - (default 'Add Image' ).
+	 * @param bool|null   $show_text_input - (default true) May not be turned off for required fields.
+	 * @param string|null $preview_size    - (default full).
 	 *
 	 * @see     Field_Type::file()
 	 *
@@ -692,7 +697,7 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#checkbox
 	 *
-	 * @param string $layout - compact, block (cmb2 default is block)
+	 * @param string $layout - compact, block (cmb2 default is block).
 	 *
 	 * @return Field
 	 */
@@ -727,8 +732,8 @@ class Field_Type {
 	 *
 	 * @param string $date_format
 	 * @param string $timezone_meta_key   - to use the value of another timezone_select field
-	 *                                    as the timezone
-	 * @param array  $date_picker_options - overrides for jQuery UI Datepicker (see example)
+	 *                                    as the timezone.
+	 * @param array  $date_picker_options - overrides for jQuery UI Datepicker (see example).
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_date
 	 *
@@ -740,13 +745,13 @@ class Field_Type {
 
 
 	/**
-	 * Date field, stored as UNIX timestamp. Useful if you plan to query based on it
+	 * Date field, stored as UNIX timestamp. Useful if you plan to query based on it.
 	 *
 	 * @param string $date_format
 	 * @param string $timezone_meta_key   - to use the value of another timezone_select field
-	 *                                    as the timezone
+	 *                                    as the timezone.
 	 *
-	 * @param array  $date_picker_options - overrides for jQuery UI Datepicker (see text_date example)
+	 * @param array  $date_picker_options - overrides for jQuery UI Datepicker (see text_date example).
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_date_timestamp
 	 *
@@ -758,13 +763,13 @@ class Field_Type {
 
 
 	/**
-	 * Date and time field, stored as UNIX timestamp.. Useful if you plan to query based on it
+	 * Date and time field, stored as UNIX timestamp. Useful if you plan to query based on it.
 	 *
 	 * @param string $date_format
 	 * @param string $timezone_meta_key   - to use the value of another timezone_select field
-	 *                                    as the timezone
+	 *                                    as the timezone.
 	 *
-	 * @param array  $date_picker_options - overrides for jQuery UI Datepicker (see text_date example)
+	 * @param array  $date_picker_options - overrides for jQuery UI Datepicker (see text_date example).
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp
 	 *
@@ -780,8 +785,8 @@ class Field_Type {
 	 *
 	 * @param string $date_format
 	 * @param string $timezone_meta_key   - to use the value of another timezone_select field
-	 *                                    as the timezone
-	 * @param array  $date_picker_options - overrides for jQuery UI Datepicker (see text_date example)
+	 *                                    as the timezone.
+	 * @param array  $date_picker_options - overrides for jQuery UI Datepicker (see text_date example).
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp_timezone
 	 *
@@ -793,12 +798,12 @@ class Field_Type {
 
 
 	/**
-	 * A colorpicker field.
+	 * A color picker field.
 	 *
-	 * The CMB2 colorpicker uses the built in WordPress colorpicker,
+	 * The CMB2 color picker uses the built-in WordPress color picker,
 	 * Iris [automattic.github.io/Iris/] (http://automattic.github.io/Iris/)
 	 *
-	 * All of the default options in Iris are configurable within the CMB2 colorpicker field.
+	 * All of the default options in Iris are configurable within the CMB2 color picker field.
 	 *
 	 *
 	 * [Default Iris Options] (http://automattic.github.io/Iris/#options):
@@ -806,7 +811,7 @@ class Field_Type {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#colorpicker
 	 *
 	 * @param array $iris_options
-	 * @param bool  $transparency = to enable transparency
+	 * @param bool  $transparency - to enable transparency.
 	 *
 	 * @return Field
 	 *
@@ -829,8 +834,8 @@ class Field_Type {
 	/**
 	 * A field with multiple checkboxes (and multiple can be selected)
 	 *
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function()
-	 * @param bool           $select_all          - display select all button or not
+	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
+	 * @param bool           $select_all          - display select all button or not.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
 	 *
@@ -847,8 +852,8 @@ class Field_Type {
 	/**
 	 * A field with multiple checkboxes (and multiple can be selected)
 	 *
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function()
-	 * @param bool           $select_all          - display select all button or not
+	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
+	 * @param bool           $select_all          - display select all button or not.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
 	 *
@@ -865,8 +870,8 @@ class Field_Type {
 	/**
 	 * Standard radio buttons.
 	 *
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function()
-	 * @param bool|string    $show_option_none    - disable or set the text of the option
+	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
+	 * @param bool|string    $show_option_none    - disable or set the text of the option.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio
 	 *
@@ -882,8 +887,8 @@ class Field_Type {
 	/**
 	 * Inline radio buttons.
 	 *
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function()
-	 * @param bool|string    $show_option_none    - disable or set the text of the option
+	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
+	 * @param bool|string    $show_option_none    - disable or set the text of the option.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio_inline
 	 *
@@ -899,8 +904,8 @@ class Field_Type {
 	/**
 	 * Standard select dropdown.
 	 *
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function()
-	 * @param bool|string    $show_option_none    - disable or set the text of the option
+	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
+	 * @param bool|string    $show_option_none    - disable or set the text of the option.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#select
 	 *
@@ -916,9 +921,9 @@ class Field_Type {
 	/**
 	 * Radio buttons pre-populated with taxonomy terms
 	 *
-	 * @param string $taxonomy       - slug
+	 * @param string $taxonomy       - slug.
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox
+	 * @param bool   $remove_default - remove default WP terms metabox.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
 	 *
@@ -934,11 +939,11 @@ class Field_Type {
 	/**
 	 * Hierarchical radio buttons pre-populated with taxonomy terms
 	 *
-	 * @param string $taxonomy       - slug
-	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox
-	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
+	 *
+	 * @param string $taxonomy       - slug.
+	 * @param string $no_terms_text
+	 * @param bool   $remove_default - remove default WP terms metabox.
 	 *
 	 * @return Field
 	 */
@@ -952,11 +957,11 @@ class Field_Type {
 	/**
 	 * Inline radio buttons pre-populated with taxonomy terms
 	 *
-	 * @param string $taxonomy       - slug
-	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox
-	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio_inline
+	 *
+	 * @param string $taxonomy       - slug.
+	 * @param string $no_terms_text
+	 * @param bool   $remove_default - remove default WP terms metabox.
 	 *
 	 * @return Field
 	 */
@@ -968,13 +973,13 @@ class Field_Type {
 
 
 	/**
-	 * A select field pre-populated with taxonomy terms
-	 *
-	 * @param string $taxonomy       - slug
-	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox
+	 * A select field pre-populated with taxonomy terms.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_select
+	 *
+	 * @param string $taxonomy       - slug.
+	 * @param string $no_terms_text
+	 * @param bool   $remove_default - remove default WP terms metabox.
 	 *
 	 * @return Field
 	 */
@@ -988,11 +993,12 @@ class Field_Type {
 	/**
 	 * A select field pre-populated with taxonomy terms and displayed hierarchical.
 	 *
-	 * @param string $taxonomy       - slug
-	 * @param null   $no_terms_text
-	 * @param null   $remove_default - remove default WP terms metabox
+	 * @todo Add link once docs become available.
 	 *
-	 * @todo Add links once docs become available.
+	 * @param string $taxonomy       - slug.
+	 * @param null   $no_terms_text
+	 * @param null   $remove_default - remove default WP terms metabox.
+	 *
 	 *
 	 * @return Field
 	 */
@@ -1004,16 +1010,16 @@ class Field_Type {
 
 
 	/**
-	 * Custom field which exists only within Lipe\Lib
+	 * A custom field, which exists only within Lipe\Lib
 	 *
 	 * Select 2 term selector.
 	 *
-	 * @param string $taxonomy         - slug
-	 * @param bool   $create_new_terms - allow creating new terms
+	 * @param string $taxonomy         - slug.
+	 * @param bool   $create_new_terms - allow creating new terms.
 	 * @param bool   $save_as_terms    - append the terms to the object as well as storing them in meta (default to
-	 *                                 false );
+	 *                                 false ).
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default   - remove default WP terms metabox
+	 * @param bool   $remove_default   - remove default WP terms metabox.
 	 *
 	 * @see Term_Select_2
 	 *
@@ -1033,12 +1039,12 @@ class Field_Type {
 	/**
 	 * A field with checkboxes with taxonomy terms, and multiple terms can be selected.
 	 *
-	 * @param string $taxonomy       - slug
-	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox
-	 * @param bool   $select_all     - display the select all button
-	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
+	 *
+	 * @param string $taxonomy       - slug.
+	 * @param string $no_terms_text
+	 * @param bool   $remove_default - remove default WP terms metabox.
+	 * @param bool   $select_all     - display the select all button.
 	 *
 	 * @return Field
 	 */
@@ -1053,12 +1059,12 @@ class Field_Type {
 	/**
 	 * Hierarchical checkboxes with taxonomy terms, and multiple terms can be selected.
 	 *
-	 * @param string $taxonomy       - slug
-	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox
-	 * @param bool   $select_all     - display the select all button
-	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_hierarchical
+	 *
+	 * @param string $taxonomy       - slug.
+	 * @param string $no_terms_text
+	 * @param bool   $remove_default - remove default WP terms metabox.
+	 * @param bool   $select_all     - display the select all button.
 	 *
 	 * @return Field
 	 */
@@ -1073,12 +1079,12 @@ class Field_Type {
 	/**
 	 * Inline checkboxes with taxonomy terms.
 	 *
-	 * @param string $taxonomy       - slug
-	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox
-	 * @param bool   $select_all     - display the select all button
-	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_inline
+	 *
+	 * @param string $taxonomy       - slug.
+	 * @param string $no_terms_text
+	 * @param bool   $remove_default - remove default WP terms metabox.
+	 * @param bool   $select_all     - display the select all button.
 	 *
 	 * @return Field
 	 */
@@ -1093,7 +1099,7 @@ class Field_Type {
 	/**
 	 * A metabox with TinyMCE editor (same as WordPress' visual editor).
 	 *
-	 * @param array $mce_options - standard WP mce options
+	 * @param array $mce_options - standard WP mce options.
 	 *
 	 * @see  \_WP_Editors::parse_settings()
 	 *
@@ -1116,19 +1122,18 @@ class Field_Type {
 	/**
 	 * A file uploader.
 	 *
-	 * By default it will store the file url and allow either attachments or URLs.
+	 * By default, it will store the file url and allow either attachments or URLs.
 	 * This field type will also store the attachment ID
 	 * (useful for getting different image sizes).
 	 * It will store it in $id . '_id', so if your field id is wiki_test_image
 	 * the ID is stored in wiki_test_image_id.
 	 * You can also limit it to only allowing attachments
-	 * (can't manually type in a URL),
-	 * which is also useful if you plan to use the attachment ID.
+	 * (can't manually type in a URL), also useful if you plan to use the attachment ID.
 	 *
-	 * @param string $button_text     - (default 'Add File' )
-	 * @param string $file_mime_type  - (default all)
-	 * @param bool   $show_text_input - (default true) *May not be turned off for required fields*
-	 * @param string $preview_size    - (default full)
+	 * @param string $button_text     - (default 'Add File' ).
+	 * @param string $file_mime_type  - (default all).
+	 * @param bool   $show_text_input - (default true) May not be turned off for required fields.
+	 * @param string $preview_size    - (default full).
 	 * @param string $select_text     - Media manager button label (default: Use this file).
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#file
@@ -1136,6 +1141,7 @@ class Field_Type {
 	 * @example file( 'Add PDF', 'application/pdf', true );
 	 *
 	 * @example file( 'Add Image', 'image', false );
+	 *
 	 * @return Field
 	 */
 	public function file( $button_text = null, $file_mime_type = null, $show_text_input = null, $preview_size = null, $select_text = null ) : Field {
@@ -1149,18 +1155,17 @@ class Field_Type {
 	 * A file uploader that allows you to add as many files as you want.
 	 * Once added, files can be dragged and dropped to reorder.
 	 * This is a repeatable field, and will store its data in an array,
-	 * with the attachment ID as the array key and the attachment url as the value
-	 *
-	 * @param string $button_text      - (default 'Add File')
-	 * @param string $file_mime_type   - (default all)
-	 * @param string $preview_size     - (default full)
-	 * @param string $remove_item_text - (default 'Remove')
-	 * @param string $file_text        - (default 'File')
-	 * @param string $download_text    - (default 'Download')
-	 * @param string $select_text      - (default 'Use these files')
-	 *
+	 * with the attachment ID as the array key, and the attachment url as the value.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file_list
+	 *
+	 * @param string $button_text      - (default 'Add File').
+	 * @param string $file_mime_type   - (default all).
+	 * @param string $preview_size     - (default full).
+	 * @param string $remove_item_text - (default 'Remove').
+	 * @param string $file_text        - (default 'File').
+	 * @param string $download_text    - (default 'Download').
+	 * @param string $select_text      - (default 'Use these files').
 	 *
 	 * @return Field
 	 */
@@ -1172,20 +1177,20 @@ class Field_Type {
 
 
 	/**
-	 * Hybrid field that supports adding other fields as a repeatable group.
+	 * A hybrid field that supports adding other fields as a repeatable group.
 	 *
-	 * @param string|null $title                 - include a {#} to have replace with number
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
+	 *
+	 * @param string|null $title                 - include a {#} to have replaced with number.
 	 * @param string|null $add_button_text
 	 * @param string|null $remove_button_text
 	 * @param bool        $sortable
 	 * @param bool        $closed
 	 * @param string|null $remove_confirm        - A message to display when a user attempts
 	 *                                           to delete a group.
-	 *                                           (Defaults to null/false for no confirmation)
+	 *                                           (Defaults to null/false for no confirmation).
 	 *
 	 * @return Field
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
-	 *
 	 */
 	public function group( ?string $title = null, ?string $add_button_text = null, ?string $remove_button_text = null, bool $sortable = true, bool $closed = false, ?string $remove_confirm = null ) : Field {
 		$_args = [
@@ -1225,7 +1230,7 @@ class Field_Type {
 	 * @param string $remove_item_text
 	 * @param string $file_text
 	 * @param string $download_text
-	 * @param string $select_text - Text on the button in the media manager (default: Use this file)
+	 * @param string $select_text - Text on the button in the media manager (default: Use this file).
 	 *
 	 * @return array
 	 */
@@ -1269,15 +1274,14 @@ class Field_Type {
 
 
 	/**
-	 *
 	 * @param string $type
-	 * @param string $taxonomy       - slug
+	 * @param string $taxonomy       - slug.
 	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox
+	 * @param bool   $remove_default - remove default WP terms metabox.
 	 *
 	 * @return array
 	 */
-	protected function field_type_taxonomy( $type, $taxonomy, $no_terms_text = null, $remove_default = null ) : array {
+	protected function field_type_taxonomy( string $type, string $taxonomy, $no_terms_text = null, $remove_default = null ) : array {
 		$_args = [
 			'type'     => $type,
 			'taxonomy' => $taxonomy,
@@ -1294,15 +1298,14 @@ class Field_Type {
 
 
 	/**
-	 *
 	 * @param string         $type
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function()
+	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
 	 * @param bool|string    $show_option_none
 	 *
 	 * @return array
 	 */
-	protected function field_type_options( $type, $options_or_callback, $show_option_none = null ) : array {
-		if ( is_callable( $options_or_callback ) ) {
+	protected function field_type_options( string $type, $options_or_callback, $show_option_none = null ) : array {
+		if ( \is_callable( $options_or_callback ) ) {
 			$_args = [
 				'type'       => $type,
 				'options_cb' => $options_or_callback,

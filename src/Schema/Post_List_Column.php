@@ -4,16 +4,35 @@ namespace Lipe\Lib\Schema;
 
 //phpcs:disable WordPress.Security.NonceVerification.Recommended
 
+/**
+ * Add a custom column to the posts list table.
+ *
+ */
 abstract class Post_List_Column {
-	protected $column_label;
+	/**
+	 * @var string
+	 */
+	protected string $column_label;
 
-	protected $column_slug;
+	/**
+	 * @var string
+	 */
+	protected string $column_slug;
 
-	protected $column_position;
+	/**
+	 * @var int
+	 */
+	protected int $column_position;
 
-	protected $post_types = [];
+	/**
+	 * @var array|string[]
+	 */
+	protected array $post_types = [];
 
-	protected $filters = [];
+	/**
+	 * @var array
+	 */
+	protected array $filters = [];
 
 
 	/**
@@ -25,7 +44,7 @@ abstract class Post_List_Column {
 	 *
 	 * @return void
 	 */
-	abstract function render_column( $column, $post_id );
+	abstract protected function render_column( string $column, int $post_id );
 
 
 	/**
@@ -48,7 +67,7 @@ abstract class Post_List_Column {
 			add_action( 'restrict_manage_posts', [ $this, 'render_filter' ] );
 			add_action( 'parse_query', [ $this, 'maybe_filter_query' ] );
 			foreach ( $this->post_types as $post_type ) {
-				add_action( "manage_{$post_type}_posts_columns", [ $this, 'add_column' ] );
+				add_filter( "manage_{$post_type}_posts_columns", [ $this, 'add_column' ] );
 				add_action( "manage_{$post_type}_posts_custom_column", [ $this, 'maybe_render_column' ], 10, 2 );
 			}
 		}
@@ -135,15 +154,15 @@ abstract class Post_List_Column {
 
 	/**
 	 * Override to filter the query being used in the posts list
-	 * Will provide the selected value and the query
-	 * to filter
+	 * Will provide the selected value, and the query
+	 * to filter.
 	 *
-	 * @notice This method must be overridden if using filters
+	 * @notice This method must be overridden if using filters.
+	 *
+	 * @throws \RuntimeException - If not overridden.
 	 *
 	 * @param mixed     $value
 	 * @param \WP_Query $query
-	 *
-	 * @return \WP_Query
 	 */
 	public function filter_query( $value, \WP_Query $query ) : \WP_Query {
 		throw new \RuntimeException( 'You must override the Post_List_Column::filter_query() method if you are using Post_List_Column::set_filters()' );
@@ -204,12 +223,10 @@ abstract class Post_List_Column {
 	 * Using this method will cause $this->filter_query to
 	 * be called when rendering the post list
 	 *
-	 * @param array{name?: string, items: array, show_all?: string} $args  -
-	 *                    {
+	 * @param array{name?: string, items: array, show_all?: string} $args
 	 *                    'name' => %name of input%
 	 *                    'items => array { %value% => %label% }
 	 *                    'show_all' => %All Label%
-	 *                    }
 	 *
 	 * @return void
 	 */

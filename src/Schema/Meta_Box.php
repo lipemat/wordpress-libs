@@ -19,23 +19,35 @@ namespace Lipe\Lib\Schema;
 abstract class Meta_Box {
 
 	protected const NONCE_ACTION = 'lipe/lib/schema/meta_box_save_post';
-	protected const NONCE_NAME = 'lipe/lib/schema/meta_box_save_post_nonce';
+	protected const NONCE_NAME   = 'lipe/lib/schema/meta_box_save_post_nonce';
 
 	/**
-	 * Store the registered meta box for later registering with WP
+	 * Store the registered meta box for later registering with WP.
 	 *
-	 * @static
 	 * @var array
 	 */
-	private static $registry = [];
+	private static array $registry = [];
 
-	public $id;
+	/**
+	 * @var string
+	 */
+	public string $id;
 
-	public $title;
+	/**
+	 * @var string
+	 */
+	public string $title;
 
-	public $context;
+	/**
+	 * @var string
+	 */
+	public string $context;
 
-	public $priority;
+	/**
+	 * @var 'core'|'default'|'high'|'low'
+	 */
+	public string $priority;
+
 	/**
 	 * The following parameter is any additional arguments passed as $callback_args
 	 * to add_meta_box, if/when applicable.
@@ -47,21 +59,23 @@ abstract class Meta_Box {
 	 * @see Box::$gutenberg_compatible
 	 *
 	 * More: https://wordpress.org/gutenberg/handbook/designers-developers/developers/backwards-compatibility/meta-box/
+	 *
+	 * @var mixed
 	 */
 	public $callback_args;
 
 	/**
 	 * This flag lets you set whether the meta box works in the block editor or not.
-	 * Setting it to true signifies that the you’ve confirmed that the meta box
-	 * works in the block editor, setting it to false signifies that it doesn't.
+	 * Setting it to true signifies that you’ve confirmed that the meta box
+	 * works in the block editor, setting it to false signifies that it does not.
 	 *
 	 * If set to false, WP will automatically fall back to the classic editor when
 	 * this box is loaded.
 	 *
 	 * @uses sets the `__block_editor_compatible_meta_box` meta box flag
 	 *
-	 * @see Box::get_args()
-	 * @see Box::$display_when_gutenberg_active
+	 * @see  Box::get_args()
+	 * @see  Box::$display_when_gutenberg_active
 	 *
 	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
 	 *
@@ -78,8 +92,8 @@ abstract class Meta_Box {
 	 *
 	 * @uses sets the `__back_compat_meta_box` meta box flag
 	 *
-	 * @see Box::get_args()
-	 * @see Box::$gutenberg_compatible
+	 * @see  Box::get_args()
+	 * @see  Box::$gutenberg_compatible
 	 *
 	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
 	 *
@@ -87,13 +101,14 @@ abstract class Meta_Box {
 	 */
 	public $display_when_gutenberg_active = true;
 
-	public $post_type;
+	/**
+	 * @var string
+	 */
+	public string $post_type;
 
 
 	/**
-	 * @abstract
-	 *
-	 * @param \WP_Post $post The post being edited
+	 * @param \WP_Post $post - The post being edited.
 	 *
 	 * @return void
 	 */
@@ -103,8 +118,8 @@ abstract class Meta_Box {
 	/**
 	 * @abstract
 	 *
-	 * @param int      $post_id The ID of the post being saved
-	 * @param \WP_Post $post    The post being saved
+	 * @param int      $post_id The ID of the post being saved.
+	 * @param \WP_Post $post    The post being saved.
 	 *
 	 * @return void
 	 */
@@ -174,16 +189,14 @@ abstract class Meta_Box {
 
 
 	/**
-	 * @static
-	 *
 	 * @param string $post_type
-	 * @param string $class
+	 * @param string $class_name
 	 *
-	 * @return string A unique identifier for this meta box
+	 * @return string A unique identifier for this meta box.
 	 */
-	protected static function build_id( string $post_type, string $class ) : string {
+	protected static function build_id( string $post_type, string $class_name ) : string {
 		static $append = 0;
-		$id = $post_type . '-' . $class;
+		$id = $post_type . '-' . $class_name;
 		$appended = $id . ( $append ? '-' . $append : '' );
 		if ( isset( self::$registry[ $post_type ][ $appended ] ) ) {
 			$append ++;
@@ -210,8 +223,8 @@ abstract class Meta_Box {
 	/**
 	 * Save the meta boxes for this post type
 	 *
-	 * @param int      $post_id The ID of the post being saved
-	 * @param \WP_Post $post    The post being saved
+	 * @param int      $post_id The ID of the post being saved.
+	 * @param \WP_Post $post    The post being saved.
 	 *
 	 * @return void
 	 */
@@ -233,7 +246,7 @@ abstract class Meta_Box {
 
 
 	/**
-	 * Make sure this is a save_post where we actually want to update the meta
+	 * Make sure this is a save_post where we actually want to update the meta.
 	 *
 	 * @param int      $post_id
 	 * @param \WP_Post $post
@@ -241,12 +254,12 @@ abstract class Meta_Box {
 	 * @return bool
 	 */
 	protected static function should_meta_boxes_be_saved( int $post_id, \WP_Post $post ) : bool {
-		// make sure this is a valid submission
+		// make sure this is a valid submission.
 		if ( ! isset( $_POST[ self::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_NAME ], self::NONCE_ACTION ) ) {
 			return false;
 		}
 
-		// don't do anything on autosave, auto-draft, bulk edit, or quick edit
+		// don't do anything on autosave, auto-draft, bulk edit, or quick edit.
 		if ( 'auto-draft' === $post->post_status || isset( $_GET['bulk_edit'] ) || wp_is_post_autosave( $post_id ) || wp_doing_ajax() || wp_is_post_revision( $post_id ) ) {
 			return false;
 		}
@@ -256,9 +269,7 @@ abstract class Meta_Box {
 
 
 	/**
-	 * Get the metabox with the given ID
-	 *
-	 * @static
+	 * Get the metabox with the given ID.
 	 *
 	 * @param string $post_type
 	 * @param string $id
@@ -271,38 +282,34 @@ abstract class Meta_Box {
 
 
 	/**
-	 * @static
-	 *
 	 * @param string $post_type
-	 * @param string $class
+	 * @param string $class_name
 	 *
 	 * @return bool Whether a meta box with the given class has been
-	 *              registered for the given post type
+	 *              registered for the given post type.
 	 */
-	public static function has_meta_box( string $post_type, string $class ) : bool {
-		return null !== self::get_meta_box( $post_type, $class );
+	public static function has_meta_box( string $post_type, string $class_name ) : bool {
+		return null !== self::get_meta_box( $post_type, $class_name );
 	}
 
 
 	/**
-	 * Get a metabox of the given class for the post type
+	 * Get a metabox of the given class for the post type.
 	 *
 	 * If more than one metabox of the same class registered
-	 * with the same post type, the first to register will be returned
-	 *
-	 * @static
+	 * with the same post type, the first to register will be returned.
 	 *
 	 * @param string $post_type
-	 * @param string $class
+	 * @param string $class_name
 	 *
 	 * @return Meta_Box|null
 	 */
-	public static function get_meta_box( string $post_type, string $class ) : ?Meta_Box {
+	public static function get_meta_box( string $post_type, string $class_name ) : ?Meta_Box {
 		if ( ! isset( self::$registry[ $post_type ] ) ) {
 			return null;
 		}
 		foreach ( (array) self::$registry[ $post_type ] as $meta_box ) {
-			if ( \get_class( $meta_box ) === $class ) {
+			if ( \get_class( $meta_box ) === $class_name ) {
 				return $meta_box;
 			}
 		}
@@ -312,18 +319,19 @@ abstract class Meta_Box {
 
 
 	/**
-	 * Registers a meta box class
+	 * Registers a meta box class.
 	 *
 	 * @see   https://codex.wordpress.org/Function_Reference/add_meta_box for more info
 	 *
-	 * @param string|array|null $post_type - null will add it to all post types
-	 * @param array             $args      = {
+	 * @param string|array|null $post_type - null will add it to all post types.
+	 * @param array             $args      {.
 	 *
 	 * @type string             $title     ( defaults to the id of the metabox built by the class ),
 	 * @type string             $context   - 'normal', 'advanced', or 'side' ( defaults to 'advanced' )
 	 * @type string             $priority  - 'high', 'core', 'default' or 'low' ( defaults to 'default' )
 	 * @type [] $callback_args - will be assigned as $this->callback_args
-	 *                              can be retrieved via $this->get_callback_args()
+	 *                                     can be retrieved via $this->get_callback_args().
+	 *                                     }
 	 * @return Meta_Box|Meta_Box[]
 	 */
 	public static function register( $post_type = null, array $args = [] ) {
@@ -412,7 +420,7 @@ abstract class Meta_Box {
 		}
 
 		if ( ! isset( $this->callback_args['__back_compat_meta_box'] ) ) {
-			// Notice we use the opposite here
+			// Notice we use the opposite here.
 			$this->callback_args['__back_compat_meta_box'] = ! $this->display_when_gutenberg_active;
 		}
 

@@ -35,6 +35,9 @@ use Lipe\Lib\Meta\Mutator_Trait;
 trait Post_Object_Trait {
 	use Mutator_Trait;
 
+	/**
+	 * @var int
+	 */
 	protected $post_id;
 
 	/**

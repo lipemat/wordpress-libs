@@ -62,14 +62,14 @@ class Repo extends Translate_Abstract {
 
 
 	/**
-	 * Get a field's value
+	 * Get a field's value.
 	 *
 	 * Use the registered fields and registered types to determine the appropriate method to
 	 * return the data.
 	 *
-	 * @param int|string $object_id - id of post, term, user, <custom>
-	 * @param string     $field_id  - field id to return
-	 * @param string     $meta_type - user, term, post, <custom> (defaults to 'post')
+	 * @param int|string $object_id - id of post, term, user, <custom>.
+	 * @param string     $field_id  - field id to return.
+	 * @param string     $meta_type - user, term, post, <custom> (defaults to 'post').
 	 *
 	 * @return mixed
 	 */
@@ -98,10 +98,10 @@ class Repo extends Translate_Abstract {
 	 * Use the registered fields and registered types to determine the appropriate method to
 	 * set the data.
 	 *
-	 * @param int|string $object_id - id of post, term, user, <custom>
+	 * @param int|string $object_id - id of post, term, user, <custom>.
 	 * @param string     $field_id  - field id to set.
 	 * @param mixed      $value     - Value to save.
-	 * @param string     $meta_type - user, term, post, <custom> (defaults to 'post')
+	 * @param string     $meta_type - user, term, post, <custom> (defaults to 'post').
 	 *
 	 * @return void
 	 */
@@ -133,9 +133,9 @@ class Repo extends Translate_Abstract {
 	 * Use the registered fields and registered types to determine the appropriate method to
 	 * delete the data.
 	 *
-	 * @param int|string $object_id - id of post, term, user, <custom>
+	 * @param int|string $object_id - id of post, term, user, <custom>.
 	 * @param string     $field_id  - field id to set.
-	 * @param string     $meta_type - user, term, post, <custom> (defaults to 'post')
+	 * @param string     $meta_type - user, term, post, <custom> (defaults to 'post').
 	 *
 	 * @return void
 	 */

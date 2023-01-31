@@ -4,15 +4,28 @@ namespace Lipe\Lib\Post_Type;
 
 use Lipe\Lib\Util\Actions;
 
+/**
+ * Register a custom post type.
+ *
+ */
 class Custom_Post_Type {
 	protected const REGISTRY_OPTION    = 'lipe/lib/post-type/custom-post-type/registry';
 	protected const CUSTOM_CAPS_OPTION = 'lipe/lib/post-type/custom-post-type/caps';
 
-	protected static $registry = [];
+	/**
+	 * @var array
+	 */
+	protected static array $registry = [];
 
-	public $post_type_label_singular = '';
+	/**
+	 * @var string
+	 */
+	public string $post_type_label_singular = '';
 
-	public $post_type_label_plural = '';
+	/**
+	 * @var string
+	 */
+	public string $post_type_label_plural = '';
 
 	/**
 	 * auto_admin_caps
@@ -34,12 +47,20 @@ class Custom_Post_Type {
 	/**
 	 * Public properties
 	 * These match the arguments used with register_post_type()
+	 *
+	 * @var string;
 	 */
 	public $description = 'A custom post type';
 
-	public $hierarchical = false;
+	/**
+	 * @var bool
+	 */
+	public bool $hierarchical = false;
 
-	public $capability_type = 'post';
+	/**
+	 * @var string
+	 */
+	public string $capability_type = 'post';
 
 	/**
 	 * @link   https://developer.wordpress.org/reference/functions/register_post_type/#capabilities
@@ -112,18 +133,39 @@ class Custom_Post_Type {
 	 */
 	public $gutenberg_compatible;
 
+	/**
+	 * @var bool
+	 */
 	public $map_meta_cap;
 
+	/**
+	 * @var string
+	 */
 	public $menu_name;
 
+	/**
+	 * @var string
+	 */
 	public $menu_icon;
 
-	public $menu_position = 5;
+	/**
+	 * @var int
+	 */
+	public int $menu_position = 5;
 
-	public $public = true;
+	/**
+	 * @var bool
+	 */
+	public bool $public = true;
 
+	/**
+	 * @var bool
+	 */
 	public $publicly_queryable;
 
+	/**
+	 * @var bool
+	 */
 	public $exclude_from_search;
 
 	/**
@@ -138,16 +180,34 @@ class Custom_Post_Type {
 	 */
 	public $has_archive = true;
 
-	public $slug = '';
+	/**
+	 * @var string
+	 */
+	public string $slug = '';
 
+	/**
+	 * @var bool|string
+	 */
 	public $query_var = true;
 
+	/**
+	 * @var bool
+	 */
 	public $show_ui;
 
+	/**
+	 * @var bool
+	 */
 	public $show_in_menu;
 
+	/**
+	 * @var bool
+	 */
 	public $show_in_nav_menus;
 
+	/**
+	 * @var bool
+	 */
 	public $show_in_admin_bar;
 
 	/**
@@ -204,24 +264,31 @@ class Custom_Post_Type {
 	 */
 	public $rewrite;
 
-	public $can_export = true;
+	/**
+	 * @var bool
+	 */
+	public bool $can_export = true;
 
-	public $taxonomies = [];
+	/**
+	 * @var array<string>
+	 */
+	public array $taxonomies = [];
 
-	public $labels;
+	/**
+	 * @var array
+	 */
+	public array $labels;
 
 	/**
 	 * The post type slug
 	 *
 	 * @var string
 	 */
-	protected $post_type = '';
+	protected string $post_type = '';
 
 
 	/**
-	 * Takes care of the necessary hook and registering
-	 *
-	 * @notice set the class vars to edit arguments
+	 * Takes care of the necessary hook and registering.
 	 *
 	 * @param string $post_type
 	 */
@@ -237,7 +304,7 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	public function hook() : void {
-		//allow methods added to the init hook to customize the post type
+		// allow methods added to the init hook to customize the post type.
 		add_action( 'wp_loaded', [ $this, 'register' ], 8, 0 );
 
 		add_filter( 'adjust_post_updated_messages', [ $this, 'adjust_post_updated_messages' ] );
@@ -305,12 +372,12 @@ class Custom_Post_Type {
 	 */
 	protected function handle_block_editor_support() : void {
 		if ( false === $this->gutenberg_compatible ) {
-			add_filter( 'use_block_editor_for_post_type', function( $use, $post_type ) {
+			add_filter( 'use_block_editor_for_post_type', function( $enabled, $post_type ) {
 				if ( $post_type === $this->post_type ) {
 					return false;
 				}
 
-				return $use;
+				return $enabled;
 			}, 10, 2 );
 		} elseif ( true === $this->gutenberg_compatible ) {
 			$this->show_in_rest = true;
@@ -404,7 +471,7 @@ class Custom_Post_Type {
 			'item_reverted_to_draft'   => sprintf( __( '%s reverted to draft.' ), $single ),
 			'item_scheduled'           => sprintf( __( '%s scheduled.' ), $single ),
 			'item_updated'             => sprintf( __( '%s updated.' ), $single ),
-			'menu_name'                => $this->menu_name ?? $plural,
+			'menu_name'                => $this->menu_name ?: $plural,
 		];
 		// phpcs:enable WordPress.WP.I18n
 
@@ -420,7 +487,7 @@ class Custom_Post_Type {
 	/**
 	 * Get the post type's label.
 	 *
-	 * @param string $quantity - (singular,plural)
+	 * @param string $quantity - (singular,plural).
 	 *
 	 * @return string
 	 */
@@ -564,8 +631,9 @@ class Custom_Post_Type {
 	/**
 	 * Set a Gutenberg template for this post type.
 	 *
-	 * @param array $template
-	 * @param   'all' | 'contentOnly' | 'insert' | null $template_lock
+	 * @param array                            $template
+	 * @param 'all' | 'contentOnly' | 'insert' $template_lock
+	 *
 	 *
 	 * @link    https://developer.wordpress.org/block-editor/reference-guides/block-api/block-templates/#locking
 	 *

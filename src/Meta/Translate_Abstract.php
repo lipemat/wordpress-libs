@@ -122,7 +122,6 @@ abstract class Translate_Abstract {
 			$this->update_meta_value( $object_id, $key, $group, $meta_type );
 		}
 
-
 		if ( 'option' === $meta_type ) {
 			$this->handle_delete_callback( $object_id, $key, $meta_type );
 
@@ -184,7 +183,7 @@ abstract class Translate_Abstract {
 	public function get_file_field_value( $object_id, string $key, string $meta_type ) : ?array {
 		$url = $this->get_meta_value( $object_id, $key, $meta_type );
 		if ( ! empty( $url ) ) {
-			//Add the extra field so groups meta will be translated properly.
+			// Add the extra field so groups meta will be translated properly.
 			if ( null !== $this->fields[ $key ]->group ) {
 				$this->fields[ $key . '_id' ] = $this->fields[ $key ];
 			}
@@ -211,7 +210,7 @@ abstract class Translate_Abstract {
 	 * @return void
 	 */
 	public function update_file_field_value( $object_id, string $key, int $attachment_id, string $meta_type ) : void {
-		//Add the extra field so groups meta will be translated properly.
+		// Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->fields[ $key ]->group ) {
 			$this->fields[ $key . '_id' ] = $this->fields[ $key ];
 		}
@@ -222,7 +221,7 @@ abstract class Translate_Abstract {
 
 	/**
 	 * CMB2 saves file fields as 2 separate meta keys.
-	 * This deletes both of them.
+	 * This deletes both.
 	 *
 	 * @param int|string $object_id
 	 * @param string     $key
@@ -231,7 +230,7 @@ abstract class Translate_Abstract {
 	 * @return void
 	 */
 	public function delete_file_field_value( $object_id, string $key, string $meta_type ) : void {
-		//Add the extra field so groups meta will be translated properly.
+		// Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->fields[ $key ]->group ) {
 			$this->fields[ $key . '_id' ] = $this->fields[ $key ];
 		}
@@ -324,9 +323,9 @@ abstract class Translate_Abstract {
 	 * @return string[]
 	 */
 	protected function get_group_fields( string $group ) : array {
-		$groups = $this->once( function () {
+		$groups = $this->once( function() {
 			$groups = [];
-			array_map( function ( Field $field ) use ( &$groups ) {
+			array_map( function( Field $field ) use ( &$groups ) {
 				if ( null !== $field->group ) {
 					$groups[ $field->group ][] = $field->get_id();
 				}
@@ -351,8 +350,8 @@ abstract class Translate_Abstract {
 	public function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : array {
 		$taxonomy = $this->get_field( $field_id )->taxonomy;
 		if ( 'post' !== $meta_type ) {
-			return $this->maybe_use_main_blog( $field_id, function () use ( $object_id, $field_id, $taxonomy, $meta_type ) {
-				return \array_filter( \array_map( function ( $term_id ) use ( $taxonomy ) {
+			return $this->maybe_use_main_blog( $field_id, function() use ( $object_id, $field_id, $taxonomy, $meta_type ) {
+				return \array_filter( \array_map( function( $term_id ) use ( $taxonomy ) {
 					// Legacy options used term slug.
 					if ( ! is_numeric( $term_id ) ) {
 						return get_term_by( 'slug', $term_id, $taxonomy );
@@ -385,7 +384,7 @@ abstract class Translate_Abstract {
 			}
 
 			if ( 'post' !== $meta_type ) {
-				$this->update_meta_value( $object_id, $key, array_map( function ( $term_id ) use ( $field ) {
+				$this->update_meta_value( $object_id, $key, array_map( function( $term_id ) use ( $field ) {
 					// Legacy options used term slug.
 					if ( ! is_numeric( $term_id ) ) {
 						return get_term_by( 'slug', $term_id, $field->taxonomy )->term_id;
@@ -394,7 +393,7 @@ abstract class Translate_Abstract {
 					return $term_id;
 				}, $terms ), $meta_type );
 			} else {
-				$terms = \array_map( function ( $term ) {
+				$terms = \array_map( function( $term ) {
 					// Term ids are perceived as term slug when strings.
 					return is_numeric( $term ) ? (int) $term : $term;
 				}, $terms );
@@ -417,7 +416,6 @@ abstract class Translate_Abstract {
 	 * @return void
 	 */
 	public function delete_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : void {
-
 		if ( 'post' !== $meta_type ) {
 			$this->delete_meta_value( $object_id, $field_id, $meta_type );
 		} else {
@@ -455,9 +453,8 @@ abstract class Translate_Abstract {
 	 * If we are working with a network setting, we switch to main blog before
 	 * retrieval, otherwise we use the standard retrieval.
 	 *
-	 * @param callable $callback - Any callback.
-	 *
 	 * @param string   $field_id
+	 * @param callable $callback - Any callback.
 	 *
 	 * @return mixed;
 	 */
@@ -482,9 +479,9 @@ abstract class Translate_Abstract {
 	 *
 	 * @since 3.13.0
 	 *
-	 * @see "cmb2_override_{$a['field_id']}_meta_remove"
+	 * @see   "cmb2_override_{$a['field_id']}_meta_remove"
 	 *
-	 * @see \Lipe\Lib\CMB2\Field::delete_cb
+	 * @see   \Lipe\Lib\CMB2\Field::delete_cb
 	 *
 	 * @param string|int $object_id
 	 * @param string     $key

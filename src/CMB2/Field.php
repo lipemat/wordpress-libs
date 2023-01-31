@@ -62,7 +62,7 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
-	 * @see  \Lipe\Lib\CMB2\Field_Type;
+	 * @see  Field_Type;
 	 * @see  \Lipe\Lib\CMB2\Field::type();
 	 *
 	 * @var string;
@@ -602,11 +602,9 @@ class Field {
 	 * Prevent conflicts with User ID and Post ID in the same
 	 * `term_relationship` table.
 	 *
-	 * @notice As of version 4, the default will be `true`.
-	 *
 	 * @var bool
 	 */
-	public $store_user_terms_in_meta;
+	public $store_user_terms_in_meta = true;
 
 	/**
 	 * Id of boxes tab which this field should display in.
@@ -719,12 +717,13 @@ class Field {
 	/**
 	 * Field constructor.
 	 *
-	 * @param string             $id
-	 * @param string|null        $name
+	 * @interal
+	 *
+	 * @see Field_Type
+	 *
+	 * @param string         $id
+	 * @param string|null    $name
 	 * @param Box|Group|null $box - Parent class using this Field.
-	 *
-	 * @see \Lipe\Lib\CMB2\Field_Type
-	 *
 	 */
 	public function __construct( string $id, ?string $name, $box = null ) {
 		$this->id = $id;
@@ -786,7 +785,7 @@ class Field {
 	 *                              'characters_left_text' - Default: "Characters left"
 	 *                              'characters_text' - Default: "Characters"
 	 *                              'characters_truncated_text' - Default: "Your text may be truncated."
-	 *                              }
+	 *                              }.
 	 *
 	 * @notice Does not work with repeatable wysiwyg.
 	 *
@@ -824,8 +823,8 @@ class Field {
 	 * posts, comments, users, terms
 	 *
 	 * @param int|null      $position
-	 * @param string|null   $name            - defaults to field name
-	 * @param callable|null $display_cb      - optional display callback
+	 * @param string|null   $name            - defaults to field name.
+	 * @param callable|null $display_cb      - optional display callback.
 	 * @param bool|null     $disable_sorting - Set to true to prevent this column from being
 	 *                                       sortable in post list.
 	 *
@@ -970,7 +969,7 @@ class Field {
 	 *
 	 */
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ) : Field {
-		// Ugh! Hack, so I can use a method from that class
+		// Ugh! Hack, so I can use a method from that class.
 		$mock = new class() extends \CMB2_Field {
 			public function __construct() {
 			}
@@ -980,7 +979,7 @@ class Field {
 				if ( $this->repeatable_exception( $type ) ) {
 					return false;
 				}
-				// Cases not covered by CMB2
+				// Cases not covered by CMB2.
 				return 'file_list' !== $type;
 			}
 		};
@@ -1141,9 +1140,10 @@ class Field {
 	 * @note   The meta repo has never supported using object terms so setting
 	 *         this to false will not change the behavior of the meta repo.
 	 *
-	 * @notice As of version 4, the default will be `true` so this need only
-	 *         be called with `false`.
+	 * @notice The default value is `true` so this need only be called with `false`.
 	 *
+	 *
+	 * @param bool $use_meta
 	 *
 	 * @return Field
 	 */
@@ -1223,7 +1223,7 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
-	 * @see  \Lipe\Lib\CMB2\Field_Type;
+	 * @see  Field_Type;
 	 * @see  \Lipe\Lib\CMB2\Field::type();
 	 *
 	 * @return string
@@ -1319,7 +1319,7 @@ class Field {
 				if ( $key === $this->get_id() ) {
 					Repo::in()->handle_delete_callback( $object_id, $key, $this->box->get_object_type() );
 				}
-			}, 10, 4 );
+			}, 10, 3 );
 		} else {
 			Actions::in()->add_filter_as_action( "cmb2_override_{$this->get_id()}_meta_remove", function( $_, $value, array $args, \CMB2_Field $field ) {
 				Repo::in()->handle_delete_callback( $field->object_id(), $this->get_id(), $this->box->get_object_type() );
@@ -1429,12 +1429,12 @@ class Field {
 
 
 	/**
-	 * Retrieve an array of this fields args to be
+	 * Retrieve an array of these fields args to be
 	 * submitted to CMB2 by way of
 	 *
 	 * @see Box::add_field_to_box()
 	 *
-	 * @throws \LogicException
+	 * @throws \LogicException - If a field has not been specified.
 	 *
 	 * @return array
 	 */
@@ -1457,12 +1457,12 @@ class Field {
 	/**
 	 * Override to allow static scans when using tools like PHPStan.
 	 *
+	 * @internal
+	 *
 	 * @param string $id
 	 * @param string $name
 	 *
-	 * @internal
-	 *
-	 * @return Field_Type
+	 * @throws \LogicException - When trying to add a field to another field.
 	 */
 	public function field( string $id, string $name ) : Field_Type {
 		throw new \LogicException( 'You cannot add a field to another field.' );

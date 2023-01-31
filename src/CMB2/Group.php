@@ -84,17 +84,19 @@ class Group extends Field {
 	/**
 	 * Group constructor.
 	 *
+	 * @internal
+	 *
 	 * @param string      $id
 	 * @param string|null $title
 	 * @param Box         $box
-	 * @param string|null $group_title             - include a {#} to have replaced with number
+	 * @param string|null $group_title             - include a {#} to have replaced with number.
 	 * @param string|null $add_button_text
 	 * @param string|null $remove_button_text
 	 * @param bool        $sortable
 	 * @param bool        $closed
 	 * @param string|null $remove_confirm          - A message to display when a user attempts
 	 *                                             to delete a group.
-	 *                                             (Defaults to null/false for no confirmation)
+	 *                                             (Defaults to null/false for no confirmation).
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 */
@@ -136,7 +138,8 @@ class Group extends Field {
 	 *
 	 * @param Field $field
 	 *
-	 * @throws \LogicException
+	 * @throws \LogicException - If no box is available.
+	 *
 	 * @return void
 	 */
 	protected function add_field_to_group( Field $field ) : void {
@@ -158,8 +161,6 @@ class Group extends Field {
 	 * with CMB2.
 	 *
 	 * @see Box::add_field_to_box()
-	 *
-	 * @throws \LogicException
 	 *
 	 * @return array
 	 */
@@ -184,7 +185,7 @@ class Group extends Field {
 	 */
 	public function register_fields() : void {
 		$this->register_meta();
-		array_map( function ( Field $field ) {
+		array_map( function( Field $field ) {
 			$this->add_field_to_group( $field );
 		}, $this->get_fields() );
 	}
@@ -265,9 +266,7 @@ class Group extends Field {
 
 
 	/**
-	 * @override
-	 *
-	 * @throws \LogicException
+	 * @throws \LogicException - If trying to add to another group.
 	 */
 	public function group() : void {
 		throw new \LogicException( 'You cannot add a group to another group.' );

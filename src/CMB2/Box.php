@@ -35,7 +35,7 @@ class Box {
 	 * The context within the screen where the boxes should display.
 	 * Available contexts vary from screen to screen.
 	 *
-	 * @see     \Lipe\Lib\CMB2\Box::$remove_box_wrap
+	 * @see     Box
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#context
 	 * @example 'normal', 'side', 'advanced' 'form_top',
@@ -197,6 +197,8 @@ class Box {
 	 * @see Box::$gutenberg_compatible
 	 *
 	 * More: https://wordpress.org/gutenberg/handbook/designers-developers/developers/backwards-compatibility/meta-box/
+	 *
+	 * @var array
 	 */
 	public $mb_callback_args;
 
@@ -242,7 +244,7 @@ class Box {
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#save_fields
 	 *
-	 * @see     \Lipe\Lib\CMB2\Box::$hookup
+	 * @see     Box
 	 *
 	 * @example false
 	 * @default true
@@ -316,11 +318,11 @@ class Box {
 	/**
 	 * Tabs for this box
 	 *
-	 * @see     \Lipe\Lib\CMB2\Box::add_tab()
+	 * @see     Box::add_tab
 	 *
 	 * @var array
 	 */
-	public $tabs = [];
+	public array $tabs = [];
 
 	/**
 	 * Tabs to display either vertical or horizontal
@@ -329,14 +331,12 @@ class Box {
 	 *
 	 * @var string
 	 */
-	protected $tab_style = 'vertical';
+	protected string $tab_style = 'vertical';
 
 	/**
-	 * cmb
-	 *
 	 * @var \CMB2
 	 */
-	public $cmb;
+	public \CMB2 $cmb;
 
 
 	/**
@@ -346,11 +346,11 @@ class Box {
 	 *
 	 * @param string      $id           - ID of this box.
 	 * @param array       $object_types - [post type slugs], or 'user', 'term',
-	 *                                  'comment', or 'options-page'
+	 *                                  'comment', or 'options-page'.
 	 * @param string|null $title        - Title of this box.
 	 * @param Location    $context      - Location the meta box will display.
 	 */
-	public function __construct( string $id, array $object_types, ?string $title = null, string $context = 'normal' ) {
+	public function __construct( string $id, array $object_types, ?string $title = null, $context = 'normal' ) {
 		$this->id = $id;
 		$this->object_types = $object_types;
 		$this->title = $title;
@@ -454,7 +454,7 @@ class Box {
 	 * Should the tabs display vertical or horizontal?
 	 * Default is vertical when not calling this.
 	 *
-	 * @param string $layout - vertical, horizontal
+	 * @param string $layout - vertical, horizontal.
 	 *
 	 *
 	 * @return void
@@ -484,7 +484,7 @@ class Box {
 	 * @return \CMB2
 	 */
 	public function get_box() : \CMB2 {
-		if ( null !== $this->cmb ) {
+		if ( ! empty( $this->cmb ) ) {
 			return $this->cmb;
 		}
 
@@ -529,7 +529,7 @@ class Box {
 		}
 
 		if ( ! isset( $this->mb_callback_args['__back_compat_meta_box'] ) ) {
-			// Notice we use the opposite here
+			// Notice we use the opposite here.
 			$this->mb_callback_args['__back_compat_meta_box'] = ! $this->display_when_gutenberg_active;
 		}
 

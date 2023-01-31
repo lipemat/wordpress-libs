@@ -23,10 +23,13 @@ use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
  * ) );
  */
 class Sortable extends Argument_Abstract {
-	protected $cpts;
+	/**
+	 * @var Custom_Post_Type_Extended
+	 */
+	protected Custom_Post_Type_Extended $cpts;
 
 	/**
-	 * @see \Lipe\Lib\Post_Type\Extended_CPTS\Sortable::set()
+	 * @see Sortable::set
 	 * @var string
 	 */
 	protected $sortables_array_key;

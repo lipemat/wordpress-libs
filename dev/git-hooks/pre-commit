@@ -77,7 +77,7 @@ function php_lint() {
 
 # Lint multiple versions of PHP if supported via environmental variables.
 if [[ "true" == "$PHP_MULTI_VERSION_SUPPORT" ]]; then
-	php_lint 'php 7.3' &
+	php_lint 'php 7.4' &
 	php_lint 'php 8.1' &
 else
 	php_lint 'php' &

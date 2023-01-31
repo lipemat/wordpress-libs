@@ -200,7 +200,7 @@ class Options_Page extends Box {
 		if ( $is_network ) {
 			$this->admin_menu_hook = 'network_admin_menu';
 		} else {
-			$this->admin_menu_hook = 'admin_menu'; //default
+			$this->admin_menu_hook = 'admin_menu';
 		}
 	}
 

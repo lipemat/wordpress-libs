@@ -9,13 +9,16 @@ use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
  *
  */
 class Filter extends Argument_Abstract {
-	protected $cpts;
+	/**
+	 * @var Custom_Post_Type_Extended
+	 */
+	protected Custom_Post_Type_Extended $cpts;
 
 	/**
-	 * @see \Lipe\Lib\Post_Type\Extended_CPTS\Filter::set()
+	 * @see Filter::set
 	 * @var ?string
 	 */
-	protected $filters_array_key;
+	protected ?string $filters_array_key;
 
 
 	/**
@@ -76,7 +79,7 @@ class Filter extends Argument_Abstract {
 	 * If multiple values are passed, a select dropdown will be shown for the user to choose from:
 	 *
 	 * @param string $title
-	 * @param array  $meta_fields - [ $meta_key => $label ]
+	 * @param array  $meta_fields - [ $meta_key => $label ].
 	 *
 	 * @return Filter_Shared
 	 */
@@ -122,7 +125,7 @@ class Filter extends Argument_Abstract {
 	 *
 	 * @param string              $title
 	 * @param string              $meta_key
-	 * @param null|array|callable $options_or_callback - [ $key => $label ] || function()
+	 * @param null|array|callable $options_or_callback - [ $key => $label ] || function().
 	 *
 	 * @return Filter_Shared
 	 */

@@ -24,7 +24,10 @@ use Lipe\Lib\Meta\Mutator_Trait;
 trait Comment_Trait {
 	use Mutator_Trait;
 
-	protected $comment_id;
+	/**
+	 * @var int
+	 */
+	protected int $comment_id;
 
 	/**
 	 * @var \WP_Comment

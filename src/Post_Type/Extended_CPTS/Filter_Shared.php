@@ -6,15 +6,18 @@ namespace Lipe\Lib\Post_Type\Extended_CPTS;
  * Base class for an Extended CPT shared filter.
  *
  */
-class Filter_Shared extends Shared_Abstract{
-	protected $filter;
+class Filter_Shared extends Shared_Abstract {
+	/**
+	 * @var Filter
+	 */
+	protected Filter $filter;
 
 	/**
 	 * For possible future use
 	 *
 	 * @var array
 	 */
-	protected $args;
+	protected array $args;
 
 
 	/**

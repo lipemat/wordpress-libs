@@ -128,16 +128,11 @@ trait User_Trait {
 
 
 	/**
-	 *
 	 * @param int|null|\WP_User $user
-	 *w
-	 *
-	 * @static
 	 *
 	 * @return static
 	 */
 	public static function factory( $user = null ) {
 		return new static( $user );
 	}
-
 }

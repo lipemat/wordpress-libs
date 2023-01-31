@@ -9,9 +9,15 @@ use Lipe\Lib\Post_Type\Extended_CPTS\Shared_Abstract;
  *
  */
 class Column_Shared extends Shared_Abstract {
-	protected $column;
+	/**
+	 * @var Column
+	 */
+	protected Column $column;
 
-	protected $args;
+	/**
+	 * @var array
+	 */
+	protected array $args;
 
 
 	/**
@@ -43,7 +49,7 @@ class Column_Shared extends Shared_Abstract {
 	 * Make this column the default sort column instead
 	 * of the default 'title'
 	 *
-	 * @param string $direction - 'ASC', 'DESC' (default 'ASC' )
+	 * @param string $direction - 'ASC', 'DESC' (default 'ASC' ).
 	 *
 	 * @return Column_Shared
 	 */

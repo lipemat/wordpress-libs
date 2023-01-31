@@ -8,14 +8,16 @@ use Lipe\Lib\Post_Type\Custom_Post_Type_Extended;
  * Base class for an Extended CPT column.
  */
 class Column extends Argument_Abstract {
-
-	protected $cpts;
+	/**
+	 * @var Custom_Post_Type_Extended
+	 */
+	protected Custom_Post_Type_Extended $cpts;
 
 	/**
 	 * @see self::set()
 	 * @var ?string
 	 */
-	protected $cols_array_key;
+	protected ?string $cols_array_key;
 
 
 	/**
@@ -100,7 +102,7 @@ class Column extends Argument_Abstract {
 	 *
 	 * @param string      $title
 	 * @param string      $connection_type
-	 * @param string      $link_to - 'view', 'edit', 'list' (default 'edit')
+	 * @param string      $link_to - 'view', 'edit', 'list' (default 'edit').
 	 * @param null|string $meta_field
 	 * @param null|string $meta_value
 	 *
@@ -133,7 +135,7 @@ class Column extends Argument_Abstract {
 	 * will be formatted as dates. Other fields will also be formatted where appropriate.
 	 *
 	 * @param string $title
-	 * @param string $field - any \WP_Post field
+	 * @param string $field - any \WP_Post field.
 	 *
 	 * @return Column_Shared
 	 */
@@ -185,7 +187,7 @@ class Column extends Argument_Abstract {
 	 *
 	 * @param string $title
 	 * @param string $taxonomy
-	 * @param string $link_to - 'view', 'edit', 'list' (Default 'edit' )
+	 * @param string $link_to - 'view', 'edit', 'list' (Default 'edit' ).
 	 *
 	 * @return Column_Shared
 	 */

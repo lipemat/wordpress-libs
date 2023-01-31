@@ -39,10 +39,10 @@ class Term_Select_2 {
 	protected function hook() : void {
 		add_action( 'cmb2_render_' . self::NAME, [ $this, 'render' ], 10, 5 );
 		add_filter( 'cmb2_sanitize_' . self::NAME, [ $this, 'assign_terms_during_save' ], 10, 4 );
-		add_filter( 'cmb2_types_esc_' . self::NAME, [ $this, 'esc_repeater_values' ], 10, 4 );
+		add_filter( 'cmb2_types_esc_' . self::NAME, [ $this, 'esc_repeater_values' ], 10, 3 );
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'js' ] );
-		//remove subtle conflict with acf
+		// remove subtle conflict with acf.
 		add_filter( 'acf/settings/select2_version', function () {
 			return 4;
 		} );
@@ -86,7 +86,7 @@ class Term_Select_2 {
 
 		$a = [
 			'multiple'         => empty( $field->args( 'multiple' ) ) ? 'multiple' : $field->args( 'multiple' ),
-			'data-js'          => $field->id(), //for js
+			'data-js'          => $field->id(), // for js.
 			'name'             => $field_type_object->_name() . '[]',
 			'id'               => $field_type_object->_id(),
 			'desc'             => $field_type_object->_desc( true ),

@@ -4,6 +4,8 @@ namespace Lipe\Lib\Util;
 
 use Lipe\Lib\Traits\Singleton;
 
+//phpcs:disable Universal.NamingConventions.NoReservedKeywordParameterNames.arrayFound
+
 /**
  * Array helpers.
  *
@@ -179,77 +181,22 @@ class Arrays {
 	 * Works the same as `wp_list_pluck` except it supports multiple keys
 	 * and will return an array of arrays instead of a single array.
 	 *
-	 * @param array<array|object> $list - List of objects or arrays.
-	 * @param array               $keys - List of keys to return.
+	 * @param array<array|object> $array - List of objects or arrays.
+	 * @param array               $keys  - List of keys to return.
 	 *
 	 * @since 3.5.0
 	 *
 	 * @return array
 	 */
-	public function list_pluck( array $list, array $keys ) : array {
-		return \array_map( function ( $item ) use ( $keys ) {
-			return $this->map_assoc( function ( $i, $key ) use ( $item ) {
+	public function list_pluck( array $array, array $keys ) : array {
+		return \array_map( function( $item ) use ( $keys ) {
+			return $this->map_assoc( function( $i, $key ) use ( $item ) {
 				if ( \is_object( $item ) ) {
 					return $item->{$key};
 				}
 
 				return $item[ $key ];
 			}, \array_flip( $keys ) );
-		}, $list );
+		}, $array );
 	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public function array_map_recursive( callable $callback, array $array ) : array {
-		_deprecated_function( __METHOD__, '3.6.0', 'map_recursive' );
-		return $this->map_recursive( $callback, $array );
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public function array_chunk_to_associative( array $array ) : array {
-		_deprecated_function( __METHOD__, '3.6.0', 'chunk_to_associative' );
-		return $this->chunk_to_associative( $array );
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public function array_merge_recursive( array $args, array $defaults ) : array {
-		_deprecated_function( __METHOD__, '3.6.0', 'merge_recursive' );
-		return $this->merge_recursive( $args, $defaults );
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public function array_map_assoc( callable $callback, array $array ) : array {
-		_deprecated_function( __METHOD__, '3.6.0', 'map_assoc' );
-		return $this->map_assoc( $callback, $array );
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public function array_recursive_unset( string $key, array $array ) : array {
-		_deprecated_function( __METHOD__, '3.6.0', 'recursive_unset' );
-		return $this->recursive_unset( $key, $array );
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public function array_flatten_assoc( callable $callback, array $array ) : array {
-		_deprecated_function( __METHOD__, '3.6.0', 'flatten_assoc' );
-		return $this->flatten_assoc( $callback, $array );
-	}
-
 }

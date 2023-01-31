@@ -11,7 +11,7 @@ class True_False extends \CMB2_Type_Checkbox {
 	 * Identical to the parent render except we use our own method
 	 * for wrapping the input in the appropriate elements
 	 *
-	 * @param array $args - not actually used for anything
+	 * @param array $args - not actually used for anything.
 	 *
 	 * @return \CMB2_Type_Base|string
 	 */

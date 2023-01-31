@@ -2,7 +2,10 @@
 
 namespace Lipe\Lib\CMB2\Box;
 
-use Lipe\Lib\CMB2\Field;use Lipe\Lib\Theme\Class_Names;use Lipe\Lib\Traits\Singleton;use Lipe\Lib\Util\Url;
+use Lipe\Lib\CMB2\Field;
+use Lipe\Lib\Theme\Class_Names;
+use Lipe\Lib\Traits\Singleton;
+use Lipe\Lib\Util\Url;
 
 /**
  * Support Tabs in meta boxes.
@@ -25,8 +28,7 @@ class Tabs {
 	protected $cmb;
 
 	/**
-	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $has_tabs = false;
 
@@ -37,6 +39,9 @@ class Tabs {
 	 */
 	protected $active_panel = '';
 
+	/**
+	 * @var array
+	 */
 	protected $fields_output = [];
 
 
@@ -47,12 +52,12 @@ class Tabs {
 	 */
 	protected function hook() : void {
 		add_action( 'cmb2_before_form', [ $this, 'opening_div' ], 10, 4 );
-		add_action( 'cmb2_after_form', [ $this, 'closing_div' ], 20, 4 );
+		add_action( 'cmb2_after_form', [ $this, 'closing_div' ], 20, 0 );
 
 		add_action( 'cmb2_before_form', [ $this, 'render_nav' ], 20, 4 );
 		add_action( 'cmb2_after_form', [ $this, 'show_panels' ], 10, 4 );
 
-		add_filter( 'cmb2_wrap_classes', [ $this, 'add_wrap_class' ], 10, 2 );
+		add_filter( 'cmb2_wrap_classes', [ $this, 'add_wrap_class' ] );
 	}
 
 
@@ -150,22 +155,22 @@ class Tabs {
 			}
 		}
 
-		return array_unique( $classes );
+		return \array_unique( $classes );
 	}
 
 
 	/**
-	 * Replaces the render_field callback for a field which as been
+	 * Replaces the render_field callback for a field, which as been
 	 * assigned to a tab
 	 *
-	 * @param array $field_args
+	 * @param array       $field_args
 	 * @param \CMB2_Field $field
 	 *
 	 * @see Field::tab()
 	 *
 	 * @return void
 	 */
-	public function render_field( $field_args, \CMB2_Field $field ) : void {
+	public function render_field( array $field_args, \CMB2_Field $field ) : void {
 		ob_start();
 		if ( isset( $field_args['tab_content_cb'] ) && \is_callable( $field_args['tab_content_cb'] ) ) {
 			$field_args['tab_content_cb']( $field_args, $field );
@@ -185,7 +190,7 @@ class Tabs {
 	 * @param string $cmb_id
 	 * @param int    $object_id
 	 * @param string $object_type
-	 * @param \CMB2 $cmb
+	 * @param \CMB2  $cmb
 	 *
 	 * @return void
 	 */

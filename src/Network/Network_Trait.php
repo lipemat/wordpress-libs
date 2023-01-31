@@ -25,7 +25,7 @@ trait Network_Trait {
 	/**
 	 * @var int
 	 */
-	protected $network_id;
+	protected int $network_id;
 
 	/**
 	 * @var \WP_Network
@@ -39,7 +39,7 @@ trait Network_Trait {
 	 */
 	public function __construct( $network = null ) {
 		if ( null === $network ) {
-			$this->network_id  = get_current_network_id();
+			$this->network_id = get_current_network_id();
 		} elseif ( is_a( $network, \WP_Network::class ) ) {
 			$this->network = $network;
 			$this->network_id = $this->network->id;
@@ -83,7 +83,7 @@ trait Network_Trait {
 	 * Update a value in the `sitemeta` table for this network.
 	 *
 	 * @param string $key
-	 * @param mixed  $value
+	 * @param mixed  ...$value
 	 */
 	public function update_meta( string $key, ...$value ) : void {
 		if ( \is_callable( $value[0] ) ) {
@@ -112,10 +112,7 @@ trait Network_Trait {
 
 
 	/**
-	 *
 	 * @param int|null|\WP_Network $network
-	 *
-	 * @static
 	 *
 	 * @return static
 	 */

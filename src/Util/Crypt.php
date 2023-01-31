@@ -73,13 +73,13 @@ class Crypt {
 	 *
 	 * @link https://gist.github.com/ve3/0f77228b174cf92a638d81fddb17189d
 	 *
-	 * @param string $string
+	 * @param string $plaintext
 	 *
 	 * @return string
 	 */
-	public function encrypt( string $string ) : ?string {
+	public function encrypt( string $plaintext ) : ?string {
 		try {
-			$iv   = random_bytes( openssl_cipher_iv_length( static::METHOD ) );
+			$iv = random_bytes( openssl_cipher_iv_length( static::METHOD ) );
 			$salt = random_bytes( 256 );
 		} catch ( \Exception $e ) {
 			return null;
@@ -88,7 +88,7 @@ class Crypt {
 		$hash_key = hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, static::ITERATIONS, $this->get_key_size() ) );
 
 		$output = [
-			'ciphertext' => base64_encode( openssl_encrypt( $string, static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv ) ),
+			'ciphertext' => base64_encode( openssl_encrypt( $plaintext, static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv ) ),
 			'iv'         => bin2hex( $iv ),
 			'salt'       => bin2hex( $salt ),
 			'iterations' => static::ITERATIONS,
@@ -116,7 +116,7 @@ class Crypt {
 	/**
 	 * Crypt Factory.
 	 *
-	 * @param string $key - The encryption key
+	 * @param string $key - The encryption key.
 	 *
 	 * @return static
 	 */

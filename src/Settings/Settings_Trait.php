@@ -26,23 +26,23 @@ trait Settings_Trait {
 	 * Get an option from the Meta repo.
 	 *
 	 * @param string $key
-	 * @param mixed  $default
+	 * @param mixed  $default_value
 	 *
 	 * @return mixed
 	 */
-	public function get_option( string $key, $default = null ) {
-		return $this->get_meta( $key, $default );
+	public function get_option( string $key, $default_value = null ) {
+		return $this->get_meta( $key, $default_value );
 	}
 
 
 	/**
 	 * Update an option.
 	 *
-	 * @param string $key
-	 * @param mixed|callable $value - If a callable is passed it will be called with the
-	 *                              previous value as the only argument.
-	 * @param mixed                 If a callable is passed with an additional argument,
-	 *                              it be be used as the default value for `$this->get_meta()`.
+	 * @param string         $key
+	 * @param mixed|callable ...$value - If a callable is passed it will be called with the
+	 *                                 previous value as the only argument.
+	 *                                 If a callable is passed with an additional argument,
+	 *                                 it will be used as the default value for `$this->get_meta()`.
 	 *
 	 * @return void
 	 */
