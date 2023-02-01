@@ -13,14 +13,14 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 		$args = new Args();
 		$args->meta_query()
 		     ->relation( 'OR' )
-		     ->in( [ 'one', 'two' ], 'some-key', 'BINARY' );
+		     ->in( [ '0', 'two', false, 0 ], 'some-key', 'BINARY' );
 
 		$this->assertEquals( [
 			'meta_query' => [
 				'relation' => 'OR',
 				[
 					'key'     => 'some-key',
-					'value'   => [ 'one', 'two' ],
+					'value'   => [ '0', 'two', false, 0 ],
 					'compare' => 'IN',
 					'type'    => 'BINARY',
 				],

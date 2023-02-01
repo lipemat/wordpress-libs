@@ -319,9 +319,9 @@ class Meta_Query {
 
 
 	/**
-	 * Generate a clause for the term query.
+	 * Generate a clause for the meta query.
 	 *
-	 * @link https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters
+	 * @link https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters
 	 *
 	 *
 	 * @phpstan-param COMPARE_OPERATOR|COMPARE_WORD $compare
