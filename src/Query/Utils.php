@@ -11,7 +11,7 @@ use Lipe\Lib\Traits\Singleton;
  * @since  4.0.0
  *
  */
-class Util {
+class Utils {
 	use Singleton;
 
 	/**

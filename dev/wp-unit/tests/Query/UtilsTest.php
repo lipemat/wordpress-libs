@@ -1,13 +1,13 @@
 <?php
 
-namespace Lipe\Lib\Util;
+namespace Lipe\Lib\Query;
 
 /**
  * @author Mat Lipe
  * @since  January 2023
  *
  */
-class QueryTest extends \WP_UnitTestCase {
+class UtilsTest extends \WP_UnitTestCase {
 
 	public function test_get_light_query() : void {
 		$expected = [
@@ -18,7 +18,7 @@ class QueryTest extends \WP_UnitTestCase {
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
 		];
-		$query = Query::in()->get_light_query_args( [] );
+		$query = Utils::in()->get_light_query_args( [] );
 		foreach ( $expected as $arg => $value ) {
 			$this->assertEquals( $value, $query[ $arg ] );
 		}
@@ -27,7 +27,7 @@ class QueryTest extends \WP_UnitTestCase {
 			'post_status'            => [ 'draft', 'private' ],
 			'update_menu_item_cache' => true,
 		];
-		$query = Query::in()->get_light_query_args( $overrides );
+		$query = Utils::in()->get_light_query_args( $overrides );
 		foreach ( $expected as $arg => $value ) {
 			if ( isset( $overrides[ $arg ] ) ) {
 				$this->assertEquals( $overrides[ $arg ], $query[ $arg ] );
