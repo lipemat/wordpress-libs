@@ -68,14 +68,15 @@ class Tax_Query {
 	 *
 	 * @phpstan-param Field     $field
 	 *
-	 * @param array<int|string> $value
+	 * @param array<int|string> $terms
 	 * @param string            $taxonomy
+	 * @param bool              $children - Include children for hierarchical taxonomies.
 	 * @param string            $field
 	 *
 	 * @return Tax_Query
 	 */
-	public function and( array $value, string $taxonomy, string $field = 'term_id' ) : Tax_Query {
-		$this->add_clause( $value, $taxonomy, $field, 'AND' );
+	public function and( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ) : Tax_Query {
+		$this->add_clause( $terms, $taxonomy, $field, 'AND', $children );
 		return $this;
 	}
 
@@ -85,14 +86,15 @@ class Tax_Query {
 	 *
 	 * @phpstan-param Field     $field
 	 *
-	 * @param array<int|string> $value
+	 * @param array<int|string> $terms
 	 * @param string            $taxonomy
+	 * @param bool              $children - Include children for hierarchical taxonomies.
 	 * @param string            $field
 	 *
 	 * @return Tax_Query
 	 */
-	public function in( array $value, string $taxonomy, string $field = 'term_id' ) : Tax_Query {
-		$this->add_clause( $value, $taxonomy, $field, 'IN' );
+	public function in( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ) : Tax_Query {
+		$this->add_clause( $terms, $taxonomy, $field, 'IN', $children );
 		return $this;
 	}
 
@@ -102,14 +104,15 @@ class Tax_Query {
 	 *
 	 * @phpstan-param Field     $field
 	 *
-	 * @param array<int|string> $value
+	 * @param array<int|string> $terms
 	 * @param string            $taxonomy
+	 * @param bool              $children - Include children for hierarchical taxonomies.
 	 * @param string            $field
 	 *
 	 * @return Tax_Query
 	 */
-	public function not_in( array $value, string $taxonomy, string $field = 'term_id' ) : Tax_Query {
-		$this->add_clause( $value, $taxonomy, $field, 'NOT IN' );
+	public function not_in( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ) : Tax_Query {
+		$this->add_clause( $terms, $taxonomy, $field, 'NOT IN', $children );
 		return $this;
 	}
 
@@ -170,20 +173,25 @@ class Tax_Query {
 	 * @phpstan-param 'AND'|'IN'|'NOT IN'|'EXISTS'|'NOT EXISTS' $operator
 	 * @phpstan-param Field                    $field
 	 *
-	 * @param string|int|array<int,string|int> $value
+	 * @param string|int|array<int,string|int> $terms
 	 * @param string                           $taxonomy
 	 * @param string                           $field
 	 * @param string                           $operator
+	 * @param bool                             $children - Include children for hierarchical taxonomies.
 	 *
 	 * @return void
 	 */
-	protected function add_clause( $value, string $taxonomy, string $field, string $operator ) : void {
+	protected function add_clause( $terms, string $taxonomy, string $field, string $operator, bool $children = true ) : void {
 		$clause = \array_filter( [
 			'taxonomy' => $taxonomy,
 			'field'    => $field,
-			'terms'    => $value,
+			'terms'    => $terms,
 			'operator' => $operator,
 		] );
+
+		if ( false === $children ) {
+			$clause['include_children'] = false;
+		}
 
 		if ( null !== $this->clause_key ) {
 			$this->args->tax_query[ $this->clause_key ][] = $clause;
