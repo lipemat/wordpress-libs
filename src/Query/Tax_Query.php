@@ -10,7 +10,7 @@ namespace Lipe\Lib\Query;
  *
  * @internal
  *
- * @template Field of 'term_id'|'slug'|'name'|'term_taxonomy_id'|''
+ * @template FIELD of 'term_id'|'slug'|'name'|'term_taxonomy_id'|''
  *
  */
 class Tax_Query {
@@ -66,7 +66,7 @@ class Tax_Query {
 	/**
 	 * Create an 'AND' clause.
 	 *
-	 * @phpstan-param Field     $field
+	 * @phpstan-param FIELD     $field
 	 *
 	 * @param array<int|string> $terms
 	 * @param string            $taxonomy
@@ -84,7 +84,7 @@ class Tax_Query {
 	/**
 	 * Create an 'IN' clause.
 	 *
-	 * @phpstan-param Field     $field
+	 * @phpstan-param FIELD     $field
 	 *
 	 * @param array<int|string> $terms
 	 * @param string            $taxonomy
@@ -102,7 +102,7 @@ class Tax_Query {
 	/**
 	 * Create a 'NOT IN' clause.
 	 *
-	 * @phpstan-param Field     $field
+	 * @phpstan-param FIELD     $field
 	 *
 	 * @param array<int|string> $terms
 	 * @param string            $taxonomy
@@ -146,7 +146,7 @@ class Tax_Query {
 	/**
 	 * Generate a sub level query for nested queries.
 	 *
-	 * @see ArgsTest::test_tax_query() for example of the resulting array.
+	 * @see Tax_QueryTest::test_in() for example of the resulting array.
 	 *
 	 * @notice Do not use with a single taxonomy array.
 	 *
@@ -171,7 +171,7 @@ class Tax_Query {
 	 *
 	 *
 	 * @phpstan-param 'AND'|'IN'|'NOT IN'|'EXISTS'|'NOT EXISTS' $operator
-	 * @phpstan-param Field                    $field
+	 * @phpstan-param FIELD                    $field
 	 *
 	 * @param string|int|array<int,string|int> $terms
 	 * @param string                           $taxonomy
