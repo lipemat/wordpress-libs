@@ -315,7 +315,7 @@ abstract class Db {
 	 *
 	 * @return int|bool - insert id on success or false
 	 */
-	public function replace( array $columns ) : bool | int {
+	public function replace( array $columns ) {
 		global $wpdb;
 
 		$columns = $this->sort_columns( $columns );
