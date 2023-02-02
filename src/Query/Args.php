@@ -2,7 +2,6 @@
 
 namespace Lipe\Lib\Query;
 
-use Lipe\Lib\Query\Clause\Clause_Abstract;
 use Lipe\Lib\Query\Clause\Date_Query;
 use Lipe\Lib\Query\Clause\Meta_Interface;
 use Lipe\Lib\Query\Clause\Meta_Query;
@@ -17,7 +16,7 @@ use Lipe\Lib\Query\Clause\Tax_Query;
  * @since  4.0.0
  *
  */
-class Args implements Meta_Interface {
+class Args extends Args_Abstract implements Meta_Interface {
 	/**
 	 * Attachment post ID. Used for 'attachment' post_type.
 	 *
@@ -620,27 +619,6 @@ class Args implements Meta_Interface {
 	 */
 	public int $year;
 
-	/**
-	 * Various sub-clauses to be flattened via `get_args`.
-	 *
-	 * @var Clause_Abstract[]
-	 */
-	protected array $clauses = [];
-
-
-	/**
-	 * Optionally pass existing arguments to preload this class.
-	 *
-	 * @param array $existing
-	 */
-	public function __construct( array $existing = [] ) {
-		foreach ( $existing as $arg => $value ) {
-			if ( \property_exists( $this, $arg ) ) {
-				$this->{$arg} = $value;
-			}
-		}
-	}
-
 
 	/**
 	 * Generate the `date_query` clauses.
@@ -681,28 +659,6 @@ class Args implements Meta_Interface {
 		$query = new Tax_Query();
 		$this->clauses[] = $query;
 		return $query;
-	}
-
-
-	/**
-	 * Get the finished arguments to pass to `WP_Query`.
-	 *
-	 * @return array
-	 */
-	public function get_args() : array {
-		foreach ( $this->clauses as $clause ) {
-			$clause->flatten( $this );
-		}
-
-		$args = [];
-		foreach ( get_object_vars( $this ) as $_var => $_value ) {
-			if ( ! isset( $this->{$_var} ) || 'clauses' === $_var ) {
-				continue;
-			}
-			$args[ $_var ] = $this->{$_var};
-		}
-
-		return $args;
 	}
 
 
