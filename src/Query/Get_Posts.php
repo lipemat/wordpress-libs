@@ -9,6 +9,9 @@ namespace Lipe\Lib\Query;
  * @author Mat Lipe
  * @since  4.0.0
  *
+ * @see get_posts()
+ *
+ * @link https://developer.wordpress.org/reference/functions/get_posts/
  */
 class Get_Posts extends Args {
 	/**

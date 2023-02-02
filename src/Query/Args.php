@@ -15,6 +15,10 @@ use Lipe\Lib\Query\Clause\Tax_Query;
  * @author Mat Lipe
  * @since  4.0.0
  *
+ * @see \WP_Query
+ *
+ * @link https://developer.wordpress.org/reference/classes/wp_query/
+ * @link https://developer.wordpress.org/reference/classes/WP_Query/parse_query/
  */
 class Args extends Args_Abstract implements Meta_Query_Interface {
 	use Meta_Query_Trait;
