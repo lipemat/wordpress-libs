@@ -1,7 +1,13 @@
-#!/bin/sh
+#!/bin/bash
+
+#####################################################################################
 #
-# Generate a .revision file to be used with browser cache busting
-# @see /src/Theme/Styles.php
-# For use when busting cache locally or when a Beanstalk deployment is not possible
+# Generate a .revision file to be used with browser cache busting locally.
+#
+# @see Resource::get_version
+#
+# @version 1.2.0
+#
+#####################################################################################
 
 git rev-parse HEAD > .revision
