@@ -2,6 +2,11 @@
 
 namespace Lipe\Lib\Query;
 
+use Lipe\Lib\Query\Clause\Date_Query;
+use Lipe\Lib\Query\Clause\Meta_Interface;
+use Lipe\Lib\Query\Clause\Meta_Query;
+use Lipe\Lib\Query\Clause\Tax_Query;
+
 /**
  * A fluent interface for constructing a `\WP_Query`.
  *

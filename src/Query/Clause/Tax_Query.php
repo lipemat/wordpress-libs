@@ -1,6 +1,8 @@
 <?php
 
-namespace Lipe\Lib\Query;
+namespace Lipe\Lib\Query\Clause;
+
+use Lipe\Lib\Query\Args;
 
 /**
  * Generate a `tax_query` argument for a `WP_Query.

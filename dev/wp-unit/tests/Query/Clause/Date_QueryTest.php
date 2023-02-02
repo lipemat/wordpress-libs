@@ -1,6 +1,8 @@
 <?php
 
-namespace Lipe\Lib\Query;
+namespace Lipe\Lib\Query\Clause;
+
+use Lipe\Lib\Query\Args;
 
 /**
  * @author Mat Lipe

@@ -1,6 +1,6 @@
 <?php
 
-namespace Lipe\Lib\Query;
+namespace Lipe\Lib\Query\Clause;
 
 //phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
 
