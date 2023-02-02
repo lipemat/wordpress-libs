@@ -2,9 +2,8 @@
 
 namespace Lipe\Lib\Query\Clause;
 
-use Lipe\Lib\Query\Args;
-
 //phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
+use Lipe\Lib\Query\Args;
 
 /**
  * Generate a `date_query` argument for a `WP_Query.
@@ -20,61 +19,13 @@ use Lipe\Lib\Query\Args;
  *
  * @phpstan-type COMPARE '='|'!='|'>'|'>='|'<'|'<='|'IN'|'NOT IN'|'BETWEEN'|'NOT BETWEEN'|''
  */
-class Date_Query {
+class Date_Query extends Clause_Abstract {
 	/**
-	 * Main WP_Query args class.
-	 *
-	 * @var Args
-	 */
-	protected Args $args;
-
-	/**
-	 * Track the key in the clause array for next queries.
+	 * Current clauses index in $this->clauses.
 	 *
 	 * @var int
 	 */
-	protected int $clause_key = 0;
-
-	/**
-	 * Track the key in the level array for sub queries.
-	 *
-	 * @var int|null
-	 */
-	protected ?int $sub_key;
-
-
-	/**
-	 * @param Args $args - The Main WP_Query args class.
-	 * @param int  $clause_key - Used internally to track the current clause.
-	 * @param ?int $sub_key - Used internally to track current clause in sub queries.
-	 */
-	final public function __construct( Args $args, int $clause_key = 0, ?int $sub_key = null ) {
-		$this->clause_key = $clause_key;
-		$this->sub_key = $sub_key;
-		$this->args = $args;
-	}
-
-
-	/**
-	 * Set the relation of the date query.
-	 *
-	 * Defaults to 'AND'.
-	 *
-	 * @phpstan-param 'AND'|'OR' $relation
-	 *
-	 * @param string $relation
-	 *
-	 * @return Date_Query
-	 */
-	public function relation( string $relation = 'AND' ) : Date_Query {
-		if ( null !== $this->sub_key ) {
-			$this->args->date_query[ $this->clause_key ]['relation'] = $relation;
-		} else {
-			$this->args->date_query['relation'] = $relation;
-		}
-
-		return $this;
-	}
+	protected int $current_index = 0;
 
 
 	/**
@@ -367,37 +318,26 @@ class Date_Query {
 	 * @return Date_Query
 	 */
 	public function next_clause() : Date_Query {
-		if ( ! isset( $this->args->date_query['relation'] ) ) {
-			$this->args->date_query['relation'] = 'AND';
+		if ( empty( $this->clauses['relation'] ) ) {
+			$this->relation();
 		}
-
-		if ( null !== $this->sub_key ) {
-			$this->args->date_query[ $this->clause_key ][] = [];
-			$this->sub_key = \array_key_last( $this->args->date_query[ $this->clause_key ] );
-		} else {
-			$this->args->date_query[] = [];
-			$this->clause_key = \array_key_last( $this->args->date_query );
-		}
+		$this->clauses[] = [];
+		$this->current_index = \array_key_last( $this->clauses );
 
 		return $this;
 	}
 
 
 	/**
-	 * Generate a sub level query for nested queries.
+	 * Flatten the finished clauses into the date_query.
 	 *
-	 * @see Date_QueryTest::test_sub_query() for example of the resulting array.
+	 * @param Args|mixed $args_class - Args class, which supports properties this method will assign.
 	 *
-	 * @notice Do not use with a single taxonomy array.
-	 *
-	 * @return Date_Query
+	 * @return void
 	 */
-	public function sub_query() : Date_Query {
-		$this->args->date_query[] = [ [] ];
-		$sub = new static( $this->args, \array_key_last( $this->args->date_query ), 0 );
-		$sub->relation();
-
-		return $sub;
+	public function flatten( $args_class ) : void {
+		$this->extract_nested( $this->clauses, $this );
+		$args_class->date_query = $this->clauses;
 	}
 
 
@@ -416,29 +356,11 @@ class Date_Query {
 	 * @return void
 	 */
 	protected function update_current_clause( $value, string $key ) : void {
-		$clause = \array_filter( [
+		if ( empty( $this->clauses[ $this->current_index ] ) ) {
+			$this->clauses[ $this->current_index ] = [];
+		}
+		$this->clauses[ $this->current_index ] = \array_merge( $this->clauses[ $this->current_index ], [
 			$key => $value,
 		] );
-
-		$current = &$this->get_current_clause();
-		$current = \array_merge( $current, $clause );
-	}
-
-
-	/**
-	 * Get the clause we are currently adding items to based
-	 * on the clause key and the level key.
-	 *
-	 * @return array
-	 */
-	protected function &get_current_clause() : array {
-		if ( empty( $this->args->date_query ) ) {
-			$this->args->date_query = [ [] ];
-			$this->clause_key = 0;
-		}
-		if ( null !== $this->sub_key ) {
-			return $this->args->date_query[ $this->clause_key ][ $this->sub_key ];
-		}
-		return $this->args->date_query[ $this->clause_key ];
 	}
 }

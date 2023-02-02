@@ -35,7 +35,6 @@ class Date_QueryTest extends \WP_UnitTestCase {
 			'date_query' => [
 				[
 					'after'  => '2022-04-14',
-					'column' => 'fake-db-column',
 				],
 			],
 		], $args->get_args() );
@@ -93,18 +92,23 @@ class Date_QueryTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_sub_query() : void {
+	public function test_nested_clause_clause() : void {
 		$args = new Args();
 		$args->date_query()
 		     ->before( '1200', '01', '20' )
 		     ->inclusive()
-		     ->sub_query()
-		     ->relation( 'OR' )
+		     ->nested_clause( 'OR' )
 		     ->before_string( '2023-01-14' )
 		     ->after_string( '2023-01-12' )
 		     ->next_clause()
 		     ->inclusive()
-		     ->after( '2001' );
+		     ->after( '2001' )
+		     ->nested_clause()
+		     ->before_string( '2023-02-14' )
+		     ->parent_clause()
+		     ->inclusive( false )
+		     ->parent_clause()
+		     ->second( '20' );
 
 		$this->assertEquals( [
 			'date_query' => [
@@ -116,6 +120,7 @@ class Date_QueryTest extends \WP_UnitTestCase {
 						'day'   => '20',
 					],
 					'inclusive' => true,
+					'second'    => '20',
 				],
 				[
 					'relation' => 'OR',
@@ -127,7 +132,13 @@ class Date_QueryTest extends \WP_UnitTestCase {
 						'after'     => [
 							'year' => '2001',
 						],
-						'inclusive' => true,
+						'inclusive' => false,
+					],
+					[
+						'relation' => 'AND',
+						[
+							'before' => '2023-02-14',
+						],
 					],
 				],
 

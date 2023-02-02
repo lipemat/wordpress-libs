@@ -2,6 +2,7 @@
 
 namespace Lipe\Lib\Query;
 
+use Lipe\Lib\Query\Clause\Clause_Abstract;
 use Lipe\Lib\Query\Clause\Date_Query;
 use Lipe\Lib\Query\Clause\Meta_Interface;
 use Lipe\Lib\Query\Clause\Meta_Query;
@@ -619,6 +620,13 @@ class Args implements Meta_Interface {
 	 */
 	public int $year;
 
+	/**
+	 * Various sub-clauses to be flattened via `get_args`.
+	 *
+	 * @var Clause_Abstract[]
+	 */
+	protected array $clauses = [];
+
 
 	/**
 	 * Optionally pass existing arguments to preload this class.
@@ -642,7 +650,9 @@ class Args implements Meta_Interface {
 	 * @return Date_Query
 	 */
 	public function date_query() : Date_Query {
-		return new Date_Query( $this );
+		$query = new Date_Query();
+		$this->clauses[] = $query;
+		return $query;
 	}
 
 
@@ -654,7 +664,9 @@ class Args implements Meta_Interface {
 	 * @return Meta_Query
 	 */
 	public function meta_query() : Meta_Query {
-		return new Meta_Query( $this );
+		$query = new Meta_Query();
+		$this->clauses[] = $query;
+		return $query;
 	}
 
 
@@ -666,7 +678,9 @@ class Args implements Meta_Interface {
 	 * @return Tax_Query
 	 */
 	public function tax_query() : Tax_Query {
-		return new Tax_Query( $this );
+		$query = new Tax_Query();
+		$this->clauses[] = $query;
+		return $query;
 	}
 
 
@@ -676,9 +690,13 @@ class Args implements Meta_Interface {
 	 * @return array
 	 */
 	public function get_args() : array {
+		foreach ( $this->clauses as $clause ) {
+			$clause->flatten( $this );
+		}
+
 		$args = [];
 		foreach ( get_object_vars( $this ) as $_var => $_value ) {
-			if ( ! isset( $this->{$_var} ) ) {
+			if ( ! isset( $this->{$_var} ) || 'clauses' === $_var ) {
 				continue;
 			}
 			$args[ $_var ] = $this->{$_var};

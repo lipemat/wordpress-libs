@@ -15,36 +15,17 @@ namespace Lipe\Lib\Query\Clause;
  * @phpstan-type TYPE 'NUMERIC'|'BINARY'|'CHAR'|'DATE'|'DATETIME'|'DECIMAL'|'SIGNED'|'TIME'|'UNSIGNED'|''
  * @phpstan-type COMPARE_OPERATOR '='|'!='|'>'|'>='|'<'|'<='
  * @phpstan-type COMPARE_WORD 'LIKE'|'NOT LIKE'|'IN'|'NOT IN'|'BETWEEN'|'NOT BETWEEN'|'EXISTS'|'NOT EXISTS'|''
+ * @phpstan-type CLAUSE array{
+ *          key: string,
+ *          value: string|int|array<int,string|int>,
+ *          compare: COMPARE_OPERATOR|COMPARE_WORD,
+ *          type: TYPE
+ *          }
  *
  */
-class Meta_Query {
+class Meta_Query extends Clause_Abstract {
 	/**
-	 * Main args class.
-	 *
-	 * @var Meta_Interface
-	 */
-	protected Meta_Interface $args;
-
-	/**
-	 * Track the key in the clause array for sub queries.
-	 *
-	 * @var int|null
-	 */
-	protected ?int $clause_key;
-
-
-	/**
-	 * @param Meta_Interface $args - The Main WP_Query args class.
-	 * @param int|null       $clause_key - Used internally to track the level of query.
-	 */
-	final public function __construct( Meta_Interface $args, ?int $clause_key = null ) {
-		$this->clause_key = $clause_key;
-		$this->args = $args;
-	}
-
-
-	/**
-	 * Set the relation of the term query.
+	 * Set the relation of the meta query.
 	 *
 	 * Defaults to 'AND'.
 	 *
@@ -57,11 +38,7 @@ class Meta_Query {
 	 * @return Meta_Query
 	 */
 	public function relation( string $relation = 'AND' ) : Meta_Query {
-		if ( null !== $this->clause_key ) {
-			$this->args->meta_query[ $this->clause_key ]['relation'] = $relation;
-		} else {
-			$this->args->meta_query['relation'] = $relation;
-		}
+		$this->clauses['relation'] = $relation;
 
 		return $this;
 	}
@@ -298,23 +275,15 @@ class Meta_Query {
 
 
 	/**
-	 * Generate a sub level query for nested queries.
+	 * Flatten the finished clauses into the meta_query.
 	 *
-	 * @see Meta_QueryTest::test_sub_query() for example of the resulting array.
+	 * @param Meta_Interface $args_class
 	 *
-	 * @notice Do not use with a single taxonomy array.
-	 *
-	 * @return Meta_Query
+	 * @return void
 	 */
-	public function sub_query() : Meta_Query {
-		if ( ! isset( $this->args->meta_query['relation'] ) ) {
-			$this->relation();
-		}
-		$this->args->meta_query[] = [];
-		$sub = new static( $this->args, \array_key_last( $this->args->meta_query ) );
-		$sub->relation();
-
-		return $sub;
+	public function flatten( $args_class ) : void {
+		$this->extract_nested( $this->clauses, $this );
+		$args_class->meta_query = $this->clauses;
 	}
 
 
@@ -336,11 +305,6 @@ class Meta_Query {
 	 */
 	protected function add_clause( $value, string $key, string $compare, string $type ) : void {
 		$clause = \array_filter( \compact( 'key', 'value', 'compare', 'type' ) );
-
-		if ( null !== $this->clause_key ) {
-			$this->args->meta_query[ $this->clause_key ][] = $clause;
-		} else {
-			$this->args->meta_query[] = $clause;
-		}
+		$this->clauses[] = $clause;
 	}
 }

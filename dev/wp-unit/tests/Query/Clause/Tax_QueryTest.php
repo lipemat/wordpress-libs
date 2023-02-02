@@ -29,7 +29,7 @@ class Tax_QueryTest extends \WP_UnitTestCase {
 			],
 		], $args->get_args() );
 
-		$tax->sub_query()
+		$tax->nested_clause()
 		    ->in( [ 4, 5 ], 'category' )
 		    ->in( [ 6, 7 ], 'post_tag' );
 
@@ -66,7 +66,7 @@ class Tax_QueryTest extends \WP_UnitTestCase {
 		$args = new Args();
 		$args->tax_query()
 		     ->exists( 'post_tag' )
-		     ->sub_query()
+		     ->nested_clause()
 		     ->relation( 'OR' )
 		     ->not_exists( 'category' )
 		     ->in( [ 6, 7 ], 'post_tag' );
@@ -100,7 +100,7 @@ class Tax_QueryTest extends \WP_UnitTestCase {
 		$args = new Args();
 		$args->tax_query()
 		     ->and( [ 4, 5 ], 'category', false )
-		     ->sub_query()
+		     ->nested_clause()
 		     ->and( [ 4, 5 ], 'post_tag', false, 'slug' )
 		     ->and( [ 4, 5 ], 'post_tag', true, 'slug' );
 
@@ -128,6 +128,69 @@ class Tax_QueryTest extends \WP_UnitTestCase {
 						'field'    => 'slug',
 						'terms'    => [ 4, 5 ],
 						'operator' => 'AND',
+					],
+				],
+			],
+		], $args->get_args() );
+	}
+
+
+	public function test_nested_clauses() : void {
+		$args = new Args();
+		$args->tax_query()
+		     ->and( [ 4, 5 ], 'category', false )
+		     ->nested_clause( 'OR' )
+		     ->relation( 'AND' )
+		     ->exists( 'post_tag' )
+		     ->not_exists( 'category' )
+		     ->nested_clause( 'OR' )
+		     ->not_in( [ 'first' ], 'post_tag', false, 'slug' )
+		     ->parent_clause()
+		     ->not_in( [ 2 ], 'category' )
+		     ->parent_clause()
+		     ->in( [ 1, 2 ], 'product' );
+
+		$this->assertEquals( [
+			'tax_query' => [
+				'relation' => 'AND',
+				[
+					'taxonomy'         => 'category',
+					'field'            => 'term_id',
+					'terms'            => [ 4, 5 ],
+					'operator'         => 'AND',
+					'include_children' => false,
+				],
+				[
+					'taxonomy' => 'product',
+					'field'    => 'term_id',
+					'terms'    => [ 1, 2 ],
+					'operator' => 'IN',
+				],
+				[
+					'relation' => 'AND',
+					[
+						'taxonomy' => 'post_tag',
+						'operator' => 'EXISTS',
+					],
+					[
+						'taxonomy' => 'category',
+						'operator' => 'NOT EXISTS',
+					],
+					[
+						'taxonomy' => 'category',
+						'field'    => 'term_id',
+						'terms'    => [ 2 ],
+						'operator' => 'NOT IN',
+					],
+					[
+						'relation' => 'OR',
+						[
+							'taxonomy'         => 'post_tag',
+							'field'            => 'slug',
+							'terms'            => [ 'first' ],
+							'operator'         => 'NOT IN',
+							'include_children' => false,
+						],
 					],
 				],
 			],

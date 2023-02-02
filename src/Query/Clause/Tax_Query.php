@@ -15,56 +15,7 @@ use Lipe\Lib\Query\Args;
  * @phpstan-type FIELD 'term_id'|'slug'|'name'|'term_taxonomy_id'|''
  *
  */
-class Tax_Query {
-	/**
-	 * Main WP_Query args class.
-	 *
-	 * @var Args
-	 */
-	protected Args $args;
-
-	/**
-	 * Track the key in the clause array for sub queries.
-	 *
-	 * @var int|null
-	 */
-	protected ?int $clause_key;
-
-
-	/**
-	 * @param Args     $args - The Main WP_Query args class.
-	 * @param int|null $clause_key - Used internally to track the level of query.
-	 */
-	final public function __construct( Args $args, ?int $clause_key = null ) {
-		$this->clause_key = $clause_key;
-		$this->args = $args;
-	}
-
-
-	/**
-	 * Set the relation of the term query.
-	 *
-	 * Defaults to 'AND'.
-	 *
-	 * @note Do not use with a single taxonomy array.
-	 *
-	 * @phpstan-param 'AND'|'OR' $relation
-	 *
-	 * @param string $relation
-	 *
-	 * @return Tax_Query
-	 */
-	public function relation( string $relation = 'AND' ) : Tax_Query {
-		if ( null !== $this->clause_key ) {
-			$this->args->tax_query[ $this->clause_key ]['relation'] = $relation;
-		} else {
-			$this->args->tax_query['relation'] = $relation;
-		}
-
-		return $this;
-	}
-
-
+class Tax_Query extends Clause_Abstract {
 	/**
 	 * Create an 'AND' clause.
 	 *
@@ -146,23 +97,15 @@ class Tax_Query {
 
 
 	/**
-	 * Generate a sub level query for nested queries.
+	 * Flatten the finished clauses into the tax_query.
 	 *
-	 * @see Tax_QueryTest::test_in() for example of the resulting array.
+	 * @param Args|mixed $args_class - Args class, which supports properties this method will assign.
 	 *
-	 * @notice Do not use with a single taxonomy array.
-	 *
-	 * @return Tax_Query
+	 * @return void
 	 */
-	public function sub_query() : Tax_Query {
-		if ( ! isset( $this->args->tax_query['relation'] ) ) {
-			$this->relation();
-		}
-		$this->args->tax_query[] = [];
-		$sub = new static( $this->args, \array_key_last( $this->args->tax_query ) );
-		$sub->relation();
-
-		return $sub;
+	public function flatten( $args_class ) : void {
+		$this->extract_nested( $this->clauses, $this );
+		$args_class->tax_query = $this->clauses;
 	}
 
 
@@ -184,21 +127,12 @@ class Tax_Query {
 	 * @return void
 	 */
 	protected function add_clause( $terms, string $taxonomy, string $field, string $operator, bool $children = true ) : void {
-		$clause = \array_filter( [
-			'taxonomy' => $taxonomy,
-			'field'    => $field,
-			'terms'    => $terms,
-			'operator' => $operator,
-		] );
+		$clause = \array_filter( compact( 'taxonomy', 'field', 'terms', 'operator' ) );
 
 		if ( false === $children ) {
 			$clause['include_children'] = false;
 		}
 
-		if ( null !== $this->clause_key ) {
-			$this->args->tax_query[ $this->clause_key ][] = $clause;
-		} else {
-			$this->args->tax_query[] = $clause;
-		}
+		$this->clauses[] = $clause;
 	}
 }
