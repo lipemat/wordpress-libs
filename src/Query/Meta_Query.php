@@ -5,7 +5,7 @@ namespace Lipe\Lib\Query;
 //phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
 
 /**
- * Generate a `meta_query` argument for a `WP_Query.
+ * Generate a `meta_query` argument for various WP queries.
  *
  * @author Mat Lipe
  * @since  4.0.0
@@ -19,11 +19,11 @@ namespace Lipe\Lib\Query;
  */
 class Meta_Query {
 	/**
-	 * Main WP_Query args class.
+	 * Main args class.
 	 *
-	 * @var Args
+	 * @var Meta_Interface
 	 */
-	protected Args $args;
+	protected Meta_Interface $args;
 
 	/**
 	 * Track the key in the clause array for sub queries.
@@ -34,10 +34,10 @@ class Meta_Query {
 
 
 	/**
-	 * @param Args     $args - The Main WP_Query args class.
-	 * @param int|null $clause_key - Used internally to track the level of query.
+	 * @param Meta_Interface $args - The Main WP_Query args class.
+	 * @param int|null       $clause_key - Used internally to track the level of query.
 	 */
-	final public function __construct( Args $args, ?int $clause_key = null ) {
+	final public function __construct( Meta_Interface $args, ?int $clause_key = null ) {
 		$this->clause_key = $clause_key;
 		$this->args = $args;
 	}

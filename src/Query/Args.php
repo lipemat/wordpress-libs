@@ -11,7 +11,7 @@ namespace Lipe\Lib\Query;
  * @since  4.0.0
  *
  */
-class Args {
+class Args implements Meta_Interface {
 	/**
 	 * Attachment post ID. Used for 'attachment' post_type.
 	 *
