@@ -278,7 +278,7 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Flatten the finished clauses into the meta_query.
 	 *
-	 * @param Meta_Interface $args_class
+	 * @param Meta_Query_Interface $args_class
 	 *
 	 * @return void
 	 */
