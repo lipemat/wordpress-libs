@@ -16,8 +16,7 @@ namespace Lipe\Lib\Query;
  *
  * @internal
  *
- * @template COMPARE of '='|'!='|'>'|'>='|'<'|'<='|'IN'|'NOT IN'|'BETWEEN'|'NOT BETWEEN'|''
- *
+ * @phpstan-type COMPARE '='|'!='|'>'|'>='|'<'|'<='|'IN'|'NOT IN'|'BETWEEN'|'NOT BETWEEN'|''
  */
 class Date_Query {
 	/**

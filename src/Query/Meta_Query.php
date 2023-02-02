@@ -12,9 +12,9 @@ namespace Lipe\Lib\Query;
  *
  * @internal
  *
- * @template TYPE of 'NUMERIC'|'BINARY'|'CHAR'|'DATE'|'DATETIME'|'DECIMAL'|'SIGNED'|'TIME'|'UNSIGNED'|''
- * @template COMPARE_OPERATOR of '='|'!='|'>'|'>='|'<'|'<='
- * @template COMPARE_WORD of 'LIKE'|'NOT LIKE'|'IN'|'NOT IN'|'BETWEEN'|'NOT BETWEEN'|'EXISTS'|'NOT EXISTS'|''
+ * @phpstan-type TYPE 'NUMERIC'|'BINARY'|'CHAR'|'DATE'|'DATETIME'|'DECIMAL'|'SIGNED'|'TIME'|'UNSIGNED'|''
+ * @phpstan-type COMPARE_OPERATOR '='|'!='|'>'|'>='|'<'|'<='
+ * @phpstan-type COMPARE_WORD 'LIKE'|'NOT LIKE'|'IN'|'NOT IN'|'BETWEEN'|'NOT BETWEEN'|'EXISTS'|'NOT EXISTS'|''
  *
  */
 class Meta_Query {

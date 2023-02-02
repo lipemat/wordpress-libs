@@ -10,7 +10,7 @@ namespace Lipe\Lib\Query;
  *
  * @internal
  *
- * @template FIELD of 'term_id'|'slug'|'name'|'term_taxonomy_id'|''
+ * @phpstan-type FIELD 'term_id'|'slug'|'name'|'term_taxonomy_id'|''
  *
  */
 class Tax_Query {
