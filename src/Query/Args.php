@@ -616,6 +616,20 @@ class Args implements Meta_Interface {
 
 
 	/**
+	 * Optionally pass existing arguments to preload this class.
+	 *
+	 * @param array $existing
+	 */
+	public function __construct( array $existing = [] ) {
+		foreach ( $existing as $arg => $value ) {
+			if ( \property_exists( $this, $arg ) ) {
+				$this->{$arg} = $value;
+			}
+		}
+	}
+
+
+	/**
 	 * Generate the `date_query` clauses.
 	 *
 	 * @link https://developer.wordpress.org/reference/classes/wp_query/#date-parameters

@@ -19,4 +19,16 @@ class ArgsTest extends \WP_UnitTestCase {
 			'update_post_meta_cache' => false,
 		], $args->get_args(), 'False values are not be returned.' );
 	}
+
+
+	public function get_preload() : void {
+		$args = new Args( [
+			'lazy_load_term_meta'    => false,
+			'update_post_meta_cache' => false,
+		] );
+		$this->assertEquals( [
+			'lazy_load_term_meta'    => false,
+			'update_post_meta_cache' => false,
+		], $args->get_args(), 'Preloading is not working.' );
+	}
 }
