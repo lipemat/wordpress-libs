@@ -72,13 +72,13 @@ class Meta_Query {
 	 *
 	 * @phpstan-param TYPE $type
 	 *
-	 * @param int|string   $value
 	 * @param string       $key
+	 * @param int|string   $value
 	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function equals( $value, string $key, string $type = '' ) : Meta_Query {
+	public function equals( string $key, $value, string $type = '' ) : Meta_Query {
 		$this->add_clause( $value, $key, '=', $type );
 		return $this;
 	}
@@ -89,13 +89,13 @@ class Meta_Query {
 	 *
 	 * @phpstan-param TYPE $type
 	 *
-	 * @param int|string   $value
 	 * @param string       $key
+	 * @param int|string   $value
 	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_equals( $value, string $key, string $type = '' ) : Meta_Query {
+	public function not_equals( string $key, $value, string $type = '' ) : Meta_Query {
 		$this->add_clause( $value, $key, '!=', $type );
 		return $this;
 	}
@@ -106,13 +106,13 @@ class Meta_Query {
 	 *
 	 * @phpstan-param TYPE $type
 	 *
-	 * @param int|string   $value
 	 * @param string       $key
+	 * @param int|string   $value
 	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function greater_than( $value, string $key, string $type = '' ) : Meta_Query {
+	public function greater_than( string $key, $value, string $type = '' ) : Meta_Query {
 		$this->add_clause( $value, $key, '>', $type );
 		return $this;
 	}
@@ -123,13 +123,13 @@ class Meta_Query {
 	 *
 	 * @phpstan-param TYPE $type
 	 *
-	 * @param int|string   $value
 	 * @param string       $key
+	 * @param int|string   $value
 	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function greater_than_or_equal( $value, string $key, string $type = '' ) : Meta_Query {
+	public function greater_than_or_equal( string $key, $value, string $type = '' ) : Meta_Query {
 		$this->add_clause( $value, $key, '>=', $type );
 		return $this;
 	}
@@ -140,13 +140,13 @@ class Meta_Query {
 	 *
 	 * @phpstan-param TYPE $type
 	 *
-	 * @param int|string   $value
 	 * @param string       $key
+	 * @param int|string   $value
 	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function less_than( $value, string $key, string $type = '' ) : Meta_Query {
+	public function less_than( string $key, $value, string $type = '' ) : Meta_Query {
 		$this->add_clause( $value, $key, '<', $type );
 		return $this;
 	}
@@ -157,13 +157,13 @@ class Meta_Query {
 	 *
 	 * @phpstan-param TYPE $type
 	 *
-	 * @param int|string   $value
 	 * @param string       $key
+	 * @param int|string   $value
 	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function less_than_or_equal( $value, string $key, string $type = '' ) : Meta_Query {
+	public function less_than_or_equal( string $key, $value, string $type = '' ) : Meta_Query {
 		$this->add_clause( $value, $key, '<=', $type );
 		return $this;
 	}
@@ -174,13 +174,13 @@ class Meta_Query {
 	 *
 	 * @phpstan-param TYPE $type
 	 *
-	 * @param int|string   $value
 	 * @param string       $key
+	 * @param int|string   $value
 	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function like( $value, string $key, string $type = '' ) : Meta_Query {
+	public function like( string $key, $value, string $type = '' ) : Meta_Query {
 		$this->add_clause( $value, $key, 'LIKE', $type );
 		return $this;
 	}
@@ -191,13 +191,13 @@ class Meta_Query {
 	 *
 	 * @phpstan-param TYPE $type
 	 *
-	 * @param int|string   $value
 	 * @param string       $key
+	 * @param int|string   $value
 	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_like( $value, string $key, string $type = '' ) : Meta_Query {
+	public function not_like( string $key, $value, string $type = '' ) : Meta_Query {
 		$this->add_clause( $value, $key, 'NOT LIKE', $type );
 		return $this;
 	}
@@ -208,13 +208,13 @@ class Meta_Query {
 	 *
 	 * @phpstan-param TYPE      $type
 	 *
-	 * @param array<int|string> $values
 	 * @param string            $key
+	 * @param array<int|string> $values
 	 * @param string            $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function in( array $values, string $key, string $type = '' ) : Meta_Query {
+	public function in( string $key, array $values, string $type = '' ) : Meta_Query {
 		$this->add_clause( $values, $key, 'IN', $type );
 		return $this;
 	}
@@ -225,13 +225,13 @@ class Meta_Query {
 	 *
 	 * @phpstan-param TYPE      $type
 	 *
-	 * @param array<int|string> $values
 	 * @param string            $key
+	 * @param array<int|string> $values
 	 * @param string            $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_in( array $values, string $key, string $type = '' ) : Meta_Query {
+	public function not_in( string $key, array $values, string $type = '' ) : Meta_Query {
 		$this->add_clause( $values, $key, 'NOT IN', $type );
 		return $this;
 	}
@@ -242,13 +242,13 @@ class Meta_Query {
 	 *
 	 * @phpstan-param TYPE      $type
 	 *
-	 * @param array<int|string> $values
 	 * @param string            $key
+	 * @param array<int|string> $values
 	 * @param string            $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function between( array $values, string $key, string $type = '' ) : Meta_Query {
+	public function between( string $key, array $values, string $type = '' ) : Meta_Query {
 		$this->add_clause( $values, $key, 'BETWEEN', $type );
 		return $this;
 	}
@@ -259,13 +259,13 @@ class Meta_Query {
 	 *
 	 * @phpstan-param TYPE      $type
 	 *
-	 * @param array<int|string> $values
 	 * @param string            $key
+	 * @param array<int|string> $values
 	 * @param string            $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_between( array $values, string $key, string $type = '' ) : Meta_Query {
+	public function not_between( string $key, array $values, string $type = '' ) : Meta_Query {
 		$this->add_clause( $values, $key, 'NOT BETWEEN', $type );
 		return $this;
 	}

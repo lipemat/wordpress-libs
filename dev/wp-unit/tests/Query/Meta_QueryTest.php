@@ -13,7 +13,7 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 		$args = new Args();
 		$args->meta_query()
 		     ->relation( 'OR' )
-		     ->in( [ '0', 'two', false, 0 ], 'some-key', 'BINARY' );
+		     ->in( 'some-key', [ '0', 'two', false, 0 ], 'BINARY' );
 
 		$this->assertEquals( [
 			'meta_query' => [
@@ -32,7 +32,7 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 	public function test_not_equals() : void {
 		$args = new Args();
 		$args->meta_query()
-		     ->not_equals( 'one', 'some-key', 'CHAR' );
+		     ->not_equals( 'some-key', 'one', 'CHAR' );
 
 		$this->assertEquals( [
 			'meta_query' => [
@@ -66,10 +66,10 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 	public function test_sub_query() : void {
 		$args = new Args();
 		$args->meta_query()
-		     ->in( [ 'one', 'two' ], 'some-key' )
+		     ->in( 'some-key', [ 'one', 'two' ] )
 		     ->sub_query()
 		     ->relation( 'OR' )
-		     ->in( [ 'three', 'four' ], 'some-key', 'BINARY' )
+		     ->in( 'some-key', [ 'three', 'four' ], 'BINARY' )
 		     ->not_exists( 'another-key' );
 
 		$this->assertEquals( [
