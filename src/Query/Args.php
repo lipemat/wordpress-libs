@@ -667,4 +667,16 @@ class Args implements Meta_Interface {
 
 		return $args;
 	}
+
+
+	/**
+	 * Get the lightest possible version of the Query args.
+	 *
+	 * @see Utils::get_light_query_args()
+	 *
+	 * @return array
+	 */
+	public function get_light_args() : array {
+		return Utils::in()->get_light_query_args( $this->get_args() );
+	}
 }
