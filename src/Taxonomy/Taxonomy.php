@@ -63,6 +63,8 @@ class Taxonomy {
 	/**
 	 * Whether to generate a default UI for managing this taxonomy.
 	 *
+	 * @notice `$this->show_in_rest` must be true to show in Gutenberg.
+	 *
 	 * @default $this->public
 	 *
 	 * @var bool
@@ -121,7 +123,7 @@ class Taxonomy {
 	/**
 	 * Whether to include the taxonomy in the REST API
 	 *
-	 * @notice  Must be set to true to show in the Gutenberg editor
+	 * @notice  Must be set to true to show in the Gutenberg editor.
 	 *
 	 * @default false
 	 *
@@ -421,6 +423,27 @@ class Taxonomy {
 	 */
 	public function capabilities() : Capabilities {
 		return new Capabilities( $this );
+	}
+
+
+	/**
+	 * The name of the custom meta box to use on the post editing screen for this taxonomy.
+	 *
+	 * Three custom meta boxes are provided:
+	 *
+	 *  - 'radio' for a meta box with radio inputs
+	 *  - 'simple' for a meta box with a simplified list of checkboxes
+	 *  - 'dropdown' for a meta box with a dropdown menu
+	 *
+	 * @phpstan-param 'radio'|'dropdown'|'simple' $type
+	 *
+	 * @param string $type - The type of UI to render.
+	 * @param bool   $checked_ontop - Move checked items to top.
+	 *
+	 * @return void
+	 */
+	public function meta_box( string $type, bool $checked_ontop = false ) : void {
+		new Meta_Box( $this->taxonomy, $type, $checked_ontop );
 	}
 
 
@@ -762,10 +785,10 @@ class Taxonomy {
 			'labels'                => $this->taxonomy_labels(),
 			'args'                  => $this->args ?? null,
 			'public'                => $this->public,
-			'publicly_queryable'    => $this->publicly_queryable ?? null,
-			'show_ui'               => $this->show_ui ?? null,
+			'publicly_queryable'    => $this->publicly_queryable ?? $this->public,
+			'show_ui'               => $this->show_ui ?? $this->public,
 			'show_in_menu'          => $this->show_in_menu,
-			'show_in_nav_menus'     => $this->show_in_nav_menus ?? null,
+			'show_in_nav_menus'     => $this->show_in_nav_menus ?? $this->public,
 			'show_in_rest'          => $this->show_in_rest,
 			'rest_base'             => $this->rest_base ?? null,
 			'rest_namespace'        => $this->rest_namespace ?? null,

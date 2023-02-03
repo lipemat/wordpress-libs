@@ -104,31 +104,6 @@ class Taxonomy_Extended extends Taxonomy {
 	}
 
 
-	/**
-	 * The name of the custom meta box to use on the post editing screen for this taxonomy.
-	 *
-	 * Three custom meta boxes are provided:
-	 *
-	 *  - 'radio' for a meta box with radio inputs
-	 *  - 'simple' for a meta box with a simplified list of checkboxes
-	 *  - 'dropdown' for a meta box with a dropdown menu
-	 *  - `callback` for a custom meta box
-	 *  - `false` remove the meta box
-	 *
-	 * You can also pass the name of a callback function, eg `my_super_meta_box()`,
-	 * or boolean `false` to remove the meta box.
-	 *
-	 * @phpstan-param 'radio'|'dropdown'|'simple'|META_CALLBACK|false $type
-	 *
-	 * @param string|callable|false $type - Meta box UI type..
-	 *
-	 * @return void
-	 */
-	public function meta_box( $type ) : void {
-		$this->meta_box = $type;
-	}
-
-
 	protected function get_taxonomy_args() : array {
 		$args = $this->taxonomy_args();
 		foreach ( get_object_vars( $this ) as $_var => $_value ) {
