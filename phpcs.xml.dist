@@ -70,6 +70,7 @@
 		<exclude name="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid" />
 		<exclude name="WordPress.NamingConventions.ValidHookName.UseUnderscores" />
 		<exclude name="WordPress.PHP.DisallowShortTernary.Found" />
+		<exclude name="WordPress.WhiteSpace.PrecisionAlignment.Found" />
 	</rule>
 
 
