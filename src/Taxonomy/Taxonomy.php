@@ -70,6 +70,13 @@ class Taxonomy {
 	public bool $show_ui;
 
 	/**
+	 * Slug to use for this taxonomy rewrite.
+	 *
+	 * @var string
+	 */
+	public string $slug;
+
+	/**
 	 * Whether to allow automatic creation of taxonomy columns
 	 * on associated post-types lists
 	 *
@@ -316,7 +323,7 @@ class Taxonomy {
 	/**
 	 * Track the register taxonomies for later use.
 	 *
-	 * @var array
+	 * @var array<Taxonomy|Taxonomy_Extended>
 	 */
 	protected static array $registry = [];
 
@@ -426,7 +433,7 @@ class Taxonomy {
 	public static function check_rewrite_rules() : void {
 		$slugs = wp_list_pluck( self::$registry, 'slug' );
 		if ( get_option( self::REGISTRY_OPTION ) !== $slugs ) {
-			\flush_rewrite_rules();
+			flush_rewrite_rules();
 			update_option( self::REGISTRY_OPTION, $slugs );
 		}
 	}
@@ -594,12 +601,16 @@ class Taxonomy {
 
 
 	/**
-	 * Return the slug of this taxonomy, formatted appropriately
+	 * Return the slug of this taxonomy, formatted appropriately.
 	 *
 	 * @return string
 	 */
 	public function get_slug() : string {
-		return \strtolower( \str_replace( ' ', '-', $this->taxonomy ) );
+		if ( empty( $this->slug ) ) {
+			$this->slug = \strtolower( \str_replace( ' ', '-', $this->taxonomy ) );
+		}
+
+		return $this->slug;
 	}
 
 
