@@ -15,6 +15,12 @@ use Lipe\Lib\Query\Args_Abstract;
  * @see register_block_type()
  *
  * @link https://developer.wordpress.org/reference/functions/register_block_type/
+ *
+ * @phpstan-type Attributes array<string, array{
+ *     type:string,
+ *     default?:int|string,
+ *     enum?:array<string|int|bool>
+ * }>
  */
 class Register_Block extends Args_Abstract {
 	/**
@@ -126,6 +132,8 @@ class Register_Block extends Args_Abstract {
 
 	/**
 	 * Block type attributes property schemas.
+	 *
+	 * @phpstan-var Attributes
 	 *
 	 * @var array<string, array<string, mixed>>
 	 */
