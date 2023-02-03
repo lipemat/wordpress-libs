@@ -78,19 +78,6 @@ class Taxonomy_Extended extends Taxonomy {
 		return new Column( $this );
 	}
 
-
-	/**
-	 * Special meta box UI.
-	 *
-	 * @param 'radio'|'dropdown'|'simple'| callable $type - Type of meta box UI.
-	 *
-	 * @return void
-	 */
-	public function meta_box( $type ) : void {
-		$this->meta_box = $type;
-	}
-
-
 	protected function get_taxonomy_args() : array {
 		$args = $this->taxonomy_args();
 		foreach ( get_object_vars( $this ) as $_var => $_value ) {
