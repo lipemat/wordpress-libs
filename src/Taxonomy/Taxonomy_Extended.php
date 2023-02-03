@@ -1,5 +1,7 @@
 <?php
 
+declare( strict_types=1 );
+
 namespace Lipe\Lib\Taxonomy;
 
 use Lipe\Lib\Taxonomy\Extended_TAXOS\Column;
@@ -10,56 +12,71 @@ use Lipe\Lib\Taxonomy\Extended_TAXOS\Column;
  *
  * @link https://github.com/johnbillion/extended-cpts/wiki/Registering-taxonomies
  *
- * @see  \register_extended_taxonomy()
+ * @see  register_extended_taxonomy()
  */
 class Taxonomy_Extended extends Taxonomy {
 
 	/**
+	 * Admin screen columns to show for this taxonomy.
+	 *
 	 * @see \Extended_Taxonomy_Admin::cols()
 	 *
-	 *
-	 * @var array
+	 * @var array<string,mixed>
 	 */
-	public $admin_cols = [];
+	public array $admin_cols = [];
 
 	/**
-	 * All this does currently is disable hierarchy in the taxonomy's rewrite rules
+	 * All this does currently is disable the hierarchy in the taxonomy's rewrite rules.
 	 *
 	 * @var bool
 	 */
-	public $allow_hierarchy;
+	public bool $allow_hierarchy;
 
 	/**
 	 * Whether to always show checked terms at the top of the meta box
 	 *
 	 * @var bool
 	 */
-	public $checked_ontop;
+	public bool $checked_ontop;
 
 	/**
 	 * Whether to show this taxonomy on the 'At a Glance' section of the admin dashboard
 	 *
 	 * @var bool
 	 */
-	public $dashboard_glance;
+	public bool $dashboard_glance;
 
 	/**
-	 * allow only one to be set
+	 * This parameter isn't feature complete. All it does currently is set the meta box
+	 * to the 'radio' meta box, thus meaning any given post can only have one term
+	 * associated with it for that taxonomy.
+	 *
+	 * 'exclusive' isn't really the right name for this, as terms aren't exclusive to a
+	 * post, but rather each post can exclusively have only one term. It's not feature
+	 * complete because you can edit a post in Quick Edit and give it more than one term
+	 * from the taxonomy.
 	 *
 	 * @var bool
 	 */
-	public $exclusive;
+	public bool $exclusive;
 
 	/**
-	 * Use a special meta box structure
+	 * The name of the custom meta box to use on the post editing screen for this taxonomy.
 	 *
-	 * @field 'radio'
-	 * @field 'dropdown'
-	 * @field 'simple'
+	 * Three custom meta boxes are provided:
+	 *
+	 *  - 'radio' for a meta box with radio inputs
+	 *  - 'simple' for a meta box with a simplified list of checkboxes
+	 *  - 'dropdown' for a meta box with a dropdown menu
+	 *
+	 * You can also pass the name of a callback function, eg `my_super_meta_box()`,
+	 * or boolean `false` to remove the meta box.
+	 *
+	 * Default `null`, meaning the standard meta box is used.
 	 *
 	 * @var string
 	 */
-	public $meta_box;
+	public string $meta_box;
 
 
 	/**
@@ -78,9 +95,20 @@ class Taxonomy_Extended extends Taxonomy {
 
 
 	/**
-	 * Special meta box UI.
+	 * The name of the custom meta box to use on the post editing screen for this taxonomy.
 	 *
-	 * @param 'radio'|'dropdown'|'simple'| callable $type - Type of meta box UI.
+	 * Three custom meta boxes are provided:
+	 *
+	 *  - 'radio' for a meta box with radio inputs
+	 *  - 'simple' for a meta box with a simplified list of checkboxes
+	 *  - 'dropdown' for a meta box with a dropdown menu
+	 *
+	 * You can also pass the name of a callback function, eg `my_super_meta_box()`,
+	 * or boolean `false` to remove the meta box.
+	 *
+	 * @phpstan-param  'radio'|'dropdown'|'simple'|callable $type
+	 *
+	 * @param string|callable $type - Meta box UI type..
 	 *
 	 * @return void
 	 */

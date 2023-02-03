@@ -1,5 +1,7 @@
 <?php
 
+declare( strict_types=1 );
+
 namespace Lipe\Lib\Post_Type;
 
 use Lipe\Lib\Post_Type\Extended_CPTS\Column;
@@ -16,41 +18,46 @@ use Lipe\Lib\Post_Type\Extended_CPTS\Sortable;
  */
 class Custom_Post_Type_Extended extends Custom_Post_Type {
 	/**
+	 * Admin screen columns to show for this post type.
+	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Admin-columns
 	 *
-	 * @var array
+	 * @var array<string,mixed>
 	 */
 	public array $admin_cols = [];
 
 	/**
+	 * Admin screen filters to show for this post type.
+	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Admin-filters
 	 *
-	 * @var array
+	 * @var array<string,mixed>
 	 */
 	public array $admin_filters = [];
 
 	/**
-	 * Add params the post type archive query
+	 * Query vars to override on this post type's archive
 	 *
 	 * @example
 	 * # Show all posts on the post type archive:
 	 *    ['nopaging' => true ]
 	 *
-	 * @var array
+	 * @var array<string,mixed>
 	 */
 	public array $archive = [];
 
 	/**
-	 * Force the block editor for this post type.
-	 * Must be used in combination with the `show_in_rest` argument.
-	 * This argument is typically used to prevent the block editor
+	 * Force the block editor for this post type. Must be used in
+	 * combination with the `show_in_rest` argument.
+	 *
+	 * The primary purpose of this argument is to prevent the block editor
 	 * from being used by setting it to false when `show_in_rest` is set to true.
 	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Other-admin-parameters#disable-quick-edit
 	 *
 	 * @var bool
 	 */
-	public $block_editor;
+	public bool $block_editor;
 
 	/**
 	 * Include post type in "Recently Publish" section of the Activity
@@ -62,7 +69,7 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 *
 	 * @var bool
 	 */
-	public $dashboard_activity;
+	public bool $dashboard_activity;
 
 	/**
 	 * Whether to show this post type on the 'At a Glance' section of the admin
@@ -71,7 +78,7 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 *
 	 * @var bool
 	 */
-	public $dashboard_glance;
+	public bool $dashboard_glance;
 
 	/**
 	 * Placeholder for title field on post edit screen.
@@ -80,7 +87,7 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 *
 	 * @var string
 	 */
-	public $enter_title_here;
+	public string $enter_title_here;
 
 	/**
 	 * Does not work with our current structure.
@@ -89,16 +96,25 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 *
 	 * @depecated
 	 *
-	 * @var string
+	 * @var false
 	 */
-	public $featured_image;
+	public bool $featured_image;
 
 	/**
 	 * Custom Rewrite structures.
 	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Custom-permalink-structures
 	 *
-	 * @var array
+	 * @phpstan-var null|bool|array{
+	 *     slug?: string,
+	 *     with_front?: bool,
+	 *     feeds?: bool,
+	 *     pages?: bool,
+	 *     ep_mask?: int,
+	 *     permastruct?: string,
+	 * }
+	 *
+	 * @var bool|array<string,mixed>
 	 */
 	public $rewrite;
 
@@ -109,7 +125,7 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 *
 	 * @var bool
 	 */
-	public $quick_edit;
+	public bool $quick_edit;
 
 	/**
 	 * Add the post type to the site's main RSS feed:
@@ -118,7 +134,7 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 *
 	 * @var bool
 	 */
-	public $show_in_feed;
+	public bool $show_in_feed;
 
 	/**
 	 * Register query vars for sorting of query results.
@@ -127,7 +143,7 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Query-vars-for-sorting
 	 *
-	 * @var array
+	 * @var array<string,mixed>
 	 */
 	public array $site_sortables = [];
 
@@ -138,7 +154,7 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Query-vars-for-filtering
 	 *
-	 * @var array
+	 * @var array<string,mixed>
 	 */
 	public array $site_filters = [];
 
@@ -156,11 +172,18 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 * @return void
 	 */
 	public function rewrite( string $permastruct ) : void {
-		$this->rewrite['permastruct'] = $permastruct;
+		if ( \is_array( $this->rewrite ) ) {
+			$this->rewrite['permastruct'] = $permastruct;
+		} else {
+			$this->rewrite = [
+				'permastruct' => $permastruct,
+			];
+		}
 	}
 
+
 	/**
-	 * Extended CPTs provides a mechanism for registering public query vars
+	 * Extended CPTs provides a mechanism for registering public query vars,
 	 * which allow users to filter your post type archives by various fields.
 	 * This also works in WP_Query, although the main advantage
 	 * is the fact these are public query vars accessible via URL parameters.
@@ -268,7 +291,7 @@ class Custom_Post_Type_Extended extends Custom_Post_Type {
 	 *
 	 */
 	public function register_post_type() : void {
-		\register_extended_post_type( $this->post_type, $this->get_post_type_args() );
+		register_extended_post_type( $this->post_type, $this->get_post_type_args() );
 	}
 
 }

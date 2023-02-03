@@ -1,5 +1,7 @@
 <?php
 
+declare( strict_types=1 );
+
 namespace Lipe\Lib\Taxonomy;
 
 use Lipe\Lib\Util\Actions;
@@ -22,11 +24,11 @@ class Taxonomy {
 	protected const REGISTRY_OPTION = 'lipe/lib/schema/taxonomy_registry';
 
 	/**
-	 * Track the register taxonomies for later use.
+	 * Array of arguments to automatically use inside `wp_get_object_terms()` for this taxonomy.
 	 *
-	 * @var array
+	 * @var array<string,mixed>
 	 */
-	protected static array $registry = [];
+	public array $args;
 
 	/**
 	 * The arguments for the taxonomy
@@ -47,7 +49,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public $public;
+	public bool $public = true;
 
 	/**
 	 * Whether the taxonomy is publicly queryable.
@@ -56,7 +58,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public $publicly_queryable;
+	public bool $publicly_queryable;
 
 	/**
 	 * Whether to generate a default UI for managing this taxonomy.
@@ -65,7 +67,17 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public $show_ui;
+	public bool $show_ui;
+
+	/**
+	 * Whether to allow automatic creation of taxonomy columns
+	 * on associated post-types lists
+	 *
+	 * @default false
+	 *
+	 * @var bool
+	 */
+	public bool $show_admin_column;
 
 	/**
 	 * Show this taxonomy in the admin menu.
@@ -97,7 +109,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public $show_in_nav_menus;
+	public bool $show_in_nav_menus;
 
 	/**
 	 * Whether to include the taxonomy in the REST API
@@ -108,7 +120,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public $show_in_rest = false;
+	public bool $show_in_rest = false;
 
 	/**
 	 * To change the base url of REST API route
@@ -117,7 +129,16 @@ class Taxonomy {
 	 *
 	 * @var string
 	 */
-	public $rest_base;
+	public string $rest_base;
+
+	/**
+	 * To change the namespace URL of REST API route.
+	 *
+	 * Default is wp/v2.
+	 *
+	 * @var string
+	 */
+	public string $rest_namespace;
 
 	/**
 	 * REST API Controller class name.
@@ -126,7 +147,7 @@ class Taxonomy {
 	 *
 	 * @var string
 	 */
-	public $rest_controller_class;
+	public string $rest_controller_class;
 
 	/**
 	 * Whether to allow the Tag Cloud widget to use this taxonomy.
@@ -135,7 +156,7 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public $show_tagcloud;
+	public bool $show_tagcloud;
 
 	/**
 	 * Whether to show the taxonomy in the quick/bulk edit panel
@@ -144,24 +165,31 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public $show_in_quick_edit;
+	public bool $show_in_quick_edit;
 
 	/**
-	 * Provide a callback function name for the meta box display
+	 * Provide a callback function for the meta box display.
 	 *
-	 * @var callable
+	 * - If not set, `post_categories_meta_box()` is used for
+	 *  hierarchical taxonomies, and `post_tags_meta_box()` is used for non-hierarchical.
+	 * - If false, no meta box is shown.
+	 *
+	 * @phpstan-var false|callable(\WP_Post,array): void
+	 *
+	 * @var false|callable
 	 */
 	public $meta_box_cb;
 
 	/**
-	 * Whether to allow automatic creation of taxonomy columns
-	 * on associated post-types lists
+	 * Callback function for sanitizing taxonomy data saved from a meta box.
 	 *
-	 * @default false
+	 * If no callback is defined, an appropriate one is determined based on the value of `$meta_box_cb`.
 	 *
-	 * @var bool
+	 * @phpstan-var callable(string,mixed): (int|string)[]
+	 *
+	 * @var callable
 	 */
-	public $show_admin_column;
+	public $meta_box_sanitize_cb;
 
 	/***
 	 * Include a description of the taxonomy.
@@ -170,7 +198,7 @@ class Taxonomy {
 	 *
 	 * @var string
 	 */
-	public $description;
+	public string $description = '';
 
 	/**
 	 * Is this taxonomy hierarchical (have descendants) like categories
@@ -180,12 +208,17 @@ class Taxonomy {
 	 *
 	 * @var bool
 	 */
-	public $hierarchical;
+	public bool $hierarchical = false;
 
 	/**
-	 * A function name that will be called when the count of
-	 * an associated $object_type, such as post, is updated.
-	 * Works much like a hook.
+	 * Works much like a hook, in that it will be called when the count is updated.
+	 *
+	 * Defaults:
+	 * - `_update_post_term_count()` for taxonomies attached to post types, which confirms
+	 *  that the objects are published before counting them.
+	 * - `_update_generic_term_count()` for taxonomies attached to other object types, such as users.
+	 *
+	 * @phpstan-var callable(int[],\WP_Taxonomy): void
 	 *
 	 * @var callable
 	 */
@@ -194,7 +227,7 @@ class Taxonomy {
 	/**
 	 * False to disable the query_var, set as string to use
 	 * custom query_var instead of default
-	 * True is not seen as a valid entry and will result in 404 issues
+	 * True is not seen as a valid entry and will result in 404 issues.
 	 *
 	 * @default $this->taxonomy
 	 *
@@ -203,64 +236,47 @@ class Taxonomy {
 	public $query_var;
 
 	/**
-	 * Assign a special rewrite args. Send only the ones wanted to change.
-	 * Set too false to disable URL rewriting.
+	 * Triggers the handling of rewrites for this taxonomy.
 	 *
-	 * array{
-	 * 'slug' - Used as pretty permalink text (i.e. /tag/) - defaults to $this->taxonomy
-	 * 'with_front' - allowing permalinks to be prepended with front base - defaults to true
-	 * 'hierarchical' - true or false allow hierarchical urls -  defaults to false
-	 * 'ep_mask' - Assign an endpoint mask for this taxonomy - defaults to EP_NONE.
+	 * Default true, using `$taxonomy` as slug.
+	 *
+	 * - To prevent a rewrite, set to false.
+	 * - To specify rewrite rules, an array can be passed with any of these keys:
+	 *
+	 * @phpstan-var bool|array{
+	 *     slug?: string,
+	 *     with_front?: bool,
+	 *     hierarchical?: bool,
+	 *     ep_mask?: int,
 	 * }
 	 *
-	 * @default true
-	 *
-	 * @var array|bool
+	 * @var bool|array<string,mixed>
 	 */
 	public $rewrite;
 
 	/**
-	 * Capabilities for these terms
-	 * array{
-	 * 'manage_terms' - 'manage_categories'
-	 * 'edit_terms' - 'manage_categories'
-	 * 'delete_terms' - 'manage_categories'
-	 * 'assign_terms' - 'edit_posts'
+	 * Array of capabilities for this taxonomy.
+	 *
+	 * @phpstan-var array{
+	 *     manage_terms: string,
+	 *     edit_terms: string,
+	 *     delete_terms: string,
+	 *     assign_terms: string,
 	 * }
 	 *
-	 * @default []
-	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
-	public array $capabilities = [];
-
-	/**
-	 * The default term added to new posts.
-	 *
-	 * Replaces "Uncategorized".
-	 *
-	 * @var string|array {
-	 * @type string $name        Name of default term.
-	 * @type string $slug        Slug for default term. Default empty.
-	 * @type string $description Description for default term. Default empty.
-	 *                           }
-	 */
-	public $default_term;
+	public array $capabilities;
 
 	/**
 	 * Whether terms in this taxonomy should be sorted in the
 	 * order they are provided to `wp_set_object_terms()`
 	 *
+	 * Default false.
+	 *
 	 * @var bool
 	 */
-	public $sort;
-
-	/**
-	 * The taxonomy slug.
-	 *
-	 * @var string
-	 */
-	protected string $taxonomy = '';
+	public bool $sort = false;
 
 	/**
 	 * Override any generated labels.
@@ -273,9 +289,36 @@ class Taxonomy {
 	 * @see      get_taxonomy_labels
 	 * @see      Taxonomy::taxonomy_labels()
 	 *
+	 * @var array<string,string>
+	 */
+	public array $labels = [];
+
+	/**
+	 * The taxonomy slug.
+	 *
+	 * @var string
+	 */
+	protected string $taxonomy = '';
+
+	/**
+	 * The default term added to new posts.
+	 *
+	 * @phpstan-var string|array{
+	 *     name: string,
+	 *     slug?: string,
+	 *     description?: string,
+	 * }
+	 *
+	 * @var string|array<string,string>
+	 */
+	protected $default_term;
+
+	/**
+	 * Track the register taxonomies for later use.
+	 *
 	 * @var array
 	 */
-	public $labels = [];
+	protected static array $registry = [];
 
 	/**
 	 * The singular label for the taxonomy.
@@ -304,7 +347,7 @@ class Taxonomy {
 	 *
 	 * @var array
 	 */
-	protected $initial_terms = [];
+	protected array $initial_terms = [];
 
 	/**
 	 * Auto generate a post list filter.
@@ -671,7 +714,7 @@ class Taxonomy {
 
 
 	/**
-	 * Handles any calls which need to run to register this taxonomy.
+	 * Handles any calls, which need to run to register this taxonomy.
 	 *
 	 * @return void
 	 */
@@ -706,24 +749,27 @@ class Taxonomy {
 	protected function taxonomy_args() : array {
 		$args = [
 			'labels'                => $this->taxonomy_labels(),
+			'args'                  => $this->args ?? null,
 			'public'                => $this->public,
-			'publicly_queryable'    => $this->publicly_queryable,
-			'show_ui'               => $this->show_ui,
+			'publicly_queryable'    => $this->publicly_queryable ?? null,
+			'show_ui'               => $this->show_ui ?? null,
 			'show_in_menu'          => $this->show_in_menu,
-			'show_in_nav_menus'     => $this->show_in_nav_menus,
+			'show_in_nav_menus'     => $this->show_in_nav_menus ?? null,
 			'show_in_rest'          => $this->show_in_rest,
-			'rest_base'             => $this->rest_base,
-			'rest_controller_class' => $this->rest_controller_class,
-			'show_tagcloud'         => $this->show_tagcloud,
-			'show_in_quick_edit'    => $this->show_in_quick_edit,
+			'rest_base'             => $this->rest_base ?? null,
+			'rest_namespace'        => $this->rest_namespace ?? null,
+			'rest_controller_class' => $this->rest_controller_class ?? null,
+			'show_tagcloud'         => $this->show_tagcloud ?? null,
+			'show_in_quick_edit'    => $this->show_in_quick_edit ?? null,
 			'meta_box_cb'           => $this->meta_box_cb,
+			'meta_box_sanitize_cb'  => $this->meta_box_sanitize_cb,
 			'show_admin_column'     => $this->show_admin_column,
-			'description'           => $this->description,
-			'hierarchical'          => $this->hierarchical,
+			'description'           => $this->description ?? null,
+			'hierarchical'          => $this->hierarchical ?? null,
 			'update_count_callback' => $this->update_count_callback,
 			'query_var'             => $this->query_var ?? $this->taxonomy,
 			'rewrite'               => $this->rewrites(),
-			'capabilities'          => $this->capabilities,
+			'capabilities'          => $this->capabilities ?? [],
 			'sort'                  => $this->sort,
 			'default_term'          => $this->default_term,
 		];
