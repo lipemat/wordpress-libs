@@ -13,6 +13,12 @@ use Lipe\Lib\Taxonomy\Extended_TAXOS\Column;
  * @link https://github.com/johnbillion/extended-cpts/wiki/Registering-taxonomies
  *
  * @see  register_extended_taxonomy()
+ *
+ * @phpstan-type META_CALLBACK callable(\WP_Post, array{
+ *         args:mixed,
+ *         callback:callable,
+ *         id:string,id:title
+ *      }): string
  */
 class Taxonomy_Extended extends Taxonomy {
 
@@ -68,15 +74,19 @@ class Taxonomy_Extended extends Taxonomy {
 	 *  - 'radio' for a meta box with radio inputs
 	 *  - 'simple' for a meta box with a simplified list of checkboxes
 	 *  - 'dropdown' for a meta box with a dropdown menu
+	 *  - `callback` for a custom meta box
+	 *  - `false` remove the meta box
 	 *
 	 * You can also pass the name of a callback function, eg `my_super_meta_box()`,
 	 * or boolean `false` to remove the meta box.
 	 *
 	 * Default `null`, meaning the standard meta box is used.
 	 *
-	 * @var string
+	 * @phpstan-var 'radio'|'dropdown'|'simple'|META_CALLBACK|false
+	 *
+	 * @var string|callable|false
 	 */
-	public string $meta_box;
+	protected $meta_box;
 
 
 	/**
@@ -102,13 +112,15 @@ class Taxonomy_Extended extends Taxonomy {
 	 *  - 'radio' for a meta box with radio inputs
 	 *  - 'simple' for a meta box with a simplified list of checkboxes
 	 *  - 'dropdown' for a meta box with a dropdown menu
+	 *  - `callback` for a custom meta box
+	 *  - `false` remove the meta box
 	 *
 	 * You can also pass the name of a callback function, eg `my_super_meta_box()`,
 	 * or boolean `false` to remove the meta box.
 	 *
-	 * @phpstan-param  'radio'|'dropdown'|'simple'|callable $type
+	 * @phpstan-param 'radio'|'dropdown'|'simple'|META_CALLBACK|false $type
 	 *
-	 * @param string|callable $type - Meta box UI type..
+	 * @param string|callable|false $type - Meta box UI type..
 	 *
 	 * @return void
 	 */
