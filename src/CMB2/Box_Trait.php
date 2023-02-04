@@ -1,5 +1,7 @@
 <?php
 
+declare( strict_types=1 );
+
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\Meta\Repo;
@@ -13,7 +15,7 @@ trait Box_Trait {
 	 *
 	 * @var Field[]|Group[]
 	 */
-	protected $fields = [];
+	protected array $fields = [];
 
 	/**
 	 * An array containing post type slugs, or 'user', 'term', 'comment', or 'options-page'.
@@ -23,7 +25,7 @@ trait Box_Trait {
 	 *
 	 * @var array
 	 */
-	protected $object_types = [];
+	protected array $object_types = [];
 
 
 	/**

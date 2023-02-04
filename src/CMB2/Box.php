@@ -1,5 +1,7 @@
 <?php
 
+declare( strict_types=1 );
+
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
@@ -20,7 +22,7 @@ class Box {
 	 * endpoint being added.
 	 *
 	 */
-	public const EXCLUDE_CMB2_REST_ENDPOINT = 'lipe/lib/cmb2/box/exclude-cmb2-rest-endpoint';
+	protected const EXCLUDE_CMB2_REST_ENDPOINT = 'lipe/lib/cmb2/box/exclude-cmb2-rest-endpoint';
 
 	/**
 	 * The id of metabox
@@ -29,7 +31,7 @@ class Box {
 	 *
 	 * @var string
 	 */
-	protected $id;
+	protected string $id;
 
 	/**
 	 * The context within the screen where the boxes should display.
@@ -43,7 +45,7 @@ class Box {
 	 *
 	 * @var string
 	 */
-	protected $context;
+	protected string $context;
 
 	/**
 	 * Title display in the admin metabox.
@@ -65,11 +67,11 @@ class Box {
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#priority
 	 *
-	 * @default 'high'
+	 * @phpstan-var  'high' | 'core' | 'default' | 'low'
 	 *
-	 * @var 'high' | 'core' | 'default' | 'low'
+	 * @var string
 	 */
-	public $priority = 'high';
+	public string $priority = 'high';
 
 	/**
 	 * This property allows you to optionally add classes to the CMB2 wrapper.
@@ -109,7 +111,7 @@ class Box {
 	 *
 	 * @var bool
 	 */
-	public $closed;
+	public bool $closed;
 
 	/**
 	 * Whether to enqeue CMB2 stylesheet
@@ -121,7 +123,7 @@ class Box {
 	 *
 	 * @var bool
 	 */
-	public $cmb_styles;
+	public bool $cmb_styles;
 
 	/**
 	 * Whether to enqeue CMB2 Javascript files.
@@ -133,7 +135,7 @@ class Box {
 	 *
 	 * @var bool
 	 */
-	public $enqueue_js;
+	public bool $enqueue_js;
 
 	/**
 	 * Handles hooking CMB2 forms/metaboxes into the post/attachment/user screens,
@@ -147,7 +149,7 @@ class Box {
 	 *
 	 * @var bool
 	 */
-	public $hookup;
+	public bool $hookup;
 
 	/**
 	 * Override the rendering of the box on rest api responses.
@@ -180,7 +182,7 @@ class Box {
 	 *
 	 * @var bool
 	 */
-	public $remove_box_wrap;
+	public bool $remove_box_wrap;
 
 	/**
 	 * The following parameter is any additional arguments passed as $callback_args
@@ -200,7 +202,7 @@ class Box {
 	 *
 	 * @var array
 	 */
-	public $mb_callback_args;
+	public array $mb_callback_args;
 
 	/**
 	 * This flag lets you set whether the meta box works in the block editor or not.
@@ -219,7 +221,7 @@ class Box {
 	 *
 	 * @var bool
 	 */
-	public $gutenberg_compatible = true;
+	public bool $gutenberg_compatible = true;
 
 	/**
 	 * Set to false if you have converted this meta box fully to Gutenberg and
@@ -237,7 +239,7 @@ class Box {
 	 *
 	 * @var bool
 	 */
-	public $display_when_gutenberg_active = true;
+	public bool $display_when_gutenberg_active = true;
 
 	/**
 	 * If false, will not save during hookup
@@ -251,7 +253,7 @@ class Box {
 	 *
 	 * @var bool
 	 */
-	public $save_fields;
+	public bool $save_fields;
 
 	/**
 	 * Determines if/how fields/metabox are available in the REST API.
@@ -285,7 +287,7 @@ class Box {
 	 *
 	 * @var bool
 	 */
-	public $show_names;
+	public bool $show_names;
 
 	/**
 	 * Post IDs or page templates to display this metabox.
@@ -300,7 +302,7 @@ class Box {
 	 *
 	 * @var  array{key:string,value:string|array<int>}
 	 */
-	public $show_on;
+	public array $show_on;
 
 	/**
 	 * To show or not based on the result
@@ -342,15 +344,15 @@ class Box {
 	/**
 	 * Register a new meta box.
 	 *
-	 * @template Location of 'normal'|'side'|'advanced'|'form_top'|'before_permalink'| 'after_title'|'after_editor'
+	 * @phpstan-param 'normal'|'side'|'advanced'|'form_top'|'before_permalink'| 'after_title'|'after_editor' $context
 	 *
-	 * @param string      $id           - ID of this box.
+	 * @param string      $id - ID of this box.
 	 * @param array       $object_types - [post type slugs], or 'user', 'term',
 	 *                                  'comment', or 'options-page'.
-	 * @param string|null $title        - Title of this box.
-	 * @param Location    $context      - Location the meta box will display.
+	 * @param string|null $title - Title of this box.
+	 * @param string      $context - Location the meta box will display.
 	 */
-	public function __construct( string $id, array $object_types, ?string $title = null, $context = 'normal' ) {
+	public function __construct( string $id, array $object_types, ?string $title = null, string $context = 'normal' ) {
 		$this->id = $id;
 		$this->object_types = $object_types;
 		$this->title = $title;
@@ -366,7 +368,6 @@ class Box {
 	 * @return void
 	 */
 	public function description( string $description ) : void {
-		$types[] = 'post';
 		foreach ( $this->get_object_types() as $_type ) {
 			add_action( "cmb2_before_{$_type}_form_{$this->id}", function () use ( $description ) {
 				?>
@@ -386,7 +387,7 @@ class Box {
 	/**
 	 * If the box's `show_in_rest` is false, and a non `false` parameter
 	 * is passed, the box's `show_in_rest` will be set to true and all
-	 * fields which do not have a `show_in_rest` specified will be set false.
+	 * fields, which do not have a `show_in_rest` specified will be set false.
 	 *
 	 * Only individual fields that are explicitly set to truthy will
 	 * be included in default WP response even if the box is set to true
@@ -407,10 +408,10 @@ class Box {
 	 * @return void
 	 */
 	public function show_in_rest( $methods = \WP_REST_Server::READABLE ) : void {
-		if ( false === $methods ) {
-			$this->show_in_rest = static::EXCLUDE_CMB2_REST_ENDPOINT;
-		} else {
+		if ( false !== $methods ) {
 			$this->show_in_rest = $methods;
+		} else {
+			$this->show_in_rest = static::EXCLUDE_CMB2_REST_ENDPOINT;
 		}
 	}
 
@@ -422,7 +423,7 @@ class Box {
 	 * @param string $id
 	 * @param string $label
 	 *
-	 * @see     \Lipe\Lib\CMB2\Field::tab();
+	 * @see     Field::tab;
 	 *
 	 *
 	 * @return void
@@ -465,7 +466,7 @@ class Box {
 
 
 	/**
-	 * Id of the CMB2 meta box, also stored as the id of this class.
+	 * The id of the CMB2 meta box, also stored as the id of this class.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#id
 	 *
@@ -479,7 +480,7 @@ class Box {
 
 
 	/**
-	 * Get teh CMB2 version of this box.
+	 * Get the CMB2 version of this box.
 	 *
 	 * @return \CMB2
 	 */
@@ -568,12 +569,14 @@ class Box {
 	 * Support a default value for any `get_metadata()` calls.
 	 * Will add the values of all subfields.
 	 *
+	 * @internal
+	 *
 	 * @param Field $field
 	 * @param array $config
 	 *
 	 */
 	public function register_meta_on_all_types( Field $field, array $config ) : void {
-		if ( null !== $field->default ) {
+		if ( ! empty( $field->default ) ) {
 			$config['default'] = $field->default;
 		}
 

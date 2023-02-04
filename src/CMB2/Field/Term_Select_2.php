@@ -4,7 +4,6 @@ namespace Lipe\Lib\CMB2\Field;
 
 use CMB2_Field;
 use CMB2_Types;
-use Lipe\Lib\Theme\Styles;
 use Lipe\Lib\Traits\Singleton;
 
 /**

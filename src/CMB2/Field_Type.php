@@ -1,5 +1,7 @@
 <?php
 
+declare( strict_types=1 );
+
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Field\Checkbox;
@@ -11,363 +13,15 @@ use Lipe\Lib\Util\Arrays;
 /**
  * CMB2 field types.
  *
+ * A fluent interface with callbacks for each possible field type.
+ *
  * @link    https://github.com/CMB2/CMB2/wiki/Field-Types
  */
 class Field_Type {
 	/**
-	 * A large title (useful for breaking up sections of fields in metabox)
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#title
-	 *
-	 * @var string
-	 */
-	protected $title;
-
-	/**
-	 * Standard text field (large).
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text
-	 *
-	 * @var string
-	 */
-	protected $text;
-
-	/**
-	 * Small text field.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_small
-	 *
-	 * @var string
-	 */
-	protected $text_small;
-
-	/**
-	 * Medium text field.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_medium
-	 *
-	 * @var string
-	 */
-	protected $text_medium;
-
-	/**
-	 * Standard text field which enforces an email address..
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_email
-	 *
-	 * @var string
-	 */
-	protected $text_email;
-
-	/**
-	 * Standard text field which enforces a url.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_url
-	 *
-	 * @var string
-	 */
-	protected $text_url;
-
-	/**
-	 * Standard text field with dollar sign in front of it
-	 * (useful to prevent users from adding a dollar sign to input). .
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_money
-	 *
-	 * @var string
-	 */
-	protected $text_money;
-
-	/**
-	 * Standard textarea.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea
-	 *
-	 * @var string
-	 */
-	protected $textarea;
-
-	/**
-	 * Smaller textarea..
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea_small
-	 *
-	 * @var string
-	 */
-	protected $textarea_small;
-
-	/**
-	 * Code textarea.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea_code
-	 *
-	 * @var string
-	 */
-	protected $textarea_code;
-
-	/**
-	 * Time picker field.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_time
-	 *
-	 * @var string
-	 */
-	protected $text_time;
-
-	/**
-	 * Timezone field.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#select_timezone
-	 *
-	 * @var string
-	 */
-	protected $select_timezone;
-
-	/**
-	 * Date field. Stored and displayed according to the date_format.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_date
-	 *
-	 * @var string
-	 */
-	protected $text_date;
-
-	/**
-	 * Date field, stored as UNIX timestamp. Useful if you plan to query based on it (ex: events listing )
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_date_timestamp
-	 *
-	 * @var string
-	 */
-	protected $text_date_timestamp;
-
-	/**
-	 * Date and time field, stored as UNIX timestamp.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp
-	 *
-	 * @var string
-	 */
-	protected $text_datetime_timestamp;
-
-	/**
-	 * Date, time and timezone field, stored as serialized DateTime object.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp_timezone
-	 *
-	 * @var string
-	 */
-	protected $text_datetime_timestamp_timezone;
-
-	/**
-	 * Adds a hidden input type to the bottom of the CMB2 output.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#hidden
-	 *
-	 * @var string
-	 */
-	protected $hidden;
-
-	/**
-	 * A colorpicker field.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#colorpicker
-	 *
-	 * @var string
-	 */
-	protected $colorpicker;
-
-	/**
-	 * Standard checkbox.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#checkbox
-	 *
-	 * @var string
-	 */
-	protected $checkbox;
-
-	/**
-	 * A field with multiple checkboxes (and multiple can be selected).
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
-	 *
-	 * @var string
-	 */
-	protected $multicheck;
-
-	/**
-	 * A field with multiple checkboxes (and multiple can be selected).
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
-	 *
-	 * @var string
-	 */
-	protected $multicheck_inline;
-
-	/**
-	 * Standard radio buttons.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio
-	 *
-	 * @var string
-	 */
-	protected $radio;
-
-	/**
-	 * Inline radio buttons.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio_inline
-	 *
-	 * @var string
-	 */
-	protected $radio_inline;
-
-	/**
-	 * Standard select dropdown.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#select
-	 *
-	 * @var string
-	 */
-	protected $select;
-
-	/**
-	 * Radio buttons pre-populated with taxonomy terms.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
-	 *
-	 * @var string
-	 */
-	protected $taxonomy_radio;
-
-	/**
-	 * Inline radio buttons pre-populated with taxonomy terms.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio_inline
-	 *
-	 * @var string
-	 */
-	protected $taxonomy_radio_inline;
-
-	/**
-	 * Hierarchical radio buttons pre-populated with taxonomy terms.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio_hierarchical
-	 *
-	 * @var string
-	 */
-	protected $taxonomy_radio_hierarchical;
-
-	/**
-	 * A select field pre-populated with taxonomy terms.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_select
-	 *
-	 * @var string
-	 */
-	protected $taxonomy_select;
-
-	/**
-	 * A select field pre-populated with taxonomy terms and display hierarchical.
-	 *
-	 * @todo Add a link once docs are available.
-	 *
-	 * @var string
-	 */
-	protected $taxonomy_select_hierarchical;
-
-	/**
-	 * A field with checkboxes with taxonomy terms, and multiple terms can be selected.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
-	 *
-	 * @var string
-	 */
-	protected $taxonomy_multicheck;
-
-	/**
-	 * Inline checkboxes with taxonomy terms.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_inline
-	 *
-	 * @var string
-	 */
-	protected $taxonomy_multicheck_inline;
-
-	/**
-	 * Hierarchical checkboxes with taxonomy terms.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_hierarchical
-	 *
-	 * @var string
-	 */
-	protected $taxonomy_multicheck_hierarchical;
-
-	/**
-	 * A metabox with TinyMCE editor (same as WordPress' visual editor).
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#wysiwyg
-	 *
-	 * @var string
-	 */
-	protected $wysiwyg;
-
-	/**
-	 * A file uploader.
-	 *
-	 * By default it will store the file url and allow either attachments or URLs.
-	 * This field type will also store the attachment ID (useful for getting different image sizes).
-	 * It will store it in $id . '_id', so if your field id is wiki_test_image
-	 * the ID is stored in wiki_test_image_id.
-	 * You can also limit it to only allowing attachments (can't manually type in a URL),
-	 * which is also useful if you plan to use the attachment ID.
-	 * The example shows its default values, with possible values commented inline.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file
-	 *
-	 * @var string
-	 */
-	protected $file;
-
-	/**
-	 * A file uploader that allows you to add as many files as you want.
-	 * Once added, files can be dragged and dropped to reorder.
-	 *
-	 * This is a repeatable field, and will store its data in an array,
-	 * with the attachment ID as the array key and the attachment url as the value. Example:
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file_list
-	 *
-	 * @var string
-	 */
-	protected $file_list;
-
-	/**
-	 * Displays embedded media inline using WordPress' built-in oEmbed support.
-	 *
-	 * See codex.wordpress.org/Embeds for more info and for a list of embed services supported
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#oembed
-	 *
-	 * @var string
-	 */
-	protected $oembed;
-
-	/**
-	 * Hybrid field that supports adding other fields as a repeatable group.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
-	 *
-	 * @var string
-	 */
-	protected $group;
-
-	/**
-	 * field
-	 *
 	 * @var Field
 	 */
-	protected $field;
+	protected Field $field;
 
 
 	/**
@@ -377,13 +31,6 @@ class Field_Type {
 	 */
 	public function __construct( Field $field ) {
 		$this->field = $field;
-
-		// set all properties to the values of matching field types.
-		foreach ( get_object_vars( $this ) as $_var => $_value ) {
-			if ( 'field' !== $_var && 'box' !== $_var ) {
-				$this->{$_var} = $_var;
-			}
-		}
 	}
 
 
@@ -415,7 +62,7 @@ class Field_Type {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#title
 	 */
 	public function title() : Field {
-		return $this->set( [ 'type' => $this->title ], Repo::DEFAULT );
+		return $this->set( [ 'type' => 'title' ], Repo::DEFAULT );
 	}
 
 
@@ -428,7 +75,7 @@ class Field_Type {
 	 */
 	public function true_false() : Field {
 		return $this->set( [
-			'type'         => $this->checkbox,
+			'type'         => 'checkbox',
 			'render_class' => True_False::class,
 		], Repo::CHECKBOX );
 	}
@@ -442,7 +89,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function text() : Field {
-		return $this->set( [ 'type' => $this->text ], Repo::DEFAULT );
+		return $this->set( [ 'type' => 'text' ], Repo::DEFAULT );
 	}
 
 
@@ -454,7 +101,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function text_small() : Field {
-		return $this->set( [ 'type' => $this->text_small ], Repo::DEFAULT );
+		return $this->set( [ 'type' => 'text_small' ], Repo::DEFAULT );
 	}
 
 
@@ -466,7 +113,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function text_medium() : Field {
-		return $this->set( [ 'type' => $this->text_medium ], Repo::DEFAULT );
+		return $this->set( [ 'type' => 'text_medium' ], Repo::DEFAULT );
 	}
 
 
@@ -478,7 +125,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function text_email() : Field {
-		return $this->set( [ 'type' => $this->text_email ], Repo::DEFAULT );
+		return $this->set( [ 'type' => 'text_email' ], Repo::DEFAULT );
 	}
 
 
@@ -499,7 +146,7 @@ class Field_Type {
 		] );
 
 		return $this->set( [
-			'type'      => $this->text_url,
+			'type'      => 'text_url',
 			'protocols' => $protocols,
 		], Repo::DEFAULT );
 	}
@@ -514,7 +161,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function text_money() : Field {
-		return $this->set( [ 'type' => $this->text_money ], Repo::DEFAULT );
+		return $this->set( [ 'type' => 'text_money' ], Repo::DEFAULT );
 	}
 
 
@@ -543,7 +190,7 @@ class Field_Type {
 		}
 		$this->field->attributes( $attributes );
 
-		return $this->set( [ 'type' => $this->text_small ], Repo::DEFAULT );
+		return $this->set( [ 'type' => 'text_small' ], Repo::DEFAULT );
 	}
 
 
@@ -562,7 +209,7 @@ class Field_Type {
 		}
 
 		return $this->set( [
-			'type' => $this->textarea,
+			'type' => 'textarea',
 		], Repo::DEFAULT );
 	}
 
@@ -575,7 +222,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function textarea_small() : Field {
-		return $this->set( [ 'type' => $this->textarea_small ], Repo::DEFAULT );
+		return $this->set( [ 'type' => 'textarea_small' ], Repo::DEFAULT );
 	}
 
 
@@ -604,7 +251,7 @@ class Field_Type {
 	 */
 	public function textarea_code( bool $disable_codemirror = false, ?string $language = null, array $code_editor_arguments = [] ) : Field {
 		$set = [
-			'type' => $this->textarea_code,
+			'type' => 'textarea_code',
 		];
 		if ( $disable_codemirror ) {
 			$set['options'] = [
@@ -636,7 +283,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function text_time() : Field {
-		return $this->set( [ 'type' => $this->text_time ], Repo::DEFAULT );
+		return $this->set( [ 'type' => 'text_time' ], Repo::DEFAULT );
 	}
 
 
@@ -648,7 +295,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function select_timezone() : Field {
-		return $this->set( [ 'type' => $this->select_timezone ], Repo::DEFAULT );
+		return $this->set( [ 'type' => 'select_timezone' ], Repo::DEFAULT );
 	}
 
 
@@ -660,7 +307,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function hidden() : Field {
-		return $this->set( [ 'type' => $this->hidden ], Repo::DEFAULT );
+		return $this->set( [ 'type' => 'hidden' ], Repo::DEFAULT );
 	}
 
 
@@ -686,7 +333,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function image( string $button_text = 'Add Image', ?bool $show_text_input = null, ?string $preview_size = null ) : Field {
-		$_args = $this->field_type_file( $this->file, $button_text, 'image', $show_text_input, $preview_size, null, null, null, 'Use Image' );
+		$_args = $this->field_type_file( 'file', $button_text, 'image', $show_text_input, $preview_size, null, null, null, 'Use Image' );
 
 		return $this->set( $_args, Repo::FILE );
 	}
@@ -703,7 +350,7 @@ class Field_Type {
 	 */
 	public function checkbox( string $layout = 'block' ) : Field {
 		$_args = [
-			'type' => $this->checkbox,
+			'type' => 'checkbox',
 		];
 		if ( 'block' !== $layout ) {
 			$_args['render_row_cb'] = [ Checkbox::in(), 'render_field_callback' ];
@@ -723,7 +370,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function oembed() : Field {
-		return $this->set( [ 'type' => $this->oembed ], Repo::DEFAULT );
+		return $this->set( [ 'type' => 'oembed' ], Repo::DEFAULT );
 	}
 
 
@@ -740,7 +387,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function text_date( $date_format = 'm/d/Y', $timezone_meta_key = '', $date_picker_options = [] ) : Field {
-		return $this->set( $this->field_type_date( $this->text_date, $date_format, $timezone_meta_key, $date_picker_options ), Repo::DEFAULT );
+		return $this->set( $this->field_type_date( 'text_date', $date_format, $timezone_meta_key, $date_picker_options ), Repo::DEFAULT );
 	}
 
 
@@ -758,7 +405,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function text_date_timestamp( $date_format = 'm/d/Y', $timezone_meta_key = '', array $date_picker_options = [] ) : Field {
-		return $this->set( $this->field_type_date( $this->text_date_timestamp, $date_format, $timezone_meta_key, $date_picker_options ), Repo::DEFAULT );
+		return $this->set( $this->field_type_date( 'text_date_timestamp', $date_format, $timezone_meta_key, $date_picker_options ), Repo::DEFAULT );
 	}
 
 
@@ -776,7 +423,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function text_datetime_timestamp( $date_format = 'm/d/Y', $timezone_meta_key = '', array $date_picker_options = [] ) : Field {
-		return $this->set( $this->field_type_date( $this->text_datetime_timestamp, $date_format, $timezone_meta_key, $date_picker_options ), Repo::DEFAULT );
+		return $this->set( $this->field_type_date( 'text_datetime_timestamp', $date_format, $timezone_meta_key, $date_picker_options ), Repo::DEFAULT );
 	}
 
 
@@ -793,7 +440,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function text_datetime_timestamp_timezone( $date_format = 'm/d/Y', $timezone_meta_key = '', $date_picker_options = [] ) : Field {
-		return $this->set( $this->field_type_date( $this->text_datetime_timestamp_timezone, $date_format, $timezone_meta_key, $date_picker_options ), Repo::DEFAULT );
+		return $this->set( $this->field_type_date( 'text_datetime_timestamp_timezone', $date_format, $timezone_meta_key, $date_picker_options ), Repo::DEFAULT );
 	}
 
 
@@ -817,7 +464,7 @@ class Field_Type {
 	 *
 	 */
 	public function colorpicker( array $iris_options = [], bool $transparency = false ) : Field {
-		$_args = [ 'type' => $this->colorpicker ];
+		$_args = [ 'type' => 'colorpicker' ];
 		if ( ! empty( $iris_options ) ) {
 			$this->field->attributes( [ 'data-colorpicker' => wp_json_encode( $iris_options ) ] );
 		}
@@ -842,7 +489,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function multicheck( $options_or_callback, $select_all = true ) : Field {
-		$_args = $this->field_type_options( $this->multicheck, $options_or_callback );
+		$_args = $this->field_type_options( 'multicheck', $options_or_callback );
 		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args, Repo::DEFAULT );
@@ -860,7 +507,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function multicheck_inline( $options_or_callback, $select_all = true ) : Field {
-		$_args = $this->field_type_options( $this->multicheck_inline, $options_or_callback );
+		$_args = $this->field_type_options( 'multicheck_inline', $options_or_callback );
 		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args, Repo::DEFAULT );
@@ -878,7 +525,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function radio( $options_or_callback, $show_option_none = true ) : Field {
-		$_args = $this->field_type_options( $this->radio, $options_or_callback, $show_option_none );
+		$_args = $this->field_type_options( 'radio', $options_or_callback, $show_option_none );
 
 		return $this->set( $_args, Repo::DEFAULT );
 	}
@@ -895,7 +542,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function radio_inline( $options_or_callback, $show_option_none = true ) : Field {
-		$_args = $this->field_type_options( $this->radio_inline, $options_or_callback, $show_option_none );
+		$_args = $this->field_type_options( 'radio_inline', $options_or_callback, $show_option_none );
 
 		return $this->set( $_args, Repo::DEFAULT );
 	}
@@ -912,7 +559,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function select( $options_or_callback, $show_option_none = true ) : Field {
-		$_args = $this->field_type_options( $this->select, $options_or_callback, $show_option_none );
+		$_args = $this->field_type_options( 'select', $options_or_callback, $show_option_none );
 
 		return $this->set( $_args, Repo::DEFAULT );
 	}
@@ -930,7 +577,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function taxonomy_radio( $taxonomy, $no_terms_text = null, $remove_default = null ) : Field {
-		$_args = $this->field_type_taxonomy( $this->taxonomy_radio, $taxonomy, $no_terms_text, $remove_default );
+		$_args = $this->field_type_taxonomy( 'taxonomy_radio', $taxonomy, $no_terms_text, $remove_default );
 
 		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
 	}
@@ -948,7 +595,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function taxonomy_radio_hierarchical( $taxonomy, $no_terms_text = null, $remove_default = null ) : Field {
-		$_args = $this->field_type_taxonomy( $this->taxonomy_radio_hierarchical, $taxonomy, $no_terms_text, $remove_default );
+		$_args = $this->field_type_taxonomy( 'taxonomy_radio_hierarchical', $taxonomy, $no_terms_text, $remove_default );
 
 		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
 	}
@@ -966,7 +613,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function taxonomy_radio_inline( $taxonomy, $no_terms_text = null, $remove_default = null ) : Field {
-		$_args = $this->field_type_taxonomy( $this->taxonomy_radio_inline, $taxonomy, $no_terms_text, $remove_default );
+		$_args = $this->field_type_taxonomy( 'taxonomy_radio_inline', $taxonomy, $no_terms_text, $remove_default );
 
 		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
 	}
@@ -984,7 +631,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function taxonomy_select( $taxonomy, $no_terms_text = null, $remove_default = null ) : Field {
-		$_args = $this->field_type_taxonomy( $this->taxonomy_select, $taxonomy, $no_terms_text, $remove_default );
+		$_args = $this->field_type_taxonomy( 'taxonomy_select', $taxonomy, $no_terms_text, $remove_default );
 
 		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
 	}
@@ -1003,7 +650,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function taxonomy_select_hierarchical( string $taxonomy, $no_terms_text = null, $remove_default = null ) : Field {
-		$_args = $this->field_type_taxonomy( $this->taxonomy_select_hierarchical, $taxonomy, $no_terms_text, $remove_default );
+		$_args = $this->field_type_taxonomy( 'taxonomy_select_hierarchical', $taxonomy, $no_terms_text, $remove_default );
 
 		return $this->set( $_args, Repo::TAXONOMY_SINGULAR );
 	}
@@ -1049,7 +696,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function taxonomy_multicheck( $taxonomy, $no_terms_text = null, $remove_default = null, $select_all = true ) : Field {
-		$_args = $this->field_type_taxonomy( $this->taxonomy_multicheck, $taxonomy, $no_terms_text, $remove_default );
+		$_args = $this->field_type_taxonomy( 'taxonomy_multicheck', $taxonomy, $no_terms_text, $remove_default );
 		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args, Repo::TAXONOMY );
@@ -1069,7 +716,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function taxonomy_multicheck_hierarchical( $taxonomy, $no_terms_text = null, $remove_default = null, $select_all = true ) : Field {
-		$_args = $this->field_type_taxonomy( $this->taxonomy_multicheck_hierarchical, $taxonomy, $no_terms_text, $remove_default );
+		$_args = $this->field_type_taxonomy( 'taxonomy_multicheck_hierarchical', $taxonomy, $no_terms_text, $remove_default );
 		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args, Repo::TAXONOMY );
@@ -1089,7 +736,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function taxonomy_multicheck_inline( $taxonomy, $no_terms_text = null, $remove_default = null, $select_all = true ) : Field {
-		$_args = $this->field_type_taxonomy( $this->taxonomy_multicheck_inline, $taxonomy, $no_terms_text, $remove_default );
+		$_args = $this->field_type_taxonomy( 'taxonomy_multicheck_inline', $taxonomy, $no_terms_text, $remove_default );
 		$_args['select_all_button'] = $select_all;
 
 		return $this->set( $_args, Repo::TAXONOMY );
@@ -1109,7 +756,7 @@ class Field_Type {
 	 */
 	public function wysiwyg( array $mce_options = [] ) : Field {
 		$_args = [
-			'type' => $this->wysiwyg,
+			'type' => 'wysiwyg',
 		];
 		if ( ! empty( $mce_options ) ) {
 			$_args['options'] = $mce_options;
@@ -1145,7 +792,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function file( $button_text = null, $file_mime_type = null, $show_text_input = null, $preview_size = null, $select_text = null ) : Field {
-		$_args = $this->field_type_file( $this->file, $button_text, $file_mime_type, $show_text_input, $preview_size, null, null, null, $select_text );
+		$_args = $this->field_type_file( 'file', $button_text, $file_mime_type, $show_text_input, $preview_size, null, null, null, $select_text );
 
 		return $this->set( $_args, Repo::FILE );
 	}
@@ -1170,7 +817,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function file_list( $button_text = null, $file_mime_type = null, $preview_size = null, $remove_item_text = null, $file_text = null, $download_text = null, $select_text = null ) : Field {
-		$_args = $this->field_type_file( $this->file_list, $button_text, $file_mime_type, null, $preview_size, $remove_item_text, $file_text, $download_text, $select_text );
+		$_args = $this->field_type_file( 'file_list', $button_text, $file_mime_type, null, $preview_size, $remove_item_text, $file_text, $download_text, $select_text );
 
 		return $this->set( $_args, Repo::DEFAULT );
 	}
@@ -1194,7 +841,7 @@ class Field_Type {
 	 */
 	public function group( ?string $title = null, ?string $add_button_text = null, ?string $remove_button_text = null, bool $sortable = true, bool $closed = false, ?string $remove_confirm = null ) : Field {
 		$_args = [
-			'type'    => $this->group,
+			'type'    => 'group',
 			'options' => [
 				'sortable' => $sortable,
 				'closed'   => $closed,
@@ -1217,10 +864,11 @@ class Field_Type {
 		return $this->set( $_args, Repo::GROUP );
 	}
 
-	/************ protected ***********************/
 
 	/**
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file_list
+	 *
+	 * @phpstan-param 'file'|'file_list' $type
 	 *
 	 * @param string $type
 	 * @param string $button_text

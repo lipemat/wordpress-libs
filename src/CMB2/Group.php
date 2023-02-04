@@ -121,7 +121,7 @@ class Group extends Field {
 			return $this;
 		}
 		Layout::init_once();
-		if ( $this->tab ) {
+		if ( ! empty( $this->tab ) ) {
 			$this->tab_content_cb = [ Layout::in(), 'render_group_callback' ];
 		} else {
 			$this->render_row_cb( [ Layout::in(), 'render_group_callback' ] );
