@@ -4,6 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy;
 
+//phpcs:disable WordPress.WhiteSpace.PrecisionAlignment.Found
+
 /**
  * Custom output for various meta box styles.
  *
