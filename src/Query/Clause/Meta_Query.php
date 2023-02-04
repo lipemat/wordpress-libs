@@ -16,10 +16,11 @@ namespace Lipe\Lib\Query\Clause;
  * @phpstan-type TYPE 'NUMERIC'|'BINARY'|'CHAR'|'DATE'|'DATETIME'|'DECIMAL'|'SIGNED'|'TIME'|'UNSIGNED'|''
  * @phpstan-type COMPARE_OPERATOR '='|'!='|'>'|'>='|'<'|'<='
  * @phpstan-type COMPARE_WORD 'LIKE'|'NOT LIKE'|'IN'|'NOT IN'|'BETWEEN'|'NOT BETWEEN'|'EXISTS'|'NOT EXISTS'|''
+ * @phpstan-type COMPARE_REGEX 'REGEXP'|'NOT REGEXP'|'RLIKE'
  * @phpstan-type CLAUSE array{
  *          key: string,
  *          value: string|int|array<int,string|int>,
- *          compare: COMPARE_OPERATOR|COMPARE_WORD,
+ *          compare: COMPARE_OPERATOR|COMPARE_WORD|COMPARE_REGEX,
  *          type: TYPE
  *          }
  *
@@ -278,6 +279,8 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Flatten the finished clauses into the meta_query.
 	 *
+	 * @interal
+	 *
 	 * @param Meta_Query_Interface $args_class
 	 *
 	 * @return void
@@ -294,13 +297,13 @@ class Meta_Query extends Clause_Abstract {
 	 * @link https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters
 	 *
 	 *
-	 * @phpstan-param COMPARE_OPERATOR|COMPARE_WORD $compare
-	 * @phpstan-param TYPE                          $type
+	 * @phpstan-param COMPARE_OPERATOR|COMPARE_WORD|COMPARE_REGEX $compare
+	 * @phpstan-param TYPE                                        $type
 	 *
-	 * @param string|int|array<int,string|int>      $value
-	 * @param string                                $key
-	 * @param string                                $compare
-	 * @param string                                $type
+	 * @param string|int|array<int,string|int>                    $value
+	 * @param string                                              $key
+	 * @param string                                              $compare
+	 * @param string                                              $type
 	 *
 	 * @return void
 	 */

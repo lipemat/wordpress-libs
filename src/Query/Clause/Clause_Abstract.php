@@ -38,6 +38,8 @@ abstract class Clause_Abstract {
 	/**
 	 * Flatten the finished clauses into a query argument property.
 	 *
+	 * @interal
+	 *
 	 * @param Args|mixed $args_class - Args class, which supports properties this method will assign.
 	 *
 	 * @return void

@@ -100,6 +100,8 @@ class Tax_Query extends Clause_Abstract {
 	/**
 	 * Flatten the finished clauses into the tax_query.
 	 *
+	 * @internal
+	 *
 	 * @param Args|mixed $args_class - Args class, which supports properties this method will assign.
 	 *
 	 * @return void
