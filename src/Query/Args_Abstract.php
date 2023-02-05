@@ -36,7 +36,7 @@ abstract class Args_Abstract {
 
 
 	/**
-	 * Get the finished arguments to pass to `WP_Query`.
+	 * Get the finished arguments as an array.
 	 *
 	 * @return array
 	 */
