@@ -454,10 +454,10 @@ class Taxonomy {
 	 * @static
 	 */
 	public static function check_rewrite_rules() : void {
-		$slugs = wp_list_pluck( self::$registry, 'slug' );
-		if ( get_option( self::REGISTRY_OPTION ) !== $slugs ) {
+		$slugs = wp_list_pluck( static::$registry, 'slug' );
+		if ( get_option( static::REGISTRY_OPTION ) !== $slugs ) {
 			flush_rewrite_rules();
-			update_option( self::REGISTRY_OPTION, $slugs );
+			update_option( static::REGISTRY_OPTION, $slugs );
 		}
 	}
 
@@ -470,7 +470,7 @@ class Taxonomy {
 	 * @return Taxonomy_Extended|Taxonomy|null
 	 */
 	public static function get_taxonomy( string $taxonomy ) {
-		return self::$registry[ $taxonomy ] ?? null;
+		return static::$registry[ $taxonomy ] ?? null;
 	}
 
 
@@ -754,7 +754,7 @@ class Taxonomy {
 	 */
 	public function register() : void {
 		$this->register_taxonomy();
-		self::$registry[ $this->taxonomy ] = $this;
+		static::$registry[ $this->taxonomy ] = $this;
 		if ( $this->initial_terms ) {
 			$this->insert_initial_terms();
 		}

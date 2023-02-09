@@ -249,7 +249,7 @@ class Tabs {
 					try {
 						var $redirect = $('[name="_wp_http_referer"]'),
 						url = new URL( $redirect.val() );
-						url.searchParams.set( '<?= esc_js( self::TAB_FIELD ) ?>', panel );
+						url.searchParams.set( '<?= esc_js( static::TAB_FIELD ) ?>', panel );
 						$redirect.val( url.toString() );
 					} catch( e ) {
 						console.error( e );

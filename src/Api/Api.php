@@ -133,7 +133,7 @@ class Api {
 	 * @return void
 	 */
 	protected function add_endpoint() : void {
-		add_rewrite_endpoint( 'api', EP_ROOT, self::NAME );
+		add_rewrite_endpoint( 'api', EP_ROOT, static::NAME );
 
 		$this->run_for_version( 'flush_rewrite_rules', static::VERSION );
 	}
@@ -150,13 +150,13 @@ class Api {
 	 * @return void
 	 */
 	protected function handle_request( \WP $wp ) : void {
-		if ( empty( $wp->query_vars[ self::NAME ] ) ) {
+		if ( empty( $wp->query_vars[ static::NAME ] ) ) {
 			return;
 		}
 
 		$this->doing_api = true;
 
-		$args = \array_filter( \explode( '/', $wp->query_vars[ self::NAME ] ) );
+		$args = \array_filter( \explode( '/', $wp->query_vars[ static::NAME ] ) );
 		$endpoint = \array_shift( $args );
 
 		//phpcs:ignore

@@ -33,7 +33,7 @@ class Route {
 	/**
 	 * @var array
 	 */
-	private static $routes = [];
+	protected static $routes = [];
 
 
 	/**
@@ -48,7 +48,7 @@ class Route {
 	 * @return void
 	 */
 	public static function add( string $url, array $args ) : void {
-		self::$routes[ $url ] = $args;
+		static::$routes[ $url ] = $args;
 	}
 
 
@@ -75,7 +75,7 @@ class Route {
 			'has_archive'         => false,
 			'rewrite'             => false,
 		];
-		register_post_type( self::NAME, $args );
+		register_post_type( static::NAME, $args );
 	}
 
 
@@ -102,7 +102,7 @@ class Route {
 	 * @return void
 	 */
 	public function maybe_add_post_hooks( \WP_Query $query ) : void {
-		if ( isset( $query->query_vars[ self::QUERY_VAR ] ) ) {
+		if ( isset( $query->query_vars[ static::QUERY_VAR ] ) ) {
 			$this->add_post_hooks();
 		}
 	}
@@ -166,12 +166,12 @@ class Route {
 	 * @return null|array{title:string, template:string}
 	 */
 	public function get_current_route() : ?array {
-		$route = get_query_var( self::QUERY_VAR );
-		if ( empty( $route ) || empty( self::$routes[ $route ] ) ) {
+		$route = get_query_var( static::QUERY_VAR );
+		if ( empty( $route ) || empty( static::$routes[ $route ] ) ) {
 			return null;
 		}
 
-		return self::$routes[ $route ];
+		return static::$routes[ $route ];
 	}
 
 
@@ -182,9 +182,9 @@ class Route {
 	 * @return void
 	 */
 	public function maybe_flush_rules() : void {
-		if ( get_option( self::OPTION ) !== md5( wp_json_encode( self::$routes ) ) ) {
+		if ( get_option( static::OPTION ) !== md5( wp_json_encode( static::$routes ) ) ) {
 			flush_rewrite_rules();
-			update_option( self::OPTION, md5( wp_json_encode( self::$routes ) ) );
+			update_option( static::OPTION, md5( wp_json_encode( static::$routes ) ) );
 		}
 	}
 
@@ -199,8 +199,8 @@ class Route {
 	 * @return array
 	 */
 	public function add_query_var( array $vars ) : array {
-		$vars[] = self::QUERY_VAR;
-		$vars[] = self::PARAM_QUERY_VAR;
+		$vars[] = static::QUERY_VAR;
+		$vars[] = static::PARAM_QUERY_VAR;
 
 		return $vars;
 	}
@@ -213,10 +213,10 @@ class Route {
 	 * @return void
 	 */
 	public function setup_endpoints() : void {
-		foreach ( self::$routes as $_route => $_args ) {
-			add_rewrite_rule( $_route . '/([^/]+)/?.?', 'index.php?post_type=' . self::NAME . '&p=' . self::get_post_id() . '&' . self::QUERY_VAR . '=' . $_route . '&' . self::PARAM_QUERY_VAR . '=$matches[1]', 'top' );
+		foreach ( static::$routes as $_route => $_args ) {
+			add_rewrite_rule( $_route . '/([^/]+)/?.?', 'index.php?post_type=' . static::NAME . '&p=' . static::get_post_id() . '&' . static::QUERY_VAR . '=' . $_route . '&' . static::PARAM_QUERY_VAR . '=$matches[1]', 'top' );
 
-			add_rewrite_rule( $_route, 'index.php?post_type=' . self::NAME . '&p=' . self::get_post_id() . '&' . self::QUERY_VAR . '=' . $_route, 'top' );
+			add_rewrite_rule( $_route, 'index.php?post_type=' . static::NAME . '&p=' . static::get_post_id() . '&' . static::QUERY_VAR . '=' . $_route, 'top' );
 		}
 	}
 
@@ -227,32 +227,32 @@ class Route {
 	 * @return int
 	 */
 	protected static function get_post_id() : int {
-		if ( self::$post_id ) {
-			return self::$post_id;
+		if ( static::$post_id ) {
+			return static::$post_id;
 		}
 
-		self::$post_id = (int) get_option( self::POST_ID_OPTION, false );
-		if ( self::$post_id ) {
-			return self::$post_id;
+		static::$post_id = (int) get_option( static::POST_ID_OPTION, false );
+		if ( static::$post_id ) {
+			return static::$post_id;
 		}
 
 		$posts = get_posts( [
-			'post_type'      => self::NAME,
+			'post_type'      => static::NAME,
 			'post_status'    => 'publish',
 			'posts_per_page' => 1,
 			'fields'         => 'ids',
 		] );
 		if ( $posts ) {
-			self::$post_id = $posts[0];
+			static::$post_id = $posts[0];
 		} else {
-			self::$post_id = self::make_post();
+			static::$post_id = static::make_post();
 		}
 
-		if ( self::$post_id ) {
-			update_option( self::POST_ID_OPTION, (int) self::$post_id );
+		if ( static::$post_id ) {
+			update_option( static::POST_ID_OPTION, (int) static::$post_id );
 		}
 
-		return self::$post_id;
+		return static::$post_id;
 	}
 
 
@@ -261,11 +261,11 @@ class Route {
 	 *
 	 * @return int The ID of the new post
 	 */
-	private static function make_post() : int {
+	protected static function make_post() : int {
 		$post = [
 			'post_title'  => 'Lipe Libs Placeholder Post',
 			'post_status' => 'publish',
-			'post_type'   => self::NAME,
+			'post_type'   => static::NAME,
 		];
 		$id = wp_insert_post( $post );
 		if ( is_wp_error( $id ) ) { // @phpstan-ignore-line
@@ -294,7 +294,7 @@ class Route {
 	 * @return bool
 	 */
 	public function is_current_route( string $route ) : bool {
-		return get_query_var( self::QUERY_VAR ) === $route;
+		return get_query_var( static::QUERY_VAR ) === $route;
 	}
 
 
@@ -307,7 +307,7 @@ class Route {
 	 * @return string
 	 */
 	public function get_url_parameter() : string {
-		return get_query_var( self::PARAM_QUERY_VAR );
+		return get_query_var( static::PARAM_QUERY_VAR );
 	}
 
 
@@ -321,7 +321,7 @@ class Route {
 	 */
 	public function get_title( string $title, $post ) : string {
 		$_post = get_post( $post );
-		if ( self::get_post_id() === $_post->ID ) {
+		if ( static::get_post_id() === $_post->ID ) {
 			$route = $this->get_current_route();
 
 			return $route['title'];

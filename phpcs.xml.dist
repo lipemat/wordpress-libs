@@ -22,8 +22,6 @@
 		<exclude name="Generic.Commenting.DocComment" />
 		<exclude name="Generic.PHP.DisallowShortOpenTag.EchoFound" />
 
-		<exclude name="LipePlugin.CodeAnalysis.SelfInClass" />
-
 		<exclude name="Squiz.Commenting.FunctionComment.Missing" />
 		<exclude name="Squiz.Commenting.FunctionComment.MissingParamComment" />
 

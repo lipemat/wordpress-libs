@@ -486,10 +486,10 @@ class Custom_Post_Type {
 	 *
 	 */
 	public static function check_rewrite_rules() : void {
-		$slugs = wp_list_pluck( self::$registry, 'slug' );
-		if ( get_option( self::REGISTRY_OPTION ) !== $slugs ) {
+		$slugs = wp_list_pluck( static::$registry, 'slug' );
+		if ( get_option( static::REGISTRY_OPTION ) !== $slugs ) {
 			\flush_rewrite_rules();
-			update_option( self::REGISTRY_OPTION, $slugs );
+			update_option( static::REGISTRY_OPTION, $slugs );
 		}
 	}
 
@@ -502,7 +502,7 @@ class Custom_Post_Type {
 	public function register() : void {
 		$this->handle_block_editor_support();
 		$this->register_post_type();
-		self::$registry[ $this->post_type ] = $this;
+		static::$registry[ $this->post_type ] = $this;
 		$this->add_administrator_capabilities( get_post_type_object( $this->post_type ) );
 	}
 
@@ -770,7 +770,7 @@ class Custom_Post_Type {
 			return;
 		}
 
-		$previous = \get_option( self::CUSTOM_CAPS_OPTION, [] );
+		$previous = \get_option( static::CUSTOM_CAPS_OPTION, [] );
 		if ( isset( $previous[ $post_type->capability_type ] ) ) {
 			return;
 		}
@@ -784,7 +784,7 @@ class Custom_Post_Type {
 		}
 
 		$previous[ $post_type->capability_type ] = 1;
-		update_option( self::CUSTOM_CAPS_OPTION, $previous );
+		update_option( static::CUSTOM_CAPS_OPTION, $previous );
 	}
 
 
@@ -831,7 +831,7 @@ class Custom_Post_Type {
 	 * @return Custom_Post_Type|Custom_Post_Type_Extended|null
 	 */
 	public function get_post_type( string $post_type ) {
-		return self::$registry[ $post_type ] ?? null;
+		return static::$registry[ $post_type ] ?? null;
 	}
 
 

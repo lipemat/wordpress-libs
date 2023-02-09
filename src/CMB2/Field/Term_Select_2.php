@@ -36,9 +36,9 @@ class Term_Select_2 {
 	 * @return void
 	 */
 	protected function hook() : void {
-		add_action( 'cmb2_render_' . self::NAME, [ $this, 'render' ], 10, 5 );
-		add_filter( 'cmb2_sanitize_' . self::NAME, [ $this, 'assign_terms_during_save' ], 10, 4 );
-		add_filter( 'cmb2_types_esc_' . self::NAME, [ $this, 'esc_repeater_values' ], 10, 3 );
+		add_action( 'cmb2_render_' . static::NAME, [ $this, 'render' ], 10, 5 );
+		add_filter( 'cmb2_sanitize_' . static::NAME, [ $this, 'assign_terms_during_save' ], 10, 4 );
+		add_filter( 'cmb2_types_esc_' . static::NAME, [ $this, 'esc_repeater_values' ], 10, 3 );
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'js' ] );
 		// remove subtle conflict with acf.
@@ -46,7 +46,7 @@ class Term_Select_2 {
 			return 4;
 		} );
 
-		add_action( 'wp_ajax_' . self::GET_TERMS, [ $this, 'ajax_get_terms' ] );
+		add_action( 'wp_ajax_' . static::GET_TERMS, [ $this, 'ajax_get_terms' ] );
 	}
 
 
@@ -118,9 +118,9 @@ class Term_Select_2 {
 		$rendered[ (string) $field->id() ] = 1;
 
 		$url_args = [
-			'action'               => self::GET_TERMS,
+			'action'               => static::GET_TERMS,
 			'taxonomy'             => $this->get_taxonomy( $field->args ),
-			self::CREATE_NEW_TERMS => $field->args( self::CREATE_NEW_TERMS ),
+			static::CREATE_NEW_TERMS => $field->args( static::CREATE_NEW_TERMS ),
 		];
 		$url = \add_query_arg( $url_args, admin_url( 'admin-ajax.php' ) );
 		$no_results_text = $field->args( 'text' )['no_terms_text'] ?? get_taxonomy( $url_args['taxonomy'] )->labels->not_found;

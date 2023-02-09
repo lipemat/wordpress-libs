@@ -62,8 +62,8 @@ class Versions {
 
 
 	protected function __construct() {
-		self::$version = (string) get_option( self::OPTION, '0.1' );
-		self::$once_run_before = get_option( self::ONCE, [] );
+		static::$version = (string) get_option( static::OPTION, '0.1' );
+		static::$once_run_before = get_option( static::ONCE, [] );
 
 		$this->hook();
 	}
@@ -80,7 +80,7 @@ class Versions {
 	 * @return string
 	 */
 	public function get_version() : string {
-		return self::$version;
+		return static::$version;
 	}
 
 
@@ -95,8 +95,8 @@ class Versions {
 	 * @return void
 	 */
 	public function once( string $key, callable $callback, $args = null ) : void {
-		if ( ! isset( self::$once_run_before[ $key ] ) ) {
-			self::$once[ $key ] = [
+		if ( ! isset( static::$once_run_before[ $key ] ) ) {
+			static::$once[ $key ] = [
 				'callable' => $callback,
 				'args'     => $args,
 			];
@@ -120,8 +120,8 @@ class Versions {
 	 * @return void
 	 */
 	public function add_update( $version, callable $callback, $args = null ) : void {
-		if ( version_compare( self::$version, (string) $version, '<' ) ) {
-			self::$updates[] = [
+		if ( version_compare( static::$version, (string) $version, '<' ) ) {
+			static::$updates[] = [
 				'version'  => (string) $version,
 				'callable' => $callback,
 				'args'     => $args,
@@ -142,28 +142,28 @@ class Versions {
 	 * @return void
 	 */
 	public function run_updates() : void {
-		if ( ! empty( self::$once ) ) {
-			foreach ( self::$once as $_key => $_item ) {
-				if ( ! isset( self::$once_run_before[ $_key ] ) ) {
-					self::$once_run_before[ $_key ] = 1;
+		if ( ! empty( static::$once ) ) {
+			foreach ( static::$once as $_key => $_item ) {
+				if ( ! isset( static::$once_run_before[ $_key ] ) ) {
+					static::$once_run_before[ $_key ] = 1;
 					\call_user_func( $_item['callable'], $_item['args'] );
-					unset( self::$once[ $_key ] );
+					unset( static::$once[ $_key ] );
 				}
 			}
-			update_option( self::ONCE, self::$once_run_before );
+			update_option( static::ONCE, static::$once_run_before );
 		}
 
-		if ( ! empty( self::$updates ) ) {
-			\usort( self::$updates, function ( $a, $b ) {
+		if ( ! empty( static::$updates ) ) {
+			\usort( static::$updates, function ( $a, $b ) {
 				return version_compare( $a['version'], $b['version'] );
 			} );
 
-			foreach ( self::$updates as $i => $func ) {
-				self::$version = $func['version'];
+			foreach ( static::$updates as $i => $func ) {
+				static::$version = $func['version'];
 				\call_user_func( $func['callable'], $func['args'] );
-				unset( self::$updates[ $i ] );
+				unset( static::$updates[ $i ] );
 			}
-			update_option( self::OPTION, self::$version );
+			update_option( static::OPTION, static::$version );
 		}
 	}
 }

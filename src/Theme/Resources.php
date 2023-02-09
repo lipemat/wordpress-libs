@@ -445,7 +445,7 @@ class Resources {
 	 * @return bool
 	 */
 	public function unpkg_integrity( string $handle, string $url ) : bool {
-		$cached = get_network_option( 0, self::INTEGRITY, [] );
+		$cached = get_network_option( 0, static::INTEGRITY, [] );
 
 		// Add `integrity="<hash>"` to `<script>` tag.
 		$integrity = null;
@@ -465,7 +465,7 @@ class Resources {
 			}
 			$integrity = $meta['integrity'] ?? null;
 			$cached[ $url ] = $integrity;
-			update_network_option( 0, self::INTEGRITY, $cached );
+			update_network_option( 0, static::INTEGRITY, $cached );
 		}
 
 		if ( null !== $integrity ) {

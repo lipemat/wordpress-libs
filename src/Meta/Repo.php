@@ -75,15 +75,15 @@ class Repo extends Translate_Abstract {
 	 */
 	public function get_value( $object_id, string $field_id, string $meta_type = 'post' ) {
 		switch ( $this->get_field_data_type( $field_id ) ) {
-			case self::CHECKBOX:
+			case static::CHECKBOX:
 				return $this->get_checkbox_field_value( $object_id, $field_id, $meta_type );
-			case self::FILE:
+			case static::FILE:
 				return $this->get_file_field_value( $object_id, $field_id, $meta_type );
-			case self::GROUP:
+			case static::GROUP:
 				return $this->get_group_field_value( $object_id, $field_id, $meta_type );
-			case self::TAXONOMY:
+			case static::TAXONOMY:
 				return $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type );
-			case self::TAXONOMY_SINGULAR:
+			case static::TAXONOMY_SINGULAR:
 				return $this->get_taxonomy_singular_field_value( $object_id, $field_id, $meta_type );
 		}
 
@@ -107,17 +107,17 @@ class Repo extends Translate_Abstract {
 	 */
 	public function update_value( $object_id, string $field_id, $value, string $meta_type = 'post' ) : void {
 		switch ( $this->get_field_data_type( $field_id ) ) {
-			case self::CHECKBOX:
+			case static::CHECKBOX:
 				$this->update_checkbox_field_value( $object_id, $field_id, $value, $meta_type );
 				break;
-			case self::FILE:
+			case static::FILE:
 				$this->update_file_field_value( $object_id, $field_id, (int) $value, $meta_type );
 				break;
-			case self::GROUP:
+			case static::GROUP:
 				$this->update_group_field_values( $object_id, $field_id, (array) $value, $meta_type );
 				break;
-			case self::TAXONOMY:
-			case self::TAXONOMY_SINGULAR:
+			case static::TAXONOMY:
+			case static::TAXONOMY_SINGULAR:
 				$this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type );
 				break;
 			default:
@@ -141,15 +141,15 @@ class Repo extends Translate_Abstract {
 	 */
 	public function delete_value( $object_id, string $field_id, string $meta_type ) : void {
 		switch ( $this->get_field_data_type( $field_id ) ) {
-			case self::FILE:
+			case static::FILE:
 				$this->delete_file_field_value( $object_id, $field_id, $meta_type );
 				break;
-			case self::TAXONOMY:
-			case self::TAXONOMY_SINGULAR:
+			case static::TAXONOMY:
+			case static::TAXONOMY_SINGULAR:
 				$this->delete_taxonomy_field_value( $object_id, $field_id, $meta_type );
 				break;
-			case self::CHECKBOX:
-			case self::GROUP:
+			case static::CHECKBOX:
+			case static::GROUP:
 			default:
 				$this->delete_meta_value( $object_id, $field_id, $meta_type );
 

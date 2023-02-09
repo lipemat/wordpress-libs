@@ -44,7 +44,7 @@ class Autoloader {
 	 * @return void
 	 */
 	public static function add( string $name_space, string $path ) : void {
-		self::instance()->add_namespace( $name_space, $path );
+		static::instance()->add_namespace( $name_space, $path );
 	}
 
 

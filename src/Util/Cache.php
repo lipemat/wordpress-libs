@@ -77,12 +77,12 @@ class Cache {
 
 
 	public function maybe_clear_cache() : void {
-		if ( empty( $_REQUEST[ self::QUERY_ARG ] ) || empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], self::QUERY_ARG ) ) {
+		if ( empty( $_REQUEST[ static::QUERY_ARG ] ) || empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], static::QUERY_ARG ) ) {
 			return;
 		}
 		wp_cache_flush();
 		do_action( 'lipe/lipe/util/cache/flush' );
-		wp_safe_redirect( remove_query_arg( [ self::QUERY_ARG, '_wpnonce' ] ) );
+		wp_safe_redirect( remove_query_arg( [ static::QUERY_ARG, '_wpnonce' ] ) );
 		die();
 	}
 
@@ -90,10 +90,10 @@ class Cache {
 	public function add_admin_bar_button( \WP_Admin_Bar $admin_bar ) : void {
 		$admin_bar->add_menu( [
 			'parent' => '',
-			'id'     => self::QUERY_ARG,
+			'id'     => static::QUERY_ARG,
 			'title'  => __( 'Clear Cache', 'lipe' ),
 			'meta'   => [ 'title' => __( 'Clear the cache for this site', 'lipe' ) ],
-			'href'   => wp_nonce_url( add_query_arg( [ self::QUERY_ARG => 1 ] ), self::QUERY_ARG ),
+			'href'   => wp_nonce_url( add_query_arg( [ static::QUERY_ARG => 1 ] ), static::QUERY_ARG ),
 		] );
 	}
 

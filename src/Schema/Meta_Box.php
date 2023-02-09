@@ -26,7 +26,7 @@ abstract class Meta_Box {
 	 *
 	 * @var array
 	 */
-	private static array $registry = [];
+	protected static array $registry = [];
 
 	/**
 	 * @var string
@@ -145,15 +145,15 @@ abstract class Meta_Box {
 	final protected function __construct( string $post_type, array $args = [] ) {
 		$this->post_type = $post_type;
 
-		self::init_once();
+		static::init_once();
 
 		if ( ! empty( $args['id'] ) ) {
 			$this->id = $args['id'];
 		} else {
-			$this->id = self::build_id( $this->post_type, \get_class( $this ) );
+			$this->id = static::build_id( $this->post_type, \get_class( $this ) );
 		}
 
-		self::$registry[ $post_type ][ $this->id ] = $this;
+		static::$registry[ $post_type ][ $this->id ] = $this;
 
 		$args = (array) wp_parse_args( $args, [
 			'title'         => null,
@@ -198,7 +198,7 @@ abstract class Meta_Box {
 		static $append = 0;
 		$id = $post_type . '-' . $class_name;
 		$appended = $id . ( $append ? '-' . $append : '' );
-		if ( isset( self::$registry[ $post_type ][ $appended ] ) ) {
+		if ( isset( static::$registry[ $post_type ][ $appended ] ) ) {
 			$append ++;
 		}
 		$id .= ( $append ? '-' . $append : '' );
@@ -214,8 +214,8 @@ abstract class Meta_Box {
 	 * @return void
 	 */
 	public static function display_nonce() : void {
-		if ( ! empty( self::$registry[ (string) get_post_type() ] ) ) {
-			wp_nonce_field( self::NONCE_ACTION, self::NONCE_NAME );
+		if ( ! empty( static::$registry[ (string) get_post_type() ] ) ) {
+			wp_nonce_field( static::NONCE_ACTION, static::NONCE_NAME );
 		}
 	}
 
@@ -229,15 +229,15 @@ abstract class Meta_Box {
 	 * @return void
 	 */
 	public static function save_meta_boxes( int $post_id, \WP_Post $post ) : void {
-		if ( ! self::should_meta_boxes_be_saved( $post_id, $post ) ) {
+		if ( ! static::should_meta_boxes_be_saved( $post_id, $post ) ) {
 			return;
 		}
-		if ( empty( self::$registry[ $post->post_type ] ) ) {
+		if ( empty( static::$registry[ $post->post_type ] ) ) {
 			return;
 		}
 		remove_action( 'save_post', [ __CLASS__, 'save_meta_boxes' ] );
 
-		foreach ( (array) self::$registry[ $post->post_type ] as $meta_box ) {
+		foreach ( (array) static::$registry[ $post->post_type ] as $meta_box ) {
 			/** @var $meta_box Meta_Box */
 			$meta_box->save( $post_id, $post );
 		}
@@ -255,7 +255,7 @@ abstract class Meta_Box {
 	 */
 	protected static function should_meta_boxes_be_saved( int $post_id, \WP_Post $post ) : bool {
 		// make sure this is a valid submission.
-		if ( ! isset( $_POST[ self::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_NAME ], self::NONCE_ACTION ) ) {
+		if ( ! isset( $_POST[ static::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ static::NONCE_NAME ], static::NONCE_ACTION ) ) {
 			return false;
 		}
 
@@ -277,7 +277,7 @@ abstract class Meta_Box {
 	 * @return Meta_Box|null
 	 */
 	public static function get_meta_box_by_id( string $post_type, string $id ) : ?Meta_Box {
-		return self::$registry[ $post_type ][ $id ] ?? null;
+		return static::$registry[ $post_type ][ $id ] ?? null;
 	}
 
 
@@ -289,7 +289,7 @@ abstract class Meta_Box {
 	 *              registered for the given post type.
 	 */
 	public static function has_meta_box( string $post_type, string $class_name ) : bool {
-		return null !== self::get_meta_box( $post_type, $class_name );
+		return null !== static::get_meta_box( $post_type, $class_name );
 	}
 
 
@@ -305,10 +305,10 @@ abstract class Meta_Box {
 	 * @return Meta_Box|null
 	 */
 	public static function get_meta_box( string $post_type, string $class_name ) : ?Meta_Box {
-		if ( ! isset( self::$registry[ $post_type ] ) ) {
+		if ( ! isset( static::$registry[ $post_type ] ) ) {
 			return null;
 		}
-		foreach ( (array) self::$registry[ $post_type ] as $meta_box ) {
+		foreach ( (array) static::$registry[ $post_type ] as $meta_box ) {
 			if ( \get_class( $meta_box ) === $class_name ) {
 				return $meta_box;
 			}
@@ -470,7 +470,7 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	private static function init_once() : void {
+	protected static function init_once() : void {
 		static $is_init = false;
 		if ( ! $is_init ) {
 			static::hook();

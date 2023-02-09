@@ -51,7 +51,7 @@ class Zip {
 
 
 	protected function hook() : void {
-		add_action( Api::in()->get_action( self::ACTION ), [ $this, 'handle_request' ] );
+		add_action( Api::in()->get_action( static::ACTION ), [ $this, 'handle_request' ] );
 	}
 
 
@@ -65,14 +65,14 @@ class Zip {
 		$this->validate_request();
 
 		//phpcs:disable WordPress.Security.NonceVerification.Missing
-		if ( empty( $_POST[ self::NAME ] ) ) {
+		if ( empty( $_POST[ static::NAME ] ) ) {
 			$name = null;
 		} else {
-			$name = sanitize_text_field( wp_unslash( $_POST[ self::NAME ] ) );
+			$name = sanitize_text_field( wp_unslash( $_POST[ static::NAME ] ) );
 		}
 
-		if ( isset( $_POST[ self::URLS ] ) ) {
-			$this->build_zip( array_map( 'esc_url_raw', (array) wp_unslash( $_POST[ self::URLS ] ) ), $name );
+		if ( isset( $_POST[ static::URLS ] ) ) {
+			$this->build_zip( array_map( 'esc_url_raw', (array) wp_unslash( $_POST[ static::URLS ] ) ), $name );
 		}
 		//phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
@@ -164,11 +164,11 @@ class Zip {
 	 */
 	private function validate_request() : void {
 		//phpcs:disable WordPress.Security.NonceVerification.Missing
-		if ( empty( $_POST[ self::KEY ] ) || ( self::get_key() !== $_POST[ self::KEY ] ) ) {
+		if ( empty( $_POST[ static::KEY ] ) || ( static::get_key() !== $_POST[ static::KEY ] ) ) {
 			die( 'Incorrect key sent.' );
 		}
 
-		if ( empty( $_POST[ self::URLS ] ) ) {
+		if ( empty( $_POST[ static::URLS ] ) ) {
 			die( 'No URL specified.' );
 		}
 		//phpcs:enable WordPress.Security.NonceVerification.Missing
@@ -222,9 +222,9 @@ class Zip {
 	 */
 	public static function get_post_data_to_send( array $urls, ?string $name = null ) : array {
 		return [
-			self::KEY  => self::get_key(),
-			self::NAME => $name,
-			self::URLS => $urls,
+			static::KEY  => static::get_key(),
+			static::NAME => $name,
+			static::URLS => $urls,
 		];
 	}
 
@@ -237,7 +237,7 @@ class Zip {
 	 * @return string
 	 */
 	public static function get_url_for_endpoint() : string {
-		return Api::in()->get_url( self::ACTION );
+		return Api::in()->get_url( static::ACTION );
 	}
 
 
@@ -250,6 +250,6 @@ class Zip {
 	 */
 	public static function init() : void {
 		Api::init_once();
-		self::singleton_init();
+		static::singleton_init();
 	}
 }
