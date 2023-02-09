@@ -106,7 +106,7 @@ class Tabs {
 
 
 	/**
-     * @param string $cmb_id
+	 * @param string $cmb_id
 	 * @param int    $object_id
 	 * @param string $object_type
 	 * @param \CMB2  $cmb
@@ -295,7 +295,7 @@ class Tabs {
 			}
 
 			.cmb-tabs .cmb-th {
-			    width: 150px !important;
+				width: 150px !important;
 			}
 
 			.cmb-tabs .cmb-th label {
@@ -565,12 +565,12 @@ class Tabs {
 			}
 
 			.cmb2-options-page .cmb-tabs.cmb-tabs-horizontal ul.cmb-tab-nav li.cmb-tab-active a {
-			    border-bottom: 2px solid #fff;
-			    margin-bottom: -1px;
+				border-bottom: 2px solid #fff;
+				margin-bottom: -1px;
 			}
 
 			.cmb2-options-page .cmb-tabs .cmb2-metabox > .cmb-row > .cmb-th + .cmb-td {
-			    margin-left: 175px;
+				margin-left: 175px;
 			}
 
 			/*--------------------------------------------------------------

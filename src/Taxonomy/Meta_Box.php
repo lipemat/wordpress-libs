@@ -60,7 +60,7 @@ class Meta_Box {
 	 * Removes the default meta box from the post editing screen and adds our custom meta box.
 	 *
 	 * @param string $post_type - The post type when on a post edit screen.
-	 * @param mixed  $post - Post object when on a post edit screen.
+	 * @param mixed  $post      - Post object when on a post edit screen.
 	 */
 	public function replace_default_meta_box( string $post_type, $post ) : void {
 		if ( ! $post instanceof \WP_Post ) {
@@ -100,7 +100,7 @@ class Meta_Box {
 	/**
 	 * Displays the custom meta box on the post editing screen.
 	 *
-	 * @param \WP_Post            $post The post object.
+	 * @param \WP_Post            $post     The post object.
 	 * @param array<string,mixed> $meta_box The meta box arguments.
 	 */
 	public function do_meta_box( \WP_Post $post, array $meta_box ) : void {
@@ -223,13 +223,13 @@ class Meta_Box {
 					$checked = \in_array( $data_object->term_id, (array) $args['selected_cats'], true );
 
 					$output .= "\n<li id='{$args['taxonomy']}-{$data_object->term_id}'>" .
-					           '<label class="selectit">' .
-					           '<input value="' . esc_attr( $value ) . '" type="radio" name="tax_input[' . esc_attr( $args['taxonomy'] ) . '][]" ' .
-					           'id="in-' . esc_attr( $args['taxonomy'] ) . '-' . esc_attr( (string) $data_object->term_id ) . '"' .
-					           checked( $checked, true, false ) .
-					           ' /> ' .
-					           esc_html( apply_filters( 'the_category', $data_object->name ) ) .
-					           '</label>';
+							   '<label class="selectit">' .
+							   '<input value="' . esc_attr( $value ) . '" type="radio" name="tax_input[' . esc_attr( $args['taxonomy'] ) . '][]" ' .
+							   'id="in-' . esc_attr( $args['taxonomy'] ) . '-' . esc_attr( (string) $data_object->term_id ) . '"' .
+							   checked( $checked, true, false ) .
+							   ' /> ' .
+							   esc_html( apply_filters( 'the_category', $data_object->name ) ) .
+							   '</label>';
 				}
 			};
 		}

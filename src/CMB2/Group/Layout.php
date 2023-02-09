@@ -150,8 +150,8 @@ class Layout {
 		?>
 		<tr
 			id="cmb-group-<?= esc_attr( $field_group->id() ) ?>-<?= esc_attr( $field_group->index ) ?>"
-		    class="cmb-row cmb-repeatable-grouping<?= esc_attr( $closed_class ) ?>"
-		    data-iterator="<?= esc_attr( $field_group->index ) ?>">
+			class="cmb-row cmb-repeatable-grouping<?= esc_attr( $closed_class ) ?>"
+			data-iterator="<?= esc_attr( $field_group->index ) ?>">
 			<?php
 			if ( $this->is_repeatable( $field_group ) ) {
 				?>
