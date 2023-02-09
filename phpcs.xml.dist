@@ -3,7 +3,7 @@
 	<!-- See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml -->
 
 	<description>Ruleset for WordPress Libs</description>
-	<version>4.0.0</version>
+	<version>4.0.3</version>
 
 	<!-- Include when not specified -->
 	<file>./src</file>
@@ -26,6 +26,16 @@
 		<exclude name="Squiz.Commenting.FunctionComment.MissingParamComment" />
 
 		<exclude name="WordPress.PHP.DisallowShortTernary.Found" />
+	</rule>
+
+	<!-- Allow the "lipe" or "Lipe" prefix for hooks, namespaces and functions -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="Lipe\Lib" />
+				<element value="lipe/lib" />
+			</property>
+		</properties>
 	</rule>
 
 	<!-- Translations -->

@@ -81,7 +81,7 @@ class Cache {
 			return;
 		}
 		wp_cache_flush();
-		do_action( 'lipe/lipe/util/cache/flush' );
+		do_action( 'lipe/lib/util/cache/flush' );
 		wp_safe_redirect( remove_query_arg( [ static::QUERY_ARG, '_wpnonce' ] ) );
 		die();
 	}

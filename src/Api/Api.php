@@ -159,11 +159,12 @@ class Api {
 		$args = \array_filter( \explode( '/', $wp->query_vars[ static::NAME ] ) );
 		$endpoint = \array_shift( $args );
 
-		//phpcs:ignore
+		//phpcs:ignore WordPress.Security.NonceVerification -- Not form submission.
 		if ( ! empty( $_REQUEST[ static::FORMAT ] ) && static::FORMAT_ASSOC === $_REQUEST[ static::FORMAT ] ) {
 			$args = Arrays::in()->chunk_to_associative( $args );
 		}
 
+		//phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
 		do_action( $this->get_action( $endpoint ), $args );
 	}
 }

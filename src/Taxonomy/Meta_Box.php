@@ -222,12 +222,14 @@ class Meta_Box {
 					}
 					$checked = \in_array( $data_object->term_id, (array) $args['selected_cats'], true );
 
+					// @todo Next time working on this, clean it up with `ob_start()`.
 					$output .= "\n<li id='{$args['taxonomy']}-{$data_object->term_id}'>" .
 							   '<label class="selectit">' .
 							   '<input value="' . esc_attr( $value ) . '" type="radio" name="tax_input[' . esc_attr( $args['taxonomy'] ) . '][]" ' .
 							   'id="in-' . esc_attr( $args['taxonomy'] ) . '-' . esc_attr( (string) $data_object->term_id ) . '"' .
 							   checked( $checked, true, false ) .
 							   ' /> ' .
+					           //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 							   esc_html( apply_filters( 'the_category', $data_object->name ) ) .
 							   '</label>';
 				}
