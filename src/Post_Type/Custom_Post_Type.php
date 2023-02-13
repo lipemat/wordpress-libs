@@ -523,14 +523,20 @@ class Custom_Post_Type {
 	 * Turn on and off Gutenberg block editor support based on
 	 * WP core requirements and $this->gutenberg_compatible
 	 *
-	 * 1. There is a filter to disable block editor support
-	 * 2. To enable block editor, we need to have show_in_rest set to true
+	 * 1. Uses existing filter to disable block editor support.
+	 * 2. To enable block editor, we need to have show_in_rest set to true.
 	 * 3. To enable block editor, we need to have editor support.
 	 *
 	 * @return void
 	 */
 	protected function handle_block_editor_support() : void {
-		if ( false === $this->gutenberg_compatible ) {
+		if ( ! isset( $this->gutenberg_compatible ) ) {
+			return;
+		}
+		if ( false !== $this->gutenberg_compatible ) {
+			$this->show_in_rest = true;
+			$this->supports[] = 'editor';
+		} else {
 			add_filter( 'use_block_editor_for_post_type', function( $enabled, $post_type ) {
 				if ( $post_type === $this->post_type ) {
 					return false;
@@ -538,9 +544,6 @@ class Custom_Post_Type {
 
 				return $enabled;
 			}, 10, 2 );
-		} elseif ( true === $this->gutenberg_compatible ) {
-			$this->show_in_rest = true;
-			$this->supports[] = 'editor';
 		}
 	}
 
