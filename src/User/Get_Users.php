@@ -207,7 +207,7 @@ class Get_Users extends Args_Abstract implements Meta_Query_Interface {
 	 *
 	 * Default 'all'.
 	 *
-	 * @phpstan-var (FIELD|'all'|'all_with_meta')|array<int,FIELD>
+	 * @phpstan-var (FIELD|'all'|'all_with_meta')|array{FIELD}
 	 *
 	 * @var string|array<int, string>
 	 */
