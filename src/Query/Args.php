@@ -2,7 +2,8 @@
 
 namespace Lipe\Lib\Query;
 
-use Lipe\Lib\Query\Clause\Date_Query;
+use Lipe\Lib\Query\Clause\Date_Query_Interface;
+use Lipe\Lib\Query\Clause\Date_Query_Trait;
 use Lipe\Lib\Query\Clause\Meta_Query_Interface;
 use Lipe\Lib\Query\Clause\Meta_Query_Trait;
 use Lipe\Lib\Query\Clause\Tax_Query;
@@ -25,7 +26,8 @@ use Lipe\Lib\Query\Clause\Tax_Query;
  * @phpstan-type ORDERBY_FIELDS 'none'|'name'|'author'|'date'|'title'|'modified'|'menu_order'|'parent'|'ID'|'meta_value'
  * @phpstan-type ORDERBY_DATA 'rand'|'relevance'|'comment_count'|'post__in'|'post_name__in'|'post_parent__in'
  */
-class Args extends Args_Abstract implements Meta_Query_Interface {
+class Args extends Args_Abstract implements Meta_Query_Interface, Date_Query_Interface {
+	use Date_Query_Trait;
 	use Meta_Query_Trait;
 
 	/**
@@ -626,20 +628,6 @@ class Args extends Args_Abstract implements Meta_Query_Interface {
 	 * @var int
 	 */
 	public int $year;
-
-
-	/**
-	 * Generate the `date_query` clauses.
-	 *
-	 * @link https://developer.wordpress.org/reference/classes/wp_query/#date-parameters
-	 *
-	 * @return Date_Query
-	 */
-	public function date_query() : Date_Query {
-		$query = new Date_Query();
-		$this->clauses[] = $query;
-		return $query;
-	}
 
 
 	/**
