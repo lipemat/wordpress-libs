@@ -7,6 +7,8 @@ use Lipe\Lib\Query\Clause\Meta_Query_Interface;
 use Lipe\Lib\Query\Clause\Meta_Query_Trait;
 use Lipe\Lib\Query\Clause\Tax_Query;
 
+//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
+
 /**
  * A fluent interface for constructing a `\WP_Query`.
  *
@@ -15,10 +17,13 @@ use Lipe\Lib\Query\Clause\Tax_Query;
  * @author Mat Lipe
  * @since  4.0.0
  *
- * @see \WP_Query
+ * @see    \WP_Query
  *
- * @link https://developer.wordpress.org/reference/classes/wp_query/
- * @link https://developer.wordpress.org/reference/classes/WP_Query/parse_query/
+ * @link   https://developer.wordpress.org/reference/classes/wp_query/
+ * @link   https://developer.wordpress.org/reference/classes/WP_Query/parse_query/
+ *
+ * @phpstan-type ORDERBY_FIELDS 'none'|'name'|'author'|'date'|'title'|'modified'|'menu_order'|'parent'|'ID'|'meta_value'
+ * @phpstan-type ORDERBY_DATA 'rand'|'relevance'|'comment_count'|'post__in'|'post_name__in'|'post_parent__in'
  */
 class Args extends Args_Abstract implements Meta_Query_Interface {
 	use Meta_Query_Trait;
@@ -313,6 +318,8 @@ class Args extends Args_Abstract implements Meta_Query_Interface {
 	 *   - The array keys of `$meta_query`
 	 *
 	 * Default is 'date', except when a search is being performed, when the default is 'relevance'.
+	 *
+	 * @phpstan-var ORDERBY_FIELDS|ORDERBY_DATA|string
 	 *
 	 * @var string|array<int,string>
 	 */
@@ -632,6 +639,41 @@ class Args extends Args_Abstract implements Meta_Query_Interface {
 		$query = new Date_Query();
 		$this->clauses[] = $query;
 		return $query;
+	}
+
+
+	/**
+	 * Orderby a basic field.
+	 *
+	 * For more advanced fields, use the property directly.
+	 *
+	 * Accepted values are:
+	 *
+	 *   - 'none'
+	 *   - 'name'
+	 *   - 'author'
+	 *   - 'date'
+	 *   - 'title'
+	 *   - 'modified'
+	 *   - 'menu_order'
+	 *   - 'parent'
+	 *   - 'ID'
+	 *   - 'rand'
+	 *   - 'relevance'
+	 *   - 'comment_count'
+	 *   - 'meta_value'
+	 *   - 'post__in'
+	 *   - 'post_name__in'
+	 *   - 'post_parent__in'
+	 *
+	 * @phpstan-param ORDERBY_FIELDS|ORDERBY_DATA $orderby
+	 *
+	 * @param string                              $orderby - Post field to order by.
+	 *
+	 * @return void
+	 */
+	public function orderby( string $orderby ) : void {
+		$this->orderby = $orderby;
 	}
 
 
