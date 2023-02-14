@@ -1,0 +1,497 @@
+<?php
+declare( strict_types=1 );
+
+namespace Lipe\Lib\Comment;
+
+use Lipe\Lib\Query\Args_Abstract;
+use Lipe\Lib\Query\Clause\Date_Query_Interface;
+use Lipe\Lib\Query\Clause\Date_Query_Trait;
+use Lipe\Lib\Query\Clause\Meta_Query_Interface;
+use Lipe\Lib\Query\Clause\Meta_Query_Trait;
+
+//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
+
+/**
+ * A fluent interface for the `get_comments` function in WordPress.
+ *
+ * @author Mat Lipe
+ * @since  4.0.0
+ *
+ * @link   https://developer.wordpress.org/reference/classes/wp_comment_query/__construct/
+ *
+ * @phpstan-type ORDERBY_1 'comment_agent'|'comment_approved'|'comment_author'
+ * @phpstan-type ORDERBY_2 'comment_author_email'|'comment_author_IP'|'comment_author_url'|'comment_content'
+ * @phpstan-type ORDERBY_3 'comment_date'|'comment_date_gmt'|'comment_ID'|'comment_karma'|'comment_parent'
+ * @phpstan-type ORDERBY_4 'comment_post_ID'|'comment_type'|'user_id'|'comment__in'|'meta_value'
+ *
+ * @phpstan-type ORDERBY ORDERBY_1|ORDERBY_2|ORDERBY_3|ORDERBY_4
+ */
+class Get_Comments extends Args_Abstract implements Meta_Query_Interface, Date_Query_Interface {
+	use Date_Query_Trait;
+	use Meta_Query_Trait;
+
+	/**
+	 * Comment author email address.
+	 *
+	 * Default empty.
+	 *
+	 * @var string
+	 */
+	public string $author_email;
+
+	/**
+	 * Comment author URL.
+	 *
+	 * Default empty.
+	 *
+	 * @var string
+	 */
+	public string $author_url;
+
+	/**
+	 * Array of author IDs to include comments for.
+	 *
+	 * Default empty.
+	 *
+	 * @var array<int,int>
+	 */
+	public array $author__in;
+
+	/**
+	 * Array of author IDs to exclude comments for.
+	 *
+	 * Default empty.
+	 *
+	 * @var array<int,int>
+	 */
+	public array $author__not_in;
+
+	/**
+	 * Array of comment IDs to include.
+	 *
+	 * Default empty.
+	 *
+	 * @var array<int,int>
+	 */
+	public array $comment__in;
+
+	/**
+	 * Array of comment IDs to exclude.
+	 *
+	 * Default empty.
+	 *
+	 * @var array<int,int>
+	 */
+	public array $comment__not_in;
+
+	/**
+	 * Whether to return a comment count (true) or array of comment objects (false).
+	 *
+	 * Default false.
+	 *
+	 * @var bool
+	 */
+	public bool $count;
+
+	/**
+	 * Comment fields to return. Accepts 'ids' for comment IDs only or empty for all fields.
+	 *
+	 * Default empty.
+	 *
+	 * @phpstan-var 'ids' | ''
+	 *
+	 * @var string
+	 */
+	public string $fields;
+
+	/**
+	 * Array of IDs or email addresses of users whose unapproved comments will be returned by the query regardless of
+	 * `$status`.
+	 *
+	 * Default empty.
+	 *
+	 * @var array<int,(int|string)>
+	 */
+	public array $include_unapproved;
+
+	/**
+	 * Karma score to retrieve matching comments for.
+	 *
+	 * Default empty.
+	 *
+	 * @var int
+	 */
+	public int $karma;
+
+	/**
+	 * Maximum number of comments to retrieve.
+	 *
+	 * Default empty (no limit).
+	 *
+	 * @var int
+	 */
+	public int $number;
+
+	/**
+	 * When used with `$number`, defines the page of results to return. When used with `$offset`, `$offset` takes
+	 * precedence.
+	 *
+	 * Default 1.
+	 *
+	 * @var int
+	 */
+	public int $paged;
+
+	/**
+	 * Number of comments to offset the query. Used to build `LIMIT` clause.
+	 *
+	 * Default 0.
+	 *
+	 * @var int
+	 */
+	public int $offset;
+
+	/**
+	 * Whether to disable the `SQL_CALC_FOUND_ROWS` query.
+	 *
+	 * Default: true.
+	 *
+	 * @var bool
+	 */
+	public bool $no_found_rows;
+
+	/**
+	 * Field(s) to order comments by. To use 'meta_value' or 'meta_value_num', `$meta_key`
+	 * must also be defined.
+	 *
+	 * To sort by a specific `$meta_query` clause, use that clause's array key.
+	 *
+	 * Accepts:
+	 *
+	 *   - 'comment_agent'
+	 *   - 'comment_approved'
+	 *   - 'comment_author'
+	 *   - 'comment_author_email'
+	 *   - 'comment_author_IP'
+	 *   - 'comment_author_url'
+	 *   - 'comment_content'
+	 *   - 'comment_date'
+	 *   - 'comment_date_gmt'
+	 *   - 'comment_ID'
+	 *   - 'comment_karma'
+	 *   - 'comment_parent'
+	 *   - 'comment_post_ID'
+	 *   - 'comment_type'
+	 *   - 'user_id'
+	 *   - 'comment__in'
+	 *   - 'meta_value'
+	 *   - 'meta_value_num'
+	 *   - the value of `$meta_key`
+	 *   - the array keys of `$meta_query`
+	 *   - an empty array or 'none' to disable `ORDER BY` clause.
+	 *
+	 * Default: 'comment_date_gmt'.
+	 *
+	 * @phpstan-var ORDERBY|string
+	 *
+	 * @var string|array<int,string>
+	 */
+	public $orderby;
+
+	/**
+	 * How to order retrieved comments. Accepts 'ASC', 'DESC'.
+	 *
+	 * Default: 'DESC'.
+	 *
+	 * @phpstan-var 'ASC'|'DESC'
+	 *
+	 * @var string
+	 */
+	public string $order;
+
+	/**
+	 * Parent ID of comment to retrieve children of.
+	 *
+	 * Default empty.
+	 *
+	 * @var int
+	 */
+	public int $parent;
+
+	/**
+	 * Array of parent IDs of comments to retrieve children for.
+	 *
+	 * Default empty.
+	 *
+	 * @var array<int,int>
+	 */
+	public array $parent__in;
+
+	/**
+	 * Array of parent IDs of comments *not* to retrieve children for.
+	 *
+	 * Default empty.
+	 *
+	 * @var array<int,int>
+	 */
+	public array $parent__not_in;
+
+	/**
+	 * Array of author IDs to retrieve comments for.
+	 *
+	 * Default empty.
+	 *
+	 * @var array<int,int>
+	 */
+	public array $post_author__in;
+
+	/**
+	 * Array of author IDs *not* to retrieve comments for.
+	 *
+	 * Default empty.
+	 *
+	 * @var array<int,int>
+	 */
+	public array $post_author__not_in;
+
+	/**
+	 * Limit results to those affiliated with a given post ID.
+	 *
+	 * Default 0.
+	 *
+	 * @var int
+	 */
+	public int $post_id;
+
+	/**
+	 * Array of post IDs to include affiliated comments for.
+	 *
+	 * Default empty.
+	 *
+	 * @var array<int,int>
+	 */
+	public array $post__in;
+
+	/**
+	 * Array of post IDs to exclude affiliated comments for.
+	 *
+	 * Default empty.
+	 *
+	 * @var array<int,int>
+	 */
+	public array $post__not_in;
+
+	/**
+	 * Post author ID to limit results by.
+	 *
+	 * Default empty.
+	 *
+	 * @var int
+	 */
+	public int $post_author;
+
+	/**
+	 * Post status or array of post statuses to retrieve affiliated comments for. Pass 'any' to match any value.
+	 *
+	 * Default empty.
+	 *
+	 * @var string|array<int,string>
+	 */
+	public $post_status;
+
+	/**
+	 * Post type or array of post types to retrieve affiliated comments for. Pass 'any' to match any value.
+	 *
+	 * Default empty.
+	 *
+	 * @var string|array<int,string>
+	 */
+	public $post_type;
+
+	/**
+	 * Post name to retrieve affiliated comments for.
+	 *
+	 * Default empty.
+	 *
+	 * @var string
+	 */
+	public string $post_name;
+
+	/**
+	 * Post parent ID to retrieve affiliated comments for.
+	 *
+	 * Default empty.
+	 *
+	 * @var int
+	 */
+	public int $post_parent;
+
+	/**
+	 * Search term(s) to retrieve matching comments for.
+	 *
+	 * Default empty.
+	 *
+	 * @var string
+	 */
+	public string $search;
+
+	/**
+	 * Comment statuses to limit results by. Accepts an array or space/comma-separated list of:
+	 *
+	 *   - 'hold' (`comment_status=0`)
+	 *   - 'approve' (`comment_status=1`)
+	 *   - 'all'
+	 *   - a custom comment status
+	 *
+	 * Default 'all'.
+	 *
+	 * @var string|array<int,string>
+	 */
+	public $status;
+
+	/**
+	 * Include comments of a given type, or array of types. Accepts:
+	 *
+	 *   - 'comment'
+	 *   - 'pings' (includes 'pingback' and 'trackback')
+	 *   - any custom type string
+	 *
+	 * Default empty.
+	 *
+	 * @var string|array<int,string>
+	 */
+	public $type;
+
+	/**
+	 * Include comments from a given array of comment types.
+	 *
+	 * Default empty.
+	 *
+	 * @var array<int,string>
+	 */
+	public array $type__in;
+
+	/**
+	 * Exclude comments from a given array of comment types.
+	 *
+	 * Default empty.
+	 *
+	 * @var array<int,string>
+	 */
+	public array $type__not_in;
+
+	/**
+	 * Include comments for a specific user ID.
+	 *
+	 * Default empty.
+	 *
+	 * @var int
+	 */
+	public int $user_id;
+
+	/**
+	 * Whether to include comment descendants in the results.
+	 *
+	 *   - 'threaded' returns a tree, with each comment's children stored in a `children` property on the `WP_Comment`
+	 *   object.
+	 *   - 'flat' returns a flat array of found comments plus their children.
+	 *   - Boolean `false` leaves out descendants.
+	 *
+	 * The parameter is ignored (forced to `false`) when `$fields` is 'ids' or 'counts'.
+	 *
+	 * Default: false.
+	 *
+	 * @phpstan-var false|'threaded'|'flat'
+	 *
+	 * @var false|string
+	 */
+	public $hierarchical;
+
+	/**
+	 * Unique cache key to be produced when this query is stored in an object cache.
+	 *
+	 * Default is 'core'.
+	 *
+	 * @var string
+	 */
+	public string $cache_domain;
+
+	/**
+	 * Whether to prime the metadata cache for found comments.
+	 *
+	 * Default true.
+	 *
+	 * @var bool
+	 */
+	public bool $update_comment_meta_cache;
+
+	/**
+	 * Whether to prime the cache for comment posts.
+	 *
+	 * Default false.
+	 *
+	 * @var bool
+	 */
+	public bool $update_comment_post_cache;
+
+
+	/**
+	 * Orderby a basic field.
+	 *
+	 * For more advanced fields, use the property directly.
+	 *
+	 * Accepted values are:
+	 *   - 'comment_agent'
+	 *   - 'comment_approved'
+	 *   - 'comment_author'
+	 *   - 'comment_author_email'
+	 *   - 'comment_author_IP'
+	 *   - 'comment_author_url'
+	 *   - 'comment_content'
+	 *   - 'comment_date'
+	 *   - 'comment_date_gmt'
+	 *   - 'comment_ID'
+	 *   - 'comment_karma'
+	 *   - 'comment_parent'
+	 *   - 'comment_post_ID'
+	 *   - 'comment_type'
+	 *   - 'user_id'
+	 *   - 'comment__in'
+	 *   - 'meta_value'
+	 *
+	 * @phpstan-param ORDERBY|array{ORDERBY} $orderby
+	 *
+	 * @param string|array                   $orderby - Comment field to order by.
+	 *
+	 * @throws \LogicException - If orderby has prerequisites not met.
+	 *
+	 * @return void
+	 */
+	public function orderby( $orderby ) : void {
+		switch ( $orderby ) {
+			case 'comment__in':
+				if ( empty( $this->comment__in ) ) {
+					throw new \LogicException( 'You cannot order by `comment__in` unless you specify the comment ins.' );
+				}
+				break;
+			case 'meta_value':
+				if ( empty( $this->meta_key ) ) {
+					throw new \LogicException( 'You cannot order by `meta_value` unless you specify the `meta_key`.' );
+				}
+		}
+		$this->orderby = $orderby;
+	}
+
+
+	/**
+	 * Get the lightest possible version of the `get_comments` args.
+	 *
+	 * @return array
+	 */
+	public function get_light_args() : array {
+		return \array_merge( [
+			'update_comment_post_cache' => false,
+			'update_comment_meta_cache' => false,
+		], $this->get_args() );
+	}
+}
