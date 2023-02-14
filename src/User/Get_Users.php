@@ -5,18 +5,20 @@ namespace Lipe\Lib\User;
 
 use Lipe\Lib\Query\Args_Abstract;
 use Lipe\Lib\Query\Clause\Meta_Query_Interface;
-use Lipe\Lib\Query\Clause\Meta_Query;
 use Lipe\Lib\Query\Clause\Meta_Query_Trait;
+
+//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
 
 /**
  * A fluent interface for the `get_users` function in WordPress.
  *
  * @author Mat Lipe
- * @since 4.0.0
+ * @since  4.0.0
  *
- * @link https://developer.wordpress.org/reference/classes/wp_user_query/prepare_query/
+ * @link   https://developer.wordpress.org/reference/classes/wp_user_query/prepare_query/
  *
  * @phpstan-type FIELD 'ID'|'display_name'|'user_login'|'user_nicename'|'user_email'|'user_url'|'user_registered'
+ * @phpstan-type ORDERBY FIELD|'post_count'|'include'|'login__in'|'nicename__in'|'meta_value'
  */
 class Get_Users extends Args_Abstract implements Meta_Query_Interface {
 	use Meta_Query_Trait;
@@ -109,7 +111,8 @@ class Get_Users extends Args_Abstract implements Meta_Query_Interface {
 	 *
 	 * Accepted values are:
 	 *
-	 *   - 'ID', 'display_name' (or 'name')
+	 *   - 'ID'
+	 *   - 'display_name' (or 'name')
 	 *   - 'include'
 	 *   - 'user_login' (or 'login')
 	 *   - 'login__in'
@@ -127,6 +130,8 @@ class Get_Users extends Args_Abstract implements Meta_Query_Interface {
 	 * To use 'meta_value' or 'meta_value_num', `$meta_key` must be also be defined.
 	 *
 	 * Default 'user_login'.
+	 *
+	 * @phpstan-var ORDERBY|string
 	 *
 	 * @var string|array
 	 */
@@ -320,4 +325,35 @@ class Get_Users extends Args_Abstract implements Meta_Query_Interface {
 	 * @var array<int,string>
 	 */
 	public array $capability__not_in;
+
+
+	/**
+	 * Orderby a basic field.
+	 *
+	 * For more advanced fields, use the property directly.
+	 *
+	 * Accepted values are:
+	 *
+	 *   - 'ID'
+	 *   - 'display_name'
+	 *   - 'include'
+	 *   - 'user_login'
+	 *   - 'login__in'
+	 *   - 'user_nicename'
+	 *   - 'nicename__in'
+	 *   - 'user_email
+	 *   - 'user_url'
+	 *   - 'user_registered'
+	 *   - 'post_count'
+	 *   - 'meta_value'
+	 *
+	 * @phpstan-param ORDERBY $orderby
+	 *
+	 * @param string          $orderby - User field to order by.
+	 *
+	 * @return void
+	 */
+	public function orderby( string $orderby ) : void {
+		$this->orderby = $orderby;
+	}
 }
