@@ -342,7 +342,9 @@ class Field_Type {
 	/**
 	 * Standard checkbox.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#checkbox
+	 * @link          https://github.com/CMB2/CMB2/wiki/Field-Types#checkbox
+	 *
+	 * @phpstan-param 'compact'|'block' $layout
 	 *
 	 * @param string $layout - compact, block (cmb2 default is block).
 	 *
