@@ -19,16 +19,28 @@ use Lipe\Lib\Query\Clause\Meta_Query_Trait;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_comment_query/__construct/
  *
- * @phpstan-type ORDERBY_1 'comment_agent'|'comment_approved'|'comment_author'
- * @phpstan-type ORDERBY_2 'comment_author_email'|'comment_author_IP'|'comment_author_url'|'comment_content'
- * @phpstan-type ORDERBY_3 'comment_date'|'comment_date_gmt'|'comment_ID'|'comment_karma'|'comment_parent'
- * @phpstan-type ORDERBY_4 'comment_post_ID'|'comment_type'|'user_id'|'comment__in'|'meta_value'
- *
- * @phpstan-type ORDERBY ORDERBY_1|ORDERBY_2|ORDERBY_3|ORDERBY_4
  */
 class Get_Comments extends Args_Abstract implements Meta_Query_Interface, Date_Query_Interface {
 	use Date_Query_Trait;
 	use Meta_Query_Trait;
+
+	public const ORDERBY_AGENT        = 'comment_agent';
+	public const ORDERBY_APPROVED     = 'comment_approved';
+	public const ORDERBY_AUTHOR       = 'comment_author';
+	public const ORDERBY_AUTHOR_EMAIL = 'comment_author_email';
+	public const ORDERBY_AUTHOR_IP    = 'comment_author_IP';
+	public const ORDERBY_AUTHOR_URL   = 'comment_author_url';
+	public const ORDERBY_CONTENT      = 'comment_content';
+	public const ORDERBY_DATE         = 'comment_date';
+	public const ORDERBY_DATE_GMT     = 'comment_date_gmt';
+	public const ORDERBY_ID           = 'comment_ID';
+	public const ORDERBY_KARMA        = 'comment_karma';
+	public const ORDERBY_PARENT       = 'comment_parent';
+	public const ORDERBY_POST_ID      = 'comment_post_ID';
+	public const ORDERBY_COMMENT_TYPE = 'comment_type';
+	public const ORDERBY_USER_ID      = 'user_id';
+	public const ORDERBY_COMMENT_IN   = 'comment__in';
+	public const ORDERBY_META_VALUE   = 'meta_value';
 
 	/**
 	 * Comment author email address.
@@ -192,7 +204,7 @@ class Get_Comments extends Args_Abstract implements Meta_Query_Interface, Date_Q
 	 *
 	 * Default: 'comment_date_gmt'.
 	 *
-	 * @phpstan-var ORDERBY|string
+	 * @phpstan-var self::ORDERBY*|array{self::ORDERBY*}|string
 	 *
 	 * @var string|array<int,string>
 	 */
@@ -459,9 +471,9 @@ class Get_Comments extends Args_Abstract implements Meta_Query_Interface, Date_Q
 	 *   - 'comment__in'
 	 *   - 'meta_value'
 	 *
-	 * @phpstan-param ORDERBY|array{ORDERBY} $orderby
+	 * @phpstan-param self::ORDERBY*|array{self::ORDERBY*} $orderby
 	 *
-	 * @param string|array                   $orderby - Comment field to order by.
+	 * @param string|array                                 $orderby - Comment field to order by.
 	 *
 	 * @throws \LogicException - If orderby has prerequisites not met.
 	 *
@@ -469,12 +481,12 @@ class Get_Comments extends Args_Abstract implements Meta_Query_Interface, Date_Q
 	 */
 	public function orderby( $orderby ) : void {
 		switch ( $orderby ) {
-			case 'comment__in':
+			case static::ORDERBY_COMMENT_IN:
 				if ( empty( $this->comment__in ) ) {
 					throw new \LogicException( 'You cannot order by `comment__in` unless you specify the comment ins.' );
 				}
 				break;
-			case 'meta_value':
+			case static::ORDERBY_META_VALUE:
 				if ( empty( $this->meta_key ) ) {
 					throw new \LogicException( 'You cannot order by `meta_value` unless you specify the `meta_key`.' );
 				}
