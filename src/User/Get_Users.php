@@ -17,11 +17,30 @@ use Lipe\Lib\Query\Clause\Meta_Query_Trait;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_user_query/prepare_query/
  *
- * @phpstan-type FIELD 'ID'|'display_name'|'user_login'|'user_nicename'|'user_email'|'user_url'|'user_registered'
- * @phpstan-type ORDERBY FIELD|'post_count'|'include'|'login__in'|'nicename__in'|'meta_value'
  */
 class Get_Users extends Args_Abstract implements Meta_Query_Interface {
 	use Meta_Query_Trait;
+
+	public const FIELD_ID           = 'ID';
+	public const FIELD_DISPLAY_NAME = 'display_name';
+	public const FIELD_LOGIN        = 'user_login';
+	public const FIELD_NICENAME     = 'user_nicename';
+	public const FIELD_EMAIL        = 'user_email';
+	public const FIELD_URL          = 'user_url';
+	public const FIELD_REGISTERED   = 'user_registered';
+
+	public const ORDERBY_ID           = 'ID';
+	public const ORDERBY_DISPLAY_NAME = 'display_name';
+	public const ORDERBY_INCLUDE      = 'include';
+	public const ORDERBY_LOGIN        = 'user_login';
+	public const ORDERBY_LOGIN_IN     = 'login__in';
+	public const ORDERBY_NICENAME     = 'user_nicename';
+	public const ORDERBY_NICENAME_IN  = 'nicename__in';
+	public const ORDERBY_EMAIL        = 'user_email';
+	public const ORDERBY_URL          = 'user_url';
+	public const ORDERBY_REGISTERED   = 'user_registered';
+	public const ORDERBY_POST_COUNT   = 'post_count';
+	public const ORDERBY_META_VALUE   = 'meta_value';
 
 	/**
 	 * The site ID.
@@ -97,7 +116,7 @@ class Get_Users extends Args_Abstract implements Meta_Query_Interface {
 	 *
 	 * Default empty array.
 	 *
-	 * @phpstan-var array<int,FIELD>
+	 * @phpstan-var array<int,static::FIELD*>
 	 *
 	 * @var array<int,string>
 	 */
@@ -131,7 +150,7 @@ class Get_Users extends Args_Abstract implements Meta_Query_Interface {
 	 *
 	 * Default 'user_login'.
 	 *
-	 * @phpstan-var ORDERBY|string
+	 * @phpstan-var static::ORDERBY*|string
 	 *
 	 * @var string|array
 	 */
@@ -212,7 +231,7 @@ class Get_Users extends Args_Abstract implements Meta_Query_Interface {
 	 *
 	 * Default 'all'.
 	 *
-	 * @phpstan-var (FIELD|'all'|'all_with_meta')|array{FIELD}
+	 * @phpstan-var (static::FIELD*|'all'|'all_with_meta')|array<int,static::FIELD*>
 	 *
 	 * @var string|array<int, string>
 	 */
@@ -347,9 +366,9 @@ class Get_Users extends Args_Abstract implements Meta_Query_Interface {
 	 *   - 'post_count'
 	 *   - 'meta_value'
 	 *
-	 * @phpstan-param ORDERBY $orderby
+	 * @phpstan-param static::ORDERBY* $orderby
 	 *
-	 * @param string          $orderby - User field to order by.
+	 * @param string                   $orderby - User field to order by.
 	 *
 	 * @return void
 	 */
