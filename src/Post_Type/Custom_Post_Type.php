@@ -769,15 +769,15 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	protected function add_administrator_capabilities( ?\WP_Post_Type $post_type ) : void {
-		if ( ! $this->auto_admin_caps || null === $post_type || 'post' === $post_type->capability_type ) {
+		if ( ! $this->auto_admin_caps || null === $post_type || ( 'post' === $post_type->capability_type && empty( $this->capabilities ) ) ) {
 			return;
 		}
 
-		$previous = \get_option( static::CUSTOM_CAPS_OPTION, [] );
+		$previous = get_option( static::CUSTOM_CAPS_OPTION, [] );
 		if ( isset( $previous[ $post_type->capability_type ] ) ) {
 			return;
 		}
-		$admin = \get_role( 'administrator' );
+		$admin = get_role( 'administrator' );
 		if ( null === $admin ) {
 			return;
 		}
