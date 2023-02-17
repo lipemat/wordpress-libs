@@ -30,6 +30,9 @@ abstract class Args_Abstract {
 		foreach ( $existing as $arg => $value ) {
 			if ( \property_exists( $this, $arg ) ) {
 				$this->{$arg} = $value;
+			} else {
+				//phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+				trigger_error( esc_html( "Attempting to use the non-existent `{$arg}` argument during the construct of " . __CLASS__ . '.' ) );
 			}
 		}
 	}
@@ -54,5 +57,22 @@ abstract class Args_Abstract {
 		}
 
 		return $args;
+	}
+
+
+	/**
+	 * Prevent setting any non-existent properties on this class.
+	 *
+	 * If the property does not exist, the argument is not supported.
+	 *
+	 * @param string $name  - Name of non-existent property.
+	 * @param mixed  $value - Value attempted to set, which we don't care about.
+	 *
+	 * @throws \LogicException - Any usage throws.
+	 *
+	 * @return void
+	 */
+	public function __set( string $name, $value ) {
+		throw new \LogicException( "Attempting to use the non-existent `{$name}` argument on " . __CLASS__ . '.' );
 	}
 }
