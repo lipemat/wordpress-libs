@@ -658,33 +658,39 @@ class Args extends Args_Abstract implements Meta_Query_Interface, Date_Query_Int
 	 *   - 'post_name__in'
 	 *   - 'post_parent__in'
 	 *
-	 * @phpstan-param static::ORDERBY* $orderby
+	 * @phpstan-param self::ORDERBY*|array<int,self::ORDERBY*> $orderby
+	 * @phpstan-param 'ASC'|'DESC'|'' $order
 	 *
-	 * @param string                   $orderby - Post field to order by.
+	 * @param string|array                                     $orderby - Post field to order by.
+	 * @param string                                           $order   - Optional order of the order by.
 	 *
 	 * @throws \LogicException - If field ordering by is not available.
 	 *
 	 * @return void
 	 */
-	public function orderby( string $orderby ) : void {
-		switch ( $orderby ) {
-			case static::ORDERBY_POST_IN:
+	public function orderby( $orderby, string $order = '' ) : void {
+		switch ( true ) {
+			case \in_array( static::ORDERBY_POST_IN, (array) $orderby, true ):
 				if ( empty( $this->post__in ) ) {
 					throw new \LogicException( 'You cannot order by `post__in` unless you specify the post ins.' );
 				}
 				break;
-			case static::ORDERBY_NAME_IN:
+			case \in_array( static::ORDERBY_NAME_IN, (array) $orderby, true ):
 				if ( empty( $this->post__name__in ) ) {
 					throw new \LogicException( 'You cannot order by `post__name__in` unless you specify the post name ins.' );
 				}
 				break;
-			case static::ORDERBY_PARENT_IN:
+			case \in_array( static::ORDERBY_PARENT_IN, (array) $orderby, true ):
 				if ( empty( $this->post_parent__in ) ) {
 					throw new \LogicException( 'You cannot order by `post_parent__in` unless you specify the post parent ins.' );
 				}
 		}
 
 		$this->orderby = $orderby;
+
+		if ( '' !== $order ) {
+			$this->order = $order;
+		}
 	}
 
 

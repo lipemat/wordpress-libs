@@ -471,27 +471,33 @@ class Get_Comments extends Args_Abstract implements Meta_Query_Interface, Date_Q
 	 *   - 'comment__in'
 	 *   - 'meta_value'
 	 *
-	 * @phpstan-param self::ORDERBY*|array{self::ORDERBY*} $orderby
+	 * @phpstan-param self::ORDERBY*|array<int,self::ORDERBY*> $orderby
+	 * @phpstan-param 'ASC'|'DESC'|'' $order
 	 *
-	 * @param string|array                                 $orderby - Comment field to order by.
+	 * @param string|array                                     $orderby - Comment field to order by.
+	 * @param string                                           $order   - Optional order of the order by.
 	 *
 	 * @throws \LogicException - If orderby has prerequisites not met.
 	 *
 	 * @return void
 	 */
-	public function orderby( $orderby ) : void {
-		switch ( $orderby ) {
-			case static::ORDERBY_COMMENT_IN:
+	public function orderby( $orderby, string $order = '' ) : void {
+		switch ( true ) {
+			case \in_array( static::ORDERBY_COMMENT_IN, (array) $orderby, true ):
 				if ( empty( $this->comment__in ) ) {
 					throw new \LogicException( 'You cannot order by `comment__in` unless you specify the comment ins.' );
 				}
 				break;
-			case static::ORDERBY_META_VALUE:
+			case \in_array( static::ORDERBY_META_VALUE, (array) $orderby, true ):
 				if ( empty( $this->meta_key ) ) {
 					throw new \LogicException( 'You cannot order by `meta_value` unless you specify the `meta_key`.' );
 				}
 		}
 		$this->orderby = $orderby;
+
+		if ( '' !== $order ) {
+			$this->order = $order;
+		}
 	}
 
 
