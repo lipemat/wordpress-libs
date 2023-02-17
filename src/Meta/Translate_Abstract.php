@@ -98,6 +98,8 @@ abstract class Translate_Abstract {
 		}
 
 		if ( 'option' === $meta_type ) {
+			$this->handle_update_callback( $object_id, $key, $value, $meta_type );
+
 			return cmb2_options( $object_id )->update( $key, $value, true );
 		}
 
@@ -393,6 +395,7 @@ abstract class Translate_Abstract {
 					return $term_id;
 				}, $terms ), $meta_type );
 			} else {
+				$this->handle_update_callback( $object_id, $key, $terms, $meta_type );
 				$terms = \array_map( function( $term ) {
 					// Term ids are perceived as term slug when strings.
 					return is_numeric( $term ) ? (int) $term : $term;
@@ -477,11 +480,9 @@ abstract class Translate_Abstract {
 	 * We mimic the same arguments as the cmb2 filter as the `delete_cb`
 	 * will also be called when saving an empty value to meta in the admin.
 	 *
-	 * @since 3.13.0
-	 *
 	 * @see   "cmb2_override_{$a['field_id']}_meta_remove"
 	 *
-	 * @see   \Lipe\Lib\CMB2\Field::delete_cb
+	 * @see   Field::delete_cb
 	 *
 	 * @param string|int $object_id
 	 * @param string     $key
@@ -496,7 +497,35 @@ abstract class Translate_Abstract {
 		}
 		$cmb2_field = $field->get_cmb2_field();
 		if ( null !== $field->delete_cb && null !== $cmb2_field ) {
-			\call_user_func( $field->delete_cb, $object_id, $key, $meta_type );
+			\call_user_func( $field->delete_cb, $object_id, $key );
+		}
+	}
+
+
+	/**
+	 * If an update callback exists, call it.
+	 *
+	 * We mimic the same arguments as the cmb2 filter as the `update_cb`.
+	 *
+	 * @see   "cmb2_override_{$a['field_id']}_meta_update"
+	 *
+	 * @see   Field::update_cb
+	 *
+	 * @param string|int $object_id
+	 * @param string     $key
+	 * @param mixed      $value
+	 * @param string     $meta_type
+	 *
+	 * @return void
+	 */
+	public function handle_update_callback( $object_id, string $key, $value, string $meta_type ) : void {
+		$field = $this->get_field( $key );
+		if ( null === $field ) {
+			return;
+		}
+		$cmb2_field = $field->get_cmb2_field();
+		if ( null !== $field->update_cb && null !== $cmb2_field ) {
+			\call_user_func( $field->update_cb, $object_id, $value, $key, $meta_type );
 		}
 	}
 }

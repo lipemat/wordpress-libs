@@ -146,7 +146,7 @@ class Custom_Post_Type {
 	 * The callback function takes one argument $post,
 	 * which contains the WP_Post object for the currently edited post
 	 *
-	 * @phpstan-var callable(\WP_Post): void
+	 * @phpstan-var callable( \WP_Post ) : void
 	 *
 	 * @default none
 	 *

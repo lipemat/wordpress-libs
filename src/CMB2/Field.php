@@ -743,6 +743,16 @@ class Field {
 	 */
 	public $delete_cb;
 
+	/**
+	 * Internal property to hold a callback function when
+	 * a meta key is updated.
+	 *
+	 * @internal
+	 *
+	 * @var callable( int, mixed, string, string ) : void
+	 */
+	public $update_cb;
+
 
 	/**
 	 * Field constructor.
@@ -1326,8 +1336,7 @@ class Field {
 	 * Fired when:
 	 * 1. A meta key is deleted using the repo.
 	 * 2. An empty meta value is passed when CMB2 is saving a post.
-	 *
-	 * @since 3.13.0
+	 * 3. A meta key is deleted using the WP meta API.
 	 *
 	 * @see Translate_Abstract::handle_delete_callback()
 	 *
@@ -1347,6 +1356,52 @@ class Field {
 		} else {
 			Actions::in()->add_filter_as_action( "cmb2_override_{$this->get_id()}_meta_remove", function( $_, $value, array $args, \CMB2_Field $field ) {
 				Repo::in()->handle_delete_callback( $field->object_id(), $this->get_id(), $this->box->get_object_type() );
+			} );
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Callback to be fired when a meta item is updated.
+	 *
+	 * Fired when:
+	 * 1. A meta field is updated using the repo.
+	 * 2. A meta field is updated when CMB2 is saving a post.
+	 * 3. A meta field is updated using the WP meta API.
+	 * 4. A checkbox value is delete (same as updating a checkbox).
+	 *
+	 * @see Translate_Abstract::handle_update_callback()
+	 *
+	 * @param callable( int, mixed, string, string ) : void $callback
+	 *
+	 * @return Field
+	 */
+	public function update_cb( callable $callback ) : Field {
+		$this->update_cb = $callback;
+		if ( $this->box->is_allowed_to_register_meta( $this ) ) {
+			add_action( "add_{$this->box->get_object_type()}_meta", function( $object_id, $key, $value ) {
+				if ( $key === $this->get_id() ) {
+					Repo::in()->handle_update_callback( $object_id, $key, $value, $this->box->get_object_type() );
+				}
+			}, 10, 3 );
+			add_action( "update_{$this->box->get_object_type()}_meta", function( $_, $object_id, $key, $value ) {
+				if ( $key === $this->get_id() ) {
+					Repo::in()->handle_update_callback( $object_id, $key, $value, $this->box->get_object_type() );
+				}
+			}, 10, 4 );
+			// Checkboxes must also to be called on delete.
+			if ( $this->get_type() === Repo::CHECKBOX ) {
+				add_action( "delete_{$this->box->get_object_type()}_meta", function( $_, $object_id, $key, $value ) {
+					if ( $key === $this->get_id() ) {
+						Repo::in()->handle_update_callback( $object_id, $key, $value, $this->box->get_object_type() );
+					}
+				}, 10, 4 );
+			}
+		} else {
+			Actions::in()->add_filter_as_action( "cmb2_override_{$this->get_id()}_meta_save", function( $_, array $args, $field_args, \CMB2_Field $field ) {
+				Repo::in()->handle_update_callback( $field->object_id(), $this->get_id(), $args['value'], $this->box->get_object_type() );
 			} );
 		}
 

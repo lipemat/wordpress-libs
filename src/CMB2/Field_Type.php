@@ -13,7 +13,7 @@ use Lipe\Lib\Util\Arrays;
 /**
  * CMB2 field types.
  *
- * A fluent interface with callbacks for each possible field type.
+ * A fluent interface complete with callbacks for each possible field type.
  *
  * @link    https://github.com/CMB2/CMB2/wiki/Field-Types
  */

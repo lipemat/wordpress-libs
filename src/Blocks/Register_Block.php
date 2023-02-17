@@ -124,7 +124,7 @@ class Register_Block extends Args_Abstract {
 	/**
 	 * Block type render callback.
 	 *
-	 * @phpstan-var callable(array<string, mixed>, string, \WP_Block): string
+	 * @phpstan-var callable( array<string, mixed>, string, \WP_Block ) : string
 	 *
 	 * @var callable
 	 */
