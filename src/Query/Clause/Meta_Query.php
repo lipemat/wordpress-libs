@@ -12,6 +12,8 @@ namespace Lipe\Lib\Query\Clause;
  * @since  4.0.0
  *
  * @internal
+ *
+ * @link   https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters
  */
 class Meta_Query extends Clause_Abstract {
 	/**

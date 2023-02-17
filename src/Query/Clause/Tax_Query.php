@@ -5,6 +5,8 @@ namespace Lipe\Lib\Query\Clause;
 
 use Lipe\Lib\Query\Args;
 
+//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
+
 /**
  * Generate a `tax_query` argument for a `WP_Query.
  *
@@ -13,20 +15,25 @@ use Lipe\Lib\Query\Args;
  *
  * @internal
  *
- * @phpstan-type FIELD 'term_id'|'slug'|'name'|'term_taxonomy_id'|''
- *
+ * @link   https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters
  */
 class Tax_Query extends Clause_Abstract {
+	public const FIELD_ID          = 'term_id';
+	public const FIELD_NAME        = 'name';
+	public const FIELD_NONE        = '';
+	public const FIELD_SLUG        = 'slug';
+	public const FIELD_TERM_TAX_ID = 'term_taxonomy_id';
+
 
 	/**
 	 * Create an 'AND' clause.
 	 *
-	 * @phpstan-param FIELD     $field
+	 * @phpstan-param static::FIELD_* $field
 	 *
-	 * @param array<int|string> $terms
-	 * @param string            $taxonomy
-	 * @param bool              $children - Include children for hierarchical taxonomies.
-	 * @param string            $field
+	 * @param array<int|string>       $terms
+	 * @param string                  $taxonomy
+	 * @param bool                    $children - Include children for hierarchical taxonomies.
+	 * @param string                  $field
 	 *
 	 * @return Tax_Query
 	 */
@@ -39,12 +46,12 @@ class Tax_Query extends Clause_Abstract {
 	/**
 	 * Create an 'IN' clause.
 	 *
-	 * @phpstan-param FIELD     $field
+	 * @phpstan-param static::FIELD_* $field
 	 *
-	 * @param array<int|string> $terms
-	 * @param string            $taxonomy
-	 * @param bool              $children - Include children for hierarchical taxonomies.
-	 * @param string            $field
+	 * @param array<int|string>       $terms
+	 * @param string                  $taxonomy
+	 * @param bool                    $children - Include children for hierarchical taxonomies.
+	 * @param string                  $field
 	 *
 	 * @return Tax_Query
 	 */
@@ -57,12 +64,12 @@ class Tax_Query extends Clause_Abstract {
 	/**
 	 * Create a 'NOT IN' clause.
 	 *
-	 * @phpstan-param FIELD     $field
+	 * @phpstan-param static::FIELD_* $field
 	 *
-	 * @param array<int|string> $terms
-	 * @param string            $taxonomy
-	 * @param bool              $children - Include children for hierarchical taxonomies.
-	 * @param string            $field
+	 * @param array<int|string>       $terms
+	 * @param string                  $taxonomy
+	 * @param bool                    $children - Include children for hierarchical taxonomies.
+	 * @param string                  $field
 	 *
 	 * @return Tax_Query
 	 */
@@ -116,11 +123,11 @@ class Tax_Query extends Clause_Abstract {
 	/**
 	 * Generate a clause for the term query.
 	 *
-	 * @link https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters
+	 * @link          https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters
 	 *
 	 *
 	 * @phpstan-param 'AND'|'IN'|'NOT IN'|'EXISTS'|'NOT EXISTS' $operator
-	 * @phpstan-param FIELD                    $field
+	 * @phpstan-param static::FIELD_*          $field
 	 *
 	 * @param string|int|array<int,string|int> $terms
 	 * @param string                           $taxonomy
