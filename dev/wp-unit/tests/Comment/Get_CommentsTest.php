@@ -21,6 +21,7 @@ class Get_CommentsTest extends \WP_UnitTestCase {
 		], $args->get_args(), 'Existing args are not being passed.' );
 
 		$args->fields = 'all';
+		$args->comment__in = [ 4 ];
 		$args->orderby( [ 'comment_agent', 'comment__in' ] );
 		$args->meta_query()
 		     ->in( 'meta-key', [ 4, 5, 6 ] )
@@ -53,6 +54,7 @@ class Get_CommentsTest extends \WP_UnitTestCase {
 					'type'    => 'NUMERIC',
 				],
 			],
+			'comment__in' => [ 4 ],
 		], $args->get_args() );
 	}
 }
