@@ -468,7 +468,7 @@ class Resources {
 			update_network_option( 0, static::INTEGRITY, $cached );
 		}
 
-		if ( null !== $integrity ) {
+		if ( ! empty( $integrity ) ) {
 			$this->integrity_javascript( $handle, $integrity );
 			return true;
 		}
