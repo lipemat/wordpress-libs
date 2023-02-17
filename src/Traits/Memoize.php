@@ -108,8 +108,33 @@ trait Memoize {
 
 
 	/**
+	 * Delete a single item from the caches without clearing
+	 * the entire class and cache group.
+	 *
+	 * @see Memoize::clear_memoize_cache()
+	 *
+	 * @param string $identifier
+	 * @param array  ...$args
+	 *
+	 * @return bool
+	 */
+	public function clear_single_item( string $identifier, ...$args ) : bool {
+		$keys = [
+			\md5( wp_json_encode( [ $args, $identifier ] ) ), // memoize.
+			"{$identifier}::once", // once.
+		];
+		\array_walk( $keys, function( $key ) {
+			unset( $this->memoize_cache[ $key ] );
+		} );
+		return Cache::in()->delete( [ $identifier, $args ], __CLASS__ );
+	}
+
+
+	/**
 	 * Clear all caches on this class.
 	 * Typically, used during unit testing.
+	 *
+	 * @see dele
 	 *
 	 */
 	public function clear_memoize_cache() : void {

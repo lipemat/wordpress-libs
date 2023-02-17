@@ -108,4 +108,33 @@ class MemoizeTest extends \WP_UnitTestCase {
 		$this->trait->clear_memoize_cache();
 		$this->assertEquals( $second, $other->heavy_persistent( [] ), 'Caches are being cleared on other classes.' );
 	}
+
+
+	public function test_clear_single_item() : void {
+		$once = $this->trait->heavy_once( 'purse', 'chair' );
+		$mem = $this->trait->heavy_memo( [ 'first' ] );
+		$persist = $this->trait->heavy_persistent( [ 'persist' ] );
+		$this->assertEquals( $persist, $this->trait->heavy_persistent( [ 'persist' ] ) );
+		$this->assertEquals( $mem, $this->trait->heavy_memo( [ 'first' ] ) );
+		$this->assertEquals( $once, $this->trait->heavy_once( [ 'not-related' ] ) );
+
+		// Clear a once item.
+		$this->trait->clear_single_item( MemoizeTestTrait::class . '::heavy_once', [ 'purse', 'chair' ] );
+		$this->assertTrue( $this->trait->heavy_once( true )[0] );
+		$this->assertEquals( $persist, $this->trait->heavy_persistent( [ 'persist' ] ) );
+		$this->assertEquals( $mem, $this->trait->heavy_memo( [ 'first' ] ) );
+
+		// Clear a persistent item.
+		$this->trait->clear_single_item( MemoizeTestTrait::class . '::heavy_persistent', [ 'persist' ] );
+		$new_persist = $this->trait->heavy_persistent( [ 'persist' ] );
+		$this->assertNotEquals( $persist, $new_persist );
+		$this->assertTrue( $this->trait->heavy_once( false )[0] );
+		$this->assertEquals( $mem, $this->trait->heavy_memo( [ 'first' ] ) );
+
+		// Clear a memoize item.
+		$this->trait->clear_single_item( MemoizeTestTrait::class . '::heavy_memoize', [ 'first' ] );
+		$this->assertEquals( $new_persist, $this->trait->heavy_persistent( [ 'persist' ] ) );
+		$this->assertTrue( $this->trait->heavy_once( false )[0] );
+		$this->assertTrue( true, $this->trait->heavy_memo( true )[0] );
+	}
 }
