@@ -45,6 +45,16 @@ class Args extends Args_Abstract implements Meta_Query_Interface, Date_Query_Int
 	public const ORDERBY_NAME_IN       = 'post_name__in';
 	public const ORDERBY_PARENT_IN     = 'post_parent__in';
 
+	public const STATUS_ANY        = 'any';
+	public const STATUS_AUTO_DRAFT = 'auto-draft';
+	public const STATUS_DRAFT      = 'draft';
+	public const STATUS_FUTURE     = 'future';
+	public const STATUS_INHERIT    = 'inherit';
+	public const STATUS_PENDING    = 'pending';
+	public const STATUS_PRIVATE    = 'private';
+	public const STATUS_PUBLISH    = 'publish';
+	public const STATUS_TRASH      = 'trash';
+
 	/**
 	 * Attachment post ID. Used for 'attachment' post_type.
 	 *
@@ -444,6 +454,8 @@ class Args extends Args_Abstract implements Meta_Query_Interface, Date_Query_Int
 
 	/**
 	 * A post status (string) or array of post statuses.
+	 *
+	 * @phpstan-var static::STATUS_*|array<int, static::STATUS_*>
 	 *
 	 * @var string|array<int, string>
 	 */
