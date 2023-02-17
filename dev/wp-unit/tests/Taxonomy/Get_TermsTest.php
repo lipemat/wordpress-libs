@@ -23,7 +23,8 @@ class Get_TermsTest extends \WP_UnitTestCase {
 		$args->fields = 'all';
 		$args->taxonomy = [ 'category', 'post_tag' ];
 		$args->meta_query()
-		     ->in( 'meta-key', [ 4, 5, 6 ], 'NUMERIC' );
+		     ->in( 'meta-key', [ 4, 5, 6 ] )
+		     ->advanced( 'NUMERIC' );
 		$args->order = 'DESC';
 
 		$this->assertEquals( [

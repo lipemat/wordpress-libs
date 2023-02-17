@@ -23,7 +23,8 @@ class Get_CommentsTest extends \WP_UnitTestCase {
 		$args->fields = 'all';
 		$args->orderby( [ 'comment_agent', 'comment__in' ] );
 		$args->meta_query()
-		     ->in( 'meta-key', [ 4, 5, 6 ], 'NUMERIC' );
+		     ->in( 'meta-key', [ 4, 5, 6 ] )
+		     ->advanced( 'NUMERIC' );
 		$args->order = 'DESC';
 
 		$args->date_query()

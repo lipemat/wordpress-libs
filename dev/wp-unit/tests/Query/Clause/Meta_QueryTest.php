@@ -15,16 +15,19 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 		$args = new Args();
 		$args->meta_query()
 		     ->relation( 'OR' )
-		     ->in( 'some-key', [ '0', 'two', false, 0 ], 'BINARY' );
+		     ->in( [ 'some-key', 'another-key' ], [ '0', 'two', false, 0 ] )
+		     ->advanced( 'REGEX', 'LIKE', 'BINARY' );
 
 		$this->assertEquals( [
 			'meta_query' => [
 				'relation' => 'OR',
 				[
-					'key'     => 'some-key',
-					'value'   => [ '0', 'two', false, 0 ],
-					'compare' => 'IN',
-					'type'    => 'BINARY',
+					'key'         => [ 'some-key', 'another-key' ],
+					'value'       => [ '0', 'two', false, 0 ],
+					'compare'     => 'IN',
+					'type'        => 'REGEX',
+					'compare_key' => 'LIKE',
+					'type_key'    => 'BINARY',
 				],
 			],
 		], $args->get_args() );
@@ -34,7 +37,8 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 	public function test_not_equals() : void {
 		$args = new Args();
 		$args->meta_query()
-		     ->not_equals( 'some-key', 'one', 'CHAR' );
+		     ->not_equals( 'some-key', 'one' )
+		     ->advanced( 'CHAR' );
 
 		$this->assertEquals( [
 			'meta_query' => [
@@ -71,7 +75,8 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 		     ->in( 'some-key', [ 'one', 'two' ] )
 		     ->nested_clause()
 		     ->relation( 'OR' )
-		     ->in( 'some-key', [ 'three', 'four' ], 'BINARY' )
+		     ->in( 'some-key', [ 'three', 'four' ] )
+		     ->advanced( 'BINARY' )
 		     ->not_exists( 'another-key' );
 
 		$this->assertEquals( [
@@ -105,9 +110,11 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 		$args->meta_query()
 		     ->exists( 'some-key' )
 		     ->nested_clause( 'OR' )
-		     ->not_exists( 'another-key' )
+		     ->not_exists( [ 'another-key' ] )
+		     ->advanced( 'NUMERIC', 'LIKE' )
 		     ->nested_clause()
-		     ->between( 'between-key', [ 1, 2 ], 'NUMERIC' )
+		     ->between( 'between-key', [ 1, 2 ] )
+		     ->advanced( 'NUMERIC' )
 		     ->parent_clause()
 		     ->exists( 'third-key' )
 		     ->not_exists( 'fourth-key' )
@@ -128,8 +135,10 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 				[
 					'relation' => 'OR',
 					[
-						'key'     => 'another-key',
-						'compare' => 'NOT EXISTS',
+						'key'         => [ 'another-key' ],
+						'compare'     => 'NOT EXISTS',
+						'type'        => 'NUMERIC',
+						'compare_key' => 'LIKE',
 					],
 					[
 						'key'     => 'third-key',

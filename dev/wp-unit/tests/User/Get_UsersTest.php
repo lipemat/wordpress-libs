@@ -23,7 +23,8 @@ class Get_UsersTest extends \WP_UnitTestCase {
 		$args->fields = [ 'ID', 'display_name' ];
 		$args->login__in = [ 'username-test', 'username-test-2' ];
 		$args->meta_query()
-		     ->in( 'meta-key', [ 4, 5, 6 ], 'NUMERIC' );
+		     ->in( 'meta-key', [ 4, 5, 6 ] )
+		     ->advanced( 'NUMERIC' );
 		$args->order = 'DESC';
 
 		$this->assertEquals( [

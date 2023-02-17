@@ -17,6 +17,7 @@ use Lipe\Lib\Query\Args;
  *
  */
 class Tax_Query extends Clause_Abstract {
+
 	/**
 	 * Create an 'AND' clause.
 	 *

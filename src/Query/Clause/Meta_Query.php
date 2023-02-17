@@ -75,16 +75,14 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an '=' clause.
 	 *
-	 * @phpstan-param TYPE $type
+	 * @param string|string[] $key
+	 * @param int|string      $value
 	 *
-	 * @param string       $key
-	 * @param int|string   $value
-	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function equals( string $key, $value, string $type = '' ) : Meta_Query {
-		$this->add_clause( $value, $key, '=', $type );
+	public function equals( $key, $value ) : Meta_Query {
+		$this->add_clause( $value, $key, '=' );
 		return $this;
 	}
 
@@ -92,16 +90,14 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an '!=' clause.
 	 *
-	 * @phpstan-param TYPE $type
+	 * @param string|string[] $key
+	 * @param int|string      $value
 	 *
-	 * @param string       $key
-	 * @param int|string   $value
-	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_equals( string $key, $value, string $type = '' ) : Meta_Query {
-		$this->add_clause( $value, $key, '!=', $type );
+	public function not_equals( $key, $value ) : Meta_Query {
+		$this->add_clause( $value, $key, '!=' );
 		return $this;
 	}
 
@@ -109,16 +105,14 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an '>' clause.
 	 *
-	 * @phpstan-param TYPE $type
+	 * @param string|string[] $key
+	 * @param int|string      $value
 	 *
-	 * @param string       $key
-	 * @param int|string   $value
-	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function greater_than( string $key, $value, string $type = '' ) : Meta_Query {
-		$this->add_clause( $value, $key, '>', $type );
+	public function greater_than( $key, $value ) : Meta_Query {
+		$this->add_clause( $value, $key, '>' );
 		return $this;
 	}
 
@@ -126,16 +120,14 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an '>=' clause.
 	 *
-	 * @phpstan-param TYPE $type
+	 * @param string|string[] $key
+	 * @param int|string      $value
 	 *
-	 * @param string       $key
-	 * @param int|string   $value
-	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function greater_than_or_equal( string $key, $value, string $type = '' ) : Meta_Query {
-		$this->add_clause( $value, $key, '>=', $type );
+	public function greater_than_or_equal( $key, $value ) : Meta_Query {
+		$this->add_clause( $value, $key, '>=' );
 		return $this;
 	}
 
@@ -143,16 +135,14 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an '<' clause.
 	 *
-	 * @phpstan-param TYPE $type
+	 * @param string|string[] $key
+	 * @param int|string      $value
 	 *
-	 * @param string       $key
-	 * @param int|string   $value
-	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function less_than( string $key, $value, string $type = '' ) : Meta_Query {
-		$this->add_clause( $value, $key, '<', $type );
+	public function less_than( $key, $value ) : Meta_Query {
+		$this->add_clause( $value, $key, '<' );
 		return $this;
 	}
 
@@ -160,16 +150,14 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an '<=' clause.
 	 *
-	 * @phpstan-param TYPE $type
+	 * @param string|string[] $key
+	 * @param int|string      $value
 	 *
-	 * @param string       $key
-	 * @param int|string   $value
-	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function less_than_or_equal( string $key, $value, string $type = '' ) : Meta_Query {
-		$this->add_clause( $value, $key, '<=', $type );
+	public function less_than_or_equal( $key, $value ) : Meta_Query {
+		$this->add_clause( $value, $key, '<=' );
 		return $this;
 	}
 
@@ -177,16 +165,14 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create a 'LIKE' clause.
 	 *
-	 * @phpstan-param TYPE $type
+	 * @param string|string[] $key
+	 * @param int|string      $value
 	 *
-	 * @param string       $key
-	 * @param int|string   $value
-	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function like( string $key, $value, string $type = '' ) : Meta_Query {
-		$this->add_clause( $value, $key, 'LIKE', $type );
+	public function like( $key, $value ) : Meta_Query {
+		$this->add_clause( $value, $key, 'LIKE' );
 		return $this;
 	}
 
@@ -194,16 +180,14 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create a 'NOT LIKE' clause.
 	 *
-	 * @phpstan-param TYPE $type
+	 * @param string|string[] $key
+	 * @param int|string      $value
 	 *
-	 * @param string       $key
-	 * @param int|string   $value
-	 * @param string       $type
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_like( string $key, $value, string $type = '' ) : Meta_Query {
-		$this->add_clause( $value, $key, 'NOT LIKE', $type );
+	public function not_like( $key, $value ) : Meta_Query {
+		$this->add_clause( $value, $key, 'NOT LIKE' );
 		return $this;
 	}
 
@@ -211,16 +195,14 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an 'IN' clause.
 	 *
-	 * @phpstan-param TYPE      $type
-	 *
-	 * @param string            $key
+	 * @param string|string[]   $key
 	 * @param array<int|string> $values
-	 * @param string            $type
+	 *
 	 *
 	 * @return Meta_Query
 	 */
-	public function in( string $key, array $values, string $type = '' ) : Meta_Query {
-		$this->add_clause( $values, $key, 'IN', $type );
+	public function in( $key, array $values ) : Meta_Query {
+		$this->add_clause( $values, $key, 'IN' );
 		return $this;
 	}
 
@@ -228,16 +210,14 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create a 'NOT IN' clause.
 	 *
-	 * @phpstan-param TYPE      $type
-	 *
-	 * @param string            $key
+	 * @param string|string[]   $key
 	 * @param array<int|string> $values
-	 * @param string            $type
+	 *
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_in( string $key, array $values, string $type = '' ) : Meta_Query {
-		$this->add_clause( $values, $key, 'NOT IN', $type );
+	public function not_in( $key, array $values ) : Meta_Query {
+		$this->add_clause( $values, $key, 'NOT IN' );
 		return $this;
 	}
 
@@ -245,16 +225,14 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create a 'BETWEEN' clause.
 	 *
-	 * @phpstan-param TYPE      $type
-	 *
-	 * @param string            $key
+	 * @param string|string[]   $key
 	 * @param array<int|string> $values
-	 * @param string            $type
+	 *
 	 *
 	 * @return Meta_Query
 	 */
-	public function between( string $key, array $values, string $type = '' ) : Meta_Query {
-		$this->add_clause( $values, $key, 'BETWEEN', $type );
+	public function between( $key, array $values ) : Meta_Query {
+		$this->add_clause( $values, $key, 'BETWEEN' );
 		return $this;
 	}
 
@@ -262,16 +240,14 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create a 'BETWEEN' clause.
 	 *
-	 * @phpstan-param TYPE      $type
-	 *
-	 * @param string            $key
+	 * @param string|string[]   $key
 	 * @param array<int|string> $values
-	 * @param string            $type
+	 *
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_between( string $key, array $values, string $type = '' ) : Meta_Query {
-		$this->add_clause( $values, $key, 'NOT BETWEEN', $type );
+	public function not_between( $key, array $values ) : Meta_Query {
+		$this->add_clause( $values, $key, 'NOT BETWEEN' );
 		return $this;
 	}
 
@@ -279,12 +255,12 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an 'EXISTS' clause.
 	 *
-	 * @param string $key
+	 * @param string|string[] $key
 	 *
 	 * @return Meta_Query
 	 */
-	public function exists( string $key ) : Meta_Query {
-		$this->add_clause( '', $key, 'EXISTS', '' );
+	public function exists( $key ) : Meta_Query {
+		$this->add_clause( '', $key, 'EXISTS' );
 		return $this;
 	}
 
@@ -292,12 +268,52 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create a 'NOT EXISTS' clause.
 	 *
-	 * @param string $key
+	 * @param string|string[] $key
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_exists( string $key ) : Meta_Query {
-		$this->add_clause( '', $key, 'NOT EXISTS', '' );
+	public function not_exists( $key ) : Meta_Query {
+		$this->add_clause( '', $key, 'NOT EXISTS' );
+		return $this;
+	}
+
+
+	/**
+	 * Advanced configuration for the current clause.
+	 *
+	 * `type` - the MySQL data type, which the provided value will be cast to.
+	 *
+	 * `compare_key` - allows for advanced compares against the meta key such as
+	 * `meta_key LIKE %product_%`.
+	 * Defaults to `IN` if the key is an array, otherwise `=`.
+	 *
+	 * `type_key` - MySQL data type the meta key CAST to for comparison.
+	 * Accepts 'BINARY' for case-sensitive regular expression comparisons.
+	 *
+	 *
+	 * @phpstan-param static::TYPE_* $type
+	 * @phpstan-param static::KEY_*  $compare_key
+	 * @phpstan-param ''|static::TYPE_BINARY $type_key
+	 *
+	 *
+	 * @param string                 $type        - Type of data.
+	 * @param string                 $compare_key - How to compare the meta_key.
+	 * @param string                 $type_key    - Support `BINARY` meta key types.
+	 *
+	 * @throws \LogicException - If called before a clause is available.
+	 *
+	 * @return Meta_Query
+	 */
+	public function advanced( string $type = '', string $compare_key = '', string $type_key = '' ) : Meta_Query {
+		$current = \array_key_last( $this->clauses );
+		if ( ! is_numeric( $current ) ) {
+			throw new \LogicException( __( 'You must create a meta clause before you add advanced parameters to it!', 'lipe' ) );
+		}
+		$current = \array_key_last( $this->clauses );
+		$this->clauses[ $current ] = \array_merge(
+			$this->clauses[ $current ],
+			\array_filter( compact( 'type', 'compare_key', 'type_key' ) )
+		);
 		return $this;
 	}
 
@@ -320,21 +336,19 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Generate a clause for the meta query.
 	 *
-	 * @link https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters
+	 * @link          https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters
 	 *
 	 *
-	 * @phpstan-param COMPARE_OPERATOR|COMPARE_WORD|COMPARE_REGEX $compare
-	 * @phpstan-param TYPE                                        $type
+	 * @phpstan-param static::COMPARE_*        $compare
 	 *
-	 * @param string|int|array<int,string|int>                    $value
-	 * @param string                                              $key
-	 * @param string                                              $compare
-	 * @param string                                              $type
+	 * @param string|int|array<int,string|int> $value
+	 * @param string|string[]                  $key
+	 * @param string                           $compare
 	 *
 	 * @return void
 	 */
-	protected function add_clause( $value, string $key, string $compare, string $type ) : void {
-		$clause = \array_filter( \compact( 'key', 'value', 'compare', 'type' ) );
+	protected function add_clause( $value, $key, string $compare ) : void {
+		$clause = \array_filter( \compact( 'key', 'value', 'compare' ) );
 		$this->clauses[] = $clause;
 	}
 }
