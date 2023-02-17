@@ -8,10 +8,6 @@ namespace Lipe\Lib\Query\Clause;
  *
  * @since 4.0.0
  *
- * @template COMPARE_OPERATOR of '='|'!='|'>'|'>='|'<'|'<='
- * @template COMPARE_WORD of 'LIKE'|'NOT LIKE'|'IN'|'NOT IN'|'BETWEEN'|'NOT BETWEEN'|'EXISTS'|'NOT EXISTS'|''
- * @template COMPARE_REGEX of 'REGEXP'|'NOT REGEXP'|'RLIKE'
- *
  */
 trait Meta_Query_Trait {
 	/**
@@ -33,7 +29,7 @@ trait Meta_Query_Trait {
 	 *
 	 * Default is 'IN' when `meta_value` is an array, '=' otherwise.
 	 *
-	 * @phpstan-var COMPARE_OPERATOR|COMPARE_WORD|COMPARE_REGEX
+	 * @phpstan-var Meta_Query::COMPARE_*
 	 *
 	 * @var string
 	 */
@@ -44,7 +40,7 @@ trait Meta_Query_Trait {
 	 *
 	 * Default is 'IN' when `meta_key` is an array, '=' otherwise.
 	 *
-	 * @phpstan-var 'LIKE'|'NOT LIKE'|'IN'|'NOT IN'|'BETWEEN'|'NOT BETWEEN'|'EXISTS'|'NOT EXISTS'|''
+	 * @phpstan-var Meta_Query::KEY_*
 	 *
 	 * @var string
 	 */
@@ -53,7 +49,7 @@ trait Meta_Query_Trait {
 	/**
 	 * The MySQL data type that the `meta_value` column will be CAST to for comparisons.
 	 *
-	 * @phpstan-var 'NUMERIC'|'BINARY'|'CHAR'|'DATE'|'DATETIME'|'DECIMAL'|'SIGNED'|'TIME'|'UNSIGNED'|''
+	 * @phpstan-var Meta_Query::TYPE_*
 	 *
 	 * @var string
 	 */
