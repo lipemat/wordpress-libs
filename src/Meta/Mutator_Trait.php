@@ -51,7 +51,8 @@ trait Mutator_Trait {
 	 */
 	public function __get( string $name ) {
 		if ( ! \method_exists( $this, 'get_object' ) ) {
-			throw new \ErrorException( 'Direct access to object properties is only available for objects with `get_object`: ' . __CLASS__ . ":{$name}" );
+			/* translators: {property name} */
+			throw new \ErrorException( sprintf( __( 'Direct access to object properties is only available for objects with `get_object`:%s', 'lipe' ), __CLASS__ . ':' . $name ) );
 		}
 		$object = $this->get_object();
 		if ( null !== $object && ( \property_exists( $object, $name ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $name ) ) ) ) {
@@ -60,8 +61,8 @@ trait Mutator_Trait {
 		if ( \method_exists( $this, 'get_extended_properties' ) && \in_array( $name, $this->get_extended_properties(), true ) ) {
 			return $object->{$name};
 		}
-
-		throw new \ErrorException( 'Undefined property: ' . __CLASS__ . ":{$name}" );
+		/* translators: {property name} */
+		throw new \ErrorException( sprintf( __( 'Undefined property: %s', 'lipe' ), __CLASS__ . ':' . $name ) );
 	}
 
 
@@ -77,7 +78,8 @@ trait Mutator_Trait {
 	 */
 	public function __set( string $name, $value ) {
 		if ( ! \method_exists( $this, 'get_object' ) ) {
-			throw new \ErrorException( 'Direct access to object properties is only available for objects with `get_object`: ' . __CLASS__ . ":{$name}" );
+			/* translators: {property name} */
+			throw new \ErrorException( sprintf( __( 'Direct access to object properties is only available for objects with `get_object`: %s', 'lipe' ), __CLASS__ . ':' . $name ) );
 		}
 		$object = $this->get_object();
 		if ( null !== $object && ( \property_exists( $object, $name ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $name ) ) ) ) {
@@ -98,13 +100,15 @@ trait Mutator_Trait {
 	 */
 	public function __call( string $name, array $arguments ) {
 		if ( ! \method_exists( $this, 'get_object' ) ) {
-			throw new \ErrorException( 'Direct access to object methods is only available for objects with `get_object`: ' . __CLASS__ . ":{$name}" );
+			/* translators: {property name} */
+			throw new \ErrorException( sprintf( __( 'Direct access to object methods is only available for objects with `get_object`: %s', 'lipe' ), __CLASS__ . ':' . $name ) );
 		}
 		$object = $this->get_object();
 		if ( null !== $object && ( \method_exists( $object, $name ) ) ) {
 			return $object->{$name}( ...$arguments );
 		}
-		throw new \ErrorException( 'Method does not exist: ' . __CLASS__ . ":{$name}" );
+		/* translators: {property name} */
+		throw new \ErrorException( sprintf( __( 'Method does not exist: %s', 'lipe' ), __CLASS__ . ':' . $name ) );
 	}
 
 

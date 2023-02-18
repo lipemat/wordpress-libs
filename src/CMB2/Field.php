@@ -1024,7 +1024,8 @@ class Field {
 			}
 		};
 		if ( ! $mock->allowed( $this->get_type() ) ) {
-			throw new \LogicException( esc_html( "Fields of `{$this->get_type()}` type do not support repeating." ) );
+			/* translators: {field type} */
+			throw new \LogicException( sprintf( __( 'Fields of `%s` type do not support repeating.', 'lipe' ), $this->get_type() ) );
 		}
 		$this->repeatable = $repeatable;
 		$this->text['add_row_text'] = $add_row_text;
@@ -1547,6 +1548,6 @@ class Field {
 	 * @throws \LogicException - When trying to add a field to another field.
 	 */
 	public function field( string $id, string $name ) : Field_Type {
-		throw new \LogicException( 'You cannot add a field to another field.' );
+		throw new \LogicException( __( 'You cannot add a field to another field.', 'lipe' ) );
 	}
 }

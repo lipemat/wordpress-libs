@@ -165,7 +165,7 @@ abstract class Post_List_Column {
 	 * @param \WP_Query $query
 	 */
 	public function filter_query( $value, \WP_Query $query ) : \WP_Query {
-		throw new \RuntimeException( 'You must override the Post_List_Column::filter_query() method if you are using Post_List_Column::set_filters()' );
+		throw new \RuntimeException( __( 'You must override the Post_List_Column::filter_query() method if you are using Post_List_Column::set_filters()', 'lipe' ) );
 	}
 
 

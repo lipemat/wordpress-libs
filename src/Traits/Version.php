@@ -93,7 +93,7 @@ trait Version {
 	 */
 	private function get_version_identifier() : string {
 		if ( ( new \ReflectionClass( $this ) )->isAnonymous() ) {
-			throw new \BadMethodCallException( 'You may not use the Version Trait with anonymous classes, you will have to implement what you need within your anonymous class.' );
+			throw new \BadMethodCallException( __( 'You may not use the Version Trait with anonymous classes, you will have to implement what you need within your anonymous class.', 'lipe' ) );
 		}
 
 		return \get_class( $this );

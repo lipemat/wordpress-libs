@@ -684,17 +684,17 @@ class Args extends Args_Abstract implements Meta_Query_Interface, Date_Query_Int
 		switch ( true ) {
 			case \in_array( static::ORDERBY_POST_IN, (array) $orderby, true ):
 				if ( empty( $this->post__in ) ) {
-					throw new \LogicException( 'You cannot order by `post__in` unless you specify the post ins.' );
+					throw new \LogicException( __( 'You cannot order by `post__in` unless you specify the post ins.', 'lipe' ) );
 				}
 				break;
 			case \in_array( static::ORDERBY_NAME_IN, (array) $orderby, true ):
 				if ( empty( $this->post__name__in ) ) {
-					throw new \LogicException( 'You cannot order by `post__name__in` unless you specify the post name ins.' );
+					throw new \LogicException( __( 'You cannot order by `post__name__in` unless you specify the post name ins.', 'lipe' ) );
 				}
 				break;
 			case \in_array( static::ORDERBY_PARENT_IN, (array) $orderby, true ):
 				if ( empty( $this->post_parent__in ) ) {
-					throw new \LogicException( 'You cannot order by `post_parent__in` unless you specify the post parent ins.' );
+					throw new \LogicException( __( 'You cannot order by `post_parent__in` unless you specify the post parent ins.', 'lipe' ) );
 				}
 		}
 

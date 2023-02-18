@@ -73,6 +73,7 @@ abstract class Args_Abstract {
 	 * @return void
 	 */
 	public function __set( string $name, $value ) {
-		throw new \LogicException( "Attempting to use the non-existent `{$name}` argument on " . __CLASS__ . '.' );
+		/* translators: {property name} {class name} */
+		throw new \LogicException( sprintf( __( 'Attempting to use the non-existent `%1$s` argument on %2$s.', 'lipe' ), $name, __CLASS__ ) );
 	}
 }
