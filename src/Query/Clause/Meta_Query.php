@@ -13,7 +13,7 @@ namespace Lipe\Lib\Query\Clause;
  *
  * @internal
  *
- * @link   https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters
+ * @link   https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters
  */
 class Meta_Query extends Clause_Abstract {
 	/**
@@ -78,12 +78,12 @@ class Meta_Query extends Clause_Abstract {
 	 * Create an '=' clause.
 	 *
 	 * @param string|string[] $key
-	 * @param int|string      $value
+	 * @param string          $value
 	 *
 	 *
 	 * @return Meta_Query
 	 */
-	public function equals( $key, $value ) : Meta_Query {
+	public function equals( $key, string $value ) : Meta_Query {
 		$this->add_clause( $value, $key, '=' );
 		return $this;
 	}
@@ -93,12 +93,12 @@ class Meta_Query extends Clause_Abstract {
 	 * Create an '!=' clause.
 	 *
 	 * @param string|string[] $key
-	 * @param int|string      $value
+	 * @param string          $value
 	 *
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_equals( $key, $value ) : Meta_Query {
+	public function not_equals( $key, string $value ) : Meta_Query {
 		$this->add_clause( $value, $key, '!=' );
 		return $this;
 	}
@@ -108,12 +108,12 @@ class Meta_Query extends Clause_Abstract {
 	 * Create an '>' clause.
 	 *
 	 * @param string|string[] $key
-	 * @param int|string      $value
+	 * @param string          $value
 	 *
 	 *
 	 * @return Meta_Query
 	 */
-	public function greater_than( $key, $value ) : Meta_Query {
+	public function greater_than( $key, string $value ) : Meta_Query {
 		$this->add_clause( $value, $key, '>' );
 		return $this;
 	}
@@ -123,12 +123,12 @@ class Meta_Query extends Clause_Abstract {
 	 * Create an '>=' clause.
 	 *
 	 * @param string|string[] $key
-	 * @param int|string      $value
+	 * @param string          $value
 	 *
 	 *
 	 * @return Meta_Query
 	 */
-	public function greater_than_or_equal( $key, $value ) : Meta_Query {
+	public function greater_than_or_equal( $key, string $value ) : Meta_Query {
 		$this->add_clause( $value, $key, '>=' );
 		return $this;
 	}
@@ -138,12 +138,12 @@ class Meta_Query extends Clause_Abstract {
 	 * Create an '<' clause.
 	 *
 	 * @param string|string[] $key
-	 * @param int|string      $value
+	 * @param string          $value
 	 *
 	 *
 	 * @return Meta_Query
 	 */
-	public function less_than( $key, $value ) : Meta_Query {
+	public function less_than( $key, string $value ) : Meta_Query {
 		$this->add_clause( $value, $key, '<' );
 		return $this;
 	}
@@ -153,12 +153,12 @@ class Meta_Query extends Clause_Abstract {
 	 * Create an '<=' clause.
 	 *
 	 * @param string|string[] $key
-	 * @param int|string      $value
+	 * @param string          $value
 	 *
 	 *
 	 * @return Meta_Query
 	 */
-	public function less_than_or_equal( $key, $value ) : Meta_Query {
+	public function less_than_or_equal( $key, string $value ) : Meta_Query {
 		$this->add_clause( $value, $key, '<=' );
 		return $this;
 	}
@@ -168,12 +168,12 @@ class Meta_Query extends Clause_Abstract {
 	 * Create a 'LIKE' clause.
 	 *
 	 * @param string|string[] $key
-	 * @param int|string      $value
+	 * @param string          $value
 	 *
 	 *
 	 * @return Meta_Query
 	 */
-	public function like( $key, $value ) : Meta_Query {
+	public function like( $key, string $value ) : Meta_Query {
 		$this->add_clause( $value, $key, 'LIKE' );
 		return $this;
 	}
@@ -183,12 +183,12 @@ class Meta_Query extends Clause_Abstract {
 	 * Create a 'NOT LIKE' clause.
 	 *
 	 * @param string|string[] $key
-	 * @param int|string      $value
+	 * @param string          $value
 	 *
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_like( $key, $value ) : Meta_Query {
+	public function not_like( $key, string $value ) : Meta_Query {
 		$this->add_clause( $value, $key, 'NOT LIKE' );
 		return $this;
 	}
@@ -198,7 +198,7 @@ class Meta_Query extends Clause_Abstract {
 	 * Create an 'IN' clause.
 	 *
 	 * @param string|string[]   $key
-	 * @param array<int|string> $values
+	 * @param array<int,string> $values
 	 *
 	 *
 	 * @return Meta_Query
@@ -213,7 +213,7 @@ class Meta_Query extends Clause_Abstract {
 	 * Create a 'NOT IN' clause.
 	 *
 	 * @param string|string[]   $key
-	 * @param array<int|string> $values
+	 * @param array<int,string> $values
 	 *
 	 *
 	 * @return Meta_Query
@@ -228,7 +228,7 @@ class Meta_Query extends Clause_Abstract {
 	 * Create a 'BETWEEN' clause.
 	 *
 	 * @param string|string[]   $key
-	 * @param array<int|string> $values
+	 * @param array<int,string> $values
 	 *
 	 *
 	 * @return Meta_Query
@@ -243,7 +243,7 @@ class Meta_Query extends Clause_Abstract {
 	 * Create a 'BETWEEN' clause.
 	 *
 	 * @param string|string[]   $key
-	 * @param array<int|string> $values
+	 * @param array<int,string> $values
 	 *
 	 *
 	 * @return Meta_Query
