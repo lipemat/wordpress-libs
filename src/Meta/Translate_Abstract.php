@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Meta;
 
@@ -17,25 +18,25 @@ abstract class Translate_Abstract {
 	 *
 	 * @var Field[]
 	 */
-	protected $fields = [];
+	protected array $fields = [];
 
 	/**
 	 * Holds a list of fields
 	 *
 	 * @var array
 	 */
-	protected $groups = [];
+	protected array $groups = [];
 
 	/**
 	 * Used internally to track which group row are on.
 	 *
 	 * @var int
 	 */
-	protected $group_row = 0;
+	protected int $group_row = 0;
 
 
 	/**
-	 * Get a field which was registered with CMB2 by id.
+	 * Get a field, which was registered with CMB2 by id.
 	 *
 	 * @param string $field_id
 	 *
@@ -98,9 +99,7 @@ abstract class Translate_Abstract {
 		}
 
 		if ( 'option' === $meta_type ) {
-			$result = cmb2_options( $object_id )->update( $key, $value, true );
-			$this->handle_update_callback( $object_id, $key, $value, $meta_type );
-			return $result;
+			return cmb2_options( $object_id )->update( $key, $value, true );
 		}
 
 		return update_metadata( $meta_type, $object_id, $key, $value );
@@ -126,8 +125,6 @@ abstract class Translate_Abstract {
 
 		if ( 'option' === $meta_type ) {
 			cmb2_options( $object_id )->remove( $key, true );
-
-			$this->handle_delete_callback( $object_id, $key, $meta_type );
 		} else {
 			delete_metadata( $meta_type, $object_id, $key );
 		}
@@ -143,7 +140,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return bool
 	 */
-	public function get_checkbox_field_value( $object_id, string $key, string $meta_type ) : bool {
+	protected function get_checkbox_field_value( $object_id, string $key, string $meta_type ) : bool {
 		$value = $this->get_meta_value( $object_id, $key, $meta_type );
 
 		return ( 'on' === $value );
@@ -163,7 +160,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	public function update_checkbox_field_value( $object_id, string $key, $checked, string $meta_type ) : void {
+	protected function update_checkbox_field_value( $object_id, string $key, $checked, string $meta_type ) : void {
 		if ( empty( $checked ) ) {
 			$this->delete_meta_value( $object_id, $key, $meta_type );
 		} else {
@@ -182,7 +179,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return ?array
 	 */
-	public function get_file_field_value( $object_id, string $key, string $meta_type ) : ?array {
+	protected function get_file_field_value( $object_id, string $key, string $meta_type ) : ?array {
 		$url = $this->get_meta_value( $object_id, $key, $meta_type );
 		if ( ! empty( $url ) ) {
 			// Add the extra field so groups meta will be translated properly.
@@ -211,7 +208,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	public function update_file_field_value( $object_id, string $key, int $attachment_id, string $meta_type ) : void {
+	protected function update_file_field_value( $object_id, string $key, int $attachment_id, string $meta_type ) : void {
 		// Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->fields[ $key ]->group ) {
 			$this->fields[ $key . '_id' ] = $this->fields[ $key ];
@@ -231,7 +228,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	public function delete_file_field_value( $object_id, string $key, string $meta_type ) : void {
+	protected function delete_file_field_value( $object_id, string $key, string $meta_type ) : void {
 		// Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->fields[ $key ]->group ) {
 			$this->fields[ $key . '_id' ] = $this->fields[ $key ];
@@ -252,7 +249,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return array
 	 */
-	public function get_group_field_value( $object_id, string $group_id, string $meta_type ) : array {
+	protected function get_group_field_value( $object_id, string $group_id, string $meta_type ) : array {
 		$values = [];
 
 		$existing = $this->get_meta_value( $object_id, $group_id, $meta_type );
@@ -278,7 +275,7 @@ abstract class Translate_Abstract {
 	 * @param array      $values
 	 * @param string     $meta_type
 	 */
-	public function update_group_field_values( $object_id, string $group_id, array $values, string $meta_type ) : void {
+	protected function update_group_field_values( $object_id, string $group_id, array $values, string $meta_type ) : void {
 		foreach ( $values as $_row => $_values ) {
 			$this->group_row = $_row;
 			foreach ( $this->get_group_fields( $group_id ) as $field ) {
@@ -327,7 +324,7 @@ abstract class Translate_Abstract {
 	protected function get_group_fields( string $group ) : array {
 		$groups = $this->once( function() {
 			$groups = [];
-			array_map( function( Field $field ) use ( &$groups ) {
+			\array_map( function( Field $field ) use ( &$groups ) {
 				if ( null !== $field->group ) {
 					$groups[ $field->group ][] = $field->get_id();
 				}
@@ -349,7 +346,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return \WP_Term[]
 	 */
-	public function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : array {
+	protected function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : array {
 		$taxonomy = $this->get_field( $field_id )->taxonomy;
 		if ( 'post' !== $meta_type ) {
 			return $this->maybe_use_main_blog( $field_id, function() use ( $object_id, $field_id, $taxonomy, $meta_type ) {
@@ -378,7 +375,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	public function update_taxonomy_field_value( $object_id, string $key, array $terms, string $meta_type ) : void {
+	protected function update_taxonomy_field_value( $object_id, string $key, array $terms, string $meta_type ) : void {
 		$field = $this->get_field( $key );
 		if ( null !== $field ) {
 			if ( null !== $field->sanitization_cb ) {
@@ -386,7 +383,7 @@ abstract class Translate_Abstract {
 			}
 
 			if ( 'post' !== $meta_type ) {
-				$this->update_meta_value( $object_id, $key, array_map( function( $term_id ) use ( $field ) {
+				$this->update_meta_value( $object_id, $key, \array_map( function( $term_id ) use ( $field ) {
 					// Legacy options used term slug.
 					if ( ! is_numeric( $term_id ) ) {
 						return get_term_by( 'slug', $term_id, $field->taxonomy )->term_id;
@@ -400,7 +397,6 @@ abstract class Translate_Abstract {
 					return is_numeric( $term ) ? (int) $term : $term;
 				}, $terms );
 				wp_set_object_terms( $object_id, $terms, $field->taxonomy );
-				$this->handle_update_callback( $object_id, $key, $terms, $meta_type );
 			}
 		}
 	}
@@ -418,13 +414,12 @@ abstract class Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	public function delete_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : void {
+	protected function delete_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : void {
 		if ( 'post' !== $meta_type ) {
 			$this->delete_meta_value( $object_id, $field_id, $meta_type );
 		} else {
 			$taxonomy = $this->get_field( $field_id )->taxonomy;
 			wp_delete_object_term_relationships( $object_id, $taxonomy );
-			$this->handle_delete_callback( $object_id, $field_id, $meta_type );
 		}
 	}
 
@@ -439,7 +434,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return \WP_Term|false
 	 */
-	public function get_taxonomy_singular_field_value( $object_id, string $field_id, string $meta_type ) {
+	protected function get_taxonomy_singular_field_value( $object_id, string $field_id, string $meta_type ) {
 		$terms = $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type );
 
 		return empty( $terms ) ? false : array_shift( $terms );
@@ -462,7 +457,8 @@ abstract class Translate_Abstract {
 	 * @return mixed;
 	 */
 	protected function maybe_use_main_blog( string $field_id, callable $callback ) {
-		$is_network = 'network_admin_menu' === cmb2_get_metabox( $this->get_field( $field_id )->box_id )->meta_box['admin_menu_hook']; // @phpstan-ignore-line
+		$box = $this->get_field( $field_id )->get_box();
+		$is_network = $box && \method_exists( $box, 'is_network' ) && $box->is_network();
 		if ( $is_network ) {
 			switch_to_blog( get_main_site_id() );
 		}
@@ -471,61 +467,5 @@ abstract class Translate_Abstract {
 			restore_current_blog();
 		}
 		return $result;
-	}
-
-
-	/**
-	 * If a delete callback exists, call it.
-	 *
-	 * We mimic the same arguments as the cmb2 filter as the `delete_cb`
-	 * will also be called when saving an empty value to meta in the admin.
-	 *
-	 * @see   "cmb2_override_{$a['field_id']}_meta_remove"
-	 *
-	 * @see   Field::delete_cb
-	 *
-	 * @param string|int $object_id
-	 * @param string     $key
-	 * @param string     $meta_type
-	 *
-	 * @return void
-	 */
-	public function handle_delete_callback( $object_id, string $key, string $meta_type ) : void {
-		$field = $this->get_field( $key );
-		if ( null === $field ) {
-			return;
-		}
-		$cmb2_field = $field->get_cmb2_field();
-		if ( null !== $field->delete_cb && null !== $cmb2_field ) {
-			\call_user_func( $field->delete_cb, $object_id, $key );
-		}
-	}
-
-
-	/**
-	 * If an update callback exists, call it.
-	 *
-	 * We mimic the same arguments as the cmb2 filter as the `update_cb`.
-	 *
-	 * @see   "cmb2_override_{$a['field_id']}_meta_update"
-	 *
-	 * @see   Field::update_cb
-	 *
-	 * @param string|int $object_id
-	 * @param string     $key
-	 * @param mixed      $value
-	 * @param string     $meta_type
-	 *
-	 * @return void
-	 */
-	public function handle_update_callback( $object_id, string $key, $value, string $meta_type ) : void {
-		$field = $this->get_field( $key );
-		if ( null === $field ) {
-			return;
-		}
-		$cmb2_field = $field->get_cmb2_field();
-		if ( null !== $field->update_cb && null !== $cmb2_field ) {
-			\call_user_func( $field->update_cb, $object_id, $value, $key, $meta_type );
-		}
 	}
 }
