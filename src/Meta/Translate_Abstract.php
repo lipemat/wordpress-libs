@@ -98,9 +98,9 @@ abstract class Translate_Abstract {
 		}
 
 		if ( 'option' === $meta_type ) {
+			$result = cmb2_options( $object_id )->update( $key, $value, true );
 			$this->handle_update_callback( $object_id, $key, $value, $meta_type );
-
-			return cmb2_options( $object_id )->update( $key, $value, true );
+			return $result;
 		}
 
 		return update_metadata( $meta_type, $object_id, $key, $value );
@@ -125,9 +125,9 @@ abstract class Translate_Abstract {
 		}
 
 		if ( 'option' === $meta_type ) {
-			$this->handle_delete_callback( $object_id, $key, $meta_type );
-
 			cmb2_options( $object_id )->remove( $key, true );
+
+			$this->handle_delete_callback( $object_id, $key, $meta_type );
 		} else {
 			delete_metadata( $meta_type, $object_id, $key );
 		}
@@ -395,12 +395,12 @@ abstract class Translate_Abstract {
 					return $term_id;
 				}, $terms ), $meta_type );
 			} else {
-				$this->handle_update_callback( $object_id, $key, $terms, $meta_type );
 				$terms = \array_map( function( $term ) {
 					// Term ids are perceived as term slug when strings.
 					return is_numeric( $term ) ? (int) $term : $term;
 				}, $terms );
 				wp_set_object_terms( $object_id, $terms, $field->taxonomy );
+				$this->handle_update_callback( $object_id, $key, $terms, $meta_type );
 			}
 		}
 	}
@@ -422,9 +422,9 @@ abstract class Translate_Abstract {
 		if ( 'post' !== $meta_type ) {
 			$this->delete_meta_value( $object_id, $field_id, $meta_type );
 		} else {
-			$this->handle_delete_callback( $object_id, $field_id, $meta_type );
 			$taxonomy = $this->get_field( $field_id )->taxonomy;
 			wp_delete_object_term_relationships( $object_id, $taxonomy );
+			$this->handle_delete_callback( $object_id, $field_id, $meta_type );
 		}
 	}
 

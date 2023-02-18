@@ -147,7 +147,7 @@ class Update_Comment extends Args_Abstract {
 	 * Array of key/value pairs to be stored in `commentmeta`
 	 * for the new comment.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	public array $comment_meta;
 

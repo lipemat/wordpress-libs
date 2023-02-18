@@ -1340,7 +1340,9 @@ class Field {
 	 *
 	 * @see Translate_Abstract::handle_delete_callback()
 	 *
-	 * @param callable $callback
+	 * @phpstan-param callable( int $object_id, string $meta_key ) : void $callback
+	 *
+	 * @param callable                                                    $callback
 	 *
 	 * @return Field
 	 */
@@ -1348,7 +1350,7 @@ class Field {
 		$this->delete_cb = $callback;
 
 		if ( $this->box->is_allowed_to_register_meta( $this ) ) {
-			add_action( "delete_{$this->box->get_object_type()}_meta", function( $_, $object_id, $key ) {
+			add_action( "deleted_{$this->box->get_object_type()}_meta", function( $_, $object_id, $key ) {
 				if ( $key === $this->get_id() ) {
 					Repo::in()->handle_delete_callback( $object_id, $key, $this->box->get_object_type() );
 				}
@@ -1356,7 +1358,7 @@ class Field {
 		} else {
 			Actions::in()->add_filter_as_action( "cmb2_override_{$this->get_id()}_meta_remove", function( $_, $value, array $args, \CMB2_Field $field ) {
 				Repo::in()->handle_delete_callback( $field->object_id(), $this->get_id(), $this->box->get_object_type() );
-			} );
+			}, 99 );
 		}
 
 		return $this;
@@ -1374,35 +1376,32 @@ class Field {
 	 *
 	 * @see Translate_Abstract::handle_update_callback()
 	 *
-	 * @param callable( int, mixed, string, string ) : void $callback
+	 * @phpstan-param callable( int $object_id, mixed $value, string $meta_key, string $meta_type ) : void $callback
+	 *
+	 * @param callable                                                                                     $callback
 	 *
 	 * @return Field
 	 */
 	public function update_cb( callable $callback ) : Field {
 		$this->update_cb = $callback;
 		if ( $this->box->is_allowed_to_register_meta( $this ) ) {
-			add_action( "add_{$this->box->get_object_type()}_meta", function( $object_id, $key, $value ) {
-				if ( $key === $this->get_id() ) {
-					Repo::in()->handle_update_callback( $object_id, $key, $value, $this->box->get_object_type() );
-				}
-			}, 10, 3 );
-			add_action( "update_{$this->box->get_object_type()}_meta", function( $_, $object_id, $key, $value ) {
-				if ( $key === $this->get_id() ) {
-					Repo::in()->handle_update_callback( $object_id, $key, $value, $this->box->get_object_type() );
-				}
-			}, 10, 4 );
+			$actions = [
+				"added_{$this->box->get_object_type()}_meta",
+				"updated_{$this->box->get_object_type()}_meta",
+			];
 			// Checkboxes must also to be called on delete.
 			if ( $this->get_type() === Repo::CHECKBOX ) {
-				add_action( "delete_{$this->box->get_object_type()}_meta", function( $_, $object_id, $key, $value ) {
-					if ( $key === $this->get_id() ) {
-						Repo::in()->handle_update_callback( $object_id, $key, $value, $this->box->get_object_type() );
-					}
-				}, 10, 4 );
+				$actions[] = "deleted_{$this->box->get_object_type()}_meta";
 			}
+			Actions::in()->add_action_all( $actions, function( $_, $object_id, $key, $value ) {
+				if ( $key === $this->get_id() ) {
+					Repo::in()->handle_update_callback( $object_id, $key, $value, $this->box->get_object_type() );
+				}
+			} );
 		} else {
 			Actions::in()->add_filter_as_action( "cmb2_override_{$this->get_id()}_meta_save", function( $_, array $args, $field_args, \CMB2_Field $field ) {
 				Repo::in()->handle_update_callback( $field->object_id(), $this->get_id(), $args['value'], $this->box->get_object_type() );
-			} );
+			}, 99 );
 		}
 
 		return $this;
