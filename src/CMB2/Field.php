@@ -1372,7 +1372,7 @@ class Field {
 	 * 1. A meta field is updated using the repo.
 	 * 2. A meta field is updated when CMB2 is saving a post.
 	 * 3. A meta field is updated using the WP meta API.
-	 * 4. A checkbox value is deleted (same as updating a checkbox).
+	 * 4. A value, which previously existed is deleted.
 	 *
 	 * @phpstan-param CHANGE_CB $callback
 	 *
