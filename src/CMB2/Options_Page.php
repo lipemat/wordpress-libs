@@ -18,7 +18,7 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	public $admin_menu_hook = 'admin_menu';
+	public string $admin_menu_hook = 'admin_menu';
 
 	/**
 	 * This parameter is for options-page metaboxes only,
@@ -31,7 +31,7 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	public $capability = 'manage_options';
+	public string $capability = 'manage_options';
 
 	/**
 	 * On settings pages (not options-general.php sub-pages), allows disabling
@@ -233,6 +233,18 @@ class Options_Page extends Box {
 				<?php
 			} );
 		}
+	}
+
+
+	/**
+	 * Is this box for network settings?
+	 *
+	 * @interal
+	 *
+	 * @return bool
+	 */
+	public function is_network() : bool {
+		return $this->admin_menu_hook === 'network_admin_menu';
 	}
 
 

@@ -224,7 +224,7 @@ class Group extends Field {
 					];
 				}
 
-				if ( Repo::FILE === $field->data_type ) {
+				if ( Repo::TYPE_FILE === $field->data_type ) {
 					$properties[ $field->get_id() . '_id' ] = [
 						'type' => 'number',
 					];

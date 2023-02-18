@@ -6,8 +6,6 @@ namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
 use Lipe\Lib\Meta\Repo;
-use Lipe\Lib\Meta\Translate_Abstract;
-use Lipe\Lib\Util\Actions;
 use Lipe\Lib\Util\Arrays;
 
 //phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
@@ -15,7 +13,9 @@ use Lipe\Lib\Util\Arrays;
 /**
  * A fluent interface for a CMB2 field.
  *
- * @phpstan-type DATA_TYPE Repo::DEFAULT|Repo::CHECKBOX|Repo::FILE|Repo::GROUP|Repo::TAXONOMY
+ * @phpstan-type DELETE_CB callable( int $object_id, string $key, mixed $previous, Repo::META_* $type ): void
+ * @phpstan-type CHANGE_CB callable( int $object_id, mixed $value, string $key, mixed $previous, Repo::META_* $type):void
+ *
  */
 class Field {
 	/**
@@ -78,11 +78,11 @@ class Field {
 	 *
 	 * @interal
 	 *
-	 * @phpstan-var DATA_TYPE
+	 * @phpstan-var Repo::TYPE_*
 	 *
 	 * @var string
 	 */
-	public string $data_type = Repo::DEFAULT;
+	public string $data_type = Repo::TYPE_DEFAULT;
 
 	/**
 	 * Will modify default attributes (class, input type, rows, etc),
@@ -529,8 +529,8 @@ class Field {
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
 	 *
-	 * @see Field::sanitization_cb()
-	 * @see Field::$sanitize_callback
+	 * @see     Field::sanitization_cb()
+	 * @see     Field::$sanitize_callback
 	 *
 	 * @example sanitize_function( $value, $field_args, $field ){ return string }
 	 *
@@ -626,7 +626,7 @@ class Field {
 	 *
 	 * @notice Required lipemat version of CMB2 to support this argument.
 	 *
-	 * @see \CMB2_Type_Taxonomy_Base::get_object_terms
+	 * @see    \CMB2_Type_Taxonomy_Base::get_object_terms
 	 *
 	 * @var bool
 	 */
@@ -734,10 +734,21 @@ class Field {
 	protected $box;
 
 	/**
+	 * Callback Event handlers registered with this field.
+	 *
+	 * @internal
+	 *
+	 * @var Event_Callbacks[]
+	 */
+	protected array $event_callbacks = [];
+
+	/**
 	 * Internal property to hold a callback function when
 	 * a meta key is deleted.
 	 *
 	 * @internal
+	 *
+	 * @phpstan-var DELETE_CB
 	 *
 	 * @var callable
 	 */
@@ -749,9 +760,11 @@ class Field {
 	 *
 	 * @internal
 	 *
-	 * @var callable( int, mixed, string, string ) : void
+	 * @phpstan-var CHANGE_CB
+	 *
+	 * @var callable
 	 */
-	public $update_cb;
+	public $change_cb;
 
 
 	/**
@@ -815,10 +828,10 @@ class Field {
 	 * Enable a character/word counter for a 'textarea', 'wysiwyg', or 'text' type field.
 	 *
 	 * @param bool     $count_words - Count words instead of characters.
-	 * @param int|null $max - Show remaining character/words based on provided limit.
-	 * @param bool     $enforce - Enforce max length using `maxlength` attribute when
+	 * @param int|null $max         - Show remaining character/words based on provided limit.
+	 * @param bool     $enforce     - Enforce max length using `maxlength` attribute when
 	 *                              characters are counted.
-	 * @param array    $labels - Override the default text strings associated with these
+	 * @param array    $labels      - Override the default text strings associated with these
 	 *                              parameters {
 	 *                              'words_left_text' - Default: "Words left"
 	 *                              'words_text' - Default: "Words"
@@ -863,8 +876,8 @@ class Field {
 	 * posts, comments, users, terms
 	 *
 	 * @param int|null      $position
-	 * @param string|null   $name - defaults to field name.
-	 * @param callable|null $display_cb - optional display callback.
+	 * @param string|null   $name            - defaults to field name.
+	 * @param callable|null $display_cb      - optional display callback.
 	 * @param bool|null     $disable_sorting - Set to true to prevent this column from being
 	 *                                       sortable in post list.
 	 *
@@ -1190,7 +1203,7 @@ class Field {
 	 */
 	public function store_user_terms_in_meta( bool $use_meta = true ) : Field {
 		$box = $this->get_box();
-		if ( $box && ( ! \in_array( $this->data_type, [ Repo::TAXONOMY, Repo::TAXONOMY_SINGULAR ], true ) || ! \in_array( 'user', $box->get_object_types(), true ) ) ) {
+		if ( $box && ( ! \in_array( $this->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) || ! \in_array( 'user', $box->get_object_types(), true ) ) ) {
 			_doing_it_wrong( __METHOD__, 'Storing user terms in meta only applies to taxonomy fields registered on users.', '3.14.0' );
 		}
 		$this->store_user_terms_in_meta = $use_meta;
@@ -1290,10 +1303,10 @@ class Field {
 	/**
 	 * Set a Fields Type and register the type with Meta\Repo
 	 *
-	 * @phpstan-param DATA_TYPE $data_type
+	 * @phpstan-param REPO::TYPE_* $type
 	 *
-	 * @param string            $type - CMB2 field type.
-	 * @param string            $data_type - Field data structure type.
+	 * @param string               $type      - CMB2 field type.
+	 * @param string               $data_type - Field data structure type.
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
@@ -1339,71 +1352,37 @@ class Field {
 	 * 2. An empty meta value is passed when CMB2 is saving a post.
 	 * 3. A meta key is deleted using the WP meta API.
 	 *
-	 * @see Translate_Abstract::handle_delete_callback()
+	 * @phpstan-param DELETE_CB $callback
 	 *
-	 * @phpstan-param callable( int $object_id, string $meta_key ) : void $callback
-	 *
-	 * @param callable                                                    $callback
+	 * @param callable          $callback
 	 *
 	 * @return Field
 	 */
 	public function delete_cb( callable $callback ) : Field {
 		$this->delete_cb = $callback;
-
-		if ( $this->box->is_allowed_to_register_meta( $this ) ) {
-			add_action( "deleted_{$this->box->get_object_type()}_meta", function( $_, $object_id, $key ) {
-				if ( $key === $this->get_id() ) {
-					Repo::in()->handle_delete_callback( $object_id, $key, $this->box->get_object_type() );
-				}
-			}, 10, 3 );
-		} else {
-			Actions::in()->add_filter_as_action( "cmb2_override_{$this->get_id()}_meta_remove", function( $_, $value, array $args, \CMB2_Field $field ) {
-				Repo::in()->handle_delete_callback( $field->object_id(), $this->get_id(), $this->box->get_object_type() );
-			}, 99 );
-		}
-
+		$this->event_callbacks[] = new Event_Callbacks( $this, Event_Callbacks::TYPE_DELETE );
 		return $this;
 	}
 
 
 	/**
-	 * Callback to be fired when a meta item is updated.
+	 * Callback to be fired when an items data is updated.
 	 *
 	 * Fired when:
 	 * 1. A meta field is updated using the repo.
 	 * 2. A meta field is updated when CMB2 is saving a post.
 	 * 3. A meta field is updated using the WP meta API.
-	 * 4. A checkbox value is delete (same as updating a checkbox).
+	 * 4. A checkbox value is deleted (same as updating a checkbox).
 	 *
-	 * @see Translate_Abstract::handle_update_callback()
+	 * @phpstan-param CHANGE_CB $callback
 	 *
-	 * @phpstan-param callable( int $object_id, mixed $value, string $meta_key, string $meta_type ) : void $callback
-	 *
-	 * @param callable                                                                                     $callback
+	 * @param callable          $callback
 	 *
 	 * @return Field
 	 */
-	public function update_cb( callable $callback ) : Field {
-		$this->update_cb = $callback;
-		if ( $this->box->is_allowed_to_register_meta( $this ) ) {
-			$actions = [
-				"added_{$this->box->get_object_type()}_meta",
-				"updated_{$this->box->get_object_type()}_meta",
-			];
-			// Checkboxes must also to be called on delete.
-			if ( $this->get_type() === Repo::CHECKBOX ) {
-				$actions[] = "deleted_{$this->box->get_object_type()}_meta";
-			}
-			Actions::in()->add_action_all( $actions, function( $_, $object_id, $key, $value ) {
-				if ( $key === $this->get_id() ) {
-					Repo::in()->handle_update_callback( $object_id, $key, $value, $this->box->get_object_type() );
-				}
-			} );
-		} else {
-			Actions::in()->add_filter_as_action( "cmb2_override_{$this->get_id()}_meta_save", function( $_, array $args, $field_args, \CMB2_Field $field ) {
-				Repo::in()->handle_update_callback( $field->object_id(), $this->get_id(), $args['value'], $this->box->get_object_type() );
-			}, 99 );
-		}
+	public function change_cb( callable $callback ) : Field {
+		$this->change_cb = $callback;
+		$this->event_callbacks[] = new Event_Callbacks( $this, Event_Callbacks::TYPE_CHANGE );
 
 		return $this;
 	}
@@ -1442,9 +1421,9 @@ class Field {
 	 *
 	 * @filter default_{$meta_type}_metadata 11, 3
 	 *
-	 * @param mixed      $value - Empty or a value set by another filter.
+	 * @param mixed      $value     - Empty or a value set by another filter.
 	 * @param string|int $object_id - Current post/term/user id.
-	 * @param string     $meta_key - Meta key being filtered.
+	 * @param string     $meta_key  - Meta key being filtered.
 	 *
 	 * @internal
 	 *

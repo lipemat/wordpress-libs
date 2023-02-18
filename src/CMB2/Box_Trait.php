@@ -18,7 +18,7 @@ trait Box_Trait {
 	protected array $fields = [];
 
 	/**
-	 * An array containing post type slugs, or 'user', 'term', 'comment', or 'options-page'.
+	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#object_types
 	 * @example [ 'page', 'post' ]
@@ -238,7 +238,7 @@ trait Box_Trait {
 	 * @return bool
 	 */
 	public function is_allowed_to_register_meta( Field $field ) : bool {
-		return \in_array( $field->data_type, [ Repo::CHECKBOX, Repo::DEFAULT, Repo::FILE ], true );
+		return \in_array( $field->data_type, [ Repo::TYPE_CHECKBOX, Repo::TYPE_DEFAULT, Repo::TYPE_FILE ], true );
 	}
 
 
@@ -280,6 +280,8 @@ trait Box_Trait {
 
 	/**
 	 * Get the type of object this box is registered to.
+	 *
+	 * @phpstan-return 'comment'|'options-page'|'user'|'term'|'post'
 	 *
 	 * @return string
 	 */

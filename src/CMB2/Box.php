@@ -611,7 +611,7 @@ class Box {
 			register_meta( $type, $field->get_id(), $config );
 
 			// A secondary field for file ids.
-			if ( Repo::FILE === $field->data_type ) {
+			if ( Repo::TYPE_FILE === $field->data_type ) {
 				if ( ! empty( $config['show_in_rest']['name'] ) ) {
 					$config['show_in_rest']['name'] .= '_id';
 					unset( $config['show_in_rest']['prepare_callback'] );

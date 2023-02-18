@@ -6,6 +6,8 @@ namespace Lipe\Lib\Meta;
 use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\Traits\Memoize;
 
+//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
+
 /**
  * Translate the fields into the correct data types.
  *
@@ -28,7 +30,7 @@ abstract class Translate_Abstract {
 	protected array $groups = [];
 
 	/**
-	 * Used internally to track which group row are on.
+	 * Used internally to track, which group row are on.
 	 *
 	 * @var int
 	 */
@@ -46,11 +48,29 @@ abstract class Translate_Abstract {
 
 
 	/**
+	 * Does this meta type support using object term taxonomy relationships?
+	 *
+	 * Really, only `post` is currently supported.
+	 *
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param string               $meta_type
+	 *
+	 * @return bool
+	 */
+	public function supports_taxonomy_relationships( string $meta_type ) : bool {
+		return 'post' === $meta_type;
+	}
+
+
+	/**
 	 * Get a value from the standard WP meta api or the options api.
 	 *
-	 * @param string|int $object_id
-	 * @param string     $key
-	 * @param string     $meta_type
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param string|int           $object_id
+	 * @param string               $key
+	 * @param string               $meta_type
 	 *
 	 * @return mixed
 	 */
@@ -76,10 +96,12 @@ abstract class Translate_Abstract {
 	/**
 	 * Update a value from the standard WP meta api or the options api.
 	 *
-	 * @param string|int $object_id
-	 * @param string     $key
-	 * @param mixed      $value
-	 * @param string     $meta_type
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param string|int           $object_id
+	 * @param string               $key
+	 * @param mixed                $value
+	 * @param string               $meta_type
 	 *
 	 * @return bool|int
 	 */
@@ -109,9 +131,11 @@ abstract class Translate_Abstract {
 	/**
 	 * Update a meta key from the standard WP meta api or the options api.
 	 *
-	 * @param string|int $object_id
-	 * @param string     $key
-	 * @param string     $meta_type
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param string|int           $object_id
+	 * @param string               $key
+	 * @param string               $meta_type
 	 *
 	 * @return void
 	 */
@@ -134,9 +158,11 @@ abstract class Translate_Abstract {
 	/**
 	 * Get the boolean result from a CMB2 checkbox
 	 *
-	 * @param int|string $object_id
-	 * @param string     $key
-	 * @param string     $meta_type
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param int|string           $object_id
+	 * @param string               $key
+	 * @param string               $meta_type
 	 *
 	 * @return bool
 	 */
@@ -153,10 +179,12 @@ abstract class Translate_Abstract {
 	 *
 	 * Any truthy value will be considered checked.
 	 *
-	 * @param int|string $object_id
-	 * @param string     $key
-	 * @param bool|int   $checked
-	 * @param string     $meta_type
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param int|string           $object_id
+	 * @param string               $key
+	 * @param bool|int             $checked
+	 * @param string               $meta_type
 	 *
 	 * @return void
 	 */
@@ -173,9 +201,11 @@ abstract class Translate_Abstract {
 	 * CMB2 saves file fields as 2 separate meta keys.
 	 * This returns an array of both.
 	 *
-	 * @param int|string $object_id
-	 * @param string     $key
-	 * @param string     $meta_type
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param int|string           $object_id
+	 * @param string               $key
+	 * @param string               $meta_type
 	 *
 	 * @return ?array
 	 */
@@ -201,10 +231,12 @@ abstract class Translate_Abstract {
 	 * CMB2 saves file fields as 2 separate meta keys
 	 * This saves both meta keys.
 	 *
-	 * @param int|string $object_id
-	 * @param string     $key
-	 * @param int        $attachment_id
-	 * @param string     $meta_type
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param int|string           $object_id
+	 * @param string               $key
+	 * @param int                  $attachment_id
+	 * @param string               $meta_type
 	 *
 	 * @return void
 	 */
@@ -222,9 +254,11 @@ abstract class Translate_Abstract {
 	 * CMB2 saves file fields as 2 separate meta keys.
 	 * This deletes both.
 	 *
-	 * @param int|string $object_id
-	 * @param string     $key
-	 * @param string     $meta_type
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param int|string           $object_id
+	 * @param string               $key
+	 * @param string               $meta_type
 	 *
 	 * @return void
 	 */
@@ -243,9 +277,11 @@ abstract class Translate_Abstract {
 	 * This return the array with all the group's fields translated to
 	 * appropriate data types.
 	 *
-	 * @param int|string $object_id
-	 * @param string     $group_id
-	 * @param string     $meta_type
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param int|string           $object_id
+	 * @param string               $group_id
+	 * @param string               $meta_type
 	 *
 	 * @return array
 	 */
@@ -270,10 +306,12 @@ abstract class Translate_Abstract {
 	/**
 	 * Update all the field values within a group.
 	 *
-	 * @param int|string $object_id
-	 * @param string     $group_id
-	 * @param array      $values
-	 * @param string     $meta_type
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param int|string           $object_id
+	 * @param string               $group_id
+	 * @param array                $values
+	 * @param string               $meta_type
 	 */
 	protected function update_group_field_values( $object_id, string $group_id, array $values, string $meta_type ) : void {
 		foreach ( $values as $_row => $_values ) {
@@ -292,10 +330,12 @@ abstract class Translate_Abstract {
 	/**
 	 * Update a single field within a group.
 	 *
-	 * @param string|int $object_id
-	 * @param string     $key
-	 * @param mixed      $value
-	 * @param string     $meta_type
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param string|int           $object_id
+	 * @param string               $key
+	 * @param mixed                $value
+	 * @param string               $meta_type
 	 *
 	 * @internal
 	 *
@@ -348,7 +388,7 @@ abstract class Translate_Abstract {
 	 */
 	protected function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : array {
 		$taxonomy = $this->get_field( $field_id )->taxonomy;
-		if ( 'post' !== $meta_type ) {
+		if ( ! $this->supports_taxonomy_relationships( $meta_type ) ) {
 			return $this->maybe_use_main_blog( $field_id, function() use ( $object_id, $field_id, $taxonomy, $meta_type ) {
 				return \array_filter( \array_map( function( $term_id ) use ( $taxonomy ) {
 					// Legacy options used term slug.
@@ -368,10 +408,12 @@ abstract class Translate_Abstract {
 	 * CMB2 saves taxonomy fields as terms or meta value for options.
 	 * We do the same here.
 	 *
-	 * @param string|int $object_id
-	 * @param string     $key
-	 * @param int[]      $terms - Term ids.
-	 * @param string     $meta_type
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param string|int           $object_id
+	 * @param string               $key
+	 * @param int[]                $terms - Term ids.
+	 * @param string               $meta_type
 	 *
 	 * @return void
 	 */
@@ -382,21 +424,20 @@ abstract class Translate_Abstract {
 				$terms = $field->get_cmb2_field()->sanitization_cb( $terms );
 			}
 
-			if ( 'post' !== $meta_type ) {
-				$this->update_meta_value( $object_id, $key, \array_map( function( $term_id ) use ( $field ) {
-					// Legacy options used term slug.
-					if ( ! is_numeric( $term_id ) ) {
-						return get_term_by( 'slug', $term_id, $field->taxonomy )->term_id;
-					}
-
-					return $term_id;
-				}, $terms ), $meta_type );
-			} else {
+			if ( $this->supports_taxonomy_relationships( $meta_type ) ) {
 				$terms = \array_map( function( $term ) {
 					// Term ids are perceived as term slug when strings.
 					return is_numeric( $term ) ? (int) $term : $term;
 				}, $terms );
 				wp_set_object_terms( $object_id, $terms, $field->taxonomy );
+			} else {
+				$this->update_meta_value( $object_id, $key, \array_map( function( $term_id ) use ( $field ) {
+					// Legacy options used term slug.
+					if ( ! is_numeric( $term_id ) ) {
+						return get_term_by( 'slug', $term_id, $field->taxonomy )->term_id;
+					}
+					return $term_id;
+				}, $terms ), $meta_type );
 			}
 		}
 	}
@@ -404,22 +445,24 @@ abstract class Translate_Abstract {
 
 	/**
 	 * CMB2 saves taxonomy fields as terms or meta value for options.
-	 * We delete either this meta value or these assigned terms.
+	 * We delete either this meta value, or these assigned terms.
 	 *
 	 * Does not delete the actual terms, just the assignment of them.
 	 *
-	 * @param string|int $object_id
-	 * @param string     $field_id
-	 * @param string     $meta_type
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param string|int           $object_id
+	 * @param string               $field_id
+	 * @param string               $meta_type
 	 *
 	 * @return void
 	 */
 	protected function delete_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : void {
-		if ( 'post' !== $meta_type ) {
-			$this->delete_meta_value( $object_id, $field_id, $meta_type );
-		} else {
+		if ( $this->supports_taxonomy_relationships( $meta_type ) ) {
 			$taxonomy = $this->get_field( $field_id )->taxonomy;
 			wp_delete_object_term_relationships( $object_id, $taxonomy );
+		} else {
+			$this->delete_meta_value( $object_id, $field_id, $meta_type );
 		}
 	}
 
@@ -428,9 +471,11 @@ abstract class Translate_Abstract {
 	 * Retrieve a single term from a taxonomy field that allows
 	 * selecting only a single term.
 	 *
-	 * @param string|int $object_id
-	 * @param string     $field_id
-	 * @param string     $meta_type
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param string|int           $object_id
+	 * @param string               $field_id
+	 * @param string               $meta_type
 	 *
 	 * @return \WP_Term|false
 	 */
