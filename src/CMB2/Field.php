@@ -1352,6 +1352,10 @@ class Field {
 	 * 2. An empty meta value is passed when CMB2 is saving a post.
 	 * 3. A meta key is deleted using the WP meta API.
 	 *
+	 * @note `change_cb` will also receive pretty much all the calls
+	 *       that `delete_cb` does, so you'll only want to use `delete_cb`
+	 *      if you want to subscribe to "delete" only calls.
+	 *
 	 * @phpstan-param DELETE_CB $callback
 	 *
 	 * @param callable          $callback
@@ -1373,6 +1377,9 @@ class Field {
 	 * 2. A meta field is updated when CMB2 is saving a post.
 	 * 3. A meta field is updated using the WP meta API.
 	 * 4. A value, which previously existed is deleted.
+	 *
+	 * @note This callback will also receive pretty much all the calls
+	 *       that `delete_cb` does, so you likely won't need to use both.
 	 *
 	 * @phpstan-param CHANGE_CB $callback
 	 *
