@@ -3,6 +3,7 @@
 namespace Lipe\Lib\Comment;
 
 use Lipe\Lib\Meta\Mutator_Trait;
+use Lipe\Lib\Meta\Repo;
 
 /**
  * @property string $comment_agent
@@ -76,7 +77,7 @@ trait Comment_Trait {
 
 
 	public function get_meta_type() : string {
-		return 'comment';
+		return Repo::META_COMMENT;
 	}
 
 

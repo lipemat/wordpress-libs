@@ -3,7 +3,8 @@
 namespace Lipe\Lib\CMB2;
 
 /**
- * CMB2 taxonomy meta box fluent interface.
+ * A fluent interface for a CMB2 taxonomy meta box.
+ *
  */
 class Term_Box extends Box {
 
@@ -23,16 +24,16 @@ class Term_Box extends Box {
 
 	/**
 	 * If object_types is set to 'term',
-	 * it is required to provide a the taxonomies property,
+	 * it is required to provide a taxonomies property,
 	 * which should be an array of Taxonomies.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#taxonomies
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#taxonomies
 	 *
 	 * @example array( 'category', 'post_tag' ),
 	 *
 	 * @var string[]
 	 */
-	public $taxonomies;
+	public array $taxonomies;
 
 
 	public function __construct( $id, array $taxonomies, $title ) {

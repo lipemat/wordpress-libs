@@ -3,6 +3,7 @@
 namespace Lipe\Lib\User;
 
 use Lipe\Lib\Meta\Mutator_Trait;
+use Lipe\Lib\Meta\Repo;
 
 /**
  * @property string   $nickname
@@ -94,7 +95,7 @@ trait User_Trait {
 
 
 	public function get_meta_type() : string {
-		return 'user';
+		return Repo::META_USER;
 	}
 
 

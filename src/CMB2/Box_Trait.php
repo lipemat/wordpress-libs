@@ -281,6 +281,9 @@ trait Box_Trait {
 	/**
 	 * Get the type of object this box is registered to.
 	 *
+	 * `$this->objects_types` may contain post type slugs, which
+	 * will return `post`.
+	 *
 	 * @phpstan-return 'comment'|'options-page'|'user'|'term'|'post'
 	 *
 	 * @return string

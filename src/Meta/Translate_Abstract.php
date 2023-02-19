@@ -79,7 +79,7 @@ abstract class Translate_Abstract {
 		if ( null !== $field && null !== $field->group ) {
 			$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
 			$value = $group[ $this->group_row ][ $key ] ?? null;
-		} elseif ( 'option' === $meta_type ) {
+		} elseif ( Repo::META_OPTION === $meta_type ) {
 			$value = cmb2_options( $object_id )->get( $key, null );
 		} else {
 			$value = get_metadata( $meta_type, $object_id, $key, true );
@@ -120,7 +120,7 @@ abstract class Translate_Abstract {
 			}
 		}
 
-		if ( 'option' === $meta_type ) {
+		if ( Repo::META_OPTION === $meta_type ) {
 			return cmb2_options( $object_id )->update( $key, $value, true );
 		}
 
@@ -147,7 +147,7 @@ abstract class Translate_Abstract {
 			$this->update_meta_value( $object_id, $key, $group, $meta_type );
 		}
 
-		if ( 'option' === $meta_type ) {
+		if ( Repo::META_OPTION === $meta_type ) {
 			cmb2_options( $object_id )->remove( $key, true );
 		} else {
 			delete_metadata( $meta_type, $object_id, $key );

@@ -23,11 +23,12 @@ class Repo extends Translate_Abstract {
 	public const TYPE_TAXONOMY          = 'taxonomy';
 	public const TYPE_TAXONOMY_SINGULAR = 'taxonomy-singular';
 
+	public const META_BLOG    = 'blog';
 	public const META_COMMENT = 'comment';
-	public const META_USER    = 'user';
-	public const META_TERM    = 'term';
-	public const META_POST    = 'post';
 	public const META_OPTION  = 'option';
+	public const META_POST    = 'post';
+	public const META_TERM    = 'term';
+	public const META_USER    = 'user';
 
 
 	/**

@@ -1353,8 +1353,13 @@ class Field {
 	 * 3. A meta key is deleted using the WP meta API.
 	 *
 	 * @note `change_cb` will also receive pretty much all the calls
-	 *       that `delete_cb` does, so you'll only want to use `delete_cb`
-	 *      if you want to subscribe to "delete" only calls.
+	 *       that `delete_cb` does, so you'll only want to use `delete_cb` if you want to subscribe to "delete" only calls.
+	 *
+	 * Receives arguments:
+	 * 0. object id.
+	 * 1. meta key.
+	 * 2. previous value.
+	 * 3. meta key.
 	 *
 	 * @phpstan-param DELETE_CB $callback
 	 *
@@ -1380,6 +1385,13 @@ class Field {
 	 *
 	 * @note This callback will also receive pretty much all the calls
 	 *       that `delete_cb` does, so you likely won't need to use both.
+	 *
+	 * Receives arguments:
+	 * 0. object id.
+	 * 1. new value.
+	 * 2. meta key.
+	 * 3. previous value.
+	 * 4. meta key.
 	 *
 	 * @phpstan-param CHANGE_CB $callback
 	 *

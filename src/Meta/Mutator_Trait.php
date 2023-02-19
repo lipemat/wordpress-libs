@@ -28,9 +28,11 @@ trait Mutator_Trait {
 
 
 	/**
-	 * Get the type of meta that is stored for this object.
+	 * Get the type of meta used with this object.
 	 *
-	 * @example 'post','user','comment','term', 'blog', <custom>
+	 * @phpstan-return Repo::META_*
+	 *
+	 * @example 'post','user','comment','term', 'blog', 'option'
 	 *
 	 * @return string
 	 */

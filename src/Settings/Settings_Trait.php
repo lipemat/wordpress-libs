@@ -3,6 +3,7 @@
 namespace Lipe\Lib\Settings;
 
 use Lipe\Lib\Meta\Mutator_Trait;
+use Lipe\Lib\Meta\Repo;
 
 /**
  * CMB2 registered settings pages.
@@ -18,7 +19,7 @@ trait Settings_Trait {
 
 
 	public function get_meta_type() : string {
-		return 'option';
+		return Repo::META_OPTION;
 	}
 
 

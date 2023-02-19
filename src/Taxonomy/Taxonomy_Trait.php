@@ -3,6 +3,7 @@
 namespace Lipe\Lib\Taxonomy;
 
 use Lipe\Lib\Meta\Mutator_Trait;
+use Lipe\Lib\Meta\Repo;
 
 /**
  * @property int    $count
@@ -63,7 +64,7 @@ trait Taxonomy_Trait {
 
 
 	public function get_meta_type() : string {
-		return 'term';
+		return Repo::META_TERM;
 	}
 
 

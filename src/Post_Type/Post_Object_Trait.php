@@ -3,6 +3,7 @@
 namespace Lipe\Lib\Post_Type;
 
 use Lipe\Lib\Meta\Mutator_Trait;
+use Lipe\Lib\Meta\Repo;
 
 /**
  * @note `@mixin` does not work in PHPStan with Traits.
@@ -77,7 +78,7 @@ trait Post_Object_Trait {
 
 
 	public function get_meta_type() : string {
-		return 'post';
+		return Repo::META_POST;
 	}
 
 	/********* static *******************/

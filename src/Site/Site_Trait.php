@@ -3,6 +3,7 @@
 namespace Lipe\Lib\Site;
 
 use Lipe\Lib\Meta\Mutator_Trait;
+use Lipe\Lib\Meta\Repo;
 
 /**
  * Interact with a single site on a multisite install.
@@ -80,7 +81,7 @@ trait Site_Trait {
 	 * @return string
 	 */
 	public function get_meta_type() : string {
-		return 'blog';
+		return Repo::META_BLOG;
 	}
 
 
