@@ -49,20 +49,25 @@ class Event_Callbacks {
 	protected string $key;
 
 	/**
-	 * Meta type this field is registered on.
+	 * Box type this field is registered on.
+	 *
+	 * Usually the box type corresponds to the meta type use for
+	 * WP hooks but its not an exact match as box types are limited.
 	 *
 	 * @see Box_Trait::get_object_type
 	 *
-	 * @phpstan-var Repo::META_*
+	 * @phpstan-var Box::TYPE_*
 	 *
 	 * @var string
 	 */
-	protected string $meta_type;
+	protected string $box_type;
 
 	/**
 	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
 	 *
 	 * @see Box_Trait::$object_types
+	 *
+	 * @phpstan-var array<Box::TYPE_*|string>
 	 *
 	 * @var array
 	 */
@@ -87,7 +92,7 @@ class Event_Callbacks {
 	public function __construct( Field $field, string $cb_type ) {
 		$this->field = $field;
 		$this->box = $this->field->get_box();
-		$this->meta_type = $this->box->get_object_type();
+		$this->box_type = $this->box->get_object_type();
 		$this->key = $field->get_id();
 		$this->object_types = $this->box->get_object_types();
 
@@ -106,7 +111,7 @@ class Event_Callbacks {
 	 */
 	protected function register_hooks( string $cb_type ) : void {
 		// Taxonomy fields added to a `post` object.
-		if ( \in_array( $this->field->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) && Repo::in()->supports_taxonomy_relationships( $this->meta_type ) ) {
+		if ( \in_array( $this->field->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) && Repo::in()->supports_taxonomy_relationships( $this->box_type ) ) {
 			$this->track_previous_taxonomy_value();
 			if ( static::TYPE_CHANGE === $cb_type ) {
 				$this->taxonomy_change_hooks();
@@ -268,13 +273,13 @@ class Event_Callbacks {
 	 * @return void
 	 */
 	public function meta_change_hooks() : void {
-		add_action( "added_{$this->meta_type}_meta", function( ...$args ) {
+		add_action( "added_{$this->box_type}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key, $value ] = $args;
 			if ( $this->key === $key ) {
 				$this->fire_change_callback( $object_id, $value );
 			}
 		}, 10, 4 );
-		add_action( "updated_{$this->meta_type}_meta", function( ...$args ) {
+		add_action( "updated_{$this->box_type}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key, $value ] = $args;
 			if ( $this->key === $key && $value !== $this->previous_value ) {
 				$this->fire_change_callback( $object_id, $value );
@@ -282,7 +287,7 @@ class Event_Callbacks {
 		}, 10, 4 );
 
 		// If the value previously existed and is now deleted, it has changed.
-		add_action( "deleted_{$this->meta_type}_meta", function( ...$args ) {
+		add_action( "deleted_{$this->box_type}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key, $value ] = $args;
 			if ( $this->key === $key && null !== $this->previous_value ) {
 				$this->fire_change_callback( $object_id, $value );
@@ -297,7 +302,7 @@ class Event_Callbacks {
 	 * @return void
 	 */
 	protected function meta_delete_hooks() : void {
-		add_action( "deleted_{$this->meta_type}_meta", function( ...$args ) {
+		add_action( "deleted_{$this->box_type}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key, $value ] = $args;
 			if ( $this->key === $key && null !== $this->previous_value ) {
 				$this->fire_delete_callback( $object_id );
@@ -314,16 +319,16 @@ class Event_Callbacks {
 	 * @return void
 	 */
 	protected function track_previous_meta_value() : void {
-		add_action( "update_{$this->meta_type}_meta", function( ...$args ) {
+		add_action( "update_{$this->box_type}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key ] = $args;
 			if ( $this->key === $key ) {
-				$this->previous_value = get_metadata_raw( $this->meta_type, $object_id, $this->key, true );
+				$this->previous_value = get_metadata_raw( $this->box_type, $object_id, $this->key, true );
 			}
 		}, 10, 3 );
-		add_action( "delete_{$this->meta_type}_meta", function( ...$args ) {
+		add_action( "delete_{$this->box_type}_meta", function( ...$args ) {
 			[ $meta_ids, $object_id, $key ] = $args;
 			if ( $this->key === $key ) {
-				$this->previous_value = get_metadata_raw( $this->meta_type, $object_id, $this->key, true );
+				$this->previous_value = get_metadata_raw( $this->box_type, $object_id, $this->key, true );
 			}
 		}, 10, 3 );
 	}
@@ -344,7 +349,7 @@ class Event_Callbacks {
 			$value,
 			$this->key,
 			$this->previous_value,
-			$this->meta_type
+			$this->box_type
 		);
 	}
 
@@ -362,7 +367,7 @@ class Event_Callbacks {
 			$object_id,
 			$this->key,
 			$this->previous_value,
-			$this->meta_type
+			$this->box_type
 		);
 	}
 

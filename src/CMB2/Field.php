@@ -13,8 +13,8 @@ use Lipe\Lib\Util\Arrays;
 /**
  * A fluent interface for a CMB2 field.
  *
- * @phpstan-type DELETE_CB callable( int $object_id, string $key, mixed $previous, Repo::META_* $type ): void
- * @phpstan-type CHANGE_CB callable( int $object_id, mixed $value, string $key, mixed $previous, Repo::META_* $type):void
+ * @phpstan-type DELETE_CB callable( int $object_id, string $key, mixed $previous, Box::TYPE_* $type ): void
+ * @phpstan-type CHANGE_CB callable( int $object_id, mixed $value, string $key, mixed $previous, Box::TYPE_* $type):void
  *
  */
 class Field {

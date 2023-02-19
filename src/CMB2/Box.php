@@ -14,6 +14,12 @@ use Lipe\Lib\Meta\Repo;
  *
  */
 class Box {
+	public const TYPE_COMMENT = 'comment';
+	public const TYPE_OPTIONS = 'options-page';
+	public const TYPE_USER    = 'user';
+	public const TYPE_TERM    = 'term';
+	public const TYPE_POST    = 'post';
+
 	use Box_Trait;
 
 	/**

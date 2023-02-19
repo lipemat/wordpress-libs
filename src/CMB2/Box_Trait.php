@@ -23,6 +23,8 @@ trait Box_Trait {
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#object_types
 	 * @example [ 'page', 'post' ]
 	 *
+	 * @phpstan-var array<Box::TYPE_*|string>
+	 *
 	 * @var array
 	 */
 	protected array $object_types = [];
@@ -281,10 +283,10 @@ trait Box_Trait {
 	/**
 	 * Get the type of object this box is registered to.
 	 *
-	 * `$this->objects_types` may contain post type slugs, which
-	 * will return `post`.
+	 * @note `$this->objects_types` may contain [post type slugs] which
+	 *        will all map to `post`.
 	 *
-	 * @phpstan-return 'comment'|'options-page'|'user'|'term'|'post'
+	 * @phpstan-return Box::TYPE_*
 	 *
 	 * @return string
 	 */
@@ -304,6 +306,8 @@ trait Box_Trait {
 	/**
 	 * Get the full list of object types this box
 	 * is registered to.
+	 *
+	 * @phpstan-return array<Box::TYPE_*|string>
 	 *
 	 * @return array
 	 */
