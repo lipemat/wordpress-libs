@@ -64,11 +64,11 @@ class Resources {
 	public function get_revision() : ?string {
 		return $this->once( function() {
 			$file = apply_filters( 'lipe/lib/theme/resources/revision-path', $this->get_site_root() . '.revision' );
-			if ( ! file_exists( $file ) ) {
+			if ( ! \is_readable( $file ) ) {
 				// Not available in root, so we try the wp-content directory.
 				$file = trailingslashit( WP_CONTENT_DIR ) . '.revision';
 			}
-			if ( file_exists( $file ) ) {
+			if ( \is_readable( $file ) ) {
 				$version = \file_get_contents( $file ); //phpcs:ignore
 			}
 			if ( empty( $version ) ) {
@@ -109,7 +109,7 @@ class Resources {
 			return null;
 		}
 
-		if ( \file_exists( $this->get_site_root() . $path ) ) {
+		if ( \is_readable( $this->get_site_root() . $path ) ) {
 			return \md5_file( $this->get_site_root() . $path ) ?: null;
 		}
 		return null;
@@ -152,7 +152,7 @@ class Resources {
 			return null;
 		}
 
-		if ( \file_exists( $this->get_site_root() . $path ) ) {
+		if ( \is_readable( $this->get_site_root() . $path ) ) {
 			return \filemtime( $this->get_site_root() . $path ) ?: null;
 		}
 		return null;

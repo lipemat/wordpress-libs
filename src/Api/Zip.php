@@ -183,7 +183,7 @@ class Zip {
 	 * @return void
 	 */
 	private function serve_existing_file() : void {
-		if ( file_exists( $this->zip_path ) ) {
+		if ( \is_readable( $this->zip_path ) ) {
 			header( 'Pragma: public' );
 			header( 'Expires: 0' );
 			header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
