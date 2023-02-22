@@ -57,9 +57,9 @@ class Custom_Post_Type {
 	 *     1: string,
 	 * }
 	 *
-	 * @var array<int,string>
+	 * @var array<int,string>|string
 	 */
-	public array $capability_type = [ 'post', 'posts' ];
+	public $capability_type = [ 'post', 'posts' ];
 
 	/**
 	 * Array of capabilities for this post type.
@@ -172,7 +172,7 @@ class Custom_Post_Type {
 	 *
 	 * @var bool
 	 */
-	public bool $map_meta_cap = false;
+	public bool $map_meta_cap = true;
 
 	/**
 	 * Label used in the menu.
