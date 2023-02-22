@@ -52,14 +52,9 @@ class Custom_Post_Type {
 	 * as a base to build the capabilities.
 	 * - e.g. array('story', 'stories').
 	 *
-	 * @phpstan-var array{
-	 *     0: string,
-	 *     1: string,
-	 * }
-	 *
 	 * @var array<int,string>|string
 	 */
-	public $capability_type = [ 'post', 'posts' ];
+	public $capability_type = 'post';
 
 	/**
 	 * Array of capabilities for this post type.
@@ -170,9 +165,9 @@ class Custom_Post_Type {
 	/**
 	 * Whether to use the internal default meta capability handling.
 	 *
-	 * @var bool
+	 * @var ?bool
 	 */
-	public bool $map_meta_cap = true;
+	public ?bool $map_meta_cap = null;
 
 	/**
 	 * Label used in the menu.
