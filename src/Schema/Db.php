@@ -1,5 +1,4 @@
 <?php
-declare( strict_types=1 );
 
 namespace Lipe\Lib\Schema;
 
@@ -124,7 +123,7 @@ abstract class Db {
 		global $wpdb;
 
 		if ( \is_array( $columns ) ) {
-			$columns = implode( ',', $columns );
+			$columns = \implode( ',', $columns );
 		}
 
 		$sql = $this->get_select_query( $columns, $id_or_wheres, $count, $order_by );
@@ -228,7 +227,7 @@ abstract class Db {
 	public function delete( $id_or_wheres ) {
 		global $wpdb;
 
-		if ( is_numeric( $id_or_wheres ) ) {
+		if ( \is_numeric( $id_or_wheres ) ) {
 			$id_or_wheres = [ static::ID_FIELD => $id_or_wheres ];
 		}
 
@@ -251,7 +250,7 @@ abstract class Db {
 	public function update( $id_or_wheres, array $columns ) {
 		global $wpdb;
 
-		if ( is_numeric( $id_or_wheres ) ) {
+		if ( \is_numeric( $id_or_wheres ) ) {
 			$id_or_wheres = [ static::ID_FIELD => $id_or_wheres ];
 		}
 
@@ -329,7 +328,7 @@ abstract class Db {
 					continue;
 				}
 
-				if ( false !== \strpos( $value, '%' ) ) {
+				if ( false !== \strpos( (string) $value, '%' ) ) {
 					$wheres[ $column ] = "`$column` LIKE " . \array_shift( $where_formats );
 				} else {
 					$wheres[ $column ] = "`$column` = " . \array_shift( $where_formats );
