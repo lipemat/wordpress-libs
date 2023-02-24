@@ -54,7 +54,7 @@ trait Version {
 	 * @internal
 	 *
 	 */
-	private function update_version() : void {
+	protected function update_version() : void {
 		$versions = $this->get_versions();
 		$versions[ $this->get_version_identifier() ] = $this->version;
 
@@ -79,7 +79,7 @@ trait Version {
 	 *
 	 * @return array
 	 */
-	private function get_versions() : array {
+	protected function get_versions() : array {
 		return get_option( $this->option, [] );
 	}
 
@@ -91,7 +91,7 @@ trait Version {
 	 *
 	 * @return string
 	 */
-	private function get_version_identifier() : string {
+	protected function get_version_identifier() : string {
 		if ( ( new \ReflectionClass( $this ) )->isAnonymous() ) {
 			throw new \BadMethodCallException( __( 'You may not use the Version Trait with anonymous classes, you will have to implement what you need within your anonymous class.', 'lipe' ) );
 		}

@@ -82,7 +82,7 @@ class Class_Names implements \ArrayAccess {
 	 *
 	 * @return int|false
 	 */
-	private function get_classes_key( string $css_class ) {
+	protected function get_classes_key( string $css_class ) {
 		return \array_search( $css_class, $this->classes, true );
 	}
 

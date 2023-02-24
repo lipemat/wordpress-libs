@@ -214,7 +214,7 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	private function fill_class_vars() : void {
+	protected function fill_class_vars() : void {
 		if ( empty( $this->title ) ) {
 			$this->title = __( 'Settings', 'lipe' );
 		}
@@ -538,7 +538,7 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	private function tabbed_form() : void {
+	protected function tabbed_form() : void {
 		reset( $this->settings );
 
 		//phpcs:ignore

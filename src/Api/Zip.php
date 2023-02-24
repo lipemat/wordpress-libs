@@ -32,22 +32,22 @@ class Zip {
 	/**
 	 * @var string
 	 */
-	private $file_name;
+	protected $file_name;
 
 	/**
 	 * @var string
 	 */
-	private $file_path;
+	protected $file_path;
 
 	/**
 	 * @var string
 	 */
-	private $zip_name;
+	protected $zip_name;
 
 	/**
 	 * @var string
 	 */
-	private $zip_path;
+	protected $zip_path;
 
 
 	protected function hook() : void {
@@ -162,7 +162,7 @@ class Zip {
 	 *
 	 * @return void
 	 */
-	private function validate_request() : void {
+	protected function validate_request() : void {
 		//phpcs:disable WordPress.Security.NonceVerification.Missing
 		if ( empty( $_POST[ static::KEY ] ) || ( static::get_key() !== $_POST[ static::KEY ] ) ) {
 			die( 'Incorrect key sent.' );
@@ -182,7 +182,7 @@ class Zip {
 	 *
 	 * @return void
 	 */
-	private function serve_existing_file() : void {
+	protected function serve_existing_file() : void {
 		if ( \is_readable( $this->zip_path ) ) {
 			header( 'Pragma: public' );
 			header( 'Expires: 0' );

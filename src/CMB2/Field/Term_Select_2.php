@@ -110,7 +110,7 @@ class Term_Select_2 {
 	 *
 	 * @return void
 	 */
-	private function js_inline( CMB2_Field $field, CMB2_Types $field_type_object ) : void {
+	protected function js_inline( CMB2_Field $field, CMB2_Types $field_type_object ) : void {
 		static $rendered = [];
 		if ( isset( $rendered[ (string) $field->id() ] ) ) {
 			return;

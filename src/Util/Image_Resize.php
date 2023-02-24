@@ -27,7 +27,7 @@ class Image_Resize {
 	 *
 	 * @var array
 	 */
-	private array $image_sizes = [];
+	protected array $image_sizes = [];
 
 
 	public function hook() : void {

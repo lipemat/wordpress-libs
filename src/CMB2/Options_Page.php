@@ -217,17 +217,16 @@ class Options_Page extends Box {
 		$this->save_button = $text;
 		if ( null === $text ) {
 			add_action( "cmb2_before_options-page_form_{$this->id}", function () {
-				// Hide so we never see it.
-				// Remove so we can't submit the form via enter.
+				// Hide, so we never see it with FOUC. Remove, so we can't submit the form via enter.
 				?>
 				<style>
-					[id="<?= esc_js( $this->id ); ?>"] .submit {
+					[id="<?= esc_js( $this->id ) ?>"] .submit {
 						display: none;
 					}
 				</style>
 				<script>
-					jQuery( function( $ ) {
-						$( '[id="<?= esc_js( $this->id ); ?>"] .submit' ).remove();
+					jQuery( function ( $ ) {
+						$( '[id="<?= esc_js( $this->id ) ?>"] .submit' ).remove();
 					} );
 				</script>
 				<?php
@@ -244,7 +243,7 @@ class Options_Page extends Box {
 	 * @return bool
 	 */
 	public function is_network() : bool {
-		return $this->admin_menu_hook === 'network_admin_menu';
+		return 'network_admin_menu' === $this->admin_menu_hook;
 	}
 
 

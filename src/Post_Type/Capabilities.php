@@ -15,7 +15,7 @@ class Capabilities {
 	 *
 	 * @var Custom_Post_Type_Extended|Custom_Post_Type
 	 */
-	private $post_type;
+	protected $post_type;
 
 
 	public function __construct( Custom_Post_Type $post_type ) {
