@@ -38,18 +38,21 @@ class DbTest extends \WP_UnitTestCase {
 	 */
 	public function test_get_paginated( $columns, $expected, $multiple ) : void {
 		global $wpdb;
-		$results = $this->mock_db()->get_paginated( $columns, 5, 10 );
+		$results = $this->mock_db()->get_paginated( $columns, 3, 10, [
+			// Arbitrary where to assure the WHERE is working.
+			'option_name' => '%c%',
+		] );
 		$this->assertCount( 10, $results['items'] );
 		if ( $multiple ) {
 			if ( \is_array( $columns ) ) {
 				$columns = implode( ',', $columns );
 			}
-			$this->assertEquals( $wpdb->get_row( "SELECT {$columns} from {$wpdb->options} LIMIT 40, 1" ), $results['items'][0] );
+			$this->assertEquals( $wpdb->get_row( "SELECT {$columns} from {$wpdb->options} WHERE `option_name` LIKE '%c%' LIMIT 20, 1" ), $results['items'][0] );
 		} else {
-			$this->assertEquals( $wpdb->get_var( "SELECT {$columns} from {$wpdb->options} LIMIT 40, 1" ), $results['items'][0] );
+			$this->assertEquals( $wpdb->get_var( "SELECT {$columns} from {$wpdb->options} WHERE `option_name` LIKE '%c%' LIMIT 20, 1" ), $results['items'][0] );
 		}
 
-		array_walk( $results['items'], function ( $item ) use ( $expected, $multiple ) {
+		\array_walk( $results['items'], function( $item ) use ( $expected, $multiple ) {
 			if ( $multiple ) {
 				foreach ( $expected as $column ) {
 					$this->assertObjectHasAttribute( $column, $item );
@@ -60,7 +63,7 @@ class DbTest extends \WP_UnitTestCase {
 			}
 		} );
 
-		$raw_count = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->options}" );
+		$raw_count = (int) $wpdb->get_var( "SELECT count(*) FROM {$wpdb->options} WHERE `option_name` LIKE '%c%'" );
 		$this->assertEquals( $raw_count, $results['total'] );
 		$this->assertEquals( ceil( $raw_count / 10 ), $results['total_pages'] );
 	}

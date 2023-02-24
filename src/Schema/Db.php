@@ -1,10 +1,11 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Schema;
 
 use Lipe\Lib\Traits\Version;
 
-//phpcs:disable WordPress.DB.DirectDatabaseQuery
+//phpcs:disable WordPress.DB -- This whole class is custom DB handler.
 
 /**
  * Interact with custom Database Tables
@@ -13,6 +14,8 @@ use Lipe\Lib\Traits\Version;
  * @const  NAME - Name of table without the prefix.
  * @const  ID_FIELD - Primary key field.
  * @const  COLUMNS - Table columns.
+ *
+ * @phpstan-type WHERE array<string,float|string|null>|int
  *
  */
 abstract class Db {
@@ -25,16 +28,16 @@ abstract class Db {
 	public const    NAME = __CLASS__;
 
 	/**
-	 * Primary key of the table. Typically auto increment.
+	 * Primary key of the table. Typically, auto increment.
 	 */
 	protected const ID_FIELD = __CLASS__;
 
 	/**
 	 * Database columns with corresponding data type.
-	 * Used to sanitize queries with any of the built in sprintf specifiers.
+	 * Used to sanitize queries with any of the built-in sprintf specifiers.
 	 *
 	 * @notice     May exclude the primary key from this list if it is auto increment.
-	 * @notice     Date should be added to this list even if default current timestamp.
+	 * @notice     Date should be added to this list even if using the current timestamp.
 	 *
 	 * @link       https://www.php.net/manual/en/function.sprintf.php
 	 *
@@ -58,13 +61,13 @@ abstract class Db {
 	public const DB_VERSION = 1;
 
 	/**
-	 * Holds the database name with prefix included.
+	 * Holds the database name with the prefix included.
 	 *
 	 * @internal
 	 *
 	 * @var string
 	 */
-	protected $table;
+	protected string $table;
 
 
 	/**
@@ -76,7 +79,7 @@ abstract class Db {
 		global $wpdb;
 		$this->table = $wpdb->prefix . static::NAME;
 
-		$this->run_for_version( [ $this, 'run_updates' ], static::DB_VERSION );
+		$this->run_for_version( [ $this, 'run_updates' ], (string) static::DB_VERSION );
 	}
 
 
@@ -96,6 +99,8 @@ abstract class Db {
 	 * Automatically maps the results to a single value or row if the
 	 * `$count` is set to 1.
 	 *
+	 * @phpstan-param WHERE        $id_or_wheres
+	 *
 	 * @param array<string>|string $columns      Array or CSV of columns we want to return.
 	 *                                           Pass '*' to return all columns.
 	 *
@@ -112,7 +117,7 @@ abstract class Db {
 	 *                                           Optionally pass `ASC` or `DESC` after the
 	 *                                           column to specify direction.
 	 *
-	 * @return array<string>|object|array<object>|string|void|null
+	 * @return null|object|array<object>|\stdClass|string|array<string>
 	 *
 	 */
 	public function get( $columns, $id_or_wheres = null, $count = null, string $order_by = null ) {
@@ -122,49 +127,7 @@ abstract class Db {
 			$columns = implode( ',', $columns );
 		}
 
-		if ( is_numeric( $id_or_wheres ) ) {
-			$id_or_wheres = [ static::ID_FIELD => $id_or_wheres ];
-			$count = 1;
-		}
-
-		$sql = "SELECT $columns FROM {$this->get_table()}";
-
-		if ( null !== $id_or_wheres ) {
-			$wheres = [];
-			$values = [];
-			$where_formats = $this->get_formats( $id_or_wheres );
-			foreach ( $id_or_wheres as $column => $value ) {
-				if ( null === $value ) {
-					continue;
-				}
-				if ( false !== strpos( $value, '%' ) ) {
-					$wheres[ $column ] = "`$column` LIKE " . array_shift( $where_formats );
-				} else {
-					$wheres[ $column ] = "`$column` = " . array_shift( $where_formats );
-				}
-				$values[] = $value;
-			}
-			// Allow filtering or adding of custom WHERE clauses.
-			[ $wheres, $values ] = apply_filters_ref_array( 'lipe/lib/schema/db/get/wheres', [
-				[ $wheres, $values ],
-				$id_or_wheres,
-				$columns,
-				$this,
-			] );
-			if ( ! empty( $wheres ) ) {
-				//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-				$where = ' WHERE ' . implode( ' AND ', $wheres );
-				$sql .= $wpdb->prepare( $where, $values );
-			}
-		}
-
-		if ( ! empty( $order_by ) ) {
-			$sql .= " ORDER BY $order_by";
-		}
-
-		if ( ! empty( $count ) ) {
-			$sql .= " LIMIT $count";
-		}
+		$sql = $this->get_select_query( $columns, $id_or_wheres, $count, $order_by );
 
 		if ( false !== \strpos( $columns, '*' ) || false !== \strpos( $columns, ',' ) ) {
 			if ( 1 === $count ) {
@@ -178,13 +141,12 @@ abstract class Db {
 		}
 
 		return $wpdb->get_col( $sql );
-		//phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 
 	}
 
 
 	/**
-	 * Get a row by it's id.
+	 * Get a row by its id.
 	 *
 	 * @param int $id - Primary key value.
 	 *
@@ -199,6 +161,8 @@ abstract class Db {
 	/**
 	 * Gets a paginated set of results with pagination information.
 	 *
+	 * @phpstan-param WHERE        $id_or_wheres
+	 *
 	 * @param array<string>|string $columns      Array or CSV of columns we want to return.
 	 *                                           Pass '*' to return all columns.
 	 * @param int                  $page         Page of paginated results to return.
@@ -210,7 +174,7 @@ abstract class Db {
 	 *                                           Optionally pass `ASC` or `DESC` after the
 	 *                                           column to specify direction.
 	 *
-	 * @return array{'total': int, 'total_pages': int, 'items': array<object|string>|object|string|void|null}
+	 * @return array{total: int, total_pages: int, items: array<object|string>|object|string|void|null}
 	 */
 	public function get_paginated( $columns, int $page, int $per_page, $id_or_wheres = null, string $order_by = null ) : array {
 		global $wpdb;
@@ -221,19 +185,11 @@ abstract class Db {
 			$count = ( $page - 1 ) * $per_page . ', ' . $per_page;
 		}
 
-		// Add query modifier to count total rows.
-		if ( \is_array( $columns ) ) {
-			$columns = \array_values( $columns );
-			$columns[0] = "SQL_CALC_FOUND_ROWS {$columns[0]}";
-		} else {
-			$columns = "SQL_CALC_FOUND_ROWS {$columns}";
-		}
-
 		$results = $this->get( $columns, $id_or_wheres, $count, $order_by );
-		$total = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
+		$total = $wpdb->get_var( $this->get_select_query( 'COUNT(*)', $id_or_wheres ) );
 
 		return [
-			'total'       => $total,
+			'total'       => (int) $total,
 			'total_pages' => (int) ceil( $total / $per_page ),
 			'items'       => $results,
 		];
@@ -263,7 +219,9 @@ abstract class Db {
 	/**
 	 * Delete a row from the database
 	 *
-	 * @param int|array $id_or_wheres - row id or array or column => values to use as where.
+	 * @phpstan-param WHERE $id_or_wheres
+	 *
+	 * @param int|array     $id_or_wheres - row id or array or column => values to use as where.
 	 *
 	 * @return int|false
 	 */
@@ -281,9 +239,12 @@ abstract class Db {
 
 
 	/**
+	 * Update a row(s) in the database.
 	 *
-	 * @param int|array $id_or_wheres - row id or array or column => values to use as where.
-	 * @param array     $columns      - data to change.
+	 * @phpstan-param WHERE $id_or_wheres
+	 *
+	 * @param int|array     $id_or_wheres - row id or array or column => values to use as where.
+	 * @param array         $columns      - data to change.
 	 *
 	 * @return int|bool - number of rows updated or false on error.
 	 */
@@ -320,11 +281,83 @@ abstract class Db {
 
 		$columns = $this->sort_columns( $columns );
 
-		if ( $wpdb->replace( $this->get_table(), $columns, self::COLUMNS ) ) { //phpcs:ignore
+		if ( $wpdb->replace( $this->get_table(), $columns, static::COLUMNS ) ) {
 			return $wpdb->insert_id;
 		}
 
 		return false;
+	}
+
+
+	/**
+	 * Retrieve a `SELECT` query based on the provided criteria.
+	 *
+	 * @phpstan-param WHERE        $id_or_wheres
+	 *
+	 * @param array<string>|string $columns      Array or CSV of columns we want to return.
+	 *                                           Pass '*' to return all columns.page.
+	 * @param string|array         $id_or_wheres Row id or array or where column => value.
+	 *                                           Adding a % within the value will turn the
+	 *                                           query into a `LIKE` query.
+	 * @param string|int           $count
+	 * @param ?string              $order_by     An ORDERBY column and direction.
+	 *                                           Optionally pass `ASC` or `DESC`.
+	 *
+	 * @return string
+	 */
+	protected function get_select_query( $columns, $id_or_wheres = null, $count = null, string $order_by = null ) : string {
+		global $wpdb;
+
+		if ( \is_array( $columns ) ) {
+			$columns = \implode( ',', $columns );
+		}
+
+		if ( \is_numeric( $id_or_wheres ) ) {
+			$id_or_wheres = [ static::ID_FIELD => $id_or_wheres ];
+			$count = 1;
+		}
+
+		$sql = "SELECT $columns FROM {$this->get_table()}";
+
+		if ( null !== $id_or_wheres ) {
+			$wheres = [];
+			$values = [];
+			$where_formats = $this->get_formats( $id_or_wheres );
+			foreach ( $id_or_wheres as $column => $value ) {
+				if ( null === $value ) {
+					$wheres[ $column ] = "`$column` IS NULL";
+					continue;
+				}
+
+				if ( false !== \strpos( $value, '%' ) ) {
+					$wheres[ $column ] = "`$column` LIKE " . \array_shift( $where_formats );
+				} else {
+					$wheres[ $column ] = "`$column` = " . \array_shift( $where_formats );
+				}
+				$values[] = $value;
+			}
+			// Allow filtering or adding of custom WHERE clauses.
+			[ $wheres, $values ] = apply_filters_ref_array( 'lipe/lib/schema/db/get/wheres', [
+				[ $wheres, $values ],
+				$id_or_wheres,
+				$columns,
+				$this,
+			] );
+			if ( ! empty( $wheres ) ) {
+				$where = ' WHERE ' . \implode( ' AND ', $wheres );
+				$sql .= $wpdb->prepare( $where, $values );
+			}
+		}
+
+		if ( ! empty( $order_by ) ) {
+			$sql .= " ORDER BY $order_by";
+		}
+
+		if ( null !== $count ) {
+			$sql .= " LIMIT $count";
+		}
+
+		return $sql;
 	}
 
 
@@ -414,8 +447,7 @@ abstract class Db {
 	 *
 	 * dbDelta( $sql );
 	 *
-	 * @notice dbDelta expects the "CREATE" etc. to be capitalized
-	 *         and will not run if not capitalized.
+	 * @notice dbDelta expects the "CREATE" etc. to be capitalized.
 	 *
 	 * @return void
 	 */
