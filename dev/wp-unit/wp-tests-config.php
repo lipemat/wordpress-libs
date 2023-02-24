@@ -8,8 +8,6 @@ if ( file_exists( __DIR__ . '/local-config.php' ) ) {
 	include __DIR__ . '/default-local-config.php';
 }
 
-define( 'WP_PHP_BINARY', 'php' );
-
 if ( ! defined( 'DOMAIN_CURRENT_SITE' ) ) {
 	define( 'DOMAIN_CURRENT_SITE', getenv( 'HTTP_HOST' ) );
 }
