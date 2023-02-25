@@ -29,7 +29,7 @@ $config_defaults = [
 	'WP_TESTS_CONFIG_FILE_PATH' => __FILE__,
 	'WP_TESTS_DIR'              => $root,
 	'WP_TESTS_DOMAIN'           => getenv( 'HTTP_HOST' ),
-	'WP_TESTS_MULTISITE'        => getenv( 'WP_TESTS_MULTISITE' ),
+	'WP_TESTS_MULTISITE'        => true,
 	'WP_TESTS_TABLE_PREFIX'     => 'wplibs_',
 	'WP_UNIT_DIR'               => getenv( 'WP_UNIT_DIR' ),
 ];

@@ -8,7 +8,7 @@
 // Point to local memcache servers (Requirement of hosts like WPE).
 $GLOBALS['memcached_servers'] = [ '127.0.0.1:11211' ];
 
-define( 'DB_NAME', 'starting-point' );
+define( 'DB_NAME', 'wordpress' );
 define( 'DB_USER', 'wplibs' );
 define( 'DB_PASSWORD', 'hle1.qRA8W[BnR03' );
 define( 'DB_HOST', 'localhost' );

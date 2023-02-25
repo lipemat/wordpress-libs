@@ -2,15 +2,18 @@
   "name": "lipemat/wordpress-libs",
   "description": "A WordPress library for supporting a core plugin and theme",
   "license": "MIT",
-  "require": {
-    "php": ">=7.4.0"
-  },
   "authors": [
     {
       "name": "Mat Lipe",
       "email": "mat@onpointplugins.com"
     }
   ],
+  "require": {
+    "php": ">=7.4.0"
+  },
+  "require-dev": {
+    "lipemat/cmb2": "^2.10.1.4"
+  },
   "scripts": {
     "git-hooks": "dev/bin/git-hooks.sh"
   },
