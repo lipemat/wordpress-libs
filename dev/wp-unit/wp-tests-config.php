@@ -1,7 +1,5 @@
 <?php
 
-$root = dirname( __DIR__, 8 );
-
 if ( file_exists( __DIR__ . '/local-config.php' ) ) {
 	include __DIR__ . '/local-config.php';
 } else {
@@ -13,7 +11,10 @@ if ( ! defined( 'DOMAIN_CURRENT_SITE' ) ) {
 }
 
 $config_defaults = [
-	'ABSPATH'                   => $root . '/wp/',
+	// Must be first.
+	'WP_SITE_ROOT'              => getenv( 'WP_SITE_ROOT' ),
+
+	'ABSPATH'                   => WP_SITE_ROOT . '/wp/',
 	'BLOG_ID_CURRENT_SITE'      => 1,
 	'BOOTSTRAP'                 => getenv( 'BOOTSTRAP' ),
 	'DB_HOST'                   => 'localhost',
@@ -21,13 +22,12 @@ $config_defaults = [
 	'DB_PASSWORD'               => getenv( 'DB_PASSWORD' ),
 	'DB_USER'                   => getenv( 'DB_USER' ),
 	'WP_CONTENT_URL'            => 'http://' . DOMAIN_CURRENT_SITE . '/wp-content',
-	'WP_CONTENT_DIR'            => $root . DIRECTORY_SEPARATOR . 'wp-content',
+	'WP_CONTENT_DIR'            => WP_SITE_ROOT . 'wp-content',
 	'WP_DEBUG'                  => true,
 	'WP_ENVIRONMENT_TYPE'       => 'local',
 	'WP_PHP_BINARY'             => 'php',
-	'WP_SITE_ROOT'              => $root . DIRECTORY_SEPARATOR,
 	'WP_TESTS_CONFIG_FILE_PATH' => __FILE__,
-	'WP_TESTS_DIR'              => $root,
+	'WP_TESTS_DIR'              => WP_SITE_ROOT,
 	'WP_TESTS_DOMAIN'           => getenv( 'HTTP_HOST' ),
 	'WP_TESTS_MULTISITE'        => true,
 	'WP_TESTS_TABLE_PREFIX'     => 'wplibs_',
