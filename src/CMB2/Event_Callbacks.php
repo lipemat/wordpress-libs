@@ -224,10 +224,11 @@ class Event_Callbacks {
 	 */
 	public function options_change_hooks() : void {
 		$action = "update_option_{$this->box->get_id()}";
-		// Network level .
+		// Network level.
 		if ( \method_exists( $this->box, 'is_network' ) && $this->box->is_network() ) {
 			$action = "update_site_option_{$this->box->get_id()}";
 		}
+
 		add_action( $action, function( ...$args ) {
 			[ $old_value, $value ] = $args;
 			$this->previous_value = $old_value[ $this->key ] ?? null;
@@ -239,6 +240,19 @@ class Event_Callbacks {
 			// Value is changed.
 			if ( isset( $value[ $this->key ] ) && $value[ $this->key ] !== $this->previous_value ) {
 				$this->fire_change_callback( $this->box->get_id(), $value[ $this->key ] );
+			}
+		}, 10, 2 );
+
+		$action = "add_option_{$this->box->get_id()}";
+		// Network level.
+		if ( \method_exists( $this->box, 'is_network' ) && $this->box->is_network() ) {
+			$action = "add_site_option_{$this->box->get_id()}";
+		}
+
+		add_action( $action, function( $option, $value ) {
+			$this->previous_value = null;
+			if ( isset( $value[ $this->key ] ) ) {
+				$this->fire_change_callback( $this->box->get_id(), null );
 			}
 		}, 10, 2 );
 	}
