@@ -375,4 +375,24 @@ class Get_Users extends Args_Abstract implements Meta_Query_Interface {
 	public function orderby( string $orderby ) : void {
 		$this->orderby = $orderby;
 	}
+
+
+	/**
+	 * Merge the arguments in this class with an existing
+	 * `\WP_User_Query` class.
+	 *
+	 * For usage with `pre_get_users` and similar.
+	 *
+	 * @param \WP_User_Query $query - The existing query to merge with.
+	 *
+	 * @return void
+	 */
+	public function merge_query( \WP_User_Query $query ) : void {
+		foreach ( $query->query_vars as $arg => $value ) {
+			if ( '' !== $value && \property_exists( $this, $arg ) && ! isset( $this->{$arg} ) ) {
+				$this->{$arg} = $value;
+			}
+		}
+		$query->query_vars = \array_merge( $query->query_vars, $this->get_args() );
+	}
 }

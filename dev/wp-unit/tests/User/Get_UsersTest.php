@@ -42,4 +42,19 @@ class Get_UsersTest extends \WP_UnitTestCase {
 			],
 		], $args->get_args() );
 	}
+
+
+	public function test_merge_existing() : void {
+		$query = new \WP_User_Query( [
+			'order' => 'ASC',
+		] );
+		$previous = $query->query_vars;
+
+		$args = new Get_Users();
+		$args->orderby( 'include' );
+		$args->merge_query( $query );
+
+		$previous['orderby'] = 'include';
+		$this->assertEquals( $previous, $query->query_vars );
+	}
 }

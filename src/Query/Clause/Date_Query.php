@@ -340,7 +340,10 @@ class Date_Query extends Clause_Abstract {
 	 */
 	public function flatten( $args_class ) : void {
 		$this->extract_nested( $this->clauses, $this );
-		$args_class->date_query = $this->clauses;
+		if ( ! isset( $args_class->date_query ) ) {
+			$args_class->date_query = [];
+		}
+		$args_class->date_query = \array_merge( $args_class->date_query, $this->clauses );
 	}
 
 

@@ -331,7 +331,10 @@ class Meta_Query extends Clause_Abstract {
 	 */
 	public function flatten( $args_class ) : void {
 		$this->extract_nested( $this->clauses, $this );
-		$args_class->meta_query = $this->clauses;
+		if ( ! isset( $args_class->meta_query ) ) {
+			$args_class->meta_query = [];
+		}
+		$args_class->meta_query = \array_merge( $args_class->meta_query, $this->clauses );
 	}
 
 

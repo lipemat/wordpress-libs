@@ -29,6 +29,7 @@ class Date_QueryTest extends \WP_UnitTestCase {
 			],
 		], $args->get_args() );
 
+		$args = new Args();
 		$args->date_query()
 		     ->after_string( '2022-04-14' );
 		$this->assertEquals( [
@@ -144,5 +145,76 @@ class Date_QueryTest extends \WP_UnitTestCase {
 
 			],
 		], $args->get_args() );
+	}
+
+
+	public function test_existing_merge() : void {
+		$args = new Args( [
+			'date_query' => [
+				'relation' => 'AND',
+				[
+					'before'    => [
+						'year'  => '1200',
+						'month' => '01',
+						'day'   => '20',
+					],
+					'inclusive' => true,
+					'second'    => '20',
+				],
+			],
+		] );
+		$args->date_query()->month( 12 )
+		     ->relation( 'OR' );
+		$this->assertEquals( [
+			'date_query' => [
+				'relation' => 'OR',
+				[
+					'before'    => [
+						'year'  => '1200',
+						'month' => '01',
+						'day'   => '20',
+					],
+					'inclusive' => true,
+					'second'    => '20',
+				],
+				[
+					'month' => '12',
+				],
+			],
+		], $args->get_args() );
+
+		$query = new \WP_Query( [
+			'date_query' => [
+				'relation' => 'AND',
+				[
+					'before'    => [
+						'year'  => '1200',
+						'month' => '01',
+						'day'   => '20',
+					],
+					'inclusive' => true,
+					'second'    => '20',
+				],
+			],
+		] );
+		$args = new Args();
+		$args->date_query()->month( 9 )
+		     ->relation( 'OR' );
+		$args->merge_query( $query );
+		$this->assertEquals( [
+			'relation' => 'OR',
+			[
+				'before'    => [
+					'year'  => '1200',
+					'month' => '01',
+					'day'   => '20',
+				],
+				'inclusive' => true,
+				'second'    => '20',
+			],
+			[
+				'month' => '9',
+			],
+		], $query->query_vars['date_query'] );
 	}
 }

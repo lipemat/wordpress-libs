@@ -161,4 +161,59 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 			],
 		], $args->get_args() );
 	}
+
+
+	public function test_existing_merge() : void {
+		$args = new Args( [
+			'meta_query' => [
+				[
+					'key'   => 'existing',
+					'value' => true,
+				],
+				'relation' => 'AND',
+			],
+		] );
+
+		$args->meta_query()->in( 'new', [ '1' ] )
+		     ->relation( 'OR' );
+		$this->assertEquals( [
+			'meta_query' => [
+				'relation' => 'OR',
+				[
+					'key'   => 'existing',
+					'value' => true,
+				],
+				[
+					'key'     => 'new',
+					'compare' => 'IN',
+					'value'   => [ '1' ],
+				],
+			],
+		], $args->get_args() );
+
+		$query = new \WP_Query( [
+			'meta_query' => [
+				[
+					'key'   => 'previous',
+					'value' => 'on',
+				],
+			],
+		] );
+		$args = new Args();
+		$args->meta_query()->in( 'new', [ '1' ] )
+		     ->relation( 'OR' );
+		$args->merge_query( $query );
+		$this->assertEquals( [
+			'relation' => 'OR',
+			[
+				'key'   => 'previous',
+				'value' => 'on',
+			],
+			[
+				'key'     => 'new',
+				'compare' => 'IN',
+				'value'   => [ '1' ],
+			],
+		], $query->query_vars['meta_query'] );
+	}
 }

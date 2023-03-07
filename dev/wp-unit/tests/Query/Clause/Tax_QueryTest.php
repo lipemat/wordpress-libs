@@ -29,6 +29,9 @@ class Tax_QueryTest extends \WP_UnitTestCase {
 			],
 		], $args->get_args() );
 
+		// Reset to prevent double up because `get_args` was called previously.
+		$args->tax_query = [];
+
 		$tax->nested_clause()
 		    ->in( [ 4, 5 ], 'category' )
 		    ->in( [ 6, 7 ], 'post_tag' );
@@ -195,5 +198,73 @@ class Tax_QueryTest extends \WP_UnitTestCase {
 				],
 			],
 		], $args->get_args() );
+	}
+
+
+	public function test_existing_merge() : void {
+		$args = new Args( [
+			'tax_query' => [
+				'relation' => 'OR',
+				[
+					'taxonomy' => 'post_tag',
+					'field'    => 'slug',
+					'terms'    => [ 'one', 'two' ],
+					'operator' => 'IN',
+				],
+			],
+		] );
+		$args->tax_query()
+		     ->relation( 'AND' )
+		     ->in( [ 'one', 'two' ], 'post_tag', true, 'slug' );
+
+		$this->assertEquals( [
+			'tax_query' => [
+				'relation' => 'AND',
+				[
+					'taxonomy' => 'post_tag',
+					'field'    => 'slug',
+					'terms'    => [ 'one', 'two' ],
+					'operator' => 'IN',
+				],
+				[
+					'taxonomy' => 'post_tag',
+					'field'    => 'slug',
+					'terms'    => [ 'one', 'two' ],
+					'operator' => 'IN',
+				],
+			],
+		], $args->get_args() );
+
+		$query = new \WP_Query( [
+			'tax_query' => [
+				'relation' => 'OR',
+				[
+					'taxonomy' => 'post_tag',
+					'field'    => 'slug',
+					'terms'    => [ 'one', 'two' ],
+					'operator' => 'IN',
+				],
+			],
+		] );
+		$args = new Args();
+		$args->tax_query()
+		     ->relation( 'AND' )
+		     ->in( [ 'one', 'two' ], 'post_tag', true, 'slug' );
+		$args->merge_query( $query );
+		$this->assertEquals( [
+			'relation' => 'AND',
+			[
+				'taxonomy' => 'post_tag',
+				'field'    => 'slug',
+				'terms'    => [ 'one', 'two' ],
+				'operator' => 'IN',
+			],
+			[
+				'taxonomy' => 'post_tag',
+				'field'    => 'slug',
+				'terms'    => [ 'one', 'two' ],
+				'operator' => 'IN',
+			],
+		], $query->query_vars['tax_query'] );
 	}
 }

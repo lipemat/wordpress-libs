@@ -721,6 +721,28 @@ class Args extends Args_Abstract implements Meta_Query_Interface, Date_Query_Int
 
 
 	/**
+	 * Merge the arguments in this class with an existing
+	 * `\WP_Query` class.
+	 *
+	 * For usage with `pre_get_posts` and similar.
+	 *
+	 * @param \WP_Query $query - The existing query to merge with.
+	 *
+	 * @return void
+	 */
+	public function merge_query( \WP_Query $query ) : void {
+		foreach ( $query->query as $arg => $value ) {
+			if ( '' !== $value && \property_exists( $this, $arg ) && ! isset( $this->{$arg} ) ) {
+				$this->{$arg} = $value;
+			}
+		}
+		$local_args = $this->get_args();
+		$query->query = \array_merge( $query->query, $local_args );
+		$query->query_vars = \array_merge( $query->query_vars, $local_args );
+	}
+
+
+	/**
 	 * Get the lightest possible version of the Query args.
 	 *
 	 * @see Utils::get_light_query_args()

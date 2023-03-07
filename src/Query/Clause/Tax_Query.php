@@ -116,7 +116,10 @@ class Tax_Query extends Clause_Abstract {
 	 */
 	public function flatten( $args_class ) : void {
 		$this->extract_nested( $this->clauses, $this );
-		$args_class->tax_query = $this->clauses;
+		if ( ! isset( $args_class->tax_query ) ) {
+			$args_class->tax_query = [];
+		}
+		$args_class->tax_query = \array_merge( $args_class->tax_query, $this->clauses );
 	}
 
 
