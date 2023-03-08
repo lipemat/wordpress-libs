@@ -281,9 +281,9 @@ class Custom_Post_Type {
 	 *
 	 * Default is value of `$show_ui`.
 	 *
-	 * @var bool
+	 * @var bool|string
 	 */
-	public bool $show_in_menu;
+	public $show_in_menu;
 
 	/**
 	 * Makes this post type available for selection in navigation menus.
@@ -565,7 +565,7 @@ class Custom_Post_Type {
 			'publicly_queryable'    => $this->publicly_queryable ?? null,
 			'show_ui'               => $this->show_ui ?? null,
 			'show_in_nav_menus'     => $this->show_in_nav_menus ?? null,
-			'show_in_menu'          => $this->show_in_menu ?? null,
+			'show_in_menu'          => $this->show_in_menu,
 			'show_in_admin_bar'     => $this->show_in_admin_bar ?? null,
 			'menu_position'         => $this->menu_position,
 			'menu_icon'             => $this->menu_icon ?? null,
