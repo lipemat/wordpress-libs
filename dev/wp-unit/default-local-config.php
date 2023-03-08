@@ -21,3 +21,5 @@ define( 'WP_TESTS_DOMAIN', 'wp-libs.loc' );
 define( 'WP_TESTS_EMAIL', 'unit-tests@test.com' );
 define( 'WP_TESTS_TITLE', 'WP Libs unit tests' );
 define( 'WP_UNIT_DIR', 'E:/SVN/wp-unit' );
+
+define( 'ABSPATH', WP_SITE_ROOT . '/wp/' );

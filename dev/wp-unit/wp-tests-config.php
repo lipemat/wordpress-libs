@@ -14,7 +14,7 @@ $config_defaults = [
 	// Must be first.
 	'WP_SITE_ROOT'              => getenv( 'WP_SITE_ROOT' ),
 
-	'ABSPATH'                   => WP_SITE_ROOT . '/wp/',
+	'ABSPATH'                   => WP_SITE_ROOT,
 	'BLOG_ID_CURRENT_SITE'      => 1,
 	'BOOTSTRAP'                 => getenv( 'BOOTSTRAP' ),
 	'DB_HOST'                   => 'localhost',
