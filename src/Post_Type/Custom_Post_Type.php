@@ -383,6 +383,14 @@ class Custom_Post_Type {
 	public array $taxonomies = [];
 
 	/**
+	 * Individual labels for the post type.
+	 *
+	 * Preferred to be set using the `labels` method.
+	 *
+	 * @see Custom_Post_Type::labels()
+	 *
+	 * @internal
+	 *
 	 * @var array
 	 */
 	public array $labels;
@@ -621,7 +629,9 @@ class Custom_Post_Type {
 			'set_featured_image'       => __( 'Set featured image' ),
 			'remove_featured_image'    => __( 'Remove featured image' ),
 			'use_featured_image'       => __( 'Use as featured image' ),
+			'menu_name'                => empty( $this->menu_name ) ? $plural : $this->menu_name,
 			'filter_items_list'        => sprintf( __( 'Filter %s list' ), $plural ),
+			'filter_by_date'           => __( 'Filter by date' ),
 			'items_list_navigation'    => sprintf( __( '%s list navigation' ), $plural ),
 			'items_list'               => sprintf( __( '%s list' ), $plural ),
 			'item_published'           => sprintf( __( '%s published.' ), $single ),
@@ -629,7 +639,8 @@ class Custom_Post_Type {
 			'item_reverted_to_draft'   => sprintf( __( '%s reverted to draft.' ), $single ),
 			'item_scheduled'           => sprintf( __( '%s scheduled.' ), $single ),
 			'item_updated'             => sprintf( __( '%s updated.' ), $single ),
-			'menu_name'                => empty( $this->menu_name ) ? $plural : $this->menu_name,
+			'item_link'                => sprintf( __( '%s Link.' ), $single ),
+			'item_link_description'    => sprintf( __( 'A link to a %s.' ), $single ),
 		];
 		// phpcs:enable WordPress.WP.I18n
 
@@ -712,6 +723,22 @@ class Custom_Post_Type {
 		}
 		$this->post_type_label_singular = $singular;
 		$this->post_type_label_plural = $plural;
+	}
+
+
+	/**
+	 * Adjust specific labels using the fluent interface.
+	 *
+	 * Adds labels to $this->Labels.
+	 *
+	 * @see   Custom_Post_Type::$labels
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return Labels
+	 */
+	public function labels() : Labels {
+		return new Labels( $this );
 	}
 
 
