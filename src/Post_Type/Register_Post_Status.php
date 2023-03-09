@@ -55,6 +55,9 @@ class Register_Post_Status extends Args_Abstract {
 	/**
 	 * Whether posts of this status should be shown in the front end of the site.
 	 *
+	 * Will be included by default in all queries, which do not have
+	 * the `post_status` specified.
+	 *
 	 * Default false.
 	 *
 	 * @var bool
@@ -63,6 +66,8 @@ class Register_Post_Status extends Args_Abstract {
 
 	/**
 	 * Whether the status is for internal use only.
+	 *
+	 * Will not be included/shown anywhere unless directly queried for.
 	 *
 	 * Default false.
 	 *
@@ -73,6 +78,9 @@ class Register_Post_Status extends Args_Abstract {
 	/**
 	 * Whether posts with this status should be protected.
 	 *
+	 * Will only be included in queried in the WP admin or
+	 * if the status is directly specified in the query.
+	 *
 	 * Default false.
 	 *
 	 * @var bool
@@ -82,6 +90,9 @@ class Register_Post_Status extends Args_Abstract {
 	/**
 	 * Whether posts with this status should be private.
 	 *
+	 * Will be included in queries if the current user has the `read_private_posts`
+	 * capability for the queried post type.
+	 *
 	 * Default false.
 	 *
 	 * @var bool
@@ -90,6 +101,11 @@ class Register_Post_Status extends Args_Abstract {
 
 	/**
 	 * Whether posts with this status should be publicly-queryable.
+	 *
+	 * Used to determine if a post can be viewed to the public.
+	 *
+	 * @see is_post_status_viewable
+	 * @see is_post_publicly_viewable
 	 *
 	 * Default is value of `$public`.
 	 *
