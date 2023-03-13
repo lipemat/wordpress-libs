@@ -9,6 +9,8 @@ use Lipe\Lib\Post_Type\Extended_CPTS\Filter;
 use Lipe\Lib\Post_Type\Extended_CPTS\Query_Var;
 use Lipe\Lib\Post_Type\Extended_CPTS\Sortable;
 
+_deprecated_file( __FILE__, '3.16.0', false, 'The `Custom_Post_Type_Extended` class will be removed in version 4.0.0.' );
+
 /**
  * Extends our Custom_Post_Type class with a Fluent Interface
  * the for Extended CPTs library.

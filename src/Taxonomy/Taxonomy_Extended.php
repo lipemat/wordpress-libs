@@ -6,6 +6,8 @@ namespace Lipe\Lib\Taxonomy;
 
 use Lipe\Lib\Taxonomy\Extended_TAXOS\Column;
 
+_deprecated_file( __FILE__, '3.16.0', false, 'The `Taxonomy_Extended` class will be removed in version 4.0.0.' );
+
 /**
  * Extends our Taxonomy class with support for additional
  * arguments provided by `extended-cpts`.
