@@ -29,8 +29,6 @@ require __DIR__ . '/vendor/autoload.php'
 * Comment Object Trait.
 * Custom Post Type registration object.
 * Database interaction object.
-* Extended CPTS mapping.
-* Extended TAXOS mapping.
 * Memoize Trait.
 * Meta Box registration object.
 * Meta Data repository.
