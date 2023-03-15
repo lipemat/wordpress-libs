@@ -13,9 +13,9 @@ namespace Lipe\Lib\Taxonomy;
  */
 class Capabilities {
 	/**
-	 * @var Taxonomy|Taxonomy_Extended
+	 * @var Taxonomy
 	 */
-	protected $taxonomy;
+	protected Taxonomy $taxonomy;
 
 
 	public function __construct( Taxonomy $taxonomy ) {

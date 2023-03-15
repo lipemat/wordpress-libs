@@ -325,7 +325,7 @@ class Taxonomy {
 	/**
 	 * Track the register taxonomies for later use.
 	 *
-	 * @var array<Taxonomy|Taxonomy_Extended>
+	 * @var Taxonomy[]
 	 */
 	protected static array $registry = [];
 
@@ -467,9 +467,9 @@ class Taxonomy {
 	 *
 	 * @param string $taxonomy
 	 *
-	 * @return Taxonomy_Extended|Taxonomy|null
+	 * @return Taxonomy|null
 	 */
-	public static function get_taxonomy( string $taxonomy ) {
+	public static function get_taxonomy( string $taxonomy ) : ?Taxonomy {
 		return static::$registry[ $taxonomy ] ?? null;
 	}
 

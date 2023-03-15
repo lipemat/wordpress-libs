@@ -853,9 +853,9 @@ class Custom_Post_Type {
 	 *
 	 * @param string $post_type
 	 *
-	 * @return Custom_Post_Type|Custom_Post_Type_Extended|null
+	 * @return ?Custom_Post_Type
 	 */
-	public function get_post_type( string $post_type ) {
+	public function get_post_type( string $post_type ) : ?Custom_Post_Type {
 		return static::$registry[ $post_type ] ?? null;
 	}
 
@@ -1108,9 +1108,11 @@ class Custom_Post_Type {
 
 
 	/**
-	 * @param string $post_type
+	 * Factory for registering a new custom post type.
 	 *
-	 * @return Custom_Post_Type|Custom_Post_Type_Extended
+	 * @param string $post_type - Post type slug.
+	 *
+	 * @return Custom_Post_Type
 	 */
 	public static function factory( string $post_type ) : Custom_Post_Type {
 		return new static( $post_type );
