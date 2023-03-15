@@ -134,7 +134,7 @@ trait Memoize {
 	 * Clear all caches on this class.
 	 * Typically, used during unit testing.
 	 *
-	 * @see dele
+	 * @see Memoize::clear_single_item()
 	 *
 	 */
 	public function clear_memoize_cache() : void {
