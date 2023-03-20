@@ -403,11 +403,17 @@ class Resources {
 		];
 
 		foreach ( $handles as $handle ) {
-			wp_deregister_script( $handle );
+			$deps = [];
+			$core = wp_scripts()->query( $handle );
+			if ( ! empty( $core ) ) {
+				$deps = $core->deps;
+				wp_deregister_script( $handle );
+			}
+
 			$url = ( \defined( 'SCRIPT_DEBUG' ) && \SCRIPT_DEBUG ) ? $cdn[ $handle ]['dev'] : $cdn[ $handle ]['min'];
 
 			//phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
-			wp_register_script( $handle, $url, [], null, $cdn[ $handle ]['footer'] );
+			wp_register_script( $handle, $url, $deps, null, $cdn[ $handle ]['footer'] );
 
 			if ( ! empty( $cdn[ $handle ]['inline'] ) ) {
 				wp_add_inline_script( $handle, $cdn[ $handle ]['inline'] );
