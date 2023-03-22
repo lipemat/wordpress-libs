@@ -4,19 +4,17 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
-use Lipe\Lib\CMB2\Box;
-use Lipe\Lib\CMB2\Field;
-use Lipe\Lib\CMB2\Options_Page;
 use Lipe\Lib\Settings\Settings_Trait;
-use Lipe\Project\Comments\Comment;
-use Lipe\Project\Post_Types\Post;
-use Lipe\Project\Taxonomies\Category;
-use Lipe\Project\User\User;
 use mocks\Comment_Mock;
 use mocks\Post_Mock;
 use mocks\Term_Mock;
 use mocks\User_Mock;
 
+/**
+ * @requires function \CMB2_Bootstrap_2101::initiate
+ *
+ * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
+ */
 class BoxTest extends \WP_UnitTestCase {
 	private $attachment_id;
 
@@ -27,7 +25,7 @@ class BoxTest extends \WP_UnitTestCase {
 		$this->attachment_id =
 			self::factory()->attachment->create_upload_object( DIR_TESTDATA . '/images/test-image.png' );
 
-		do_action( 'init' );
+		\CMB2_Bootstrap_2101::initiate()->include_cmb();
 		do_action( 'cmb2_init' );
 	}
 

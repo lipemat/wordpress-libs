@@ -14,6 +14,11 @@ use Lipe\Project\User\User;
 use mocks\Post_Mock;
 use mocks\User_Mock;
 
+/**
+ * @requires function \CMB2_Bootstrap_2101::initiate
+ *
+ * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
+ */
 class RepoTest extends \WP_UnitTestCase {
 
 	public function test_get_value() : void {
@@ -27,7 +32,7 @@ class RepoTest extends \WP_UnitTestCase {
 		    ->taxonomy_multicheck( 'category' )
 		    ->store_user_terms_in_meta();
 
-		do_action( 'init' );
+		\CMB2_Bootstrap_2101::initiate()->include_cmb();
 		do_action( 'cmb2_init' );
 
 		update_user_meta( $user_id, 'u', 'on' );

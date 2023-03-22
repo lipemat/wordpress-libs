@@ -76,7 +76,7 @@ class ResourcesTest extends \WP_UnitTestCase {
 	public function test_use_cdn_for_resources() : void {
 		$react_version = wp_scripts()->query( 'react' )->ver;
 		$lodash_version = wp_scripts()->query( 'lodash' )->ver;
-		$jquery_version = wp_scripts()->query( 'jquery-core' )->ver;
+		$jquery_version = wp_scripts()->query( 'jquery' )->ver;
 		$jquery_migrate_version = wp_scripts()->query( 'jquery-migrate' )->ver;
 		$this->assertNotEmpty( $react_version );
 		$this->assertNotEmpty( $lodash_version );

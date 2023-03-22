@@ -2,18 +2,16 @@
 
 declare( strict_types=1 );
 
-/**
- * @author Mat Lipe
- * @since  June, 2019
- *
- */
-
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\Meta\Repo;
-use Lipe\Project\Post_Types\Post;
 use mocks\Post_Mock;
 
+/**
+ * @requires function \CMB2_Bootstrap_2101::initiate
+ *
+ * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
+ */
 class GroupTest extends \WP_UnitTestCase {
 	/**
 	 * @var \WP_Post

@@ -4,14 +4,15 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
-use Lipe\Lib\CMB2\Box;
-use Lipe\Lib\CMB2\Field;
-use Lipe\Lib\CMB2\Options_Page;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Settings\Settings_Trait;
-use Lipe\Project\Post_Types\Post;
 use mocks\Post_Mock;
 
+/**
+ * @requires function \CMB2_Bootstrap_2101::initiate
+ *
+ * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
+ */
 class FieldTest extends \WP_Test_REST_TestCase {
 	public function setUp() : void {
 		parent::setUp();
@@ -24,7 +25,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		$box->field( 'tc', 'Category' )
 		    ->taxonomy_multicheck( 'category' );
 
-		do_action( 'init' );
+		\CMB2_Bootstrap_2101::initiate()->include_cmb();
 		do_action( 'cmb2_init' );
 	}
 
@@ -121,7 +122,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 			->field( 'second', '' )
 			->text();
 
-		do_action( 'init' );
+		\CMB2_Bootstrap_2101::initiate()->include_cmb();
 		do_action( 'cmb2_init' );
 
 		$this->assertEquals( 'secret', get_post_meta( $post->ID, 'd1', true ) );

@@ -1,28 +1,22 @@
 <?php
 declare( strict_types=1 );
 
-/**
- * @author Mat Lipe
- * @since  February, 2019
- *
- */
-
 namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\CMB2\Box;
 use Lipe\Lib\CMB2\Options_Page;
 use Lipe\Lib\Settings\Settings_Trait;
-use Lipe\Project\Comments\Comment;
-use Lipe\Project\Post_Types\Post;
-use Lipe\Project\Settings\Theme;
-use Lipe\Project\Taxonomies\Category;
-use Lipe\Project\User\User;
 use mocks\Comment_Mock;
 use mocks\Post_Mock;
 use mocks\Settings_Mock;
 use mocks\Term_Mock;
 use mocks\User_Mock;
 
+/**
+ * @requires function \CMB2_Bootstrap_2101::initiate
+ *
+ * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
+ */
 class Mutator_Test extends \WP_UnitTestCase {
 	protected array $deleted_args;
 
@@ -88,7 +82,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 
 		$this->tags = self::factory()->term->create_many( 2 );
 
-		do_action( 'init' );
+		\CMB2_Bootstrap_2101::initiate()->include_cmb();
 		do_action( 'cmb2_init' );
 	}
 
