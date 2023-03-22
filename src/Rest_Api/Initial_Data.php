@@ -122,6 +122,24 @@ class Initial_Data {
 		}, $terms );
 	}
 
+	/**
+	 * Turn an array of attachments into their matching data format
+	 * provided by the JSON API Server.
+	 *
+	 * @param \WP_Post[] 	$attachments
+	 * @param bool          $with_links - To include links inside the response.
+	 * @param bool|string[] $embed      - Whether to embed all links, a filtered list of link relations, or no links.
+	 *
+	 * @return array
+	 */
+	public function get_attachments_data( array $attachments, bool $with_links = false, $embed = false ) : array {
+		$controller = new \WP_REST_Attachments_Controller( 'attachment' );
+
+		return array_map( function ( $attachment ) use ( $controller, $with_links, $embed ) {
+			return $this->get_response( $controller, $attachment, $with_links, $embed );
+		}, $attachments );
+	}
+
 
 	/**
 	 * Mimic response from the REST server for the provided controller.
