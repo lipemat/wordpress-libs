@@ -97,6 +97,7 @@ class Class_Names implements \ArrayAccess {
 	}
 
 
+	#[\ReturnTypeWillChange]
 	public function offsetGet( $offset ) {
 		return Template::in()->sanitize_html_class( $this->classes[ (int) $this->get_classes_key( $offset ) ] );
 	}
