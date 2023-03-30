@@ -1056,7 +1056,7 @@ class Custom_Post_Type {
 	/**
 	 * Exclude this post type from sitemaps.
 	 *
-	 * If the post type is publicly viewable, this does nothing.
+	 * If the post type is not publicly viewable, this does nothing.
 	 *
 	 * @since 13.14.0
 	 *
