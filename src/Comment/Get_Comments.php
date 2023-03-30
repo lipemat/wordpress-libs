@@ -502,6 +502,32 @@ class Get_Comments extends Args_Abstract implements Meta_Query_Interface, Date_Q
 
 
 	/**
+	 * Merge the arguments in this class with an existing
+	 * `\WP_Comment_Query` class.
+	 *
+	 * For usage with `pre_get_comments` and similar.
+	 *
+	 * @param \WP_Comment_Query $query - The existing query to merge with.
+	 *
+	 * @return void
+	 */
+	public function merge_query( \WP_Comment_Query $query ) : void {
+		foreach ( $query->query_vars as $arg => $value ) {
+			if ( null === $value || '' === $value ) {
+				continue;
+			}
+			if ( \property_exists( $this, $arg ) && ! isset( $this->{$arg} ) ) {
+				if ( 'parent' === $arg ) {
+					$value = (int) $value;
+				}
+				$this->{$arg} = $value;
+			}
+		}
+		$query->query_vars = \array_merge( $query->query_vars, $this->get_args() );
+	}
+
+
+	/**
 	 * Get the lightest possible version of the `get_comments` args.
 	 *
 	 * @return array
