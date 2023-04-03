@@ -88,7 +88,7 @@ trait Memoize {
 	 * If the arguments change, I will return a result matching the change.
 	 * I will only call the callback one time for the same set of arguments.
 	 *
-	 * @param callable $callback
+	 * @param callable $callback   - Callback, which returns the value to store and return.
 	 * @param string   $identifier - Something unique to identify the method being used
 	 *                             so we can determine the difference in the cache.
 	 *                             `__METHOD__` works nicely here.
@@ -113,10 +113,10 @@ trait Memoize {
 	 *
 	 * @see Memoize::clear_memoize_cache()
 	 *
-	 * @param string $identifier
-	 * @param array  ...$args
+	 * @param string $identifier - Identifier used with original method to store value.
+	 * @param array  ...$args    - Arguments passed to original method when storing value.
 	 *
-	 * @return bool
+	 * @return bool - Result of deleting the cache from external object cache.
 	 */
 	public function clear_single_item( string $identifier, ...$args ) : bool {
 		$keys = [
