@@ -10,7 +10,7 @@ use Lipe\Lib\Util\Arrays;
  * Generate JSON data, which mimics the return of wp-json API.
  *
  * Use most commonly to get the json data without making a request to the API.
- * Thus preventing an anti-pattern when using React etc.
+ * Thus preventing an antipattern when using React etc.
  *
  */
 class Initial_Data {
@@ -50,7 +50,7 @@ class Initial_Data {
 	public function get_comments_data( array $comments, bool $with_links = false, $embed = false ) : array {
 		$controller = new \WP_REST_Comments_Controller();
 
-		return array_map( function ( $comment ) use ( $controller, $with_links, $embed ) {
+		return \array_map( function( $comment ) use ( $controller, $with_links, $embed ) {
 			return $this->get_response( $controller, $comment, $with_links, $embed );
 		}, $comments );
 	}
@@ -71,7 +71,7 @@ class Initial_Data {
 			$posts = $GLOBALS['wp_query']->posts;
 		}
 
-		return array_map( function ( $post ) use ( $with_links, $embed ) {
+		return \array_map( function( $post ) use ( $with_links, $embed ) {
 			$controller = new \WP_REST_Posts_Controller( $post->post_type );
 
 			return $this->get_response( $controller, $post, $with_links, $embed );
@@ -95,7 +95,7 @@ class Initial_Data {
 	public function get_user_data( array $users, bool $with_links = false, $embed = false ) : array {
 		$controller = new \WP_REST_Users_Controller();
 
-		return array_map( function ( $user ) use ( $controller, $with_links, $embed ) {
+		return \array_map( function( $user ) use ( $controller, $with_links, $embed ) {
 			return $this->get_response( $controller, $user, $with_links, $embed );
 		}, $users );
 	}
@@ -115,18 +115,19 @@ class Initial_Data {
 	 * @return array
 	 */
 	public function get_term_data( array $terms, bool $with_links = false, $embed = false ) : array {
-		return array_map( function ( $term ) use ( $with_links, $embed ) {
+		return \array_map( function( $term ) use ( $with_links, $embed ) {
 			$controller = new \WP_REST_Terms_Controller( $term->taxonomy );
 
 			return $this->get_response( $controller, $term, $with_links, $embed );
 		}, $terms );
 	}
 
+
 	/**
 	 * Turn an array of attachments into their matching data format
 	 * provided by the JSON API Server.
 	 *
-	 * @param \WP_Post[] 	$attachments
+	 * @param \WP_Post[]    $attachments
 	 * @param bool          $with_links - To include links inside the response.
 	 * @param bool|string[] $embed      - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
@@ -135,7 +136,7 @@ class Initial_Data {
 	public function get_attachments_data( array $attachments, bool $with_links = false, $embed = false ) : array {
 		$controller = new \WP_REST_Attachments_Controller( 'attachment' );
 
-		return array_map( function ( $attachment ) use ( $controller, $with_links, $embed ) {
+		return \array_map( function( $attachment ) use ( $controller, $with_links, $embed ) {
 			return $this->get_response( $controller, $attachment, $with_links, $embed );
 		}, $attachments );
 	}
@@ -157,13 +158,21 @@ class Initial_Data {
 	 */
 	protected function get_response( \WP_REST_Controller $controller, $item, bool $with_links = false, $embed = false ) : array {
 		$this->retrieving = true;
+		$request = $this->get_request();
+
+		$fields = $controller->get_fields_for_response( $request );
+		if ( ! $with_links ) {
+			$key = \array_search( '_links', $fields, true );
+			if ( $key ) {
+				unset( $fields[ $key ] );
+			}
+			$request['_fields'] = \array_unique( $fields );
+		}
+
 		$data = rest_get_server()->response_to_data(
-			$controller->prepare_item_for_response( $item, $this->get_request() ),
+			$controller->prepare_item_for_response( $item, $request ),
 			$embed
 		);
-		if ( ! $with_links ) {
-			return Arrays::in()->recursive_unset( '_links', $data );
-		}
 		$this->retrieving = false;
 		return $data;
 	}
@@ -176,11 +185,9 @@ class Initial_Data {
 	 * @return \WP_REST_Request
 	 */
 	protected function get_request() : \WP_REST_Request {
-		return $this->once( function () {
-			$request = new \WP_REST_Request();
-			$request['context'] = 'view';
+		$request = new \WP_REST_Request();
+		$request['context'] = 'view';
 
-			return $request;
-		}, __METHOD__ );
+		return $request;
 	}
 }
