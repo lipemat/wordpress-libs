@@ -166,7 +166,7 @@ class Initial_Data {
 			if ( $key ) {
 				unset( $fields[ $key ] );
 			}
-			$request['_fields'] = \array_unique( $fields );
+			$request->set_param( '_fields', \array_unique( $fields ) );
 		}
 
 		$data = rest_get_server()->response_to_data(
@@ -186,7 +186,7 @@ class Initial_Data {
 	 */
 	protected function get_request() : \WP_REST_Request {
 		$request = new \WP_REST_Request();
-		$request['context'] = 'view';
+		$request->set_param( 'context', 'view' );
 
 		return $request;
 	}
