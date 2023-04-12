@@ -5,4 +5,4 @@ parameters:
         - src
     scanFiles:
         - dev/stubs/wp-smush.php
-        - %rootDir%/../../../stubs/cmb2/cmb2-3.10.php
+        - %rootDir%/../../../stubs/cmb2/cmb2-2.10.php
