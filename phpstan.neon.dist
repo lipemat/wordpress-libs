@@ -4,6 +4,5 @@ parameters:
     paths:
         - src
     scanFiles:
-        - dev/stubs/extended-cpts.php
         - dev/stubs/wp-smush.php
-        - %rootDir%/../../../stubs/cmb2/cmb2-2.9.php
+        - %rootDir%/../../../stubs/cmb2/cmb2-3.10.php
