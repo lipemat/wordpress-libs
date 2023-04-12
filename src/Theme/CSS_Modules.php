@@ -48,11 +48,9 @@ class CSS_Modules {
 	/**
 	 * Name of JSON file when using a combined JSON file.
 	 *
-	 * @default 'css-modules.json'
-	 *
 	 * @var string
 	 */
-	protected string $combined_filename = 'css-modules.json';
+	protected string $combined_filename = '';
 
 
 	/**
@@ -72,15 +70,17 @@ class CSS_Modules {
 
 
 	/**
-	 * Do we want to use the `combined.json` file?
+	 * Do we want to use the combined `modules.json` file?
 	 *
-	 * @param bool        $combined - Use combined file or not.
-	 * @param string|null $filename - Name of the combined JSON file.
+	 * @note This functionality is opt-in in version 4 but will likely
+	 *       become the default in version 5.
+	 *
+	 * @param string $filename - Name of the combined JSON file.
 	 *
 	 * @return void
 	 */
-	public function set_combined( bool $combined, ?string $filename = null ) : void {
-		$this->combined = $combined;
+	public function use_combined_file( string $filename ) : void {
+		$this->combined = true;
 		if ( $filename ) {
 			$this->combined_filename = $filename;
 		}
