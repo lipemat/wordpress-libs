@@ -22,7 +22,7 @@ use Lipe\Lib\Query\Args_Abstract;
  * @link   https://developer.wordpress.org/reference/classes/wp_http/request/
  *
  */
-class WP_Remote extends Args_Abstract {
+class Wp_Remote extends Args_Abstract {
 	public const METHOD_GET     = 'GET';
 	public const METHOD_POST    = 'POST';
 	public const METHOD_HEAD    = 'HEAD';
