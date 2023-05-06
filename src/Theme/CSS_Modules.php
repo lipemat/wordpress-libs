@@ -37,13 +37,6 @@ class CSS_Modules {
 	 */
 	protected string $prepend = '';
 
-	/**
-	 * Use the `combined.json` file instead of separate .json files
-	 * per each module.
-	 *
-	 * @var bool
-	 */
-	protected bool $combined = false;
 
 	/**
 	 * Name of JSON file when using a combined JSON file.
@@ -80,10 +73,7 @@ class CSS_Modules {
 	 * @return void
 	 */
 	public function use_combined_file( string $filename ) : void {
-		$this->combined = true;
-		if ( $filename ) {
-			$this->combined_filename = $filename;
-		}
+		$this->combined_filename = $filename;
 	}
 
 
@@ -96,7 +86,7 @@ class CSS_Modules {
 	 */
 	public function styles( string $file ) : array {
 		$file = $this->prepend . $file . '.pcss';
-		if ( $this->combined ) {
+		if ( '' !== $this->combined_filename ) {
 			return $this->get_combined_css_classes()[ $file ] ?? [];
 		}
 
