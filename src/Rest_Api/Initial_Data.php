@@ -158,6 +158,8 @@ class Initial_Data {
 	 */
 	protected function get_response( \WP_REST_Controller $controller, $item, bool $with_links = false, $embed = false ) : array {
 		$this->retrieving = true;
+		// Call before get_fields to allow `rest_api_init` to fire.
+		$server = rest_get_server();
 		$request = $this->get_request();
 
 		$fields = $controller->get_fields_for_response( $request );
@@ -169,7 +171,7 @@ class Initial_Data {
 			$request->set_param( '_fields', \array_unique( $fields ) );
 		}
 
-		$data = rest_get_server()->response_to_data(
+		$data = $server->response_to_data(
 			$controller->prepare_item_for_response( $item, $request ),
 			$embed
 		);
