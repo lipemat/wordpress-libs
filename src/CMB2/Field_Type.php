@@ -82,6 +82,18 @@ class Field_Type {
 
 
 	/**
+	 * True false switch like checkbox.
+	 *
+	 * @alias Field_Type::true_false
+	 *
+	 * @return Field
+	 */
+	public function toggle() : Field {
+		return $this->true_false();
+	}
+
+
+	/**
 	 * Standard text field (large).
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text
