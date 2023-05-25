@@ -13,12 +13,19 @@ class Url {
 	/**
 	 * Returns the url of the page you are currently on
 	 *
+	 * @param bool $with_query - Include any URL query in the URL.
+	 *
 	 * @return string
 	 */
-	public function get_current_url() : string {
+	public function get_current_url( bool $with_query = true ) : string {
 		$prefix = is_ssl() ? 'https://' : 'http://';
+		$uri = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) );
+		if ( ! $with_query && '' !== $uri ) {
+			$parts = wp_parse_url( $uri );
+			$uri = $parts['path'] ?? '';
+		}
 
-		return esc_url_raw( $prefix . wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) . wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) );
+		return esc_url_raw( $prefix . wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) . $uri );
 	}
 
 
