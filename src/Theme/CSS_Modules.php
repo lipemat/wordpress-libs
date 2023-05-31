@@ -85,14 +85,17 @@ class CSS_Modules {
 	 * @return array
 	 */
 	public function styles( string $file ) : array {
-		$file = $this->prepend . $file . '.pcss';
+		$file_with_prefix = $this->prepend . $file . '.pcss';
 		if ( '' !== $this->combined_filename ) {
-			return $this->get_combined_css_classes()[ $file ] ?? [];
+			if ( \substr( $file, 0, 3 ) === '../' ) {
+				$file_with_prefix = \substr( $file, 3 ) . '.pcss';
+			}
+			return $this->get_combined_css_classes()[ $file_with_prefix ] ?? [];
 		}
 
 		try {
 			//phpcs:ignore -- Reading local file.
-			$classes = json_decode( file_get_contents( trailingslashit( $this->path ) . "{$file}.json" ), true, 3, JSON_THROW_ON_ERROR );
+			$classes = json_decode( file_get_contents( trailingslashit( $this->path ) . "{$file_with_prefix}.json" ), true, 3, JSON_THROW_ON_ERROR );
 		} catch ( \JsonException $exception ) {
 			return [];
 		}

@@ -1,0 +1,165 @@
+{
+  "woocommerce/checkout/form-checkout.pcss": {
+    "login": "Ⓜform-checkout__login__VJ",
+    "info": "Ⓜform-checkout__info__Tl",
+    "form": "Ⓜform-checkout__form__FM"
+  },
+  "woocommerce/loop/add-to-cart.pcss": {
+    "button": "Ⓜadd-to-cart__button__Db"
+  },
+  "woocommerce/myaccount/form-login.pcss": {
+    "wrap": "Ⓜform-login__wrap__Nc",
+    "text": "Ⓜform-login__text__jf",
+    "icon": "Ⓜform-login__icon__SY",
+    "button": "Ⓜform-login__button__Zg teal-button",
+    "lostPassword": "Ⓜform-login__lostPassword__eA"
+  },
+  "woocommerce/myaccount/form-lost-password.pcss": {
+    "wrap": "Ⓜform-lost-password__wrap__wH",
+    "text": "Ⓜform-lost-password__text__vk",
+    "icon": "Ⓜform-lost-password__icon__rA",
+    "button": "Ⓜform-lost-password__button__CK teal-button"
+  },
+  "woocommerce/myaccount/form-reset-password.pcss": {
+    "wrap": "Ⓜform-reset-password__wrap__jj",
+    "text": "Ⓜform-reset-password__text__Cu",
+    "icon": "Ⓜform-reset-password__icon__sl",
+    "button": "Ⓜform-reset-password__button__ww teal-button"
+  },
+  "template-parts/blocks/codemirror.pcss": {
+    "wrap": "Ⓜcodemirror__wrap__sw",
+    "marked": "Ⓜcodemirror__marked__VP",
+    "header": "Ⓜcodemirror__header__UE",
+    "lang": "Ⓜcodemirror__lang__Mm",
+    "jsx": "Ⓜcodemirror__jsx__MG",
+    "json": "Ⓜcodemirror__json__SN",
+    "javascript": "Ⓜcodemirror__javascript__Ky",
+    "php": "Ⓜcodemirror__php__CF",
+    "htmlmixed": "Ⓜcodemirror__htmlmixed__vF",
+    "xml": "Ⓜcodemirror__xml__LX",
+    "css": "Ⓜcodemirror__css__dS",
+    "shell": "Ⓜcodemirror__shell__aj",
+    "nginx": "Ⓜcodemirror__nginx__kg",
+    "twig": "Ⓜcodemirror__twig__ZR",
+    "sass": "Ⓜcodemirror__sass__Ul",
+    "markdown": "Ⓜcodemirror__markdown__lL"
+  },
+  "template-parts/blocks/lined-title.pcss": {
+    "wrap": "Ⓜlined-title__wrap__Em"
+  },
+  "template-parts/blocks/services.pcss": {
+    "wrap": "Ⓜservices__wrap__lU",
+    "left": "Ⓜservices__left__ot",
+    "right": "Ⓜservices__right__Wp"
+  },
+  "template-parts/blocks/stats.pcss": {
+    "wrap": "Ⓜstats__wrap__YZ"
+  },
+  "template-parts/footer/mobile-menu.pcss": {
+    "wrap": "Ⓜmobile-menu__wrap__yZ",
+    "menu": "Ⓜmobile-menu__menu__At",
+    "icon": "Ⓜmobile-menu__icon__HM",
+    "badge": "Ⓜmobile-menu__badge__KV"
+  },
+  "template-parts/home/latest-articles.pcss": {
+    "wrap": "Ⓜlatest-articles__wrap__xp",
+    "items": "Ⓜlatest-articles__items__Pd",
+    "pagination": "Ⓜlatest-articles__pagination__Xh"
+  },
+  "template-parts/home/hero.pcss": {
+    "wrap": "Ⓜhero__wrap__Vr hero",
+    "buttons": "Ⓜhero__buttons__PI hero-buttons",
+    "button": "Ⓜhero__button__cz"
+  },
+  "template-parts/page-about/hero.pcss": {
+    "wrap": "Ⓜhero__wrap__DH hero",
+    "title": "Ⓜhero__title__GG widget-title shadowed-text"
+  },
+  "template-parts/page-contact/form.pcss": {
+    "wrap": "Ⓜform__wrap__WY",
+    "text": "Ⓜform__text__by",
+    "icon": "Ⓜform__icon__HE",
+    "description": "Ⓜform__description__vi",
+    "select": "Ⓜform__select__JS",
+    "submit": "Ⓜform__submit__tw teal-button",
+    "error": "Ⓜform__error__jw",
+    "honeypot": "Ⓜform__honeypot__GM"
+  },
+  "template-parts/page-contact/success.pcss": {
+    "wrap": "Ⓜsuccess__wrap__Tc"
+  },
+  "template-parts/sidebar/latest-articles.pcss": {
+    "wrap": "Ⓜlatest-articles__wrap__ta"
+  },
+  "template-parts/support/ooo.pcss": {
+    "wrap": "Ⓜooo__wrap__ee"
+  },
+  "template-parts/support/archive/shared.pcss": {
+    "heading": "Ⓜshared__heading__Cv hero",
+    "jsWrap": "Ⓜshared__jsWrap__Gf",
+    "wrap": "Ⓜshared__wrap__st entry",
+    "section": "Ⓜshared__section__KJ",
+    "button": "Ⓜshared__button__Mm",
+    "plugin": "Ⓜshared__plugin__QE Ⓜshared__button__Mm",
+    "plugins": "Ⓜshared__plugins__yb Ⓜshared__section__KJ",
+    "icon": "Ⓜshared__icon__Lc",
+    "active": "Ⓜshared__active__ZA"
+  },
+  "template-parts/support/comments/comment-form.pcss": {
+    "wrap": "Ⓜcomment-form__wrap__RL",
+    "form": "Ⓜcomment-form__form__uW",
+    "description": "Ⓜcomment-form__description__pC",
+    "resolved": "Ⓜcomment-form__resolved__Pz",
+    "submit": "Ⓜcomment-form__submit__Fm teal-button"
+  },
+  "template-parts/support/comments/private-info.pcss": {
+    "wrap": "Ⓜprivate-info__wrap__fX"
+  },
+  "template-parts/support/single/actions.pcss": {
+    "wrap": "Ⓜactions__wrap__qL",
+    "close": "Ⓜactions__close__db",
+    "back": "Ⓜactions__back__fz"
+  },
+  "template-parts/support/single/post-info.pcss": {
+    "status": "Ⓜpost-info__status__dg",
+    "new": "Ⓜpost-info__new__EB",
+    "open": "Ⓜpost-info__open__Rd",
+    "resolved": "Ⓜpost-info__resolved__xY",
+    "abandoned": "Ⓜpost-info__abandoned__Fn"
+  },
+  "template-parts/support/single/private-info.pcss": {
+    "wrap": "Ⓜprivate-info__wrap__NP Ⓜprivate-info__wrap__fX",
+    "url": "Ⓜprivate-info__url__Bq"
+  },
+  "template-parts/single-product/compare-version.pcss": {
+    "lined-title": "Ⓜcompare-version__lined-title__oD Ⓜsingle-product__lined-title__It",
+    "table": "Ⓜcompare-version__table__nO table",
+    "column": "Ⓜcompare-version__column__Ji column",
+    "tf": "Ⓜcompare-version__tf__oT",
+    "th": "Ⓜcompare-version__th__Vv th shadowed-text row",
+    "row": "Ⓜcompare-version__row__Kt row"
+  },
+  "template-parts/single-product/single-product.pcss": {
+    "lined-title": "Ⓜsingle-product__lined-title__It"
+  },
+  "template-parts/single-product/features.pcss": {
+    "title": "Ⓜfeatures__title__Os",
+    "content": "Ⓜfeatures__content__mL entry",
+    "dashicon": "Ⓜfeatures__dashicon__Yu"
+  },
+  "template-parts/single-product/purchase-modal.pcss": {
+    "column": "Ⓜpurchase-modal__column__uu",
+    "title": "Ⓜpurchase-modal__title__sG",
+    "small": "Ⓜpurchase-modal__small__jE",
+    "button": "Ⓜpurchase-modal__button__kK blue-button"
+  },
+  "template-parts/widgets/feedburner.pcss": {
+    "wrap": "Ⓜfeedburner__wrap__Up",
+    "home-wrap": "Ⓜfeedburner__home-wrap__Tn",
+    "email": "Ⓜfeedburner__email__fJ",
+    "sidebar-wrap": "Ⓜfeedburner__sidebar-wrap__ka",
+    "message": "Ⓜfeedburner__message__Ss",
+    "submit": "Ⓜfeedburner__submit__DS blue-button",
+    "twitter": "Ⓜfeedburner__twitter__zS dashicons-before dashicons-twitter"
+  }
+}
