@@ -25,7 +25,7 @@ class Image_Resize {
 	/**
 	 * Image sizes registered via `add_image_size`.
 	 *
-	 * @var array
+	 * @var array<string, array{width: int, height: int, crop: bool}>
 	 */
 	protected array $image_sizes = [];
 
@@ -41,7 +41,7 @@ class Image_Resize {
 	 * Get a list of the image sizes from here
 	 * because they no longer exist in standard WP global
 	 *
-	 * @return array
+	 * @return array<string, array{width: int, height: int, crop: bool}>
 	 */
 	public function get_image_sizes() : array {
 		return $this->image_sizes;
@@ -99,16 +99,20 @@ class Image_Resize {
 	 * Limited to only sizes, which would be used in the srcset to
 	 * prevent superfluous image generation.
 	 *
-	 * @param array  $meta          - Existing image sizes and information.
-	 * @param array  $size_array    - width,height.
-	 * @param string $src           - The image src.
-	 * @param int    $attachment_id - ID of attachment.
+	 * @since            3.8.0
 	 *
-	 * @filter wp_calculate_image_srcset_meta 10 4
+	 * @phpstan-template META array{file: string, width: string, height: int, mime-type: string}
 	 *
-	 * @since  3.8.0
+	 * @phpstan-param  array{sizes: array<string, META>} $meta          - Existing image sizes and information.
 	 *
-	 * @return array
+	 * @param array                                      $meta          - Image size information.
+	 * @param array<int>                                 $size_array    - width,height.
+	 * @param string                                     $src           - The image src.
+	 * @param int                                        $attachment_id - ID of attachment.
+	 *
+	 * @filter           wp_calculate_image_srcset_meta 10 4
+	 *
+	 * @return array{sizes: array<string, META>}
 	 */
 	public function populate_srcset_sizes( array $meta, array $size_array, string $src, int $attachment_id ) : array {
 		$width = (int) $size_array[0];
@@ -171,25 +175,25 @@ class Image_Resize {
 	/**
 	 * Get image.
 	 *
-	 * @param array $args   = array{
-	 *                      'id' => null,   // the thumbnail ID
-	 *                      'post_id' => null,   // thumbnail of specified post ID
-	 *                      'src' => '',
-	 *                      'alt' => '',
-	 *                      'class' => '',
-	 *                      'title' => '',
-	 *                      'size' => '',
-	 *                      'width' => null,
-	 *                      'height' => null,
-	 *                      'crop' => false,
-	 *                      'output' => 'img',   // how print: 'a', with an anchor; 'img' without an anchor; 'url' only
-	 *                      url;
-	 *                      'array' array width 'url', 'width' and 'height'
-	 *                      'numeric_array' default way wp expects it
-	 *                      'link' => '',      // the link of <a> tag. If empty, get from the original image url
-	 *                      'link_class' => '',      // the class of <a> tag
-	 *                      'link_title' => '',      // the title of <a> tag. If empty, get it from "title" attribute.
-	 *                      }.
+	 * @param array $args        = array{
+	 *                           'id' => null,   // the thumbnail ID
+	 *                           'post_id' => null,   // thumbnail of specified post ID
+	 *                           'src' => '',
+	 *                           'alt' => '',
+	 *                           'class' => '',
+	 *                           'title' => '',
+	 *                           'size' => '',
+	 *                           'width' => null,
+	 *                           'height' => null,
+	 *                           'crop' => false,
+	 *                           'output' => 'img',   // how print: 'a', with an anchor; 'img' without an anchor; 'url' only
+	 *                           url;
+	 *                           'array' array width 'url', 'width' and 'height'
+	 *                           'numeric_array' default way wp expects it
+	 *                           'link' => '',      // the link of <a> tag. If empty, get from the original image url
+	 *                           'link_class' => '',      // the class of <a> tag
+	 *                           'link_title' => '',      // the title of <a> tag. If empty, get it from "title" attribute.
+	 *                           }.
 	 * @param bool  $echo_output
 	 *
 	 * @return string|null|array
@@ -432,7 +436,7 @@ class Image_Resize {
 	 * @param bool        $crop
 	 *
 	 *
-	 * @return array
+	 * @return array{width: int, height: int, url: string}|array<null>
 	 */
 	protected function resize( int $width, int $height, int $attach_id, ?string $img_url = null, bool $crop = false ) : array {
 		if ( $attach_id ) {

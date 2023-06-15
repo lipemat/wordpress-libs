@@ -38,9 +38,9 @@ class Versions {
 	 *
 	 * @static
 	 *
-	 * @var array
+	 * @var array<string, 1>
 	 */
-	protected static $once_run_before;
+	protected static array $once_run_before;
 
 	/**
 	 * Keeps track of the updates to run
@@ -49,7 +49,7 @@ class Versions {
 	 *
 	 * @var array<array{version:string, callable:callable, args:array}>>
 	 */
-	protected static $updates = [];
+	protected static array $updates = [];
 
 	/**
 	 * Items registered to run only once
@@ -58,7 +58,7 @@ class Versions {
 	 *
 	 * @var array<array{callable:callable, args:array}>>
 	 */
-	protected static $once = [];
+	protected static array $once = [];
 
 
 	protected function __construct() {

@@ -11,6 +11,8 @@ use Lipe\Lib\Traits\Singleton;
  * @example Cache::init(); To optionally generate the clear cache button.
  * @example Cache::set( $key, $value );
  *
+ * @phpstan-type CACHE_KEY array|string|object
+ *
  */
 class Cache {
 	use Singleton;
@@ -31,10 +33,12 @@ class Cache {
 
 
 	/**
-	 * @param array|string|object $key
-	 * @param mixed               $value
-	 * @param string              $group
-	 * @param int                 $expire_in_seconds
+	 * @phpstan-param CACHE_KEY $key
+	 *
+	 * @param mixed             $key
+	 * @param mixed             $value
+	 * @param string            $group
+	 * @param int               $expire_in_seconds
 	 *
 	 * @return bool
 	 */
@@ -53,8 +57,10 @@ class Cache {
 	/**
 	 * Get an item from the cache.
 	 *
-	 * @param array|string|object $key
-	 * @param string              $group
+	 * @phpstan-param CACHE_KEY $key
+	 *
+	 * @param mixed             $key
+	 * @param string            $group
 	 *
 	 * @return false|mixed
 	 */
@@ -66,8 +72,10 @@ class Cache {
 
 
 	/**
-	 * @param array|string|object $key
-	 * @param string              $group
+	 * @phpstan-param CACHE_KEY $key
+	 *
+	 * @param mixed             $key
+	 * @param string            $group
 	 *
 	 * @return bool
 	 */
@@ -85,7 +93,7 @@ class Cache {
 	 *
 	 * @return void
 	 */
-	public function flush_group( $group = self::DEFAULT_GROUP ) : void {
+	public function flush_group( string $group = self::DEFAULT_GROUP ) : void {
 		wp_cache_set( 'last_changed', microtime(), $group );
 	}
 
@@ -129,7 +137,9 @@ class Cache {
 	 * Process the cache key so that any unique data may serve as a key,
 	 * even if it's an object or array.
 	 *
-	 * @param array|string|object $key
+	 * @phpstan-param CACHE_KEY $key
+	 *
+	 * @param mixed             $key
 	 *
 	 * @return bool|string
 	 */

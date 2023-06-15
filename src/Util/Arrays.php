@@ -17,9 +17,9 @@ class Arrays {
 	 * Turn a numeric array of values into an associative array with
 	 * the odd values being keys for the even values.
 	 *
-	 * @param array $array
-	 *
 	 * @example ['page', 3, 'category', 6 ] becomes ['page' => 3, 'category' => 6]
+	 *
+	 * @param array $array
 	 *
 	 * @return array
 	 */
@@ -46,7 +46,7 @@ class Arrays {
 	 *
 	 * Keys are preserved.
 	 *
-	 * @param array $array - Array to clean, numeric or associative.
+	 * @param array $array         - Array to clean, numeric or associative.
 	 * @param bool  $preserve_keys (optional) - Preserve the original array keys.
 	 *
 	 * @return array
