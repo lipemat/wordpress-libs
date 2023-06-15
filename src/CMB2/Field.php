@@ -1459,8 +1459,6 @@ class Field {
 		if ( $cmb2_field ) {
 			$cmb2_field->object_id( $object_id );
 			add_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11, 3 );
-
-			/* @phpstan-ignore-next-line */
 			return \call_user_func( $this->default_cb, $cmb2_field->properties, $cmb2_field );
 		}
 
@@ -1491,8 +1489,8 @@ class Field {
 		if ( null === $cmb2_field ) {
 			return false;
 		}
-		$cmb2_field->object_id( $this->box->get_id() ); // @phpstan-ignore-line
-		/* @phpstan-ignore-next-line */
+		// @phpstan-ignore-next-line -- The object id must accept a string for options.
+		$cmb2_field->object_id( $this->box->get_id() );
 		return \call_user_func( $this->default_cb, $cmb2_field->properties, $cmb2_field );
 	}
 

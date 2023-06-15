@@ -551,7 +551,7 @@ class Image_Resize {
 			if ( class_exists( 'WpSmush' ) ) {
 				// phpcs:disable WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 				global $WpSmush;
-				$max_size = $WpSmush->validate_install() ? WP_SMUSH_PREMIUM_MAX_BYTES : WP_SMUSH_MAX_BYTES; // @phpstan-ignore-line
+				$max_size = $WpSmush->validate_install() ? WP_SMUSH_PREMIUM_MAX_BYTES : WP_SMUSH_MAX_BYTES;
 				if ( filesize( $new_img_path ) < $max_size ) {
 					$WpSmush->do_smushit( $new_img_path );
 				}
