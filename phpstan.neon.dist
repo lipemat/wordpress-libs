@@ -1,6 +1,5 @@
 parameters:
     level: 5
-    tmpDir: E:/.phpstan
     paths:
         - src
     scanFiles:
