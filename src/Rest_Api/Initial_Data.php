@@ -22,7 +22,7 @@ class Initial_Data {
 	 *
 	 * @var bool
 	 */
-	protected $retrieving = false;
+	protected bool $retrieving = false;
 
 
 	/**
@@ -184,7 +184,7 @@ class Initial_Data {
 	 * Get an instance of the WP_REST_Request setup with
 	 * the 'view' context.
 	 *
-	 * @return \WP_REST_Request
+	 * @return \WP_REST_Request<array>
 	 */
 	protected function get_request() : \WP_REST_Request {
 		$request = new \WP_REST_Request();

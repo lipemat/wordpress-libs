@@ -1027,8 +1027,7 @@ class Field {
 			public function __construct() {
 			}
 
-
-			public function allowed( $type ) : bool {
+			public function allowed( string $type ) : bool {
 				if ( $this->repeatable_exception( $type ) ) {
 					return false;
 				}

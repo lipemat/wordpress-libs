@@ -30,7 +30,15 @@ class Cache {
 	}
 
 
-	public function set( $key, $value, $group = self::DEFAULT_GROUP, $expire_in_seconds = 0 ) : bool {
+	/**
+	 * @param array|string|object $key
+	 * @param mixed               $value
+	 * @param string              $group
+	 * @param int                 $expire_in_seconds
+	 *
+	 * @return bool
+	 */
+	public function set( $key, $value, string $group = self::DEFAULT_GROUP, int $expire_in_seconds = 0 ) : bool {
 		$group = $this->get_group_key( $group );
 
 		if ( null === $value ) {
@@ -45,8 +53,8 @@ class Cache {
 	/**
 	 * Get an item from the cache.
 	 *
-	 * @param mixed  $key
-	 * @param string $group
+	 * @param array|string|object $key
+	 * @param string              $group
 	 *
 	 * @return false|mixed
 	 */
@@ -57,7 +65,13 @@ class Cache {
 	}
 
 
-	public function delete( $key, $group = self::DEFAULT_GROUP ) : bool {
+	/**
+	 * @param array|string|object $key
+	 * @param string              $group
+	 *
+	 * @return bool
+	 */
+	public function delete( $key, string $group = self::DEFAULT_GROUP ) : bool {
 		$group = $this->get_group_key( $group );
 
 		return wp_cache_delete( $this->filter_key( $key ), $group );

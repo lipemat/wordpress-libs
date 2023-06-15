@@ -18,6 +18,8 @@ use Lipe\Lib\Util\Arrays;
  *          // Conditionally add an active class as we go.
  *          $class[ 'active' ] = isset( $_POST['domain_list'] );
  *
+ * @implements \ArrayAccess<string, array|string>
+ *
  */
 class Class_Names implements \ArrayAccess {
 
@@ -29,6 +31,9 @@ class Class_Names implements \ArrayAccess {
 	protected array $classes = [];
 
 
+	/**
+	 * @param string|array ...$classes
+	 */
 	public function __construct( ...$classes ) {
 		\array_walk( $classes, [ $this, 'parse_classes' ] );
 	}

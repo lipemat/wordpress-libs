@@ -76,6 +76,15 @@ class Term_Select_2 {
 	}
 
 
+	/**
+	 * @param CMB2_Field        $field
+	 * @param string|array|null $value
+	 * @param string|int        $object_id
+	 * @param string            $object_type
+	 * @param CMB2_Types        $field_type_object
+	 *
+	 * @return void
+	 */
 	public function render( CMB2_Field $field, $value, $object_id, string $object_type, CMB2_Types $field_type_object ) : void {
 		if ( empty( $value ) ) {
 			$value = null;

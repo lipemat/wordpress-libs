@@ -147,7 +147,7 @@ class Tabs {
 	}
 
 
-	public function add_wrap_class( $classes ) : array {
+	public function add_wrap_class( array $classes ) : array {
 		if ( $this->has_tabs ) {
 			$classes[] = 'cmb-tabs-panel';
 			if ( ! empty( $this->fields_output ) ) {
@@ -213,7 +213,7 @@ class Tabs {
 	}
 
 
-	public function capture_fields( $output, $field_args ) : string {
+	public function capture_fields( string $output, array $field_args ) : string {
 		if ( ! $this->has_tabs || ! isset( $field_args['tab'] ) ) {
 			return $output;
 		}

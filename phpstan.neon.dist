@@ -1,7 +1,8 @@
 parameters:
-    level: 5
+    level: 6
     paths:
         - src
     scanFiles:
         - dev/stubs/wp-smush.php
         - %rootDir%/../../../stubs/cmb2/cmb2-2.10.php
+    checkMissingIterableValueType: false

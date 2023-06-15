@@ -141,13 +141,11 @@ abstract class Settings {
 	protected $defaults = [];
 
 	/**
-	 * tabs
-	 *
 	 * Put the settings sections into tabs
 	 *
 	 * @var bool
 	 */
-	protected $tabs = false;
+	protected bool $tabs = false;
 
 	/**
 	 * form_url
@@ -157,14 +155,12 @@ abstract class Settings {
 	 *
 	 * @var string
 	 */
-	protected $form_url;
+	protected string $form_url;
 
 
 	/**
-	 * Add Settings
-	 *
 	 * Method used to set the settings
-	 * Separate from set_vars to keep things cleaner
+	 * Separate from set_vars to keep things cleaner.
 	 *
 	 * @uses    $this->settings
 	 *
@@ -182,8 +178,9 @@ abstract class Settings {
 	 *        )
 	 * );
 	 *
+	 * @return void
 	 */
-	abstract protected function add_settings();
+	abstract protected function add_settings() : void;
 
 
 	/**
@@ -192,7 +189,6 @@ abstract class Settings {
 	 * @see This classes vars
 	 *
 	 * @return void
-	 *
 	 */
 	abstract protected function set_vars();
 
