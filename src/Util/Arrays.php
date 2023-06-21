@@ -148,6 +148,56 @@ class Arrays {
 
 
 	/**
+	 * Mimics the Javascript `.find` array prototype to allow a user
+	 * defined predicate and return the array item of the first `true` response.
+	 *
+	 * @template TKey of array-key
+	 * @template T
+	 *
+	 * @param array<TKey, T>           $items    - List of items to look through.
+	 * @param callable( T, TKey ):bool $callback - Callback to make comparisons and
+	 *                                           return true for a match.
+	 *
+	 * @phpstan-return T|null
+	 *
+	 * @return ?mixed
+	 */
+	public function find( array $items, callable $callback ) {
+		$index = $this->find_index( $items, $callback );
+		if ( null !== $index && isset( $items[ $index ] ) ) {
+			return $items[ $index ];
+		}
+		return null;
+	}
+
+
+	/**
+	 * Mimics the Javascript `.findIndex` array prototype to allow a user
+	 * defined predicate and return the array key of the first `true` response.
+	 *
+	 * @template TKey of array-key
+	 * @template T
+	 *
+	 * @param array<TKey, T>           $items    - List of items to look through.
+	 * @param callable( T, TKey ):bool $callback - Callback to make comparisons and
+	 *                                           return true for a match.
+	 *
+	 * @phpstan-return TKey|null
+	 *
+	 * @return int|null|string
+	 */
+	public function find_index( array $items, callable $callback ) {
+		foreach ( $items as $k => $item ) {
+			if ( true === $callback( $item, $k ) ) {
+				return $k;
+			}
+		}
+
+		return null;
+	}
+
+
+	/**
 	 * Combine the results of a callback which returns `[ key => value ]` for
 	 * each element into a single associative array. Used to convert an array
 	 * of any structure into a finished `key => value` array.

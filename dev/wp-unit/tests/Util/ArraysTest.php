@@ -5,9 +5,7 @@
  *
  */
 
-namespace Lipe\Project\Util;
-
-use Lipe\Lib\Util\Arrays;
+namespace Lipe\Lib\Util;
 
 class ArraysTest extends \WP_UnitTestCase {
 	public function test_array_chunk_to_associative() : void {
@@ -68,6 +66,82 @@ class ArraysTest extends \WP_UnitTestCase {
 			'x' => 5,
 			8   => 0,
 		] ) );
+	}
+
+
+	public function test_find_index() : void {
+		$this->assertEquals( 's', Arrays::in()->find_index( [
+			'f' => 'first',
+			's' => 'second',
+			'x' => 5,
+			'v' => 'second',
+		], fn( $value ) => $value === 'second' ) );
+
+		$this->assertNull( Arrays::in()->find_index( [
+			'f' => 'first',
+			's' => 'second',
+			'x' => 5,
+			'v' => 'second',
+		], fn( $value ) => $value === 'not-exists' ) );
+
+		$this->assertEquals( 'v', Arrays::in()->find_index( [
+			'f' => 'first',
+			's' => 'second',
+			'x' => 5,
+			'v' => 'second',
+		], fn( $value, string $key ) => 's' !== $key && $value === 'second' ) );
+	}
+
+
+	public function test_find() : void {
+		$this->assertEquals( [
+			'some-key' => 'second',
+		], Arrays::in()->find( [
+			'f' => [
+				'some-key' => 'first',
+			],
+			's' => [
+				'some-key' => 'second',
+			],
+			'x' => [
+				'some-key' => 5,
+			],
+			'v' => [
+				'some-key' => 'second',
+			],
+		], fn( $value ) => $value['some-key'] === 'second' ) );
+
+		$this->assertNull( Arrays::in()->find( [
+			'f' => [
+				'some-key' => 'first',
+			],
+			's' => [
+				'some-key' => 'second',
+			],
+			'x' => [
+				'some-key' => 5,
+			],
+			'v' => [
+				'some-key' => 'second',
+			],
+		], fn( $value ) => $value['some-key'] === 'not-exists' ) );
+
+		$this->assertEquals( [
+			'some-key' => 'second',
+		], Arrays::in()->find( [
+			'f' => [
+				'some-key' => 'first',
+			],
+			's' => [
+				'some-key' => 'second',
+			],
+			'x' => [
+				'some-key' => 5,
+			],
+			'v' => [
+				'some-key' => 'second',
+			],
+		], fn( $value, string $key ) => 's' !== $key && $value['some-key'] === 'second' ) );
 	}
 
 
