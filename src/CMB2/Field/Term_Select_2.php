@@ -60,7 +60,9 @@ class Term_Select_2 {
 			'fields'     => 'id=>name',
 			'hide_empty' => false,
 		] );
-		if ( \is_array( $terms ) && sanitize_text_field( $_REQUEST[ self::CREATE_NEW_TERMS ] ?? '' ) ) {
+
+		$create_new = sanitize_text_field( $_REQUEST[ self::CREATE_NEW_TERMS ] ?? '' );
+		if ( \is_array( $terms ) && '' !== $create_new ) {
 			// Add a newly entered term as an option.
 			$terms[ $search ] = $search;
 		}
@@ -121,10 +123,10 @@ class Term_Select_2 {
 	 */
 	protected function js_inline( CMB2_Field $field, CMB2_Types $field_type_object ) : void {
 		static $rendered = [];
-		if ( isset( $rendered[ (string) $field->id() ] ) ) {
+		if ( isset( $rendered[ $field->id() ] ) ) {
 			return;
 		}
-		$rendered[ (string) $field->id() ] = 1;
+		$rendered[ $field->id() ] = 1;
 
 		$url_args = [
 			'action'               => static::GET_TERMS,
@@ -234,7 +236,7 @@ class Term_Select_2 {
 			];
 
 			// Split options into those, which are selected and the rest.
-			if ( empty( $option_value ) || \in_array( $option_value, $field_escaped_value, false ) ) {
+			if ( empty( $option_value ) || \in_array( $option_value, $field_escaped_value, true ) ) {
 				$option['checked'] = true;
 				$selected_items .= $select->select_option( $option );
 			} else {

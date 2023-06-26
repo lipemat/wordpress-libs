@@ -44,27 +44,35 @@ class Crypt {
 
 
 	/**
-	 * Decrypt string.
+	 * Decrypt a string.
 	 *
-	 * @link   https://gist.github.com/ve3/0f77228b174cf92a638d81fddb17189d
+	 * @link         https://gist.github.com/ve3/0f77228b174cf92a638d81fddb17189d
+	 *
+	 * @noinspection ForgottenDebugOutputInspection
 	 *
 	 * @param string $message - The encrypted string that is base64 encoded.
 	 *
 	 * @return string
 	 */
 	public function decrypt( string $message ) : ?string {
-		$json = json_decode( base64_decode( $message ), true );
+		try {
+			$json = json_decode( base64_decode( $message, true ), true, 512, JSON_THROW_ON_ERROR );
+		} catch ( \JsonException $e ) {
+			error_log( "Unable to decrypt message: {$message}. {$e->getMessage()}" ); //phpcs:ignore
+			return null;
+		}
 		$iterations = (int) abs( $json['iterations'] ?? static::ITERATIONS );
 
 		try {
-			$salt     = hex2bin( $json['salt'] );
-			$iv       = hex2bin( $json['iv'] );
+			$salt = hex2bin( $json['salt'] );
+			$iv = hex2bin( $json['iv'] );
 			$hash_key = hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, $iterations, $this->get_key_size() ) );
 		} catch ( \Exception $e ) {
+			error_log( "Unable to decrypt message: {$message}. {$e->getMessage()}" ); //phpcs:ignore
 			return null;
 		}
 
-		return openssl_decrypt( base64_decode( $json['ciphertext'] ), static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv );
+		return openssl_decrypt( base64_decode( $json['ciphertext'], true ), static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv );
 	}
 
 

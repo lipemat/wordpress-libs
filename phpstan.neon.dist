@@ -1,7 +1,10 @@
 parameters:
     level: 6
     strictRules:
-        allRules: false
+        allRules: true
+        # Construct empty() is not allowed.
+        disallowedConstructs: false
+        noVariableVariables: false
     paths:
         - src
     scanFiles:

@@ -25,7 +25,7 @@ class Meta_Box {
 	/**
 	 * The type meta box.
 	 *
-	 * @phpstan-var 'radio'|'dropdown'|'simple'
+	 * @phpstan-var 'radio'|'dropdown'|'simple'|'checklist'
 	 *
 	 * @var string
 	 */
@@ -220,7 +220,7 @@ class Meta_Box {
 					if ( empty( $data_object->term_id ) && ! $tax->hierarchical ) {
 						$value = '';
 					}
-					$checked = \in_array( $data_object->term_id, (array) $args['selected_cats'], true );
+					$checked = \in_array( $data_object->term_id, $args['selected_cats'], true );
 
 					// @todo Next time working on this, clean it up with `ob_start()`.
 					$output .= "\n<li id='{$args['taxonomy']}-{$data_object->term_id}'>" .

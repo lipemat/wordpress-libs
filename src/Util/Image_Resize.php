@@ -115,8 +115,7 @@ class Image_Resize {
 	 * @return array{sizes: array<string, META>}
 	 */
 	public function populate_srcset_sizes( array $meta, array $size_array, string $src, int $attachment_id ) : array {
-		$width = (int) $size_array[0];
-		$height = (int) $size_array[1];
+		[ $width, $height ] = $size_array;
 		if ( $width < 1 ) {
 			return $meta;
 		}
@@ -275,7 +274,7 @@ class Image_Resize {
 				$width = (int) get_option( 'thumbnail_size_w' );
 				$height = (int) get_option( 'thumbnail_size_h' );
 				// last chance thumbnail size defaults.
-				if ( ! $width && ! $height ) {
+				if ( 0 === $width && 0 === $height ) {
 					$width = 128;
 					$height = 96;
 				}
@@ -437,11 +436,11 @@ class Image_Resize {
 	 * @return array{width: int, height: int, url: string}|array<null>
 	 */
 	protected function resize( int $width, int $height, int $attach_id, ?string $img_url = null, bool $crop = false ) : array {
-		if ( $attach_id ) {
+		if ( 0 !== $attach_id ) {
 			$image_src = wp_get_attachment_image_src( $attach_id, 'full' );
 			$file_path = get_attached_file( $attach_id );
 			// this is not an attachment, let's use the image url.
-		} elseif ( $img_url ) {
+		} elseif ( null !== $img_url ) {
 			$uploads_dir = wp_upload_dir();
 			if ( false !== strpos( $img_url, $uploads_dir['baseurl'] ) ) {
 				$file_path = str_replace( $uploads_dir['baseurl'], $uploads_dir['basedir'], $img_url );
@@ -483,7 +482,7 @@ class Image_Resize {
 		// checking if the file size is larger than the target size.
 		// if it is smaller, or the same size, stop right here and return.
 		if ( $image_src[1] > $width || $image_src[2] > $height ) {
-			if ( false === $crop || ! $height ) {
+			if ( false === $crop || 0 === $height ) {
 				// calculate the size proportionally.
 				$proportional_size = wp_constrain_dimensions( $image_src[1], $image_src[2], $width, $height );
 				$resized_img_path = $no_ext_path . '-' . $proportional_size[0] . 'x' . $proportional_size[1] . $extension;

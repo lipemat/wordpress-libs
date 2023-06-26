@@ -149,11 +149,11 @@ class Zip {
 		}
 
 		// if at least one file made it.
-		if ( $success ) {
+		if ( \count( $success ) > 0 ) {
 			$this->serve_existing_file();
 		}
 
-		die( 'Failed to create zip file' );
+		die( 'Failed creating zip file.' );
 	}
 
 

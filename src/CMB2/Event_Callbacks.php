@@ -152,7 +152,7 @@ class Event_Callbacks {
 			if ( \in_array( get_post_type( $object_id ), $this->object_types, true ) ) {
 				// Already run during `deleted_term_relationship`.
 				// Same logic used within `wp_set_object_terms`.
-				if ( ! $append && \array_diff( $old_tt_ids, $tt_ids ) ) {
+				if ( ! $append && \count( \array_diff( $old_tt_ids, $tt_ids ) ) > 0 ) {
 					return;
 				}
 				$this->previous_value = $old_tt_ids;

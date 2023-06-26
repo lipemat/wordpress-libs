@@ -706,12 +706,12 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	public function set_post_type_label( string $singular = '', string $plural = '' ) : void {
-		if ( ! $singular ) {
+		if ( '' === $singular ) {
 			$singular = str_replace( '_', ' ', $this->post_type );
 			$singular = ucwords( $singular );
 		}
 
-		if ( ! $plural ) {
+		if ( '' === $plural ) {
 			$end = substr( $singular, - 1 );
 			if ( 's' === $end ) {
 				$plural = ucwords( $singular . 'es' );
@@ -973,7 +973,7 @@ class Custom_Post_Type {
 	 */
 	public function get_post_type_archive_label( string $title ) : string {
 		if ( is_post_type_archive( $this->post_type ) ) {
-			if ( $this->archive_label ) {
+			if ( '' !== $this->archive_label ) {
 				$title = $this->archive_label;
 			} else {
 				$title = $this->get_post_type_label( 'plural' );

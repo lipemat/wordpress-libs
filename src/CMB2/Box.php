@@ -590,8 +590,8 @@ class Box {
 			$config = $this->translate_rest_keys( $field, $config );
 		}
 
-		if ( $field->sanitize_callback ) {
-			$config['sanitize_callback'] = function ( $value ) use ( $field ) {
+		if ( null !== $field->sanitize_callback ) {
+			$config['sanitize_callback'] = function( $value ) use ( $field ) {
 				return \call_user_func( $field->sanitize_callback, $value, $field->get_field_args(), $field->get_cmb2_field() );
 			};
 		}

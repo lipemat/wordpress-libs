@@ -71,7 +71,7 @@ class Tabs {
 	 * @return void
 	 */
 	public function opening_div( $cmb_id, $object_id, $object_type, $cmb ) : void {
-		if ( ! $cmb->prop( 'tabs' ) ) {
+		if ( ! (bool) $cmb->prop( 'tabs' ) ) {
 			return;
 		}
 		$this->cmb = $cmb;
@@ -116,7 +116,7 @@ class Tabs {
 	public function render_nav( $cmb_id, $object_id, $object_type, $cmb ) : void {
 		$tabs = $cmb->prop( 'tabs' );
 
-		if ( $tabs ) {
+		if ( (bool) $tabs ) {
 			echo '<ul class="cmb-tab-nav">';
 
 			if ( empty( $_REQUEST[ self::TAB_FIELD ] ) ) { //phpcs:ignore

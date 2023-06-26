@@ -604,11 +604,11 @@ class Taxonomy {
 
 		if ( ! isset( $already_defaulted[ $this->get_slug() ] ) ) {
 			// Don't do anything if the taxonomy already has terms.
-			if ( ! get_terms( [
-				'taxonomy'   => $this->taxonomy,
-				'hide_empty' => false,
-				'number'     => 1,
-			] ) ) {
+			$existing = get_terms( [
+				'taxonomy' => $this->taxonomy,
+				'fields'   => 'count',
+			] );
+			if ( 0 === (int) $existing ) {
 				foreach ( $this->initial_terms as $slug => $term ) {
 					$args = [];
 					if ( ! \is_numeric( $slug ) ) {
@@ -755,7 +755,7 @@ class Taxonomy {
 	public function register() : void {
 		$this->register_taxonomy();
 		static::$registry[ $this->taxonomy ] = $this;
-		if ( $this->initial_terms ) {
+		if ( \count( $this->initial_terms ) > 0 ) {
 			$this->insert_initial_terms();
 		}
 	}
@@ -872,14 +872,14 @@ class Taxonomy {
 	 */
 	protected function get_label( string $quantity = 'singular' ) : string {
 		if ( 'plural' === $quantity ) {
-			if ( ! $this->label_plural ) {
+			if ( '' === $this->label_plural ) {
 				$this->set_label( $this->label_singular );
 			}
 
 			return $this->label_plural;
 		}
 
-		if ( ! $this->label_singular ) {
+		if ( '' === $this->label_singular ) {
 			$this->set_label();
 		}
 
@@ -897,10 +897,10 @@ class Taxonomy {
 	 *
 	 */
 	public function set_label( string $singular = '', string $plural = '' ) : void {
-		if ( ! $singular ) {
+		if ( '' === $singular ) {
 			$singular = ucwords( \str_replace( '_', ' ', $this->taxonomy ) );
 		}
-		if ( ! $plural ) {
+		if ( '' === $plural ) {
 			if ( 'y' === \substr( $singular, - 1 ) ) {
 				$plural = \substr( $singular, 0, - 1 ) . 'ies';
 			} else {
@@ -920,7 +920,7 @@ class Taxonomy {
 	 *
 	 */
 	public function get_menu_label() : string {
-		if ( ! $this->label_menu ) {
+		if ( '' === $this->label_menu ) {
 			$this->label_menu = $this->label_plural;
 		}
 

@@ -51,17 +51,17 @@ class Layout {
 
 		echo '<div class="cmb-row cmb-repeat-group-wrap cmb-group-table cmb-group-display-' . esc_attr( $field_group->args( 'layout' ) ) . ' ' . esc_attr( $field_group->row_classes() ), '" data-fieldtype="group"><div class="cmb-td"><div data-groupid="' . esc_attr( $field_group->id() ) . '" id="' . esc_attr( $field_group->id() ) . '_repeat" ' . $cmb->group_wrap_attributes( $field_group ) . '>'; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
-		if ( $desc || $label ) {
+		if ( \is_string( $desc ) || \is_string( $label ) ) {
 			$classnames = new Class_Names( [
 				'cmb-group-description' => $desc,
 				'cmb-row'               => ! $this->is_table( $field_group ),
 			] );
 			echo '<div class="' . esc_attr( $classnames ) . '">';
 
-			if ( $label ) {
+			if ( \is_string( $label ) && '' !== $label ) {
 				echo '<h2 class="cmb-group-name cmb-layout-header">' . esc_html( $label ) . '</h2>';
 			}
-			if ( $desc ) {
+			if ( \is_string( $desc ) && '' !== $desc ) {
 				echo '<p class="cmb2-metabox-description cmb-layout-description">' . esc_html( $desc ) . '</p>';
 			}
 			echo '</div>';
@@ -74,7 +74,7 @@ class Layout {
 
 		echo '<table class="' . esc_attr( $classnames ) . '" cellpadding="0" cellspacing="0">';
 
-		if ( $this->is_table( $field_group ) && $field_group->args( 'show_names' ) ) {
+		if ( $this->is_table( $field_group ) && (bool) $field_group->args( 'show_names' ) ) {
 			$this->render_group_table_header( $field_group );
 		}
 
@@ -143,7 +143,7 @@ class Layout {
 	 */
 	public function render_group_table_row( \CMB2_Field $field_group ) : \CMB2 {
 		$field_group->peform_param_callback( 'before_group_row' );
-		$closed_class     = $field_group->options( 'closed' ) ? ' closed' : '';
+		$closed_class = (bool) $field_group->options( 'closed' ) ? ' closed' : '';
 		$confirm_deletion = $field_group->options( 'remove_confirm' );
 		$confirm_deletion = ! empty( $confirm_deletion ) ? $confirm_deletion : '';
 

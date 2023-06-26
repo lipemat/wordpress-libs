@@ -25,9 +25,12 @@ class True_False extends \CMB2_Type_Checkbox {
 
 		$meta_value = $this->field->escaped_value(); // @phpstan-ignore-line
 
-		$is_checked = $this->is_checked ?? ! empty( $meta_value );
+		$is_checked = $this->is_checked;
+		if ( null === $is_checked ) {
+			$is_checked = ! empty( $meta_value );
+		}
 
-		if ( $is_checked ) {
+		if ( (bool) $is_checked ) {
 			$defaults['checked'] = 'checked';
 		}
 

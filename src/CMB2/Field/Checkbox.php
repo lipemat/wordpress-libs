@@ -32,7 +32,7 @@ class Checkbox {
 	 * @return \CMB2_Field|null
 	 */
 	public function render_field_callback( array $args, \CMB2_Field $field ) : ?\CMB2_Field {
-		if ( ! $field->should_show() || ( ! is_admin() && ! $field->args( 'on_front' ) ) ) {
+		if ( ! $field->should_show() || ( ! is_admin() && ! (bool) $field->args( 'on_front' ) ) ) {
 			return null;
 		}
 		// default layout, nothing to do here.
@@ -46,18 +46,18 @@ class Checkbox {
 
 		$field->peform_param_callback( 'before' );
 
-		$_field                      = clone $field;
+		$_field = clone $field;
 		$_field->args['description'] = '';
-		$types                       = new \CMB2_Types( $_field );
+		$types = new \CMB2_Types( $_field );
 		$types->render();
 
-		if ( ! $field->args( 'show_names' ) ) {
-			$field->peform_param_callback( 'label_cb' );
-			echo '<br />';
-		} else {
-			if ( $field->get_param_callback_result( 'label_cb' ) ) {
+		if ( (bool) $field->args( 'show_names' ) ) {
+			if ( (bool) $field->get_param_callback_result( 'label_cb' ) ) {
 				$field->peform_param_callback( 'label_cb' );
 			}
+			echo '<br />';
+		} else {
+			$field->peform_param_callback( 'label_cb' );
 			echo '<br />';
 		}
 

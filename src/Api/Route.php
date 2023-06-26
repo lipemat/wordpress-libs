@@ -53,7 +53,7 @@ class Route {
 
 
 	/**
-	 * Setup a special post type to be used in the queries, so we return
+	 * Set up a special post type to be used in the queries, so we return
 	 * an actual post and not a 404.
 	 *
 	 * A single post of this type is created to be queried
@@ -121,7 +121,7 @@ class Route {
 		add_filter( 'the_title', [ $this, 'get_title' ], 10, 2 );
 		add_filter( 'single_post_title', [ $this, 'get_title' ], 10, 2 );
 		add_filter( 'body_class', [ $this, 'adjust_body_class' ], 99 );
-		add_filter( 'template_include', [ $this, 'override_template' ], 10, 1 );
+		add_filter( 'template_include', [ $this, 'override_template' ] );
 	}
 
 
@@ -222,17 +222,19 @@ class Route {
 
 
 	/**
-	 * Get the ID of the placeholder post
+	 * Get the ID of the placeholder post.
+	 *
+	 * @throws \LogicException -- If we somehow fail to create the post.
 	 *
 	 * @return int
 	 */
 	protected static function get_post_id() : int {
-		if ( static::$post_id ) {
+		if ( static::$post_id > 0 ) {
 			return static::$post_id;
 		}
 
 		static::$post_id = (int) get_option( static::POST_ID_OPTION, false );
-		if ( static::$post_id ) {
+		if ( static::$post_id > 0 ) {
 			return static::$post_id;
 		}
 
@@ -242,14 +244,16 @@ class Route {
 			'posts_per_page' => 1,
 			'fields'         => 'ids',
 		] );
-		if ( $posts ) {
+		if ( isset( $posts[0] ) ) {
 			static::$post_id = $posts[0];
 		} else {
 			static::$post_id = static::make_post();
 		}
 
-		if ( static::$post_id ) {
-			update_option( static::POST_ID_OPTION, (int) static::$post_id );
+		if ( static::$post_id > 0 ) {
+			update_option( static::POST_ID_OPTION, static::$post_id );
+		} else {
+			throw new \LogicException( 'Failed creating post for routing.' );
 		}
 
 		return static::$post_id;

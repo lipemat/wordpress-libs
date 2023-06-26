@@ -108,8 +108,16 @@ class Class_Names implements \ArrayAccess {
 	}
 
 
+	/**
+	 * Add or remove a class name from the list.
+	 *
+	 * @param ?string           $offset - Class name.
+	 * @param string|array|bool $value  - True to add class or false to remove it.
+	 *
+	 * @return void
+	 */
 	public function offsetSet( $offset, $value ) : void {
-		if ( $value ) {
+		if ( ! empty( $value ) ) {
 			$this->parse_classes( $offset );
 		} else {
 			$this->offsetUnset( $offset );

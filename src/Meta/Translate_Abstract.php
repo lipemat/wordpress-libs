@@ -503,7 +503,7 @@ abstract class Translate_Abstract {
 	 */
 	protected function maybe_use_main_blog( string $field_id, callable $callback ) {
 		$box = $this->get_field( $field_id )->get_box();
-		$is_network = $box && \method_exists( $box, 'is_network' ) && $box->is_network();
+		$is_network = null !== $box && \method_exists( $box, 'is_network' ) && $box->is_network();
 		if ( $is_network ) {
 			switch_to_blog( get_main_site_id() );
 		}

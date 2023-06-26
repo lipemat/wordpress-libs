@@ -155,7 +155,7 @@ abstract class Meta_Box {
 
 		static::$registry[ $post_type ][ $this->id ] = $this;
 
-		$args = (array) wp_parse_args( $args, [
+		$args = wp_parse_args( $args, [
 			'title'         => null,
 			'context'       => 'advanced',
 			'priority'      => 'default',

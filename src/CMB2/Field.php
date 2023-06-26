@@ -847,7 +847,7 @@ class Field {
 	public function char_counter( bool $count_words = false, int $max = null, bool $enforce = false, array $labels = [] ) : Field {
 		$this->char_counter = $count_words ? 'words' : true;
 
-		if ( $max ) {
+		if ( null !== $max ) {
 			$this->char_max = $max;
 			if ( $enforce ) {
 				if ( 'words' === $this->char_counter ) {
@@ -1024,8 +1024,13 @@ class Field {
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ) : Field {
 		// Ugh! Hack, so I can use a method from that class.
 		$mock = new class() extends \CMB2_Field {
+			/**
+			 * @phpstan-ignore-next-line
+			 * @noinspection MagicMethodsValidityInspection PhpMissingParentConstructorInspection
+			 */
 			public function __construct() {
 			}
+
 
 			public function allowed( string $type ) : bool {
 				if ( $this->repeatable_exception( $type ) ) {
@@ -1202,7 +1207,7 @@ class Field {
 	 */
 	public function store_user_terms_in_meta( bool $use_meta = true ) : Field {
 		$box = $this->get_box();
-		if ( $box && ( ! \in_array( $this->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) || ! \in_array( 'user', $box->get_object_types(), true ) ) ) {
+		if ( null !== $box && ( ! \in_array( $this->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) || ! \in_array( 'user', $box->get_object_types(), true ) ) ) {
 			_doing_it_wrong( __METHOD__, 'Storing user terms in meta only applies to taxonomy fields registered on users.', '3.14.0' );
 		}
 		$this->store_user_terms_in_meta = $use_meta;
@@ -1245,7 +1250,7 @@ class Field {
 		Tabs::init_once();
 
 		$this->tab = $id;
-		if ( $this->render_row_cb ) {
+		if ( null !== $this->render_row_cb ) {
 			$this->tab_content_cb = $this->render_row_cb;
 		}
 		$this->render_row_cb( [ Tabs::in(), 'render_field' ] );
@@ -1455,7 +1460,7 @@ class Field {
 		// Will create an infinite loop if filter is intact.
 		remove_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11 );
 		$cmb2_field = $this->get_cmb2_field();
-		if ( $cmb2_field ) {
+		if ( null !== $cmb2_field ) {
 			$cmb2_field->object_id( $object_id );
 			add_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11, 3 );
 			return \call_user_func( $this->default_cb, $cmb2_field->properties, $cmb2_field );
