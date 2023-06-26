@@ -89,6 +89,8 @@ class Cache {
 	/**
 	 * Flush a group by changing the "last_changed" key.
 	 *
+	 * @todo Switch to conditional `wp_cache_set_last_changed` when WP 6.3 is available.
+	 *
 	 * @param string $group
 	 *
 	 * @return void
