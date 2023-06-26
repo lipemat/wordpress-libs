@@ -3,17 +3,18 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Query\Clause;
 
-//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
-
 /**
  * Generate a `meta_query` argument for various WP queries.
  *
  * @author Mat Lipe
  * @since  4.0.0
  *
+ * @link   https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters
+ *
+ * @extends Clause_Abstract<Meta_Query_Interface>
+ *
  * @internal
  *
- * @link   https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters
  */
 class Meta_Query extends Clause_Abstract {
 	/**

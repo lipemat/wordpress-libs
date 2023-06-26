@@ -5,17 +5,18 @@ namespace Lipe\Lib\Query\Clause;
 
 use Lipe\Lib\Query\Args;
 
-//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
-
 /**
  * Generate a `tax_query` argument for a `WP_Query.
  *
  * @author Mat Lipe
  * @since  4.0.0
  *
+ * @link   https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters
+ *
+ * @extends Clause_Abstract<Args>
+ *
  * @internal
  *
- * @link   https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters
  */
 class Tax_Query extends Clause_Abstract {
 	public const FIELD_ID          = 'term_id';
@@ -110,7 +111,7 @@ class Tax_Query extends Clause_Abstract {
 	 *
 	 * @internal
 	 *
-	 * @param Args|mixed $args_class - Args class, which supports properties this method will assign.
+	 * @param Args $args_class - Args class, which supports properties this method will assign.
 	 *
 	 * @return void
 	 */

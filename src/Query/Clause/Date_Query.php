@@ -3,13 +3,12 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Query\Clause;
 
-//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
 use Lipe\Lib\Query\Args;
 
 /**
  * Generate a `date_query` argument for a `WP_Query.
  *
- * @note Far too many possibilities to add methods the same
+ * @note   Far too many possibilities to add methods the same
  * way we do for Date_Query and Tax_Query. Instead, we are using the properties
  * of this class.
  *
@@ -19,6 +18,8 @@ use Lipe\Lib\Query\Args;
  * @internal
  *
  * @phpstan-type COMPARE '='|'!='|'>'|'>='|'<'|'<='|'IN'|'NOT IN'|'BETWEEN'|'NOT BETWEEN'|''
+ *
+ * @extends Clause_Abstract<Date_Query_Interface>
  */
 class Date_Query extends Clause_Abstract {
 	/**

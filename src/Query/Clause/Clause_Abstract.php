@@ -4,12 +4,15 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Query\Clause;
 
 use Lipe\Lib\Query\Args;
+use Lipe\Lib\Query\Args_Abstract;
 
 /**
  * Shared methods and interface for various query clauses.
  *
- * @author Mat Lipe
- * @since  4.0.0
+ * @author   Mat Lipe
+ * @since    4.0.0
+ *
+ * @template C
  *
  */
 abstract class Clause_Abstract {
@@ -40,7 +43,9 @@ abstract class Clause_Abstract {
 	 *
 	 * @interal
 	 *
-	 * @param Args|mixed $args_class - Args class, which supports properties this method will assign.
+	 * @phpstan-param C $args_class
+	 *
+	 * @param Args      $args_class - Args class, which supports properties this method will assign.
 	 *
 	 * @return void
 	 */
@@ -112,6 +117,8 @@ abstract class Clause_Abstract {
 	/**
 	 * Loop through the nested clauses and append them to
 	 * the clause array at the correct level.
+	 *
+	 * @phpstan-param static<C>      $level
 	 *
 	 * @param array                  $clauses
 	 * @param static|Clause_Abstract $level

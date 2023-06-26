@@ -308,11 +308,9 @@ class Image_Resize {
 			if ( empty( $image ) ) {
 				return null;
 			}
-			if ( \is_array( $image ) ) {
-				$image_url = $image['url'];
-				$width = $image['width'];
-				$height = $image['height'];
-			}
+			$image_url = $image['url'];
+			$width = $image['width'];
+			$height = $image['height'];
 		}
 
 		/* BEGIN OUTPUT */
@@ -484,7 +482,7 @@ class Image_Resize {
 
 		// checking if the file size is larger than the target size.
 		// if it is smaller, or the same size, stop right here and return.
-		if ( \is_array( $image_src ) && ( $image_src[1] > $width || $image_src[2] > $height ) ) {
+		if ( $image_src[1] > $width || $image_src[2] > $height ) {
 			if ( false === $crop || ! $height ) {
 				// calculate the size proportionally.
 				$proportional_size = wp_constrain_dimensions( $image_src[1], $image_src[2], $width, $height );

@@ -659,7 +659,7 @@ class Taxonomy {
 			$tax = get_taxonomy( $this->taxonomy );
 			$parent = $this->show_in_menu;
 			$order = 100;
-			if ( null !== $tax ) {
+			if ( false !== $tax ) {
 				if ( \is_array( $parent ) ) {
 					$parent = \key( $this->show_in_menu );
 					$order = \reset( $this->show_in_menu );

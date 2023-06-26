@@ -1,5 +1,7 @@
 parameters:
     level: 6
+    strictRules:
+        allRules: false
     paths:
         - src
     scanFiles:

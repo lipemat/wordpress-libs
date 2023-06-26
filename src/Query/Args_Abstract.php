@@ -16,7 +16,7 @@ abstract class Args_Abstract {
 	/**
 	 * Various sub-clauses to be flattened via `get_args`.
 	 *
-	 * @var Clause_Abstract[]
+	 * @var array<Clause_Abstract<static>>
 	 */
 	protected array $clauses = [];
 
