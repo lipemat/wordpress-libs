@@ -37,17 +37,24 @@ trait Post_Object_Trait {
 	use Mutator_Trait;
 
 	/**
+	 * ID of this post.
+	 *
 	 * @var int
 	 */
-	protected $post_id;
+	protected int $post_id = 0;
 
 	/**
-	 * @var \WP_Post
+	 * Object of this post.
+	 *
+	 * @var \WP_Post|null
 	 */
-	protected $post;
+	protected ?\WP_Post $post = null;
 
 
 	/**
+	 * Construct this class with either the provided post
+	 * of the current global post.
+	 *
 	 * @param int|\WP_Post|null $post
 	 */
 	public function __construct( $post = null ) {
@@ -55,7 +62,7 @@ trait Post_Object_Trait {
 			$post = get_post();
 		}
 		if ( is_a( $post, \WP_Post::class ) ) {
-			$this->post    = $post;
+			$this->post = $post;
 			$this->post_id = $this->post->ID;
 		} else {
 			$this->post_id = (int) $post;
@@ -63,6 +70,11 @@ trait Post_Object_Trait {
 	}
 
 
+	/**
+	 * Get the WP Post object.
+	 *
+	 * @return \WP_Post|null
+	 */
 	public function get_object() : ?\WP_Post {
 		if ( null === $this->post ) {
 			$this->post = get_post( $this->post_id );
@@ -72,16 +84,26 @@ trait Post_Object_Trait {
 	}
 
 
+	/**
+	 * Get the database ID of this wp post.
+	 *
+	 * @return int
+	 */
 	public function get_id() : int {
 		return $this->post_id;
 	}
 
 
+	/**
+	 * Used by the Mutator_Trait to determine the type
+	 * of meta to retrieve or update.
+	 *
+	 * @return string
+	 */
 	public function get_meta_type() : string {
 		return Repo::META_POST;
 	}
 
-	/********* static *******************/
 
 	/**
 	 *
