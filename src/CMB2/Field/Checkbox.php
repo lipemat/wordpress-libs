@@ -28,7 +28,6 @@ class Checkbox {
 	 * @see Field_Type::checkbox()
 	 * @example $box->field()->checkbox('compact')
 	 *
-	 *
 	 * @return \CMB2_Field|null
 	 */
 	public function render_field_callback( array $args, \CMB2_Field $field ) : ?\CMB2_Field {
@@ -77,6 +76,11 @@ class Checkbox {
 	}
 
 
+	/**
+	 * Add styles for the checkbox field.
+	 *
+	 * @return void
+	 */
 	protected function styles() : void {
 		$this->once( function() {
 			?>

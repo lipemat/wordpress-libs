@@ -6,6 +6,8 @@ use Lipe\Lib\Meta\Mutator_Trait;
 use Lipe\Lib\Meta\Repo;
 
 /**
+ * Shared methods for interacting with the WordPress comment object.
+ *
  * @property string $comment_agent
  * @property string $comment_approved
  * @property string $comment_author
@@ -26,18 +28,24 @@ trait Comment_Trait {
 	use Mutator_Trait;
 
 	/**
+	 * Comment ID
+	 *
 	 * @var int
 	 */
 	protected int $comment_id;
 
 	/**
+	 * Comment object
+	 *
 	 * @var \WP_Comment
 	 */
 	protected $comment;
 
 
 	/**
-	 * @param int|\WP_Comment $comment
+	 * Comment_Trait constructor.
+	 *
+	 * @param int|\WP_Comment $comment - Comment ID or object.
 	 */
 	public function __construct( $comment ) {
 		if ( is_a( $comment, \WP_Comment::class ) ) {
@@ -49,6 +57,11 @@ trait Comment_Trait {
 	}
 
 
+	/**
+	 * Return the comment object.
+	 *
+	 * @return \WP_Comment|null
+	 */
 	public function get_object() : ?\WP_Comment {
 		if ( null === $this->comment ) {
 			$this->comment = get_comment( $this->comment_id );
@@ -58,6 +71,11 @@ trait Comment_Trait {
 	}
 
 
+	/**
+	 * Get the comment id.
+	 *
+	 * @return int
+	 */
 	public function get_id() : int {
 		return $this->comment_id;
 	}
@@ -76,13 +94,20 @@ trait Comment_Trait {
 	}
 
 
+	/**
+	 * Used to determine the type of meta to retrieve or update.
+	 *
+	 * @return string
+	 */
 	public function get_meta_type() : string {
 		return Repo::META_COMMENT;
 	}
 
 
 	/**
-	 * @param int|\WP_Comment $comment
+	 * Create a new instance of this class.
+	 *
+	 * @param int|\WP_Comment $comment - Comment ID or object.
 	 *
 	 * @return static
 	 */

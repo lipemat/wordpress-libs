@@ -4,7 +4,6 @@ namespace Lipe\Lib\CMB2;
 
 /**
  * CMB2 Option Page fluent interface.
- *
  */
 class Options_Page extends Box {
 
@@ -101,7 +100,6 @@ class Options_Page extends Box {
 	 *
 	 * @example 'tools.php'
 	 *
-	 *
 	 * @var string
 	 */
 	public $parent_slug;
@@ -164,8 +162,8 @@ class Options_Page extends Box {
 	/**
 	 * Holds default values specified on individual fields
 	 * for use with the get filter.
-	 * CMB2 saves options as a single blob so we use the
-	 * filter to inject the default on retrieve.
+	 * CMB2 saves options as a single blob, so we use the
+	 * filter to inject the default on retrieval.
 	 *
 	 * @var array
 	 */
@@ -175,8 +173,8 @@ class Options_Page extends Box {
 	/**
 	 * Options Page constructor.
 	 *
-	 * @param string      $id
-	 * @param string|null $title
+	 * @param string      $id    - Options page id.
+	 * @param string|null $title - Options page title.
 	 */
 	public function __construct( string $id, ?string $title = null ) {
 		if ( null === $this->option_key ) {
@@ -192,7 +190,7 @@ class Options_Page extends Box {
 	/**
 	 * Is this a network level settings page?
 	 *
-	 * @param bool $is_network
+	 * @param bool $is_network - Whether this is a network settings page.
 	 *
 	 * @return void
 	 */
@@ -209,7 +207,7 @@ class Options_Page extends Box {
 	 * Specify the save button text.
 	 * Set to `null` to create a read-only form which has no save button.
 	 *
-	 * @param null|string $text
+	 * @param null|string $text - The text to display on the save button.
 	 *
 	 * @return void
 	 */
@@ -255,7 +253,7 @@ class Options_Page extends Box {
 	 * it expects direct calls to `get_site_option`. We mimic the admin
 	 * functionality here, so we get the correct values when using the Repo.
 	 *
-	 * @param \CMB2 $cmb
+	 * @param \CMB2 $cmb - The CMB2 object.
 	 */
 	public function run_options_hookup_on_front_end( \CMB2 $cmb ) : void {
 		if ( ! is_admin() ) {
@@ -271,8 +269,8 @@ class Options_Page extends Box {
 	 *
 	 * Gives a universal place for amending the config.
 	 *
-	 * @param Field $field
-	 * @param array $config
+	 * @param Field $field  - The field object.
+	 * @param array $config - The field config.
 	 */
 	public function register_meta_on_all_types( Field $field, array $config ) : void {
 		unset( $config['single'] );

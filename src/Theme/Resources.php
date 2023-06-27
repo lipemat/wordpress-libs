@@ -19,26 +19,36 @@ class Resources {
 	public const INTEGRITY = 'lipe/lib/theme/styles/integrity';
 
 	/**
+	 * Script handles to be loaded with the `async` attribute.
+	 *
 	 * @var string[]
 	 */
 	protected static $async = [];
 
 	/**
+	 * Classes to be added to the main <body> tag.
+	 *
 	 * @var string[]
 	 */
 	protected static $body_class = [];
 
 	/**
+	 * Script handles to be loaded with the `crossorigin` attribute.
+	 *
 	 * @var array<null|string>
 	 */
 	protected static $crossorigin = [];
 
 	/**
+	 * Script handles to be loaded with the `defer` attribute.
+	 *
 	 * @var string[]
 	 */
 	protected static $deffer = [];
 
 	/**
+	 * Script handles to be loaded with the `integrity` attribute.
+	 *
 	 * @var string[]
 	 */
 	protected static $integrity = [];

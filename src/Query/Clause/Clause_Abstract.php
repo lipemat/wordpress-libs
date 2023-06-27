@@ -13,7 +13,6 @@ use Lipe\Lib\Query\Args_Abstract;
  * @since    4.0.0
  *
  * @template C
- *
  */
 abstract class Clause_Abstract {
 	/**
@@ -53,6 +52,8 @@ abstract class Clause_Abstract {
 
 
 	/**
+	 * Construct a new clause.
+	 *
 	 * @param static|null $parent_clause - The parent clause if we are within a nested clause.
 	 */
 	final public function __construct( ?Clause_Abstract $parent_clause = null ) {
@@ -67,7 +68,7 @@ abstract class Clause_Abstract {
 	 *
 	 * @phpstan-param 'AND'|'OR' $relation
 	 *
-	 * @param string $relation
+	 * @param string             $relation - 'AND' or 'OR'.
 	 *
 	 * @return static
 	 */
@@ -83,7 +84,7 @@ abstract class Clause_Abstract {
 	 *
 	 * @phpstan-param 'AND'|'OR' $relation
 	 *
-	 * @param string $relation
+	 * @param string             $relation - 'AND' or 'OR'.
 	 *
 	 * @return static
 	 */
@@ -120,8 +121,8 @@ abstract class Clause_Abstract {
 	 *
 	 * @phpstan-param static<C>      $level
 	 *
-	 * @param array                  $clauses
-	 * @param static|Clause_Abstract $level
+	 * @param array                  $clauses - The clauses array to append to.
+	 * @param static|Clause_Abstract $level   - The clause to determine the level of nesting.
 	 *
 	 * @return void
 	 */

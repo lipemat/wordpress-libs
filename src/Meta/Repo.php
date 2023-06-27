@@ -11,7 +11,6 @@ use Lipe\Lib\Traits\Singleton;
 /**
  * Repo to hold the different field types for our meta keys
  * and return the appropriate data based on field type.
- *
  */
 class Repo extends Translate_Abstract {
 	use Singleton;
@@ -34,7 +33,7 @@ class Repo extends Translate_Abstract {
 	/**
 	 * Store a field's id mapped to the field object
 	 *
-	 * @param Field $field
+	 * @param Field $field - The field to register.
 	 *
 	 * @return void
 	 */
@@ -46,7 +45,7 @@ class Repo extends Translate_Abstract {
 	/**
 	 * Get a registered field by an id.
 	 *
-	 * @param string $field_id
+	 * @param string $field_id - The field id to return.
 	 *
 	 * @return null|Field
 	 */
@@ -60,7 +59,7 @@ class Repo extends Translate_Abstract {
 	 *
 	 * @phpstan-return static::TYPE_*
 	 *
-	 * @param string $field_id
+	 * @param string $field_id - The field id whose type to return.
 	 *
 	 * @return string
 	 */

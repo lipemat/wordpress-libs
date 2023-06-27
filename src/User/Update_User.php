@@ -16,7 +16,6 @@ use Lipe\Lib\Query\Args_Abstract;
  * @see wp_update_user()
  *
  * @link https://developer.wordpress.org/reference/functions/wp_insert_user/
- *
  */
 class Update_User extends Args_Abstract {
 	/**

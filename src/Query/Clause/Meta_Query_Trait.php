@@ -7,7 +7,6 @@ namespace Lipe\Lib\Query\Clause;
  * Shared properties and methods for working with `meta_query`.
  *
  * @since 4.0.0
- *
  */
 trait Meta_Query_Trait {
 	/**

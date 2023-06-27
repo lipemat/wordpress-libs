@@ -6,13 +6,13 @@ use Lipe\Lib\Meta\Mutator_Trait;
 use Lipe\Lib\Meta\Repo;
 
 /**
- * Interact with a single site on a multisite install.
+ * Interact with a single site on a multisite installation.
  *
  * Gives quick access to the `blogmeta` table and any
  * other properties available in the `WP_Site` class.
  *
- * @property int $id
- * @property int $network_id
+ * @property int    $id
+ * @property int    $network_id
  * @property string $archived
  * @property string $deleted
  * @property string $domain
@@ -28,25 +28,29 @@ use Lipe\Lib\Meta\Repo;
  * @property string $home
  * @property int $post_count
  * @property string $siteurl
- *
  */
 trait Site_Trait {
 	use Mutator_Trait;
 
 	/**
+	 * Site ID.
+	 *
 	 * @var int
 	 */
 	protected $blog_id;
 
 	/**
+	 * Site object.
+	 *
 	 * @var \WP_Site
 	 */
 	protected $site;
 
 
 	/**
-	 * @param int|null|\WP_Site $site
+	 * Construct this class with either site object or site ID.
 	 *
+	 * @param int|null|\WP_Site $site - Site object, ID, or null for current site..
 	 */
 	public function __construct( $site = null ) {
 		if ( null === $site ) {
@@ -60,6 +64,11 @@ trait Site_Trait {
 	}
 
 
+	/**
+	 * Get the site object.
+	 *
+	 * @return \WP_Site|null
+	 */
 	public function get_object() : ?\WP_Site {
 		if ( null === $this->site ) {
 			$this->site = \get_site( $this->blog_id );
@@ -70,6 +79,8 @@ trait Site_Trait {
 
 
 	/**
+	 * Get the site ID.
+	 *
 	 * @return int
 	 */
 	public function get_id() : int {
@@ -78,6 +89,8 @@ trait Site_Trait {
 
 
 	/**
+	 * Used to determine the type of meta to retrieve or update.
+	 *
 	 * @return string
 	 */
 	public function get_meta_type() : string {
@@ -104,11 +117,11 @@ trait Site_Trait {
 		];
 	}
 
+
 	/**
+	 * Create a new instance of this class.
 	 *
-	 * @param int|null|\WP_Site $site
-	 *
-	 * @static
+	 * @param int|null|\WP_Site $site - Site object, ID, or null for current site..
 	 *
 	 * @return static
 	 */

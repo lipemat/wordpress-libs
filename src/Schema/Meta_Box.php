@@ -6,15 +6,14 @@ namespace Lipe\Lib\Schema;
  * The base meta box class. To extend this, implement the
  * render() and save() functions.
  *
- * render() will be called when the meta box needs to be printed
- * in the post editor
+ * The render() method will be called when the meta box needs to be printed
+ * in the post editor.
  *
- * save() will be called when a post is being saved. No need to
+ * The save() method will be called when a post is being saved. No need to
  * worry about validating if the correct post type has been
  * submitted, nonces, and all that. They're already taken care of.
  *
  * @example self::register( [%post_type%], %args% );
- *
  */
 abstract class Meta_Box {
 
@@ -24,26 +23,36 @@ abstract class Meta_Box {
 	/**
 	 * Store the registered meta box for later registering with WP.
 	 *
-	 * @var array
+	 * @var Meta_Box[]
 	 */
 	protected static array $registry = [];
 
 	/**
+	 * The id of the meta box.
+	 *
 	 * @var string
 	 */
 	public string $id;
 
 	/**
+	 * The title of the meta box.
+	 *
 	 * @var string
 	 */
 	public string $title;
 
 	/**
+	 * The context of the meta box.
+	 *
+	 * Determines where the meta box will display in the editor screen.
+	 *
 	 * @var string
 	 */
 	public string $context;
 
 	/**
+	 * The priority of the meta box.
+	 *
 	 * @var 'core'|'default'|'high'|'low'
 	 */
 	public string $priority;
@@ -53,7 +62,7 @@ abstract class Meta_Box {
 	 * to add_meta_box, if/when applicable.
 	 *
 	 * We have our own Gutenberg/block-editor properties in this class so use those instead
-	 * of this property if you are working with Gutenberg
+	 * of this property if you are working with Gutenberg.
 	 *
 	 * @see Box::$display_when_gutenberg_active
 	 * @see Box::$gutenberg_compatible
@@ -102,12 +111,16 @@ abstract class Meta_Box {
 	public $display_when_gutenberg_active = true;
 
 	/**
+	 * The post type this meta box will display on.
+	 *
 	 * @var string
 	 */
 	public string $post_type;
 
 
 	/**
+	 * Render the meta box contents.
+	 *
 	 * @param \WP_Post $post - The post being edited.
 	 *
 	 * @return void
@@ -116,7 +129,7 @@ abstract class Meta_Box {
 
 
 	/**
-	 * @abstract
+	 * Save the meta box field values.
 	 *
 	 * @param int      $post_id The ID of the post being saved.
 	 * @param \WP_Post $post    The post being saved.
@@ -127,10 +140,7 @@ abstract class Meta_Box {
 
 
 	/**
-	 *
-	 * @param string $post_type
-	 * @param array  $args          = array{
-	 *                              Optional arguments to pass to the meta box class.
+	 * Constructs the meta box.
 	 *
 	 * @see https://codex.wordpress.org/Function_Reference/add_meta_box for more info
 	 *
@@ -138,9 +148,11 @@ abstract class Meta_Box {
 	 * @type string  $context       - 'normal', 'advanced', or 'side' ( defaults to 'advanced' )
 	 * @type string  $priority      - 'high', 'core', 'default' or 'low' ( defaults to 'default' )
 	 * @type array   $callback_args - will be assigned as $this->callback_args to the meta box class and can be
-	 *       retrieved via $this->get_callback_args()
-	 * }
+	 *                              retrieved via $this->get_callback_args()
+	 *                              }
 	 *
+	 * @param string $post_type     The post type this meta box will display on.
+	 * @param array  $args          Optional arguments to pass to the meta box class.
 	 */
 	final protected function __construct( string $post_type, array $args = [] ) {
 		$this->post_type = $post_type;
@@ -176,6 +188,11 @@ abstract class Meta_Box {
 	}
 
 
+	/**
+	 * Actions and filters.
+	 *
+	 * @return void
+	 */
 	protected static function hook() : void {
 		add_action( 'post_submitbox_misc_actions', [
 			__CLASS__,
@@ -189,8 +206,10 @@ abstract class Meta_Box {
 
 
 	/**
-	 * @param string $post_type
-	 * @param string $class_name
+	 * Build a unique id for the meta box.
+	 *
+	 * @param string       $post_type  The post type this meta box will display on.
+	 * @param class-string $class_name The name of the meta box class.
 	 *
 	 * @return string A unique identifier for this meta box.
 	 */
@@ -208,8 +227,8 @@ abstract class Meta_Box {
 
 
 	/**
-	 * Put our nonce in the Publish box, so we can share it
-	 * across all meta boxes
+	 * Put our nonce in the Publishing box, so we can share it
+	 * across all meta boxes.
 	 *
 	 * @return void
 	 */
@@ -238,7 +257,6 @@ abstract class Meta_Box {
 		remove_action( 'save_post', [ __CLASS__, 'save_meta_boxes' ] );
 
 		foreach ( (array) static::$registry[ $post->post_type ] as $meta_box ) {
-			/** @var $meta_box Meta_Box */
 			$meta_box->save( $post_id, $post );
 		}
 
@@ -248,8 +266,8 @@ abstract class Meta_Box {
 	/**
 	 * Make sure this is a save_post where we actually want to update the meta.
 	 *
-	 * @param int      $post_id
-	 * @param \WP_Post $post
+	 * @param int      $post_id - The ID of the post being saved.
+	 * @param \WP_Post $post    - The post being saved.
 	 *
 	 * @return bool
 	 */
@@ -271,8 +289,8 @@ abstract class Meta_Box {
 	/**
 	 * Get the metabox with the given ID.
 	 *
-	 * @param string $post_type
-	 * @param string $id
+	 * @param string $post_type - The post type this meta box will display on.
+	 * @param string $id        - The ID of the meta box to get.
 	 *
 	 * @return Meta_Box|null
 	 */
@@ -282,11 +300,12 @@ abstract class Meta_Box {
 
 
 	/**
-	 * @param string $post_type
-	 * @param string $class_name
+	 * Whether a meta box with the given class has been registered for the given post type.
 	 *
-	 * @return bool Whether a meta box with the given class has been
-	 *              registered for the given post type.
+	 * @param string       $post_type  - The post type this meta box will display on.
+	 * @param class-string $class_name - The name of the meta box class.
+	 *
+	 * @return bool
 	 */
 	public static function has_meta_box( string $post_type, string $class_name ) : bool {
 		return null !== static::get_meta_box( $post_type, $class_name );
@@ -299,8 +318,8 @@ abstract class Meta_Box {
 	 * If more than one metabox of the same class registered
 	 * with the same post type, the first to register will be returned.
 	 *
-	 * @param string $post_type
-	 * @param string $class_name
+	 * @param string       $post_type  - The post type this meta box will display on.
+	 * @param class-string $class_name - The name of the meta box class.
 	 *
 	 * @return Meta_Box|null
 	 */
@@ -429,9 +448,9 @@ abstract class Meta_Box {
 
 
 	/**
-	 * Set the arguments to pass to the meta box
+	 * Set the arguments to pass to the meta box.
 	 *
-	 * @param array|null $args
+	 * @param array|null $args - The arguments to pass to the meta box.
 	 *
 	 * @return void
 	 */
@@ -443,8 +462,8 @@ abstract class Meta_Box {
 	/**
 	 * Retrieve an array of key value pairs of the posts meta fields
 	 *
-	 * @param int          $post_id
-	 * @param string|array $fields
+	 * @param int          $post_id - The post ID to retrieve the meta for.
+	 * @param string|array $fields  - The meta fields to retrieve.
 	 *
 	 * @return array
 	 */
@@ -477,5 +496,4 @@ abstract class Meta_Box {
 			$is_init = true;
 		}
 	}
-
 }

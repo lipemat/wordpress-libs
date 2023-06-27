@@ -8,7 +8,6 @@ use Lipe\Lib\Util\Actions;
 
 /**
  * Register a custom post type.
- *
  */
 class Custom_Post_Type {
 	protected const REGISTRY_OPTION    = 'lipe/lib/post-type/custom-post-type/registry';
@@ -246,6 +245,8 @@ class Custom_Post_Type {
 	public $has_archive = true;
 
 	/**
+	 * Post type slug.
+	 *
 	 * @var string
 	 */
 	public string $slug = '';
@@ -441,7 +442,6 @@ class Custom_Post_Type {
 	 *
 	 * @link https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#locking
 	 *
-	 *
 	 * @phpstan-var 'all'|'contentOnly'|'insert'|false
 	 *
 	 * @var string|false
@@ -452,7 +452,7 @@ class Custom_Post_Type {
 	/**
 	 * Takes care of the necessary hook and registering.
 	 *
-	 * @param string $post_type
+	 * @param string $post_type The post type slug.
 	 */
 	final public function __construct( string $post_type ) {
 		$this->post_type = $post_type;
@@ -486,7 +486,6 @@ class Custom_Post_Type {
 	 * @static
 	 *
 	 * @return void
-	 *
 	 */
 	public static function check_rewrite_rules() : void {
 		$slugs = wp_list_pluck( static::$registry, 'slug' );
@@ -515,7 +514,6 @@ class Custom_Post_Type {
 	 *
 	 * Allow using a different process for registering post types via
 	 * child classes.
-	 *
 	 */
 	protected function register_post_type() : void {
 		\register_post_type( $this->post_type, $this->post_type_args() );
@@ -597,8 +595,8 @@ class Custom_Post_Type {
 	/**
 	 * Build the labels array for the post type definition.
 	 *
-	 * @param string|null $single
-	 * @param string|null $plural
+	 * @param string|null $single The singular label for the post type.
+	 * @param string|null $plural The plural label for the post type.
 	 *
 	 * @return array
 	 */
@@ -683,7 +681,6 @@ class Custom_Post_Type {
 	 *         not work with our current structure.
 	 *
 	 * @param string $label - Text to use.
-	 *
 	 */
 	public function set_featured_image_labels( string $label ) : void {
 		$lowercase = strtolower( $label );
@@ -700,8 +697,8 @@ class Custom_Post_Type {
 	/**
 	 * Set the labels for the post type.
 	 *
-	 * @param string $singular
-	 * @param string $plural
+	 * @param string $singular - The singular label for the post type.
+	 * @param string $plural   - The plural label for the post type.
 	 *
 	 * @return void
 	 */
@@ -786,7 +783,7 @@ class Custom_Post_Type {
 	 *
 	 * Checks to make sure we have not done this already
 	 *
-	 * @param \WP_Post_Type|null $post_type
+	 * @param \WP_Post_Type|null $post_type - The post type object.
 	 *
 	 * @return void
 	 */
@@ -816,7 +813,6 @@ class Custom_Post_Type {
 	/**
 	 * Set a Gutenberg template for this post type.
 	 *
-	 *
 	 * @link    https://developer.wordpress.org/block-editor/reference-guides/block-api/block-templates/#locking
 	 *
 	 * @link    https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#custom-post-types
@@ -835,8 +831,8 @@ class Custom_Post_Type {
 	 *
 	 * @phpstan-param 'all'|'contentOnly'|'insert'|false $template_lock
 	 *
-	 * @param array        $template
-	 * @param string|false $template_lock
+	 * @param array                                      $template      - The template to use.
+	 * @param string|false                               $template_lock - The template lock to use.
 	 *
 	 * @return Custom_Post_Type
 	 */
@@ -851,7 +847,7 @@ class Custom_Post_Type {
 	/**
 	 * Get a registered post type object.
 	 *
-	 * @param string $post_type
+	 * @param string $post_type - The post type slug.
 	 *
 	 * @return ?Custom_Post_Type
 	 */
@@ -865,8 +861,8 @@ class Custom_Post_Type {
 	 *
 	 * @filter bulk_post_updated_messages 10 2
 	 *
-	 * @param array $bulk_messages
-	 * @param array $bulk_counts
+	 * @param array $bulk_messages - The bulk messages.
+	 * @param array $bulk_counts   - The bulk counts.
 	 *
 	 * @return array
 	 */
@@ -911,7 +907,7 @@ class Custom_Post_Type {
 	 *
 	 * @filter post_updated_messages 10 1
 	 *
-	 * @param array $messages
+	 * @param array $messages - The messages.
 	 *
 	 * @return array
 	 */
@@ -954,7 +950,6 @@ class Custom_Post_Type {
 	 * of the Capabilities class
 	 *
 	 * @return Capabilities
-	 *
 	 */
 	public function capabilities() : Capabilities {
 		return new Capabilities( $this );
@@ -963,9 +958,9 @@ class Custom_Post_Type {
 
 	/**
 	 * Used when retrieving the post type archive title
-	 * Makes it match any customization done here
+	 * Makes it match any customization done here.
 	 *
-	 * @param string $title
+	 * @param string $title - The title.
 	 *
 	 * @filter get_post_type_archive_label 10 1
 	 *
@@ -1009,7 +1004,7 @@ class Custom_Post_Type {
 	 * Example:
 	 *     array( 'my_feature', array( 'field' => 'value' ) )
 	 *
-	 * @param array|string $features
+	 * @param array|string $features - The feature being added, or an array of arguments for the feature.
 	 *
 	 * @return void
 	 */
@@ -1021,11 +1016,11 @@ class Custom_Post_Type {
 
 	/**
 	 * Removes post type support.
-	 * Send a single feature or array of features
+	 * Send a single feature or array of features.
 	 *
 	 * Must be called before the post type is registered
 	 *
-	 * @param array|string $features
+	 * @param array|string $features - The feature(s) to removed.
 	 *
 	 * @return void
 	 */
@@ -1039,11 +1034,10 @@ class Custom_Post_Type {
 	 * Removes a column from the posts list in the admin.
 	 *
 	 * Default WP columns are
-	 * 1. 'author'
-	 * 2. 'date'
+	 * 1. 'author'.
+	 * 2. 'date'.
 	 *
-	 * @param string $column
-	 *
+	 * @param string $column - The column to remove.
 	 */
 	public function remove_column( string $column ) : void {
 		add_filter( "manage_edit-{$this->post_type}_columns", function( $columns ) use ( $column ) {

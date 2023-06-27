@@ -25,7 +25,6 @@ use Lipe\Lib\Post_Type\Post_Object_Trait;
  * @property string $description
  * @property array  $classes
  * @property string $xfn
- *
  */
 trait Menu_Item_Trait {
 	use Post_Object_Trait;

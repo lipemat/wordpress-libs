@@ -22,7 +22,6 @@ use Lipe\Lib\Query\Clause\Tax_Query;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_query/
  * @link   https://developer.wordpress.org/reference/classes/WP_Query/parse_query/
- *
  */
 class Args extends Args_Abstract implements Meta_Query_Interface, Date_Query_Interface {
 	use Date_Query_Trait;

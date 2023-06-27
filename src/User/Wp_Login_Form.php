@@ -12,7 +12,6 @@ use Lipe\Lib\Query\Args_Abstract;
  * @since  4.1.0
  *
  * @link   https://developer.wordpress.org/reference/functions/wp_login_form/#parameters
- *
  */
 class Wp_Login_Form extends Args_Abstract {
 	/**

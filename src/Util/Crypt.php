@@ -14,7 +14,6 @@ namespace Lipe\Lib\Util;
  * @link   https://gist.github.com/ve3/0f77228b174cf92a638d81fddb17189d
  *       Reference
  * @see    `js/src/helpers/crypt`
- *
  */
 class Crypt {
 	protected const ALGORITHM  = 'sha512';
@@ -28,7 +27,9 @@ class Crypt {
 	protected const METHOD = 'AES-256-CBC';
 
 	/**
-	 * @var string The encryption key.
+	 * The encryption key.
+	 *
+	 * @var string
 	 */
 	protected $key;
 
@@ -77,11 +78,11 @@ class Crypt {
 
 
 	/**
-	 * Encrypt string.
+	 * Encrypt a string.
 	 *
 	 * @link https://gist.github.com/ve3/0f77228b174cf92a638d81fddb17189d
 	 *
-	 * @param string $plaintext
+	 * @param string $plaintext - The string to encrypt.
 	 *
 	 * @return string
 	 */

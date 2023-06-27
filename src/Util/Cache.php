@@ -12,33 +12,39 @@ use Lipe\Lib\Traits\Singleton;
  * @example Cache::set( $key, $value );
  *
  * @phpstan-type CACHE_KEY array|string|object
- *
  */
 class Cache {
 	use Singleton;
 
+	public const    DEFAULT_GROUP            = 'lipe/lib/util/cache/group';
+	public const    FLUSH_ON_SAVE_POST_GROUP = 'posts';
+
 	protected const QUERY_ARG = 'lipe/lib/util/cache/cache';
-	public const DEFAULT_GROUP = 'lipe/lib/util/cache/group';
-
-	public const FLUSH_ON_SAVE_POST_GROUP = 'posts';
 
 
+	/**
+	 * Actions and filters.
+	 *
+	 * @return void
+	 */
 	public function hook() : void {
 		add_action( 'init', [ $this, 'maybe_clear_cache' ], 9, 0 );
 
 		if ( current_user_can( 'manage_options' ) ) {
-			add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_button' ], 100, 1 );
+			add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_button' ], 100 );
 		}
 	}
 
 
 	/**
+	 * Set a value in the cache.
+	 *
 	 * @phpstan-param CACHE_KEY $key
 	 *
-	 * @param mixed             $key
-	 * @param mixed             $value
-	 * @param string            $group
-	 * @param int               $expire_in_seconds
+	 * @param mixed             $key               - Cache key. Array, string, or object.
+	 * @param mixed             $value             - Value to store in the cache.
+	 * @param string            $group             - The group to store the cache in.
+	 * @param int               $expire_in_seconds - How long to store the cache for.
 	 *
 	 * @return bool
 	 */
@@ -59,8 +65,8 @@ class Cache {
 	 *
 	 * @phpstan-param CACHE_KEY $key
 	 *
-	 * @param mixed             $key
-	 * @param string            $group
+	 * @param mixed             $key   - Cache key. Array, string, or object.
+	 * @param string            $group - The group to store the cache in.
 	 *
 	 * @return false|mixed
 	 */
@@ -72,10 +78,14 @@ class Cache {
 
 
 	/**
+	 * Delete an item from the cache.
+	 *
+	 * Returns true if the item was deleted, false otherwise.
+	 *
 	 * @phpstan-param CACHE_KEY $key
 	 *
-	 * @param mixed             $key
-	 * @param string            $group
+	 * @param mixed             $key   - Cache key. Array, string, or object.
+	 * @param string            $group - The group to store the cache in.
 	 *
 	 * @return bool
 	 */
@@ -91,7 +101,7 @@ class Cache {
 	 *
 	 * @todo Switch to conditional `wp_cache_set_last_changed` when WP 6.3 is available.
 	 *
-	 * @param string $group
+	 * @param string $group - The group to flush.
 	 *
 	 * @return void
 	 */
@@ -100,6 +110,11 @@ class Cache {
 	}
 
 
+	/**
+	 * Clear the entire cache using the "Clear Cache" button in the admin bar.
+	 *
+	 * @return void
+	 */
 	public function maybe_clear_cache() : void {
 		if ( empty( $_REQUEST[ static::QUERY_ARG ] ) || empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], static::QUERY_ARG ) ) {
 			return;
@@ -111,6 +126,14 @@ class Cache {
 	}
 
 
+	/**
+	 * Add the "Clear Cache" button to the admin bar.
+	 * Only available to users with the "manage_options" capability.
+	 *
+	 * @param \WP_Admin_Bar $admin_bar - The admin bar object.
+	 *
+	 * @return void
+	 */
 	public function add_admin_bar_button( \WP_Admin_Bar $admin_bar ) : void {
 		$admin_bar->add_menu( [
 			'parent' => '',
@@ -126,7 +149,7 @@ class Cache {
 	 * Group key with a custom "last_change" appended to it to handle
 	 * flushing an entire group by changing a "last_changed" cache key.
 	 *
-	 * @param string $group
+	 * @param string $group - The cache group.
 	 *
 	 * @return string
 	 */
@@ -141,7 +164,7 @@ class Cache {
 	 *
 	 * @phpstan-param CACHE_KEY $key
 	 *
-	 * @param mixed             $key
+	 * @param mixed             $key - Data to convert to a string cache key.
 	 *
 	 * @return bool|string
 	 */

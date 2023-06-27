@@ -11,7 +11,6 @@ use Lipe\Lib\Meta\Repo;
  * Main meta box class.
  *
  * A fluent interface for CMB2 meta box properties.
- *
  */
 class Box {
 	public const TYPE_COMMENT = 'comment';
@@ -26,7 +25,6 @@ class Box {
 	 * Used as a flag to allow REST fields to be added
 	 * to the `meta` response without the `cmb2` REST
 	 * endpoint being added.
-	 *
 	 */
 	protected const EXCLUDE_CMB2_REST_ENDPOINT = 'lipe/lib/cmb2/box/exclude-cmb2-rest-endpoint';
 
@@ -342,6 +340,8 @@ class Box {
 	protected string $tab_style = 'vertical';
 
 	/**
+	 * The CMB2 object
+	 *
 	 * @var \CMB2
 	 */
 	public \CMB2 $cmb;
@@ -369,7 +369,7 @@ class Box {
 	/**
 	 * Display a description at the top of a meta box, or an option's page
 	 *
-	 * @param string $description
+	 * @param string $description - The description to display.
 	 *
 	 * @return void
 	 */
@@ -399,9 +399,6 @@ class Box {
 	 * be included in default WP response even if the box is set to true
 	 * and all fields are in the /cmb2 response.
 	 *
-	 *
-	 * @param string|bool $methods
-	 *
 	 * @see     Box_Trait::selectively_show_in_rest()
 	 *
 	 * @example WP_REST_Server::READABLE // Same as `true`
@@ -410,6 +407,7 @@ class Box {
 	 * @example false // Will allow fields to show
 	 *          up under the `meta` key without also showing in `cmb2`.
 	 *
+	 * @param string|bool $methods - Whether to show in REST API.
 	 *
 	 * @return void
 	 */
@@ -426,11 +424,10 @@ class Box {
 	 * Add a tab to this box which can later be assigned to fields via
 	 * Field::tab( $id );
 	 *
-	 * @param string $id
-	 * @param string $label
-	 *
 	 * @see     Field::tab;
 	 *
+	 * @param string $id    - The tab ID.
+	 * @param string $label - The tab label.
 	 *
 	 * @return void
 	 */
@@ -443,11 +440,10 @@ class Box {
 	/**
 	 * Remove meta box wrap for alternate-context meta-boxes
 	 *
-	 * Takes care of setting the title to false which is required
+	 * Takes care of setting the title to false required
 	 * by the native `remove_box_wrap` property
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Box-Properties#context
-	 *
 	 *
 	 * @return void
 	 */
@@ -462,7 +458,6 @@ class Box {
 	 * Default is vertical when not calling this.
 	 *
 	 * @param string $layout - vertical, horizontal.
-	 *
 	 *
 	 * @return void
 	 */
@@ -502,6 +497,11 @@ class Box {
 	}
 
 
+	/**
+	 * Get the arguments for this box.
+	 *
+	 * @return array
+	 */
 	protected function get_args() : array {
 		$args = [];
 		foreach ( get_object_vars( $this ) as $_var => $_value ) {
@@ -549,7 +549,7 @@ class Box {
 	 * 2. Assign the box_id to the field.
 	 * 3. Register the field with the Meta\Repo.
 	 *
-	 * @param Field $field
+	 * @param Field $field - The field to add.
 	 *
 	 * @return void
 	 */
@@ -577,9 +577,8 @@ class Box {
 	 *
 	 * @internal
 	 *
-	 * @param Field $field
-	 * @param array $config
-	 *
+	 * @param Field $field  - The field to register.
+	 * @param array $config - The config to register.
 	 */
 	public function register_meta_on_all_types( Field $field, array $config ) : void {
 		if ( ! empty( $field->default ) ) {

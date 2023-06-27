@@ -12,7 +12,6 @@ use Lipe\Lib\Query\Args_Abstract;
  * @since  4.0.0
  *
  * @link   https://developer.wordpress.org/reference/functions/register_post_status/
- *
  */
 class Register_Post_Status extends Args_Abstract {
 	/**

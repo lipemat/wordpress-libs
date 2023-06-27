@@ -18,7 +18,6 @@ use Lipe\Lib\Util\Actions;
  * $tax->set_label( %singular%, %plural%  );
  * $tax->post_types = array( self::NAME );
  * $tax->slug = %slug;
- *
  */
 class Taxonomy {
 	protected const REGISTRY_OPTION = 'lipe/lib/schema/taxonomy_registry';
@@ -35,7 +34,6 @@ class Taxonomy {
 	 * Set these in the constructed class
 	 *
 	 * @var mixed
-	 *
 	 */
 	public $post_types = [];
 
@@ -112,7 +110,7 @@ class Taxonomy {
 	public $show_in_menu;
 
 	/**
-	 * true makes this taxonomy available for selection in navigation menus.
+	 * True makes this taxonomy available for selection in navigation menus.
 	 *
 	 * @default $this->public
 	 *
@@ -465,7 +463,7 @@ class Taxonomy {
 	/**
 	 * Get a registered taxonomy object.
 	 *
-	 * @param string $taxonomy
+	 * @param string $taxonomy - Taxonomy slug.
 	 *
 	 * @return Taxonomy|null
 	 */
@@ -477,12 +475,11 @@ class Taxonomy {
 	/**
 	 * Filters to query to match the taxonomy drop-downs on the post list page
 	 *
-	 * @param \WP_Query $query
+	 * Added to `parse_tax_query` action by `$this->hook()`.
 	 *
-	 * @uses added to parse_tax_query action by $this->hook()
+	 * @param \WP_Query $query - The WP_Query object.
 	 *
 	 * @return void
-	 *
 	 */
 	public function post_list_query_filters( \WP_Query $query ) : void {
 		global $pagenow;
@@ -580,9 +577,9 @@ class Taxonomy {
 	 * Default WP columns are
 	 * 1. 'description'
 	 * 2. 'slug'
-	 * 3. 'posts'
+	 * 3. 'posts'.
 	 *
-	 * @param string $column
+	 * @param string $column - Column slug.
 	 */
 	public function remove_column( string $column ) : void {
 		add_filter( "manage_edit-{$this->taxonomy}_columns", function( $columns ) use ( $column ) {
@@ -687,9 +684,9 @@ class Taxonomy {
 	 * Automatically called within __construct() but may be called
 	 * directly if desired.
 	 *
-	 * @param string $label
-	 *
 	 * @see   Taxonomy::__construct()
+	 *
+	 * @param string $label - The label to use for the column.
 	 */
 	public function show_admin_column( string $label ) : void {
 		Actions::in()->add_filter_all( array_map( function( $post_type ) {
@@ -709,9 +706,9 @@ class Taxonomy {
 	 *
 	 * @requires WP 5.5.0+
 	 *
-	 * @param string $slug
-	 * @param string $name
-	 * @param string $description
+	 * @param string $slug        - The slug of the term to use.
+	 * @param string $name        - The name of the term to use.
+	 * @param string $description - The description of the term to use.
 	 *
 	 * @return void
 	 */
@@ -721,20 +718,20 @@ class Taxonomy {
 
 
 	/**
-	 * Set the current admin menu so the correct one is highlighted.
+	 * Set the current admin menu, so the correct one is highlighted.
 	 * Only used when $this->show_menu is set to a slug of a menu.
 	 *
 	 * @filter parent_file 10 1
-	 *
-	 * @param string|array $parent_file
 	 *
 	 * @see    Taxonomy::add_as_submenu();
 	 *
 	 * @interanl
 	 *
+	 * @param string $parent_file - Parent file slug to set as current.
+	 *
 	 * @return string
 	 */
-	public function set_current_menu( $parent_file ) : string {
+	public function set_current_menu( string $parent_file ) : string {
 		$screen = \get_current_screen();
 		if ( null === $screen || null === $this->show_in_menu ) {
 			return $parent_file;
@@ -766,7 +763,6 @@ class Taxonomy {
 	 *
 	 * Allow using a different process for registering taxonomies via
 	 * child classes.
-	 *
 	 */
 	protected function register_taxonomy() : void {
 		register_taxonomy( $this->taxonomy, $this->post_types, $this->taxonomy_args() );
@@ -816,8 +812,8 @@ class Taxonomy {
 	/**
 	 * Build the labels array for the post type definition
 	 *
-	 * @param string|null $single
-	 * @param string|null $plural
+	 * @param string|null $single - The singular label to use.
+	 * @param string|null $plural - The plural label to use.
 	 *
 	 * @return array
 	 */
@@ -866,7 +862,7 @@ class Taxonomy {
 	 * Retrieve a singular or plural label.
 	 * Auto generate the label if necessary.
 	 *
-	 * @param 'plural' | 'singular' $quantity
+	 * @param 'plural' | 'singular' $quantity - The label quantity to retrieve.
 	 *
 	 * @return string
 	 */
@@ -890,11 +886,10 @@ class Taxonomy {
 	/**
 	 * Sets the singular and plural labels automatically
 	 *
-	 * @param string $singular
-	 * @param string $plural
+	 * @param string $singular - The singular label to use.
+	 * @param string $plural   - The plural label to use.
 	 *
 	 * @return void
-	 *
 	 */
 	public function set_label( string $singular = '', string $plural = '' ) : void {
 		if ( '' === $singular ) {
@@ -917,7 +912,6 @@ class Taxonomy {
 	 * Returns the set menu label, or the plural label if not set.
 	 *
 	 * @return string
-	 *
 	 */
 	public function get_menu_label() : string {
 		if ( '' === $this->label_menu ) {
@@ -956,5 +950,4 @@ class Taxonomy {
 	public function set_menu_label( string $label ) : void {
 		$this->label_menu = $label;
 	}
-
 }

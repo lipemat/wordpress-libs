@@ -14,7 +14,6 @@ namespace Lipe\Lib\Post_Type;
  * @interal
  *
  * @see    Custom_Post_Type::labels()
- *
  */
 class Labels {
 	/**
@@ -25,6 +24,11 @@ class Labels {
 	protected Custom_Post_Type $cpt;
 
 
+	/**
+	 * Labels constructor.
+	 *
+	 * @param Custom_Post_Type $cpt - The Custom_Post_Type instance currently registering.
+	 */
 	public function __construct( Custom_Post_Type $cpt ) {
 		$this->cpt = $cpt;
 	}
@@ -35,7 +39,7 @@ class Labels {
 	 *
 	 * Default is '<post type plural>'
 	 *
-	 * @param string $label
+	 * @param string $label - General name for the post type, usually plural.
 	 *
 	 * @return $this
 	 */
@@ -50,7 +54,7 @@ class Labels {
 	 *
 	 * Default is '<post type singular>'
 	 *
-	 * @param string $label
+	 * @param string $label - Name for one object of this post type.
 	 *
 	 * @return $this
 	 */
@@ -63,7 +67,7 @@ class Labels {
 	/**
 	 * Default is 'Add New' for both hierarchical and non-hierarchical types.
 	 *
-	 * @param string $label
+	 * @param string $label - Add new post label.
 	 *
 	 * @return $this
 	 */
@@ -78,7 +82,7 @@ class Labels {
 	 *
 	 * Default is 'Add New <post type singular>'
 	 *
-	 * @param string $label
+	 * @param string $label - Label for adding a new singular item.
 	 *
 	 * @return $this
 	 */
@@ -93,7 +97,7 @@ class Labels {
 	 *
 	 * Default is 'Edit <post type singular>'
 	 *
-	 * @param string $label
+	 * @param string $label - Label for editing a singular item.
 	 *
 	 * @return $this
 	 */
@@ -108,7 +112,7 @@ class Labels {
 	 *
 	 * Default is 'New <post type singular>'
 	 *
-	 * @param string $label
+	 * @param string $label - Label for the new item page title.
 	 *
 	 * @return $this
 	 */
@@ -123,7 +127,7 @@ class Labels {
 	 *
 	 * Default is 'View <post type singular>'
 	 *
-	 * @param string $label
+	 * @param string $label - Label for viewing a singular item.
 	 *
 	 * @return $this
 	 */
@@ -138,7 +142,7 @@ class Labels {
 	 *
 	 * Default is 'View <post type plural>'
 	 *
-	 * @param string $label
+	 * @param string $label - Label for viewing <post type singular> type archives.
 	 *
 	 * @return $this
 	 */
@@ -153,7 +157,7 @@ class Labels {
 	 *
 	 * Default is 'Search <post type plural>'
 	 *
-	 * @param string $label
+	 * @param string $label - Label for searching plural items.
 	 *
 	 * @return $this
 	 */
@@ -168,7 +172,7 @@ class Labels {
 	 *
 	 * Default is 'No <post type plural> found'
 	 *
-	 * @param string $label
+	 * @param string $label - Label used when no items are found.
 	 *
 	 * @return $this
 	 */
@@ -183,7 +187,7 @@ class Labels {
 	 *
 	 * Default is 'No <post type plural> found in Trash'
 	 *
-	 * @param string $label
+	 * @param string $label - Label used when no items are in the Trash.
 	 *
 	 * @return $this
 	 */
@@ -199,7 +203,7 @@ class Labels {
 	 *
 	 * Default is 'Parent Page:'.
 	 *
-	 * @param string $label
+	 * @param string $label - Label used to prefix parents of hierarchical items.
 	 *
 	 * @return $this
 	 */
@@ -214,7 +218,7 @@ class Labels {
 	 *
 	 * Default is 'All <post type plural>'
 	 *
-	 * @param string $label
+	 * @param string $label - Label to signify all items in a submenu link.
 	 *
 	 * @return $this
 	 */
@@ -229,7 +233,7 @@ class Labels {
 	 *
 	 * Default is '<post type singular> Archives'
 	 *
-	 * @param string $label
+	 * @param string $label - Label for archives in nav menus.
 	 *
 	 * @return $this
 	 */
@@ -244,7 +248,7 @@ class Labels {
 	 *
 	 * Default is '<post type singular> Attributes'
 	 *
-	 * @param string $label
+	 * @param string $label - Label for the attributes meta box.
 	 *
 	 * @return $this
 	 */
@@ -259,7 +263,7 @@ class Labels {
 	 *
 	 * Default is 'Insert into <post type singular>'
 	 *
-	 * @param string $label
+	 * @param string $label - Label for the media frame button.
 	 *
 	 * @return $this
 	 */
@@ -274,7 +278,7 @@ class Labels {
 	 *
 	 * Default is 'Uploaded to this <post type singular>'
 	 *
-	 * @param string $label
+	 * @param string $label - Label for the media frame filter.
 	 *
 	 * @return $this
 	 */
@@ -291,7 +295,7 @@ class Labels {
 	 *
 	 * @see Custom_Post_Type::set_featured_image_labels()
 	 *
-	 * @param string $label
+	 * @param string $label - Label for the featured image meta box title.
 	 *
 	 * @return $this
 	 */
@@ -308,7 +312,7 @@ class Labels {
 	 *
 	 * @see Custom_Post_Type::set_featured_image_labels()
 	 *
-	 * @param string $label
+	 * @param string $label - Label for setting the featured image.
 	 *
 	 * @return $this
 	 */
@@ -325,7 +329,7 @@ class Labels {
 	 *
 	 * @see Custom_Post_Type::set_featured_image_labels()
 	 *
-	 * @param string $label
+	 * @param string $label - Label for removing the featured image.
 	 *
 	 * @return $this
 	 */
@@ -342,7 +346,7 @@ class Labels {
 	 *
 	 * @see Custom_Post_Type::set_featured_image_labels()
 	 *
-	 * @param string $label
+	 * @param string $label - Label in the media frame for using a featured image.
 	 *
 	 * @return $this
 	 */
@@ -357,7 +361,7 @@ class Labels {
 	 *
 	 * Default is the same as `name`.
 	 *
-	 * @param string $label
+	 * @param string $label - Label for the menu name.
 	 *
 	 * @return $this
 	 */
@@ -372,7 +376,7 @@ class Labels {
 	 *
 	 * Default is 'Filter <post type plural> list'
 	 *
-	 * @param string $label
+	 * @param string $label - Label for the table views hidden heading.
 	 *
 	 * @return $this
 	 */
@@ -387,7 +391,7 @@ class Labels {
 	 *
 	 * Default is 'Filter by date'.
 	 *
-	 * @param string $label
+	 * @param string $label - Label for the date filter in list tables.
 	 *
 	 * @return $this
 	 */
@@ -402,7 +406,7 @@ class Labels {
 	 *
 	 * Default is '<post type plural> list navigation'
 	 *
-	 * @param string $label
+	 * @param string $label - Label for the table pagination hidden heading.
 	 *
 	 * @return $this
 	 */
@@ -417,7 +421,7 @@ class Labels {
 	 *
 	 * Default is '<post type plural> list'
 	 *
-	 * @param string $label
+	 * @param string $label - Label for the table hidden heading.
 	 *
 	 * @return $this
 	 */
@@ -432,7 +436,7 @@ class Labels {
 	 *
 	 * Default is '<post type singular> published.'
 	 *
-	 * @param string $label
+	 * @param string $label - Label used when an item is published.
 	 *
 	 * @return $this
 	 */
@@ -447,7 +451,7 @@ class Labels {
 	 *
 	 * Default is '<post type singular> published privately.'
 	 *
-	 * @param string $label
+	 * @param string $label - Label used when an item is published with private visibility.
 	 *
 	 * @return $this
 	 */
@@ -462,7 +466,7 @@ class Labels {
 	 *
 	 * Default is '<post type singular> reverted to draft.'
 	 *
-	 * @param string $label
+	 * @param string $label - Label used when an item is switched to a draft.
 	 *
 	 * @return $this
 	 */
@@ -477,7 +481,7 @@ class Labels {
 	 *
 	 * Default is '<post type singular> scheduled.'
 	 *
-	 * @param string $label
+	 * @param string $label - Label used when an item is scheduled for publishing.
 	 *
 	 * @return $this
 	 */
@@ -492,7 +496,7 @@ class Labels {
 	 *
 	 * Default is '<post type singular> updated.'
 	 *
-	 * @param string $label
+	 * @param string $label - Label used when an item is updated.
 	 *
 	 * @return $this
 	 */
@@ -507,7 +511,7 @@ class Labels {
 	 *
 	 * Default is '<post type singular> Link'
 	 *
-	 * @param string $label
+	 * @param string $label - Title for a navigation link block variation.
 	 *
 	 * @return $this
 	 */
@@ -522,7 +526,7 @@ class Labels {
 	 *
 	 * Default is 'A link to a <post type singular>.'
 	 *
-	 * @param string $label
+	 * @param string $label - Description for a navigation link block variation.
 	 *
 	 * @return $this
 	 */

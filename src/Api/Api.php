@@ -14,11 +14,9 @@ use Lipe\Lib\Util\Arrays;
  * 1. `get_action`
  * 2. `get_url`
  *
- *
  * @example Api::init();
  *          add_action( Api::in()->get_action( 'space' ), 'print_r' )
  *          Api::in()->get_url( 'space', [ 'first' => 'FY', 'second' => 'TY'] );
- *
  */
 class Api {
 	use Singleton;
@@ -37,14 +35,19 @@ class Api {
 	 *
 	 * @var bool
 	 */
-	protected $doing_api = false;
+	protected bool $doing_api = false;
 
 
+	/**
+	 * Actions and filters
+	 *
+	 * @return void
+	 */
 	public function hook() : void {
-		add_action( 'init', function () {
+		add_action( 'init', function() {
 			$this->add_endpoint();
 		} );
-		add_action( 'parse_request', function ( \WP $wp ) {
+		add_action( 'parse_request', function( \WP $wp ) {
 			$this->handle_request( $wp );
 		} );
 	}
@@ -145,7 +148,7 @@ class Api {
 	 *
 	 * @action parse_request 10 1
 	 *
-	 * @param \WP $wp
+	 * @param \WP $wp - The global WP object.
 	 *
 	 * @return void
 	 */

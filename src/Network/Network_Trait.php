@@ -5,8 +5,8 @@ namespace Lipe\Lib\Network;
 use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
- * Interact with a single network on a multi-network install
- *, or a centralized place to store data for the entire network.
+ * Interact with a single network on a multi-network install *, or a centralized place
+ * to store data for the entire network.
  *
  * Gives quick access to the `sitemeta` table and any
  * other properties available in the `WP_Network` class.
@@ -17,25 +17,29 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @property string $domain
  * @property string $site_name
  * @property string $path
- *
  */
 trait Network_Trait {
 	use Mutator_Trait;
 
 	/**
+	 * ID of this network.
+	 *
 	 * @var int
 	 */
 	protected int $network_id;
 
 	/**
+	 * Object of this network.
+	 *
 	 * @var \WP_Network
 	 */
 	protected $network;
 
 
 	/**
-	 * @param int|null|\WP_Network $network
+	 * Construct this class with either the provided network or the current global network.
 	 *
+	 * @param int|null|\WP_Network $network - Network ID, object or null for the current network.
 	 */
 	public function __construct( $network = null ) {
 		if ( null === $network ) {
@@ -49,6 +53,11 @@ trait Network_Trait {
 	}
 
 
+	/**
+	 * Get the WP Network object.
+	 *
+	 * @return \WP_Network|null
+	 */
 	public function get_object() : ?\WP_Network {
 		if ( null === $this->network ) {
 			$this->network = get_network( $this->network_id );
@@ -59,6 +68,8 @@ trait Network_Trait {
 
 
 	/**
+	 * Get the network id.
+	 *
 	 * @return int
 	 */
 	public function get_id() : int {
@@ -69,10 +80,10 @@ trait Network_Trait {
 	/**
 	 * Get a value from the `sitemeta` table for this network.
 	 *
-	 * @param string     $key
-	 * @param null|mixed $default
+	 * @param string     $key     - Meta key.
+	 * @param null|mixed $default - Default value if meta key is not set.
 	 *
-	 * @return mixed|null
+	 * @return mixed|false
 	 */
 	public function get_meta( string $key, $default = null ) {
 		return get_network_option( $this->network_id, $key, $default );
@@ -82,8 +93,8 @@ trait Network_Trait {
 	/**
 	 * Update a value in the `sitemeta` table for this network.
 	 *
-	 * @param string $key
-	 * @param mixed  ...$value
+	 * @param string $key      - Meta key.
+	 * @param mixed  ...$value - Value to set.
 	 */
 	public function update_meta( string $key, ...$value ) : void {
 		if ( \is_callable( $value[0] ) ) {
@@ -96,7 +107,7 @@ trait Network_Trait {
 	/**
 	 * Delete a value from the `sitemeta` table for this network.
 	 *
-	 * @param string $key
+	 * @param string $key - Meta key.
 	 */
 	public function delete_meta( string $key ) : void {
 		delete_network_option( $this->network_id, $key );
@@ -104,6 +115,8 @@ trait Network_Trait {
 
 
 	/**
+	 * Used to determine the type of meta to retrieve or update.
+	 *
 	 * @return string
 	 */
 	public function get_meta_type() : string {
@@ -112,7 +125,9 @@ trait Network_Trait {
 
 
 	/**
-	 * @param int|null|\WP_Network $network
+	 * Create an instance of this class.
+	 *
+	 * @param int|null|\WP_Network $network - Network ID, object or null for the current network.
 	 *
 	 * @return static
 	 */

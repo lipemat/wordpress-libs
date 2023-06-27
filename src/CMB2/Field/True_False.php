@@ -47,7 +47,7 @@ class True_False extends \CMB2_Type_Checkbox {
 	/**
 	 * Generates a CSS only driven toggle on/off field.
 	 *
-	 * @param array $args
+	 * @param array $args - Field arguments.
 	 *
 	 * @return string
 	 */

@@ -10,7 +10,6 @@ use Lipe\Lib\Traits\Memoize;
 
 /**
  * Translate the fields into the correct data types.
- *
  */
 abstract class Translate_Abstract {
 	use Memoize;
@@ -38,9 +37,9 @@ abstract class Translate_Abstract {
 
 
 	/**
-	 * Get a field, which was registered with CMB2 by id.
+	 * Get a field, which was registered with CMB2 by an id.
 	 *
-	 * @param string $field_id
+	 * @param string $field_id - The field id.
 	 *
 	 * @return null|Field
 	 */
@@ -54,7 +53,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string               $meta_type
+	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return bool
 	 */
@@ -68,9 +67,9 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id
-	 * @param string               $key
-	 * @param string               $meta_type
+	 * @param string|int           $object_id - The object id.
+	 * @param string               $key       - The meta key.
+	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return mixed
 	 */
@@ -98,10 +97,10 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id
-	 * @param string               $key
-	 * @param mixed                $value
-	 * @param string               $meta_type
+	 * @param string|int           $object_id - The object id.
+	 * @param string               $key       - The meta key.
+	 * @param mixed                $value     - The meta value.
+	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return bool|int
 	 */
@@ -133,9 +132,9 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id
-	 * @param string               $key
-	 * @param string               $meta_type
+	 * @param string|int           $object_id - The object id.
+	 * @param string               $key       - The meta key.
+	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return void
 	 */
@@ -160,9 +159,9 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param int|string           $object_id
-	 * @param string               $key
-	 * @param string               $meta_type
+	 * @param string|int           $object_id - The object id.
+	 * @param string               $key       - The meta key.
+	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return bool
 	 */
@@ -181,10 +180,10 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param int|string           $object_id
-	 * @param string               $key
-	 * @param bool|int             $checked
-	 * @param string               $meta_type
+	 * @param int|string           $object_id - The object id.
+	 * @param string               $key       - The meta key.
+	 * @param bool|int             $checked   - Is the checkbox checked?.
+	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return void
 	 */
@@ -203,9 +202,9 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param int|string           $object_id
-	 * @param string               $key
-	 * @param string               $meta_type
+	 * @param string|int           $object_id - The object id.
+	 * @param string               $key       - The meta key.
+	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return ?array
 	 */
@@ -233,10 +232,10 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param int|string           $object_id
-	 * @param string               $key
-	 * @param int                  $attachment_id
-	 * @param string               $meta_type
+	 * @param int|string           $object_id     - The object id.
+	 * @param string               $key           - The meta key.
+	 * @param int                  $attachment_id - The attachment id.
+	 * @param string               $meta_type     - The meta type.
 	 *
 	 * @return void
 	 */
@@ -256,9 +255,9 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param int|string           $object_id
-	 * @param string               $key
-	 * @param string               $meta_type
+	 * @param string|int           $object_id - The object id.
+	 * @param string               $key       - The meta key.
+	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return void
 	 */
@@ -279,9 +278,9 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param int|string           $object_id
-	 * @param string               $group_id
-	 * @param string               $meta_type
+	 * @param int|string           $object_id - The object id.
+	 * @param string               $group_id  - The group id.
+	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return array
 	 */
@@ -308,10 +307,10 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param int|string           $object_id
-	 * @param string               $group_id
-	 * @param array                $values
-	 * @param string               $meta_type
+	 * @param int|string           $object_id - The object id.
+	 * @param string               $group_id  - The group id.
+	 * @param array                $values    - The values.
+	 * @param string               $meta_type - The meta type.
 	 */
 	protected function update_group_field_values( $object_id, string $group_id, array $values, string $meta_type ) : void {
 		foreach ( $values as $_row => $_values ) {
@@ -332,12 +331,12 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id
-	 * @param string               $key
-	 * @param mixed                $value
-	 * @param string               $meta_type
-	 *
 	 * @internal
+	 *
+	 * @param string|int           $object_id - The object id.
+	 * @param string               $key       - The meta key.
+	 * @param mixed                $value     - The value.
+	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return bool|int
 	 */
@@ -380,9 +379,9 @@ abstract class Translate_Abstract {
 	 * CMB2 saves taxonomy fields as terms or meta value for options.
 	 * We pull from either here.
 	 *
-	 * @param string|int $object_id
-	 * @param string     $field_id
-	 * @param string     $meta_type
+	 * @param string|int $object_id - The object id.
+	 * @param string     $field_id  - The field id.
+	 * @param string     $meta_type - The meta type.
 	 *
 	 * @return \WP_Term[]
 	 */
@@ -410,10 +409,10 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id
-	 * @param string               $key
-	 * @param int[]                $terms - Term ids.
-	 * @param string               $meta_type
+	 * @param string|int           $object_id - The object id.
+	 * @param string               $key       - The meta key.
+	 * @param int[]                $terms     - Term ids.
+	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return void
 	 */
@@ -451,9 +450,9 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id
-	 * @param string               $field_id
-	 * @param string               $meta_type
+	 * @param string|int           $object_id - The object id.
+	 * @param string               $field_id  - The field id.
+	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return void
 	 */
@@ -473,9 +472,9 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id
-	 * @param string               $field_id
-	 * @param string               $meta_type
+	 * @param string|int           $object_id - The object id.
+	 * @param string               $field_id  - The field id.
+	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return \WP_Term|false
 	 */
@@ -496,7 +495,7 @@ abstract class Translate_Abstract {
 	 * If we are working with a network setting, we switch to main blog before
 	 * retrieval, otherwise we use the standard retrieval.
 	 *
-	 * @param string   $field_id
+	 * @param string   $field_id - The field id.
 	 * @param callable $callback - Any callback.
 	 *
 	 * @return mixed;

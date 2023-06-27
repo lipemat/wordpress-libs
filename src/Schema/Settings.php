@@ -25,7 +25,6 @@ namespace Lipe\Lib\Schema;
  *
  * To run a method when the settings are saved create one named on_settings_save() and it
  * will be called automatically.
- *
  */
 abstract class Settings {
 
@@ -66,7 +65,7 @@ abstract class Settings {
 	protected $slug;
 
 	/**
-	 * Auto namespace the options during rendering, saving, and retrieval
+	 * Auto namespace the options during rendering, saving and retrieval
 	 *
 	 * @var string
 	 */
@@ -111,8 +110,6 @@ abstract class Settings {
 	protected $capability = 'manage_options';
 
 	/**
-	 * Network
-	 *
 	 * Network admin menu?
 	 *
 	 * @var bool
@@ -129,8 +126,6 @@ abstract class Settings {
 	protected $settings = [];
 
 	/**
-	 * defaults
-	 *
 	 * Hold default values if desired for options
 	 * Can be set manually or by using $this->set_default( %field%, %value )
 	 *
@@ -148,8 +143,6 @@ abstract class Settings {
 	protected bool $tabs = false;
 
 	/**
-	 * form_url
-	 *
 	 * The url the form submits
 	 * Set automatically only adjust in extreme cases
 	 *
@@ -163,7 +156,6 @@ abstract class Settings {
 	 * Separate from set_vars to keep things cleaner.
 	 *
 	 * @uses    $this->settings
-	 *
 	 *
 	 * @example $this->add_setting_section( %slug%, %title% );
 	 * @example $this->add_setting( %section%, %field_slug%, %field_title% );
@@ -194,8 +186,7 @@ abstract class Settings {
 
 
 	/**
-	 * Construct
-	 *
+	 * Settings constructor.
 	 */
 	public function __construct() {
 		$this->add_settings();
@@ -206,7 +197,7 @@ abstract class Settings {
 
 
 	/**
-	 * Did you forget something? Oh well, this will fix it
+	 * Fill in the class vars if they are empty.
 	 *
 	 * @return void
 	 */
@@ -235,6 +226,11 @@ abstract class Settings {
 	}
 
 
+	/**
+	 * Actions and filters.
+	 *
+	 * @return void
+	 */
 	public function hook() : void {
 		if ( $this->network ) {
 			add_action( 'network_admin_menu', [ $this, 'register_settings_page' ], 10, 0 );
@@ -263,8 +259,8 @@ abstract class Settings {
 	/**
 	 * Set a default value for any field
 	 *
-	 * @param string $field
-	 * @param mixed  $value
+	 * @param string $field - The field key.
+	 * @param mixed  $value - The default value.
 	 *
 	 * @return void
 	 */
@@ -342,7 +338,6 @@ abstract class Settings {
 	 * @uses $this->settings
 	 *
 	 * @return void
-	 *
 	 */
 	public function register_settings_page() : void {
 		if ( ! empty( $this->parent_menu_slug ) ) {
@@ -408,7 +403,7 @@ abstract class Settings {
 	 * Will call a method matching the field name if exists
 	 * Otherwise outputs a standard text field
 	 *
-	 * @param string $field
+	 * @param string $field - The field key.
 	 *
 	 * @return void
 	 */
@@ -440,9 +435,9 @@ abstract class Settings {
 	 * Will return the default value for this field if set, and the option
 	 * has not been set.
 	 *
-	 * @param string $field
+	 * @param string $field - The field key.
 	 *
-	 * @return mixed|void
+	 * @return mixed
 	 */
 	public function get_option( string $field ) {
 		$field = $this->get_field_name( $field );
@@ -605,12 +600,13 @@ abstract class Settings {
 	 * If you prefer the use the method approach vs the set class var approach.
 	 * Use this method to create or update a section of settings.
 	 *
-	 * @param string $slug
-	 * @param string $title
-	 *
 	 * @see  $this->add_setting()
 	 *
 	 * @uses $this->settings (may be set independently)
+	 *
+	 * @param string $slug  - slug of the section.
+	 * @param string $title - title of the section.
+	 *
 	 * @return void
 	 */
 	protected function add_setting_section( string $slug, string $title ) : void {
@@ -625,13 +621,14 @@ abstract class Settings {
 	 * If you prefer to use the method approach vs the set class var approach.
 	 * Use this method to add a single setting to a section.
 	 *
-	 * @param string $section
-	 * @param string $field
-	 * @param string $label
-	 *
 	 * @see  $this->add_settings_section()
 	 *
 	 * @uses $this->settings (may be set independently)
+	 *
+	 * @param string $section - Key of the section.
+	 * @param string $field   - Key of the field.
+	 * @param string $label   - label of the field.
+	 *
 	 * @return void
 	 */
 	protected function add_setting( string $section, string $field, string $label ) : void {

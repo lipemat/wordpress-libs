@@ -10,7 +10,6 @@ use Lipe\Lib\Meta\Repo;
  * logic of a Box and a Field.
  *
  * A fluent interface for CMB2 group properties.
- *
  */
 class Group extends Field {
 	use Box_Trait;
@@ -21,7 +20,7 @@ class Group extends Field {
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
+	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
@@ -35,7 +34,7 @@ class Group extends Field {
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
+	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
@@ -49,7 +48,7 @@ class Group extends Field {
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
+	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
@@ -63,7 +62,7 @@ class Group extends Field {
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
+	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
@@ -74,7 +73,9 @@ class Group extends Field {
 	/**
 	 * Display format for the group
 	 *
-	 * block (default), row, table
+	 * Options: block (default), row, table.
+	 *
+	 * @phpstan-var 'block'|'row'|'table'
 	 *
 	 * @var string
 	 */
@@ -84,21 +85,20 @@ class Group extends Field {
 	/**
 	 * Group constructor.
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 * @internal
 	 *
-	 * @param string      $id
-	 * @param string|null $title
-	 * @param Box         $box
+	 * @param string      $id                      - Field ID.
+	 * @param string|null $title                   - Group title.
+	 * @param Box         $box                     - Box object.
 	 * @param string|null $group_title             - include a {#} to have replaced with number.
-	 * @param string|null $add_button_text
-	 * @param string|null $remove_button_text
-	 * @param bool        $sortable
-	 * @param bool        $closed
+	 * @param string|null $add_button_text         - Defaults to 'Add Another'.
+	 * @param string|null $remove_button_text      - Defaults to 'Remove'.
+	 * @param bool        $sortable                - Whether the group is sortable.
+	 * @param bool        $closed                  - Whether the group is closed by default.
 	 * @param string|null $remove_confirm          - A message to display when a user attempts
 	 *                                             to delete a group.
 	 *                                             (Defaults to null/false for no confirmation).
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 */
 	public function __construct( string $id, ?string $title, Box $box, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, bool $sortable = true, bool $closed = false, ?string $remove_confirm = null ) {
 		$this->type()->group( $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
@@ -110,9 +110,11 @@ class Group extends Field {
 	/**
 	 * Display format for the group.
 	 *
-	 * block (default), row, table
+	 * Options: block (default), row, table
 	 *
-	 * @param string $layout
+	 * @phpstan-param 'block'|'row'|'table' $layout
+	 *
+	 * @param string                        $layout - Layout type.
 	 *
 	 * @return Group
 	 */
@@ -136,7 +138,7 @@ class Group extends Field {
 	/**
 	 * Assign a field to a group, then register it.
 	 *
-	 * @param Field $field
+	 * @param Field $field - Field object.
 	 *
 	 * @throws \LogicException - If no box is available.
 	 *
@@ -194,7 +196,6 @@ class Group extends Field {
 	/**
 	 * Register the meta field with WP core for things like
 	 * `show_in_rest` and `default.
-	 *
 	 */
 	protected function register_meta() : void {
 		$config = [
@@ -266,6 +267,10 @@ class Group extends Field {
 
 
 	/**
+	 * Add a group to a box.
+	 *
+	 * This is a no-op for groups.
+	 *
 	 * @throws \LogicException - If trying to add to another group.
 	 */
 	public function group() : void {

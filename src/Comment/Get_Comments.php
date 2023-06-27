@@ -18,7 +18,6 @@ use Lipe\Lib\Query\Clause\Meta_Query_Trait;
  * @since  4.0.0
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_comment_query/__construct/
- *
  */
 class Get_Comments extends Args_Abstract implements Meta_Query_Interface, Date_Query_Interface {
 	use Date_Query_Trait;

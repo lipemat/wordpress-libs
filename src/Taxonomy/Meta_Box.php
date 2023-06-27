@@ -14,10 +14,11 @@ namespace Lipe\Lib\Taxonomy;
  *
  * @author Mat Lipe
  * @since  4.0.0
- *
  */
 class Meta_Box {
 	/**
+	 * The taxonomy slug.
+	 *
 	 * @var string
 	 */
 	protected string $taxonomy;
@@ -40,11 +41,13 @@ class Meta_Box {
 
 
 	/**
+	 * Meta_Box constructor.
+	 *
 	 * @phpstan-param 'radio'|'dropdown'|'simple' $type
 	 *
-	 * @param string $taxonomy
-	 * @param string $type
-	 * @param bool   $checked_ontop
+	 * @param string                              $taxonomy      - The taxonomy slug.
+	 * @param string                              $type          - The type of meta box.
+	 * @param bool                                $checked_ontop - Move checked items to top.
 	 */
 	public function __construct( string $taxonomy, string $type, bool $checked_ontop ) {
 		$this->taxonomy = $taxonomy;
@@ -210,6 +213,17 @@ class Meta_Box {
 	protected function get_walker() : \Walker {
 		if ( 'radio' === $this->type ) {
 			return new class() extends \Walker_Category_Checklist {
+				/**
+				 * Starts the element output.
+				 *
+				 * @param string $output            Passed by reference. Used to append additional content.
+				 * @param object $data_object       The current item's term data object.
+				 * @param int    $depth             Depth of the current item.
+				 * @param array  $args              An array of arguments.
+				 * @param int    $current_object_id ID of the current item.
+				 *
+				 * @return void
+				 */
 				public function start_el( &$output, $data_object, $depth = 0, $args = [], $current_object_id = 0 ) : void {
 					$tax = get_taxonomy( $args['taxonomy'] );
 					if ( ! $tax ) {

@@ -6,6 +6,8 @@ use Lipe\Lib\Meta\Mutator_Trait;
 use Lipe\Lib\Meta\Repo;
 
 /**
+ * Shared methods for interacting with the WordPress user object.
+ *
  * @property string   $nickname
  * @property string   $description
  * @property string   $user_description
@@ -49,11 +51,15 @@ trait User_Trait {
 	use Mutator_Trait;
 
 	/**
+	 * User ID
+	 *
 	 * @var int
 	 */
 	protected $user_id;
 
 	/**
+	 * User object
+	 *
 	 * @var ?\WP_User
 	 */
 	protected $user;
@@ -62,7 +68,7 @@ trait User_Trait {
 	/**
 	 * User_Trait constructor.
 	 *
-	 * @param int|null|\WP_User $user
+	 * @param int|null|\WP_User $user - User ID, WP_User object, or null for the current user.
 	 */
 	public function __construct( $user = null ) {
 		if ( null === $user ) {
@@ -80,11 +86,21 @@ trait User_Trait {
 	}
 
 
+	/**
+	 * Get the user ID.
+	 *
+	 * @return int
+	 */
 	public function get_id() : int {
 		return $this->user_id;
 	}
 
 
+	/**
+	 * Get the user object.
+	 *
+	 * @return \WP_User|null
+	 */
 	public function get_object() : ?\WP_User {
 		if ( null === $this->user ) {
 			$this->user = get_user_by( 'id', $this->user_id ) ?: null;
@@ -94,6 +110,11 @@ trait User_Trait {
 	}
 
 
+	/**
+	 * Used to determine the type of meta to retrieve or update.
+	 *
+	 * @return string
+	 */
 	public function get_meta_type() : string {
 		return Repo::META_USER;
 	}
@@ -129,7 +150,9 @@ trait User_Trait {
 
 
 	/**
-	 * @param int|null|\WP_User $user
+	 * Get an instance of this class.
+	 *
+	 * @param int|null|\WP_User $user - User ID, WP_User object, or null for the current user.
 	 *
 	 * @return static
 	 */

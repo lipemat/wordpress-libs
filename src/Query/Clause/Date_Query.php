@@ -39,9 +39,9 @@ class Date_Query extends Clause_Abstract {
 	 * @phpstan-param numeric-string $month
 	 * @phpstan-param numeric-string $day
 	 *
-	 * @param ?string                $year
-	 * @param ?string                $month
-	 * @param ?string                $day
+	 * @param ?string                $year  - Year to retrieve posts after.
+	 * @param ?string                $month - Month to retrieve posts after.
+	 * @param ?string                $day   - Day to retrieve posts after.
 	 *
 	 * @return $this
 	 */
@@ -76,9 +76,9 @@ class Date_Query extends Clause_Abstract {
 	 * @phpstan-param numeric-string $month
 	 * @phpstan-param numeric-string $day
 	 *
-	 * @param ?string                $year
-	 * @param ?string                $month
-	 * @param ?string                $day
+	 * @param ?string                $year  - Year to retrieve posts before.
+	 * @param ?string                $month - Month to retrieve posts before.
+	 * @param ?string                $day   - Day to retrieve posts before.
 	 *
 	 * @return $this
 	 */
@@ -111,7 +111,7 @@ class Date_Query extends Clause_Abstract {
 	 * @see WP_Date_Query::validate_column()
 	 * @see date_query_valid_columns filter
 	 *
-	 * @param string $column
+	 * @param string $column - Database column to compare against.
 	 *
 	 * @return Date_Query
 	 */
@@ -124,9 +124,11 @@ class Date_Query extends Clause_Abstract {
 	/**
 	 * Compare operator for the current clause.
 	 *
+	 * @see WP_Date_Query::get_compare()
+	 *
 	 * @phpstan-param COMPARE $compare
 	 *
-	 * @param string          $compare
+	 * @param string          $compare - The comparison operator.
 	 *
 	 * @return Date_Query
 	 */
@@ -142,7 +144,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * Default false.
 	 *
-	 * @param bool $inclusive
+	 * @param bool $inclusive - Whether to be inclusive or not.
 	 *
 	 * @return Date_Query
 	 */
@@ -156,7 +158,7 @@ class Date_Query extends Clause_Abstract {
 	 * The four-digit year number. Accepts any four-digit year,
 	 * or an array of years if `$compare` supports it.
 	 *
-	 * @param int|int[] $year
+	 * @param int|int[] $year - Year to retrieve posts for.
 	 *
 	 * @return Date_Query
 	 */
@@ -172,8 +174,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @phpstan-param  int<1,12>|array<int, int<1,12>> $month
 	 *
-	 * @param int|int[]                                $month
-	 *
+	 * @param int|int[]                                $month - Month to retrieve posts for.
 	 *
 	 * @return Date_Query
 	 */
@@ -189,7 +190,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @phpstan-param  int<0,53>|array<int, int<0,53>> $week
 	 *
-	 * @param int|int[]                                $week
+	 * @param int|int[]                                $week - Week of the year to retrieve posts for.
 	 *
 	 * @return Date_Query
 	 */
@@ -205,8 +206,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @phpstan-param  int<1,31>|array<int, int<1,31>> $day
 	 *
-	 * @param int|int[]                                $day
-	 *
+	 * @param int|int[]                                $day - Day of the month to retrieve posts for.
 	 */
 	public function day( $day ) : Date_Query {
 		$this->update_current_clause( $day, 'day' );
@@ -220,7 +220,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @phpstan-param  int<1,23>|array<int, int<1,23>> $hour
 	 *
-	 * @param int|int[]                                $hour
+	 * @param int|int[]                                $hour - Hour to retrieve posts for.
 	 *
 	 * @return Date_Query
 	 */
@@ -236,7 +236,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @phpstan-param  int<0,59>|array<int, int<0,59>> $minute
 	 *
-	 * @param int|int[]                                $minute
+	 * @param int|int[]                                $minute - Minute to retrieve posts for.
 	 *
 	 * @return Date_Query
 	 */
@@ -252,7 +252,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @phpstan-param  int<0,59>|array<int, int<0,59>> $second
 	 *
-	 * @param int|int[]                                $second
+	 * @param int|int[]                                $second - Second to retrieve posts for.
 	 *
 	 * @return Date_Query
 	 */
@@ -268,7 +268,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @phpstan-param  int<1,366>|array<int, int<1,366>> $dayofyear
 	 *
-	 * @param int|int[]                                  $dayofyear
+	 * @param int|int[]                                  $dayofyear - Day of the year to retrieve posts for.
 	 *
 	 * @return Date_Query
 	 */
@@ -284,7 +284,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @phpstan-param  int<1,7>|array<int, int<1,7>> $dayofweek
 	 *
-	 * @param int|int[]                              $dayofweek
+	 * @param int|int[]                              $dayofweek - Day of the week to retrieve posts for.
 	 *
 	 * @return Date_Query
 	 */
@@ -300,7 +300,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @phpstan-param  int<1,7>|array<int, int<1,7>> $dayofweek_iso
 	 *
-	 * @param int|int[]                              $dayofweek_iso
+	 * @param int|int[]                              $dayofweek_iso - Day of the week (ISO) to retrieve posts for.
 	 *
 	 * @return Date_Query
 	 */
@@ -356,9 +356,8 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @link https://developer.wordpress.org/reference/classes/wp_query/#date-parameters
 	 *
-	 *
-	 * @param string|int|bool|array<string|int|bool> $value
-	 * @param string                                 $key
+	 * @param string|int|bool|array<string|int|bool> $value - Value to update the current clause with.
+	 * @param string                                 $key   - Key to update in the current clause.
 	 *
 	 * @return void
 	 */

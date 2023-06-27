@@ -6,14 +6,16 @@ use Lipe\Lib\Meta\Mutator_Trait;
 use Lipe\Lib\Meta\Repo;
 
 /**
+ * Shared methods for interacting with the WordPress post object.
+ *
  * @note `@mixin` does not work in PHPStan with Traits.
  *
  * @property string $comment_count
  * @property string $comment_status
  * @property string $filter
  * @property string $guid
- * @property int $ID
- * @property int $menu_order
+ * @property int    $ID
+ * @property int    $menu_order
  * @property string $ping_status
  * @property string $pinged
  * @property string $post_author
@@ -55,7 +57,7 @@ trait Post_Object_Trait {
 	 * Construct this class with either the provided post
 	 * of the current global post.
 	 *
-	 * @param int|\WP_Post|null $post
+	 * @param int|\WP_Post|null $post - Post ID, WP_Post object, or null for global post.
 	 */
 	public function __construct( $post = null ) {
 		if ( null === $post ) {
@@ -106,10 +108,9 @@ trait Post_Object_Trait {
 
 
 	/**
+	 * Get an instance of this class.
 	 *
-	 * @param int|\WP_Post|null $post
-	 *
-	 * @static
+	 * @param int|\WP_Post|null $post - Post ID, WP_Post object, or null for the current post.
 	 *
 	 * @return static
 	 */

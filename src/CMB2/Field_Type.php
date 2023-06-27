@@ -19,15 +19,19 @@ use Lipe\Lib\Util\Arrays;
  */
 class Field_Type {
 	/**
+	 * The field object.
+	 *
 	 * @var Field
 	 */
 	protected Field $field;
 
 
 	/**
+	 * Field_Type constructor.
+	 *
 	 * @internal
 	 *
-	 * @param Field $field
+	 * @param Field $field - the field to set properties on.
 	 */
 	public function __construct( Field $field ) {
 		$this->field = $field;
@@ -36,7 +40,6 @@ class Field_Type {
 
 	/**
 	 * Set the field properties based on an array or args.
-	 *
 	 *
 	 * @param array  $args      - [$key => $value].
 	 * @param string $data_type - a type of data to return [Repo::DEFAULT, Repo::CHECKBOX, Repo::FILE, Repo::TAXONOMY ].
@@ -183,9 +186,9 @@ class Field_Type {
 	 *
 	 * @link https://www.w3schools.com/tags/att_input_type_number.asp
 	 *
-	 * @param float      $step
-	 * @param float|null $min
-	 * @param float|null $max
+	 * @param float      $step - The input's number intervals.
+	 * @param float|null $min  - The minimum value of the input.
+	 * @param float|null $max  - The maximum value of the input.
 	 *
 	 * @return Field
 	 */
@@ -211,7 +214,7 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea
 	 *
-	 * @param int $rows - For small text areas use `textarea_small`.
+	 * @param int|null $rows - For small text areas use `textarea_small`.
 	 *
 	 * @return Field
 	 */
@@ -258,8 +261,6 @@ class Field_Type {
 	 *
 	 * @example textarea_code( false, 'javascript', [ 'codemirror' => [ 'lineNumbers' => false, 'theme' => 'cobalt' ] ]
 	 *          );
-	 *
-	 *
 	 */
 	public function textarea_code( bool $disable_codemirror = false, ?string $language = null, array $code_editor_arguments = [] ) : Field {
 		$set = [
@@ -391,12 +392,12 @@ class Field_Type {
 	/**
 	 * Date field. Stored and displayed according to the date_format.
 	 *
-	 * @param string $date_format
-	 * @param string $timezone_meta_key   - to use the value of another timezone_select field
-	 *                                    as the timezone.
-	 * @param array  $date_picker_options - overrides for jQuery UI Datepicker (see example).
-	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_date
+	 *
+	 * @param string $date_format         - PHP date format string.
+	 * @param string $timezone_meta_key   - To use the value of another timezone_select field
+	 *                                    as the timezone.
+	 * @param array  $date_picker_options - Overrides for jQuery UI Datepicker (see example).
 	 *
 	 * @return Field
 	 */
@@ -408,13 +409,12 @@ class Field_Type {
 	/**
 	 * Date field, stored as UNIX timestamp. Useful if you plan to query based on it.
 	 *
-	 * @param string $date_format
-	 * @param string $timezone_meta_key   - to use the value of another timezone_select field
-	 *                                    as the timezone.
-	 *
-	 * @param array  $date_picker_options - overrides for jQuery UI Datepicker (see text_date example).
-	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_date_timestamp
+	 *
+	 * @param string $date_format         - PHP date format string.
+	 * @param string $timezone_meta_key   - To use the value of another timezone_select field
+	 *                                    as the timezone.
+	 * @param array  $date_picker_options - Overrides for jQuery UI Datepicker (see text_date example).
 	 *
 	 * @return Field
 	 */
@@ -426,13 +426,12 @@ class Field_Type {
 	/**
 	 * Date and time field, stored as UNIX timestamp. Useful if you plan to query based on it.
 	 *
-	 * @param string $date_format
-	 * @param string $timezone_meta_key   - to use the value of another timezone_select field
-	 *                                    as the timezone.
-	 *
-	 * @param array  $date_picker_options - overrides for jQuery UI Datepicker (see text_date example).
-	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp
+	 *
+	 * @param string $date_format         - PHP date format string.
+	 * @param string $timezone_meta_key   - To use the value of another timezone_select field
+	 *                                    as the timezone.
+	 * @param array  $date_picker_options - Overrides for jQuery UI Datepicker (see text_date example).
 	 *
 	 * @return Field
 	 */
@@ -444,12 +443,12 @@ class Field_Type {
 	/**
 	 * Date, time and timezone field, stored as serialized DateTime object.
 	 *
-	 * @param string $date_format
-	 * @param string $timezone_meta_key   - to use the value of another timezone_select field
-	 *                                    as the timezone.
-	 * @param array  $date_picker_options - overrides for jQuery UI Datepicker (see text_date example).
-	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp_timezone
+	 *
+	 * @param string $date_format         - PHP date format string.
+	 * @param string $timezone_meta_key   - To use the value of another timezone_select field
+	 *                                    as the timezone.
+	 * @param array  $date_picker_options - Overrides for jQuery UI Datepicker (see text_date example).
 	 *
 	 * @return Field
 	 */
@@ -471,11 +470,10 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#colorpicker
 	 *
-	 * @param array $iris_options
+	 * @param array $iris_options - Array of options to pass to Iris.
 	 * @param bool  $transparency - to enable transparency.
 	 *
 	 * @return Field
-	 *
 	 */
 	public function colorpicker( array $iris_options = [], bool $transparency = false ) : Field {
 		$_args = [ 'type' => 'colorpicker' ];
@@ -582,11 +580,11 @@ class Field_Type {
 	/**
 	 * Radio buttons pre-populated with taxonomy terms
 	 *
-	 * @param string $taxonomy       - slug.
-	 * @param string $no_terms_text
-	 * @param bool   $remove_default - remove default WP terms metabox.
-	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
+	 *
+	 * @param string $taxonomy       - slug.
+	 * @param string $no_terms_text  - text to display if no terms are found.
+	 * @param bool   $remove_default - remove default WP terms metabox.
 	 *
 	 * @return Field
 	 */
@@ -603,7 +601,7 @@ class Field_Type {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
 	 *
 	 * @param string $taxonomy       - slug.
-	 * @param string $no_terms_text
+	 * @param string $no_terms_text  - text to display if no terms are found.
 	 * @param bool   $remove_default - remove default WP terms metabox.
 	 *
 	 * @return Field
@@ -621,7 +619,7 @@ class Field_Type {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio_inline
 	 *
 	 * @param string $taxonomy       - slug.
-	 * @param string $no_terms_text
+	 * @param string $no_terms_text  - text to display if no terms are found.
 	 * @param bool   $remove_default - remove default WP terms metabox.
 	 *
 	 * @return Field
@@ -639,7 +637,7 @@ class Field_Type {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_select
 	 *
 	 * @param string $taxonomy       - slug.
-	 * @param string $no_terms_text
+	 * @param string $no_terms_text  - text to display if no terms are found.
 	 * @param bool   $remove_default - remove default WP terms metabox.
 	 *
 	 * @return Field
@@ -657,9 +655,8 @@ class Field_Type {
 	 * @todo Add link once docs become available.
 	 *
 	 * @param string $taxonomy       - slug.
-	 * @param null   $no_terms_text
+	 * @param null   $no_terms_text  - text to display if no terms are found.
 	 * @param null   $remove_default - remove default WP terms metabox.
-	 *
 	 *
 	 * @return Field
 	 */
@@ -675,14 +672,13 @@ class Field_Type {
 	 *
 	 * Select 2 term selector.
 	 *
+	 * @see Term_Select_2
+	 *
 	 * @param string $taxonomy         - slug.
 	 * @param bool   $create_new_terms - allow creating new terms.
-	 * @param bool   $save_as_terms    - append the terms to the object as well as storing them in meta (default to
-	 *                                 false ).
-	 * @param string $no_terms_text
+	 * @param bool   $save_as_terms    - append the terms to the object as well as storing them in meta (default to false ).
+	 * @param string $no_terms_text    - text to display if no terms are found.
 	 * @param bool   $remove_default   - remove default WP terms metabox.
-	 *
-	 * @see Term_Select_2
 	 *
 	 * @return Field
 	 */
@@ -703,7 +699,7 @@ class Field_Type {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
 	 *
 	 * @param string $taxonomy       - slug.
-	 * @param string $no_terms_text
+	 * @param string $no_terms_text  - text to display if no terms are found.
 	 * @param bool   $remove_default - remove default WP terms metabox.
 	 * @param bool   $select_all     - display the select all button.
 	 *
@@ -723,7 +719,7 @@ class Field_Type {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_hierarchical
 	 *
 	 * @param string $taxonomy       - slug.
-	 * @param string $no_terms_text
+	 * @param string $no_terms_text  - text to display if no terms are found.
 	 * @param bool   $remove_default - remove default WP terms metabox.
 	 * @param bool   $select_all     - display the select all button.
 	 *
@@ -743,7 +739,7 @@ class Field_Type {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_inline
 	 *
 	 * @param string $taxonomy       - slug.
-	 * @param string $no_terms_text
+	 * @param string $no_terms_text  - text to display if no terms are found.
 	 * @param bool   $remove_default - remove default WP terms metabox.
 	 * @param bool   $select_all     - display the select all button.
 	 *
@@ -843,10 +839,10 @@ class Field_Type {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 *
 	 * @param string|null $title                 - include a {#} to have replaced with number.
-	 * @param string|null $add_button_text
-	 * @param string|null $remove_button_text
-	 * @param bool        $sortable
-	 * @param bool        $closed
+	 * @param string|null $add_button_text       - defaults to 'Add Group'.
+	 * @param string|null $remove_button_text    - defaults to 'Remove Group'.
+	 * @param bool        $sortable              - Is this group sortable.
+	 * @param bool        $closed                - Is this group closed by default.
 	 * @param string|null $remove_confirm        - A message to display when a user attempts
 	 *                                           to delete a group.
 	 *                                           (Defaults to null/false for no confirmation).
@@ -880,19 +876,21 @@ class Field_Type {
 
 
 	/**
+	 * A field for uploading a list of files.
+	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file_list
 	 *
 	 * @phpstan-param 'file'|'file_list' $type
 	 *
-	 * @param string $type
-	 * @param string $button_text
-	 * @param string $file_mime_type
-	 * @param bool   $show_text_input
-	 * @param string $preview_size
-	 * @param string $remove_item_text
-	 * @param string $file_text
-	 * @param string $download_text
-	 * @param string $select_text - Text on the button in the media manager (default: Use this file).
+	 * @param string                     $type             - (default 'file').
+	 * @param string                     $button_text      - (default 'Add File').
+	 * @param string                     $file_mime_type   - (default all).
+	 * @param bool                       $show_text_input  - (default true) May not be turned off for required fields.
+	 * @param string                     $preview_size     - (default full).
+	 * @param string                     $remove_item_text - (default 'Remove').
+	 * @param string                     $file_text        - (default 'File').
+	 * @param string                     $download_text    - (default 'Download').
+	 * @param string                     $select_text      - Media manager button label (default: Use this file).
 	 *
 	 * @return array
 	 */
@@ -936,9 +934,11 @@ class Field_Type {
 
 
 	/**
-	 * @param string $type
+	 * A field for selecting a taxonomy.
+	 *
+	 * @param string $type           - Type of field.
 	 * @param string $taxonomy       - slug.
-	 * @param string $no_terms_text
+	 * @param string $no_terms_text  - text to display when no terms are found.
 	 * @param bool   $remove_default - remove default WP terms metabox.
 	 *
 	 * @return array
@@ -960,9 +960,11 @@ class Field_Type {
 
 
 	/**
-	 * @param string         $type
+	 * A field for selecting for provided options.
+	 *
+	 * @param string         $type                - Type of field.
 	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
-	 * @param bool|string    $show_option_none
+	 * @param bool|string    $show_option_none    - Label of no option selected option. Defaults to not shown.
 	 *
 	 * @return array
 	 */
@@ -987,11 +989,12 @@ class Field_Type {
 
 
 	/**
+	 * A field for selecting a date.
 	 *
-	 * @param string $type
-	 * @param string $date_format
-	 * @param string $timezone_meta_key
-	 * @param array  $date_picker_options
+	 * @param string $type                - Type of field.
+	 * @param string $date_format         - PHP date format.
+	 * @param string $timezone_meta_key   - Meta key to retrieve timezone from.
+	 * @param array  $date_picker_options - Options to pass to datepicker.
 	 *
 	 * @return array
 	 */

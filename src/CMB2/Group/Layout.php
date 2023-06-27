@@ -14,10 +14,25 @@ class Layout {
 	use Singleton;
 	use Memoize;
 
+	/**
+	 * Is this a table layout?
+	 *
+	 * @param \CMB2_Field $field_group - The CMB2_Field group object.
+	 *
+	 * @return bool
+	 */
 	protected function is_table( \CMB2_Field $field_group ) : bool {
 		return ( 'table' === $field_group->args( 'layout' ) );
 	}
 
+
+	/**
+	 * Is this a repeatable group?
+	 *
+	 * @param \CMB2_Field $field_group - The CMB2_Field group object.
+	 *
+	 * @return bool
+	 */
 	protected function is_repeatable( \CMB2_Field $field_group ) : bool {
 		return (bool) $field_group->args( 'repeatable' );
 	}
@@ -26,11 +41,11 @@ class Layout {
 	/**
 	 * Copied mostly from CMB2::render_group_callback()
 	 *
-	 * @param  array       $field_args  Array of field arguments for the group field parent.
-	 * @param  \CMB2_Field $field_group The CMB2_Field group object.
-	 *
 	 * @see Group::layout()
 	 * @see \CMB2::render_group_callback()
+	 *
+	 * @param array       $field_args  Array of field arguments for the group field parent.
+	 * @param \CMB2_Field $field_group The CMB2_Field group object.
 	 *
 	 * @return \CMB2_Field|null Group field object.
 	 */
@@ -107,7 +122,6 @@ class Layout {
 	 * Render a repeatable group row table header
 	 *
 	 * @param  \CMB2_Field $field_group CMB2_Field group field object.
-	 *
 	 */
 	public function render_group_table_header( $field_group ) : void {
 		?>
@@ -222,6 +236,12 @@ class Layout {
 	}
 
 
+	/**
+	 * Render a single field.
+	 *
+	 * @param array       $field_args  Array of field arguments.
+	 * @param \CMB2_Field $field_group CMB2_Field group field object.
+	 */
 	protected function render_field( array $field_args, \CMB2_Field $field_group ) : void {
 		$cmb = \CMB2_Boxes::get( $field_group->cmb_id );
 		if ( 'hidden' === $field_args['type'] ) {
@@ -234,8 +254,13 @@ class Layout {
 	}
 
 
+	/**
+	 * Render the CSS for the group.
+	 *
+	 * @return void
+	 */
 	protected function styles() : void {
-		$this->once( function () {
+		$this->once( function() {
 			?>
 			<style>
 				.cmb-group-table table {

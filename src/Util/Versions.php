@@ -16,7 +16,6 @@ use Lipe\Lib\Traits\Singleton;
  *
  * @example Versions::in()->add_update( $version, function(){}, [ data ] );
  * @example Versions::in()->once( $key, function(){}, [ data ] );
- *
  */
 class Versions {
 	use Singleton;
@@ -25,9 +24,7 @@ class Versions {
 	protected const ONCE   = 'lipe/lib/util/versions/once';
 
 	/**
-	 * Keeps track of version in db
-	 *
-	 * @static
+	 * Keeps track of version in the database.
 	 *
 	 * @var string
 	 */
@@ -61,6 +58,9 @@ class Versions {
 	protected static array $once = [];
 
 
+	/**
+	 * Construct the versions class.
+	 */
 	protected function __construct() {
 		static::$version = (string) get_option( static::OPTION, '0.1' );
 		static::$once_run_before = get_option( static::ONCE, [] );
@@ -69,6 +69,11 @@ class Versions {
 	}
 
 
+	/**
+	 * Actions and filters.
+	 *
+	 * @return void
+	 */
 	protected function hook() : void {
 		add_action( 'init', [ $this, 'run_updates' ], 99999 );
 	}
@@ -86,11 +91,12 @@ class Versions {
 
 	/**
 	 * Run a function one time only.
-	 * To be use for items with no pre-requisites, which just need to be run once.
 	 *
-	 * @param string   $key - Unique identifier.
-	 * @param callable $callback
-	 * @param mixed    $args
+	 * To be used for items with no pre-requisites, which just need to be run once.
+	 *
+	 * @param string   $key      - Unique identifier.
+	 * @param callable $callback - Callback to be run only once.
+	 * @param mixed    $args     - Arguments to be passed to the callback.
 	 *
 	 * @return void
 	 */

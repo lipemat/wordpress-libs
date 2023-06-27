@@ -11,7 +11,7 @@ namespace Lipe\Lib\Meta;
  * implements \ArrayAccess.
  *
  * If you don't want array keys to be able to modify data, then simply
- * do not give not implement \ArrayAccess on the class and they will
+ * do not give not implement \ArrayAccess on the class, and they will
  * not work
  *
  * All methods will manipulate data in the database directly.
@@ -29,6 +29,8 @@ trait Mutator_Trait {
 
 	/**
 	 * Get the type of meta used with this object.
+	 *
+	 * Used to determine the type of meta to retrieve or update.
 	 *
 	 * @phpstan-return Repo::META_*
 	 *
@@ -71,8 +73,8 @@ trait Mutator_Trait {
 	/**
 	 * Set value of any property, which exists on the child Object.
 	 *
-	 * @param string $name - Property to set.
-	 * @param mixed  $value
+	 * @param string $name  - Property to set.
+	 * @param mixed  $value - Value to set.
 	 *
 	 * @throws \ErrorException - If `get_object` method not available.
 	 *
@@ -118,8 +120,8 @@ trait Mutator_Trait {
 	 * Get a value of this object's meta field
 	 * using the meta repo to map the appropriate data type.
 	 *
-	 * @param string $key
-	 * @param mixed  $default
+	 * @param string $key     - Meta key to retrieve.
+	 * @param mixed  $default - Default value to return if meta is empty.
 	 *
 	 * @return mixed
 	 */
@@ -137,7 +139,7 @@ trait Mutator_Trait {
 	 * Update a value of this object's meta field
 	 * using the meta repo to map the appropriate data type.
 	 *
-	 * @param string         $key
+	 * @param string         $key      - Meta key to update.
 	 * @param mixed|callable ...$value - If a callable is passed it will be called with the
 	 *                                 previous value as the only argument.
 	 *                                 If a callable is passed with an additional argument,
@@ -157,7 +159,7 @@ trait Mutator_Trait {
 	 * Delete the value of this object's meta field
 	 * using the meta repo to map the appropriate data type.
 	 *
-	 * @param string $key
+	 * @param string $key - Meta key to delete.
 	 *
 	 * @return void
 	 */
@@ -166,6 +168,13 @@ trait Mutator_Trait {
 	}
 
 
+	/**
+	 * Get meta value by key.
+	 *
+	 * @param string $field_id - Meta key to retrieve.
+	 *
+	 * @return mixed
+	 */
 	#[\ReturnTypeWillChange]
 	public function offsetGet( $field_id ) {
 		return $this->get_meta( $field_id );
@@ -173,21 +182,34 @@ trait Mutator_Trait {
 
 
 	/**
-	 * @param string         $field_id
-	 * @param mixed|callable $value - If a callable is passed it will be called with the
-	 *                              previous value as the only argument.
+	 * Update meta value by key.
 	 *
+	 * @param string         $field_id - Meta key to update.
+	 * @param mixed|callable $value    - If a callable is passed it will be called with the
+	 *                                 previous value as the only argument.
 	 */
 	public function offsetSet( $field_id, $value ) : void {
 		$this->update_meta( $field_id, $value );
 	}
 
 
+	/**
+	 * Delete meta value by key.
+	 *
+	 * @param string $field_id - Meta key to delete.
+	 */
 	public function offsetUnset( $field_id ) : void {
 		$this->delete_meta( $field_id );
 	}
 
 
+	/**
+	 * Check if meta value exists by key.
+	 *
+	 * @param string $field_id - Meta key to check.
+	 *
+	 * @return bool
+	 */
 	public function offsetExists( $field_id ) : bool {
 		return ! empty( $this->get_meta( $field_id ) );
 	}

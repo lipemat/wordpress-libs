@@ -16,7 +16,6 @@ use Lipe\Lib\Traits\Singleton;
  * $js_endpoint = Zip::in()->get_url_for_endpoint()
  * $js_config = Zip::in()->get_post_data_to_send( array $urls );
  * $.post( $js_endpoint, $js_config);
- *
  */
 class Zip {
 	use Singleton {
@@ -30,26 +29,39 @@ class Zip {
 	public const URLS = 'lipe/lib/util/zip/urls';
 
 	/**
+	 * Name of the zip file.
+	 *
 	 * @var string
 	 */
-	protected $file_name;
+	protected string $file_name;
 
 	/**
+	 * Path to the zip file.
+	 *
 	 * @var string
 	 */
-	protected $file_path;
+	protected string $file_path;
 
 	/**
+	 * Name of the zip file.
+	 *
 	 * @var string
 	 */
-	protected $zip_name;
+	protected string $zip_name;
 
 	/**
+	 * Path to the zip file.
+	 *
 	 * @var string
 	 */
-	protected $zip_path;
+	protected string $zip_path;
 
 
+	/**
+	 * Actions and filters.
+	 *
+	 * @return void
+	 */
 	protected function hook() : void {
 		add_action( Api::in()->get_action( static::ACTION ), [ $this, 'handle_request' ] );
 	}
@@ -81,7 +93,7 @@ class Zip {
 	/**
 	 * Set all the paths we are going to work with.
 	 *
-	 * @param array       $files
+	 * @param array       $files    - urls of files to add.
 	 * @param string|null $zip_name - optional name for the zip folder.
 	 *
 	 * @return void
@@ -98,7 +110,7 @@ class Zip {
 	/**
 	 * Create and serve zip file from the specified urls.
 	 *
-	 * At first glance, this might appear like a security hole, but
+	 * This might appear like a security hole, but
 	 * it will only serve files accessible via http request, which
 	 * technically would already be available publicly.
 	 *
@@ -218,7 +230,6 @@ class Zip {
 	 *
 	 * @return array
 	 * @static
-	 *
 	 */
 	public static function get_post_data_to_send( array $urls, ?string $name = null ) : array {
 		return [

@@ -19,7 +19,6 @@ use Lipe\Lib\Util\Arrays;
  *          $class[ 'active' ] = isset( $_POST['domain_list'] );
  *
  * @implements \ArrayAccess<string, array|string>
- *
  */
 class Class_Names implements \ArrayAccess {
 
@@ -32,7 +31,9 @@ class Class_Names implements \ArrayAccess {
 
 
 	/**
-	 * @param string|array ...$classes
+	 * Accepts any number of arrays or strings.
+	 *
+	 * @param string|array ...$classes - Classes to parse.
 	 */
 	public function __construct( ...$classes ) {
 		\array_walk( $classes, [ $this, 'parse_classes' ] );
@@ -59,7 +60,7 @@ class Class_Names implements \ArrayAccess {
 	 * Allows us to pass any combination of arrays or strings
 	 * and still get the appropriate classes
 	 *
-	 * @param string|array $classes
+	 * @param string|array $classes - Classes to parse.
 	 *
 	 * @return void
 	 */
@@ -83,7 +84,9 @@ class Class_Names implements \ArrayAccess {
 
 
 	/**
-	 * @param string $css_class
+	 * Get the index of a class name if it exists.
+	 *
+	 * @param string $css_class - Class name to search for.
 	 *
 	 * @return int|false
 	 */
@@ -92,16 +95,35 @@ class Class_Names implements \ArrayAccess {
 	}
 
 
+	/**
+	 * Generate a CSS class list to be used in an HTML element.
+	 *
+	 * @return string
+	 */
 	public function __toString() {
 		return \implode( ' ', $this->get_classes() );
 	}
 
 
+	/**
+	 * Check if a class name exists in the list.
+	 *
+	 * @param string $offset - Class name.
+	 *
+	 * @return bool
+	 */
 	public function offsetExists( $offset ) : bool {
 		return false !== $this->get_classes_key( $offset );
 	}
 
 
+	/**
+	 * Get a class name from the list.
+	 *
+	 * @param string $offset - Class name.
+	 *
+	 * @return string
+	 */
 	#[\ReturnTypeWillChange]
 	public function offsetGet( $offset ) {
 		return Template::in()->sanitize_html_class( $this->classes[ (int) $this->get_classes_key( $offset ) ] );
@@ -125,6 +147,13 @@ class Class_Names implements \ArrayAccess {
 	}
 
 
+	/**
+	 * Remove a class name from the list.
+	 *
+	 * @param string $offset - Class name.
+	 *
+	 * @return void
+	 */
 	public function offsetUnset( $offset ) : void {
 		if ( $this->offsetExists( $offset ) ) {
 			unset( $this->classes[ (int) $this->get_classes_key( $offset ) ] );

@@ -36,7 +36,7 @@ trait Memoize {
 	 * I will only call the callback one time for the same set of arguments.
 	 * If the result already exists in the cache, the callback will not be called.
 	 *
-	 * @param callable $callback
+	 * @param callable $callback   - Callback, which returns the value to store and return.
 	 * @param string   $identifier - Something unique to identify the method being used
 	 *                             so we can determine the difference in the cache.
 	 *                             `__METHOD__` works nicely here.
@@ -63,7 +63,7 @@ trait Memoize {
 	 * and what the arguments are.
 	 * I will always return the value received from the callback on its first run.
 	 *
-	 * @param callable $callback
+	 * @param callable $callback   - Callback, which returns the value to store and return.
 	 * @param string   $identifier - Something unique to identify the method being used
 	 *                             so we can determine the difference in the cache.
 	 *                             `__METHOD__` works nicely here.
@@ -135,7 +135,6 @@ trait Memoize {
 	 * Typically, used during unit testing.
 	 *
 	 * @see Memoize::clear_single_item()
-	 *
 	 */
 	public function clear_memoize_cache() : void {
 		$this->memoize_cache = [];

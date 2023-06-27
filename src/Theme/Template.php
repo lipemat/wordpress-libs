@@ -6,7 +6,6 @@ use Lipe\Lib\Traits\Singleton;
 
 /**
  * Template helpers for the theme.
- *
  */
 class Template {
 	use Singleton;
@@ -14,7 +13,7 @@ class Template {
 	/**
 	 * Render of an array of attributes to be used in HTML markup.
 	 *
-	 * @param array $attributes
+	 * @param array $attributes - Array of attributes to sanitize, implode and return.
 	 *
 	 * @return    string
 	 */
@@ -48,7 +47,6 @@ class Template {
 	 * @since 3.7.0
 	 *
 	 * @return string
-	 *
 	 */
 	public function get_template_contents( string $slug, ?string $name = null, $args = [] ) : string {
 		ob_start();

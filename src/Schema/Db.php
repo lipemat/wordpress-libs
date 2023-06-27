@@ -15,7 +15,6 @@ use Lipe\Lib\Traits\Version;
  * @const  COLUMNS - Table columns.
  *
  * @phpstan-type WHERE array<string,float|string|null>|int
- *
  */
 abstract class Db {
 	use Version;
@@ -83,7 +82,7 @@ abstract class Db {
 
 
 	/**
-	 * Get the name of the database table with prefix included.
+	 * Get the name of the database table with the prefix included.
 	 *
 	 * @return string
 	 */
@@ -117,7 +116,6 @@ abstract class Db {
 	 *                                           column to specify direction.
 	 *
 	 * @return null|object|array<object>|\stdClass|string|array<string>
-	 *
 	 */
 	public function get( $columns, $id_or_wheres = null, $count = null, string $order_by = null ) {
 		global $wpdb;
@@ -148,7 +146,6 @@ abstract class Db {
 	 * Get a row by its id.
 	 *
 	 * @param int $id - Primary key value.
-	 *
 	 *
 	 * @return object|null
 	 */
@@ -198,7 +195,7 @@ abstract class Db {
 	/**
 	 * Add a row to the table
 	 *
-	 * @param array $columns
+	 * @param array $columns - column => value pairs to insert.
 	 *
 	 * @return int|bool - insert id on success or false
 	 */
@@ -271,7 +268,7 @@ abstract class Db {
 	 *
 	 * @since 3.14.0
 	 *
-	 * @param array $columns
+	 * @param array $columns - column => value pairs to replace.
 	 *
 	 * @return int|bool - insert id on success or false
 	 */
@@ -298,7 +295,7 @@ abstract class Db {
 	 * @param string|array         $id_or_wheres Row id or array or where column => value.
 	 *                                           Adding a % within the value will turn the
 	 *                                           query into a `LIKE` query.
-	 * @param string|int           $count
+	 * @param string|int           $count        Number of rows to return.
 	 * @param ?string              $order_by     An ORDERBY column and direction.
 	 *                                           Optionally pass `ASC` or `DESC`.
 	 *
@@ -365,7 +362,7 @@ abstract class Db {
 	 *
 	 * @link https://www.php.net/manual/en/function.sprintf.php
 	 *
-	 * @param array $columns
+	 * @param array $columns - Columns to retrieve formats for.
 	 *
 	 * @return array
 	 */
@@ -388,9 +385,9 @@ abstract class Db {
 	/**
 	 * Sorts columns to match `static::COLUMNS` for use with query sanitization.
 	 *
-	 * @param array $columns
-	 *
 	 * @see Db::COLUMNS
+	 *
+	 * @param array $columns - Columns to sort.
 	 *
 	 * @return array
 	 */

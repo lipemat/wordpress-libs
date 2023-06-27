@@ -6,7 +6,6 @@ use Lipe\Lib\Traits\Singleton;
 
 /**
  * Color helpers.
- *
  */
 class Colors {
 	use Singleton;

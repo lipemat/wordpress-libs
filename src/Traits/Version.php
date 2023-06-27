@@ -11,7 +11,6 @@ namespace Lipe\Lib\Traits;
  * For global version tracking.
  *
  * @see    \Lipe\Lib\Util\Versions
- *
  */
 trait Version {
 	/**
@@ -51,8 +50,11 @@ trait Version {
 
 
 	/**
-	 * @internal
+	 * Update the version in the database.
 	 *
+	 * This is called automatically by run_for_version.
+	 *
+	 * @internal
 	 */
 	protected function update_version() : void {
 		$versions = $this->get_versions();
@@ -63,6 +65,8 @@ trait Version {
 
 
 	/**
+	 * Check if an update is required.
+	 *
 	 * @internal
 	 *
 	 * @return bool
@@ -75,6 +79,8 @@ trait Version {
 
 
 	/**
+	 * Get the versions from the database.
+	 *
 	 * @internal
 	 *
 	 * @return array
@@ -85,6 +91,10 @@ trait Version {
 
 
 	/**
+	 * Get the identifier for the class.
+	 *
+	 * This is used to track the version in the database.
+	 *
 	 * @notice Anonymous classes do not have identifiers and may not be used.
 	 *
 	 * @throws \BadMethodCallException - Will throw if using an anonymous class.

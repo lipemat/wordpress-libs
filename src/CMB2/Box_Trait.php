@@ -56,10 +56,10 @@ trait Box_Trait {
 	/**
 	 * Add a field to this box.
 	 *
-	 * @param string $id
-	 * @param string $name
-	 *
 	 * @example $box->field( $id, $name )->checkbox();
+	 *
+	 * @param string $id   - Field ID.
+	 * @param string $name - Field name.
 	 *
 	 * @return Field_Type
 	 */
@@ -76,19 +76,18 @@ trait Box_Trait {
 	 *
 	 * For shorthand calls where no special setting is necessary.
 	 *
-	 * @param string      $id
-	 * @param string|null $title
-	 * @param string|null $group_title      - include a {#} to have replaced with number.
-	 * @param string|null $add_button_text
-	 * @param string|null $remove_button_text
-	 * @param bool        $sortable
-	 * @param bool        $closed
-	 * @param string|null $remove_confirm   - A message to display when a user attempts
-	 *                                      to delete a group.
-	 *                                      (Defaults to null/false for no confirmation).
-	 *
-	 *
 	 * @example $group = $box->group( $id, $name );
+	 *
+	 * @param string      $id                 - Group ID.
+	 * @param string|null $title              - Group title.
+	 * @param string|null $group_title        - include a {#} to have replaced with number.
+	 * @param string|null $add_button_text    - Text for the "Add" button.
+	 * @param string|null $remove_button_text - Text for the "Remove" button.
+	 * @param bool        $sortable           - Whether the group is sortable.
+	 * @param bool        $closed             - Whether the group is closed by default.
+	 * @param string|null $remove_confirm     - A message to display when a user attempts
+	 *                                        to delete a group.
+	 *                                        (Defaults to null/false for no confirmation).
 	 *
 	 * @return Group
 	 */
@@ -137,8 +136,7 @@ trait Box_Trait {
 	 *
 	 * @requires WP 5.5+ for default values.
 	 *
-	 * @param Field $field
-	 *
+	 * @param Field $field - The field to register.
 	 */
 	protected function register_meta( Field $field ) : void {
 		if ( ! $this->is_allowed_to_register_meta( $field ) ) {
@@ -188,9 +186,9 @@ trait Box_Trait {
 	 *
 	 * Makes selectively adding fields to rest much simpler.
 	 *
-	 * @param Field $field
-	 *
 	 * @internal
+	 *
+	 * @param Field $field - The field to check.
 	 */
 	protected function selectively_show_in_rest( Field $field ) : void {
 		if ( ! empty( $field->show_in_rest ) ) {
@@ -206,10 +204,10 @@ trait Box_Trait {
 	 * If you need the long names due to conflicts, they will still
 	 * be available via /cmb2 values.
 	 *
-	 * @param Field $field
-	 * @param array $config
+	 * @param Field $field  - The field to translate.
+	 * @param array $config - The config array to translate.
 	 *
-	 * @notice This can never be changed or it will break sites!!
+	 * @notice This can never be changed, or it will break sites!!
 	 *
 	 * @return array
 	 */
@@ -217,7 +215,7 @@ trait Box_Trait {
 		if ( isset( $config['show_in_rest'] ) ) {
 			if ( 'post' === $this->get_object_type() ) {
 				// Post type must support 'custom-fields' to allow REST meta.
-				array_walk( $this->object_types, function( $type ) {
+				\array_walk( $this->object_types, function( $type ) {
 					add_post_type_support( $type, 'custom-fields' );
 				} );
 			}
@@ -235,7 +233,7 @@ trait Box_Trait {
 	/**
 	 * Is this field allowed to be registered with meta?
 	 *
-	 * @param Field $field
+	 * @param Field $field - The field to check.
 	 *
 	 * @return bool
 	 */
@@ -251,7 +249,7 @@ trait Box_Trait {
 	 * so if a method other than `ALLMETHODS` is specified, we
 	 * can't add it to the REST api via meta.
 	 *
-	 * @param Field $field
+	 * @param Field $field - The field to check.
 	 *
 	 * @return bool
 	 */

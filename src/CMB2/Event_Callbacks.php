@@ -21,7 +21,6 @@ use Lipe\Lib\Taxonomy\Get_Terms;
  * @since  4.0.0
  *
  * @interal
- *
  */
 class Event_Callbacks {
 	public const TYPE_CHANGE = 'change';
@@ -86,7 +85,7 @@ class Event_Callbacks {
 	 *
 	 * @phpstan-param static::TYPE_* $cb_type
 	 *
-	 * @param Field                  $field
+	 * @param Field                  $field   - Field to register events for.
 	 * @param string                 $cb_type - Callback type, either 'change' or 'delete'.
 	 */
 	public function __construct( Field $field, string $cb_type ) {
@@ -351,8 +350,8 @@ class Event_Callbacks {
 	/**
 	 * Call the field's `change_cb` callback.
 	 *
-	 * @param int|string $object_id - Id of the object or the options page.
-	 * @param mixed      $value
+	 * @param int|string $object_id - ID of the object, or the options page.
+	 * @param mixed      $value     - The new value.
 	 *
 	 * @return void
 	 */

@@ -15,7 +15,6 @@ use Lipe\Lib\Query\Clause\Meta_Query_Trait;
  * @since  4.0.0
  *
  * @link https://developer.wordpress.org/reference/classes/wp_term_query/__construct/
- *
  */
 class Get_Terms extends Args_Abstract implements Meta_Query_Interface {
 	use Meta_Query_Trait;

@@ -11,7 +11,6 @@ use Lipe\Lib\Util\Arrays;
  *
  * Use most commonly to get the json data without making a request to the API.
  * Thus preventing an antipattern when using React etc.
- *
  */
 class Initial_Data {
 	use Singleton;
@@ -41,7 +40,7 @@ class Initial_Data {
 	 * Turn an array of comments into their matching data format
 	 * provided by the JSON API Server.
 	 *
-	 * @param \WP_Comment[] $comments
+	 * @param \WP_Comment[] $comments   - Array of comment objects.
 	 * @param bool          $with_links - To include links inside the response.
 	 * @param bool|string[] $embed      - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
@@ -127,9 +126,9 @@ class Initial_Data {
 	 * Turn an array of attachments into their matching data format
 	 * provided by the JSON API Server.
 	 *
-	 * @param \WP_Post[]    $attachments
-	 * @param bool          $with_links - To include links inside the response.
-	 * @param bool|string[] $embed      - Whether to embed all links, a filtered list of link relations, or no links.
+	 * @param \WP_Post[]    $attachments - Array of attachment objects.
+	 * @param bool          $with_links  - To include links inside the response.
+	 * @param bool|string[] $embed       - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
 	 * @return array
 	 */
@@ -145,14 +144,14 @@ class Initial_Data {
 	/**
 	 * Mimic response from the REST server for the provided controller.
 	 *
-	 * @param \WP_REST_Controller         $controller
-	 * @param \WP_Post|\WP_Comment|object $item
-	 * @param bool                        $with_links - To include links inside the response.
-	 * @param bool|string[]               $embed      - Whether to embed all links, a filtered list of link relations,
-	 *                                                or no links.
-	 *
 	 * @link  https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_embed
 	 * @link  https://developer.wordpress.org/rest-api/using-the-rest-api/linking-and-embedding/#embedding
+	 *
+	 * @param \WP_REST_Controller         $controller - REST controller instance.
+	 * @param \WP_Post|\WP_Comment|object $item       - Object to mimic response for.
+	 *
+	 * @param bool                        $with_links - To include links inside the response.
+	 * @param bool|string[]               $embed      - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
 	 * @return array
 	 */

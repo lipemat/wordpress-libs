@@ -7,17 +7,25 @@ use Lipe\Lib\Meta\Repo;
 
 /**
  * CMB2 registered settings pages.
- *
  */
 trait Settings_Trait {
 	use Mutator_Trait;
 
-
+	/**
+	 * Settings page ID.
+	 *
+	 * @return string
+	 */
 	public function get_id() : string {
 		return static::NAME;
 	}
 
 
+	/**
+	 * Used to determine the type of meta to retrieve or update.
+	 *
+	 * @return string
+	 */
 	public function get_meta_type() : string {
 		return Repo::META_OPTION;
 	}
@@ -26,8 +34,8 @@ trait Settings_Trait {
 	/**
 	 * Get an option from the Meta repo.
 	 *
-	 * @param string $key
-	 * @param mixed  $default_value
+	 * @param string $key           - Option key.
+	 * @param mixed  $default_value - Default value if option is not set.
 	 *
 	 * @return mixed
 	 */
@@ -39,7 +47,7 @@ trait Settings_Trait {
 	/**
 	 * Update an option.
 	 *
-	 * @param string         $key
+	 * @param string         $key      - Option key.
 	 * @param mixed|callable ...$value - If a callable is passed it will be called with the
 	 *                                 previous value as the only argument.
 	 *                                 If a callable is passed with an additional argument,

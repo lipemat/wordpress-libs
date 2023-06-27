@@ -14,7 +14,6 @@ namespace Lipe\Lib\Query\Clause;
  * @extends Clause_Abstract<Meta_Query_Interface>
  *
  * @internal
- *
  */
 class Meta_Query extends Clause_Abstract {
 	/**
@@ -78,9 +77,8 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an '=' clause.
 	 *
-	 * @param string|string[] $key
-	 * @param string          $value
-	 *
+	 * @param string|string[] $key   - Meta key(s) to query.
+	 * @param string          $value - Meta value to query.
 	 *
 	 * @return Meta_Query
 	 */
@@ -93,9 +91,8 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an '!=' clause.
 	 *
-	 * @param string|string[] $key
-	 * @param string          $value
-	 *
+	 * @param string|string[] $key   - Meta key(s) to query.
+	 * @param string          $value - Meta value to exclude results from.
 	 *
 	 * @return Meta_Query
 	 */
@@ -108,9 +105,8 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an '>' clause.
 	 *
-	 * @param string|string[] $key
-	 * @param string          $value
-	 *
+	 * @param string|string[] $key   - Meta key(s) to query.
+	 * @param string          $value - Meta value to query.
 	 *
 	 * @return Meta_Query
 	 */
@@ -123,9 +119,8 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an '>=' clause.
 	 *
-	 * @param string|string[] $key
-	 * @param string          $value
-	 *
+	 * @param string|string[] $key   - Meta key(s) to query.
+	 * @param string          $value - Meta value to query.
 	 *
 	 * @return Meta_Query
 	 */
@@ -138,9 +133,8 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an '<' clause.
 	 *
-	 * @param string|string[] $key
-	 * @param string          $value
-	 *
+	 * @param string|string[] $key   - Meta key(s) to query.
+	 * @param string          $value - Meta value to query.
 	 *
 	 * @return Meta_Query
 	 */
@@ -153,9 +147,8 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an '<=' clause.
 	 *
-	 * @param string|string[] $key
-	 * @param string          $value
-	 *
+	 * @param string|string[] $key   - Meta key(s) to query.
+	 * @param string          $value - Meta value to query.
 	 *
 	 * @return Meta_Query
 	 */
@@ -168,9 +161,8 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create a 'LIKE' clause.
 	 *
-	 * @param string|string[] $key
-	 * @param string          $value
-	 *
+	 * @param string|string[] $key   - Meta key(s) to query.
+	 * @param string          $value - Meta value to query.
 	 *
 	 * @return Meta_Query
 	 */
@@ -183,9 +175,8 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create a 'NOT LIKE' clause.
 	 *
-	 * @param string|string[] $key
-	 * @param string          $value
-	 *
+	 * @param string|string[] $key   - Meta key(s) to query.
+	 * @param string          $value - Meta value to exculde results from.
 	 *
 	 * @return Meta_Query
 	 */
@@ -198,9 +189,8 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an 'IN' clause.
 	 *
-	 * @param string|string[]   $key
-	 * @param array<int,string> $values
-	 *
+	 * @param string|string[]   $key    - Meta key(s) to query.
+	 * @param array<int,string> $values - Meta values to query.
 	 *
 	 * @return Meta_Query
 	 */
@@ -213,9 +203,8 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create a 'NOT IN' clause.
 	 *
-	 * @param string|string[]   $key
-	 * @param array<int,string> $values
-	 *
+	 * @param string|string[]   $key    - Meta key(s) to query.
+	 * @param array<int,string> $values - Meta values to exclude results from.
 	 *
 	 * @return Meta_Query
 	 */
@@ -228,9 +217,8 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create a 'BETWEEN' clause.
 	 *
-	 * @param string|string[]   $key
-	 * @param array<int,string> $values
-	 *
+	 * @param string|string[]   $key    - Meta key(s) to query.
+	 * @param array<int,string> $values - Meta values to query.
 	 *
 	 * @return Meta_Query
 	 */
@@ -243,9 +231,8 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create a 'BETWEEN' clause.
 	 *
-	 * @param string|string[]   $key
-	 * @param array<int,string> $values
-	 *
+	 * @param string|string[]   $key    - Meta key(s) to query.
+	 * @param array<int,string> $values - Meta values to exclude results from.
 	 *
 	 * @return Meta_Query
 	 */
@@ -258,7 +245,7 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create an 'EXISTS' clause.
 	 *
-	 * @param string|string[] $key
+	 * @param string|string[] $key - Meta key(s) to query.
 	 *
 	 * @return Meta_Query
 	 */
@@ -271,7 +258,7 @@ class Meta_Query extends Clause_Abstract {
 	/**
 	 * Create a 'NOT EXISTS' clause.
 	 *
-	 * @param string|string[] $key
+	 * @param string|string[] $key - Meta key(s) to exclude results from.
 	 *
 	 * @return Meta_Query
 	 */
@@ -293,11 +280,9 @@ class Meta_Query extends Clause_Abstract {
 	 * `type_key` - MySQL data type the meta key CAST to for comparison.
 	 * Accepts 'BINARY' for case-sensitive regular expression comparisons.
 	 *
-	 *
 	 * @phpstan-param static::TYPE_* $type
 	 * @phpstan-param static::KEY_*  $compare_key
 	 * @phpstan-param ''|static::TYPE_BINARY $type_key
-	 *
 	 *
 	 * @param string                 $type        - Type of data.
 	 * @param string                 $compare_key - How to compare the meta_key.
@@ -326,7 +311,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @interal
 	 *
-	 * @param Meta_Query_Interface $args_class
+	 * @param Meta_Query_Interface $args_class - The class to add the meta_query to.
 	 *
 	 * @return void
 	 */
@@ -344,12 +329,11 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @link          https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters
 	 *
-	 *
 	 * @phpstan-param static::COMPARE_*        $compare
 	 *
-	 * @param string|int|array<int,string|int> $value
-	 * @param string|string[]                  $key
-	 * @param string                           $compare
+	 * @param string|int|array<int,string|int> $value   - Meta value(s) to query.
+	 * @param string|string[]                  $key     - Meta key(s) to query.
+	 * @param string                           $compare - Comparison operator.
 	 *
 	 * @return void
 	 */

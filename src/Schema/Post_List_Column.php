@@ -6,30 +6,39 @@ namespace Lipe\Lib\Schema;
 
 /**
  * Add a custom column to the posts list table.
- *
  */
 abstract class Post_List_Column {
 	/**
+	 * The column label.
+	 *
 	 * @var string
 	 */
 	protected string $column_label;
 
 	/**
+	 * The column slug.
+	 *
 	 * @var string
 	 */
 	protected string $column_slug;
 
 	/**
+	 * The column position.
+	 *
 	 * @var int
 	 */
 	protected int $column_position;
 
 	/**
+	 * The post types to add the column to.
+	 *
 	 * @var array|string[]
 	 */
 	protected array $post_types = [];
 
 	/**
+	 * The column filters.
+	 *
 	 * @var array
 	 */
 	protected array $filters = [];
@@ -39,8 +48,8 @@ abstract class Post_List_Column {
 	 * Renders the output of the column in each row
 	 * of the posts list
 	 *
-	 * @param string $column
-	 * @param int    $post_id
+	 * @param string $column  - The column key.
+	 * @param int    $post_id - The post ID.
 	 *
 	 * @return void
 	 */
@@ -50,8 +59,8 @@ abstract class Post_List_Column {
 	/**
 	 * Post_List_Column constructor.
 	 *
-	 * @param string $column_label
-	 * @param array  $post_types
+	 * @param string $column_label - The column label.
+	 * @param array  $post_types   - The post types to add the column to.
 	 */
 	public function __construct( string $column_label, $post_types = [ 'post' ] ) {
 		$this->column_label = $column_label;
@@ -61,6 +70,11 @@ abstract class Post_List_Column {
 	}
 
 
+	/**
+	 * Actions and filters
+	 *
+	 * @return void
+	 */
 	public function hook() : void {
 		global $pagenow;
 		if ( 'edit.php' === $pagenow && is_admin() ) {
@@ -77,7 +91,7 @@ abstract class Post_List_Column {
 	/**
 	 * Put the column in a specific position in the table.
 	 *
-	 * @param int $position
+	 * @param int $position - The position to place the column.
 	 *
 	 * @return void
 	 */
@@ -89,8 +103,8 @@ abstract class Post_List_Column {
 	/**
 	 * Calls $this->render_column() for the current column only
 	 *
-	 * @param string $column
-	 * @param int    $post_id
+	 * @param string $column  - The column key.
+	 * @param int    $post_id - The post ID.
 	 *
 	 * @return void
 	 */
@@ -102,11 +116,11 @@ abstract class Post_List_Column {
 
 
 	/**
-	 * Add Column to Post List
-	 *
-	 * @param array $columns
+	 * Add Columns to the Post List
 	 *
 	 * @internal
+	 *
+	 * @param array $columns - Colmuns to add to the post list.
 	 *
 	 * @return array
 	 */
@@ -126,15 +140,15 @@ abstract class Post_List_Column {
 
 	/**
 	 * If a value is selected from this drop-down
-	 * Call $this->filter_query to adjust query as needed
+	 * Call $this->filter_query to adjust the query as needed
 	 *
 	 * @notice Only called if we are using $this->set_filters() to handle rendering
-	 *
-	 * @param \WP_Query $query
 	 *
 	 * @see    $this->set_filters();
 	 *
 	 * @internal
+	 *
+	 * @param \WP_Query $query - The query object.
 	 *
 	 * @return void
 	 */
@@ -159,10 +173,10 @@ abstract class Post_List_Column {
 	 *
 	 * @notice This method must be overridden if using filters.
 	 *
-	 * @throws \RuntimeException - If not overridden.
+	 * @param string    $value - The selected value.
+	 * @param \WP_Query $query - The query object.
 	 *
-	 * @param mixed     $value
-	 * @param \WP_Query $query
+	 * @throws \RuntimeException - If not overridden.
 	 */
 	public function filter_query( $value, \WP_Query $query ) : \WP_Query {
 		throw new \RuntimeException( __( 'You must override the Post_List_Column::filter_query() method if you are using Post_List_Column::set_filters()', 'lipe' ) );
@@ -221,12 +235,14 @@ abstract class Post_List_Column {
 	/**
 	 * Setup filters to be used as a drop-down select in the posts list.
 	 * Using this method will cause $this->filter_query to
-	 * be called when rendering the post list
+	 * be called when rendering the post list.
 	 *
-	 * @param array{name?: string, items: array, show_all?: string} $args
-	 *                    'name' => %name of input%
-	 *                    'items => array { %value% => %label% }
-	 *                    'show_all' => %All Label%
+	 * @param array{name?: string, items: array, show_all?: string} $args     - The arguments for the filter.
+	 *
+	 * @type string                                                 $name     => %name of input%
+	 *
+	 * @type array                                                  $items    => array { %value% => %label% }
+	 * @type string                                                 $show_all ' => %All Label%
 	 *
 	 * @return void
 	 */

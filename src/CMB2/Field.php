@@ -15,7 +15,6 @@ use Lipe\Lib\Util\Arrays;
  *
  * @phpstan-type DELETE_CB callable( int $object_id, string $key, mixed $previous, Box::TYPE_* $type ): void
  * @phpstan-type CHANGE_CB callable( int $object_id, mixed $value, string $key, mixed $previous, Box::TYPE_* $type):void
- *
  */
 class Field {
 	/**
@@ -31,7 +30,7 @@ class Field {
 	protected string $id = '';
 
 	/**
-	 * Id of meta box this field is assigned to.
+	 * ID of meta box this field is assigned to.
 	 *
 	 * @internal
 	 *
@@ -62,8 +61,7 @@ class Field {
 	 * Calling Field::type() will return the Field_Type object, which
 	 * will auto complete any type.
 	 *
-	 * link https://github.com/CMB2/CMB2/wiki/Field-Parameters#type
-	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#type
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
 	 * @see  Field_Type;
@@ -101,7 +99,6 @@ class Field {
 	 *          ]
 	 *
 	 * @internal
-	 *
 	 *
 	 * @var     array
 	 */
@@ -537,7 +534,6 @@ class Field {
 	 * @internal
 	 *
 	 * @var callable|false
-	 *
 	 */
 	public $sanitization_cb;
 
@@ -705,7 +701,6 @@ class Field {
 	 *          'no_terms_text' => 'Sorry, no terms could be found.'
 	 * )
 	 *
-	 *
 	 * @var  array
 	 */
 	public array $text = [];
@@ -774,9 +769,9 @@ class Field {
 	 *
 	 * @see Field_Type
 	 *
-	 * @param string         $id
-	 * @param string|null    $name
-	 * @param Box|Group|null $box - Parent class using this Field.
+	 * @param string         $id   - ID of the field.
+	 * @param string|null    $name - Name of the field.
+	 * @param Box|Group|null $box  - Parent class using this Field.
 	 */
 	public function __construct( string $id, ?string $name, $box = null ) {
 		$this->id = $id;
@@ -873,9 +868,9 @@ class Field {
 
 	/**
 	 * Add this field as a post list column on the attached
-	 * posts, comments, users, terms
+	 * posts, comments, users, terms.
 	 *
-	 * @param int|null      $position
+	 * @param int|null      $position        - The column position.
 	 * @param string|null   $name            - defaults to field name.
 	 * @param callable|null $display_cb      - optional display callback.
 	 * @param bool|null     $disable_sorting - Set to true to prevent this column from being
@@ -914,7 +909,7 @@ class Field {
 	 * 'min'  => '101',
 	 *          ]
 	 *
-	 * @param array $attributes
+	 * @param array $attributes - An array of attributes to add or modify.
 	 *
 	 * @return Field
 	 */
@@ -929,8 +924,6 @@ class Field {
 	 * Specify a default value for the field, or a
 	 * function which will return a default value.
 	 *
-	 * @param string|callable $default_value
-	 *
 	 * @example = 'John'
 	 * @example function prefix_set_test_default( $field_args, \CMB2_Field $field ) {
 	 *                      return 'Post ID: '. $field->object_id
@@ -938,6 +931,8 @@ class Field {
 	 *
 	 * @notice  checkboxes are tricky
 	 *          https://github.com/CMB2/CMB2/wiki/Tips-&-Tricks#setting-a-default-value-for-a-checkbox
+	 *
+	 * @param string|callable $default_value - A default value, or a function which will return a value.
 	 *
 	 * @return Field
 	 */
@@ -972,7 +967,7 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#desc
 	 *
-	 * @param string $description
+	 * @param string $description - The field description.
 	 *
 	 * @return Field
 	 */
@@ -1001,7 +996,7 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#escape_cb
 	 *
-	 * @param callable $callback
+	 * @param callable $callback - The callback to use for escaping.
 	 *
 	 * @return Field
 	 */
@@ -1014,8 +1009,8 @@ class Field {
 	/**
 	 * Supported by most field types, and will make the individual field a repeatable one.
 	 *
-	 * @param bool        $repeatable
-	 * @param string|null $add_row_text
+	 * @param bool        $repeatable   - Whether the field should be repeatable.
+	 * @param string|null $add_row_text - Optional text to display on the 'Add' button.
 	 *
 	 * @throws \LogicException - If trying to repeat an unsupported field type.
 	 *
@@ -1025,6 +1020,8 @@ class Field {
 		// Ugh! Hack, so I can use a method from that class.
 		$mock = new class() extends \CMB2_Field {
 			/**
+			 * Construct the mock class.
+			 *
 			 * @phpstan-ignore-next-line
 			 * @noinspection MagicMethodsValidityInspection PhpMissingParentConstructorInspection
 			 */
@@ -1032,6 +1029,13 @@ class Field {
 			}
 
 
+			/**
+			 * Check if the field type is allowed to be repeatable.
+			 *
+			 * @param string $type - The field type.
+			 *
+			 * @return bool
+			 */
 			public function allowed( string $type ) : bool {
 				if ( $this->repeatable_exception( $type ) ) {
 					return false;
@@ -1058,7 +1062,7 @@ class Field {
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#rest_value_cb
 	 * @link    https://github.com/CMB2/CMB2/wiki/REST-API#overriding-a-returned-value-for-a-individual-field
 	 *
-	 * @param callable $callback
+	 * @param callable $callback - The callback to use for filtering.
 	 *
 	 * @example 'intval'
 	 *
@@ -1073,7 +1077,7 @@ class Field {
 	/**
 	 * Set the position of the field in the meta box
 	 *
-	 * @param int $position
+	 * @param int $position - The position of the field.
 	 *
 	 * @default 1
 	 *
@@ -1158,7 +1162,7 @@ class Field {
 	 *
 	 * @phpstan-param \WP_REST_Server::*|bool $methods
 	 *
-	 * @param string|bool                     $methods
+	 * @param string|bool                     $methods - The methods to show this field in.
 	 *
 	 * @return Field
 	 */
@@ -1177,7 +1181,7 @@ class Field {
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_on_cb
 	 * @example should_i_show( $field ){ return bool}
 	 *
-	 * @param callable $func
+	 * @param callable $func - The function to use for determining if the field should show.
 	 *
 	 * @return $this
 	 */
@@ -1200,8 +1204,7 @@ class Field {
 	 *
 	 * @notice The default value is `true` so this need only be called with `false`.
 	 *
-	 *
-	 * @param bool $use_meta
+	 * @param bool $use_meta - Whether to use meta or not.
 	 *
 	 * @return Field
 	 */
@@ -1224,7 +1227,7 @@ class Field {
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
 	 *
-	 * @param array $args
+	 * @param array $args - The arguments to pass to get_terms() or the media library query.
 	 *
 	 * @return $this
 	 */
@@ -1239,11 +1242,12 @@ class Field {
 	 * Add this field to a tab.
 	 * The tab must be first registered with the box.
 	 *
-	 * @param string $id
-	 *
 	 * @see Tabs::render_field()
 	 *
 	 * @see Box::add_tab
+	 *
+	 * @param string $id - The tab id.
+	 *
 	 * @return $this
 	 */
 	public function tab( string $id ) : Field {
@@ -1278,8 +1282,7 @@ class Field {
 	/**
 	 * The type of field
 	 *
-	 * link https://github.com/CMB2/CMB2/wiki/Field-Parameters#type
-	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#type
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
 	 * @see  Field_Type;
@@ -1293,7 +1296,9 @@ class Field {
 
 
 	/**
-	 * @param callable $callback
+	 * Callback to render the field's row.
+	 *
+	 * @param callable $callback - The callback to render the field's row.
 	 *
 	 * @return Field
 	 */
@@ -1367,7 +1372,7 @@ class Field {
 	 *
 	 * @phpstan-param DELETE_CB $callback
 	 *
-	 * @param callable          $callback
+	 * @param callable          $callback - The callback to be fired when a meta item is deleted.
 	 *
 	 * @return Field
 	 */
@@ -1399,7 +1404,7 @@ class Field {
 	 *
 	 * @phpstan-param CHANGE_CB $callback
 	 *
-	 * @param callable          $callback
+	 * @param callable          $callback - The callback to be fired when an items data is updated.
 	 *
 	 * @return Field
 	 */
@@ -1419,7 +1424,7 @@ class Field {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
 	 * @link https://developer.wordpress.org/reference/functions/register_meta/
 	 *
-	 * @param callable $callback
+	 * @param callable $callback - The callback to be used for sanitization.
 	 *
 	 * @return Field
 	 */
@@ -1542,8 +1547,8 @@ class Field {
 	 *
 	 * @internal
 	 *
-	 * @param string $id
-	 * @param string $name
+	 * @param string $id   - The field id.
+	 * @param string $name - The field name.
 	 *
 	 * @throws \LogicException - When trying to add a field to another field.
 	 */

@@ -6,7 +6,6 @@ use Lipe\Lib\Traits\Singleton;
 
 /**
  * Action and filter helpers.
- *
  */
 class Actions {
 	use Singleton;

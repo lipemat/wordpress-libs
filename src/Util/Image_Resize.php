@@ -17,7 +17,6 @@ use Lipe\Lib\Traits\Singleton;
  * @notice   The image sizes cannot be relied on in wp.media when using this.
  *         If you need a custom resized image using normal JS wp conventions you will have
  *         to do an ajax call, which uses php to retrieve.
- *
  */
 class Image_Resize {
 	use Singleton;
@@ -30,6 +29,11 @@ class Image_Resize {
 	protected array $image_sizes = [];
 
 
+	/**
+	 * Actions and filters.
+	 *
+	 * @return void
+	 */
 	public function hook() : void {
 		add_action( 'init', [ $this, 'add_other_image_sizes' ] );
 		add_filter( 'image_downsize', [ $this, 'convert_image_downsize' ], 10, 3 );
@@ -50,7 +54,6 @@ class Image_Resize {
 
 	/**
 	 * Convert other add_image_sizes from other plugins to the attribute of the class.
-	 *
 	 */
 	public function add_other_image_sizes() : void {
 		global $_wp_additional_image_sizes;
@@ -75,10 +78,10 @@ class Image_Resize {
 	/**
 	 * Populate Image Sizes.
 	 *
-	 * @param string           $name
-	 * @param int|float|string $width
-	 * @param int|float|string $height
-	 * @param bool             $crop
+	 * @param string           $name   - Name of the image size.
+	 * @param int|float|string $width  - Width of the image size.
+	 * @param int|float|string $height - Height of the image size.
+	 * @param bool             $crop   - Hard crop the image to match the size.
 	 *
 	 * @return void
 	 */
@@ -142,11 +145,11 @@ class Image_Resize {
 	 *
 	 * @filter image_downsize 10 3
 	 *
-	 * @param mixed  $out
-	 * @param int    $id
-	 * @param string $size
+	 * @param array|null|string $out  - Resulting image data.
+	 * @param int               $id   - Attachment ID for image.
+	 * @param string            $size - Size of image, either array or string.
 	 *
-	 * @return mixed
+	 * @return array|null|string
 	 */
 	public function convert_image_downsize( $out, int $id, string $size ) {
 		if ( 'full' === $size ) {
@@ -193,7 +196,7 @@ class Image_Resize {
 	 *                           'link_class' => '',      // the class of <a> tag
 	 *                           'link_title' => '',      // the title of <a> tag. If empty, get it from "title" attribute.
 	 *                           }.
-	 * @param bool  $echo_output
+	 * @param bool  $echo_output - Whether to echo or return the output.
 	 *
 	 * @return string|null|array
 	 */
@@ -426,12 +429,11 @@ class Image_Resize {
 	 * Resize images dynamically using wp built-in functions.
 	 * Will also run the images through smush.it if available.
 	 *
-	 * @param int         $width
-	 * @param int         $height
-	 * @param int         $attach_id
-	 * @param string|null $img_url
-	 * @param bool        $crop
-	 *
+	 * @param int         $width     - Width of the new image in pixels.
+	 * @param int         $height    - Height of the new image in pixels.
+	 * @param int         $attach_id - ID of the attachment.
+	 * @param string|null $img_url   - Url of the attachment.
+	 * @param bool        $crop      - Optional, default is false. Whether to crop image or resize.
 	 *
 	 * @return array{width: int, height: int, url: string}|array<null>
 	 */

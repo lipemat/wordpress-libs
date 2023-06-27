@@ -8,7 +8,6 @@ use Lipe\Lib\Traits\Singleton;
 
 /**
  * Array helpers.
- *
  */
 class Arrays {
 	use Singleton;
@@ -19,7 +18,7 @@ class Arrays {
 	 *
 	 * @example ['page', 3, 'category', 6 ] becomes ['page' => 3, 'category' => 6]
 	 *
-	 * @param array $array
+	 * @param array $array - Array to convert.
 	 *
 	 * @return array
 	 */
@@ -72,8 +71,8 @@ class Arrays {
 	 * a new array instead of requiring you pass the array element by reference
 	 * and alter it directly.
 	 *
-	 * @param callable $callback
-	 * @param array    $array
+	 * @param callable $callback - Callback to apply to each element.
+	 * @param array    $array    - Array to apply the callback to.
 	 *
 	 * @return array
 	 */
@@ -96,8 +95,8 @@ class Arrays {
 	 * duplicate array keys into arrays, this will favor the $args over
 	 * the $defaults and clobber identical $default keys.
 	 *
-	 * @param array $args
-	 * @param array $defaults
+	 * @param array $args     - Array to merge into the defaults.
+	 * @param array $defaults - Array to merge into.
 	 *
 	 * @return array
 	 */
@@ -118,8 +117,8 @@ class Arrays {
 	 * Works the same as `array_map` except the array key is passed as the
 	 * second argument to the callback and original keys are preserved.
 	 *
-	 * @param callable $callback
-	 * @param array    $array
+	 * @param callable $callback - Callback to apply to each element.
+	 * @param array    $array    - Array to apply the callback to.
 	 *
 	 * @return array
 	 */
@@ -210,16 +209,16 @@ class Arrays {
 	 *          // [ 1 => 'Hello World', 2 => 'Sample Page' ]
 	 *          `
 	 *
-	 * @param callable $callback
-	 * @param array    $array
+	 * @param callable $callback - Callback to apply to each element.
+	 * @param array    $array    - Array to apply the callback to.
 	 *
 	 * @return array
 	 */
 	public function flatten_assoc( callable $callback, array $array ) : array {
-		$pairs = array_map( $callback, $array );
+		$pairs = \array_map( $callback, $array );
 		$array = [];
 		foreach ( $pairs as $pair ) {
-			$array[ key( $pair ) ] = reset( $pair );
+			$array[ key( $pair ) ] = \reset( $pair );
 		}
 		return $array;
 	}

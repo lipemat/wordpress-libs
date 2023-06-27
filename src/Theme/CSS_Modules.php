@@ -12,7 +12,6 @@ use Lipe\Lib\Traits\Singleton;
  *
  * @example $styles = CSS_Modules()->instance()->styles( 'home/header' );
  *          <div class="<?= $styles['wrap'] ?>" />
- *
  */
 class CSS_Modules {
 	use Memoize;
@@ -49,7 +48,6 @@ class CSS_Modules {
 	/**
 	 * Set the path to the CSS module JSON files with an
 	 * optional file prepend.
-	 *
 	 *
 	 * @param string $path         - Path to CSS modules JSON file(s).
 	 * @param string $file_prepend - Prepend a path to the $file during lookup.

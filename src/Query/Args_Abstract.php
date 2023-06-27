@@ -10,7 +10,6 @@ use Lipe\Lib\Query\Clause\Clause_Abstract;
  *
  * @author Mat Lipe
  * @since  4.0.0
- *
  */
 abstract class Args_Abstract {
 	/**
@@ -24,7 +23,7 @@ abstract class Args_Abstract {
 	/**
 	 * Optionally pass existing arguments to preload this class.
 	 *
-	 * @param array $existing
+	 * @param array $existing - Existing arguments to preload.
 	 */
 	public function __construct( array $existing = [] ) {
 		foreach ( $existing as $arg => $value ) {

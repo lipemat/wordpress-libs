@@ -23,8 +23,8 @@ class User_Box extends Box {
 	/**
 	 * User_Box constructor.
 	 *
-	 * @param string $id
-	 * @param string $title
+	 * @param string $id    - Meta box ID.
+	 * @param string $title - Meta box title.
 	 */
 	public function __construct( $id, $title ) {
 		parent::__construct( $id, [ 'user' ], $title );

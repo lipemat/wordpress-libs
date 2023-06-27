@@ -10,7 +10,6 @@ use Lipe\Lib\Traits\Singleton;
  *
  * @author Mat Lipe
  * @since  4.0.0
- *
  */
 class Utils {
 	use Singleton;

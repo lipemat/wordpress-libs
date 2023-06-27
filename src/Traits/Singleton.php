@@ -12,6 +12,8 @@ trait Singleton {
 	protected static $instance;
 
 	/**
+	 * Whether the class has been initialized.
+	 *
 	 * @var bool
 	 */
 	protected static $inited = false;
@@ -48,6 +50,8 @@ trait Singleton {
 
 
 	/**
+	 * Return the instance of this class.
+	 *
 	 * @return static
 	 */
 	public static function in() {
@@ -56,6 +60,8 @@ trait Singleton {
 
 
 	/**
+	 * Return the instance of this class.
+	 *
 	 * @return static
 	 */
 	public static function instance() {

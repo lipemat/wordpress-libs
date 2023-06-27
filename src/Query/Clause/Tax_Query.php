@@ -16,7 +16,6 @@ use Lipe\Lib\Query\Args;
  * @extends Clause_Abstract<Args>
  *
  * @internal
- *
  */
 class Tax_Query extends Clause_Abstract {
 	public const FIELD_ID          = 'term_id';
@@ -31,10 +30,10 @@ class Tax_Query extends Clause_Abstract {
 	 *
 	 * @phpstan-param static::FIELD_* $field
 	 *
-	 * @param array<int|string>       $terms
-	 * @param string                  $taxonomy
+	 * @param array<int|string>       $terms    - The terms to include in results.
+	 * @param string                  $taxonomy - The taxonomy to query.
 	 * @param bool                    $children - Include children for hierarchical taxonomies.
-	 * @param string                  $field
+	 * @param string                  $field    - The field to query against.
 	 *
 	 * @return Tax_Query
 	 */
@@ -49,10 +48,10 @@ class Tax_Query extends Clause_Abstract {
 	 *
 	 * @phpstan-param static::FIELD_* $field
 	 *
-	 * @param array<int|string>       $terms
-	 * @param string                  $taxonomy
+	 * @param array<int|string>       $terms    - The terms to include in results.
+	 * @param string                  $taxonomy - The taxonomy to query.
 	 * @param bool                    $children - Include children for hierarchical taxonomies.
-	 * @param string                  $field
+	 * @param string                  $field    - The field to query against.
 	 *
 	 * @return Tax_Query
 	 */
@@ -67,10 +66,10 @@ class Tax_Query extends Clause_Abstract {
 	 *
 	 * @phpstan-param static::FIELD_* $field
 	 *
-	 * @param array<int|string>       $terms
-	 * @param string                  $taxonomy
+	 * @param array<int|string>       $terms    - The terms to exclude results from.
+	 * @param string                  $taxonomy - The taxonomy to query.
 	 * @param bool                    $children - Include children for hierarchical taxonomies.
-	 * @param string                  $field
+	 * @param string                  $field    - The field to query against.
 	 *
 	 * @return Tax_Query
 	 */
@@ -83,7 +82,7 @@ class Tax_Query extends Clause_Abstract {
 	/**
 	 * Create an 'EXISTS' clause.
 	 *
-	 * @param string $taxonomy
+	 * @param string $taxonomy - The taxonomy to query.
 	 *
 	 * @return Tax_Query
 	 */
@@ -96,7 +95,7 @@ class Tax_Query extends Clause_Abstract {
 	/**
 	 * Create a 'NOT EXISTS' clause.
 	 *
-	 * @param string $taxonomy
+	 * @param string $taxonomy - The taxonomy to query.
 	 *
 	 * @return Tax_Query
 	 */
@@ -129,15 +128,14 @@ class Tax_Query extends Clause_Abstract {
 	 *
 	 * @link          https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters
 	 *
-	 *
 	 * @phpstan-param 'AND'|'IN'|'NOT IN'|'EXISTS'|'NOT EXISTS' $operator
-	 * @phpstan-param static::FIELD_*          $field
+	 * @phpstan-param static::FIELD_*                           $field
 	 *
-	 * @param string|int|array<int,string|int> $terms
-	 * @param string                           $taxonomy
-	 * @param string                           $field
-	 * @param string                           $operator
-	 * @param bool                             $children - Include children for hierarchical taxonomies.
+	 * @param string|int|array<int,string|int>                  $terms    - Term(s) to query.
+	 * @param string                                            $taxonomy - Taxonomy to query.
+	 * @param string                                            $field    - Field to query against.
+	 * @param string                                            $operator - MySQL operator to use.
+	 * @param bool                                              $children - Include children for hierarchical taxonomies.
 	 *
 	 * @return void
 	 */

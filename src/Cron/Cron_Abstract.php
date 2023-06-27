@@ -45,6 +45,11 @@ abstract class Cron_Abstract {
 	}
 
 
+	/**
+	 * Actions and filters
+	 *
+	 * @return void
+	 */
 	protected function hook() : void {
 		add_action( static::NAME, [ $this, 'run_task' ] );
 	}

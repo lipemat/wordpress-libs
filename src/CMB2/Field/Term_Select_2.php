@@ -9,7 +9,6 @@ use Lipe\Lib\Traits\Singleton;
 /**
  * Select 2 Field for Terms.
  *
- *
  * @example $field = new Field( self::DISPLAYED_TAG, 'Displayed Tags' );
  *          $field->type = Term_Select_2::NAME;
  *          $field->taxonomy = Post_Tag::NAME;
@@ -42,7 +41,7 @@ class Term_Select_2 {
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'js' ] );
 		// remove subtle conflict with acf.
-		add_filter( 'acf/settings/select2_version', function () {
+		add_filter( 'acf/settings/select2_version', function() {
 			return 4;
 		} );
 
@@ -50,6 +49,11 @@ class Term_Select_2 {
 	}
 
 
+	/**
+	 * Get available terms via AJAX.
+	 *
+	 * @return void
+	 */
 	public function ajax_get_terms() : void {
 		//phpcs:disable
 		$search = sanitize_text_field( $_POST['q'] ?? '' );
@@ -72,6 +76,11 @@ class Term_Select_2 {
 	}
 
 
+	/**
+	 * Enqueue select2 scripts and styles.
+	 *
+	 * @return void
+	 */
 	public function js() : void {
 		wp_enqueue_style( 'select2-css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css', [], null ); //phpcs:ignore
 		wp_enqueue_script( 'select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js', [], null ); //phpcs:ignore
@@ -79,11 +88,13 @@ class Term_Select_2 {
 
 
 	/**
-	 * @param CMB2_Field        $field
-	 * @param string|array|null $value
-	 * @param string|int        $object_id
-	 * @param string            $object_type
-	 * @param CMB2_Types        $field_type_object
+	 * Render the Field.
+	 *
+	 * @param CMB2_Field        $field             This field object.
+	 * @param string|array|null $value             The value of this field escaped.
+	 * @param string|int        $object_id         The current post ID or user ID being edited.
+	 * @param string            $object_type       The type of object being edited.
+	 * @param CMB2_Types        $field_type_object The field type object.
 	 *
 	 * @return void
 	 */
@@ -116,8 +127,8 @@ class Term_Select_2 {
 	 * I know this sucks. One day I would like to figure this out properly.
 	 * The main issue is repeaters.
 	 *
-	 * @param \CMB2_Field $field
-	 * @param \CMB2_Types $field_type_object
+	 * @param \CMB2_Field $field             This field object.
+	 * @param \CMB2_Types $field_type_object The field type object.
 	 *
 	 * @return void
 	 */
@@ -270,7 +281,7 @@ class Term_Select_2 {
 
 
 	/**
-	 * Add new terms to the db and the object
+	 * Add new terms to the db, and the object
 	 * If either option is set to do so
 	 *
 	 * Also needed for repeater fields

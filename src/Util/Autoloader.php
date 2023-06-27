@@ -7,11 +7,10 @@ use Lipe\Lib\Traits\Singleton;
 /**
  * Autoload class files from namespaced folders
  *
- * load a namespaced folder from a specified directory.
+ * Load a namespaced folder from a specified directory.
  *
  * @example load a namespaced folder from root dir
  *          Autoloader::add( "Products\\", __DIR__ . '/Products' );
- *
  */
 class Autoloader {
 	use Singleton;

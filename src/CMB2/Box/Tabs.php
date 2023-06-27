@@ -28,6 +28,8 @@ class Tabs {
 	protected $cmb;
 
 	/**
+	 * Do we have tabs?
+	 *
 	 * @var bool
 	 */
 	protected $has_tabs = false;
@@ -40,6 +42,8 @@ class Tabs {
 	protected $active_panel = '';
 
 	/**
+	 * List of fields and their output.
+	 *
 	 * @var array
 	 */
 	protected $fields_output = [];
@@ -62,11 +66,12 @@ class Tabs {
 
 
 	/**
+	 * Main opening <div> for the tabs.
 	 *
-	 * @param string     $cmb_id
-	 * @param string|int $object_id
-	 * @param string     $object_type
-	 * @param \CMB2      $cmb
+	 * @param string     $cmb_id    - The cmb2 box id.
+	 * @param string|int $object_id - The object id.
+	 * @param string     $object_type - The object type.
+	 * @param \CMB2      $cmb    - The cmb2 instance.
 	 *
 	 * @return void
 	 */
@@ -92,7 +97,11 @@ class Tabs {
 		<?php
 	}
 
-
+	/**
+	 * Close the main div wrap.
+	 *
+	 * @return void
+	 */
 	public function closing_div() : void {
 		if ( ! $this->has_tabs ) {
 			return;
@@ -106,10 +115,12 @@ class Tabs {
 
 
 	/**
-	 * @param string $cmb_id
-	 * @param int    $object_id
-	 * @param string $object_type
-	 * @param \CMB2  $cmb
+	 * Render the tabs navigation.
+	 *
+	 * @param string $cmb_id   - The cmb2 box id.
+	 * @param int    $object_id - The object id.
+	 * @param string $object_type - The object type.
+	 * @param \CMB2  $cmb   - The cmb2 instance.
 	 *
 	 * @return void
 	 */
@@ -146,7 +157,13 @@ class Tabs {
 		}
 	}
 
-
+	/**
+	 * Add classes to the cmb2-wrap div.
+	 *
+	 * @param array $classes - Default css classes.
+	 *
+	 * @return array
+	 */
 	public function add_wrap_class( array $classes ) : array {
 		if ( $this->has_tabs ) {
 			$classes[] = 'cmb-tabs-panel';
@@ -163,10 +180,10 @@ class Tabs {
 	 * Replaces the render_field callback for a field, which as been
 	 * assigned to a tab
 	 *
-	 * @param array       $field_args
-	 * @param \CMB2_Field $field
-	 *
 	 * @see Field::tab()
+	 *
+	 * @param array       $field_args - The field args.
+	 * @param \CMB2_Field $field - The field object.
 	 *
 	 * @return void
 	 */
@@ -187,10 +204,12 @@ class Tabs {
 
 
 	/**
-	 * @param string $cmb_id
-	 * @param int    $object_id
-	 * @param string $object_type
-	 * @param \CMB2  $cmb
+	 * Display the tab panels.
+	 *
+	 * @param string $cmb_id - The cmb2 box id.
+	 * @param int    $object_id - The object id.
+	 * @param string $object_type - The object type.
+	 * @param \CMB2  $cmb   - The cmb2 instance.
 	 *
 	 * @return void
 	 */
@@ -212,7 +231,14 @@ class Tabs {
 		echo '</div></div>';
 	}
 
-
+	/**
+	 * Capture the fields output.
+	 *
+	 * @param string $output - The field output.
+	 * @param array  $field_args - The field args.
+	 *
+	 * @return string
+	 */
 	public function capture_fields( string $output, array $field_args ) : string {
 		if ( ! $this->has_tabs || ! isset( $field_args['tab'] ) ) {
 			return $output;
@@ -228,7 +254,11 @@ class Tabs {
 		return '';
 	}
 
-
+	/**
+	 * Add the tab styles.
+	 *
+	 * @return void
+	 */
 	protected function styles() : void {
 		static $displayed = false;
 		if ( $displayed ) {
@@ -618,5 +648,4 @@ class Tabs {
 		<?php
 
 	}
-
 }
