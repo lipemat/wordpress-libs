@@ -103,10 +103,13 @@ trait User_Trait {
 	 */
 	public function get_object() : ?\WP_User {
 		if ( null === $this->user ) {
-			$this->user = get_user_by( 'id', $this->user_id ) ?: null;
+			$user = get_user_by( 'id', $this->user_id );
+			if ( false !== $user ) {
+				$this->user = $user;
+			}
 		}
 
-		return $this->user ?: null;
+		return $this->user;
 	}
 
 

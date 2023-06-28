@@ -22,8 +22,6 @@
 		<exclude name="Generic.PHP.DisallowShortOpenTag.EchoFound" />
 
 		<exclude name="LipePlugin.TypeHints.PreventStrictTypes" />
-
-		<exclude name="WordPress.PHP.DisallowShortTernary.Found" />
 	</rule>
 
 	<!-- Allow the "lipe" or "Lipe" prefix for hooks, namespaces and functions -->

@@ -23,35 +23,35 @@ class Resources {
 	 *
 	 * @var string[]
 	 */
-	protected static $async = [];
+	protected static array $async = [];
 
 	/**
 	 * Classes to be added to the main <body> tag.
 	 *
 	 * @var string[]
 	 */
-	protected static $body_class = [];
+	protected static array $body_class = [];
 
 	/**
 	 * Script handles to be loaded with the `crossorigin` attribute.
 	 *
 	 * @var array<null|string>
 	 */
-	protected static $crossorigin = [];
+	protected static array $crossorigin = [];
 
 	/**
 	 * Script handles to be loaded with the `defer` attribute.
 	 *
 	 * @var string[]
 	 */
-	protected static $deffer = [];
+	protected static array $deffer = [];
 
 	/**
 	 * Script handles to be loaded with the `integrity` attribute.
 	 *
 	 * @var string[]
 	 */
-	protected static $integrity = [];
+	protected static array $integrity = [];
 
 
 	/**
@@ -120,7 +120,10 @@ class Resources {
 		}
 
 		if ( \is_readable( $this->get_site_root() . $path ) ) {
-			return \md5_file( $this->get_site_root() . $path ) ?: null;
+			$md5 = \md5_file( $this->get_site_root() . $path );
+			if ( false !== $md5 ) {
+				return $md5;
+			}
 		}
 		return null;
 	}
@@ -163,7 +166,10 @@ class Resources {
 		}
 
 		if ( \is_readable( $this->get_site_root() . $path ) ) {
-			return \filemtime( $this->get_site_root() . $path ) ?: null;
+			$time = \filemtime( $this->get_site_root() . $path );
+			if ( false !== $time ) {
+				return $time;
+			}
 		}
 		return null;
 	}

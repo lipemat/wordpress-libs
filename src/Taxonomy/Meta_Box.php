@@ -115,7 +115,7 @@ class Meta_Box {
 		$none = $object->labels->no_item ?: esc_html__( 'Not specified' ); //phpcs:ignore
 
 		?>
-		<div id="taxonomy-<?php echo esc_attr( $this->taxonomy ); ?>" class="categorydiv lipe-libs-terms-box">
+		<div id="taxonomy-<?= esc_attr( $this->taxonomy ) ?>" class="categorydiv lipe-libs-terms-box">
 			<?php
 			switch ( $this->type ) {
 				case 'dropdown':
@@ -132,7 +132,7 @@ class Meta_Box {
 						'hierarchical'      => true,
 						'show_count'        => false,
 						'orderby'           => 'name',
-						'selected'          => reset( $selected ) ?: 0,
+						'selected'          => \count( $selected ) < 1 ? 0 : \reset( $selected ),
 						'id'                => "{$this->taxonomy}dropdown",
 						'name'              => is_taxonomy_hierarchical( $this->taxonomy ) ? "tax_input[{$this->taxonomy}][]" : "tax_input[{$this->taxonomy}]",
 						'taxonomy'          => $this->taxonomy,
@@ -162,8 +162,8 @@ class Meta_Box {
 					<input type="hidden" name="tax_input[<?php echo esc_attr( $this->taxonomy ); ?>][]" value="0" />
 
 					<ul
-						id="<?php echo esc_attr( $this->taxonomy ); ?>checklist"
-						class="list:<?php echo esc_attr( $this->taxonomy ); ?> categorychecklist form-no-clear">
+						id="<?= esc_attr( $this->taxonomy ) ?>checklist"
+						class="list:<?= esc_attr( $this->taxonomy ) ?> categorychecklist form-no-clear">
 						<?php
 
 						// Output the terms.
@@ -186,7 +186,7 @@ class Meta_Box {
 						];
 						$args = [
 							'taxonomy'      => $this->taxonomy,
-							'selected_cats' => $selected ?: [ 0 ],
+							'selected_cats' => \count( $selected ) < 1 ? [ 0 ] : $selected,
 							'disabled'      => false,
 						];
 						$walker->start_el( $output, $o, 1, $args );

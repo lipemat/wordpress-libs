@@ -870,19 +870,19 @@ class Field {
 	 * Add this field as a post list column on the attached
 	 * posts, comments, users, terms.
 	 *
-	 * @param int|null      $position        - The column position.
-	 * @param string|null   $name            - defaults to field name.
-	 * @param callable|null $display_cb      - optional display callback.
-	 * @param bool|null     $disable_sorting - Set to true to prevent this column from being
-	 *                                       sortable in post list.
+	 * @param int|null|false $position        - The column position.
+	 * @param string|null    $name            - defaults to field name.
+	 * @param callable|null  $display_cb      - optional display callback.
+	 * @param bool|null      $disable_sorting - Set to true to prevent this column from being
+	 *                                        sortable in post list.
 	 *
 	 * @return Field
 	 */
-	public function column( int $position = null, string $name = null, ?callable $display_cb = null, ?bool $disable_sorting = null ) : Field {
+	public function column( $position = null, string $name = null, ?callable $display_cb = null, ?bool $disable_sorting = null ) : Field {
 		$this->column = [
 			'disable_sortable' => $disable_sorting ?? false,
 			'name'             => $name ?? $this->name,
-			'position'         => $position ?: false,
+			'position'         => $position ?? false,
 		];
 		if ( null === $position && null === $name && null === $disable_sorting ) {
 			$this->column = true;
