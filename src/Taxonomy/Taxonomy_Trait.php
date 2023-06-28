@@ -27,14 +27,14 @@ trait Taxonomy_Trait {
 	 *
 	 * @var int
 	 */
-	public $term_id;
+	public int $term_id;
 
 	/**
 	 * Term object.
 	 *
-	 * @var \WP_Term
+	 * @var ?\WP_Term
 	 */
-	protected $term;
+	protected ?\WP_Term $term = null;
 
 
 	/**
