@@ -187,9 +187,10 @@ class Route {
 	 * @return void
 	 */
 	public function maybe_flush_rules() : void {
-		if ( get_option( static::OPTION ) !== md5( wp_json_encode( static::$routes ) ) ) {
+		$hash = \hash( 'fnv1a64', wp_json_encode( static::$routes ) );
+		if ( get_option( static::OPTION ) !== $hash ) {
 			flush_rewrite_rules();
-			update_option( static::OPTION, md5( wp_json_encode( static::$routes ) ) );
+			update_option( static::OPTION, $hash );
 		}
 	}
 

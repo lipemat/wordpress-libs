@@ -120,9 +120,9 @@ class Resources {
 		}
 
 		if ( \is_readable( $this->get_site_root() . $path ) ) {
-			$md5 = \md5_file( $this->get_site_root() . $path );
-			if ( false !== $md5 ) {
-				return $md5;
+			$hash = \hash_file( 'fnv1a64', $this->get_site_root() . $path );
+			if ( false !== $hash ) {
+				return $hash;
 			}
 		}
 		return null;

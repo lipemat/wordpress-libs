@@ -99,7 +99,7 @@ class Zip {
 	 * @return void
 	 */
 	protected function set_paths( array $files, ?string $zip_name = null ) : void {
-		$this->file_name = md5( implode( '|', $files ) );
+		$this->file_name = \md5( implode( '|', $files ) );
 		$this->file_path = sys_get_temp_dir() . '/' . $this->file_name;
 		$this->zip_path = $this->file_path . '/' . $this->file_name;
 

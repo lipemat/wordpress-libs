@@ -172,7 +172,7 @@ class Cache {
 		if ( empty( $key ) ) {
 			return false;
 		}
-		return ( \is_array( $key ) || \is_object( $key ) ) ? md5( wp_json_encode( $key ) ) : $key;
+		return ( \is_array( $key ) || \is_object( $key ) ) ? \hash( 'fnv1a64', wp_json_encode( $key ) ) : $key;
 	}
 
 }
