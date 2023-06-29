@@ -29,6 +29,11 @@ class MemoizeTestTrait {
 			return [ $passed[0], microtime( true ), $passed[1] ?? null ];
 		}, __METHOD__, 0, ...$args );
 	}
+
+
+	public function get_key( string $identifier, array $args ) : string {
+		return $this->get_cache_key( $identifier, $args );
+	}
 }
 
 class MemoizeTest extends \WP_UnitTestCase {
@@ -136,5 +141,14 @@ class MemoizeTest extends \WP_UnitTestCase {
 		$this->assertEquals( $new_persist, $this->trait->heavy_persistent( [ 'persist' ] ) );
 		$this->assertTrue( $this->trait->heavy_once( false )[0] );
 		$this->assertTrue( true, $this->trait->heavy_memo( true )[0] );
+	}
+
+
+	public function test_get_cache_key() : void {
+		$this->assertEquals( 'www', $this->trait->get_key( 'www', [] ) );
+		$this->assertEquals( 'www', $this->trait->get_key( 'www', [ [] ] ) );
+		$this->assertEquals( 'bcc621482d3b11a1ee05db8cdc6350ec', $this->trait->get_key( 'www', [ [], [] ] ) );
+		$this->assertEquals( '7bc52ca1b048adb744beda15b94a3e7b', $this->trait->get_key( 'www', [ [], 'random' ] ) );
+		$this->assertEquals( 'c139b5945341ede15c433ae470c18e15', $this->trait->get_key( 'www', [ 34, 'random' ] ) );
 	}
 }

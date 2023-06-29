@@ -46,10 +46,11 @@ trait Memoize {
 	 * @return mixed
 	 */
 	public function persistent( callable $callback, string $identifier, $expire = 0, ...$args ) {
-		$data = Cache::in()->get( [ $identifier, $args ], __CLASS__ );
+		$cache_key = $this->get_cache_key( $identifier, $args );
+		$data = Cache::in()->get( $cache_key, __CLASS__ );
 		if ( false === $data ) {
 			$data = $callback( ...$args );
-			Cache::in()->set( [ $identifier, $args ], $data, __CLASS__, $expire );
+			Cache::in()->set( $cache_key, $data, __CLASS__, $expire );
 		}
 		return $data;
 	}
@@ -57,7 +58,7 @@ trait Memoize {
 
 	/**
 	 * Pass me a callback, a method identifier, and some optional arguments and
-	 * and I will return the same result every time.
+	 * I will return the same result every time.
 	 *
 	 * The passed function will only be called once no matter where it called from
 	 * and what the arguments are.
@@ -98,7 +99,7 @@ trait Memoize {
 	 * @return mixed
 	 */
 	public function memoize( callable $callback, string $identifier, ...$args ) {
-		$key = \md5( wp_json_encode( [ $args, $identifier ] ) );
+		$key = $this->get_cache_key( $identifier, $args );
 		if ( ! \array_key_exists( $key, $this->memoize_cache ) ) {
 			$this->memoize_cache[ $key ] = $callback( ...$args );
 		}
@@ -119,14 +120,13 @@ trait Memoize {
 	 * @return bool - Result of deleting the cache from external object cache.
 	 */
 	public function clear_single_item( string $identifier, ...$args ) : bool {
-		$keys = [
-			\md5( wp_json_encode( [ $args, $identifier ] ) ), // memoize.
-			"{$identifier}::once", // once.
-		];
-		\array_walk( $keys, function( $key ) {
-			unset( $this->memoize_cache[ $key ] );
-		} );
-		return Cache::in()->delete( [ $identifier, $args ], __CLASS__ );
+		$cache_key = $this->get_cache_key( $identifier, $args );
+		$nonce_key = "{$identifier}::once";
+		unset(
+			$this->memoize_cache[ $cache_key ],
+			$this->memoize_cache[ $nonce_key ]
+		);
+		return Cache::in()->delete( $cache_key, __CLASS__ );
 	}
 
 
@@ -139,5 +139,32 @@ trait Memoize {
 	public function clear_memoize_cache() : void {
 		$this->memoize_cache = [];
 		Cache::in()->flush_group( __CLASS__ );
+	}
+
+
+	/**
+	 * Return a key use for the various caches.
+	 *
+	 * - If `$args` is empty, return the `$identifier` as is.
+	 * - If not, return a combination of the `$identifier` and `$args` as a hash.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $identifier - Unique key to hold the cache.
+	 * @param array  $args       - Arguments passed to the original method.
+	 *
+	 * @return string
+	 */
+	protected function get_cache_key( string $identifier, array $args ) : string {
+		if ( \count( $args ) < 1 ) {
+			return $identifier;
+		}
+
+		// Return `$identifier` on empty multidimensional array.
+		if ( 1 === \count( $args ) && \is_array( $args[0] ) && \count( $args[0] ) < 1 ) {
+			return $identifier;
+		}
+
+		return \md5( wp_json_encode( [ $args, $identifier ] ) );
 	}
 }
