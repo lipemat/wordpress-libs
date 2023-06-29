@@ -32,9 +32,15 @@ class Image_Resize {
 	/**
 	 * Actions and filters.
 	 *
+	 * @notice If WP-CLI is running we leave the default image handling intact so
+	 *         the various media commands will function.
+	 *
 	 * @return void
 	 */
 	public function hook() : void {
+		if ( \defined( 'WP_CLI' ) && \WP_CLI ) {
+			return;
+		}
 		add_action( 'init', [ $this, 'add_other_image_sizes' ] );
 		add_filter( 'image_downsize', [ $this, 'convert_image_downsize' ], 10, 3 );
 		add_filter( 'wp_calculate_image_srcset_meta', [ $this, 'populate_srcset_sizes' ], 10, 4 );
@@ -65,10 +71,6 @@ class Image_Resize {
 		}
 
 		foreach ( $_wp_additional_image_sizes as $size => $the_ ) {
-			if ( isset( $this->image_sizes[ $size ] ) ) {
-				continue;
-			}
-
 			$this->add_image_size( $size, $the_['width'], $the_['height'], $the_['crop'] );
 			unset( $_wp_additional_image_sizes[ $size ] );
 		}
