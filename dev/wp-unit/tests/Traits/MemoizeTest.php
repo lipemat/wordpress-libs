@@ -147,8 +147,8 @@ class MemoizeTest extends \WP_UnitTestCase {
 	public function test_get_cache_key() : void {
 		$this->assertEquals( 'www', $this->trait->get_key( 'www', [] ) );
 		$this->assertEquals( 'www', $this->trait->get_key( 'www', [ [] ] ) );
-		$this->assertEquals( 'bcc621482d3b11a1ee05db8cdc6350ec', $this->trait->get_key( 'www', [ [], [] ] ) );
-		$this->assertEquals( '7bc52ca1b048adb744beda15b94a3e7b', $this->trait->get_key( 'www', [ [], 'random' ] ) );
-		$this->assertEquals( 'c139b5945341ede15c433ae470c18e15', $this->trait->get_key( 'www', [ 34, 'random' ] ) );
+		$this->assertEquals( '592cfcc9545ca444', $this->trait->get_key( 'www', [ [], [] ] ) );
+		$this->assertEquals( '1f308a974c2c2445', $this->trait->get_key( 'www', [ [], 'random' ] ) );
+		$this->assertEquals( '08481a9bd95a720c', $this->trait->get_key( 'www', [ 34, 'random' ] ) );
 	}
 }
