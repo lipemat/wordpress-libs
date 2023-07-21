@@ -315,6 +315,15 @@ class Get_Users extends Args_Abstract implements Meta_Query_Interface {
 	public array $login__not_in;
 
 	/**
+	 * Whether to cache user information.
+	 *
+	 * Default `true`.
+	 *
+	 * @var bool
+	 */
+	public bool $cache_results;
+
+	/**
 	 * An array or a comma-separated list of capability names that users must match to be included in results.
 	 *
 	 * Note that this is an inclusive list: users must match *each* capability.

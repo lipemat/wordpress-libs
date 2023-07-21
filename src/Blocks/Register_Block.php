@@ -168,6 +168,13 @@ class Register_Block extends Args_Abstract {
 	public array $script_handles;
 
 	/**
+	 * Custom CSS selectors for block theme.json style generation.
+	 *
+	 * @var array<string, mixed>
+	 */
+	public array $selectors;
+
+	/**
 	 * Block type editor only style handles.
 	 *
 	 * @var array<int, string>
