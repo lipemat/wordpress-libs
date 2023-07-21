@@ -170,6 +170,48 @@ class Register_Block extends Args_Abstract {
 	/**
 	 * Custom CSS selectors for block theme.json style generation.
 	 *
+	 * @link https://github.com/WordPress/gutenberg/blob/trunk/docs/reference-guides/block-api/block-selectors.md
+	 * @link https://raw.githubusercontent.com/WordPress/gutenberg/trunk/schemas/json/block.json
+	 *
+	 * @see  BlockSelector in @types/js-boilerplate
+	 *
+	 * @phpstan-var array{
+	 *     root: string,
+	 *     border?: string | array{
+	 *         color?: string,
+	 *         root?: string,
+	 *         radius?: string,
+	 *         style?: string,
+	 *         width?: string,
+	 *     },
+	 *     color?: string | array{
+	 *          root?:string,
+	 *          background?: string,
+	 *          text?: string,
+	 *     },
+	 *     dimensions?: string | array{
+	 *          root?: string,
+	 *          minHeight?: string,
+	 *     },
+	 *     spacing?: string | array{
+	 *          root?: string,
+	 *          padding?: string,
+	 *          margin?: string,
+	 *          blockGap?: string,
+	 *     },
+	 *     typography?: string | array{
+	 *          root?: string,
+	 *          fontFamily?: string,
+	 *          fontSize?: string,
+	 *          fontStyle?: string,
+	 *          fontWeight?: string,
+	 *          letterSpacing?: string,
+	 *          lineHeight?: string,
+	 *          textDecoration?: string,
+	 *          textTransform?: string,
+	 *     }
+	 * }
+	 *
 	 * @var array<string, mixed>
 	 */
 	public array $selectors;
