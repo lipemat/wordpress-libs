@@ -255,9 +255,10 @@ class Resources {
 	 * in the document but after any non `defer` script.
 	 * 5. The DOM is guaranteed to be available for the script.
 	 *
-	 * @link       https://make.wordpress.org/core/2023/07/14/registering-scripts-with-async-and-defer-attributes-in-wordpress-6-3/
+	 * @link https://make.wordpress.org/core/2023/07/14/registering-scripts-with-async-and-defer-attributes-in-wordpress-6-3/
 	 *
-	 * @deprecated WordPress 6.3 provides native support for this.
+	 * @todo Once WordPress 6.3 is available, look at using the `wp_script_add_data` `strategy` approach.
+	 *       `wp_script_add_data( $handle, 'strategy', 'defer' );`
 	 *
 	 * @param string $handle - The handle used to enqueued this script.
 	 *
@@ -288,9 +289,10 @@ class Resources {
 	 * 3. Executes at an unpredictable time so must be self-contained.
 	 * 4. Good for scripts such as Google Analytics.
 	 *
-	 * @link       https://make.wordpress.org/core/2023/07/14/registering-scripts-with-async-and-defer-attributes-in-wordpress-6-3/
+	 * @link https://make.wordpress.org/core/2023/07/14/registering-scripts-with-async-and-defer-attributes-in-wordpress-6-3/
 	 *
-	 * @deprecated WordPress 6.3 provides native support for this.
+	 * @todo Once WordPress 6.3 is available, look at using the `wp_script_add_data` `strategy` approach.
+	 *       `wp_script_add_data( $handle, 'strategy', 'defer' );`
 	 *
 	 * @param string $handle - The handle used to enqueued this script.
 	 *
