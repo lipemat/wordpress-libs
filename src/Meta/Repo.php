@@ -132,8 +132,10 @@ class Repo extends Translate_Abstract {
 				$this->update_group_field_values( $object_id, $field_id, (array) $value, $meta_type );
 				break;
 			case static::TYPE_TAXONOMY:
-			case static::TYPE_TAXONOMY_SINGULAR:
 				$this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type );
+				break;
+			case static::TYPE_TAXONOMY_SINGULAR:
+				$this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type, true );
 				break;
 			default:
 				$this->update_meta_value( $object_id, $field_id, $value, $meta_type );

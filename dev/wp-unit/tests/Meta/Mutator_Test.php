@@ -279,7 +279,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 		$o['categories'] = [ $cat_id ];
 		$this->assertEquals( [
 			Settings_Mock::NAME,
-			[ $cat_id ],
+			$cat_id,
 			'categories',
 			null,
 			'options-page',
@@ -293,13 +293,13 @@ class Mutator_Test extends \WP_UnitTestCase {
 			Settings_Mock::NAME,
 			null,
 			'categories',
-			[ $cat_id ],
+			$cat_id,
 			'options-page',
 		], $this->changed_args );
 		$this->assertEquals( [
 			$id,
 			'categories',
-			[ $cat_id ],
+			$cat_id,
 			'options-page',
 		], $this->deleted_args );
 
@@ -339,13 +339,13 @@ class Mutator_Test extends \WP_UnitTestCase {
 			$id,
 			null,
 			'categories',
-			[ $cat_id ],
+			$cat_id,
 			'options-page',
 		], $this->changed_args );
 		$this->assertEquals( [
 			$id,
 			'categories',
-			[ $cat_id ],
+			$cat_id,
 			'options-page',
 		], $this->deleted_args );
 		$this->assertEquals( [ $id, ], $this->deleted );
@@ -550,7 +550,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 		$o = Term_Mock::factory( $cat_id );
 		$o['categories'] = [ $assigned ];
 		$this->assertEquals( get_term( $assigned ), $o['categories'] );
-		$this->assertEquals( get_term( $assigned )->term_id, \get_term_meta( $cat_id, 'categories', true )[0] );
+		$this->assertEquals( get_term( $assigned )->term_id, \get_term_meta( $cat_id, 'categories', true ) );
 
 		$o['tags'] = $this->tags;
 		$this->assertEquals( $this->get_tags(), $o['tags'] );

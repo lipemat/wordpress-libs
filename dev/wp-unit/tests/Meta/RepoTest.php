@@ -10,6 +10,7 @@ namespace Lipe\Lib\Meta;
 use Lipe\Lib\CMB2\Box;
 use Lipe\Lib\CMB2\User_Box;
 use Lipe\Project\Post_Types\Post;
+use Lipe\Project\Taxonomies\School;
 use Lipe\Project\User\User;
 use mocks\Post_Mock;
 use mocks\User_Mock;
@@ -20,6 +21,11 @@ use mocks\User_Mock;
  * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
  */
 class RepoTest extends \WP_UnitTestCase {
+	public function setUp() : void {
+		parent::setUp();
+		\CMB2_Bootstrap_2101::initiate()->include_cmb();
+	}
+
 
 	public function test_get_value() : void {
 		$user_id = self::factory()->user->create();
@@ -32,7 +38,6 @@ class RepoTest extends \WP_UnitTestCase {
 		    ->taxonomy_multicheck( 'category' )
 		    ->store_user_terms_in_meta();
 
-		\CMB2_Bootstrap_2101::initiate()->include_cmb();
 		do_action( 'cmb2_init' );
 
 		update_user_meta( $user_id, 'u', 'on' );
@@ -72,5 +77,20 @@ class RepoTest extends \WP_UnitTestCase {
 		$object = Post_Mock::factory( self::factory()->post->create_and_get() );
 		$object['t'] = 'not teh post id';
 		$this->assertEquals( $object->get_id(), $object['t'] );
+	}
+
+
+	public function test_taxonomy_single() : void {
+		$box = new User_Box( 's', 'SS' );
+		$box->field( 's', 'S' )
+		    ->taxonomy_select( 'category' )
+		    ->column( 3, null, null, true );
+		do_action( 'cmb2_init' );
+		$term = self::factory()->category->create();
+
+		$object = User_Mock::factory( self::factory()->user->create_and_get() );
+		$object['s'] = $term;
+		$this->assertEquals( $term, get_user_meta( $object->get_id(), 's', true ) );
+		$this->assertEquals( get_term( $term ), $object['s'] );
 	}
 }

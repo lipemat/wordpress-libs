@@ -139,7 +139,7 @@ class BoxTest extends \WP_UnitTestCase {
 		$object->update_option( 't', [ \WP_Term::get_instance( '1' )->slug ] );
 		$object->update_option( 'f', $this->attachment_id );
 		$this->assertEquals( $term, $object->get_option( 't' ) );
-		$this->assertEquals( [ $term->term_id ], get_option( 'op' )['t'] );
+		$this->assertEquals( $term->term_id, get_option( 'op' )['t'] );
 		$this->assertEquals( [
 			'id'  => $this->attachment_id,
 			'url' => wp_get_attachment_url( $this->attachment_id ),
@@ -151,7 +151,7 @@ class BoxTest extends \WP_UnitTestCase {
 
 		$object->update_option( 't', [ \WP_Term::get_instance( '1' )->term_id ] );
 		$this->assertEquals( get_term( 1, 'category' ), $object->get_option( 't' ) );
-		$this->assertEquals( [ get_term( 1, 'category' )->term_id ], get_option( 'op' )['t'] );
+		$this->assertEquals( get_term( 1, 'category' )->term_id, get_option( 'op' )['t'] );
 	}
 
 
@@ -191,7 +191,7 @@ class BoxTest extends \WP_UnitTestCase {
 		$object->update_option( 'nt', [ $term->slug ] );
 		$object->update_option( 'nf', $this->attachment_id );
 		$this->assertEquals( $term, $object->get_option( 'nt' ) );
-		$this->assertEquals( [ $term->term_id ], get_network_option( 1, 'nop' )['nt'] );
+		$this->assertEquals( $term->term_id, get_network_option( 1, 'nop' )['nt'] );
 		$this->assertEquals( [
 			'id'  => $this->attachment_id,
 			'url' => wp_get_attachment_url( $this->attachment_id ),

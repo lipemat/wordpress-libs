@@ -388,14 +388,16 @@ abstract class Translate_Abstract {
 	protected function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : array {
 		$taxonomy = $this->get_field( $field_id )->taxonomy;
 		if ( ! $this->supports_taxonomy_relationships( $meta_type ) ) {
-			return $this->maybe_use_main_blog( $field_id, function() use ( $object_id, $field_id, $taxonomy, $meta_type ) {
-				return \array_filter( \array_map( function( $term_id ) use ( $taxonomy ) {
-					// Legacy options used term slug.
-					if ( ! is_numeric( $term_id ) ) {
-						return get_term_by( 'slug', $term_id, $taxonomy );
+			return $this->maybe_use_main_blog( $field_id, function() use ( $object_id, $field_id, $meta_type ) {
+				$meta_value = (array) $this->get_meta_value( $object_id, $field_id, $meta_type );
+
+				return \array_filter( \array_map( function( $term_id ) use ( $field_id ) {
+					$value = $this->get_term_id_from_slug( $field_id, $term_id );
+					if ( null !== $value ) {
+						return get_term( $value );
 					}
-					return get_term( $term_id, $taxonomy );
-				}, (array) $this->get_meta_value( $object_id, $field_id, $meta_type ) ) );
+					return false;
+				}, $meta_value ) );
 			} );
 		}
 
@@ -416,28 +418,39 @@ abstract class Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function update_taxonomy_field_value( $object_id, string $key, array $terms, string $meta_type ) : void {
+	protected function update_taxonomy_field_value( $object_id, string $key, array $terms, string $meta_type, bool $singular = false ) : void {
 		$field = $this->get_field( $key );
-		if ( null !== $field ) {
-			if ( null !== $field->sanitization_cb ) {
-				$terms = $field->get_cmb2_field()->sanitization_cb( $terms );
-			}
+		if ( null === $field ) {
+			return;
+		}
+		if ( null !== $field->sanitization_cb ) {
+			$terms = $field->get_cmb2_field()->sanitization_cb( $terms );
+		}
 
-			if ( $this->supports_taxonomy_relationships( $meta_type ) ) {
-				$terms = \array_map( function( $term ) {
-					// Term ids are perceived as term slug when strings.
-					return is_numeric( $term ) ? (int) $term : $term;
-				}, $terms );
-				wp_set_object_terms( $object_id, $terms, $field->taxonomy );
+		// Stored as term relationship.
+		if ( $this->supports_taxonomy_relationships( $meta_type ) ) {
+			$terms = \array_map( function( $term ) {
+				// Term ids are perceived as term slug when strings.
+				return is_numeric( $term ) ? (int) $term : $term;
+			}, $terms );
+			wp_set_object_terms( $object_id, $terms, $field->taxonomy );
+			return;
+		}
+
+		// Store in meta.
+		$terms = \array_map( function( $value ) use ( $key ) {
+			return $this->get_term_id_from_slug( $key, $value );
+		}, $terms );
+
+		if ( $singular ) {
+			$value = \reset( $terms );
+			if ( false !== $value ) {
+				$this->update_meta_value( $object_id, $key, $value, $meta_type );
 			} else {
-				$this->update_meta_value( $object_id, $key, \array_map( function( $term_id ) use ( $field ) {
-					// Legacy options used term slug.
-					if ( ! is_numeric( $term_id ) ) {
-						return get_term_by( 'slug', $term_id, $field->taxonomy )->term_id;
-					}
-					return $term_id;
-				}, $terms ), $meta_type );
+				$this->delete_meta_value( $object_id, $key, $meta_type );
 			}
+		} else {
+			$this->update_meta_value( $object_id, $key, $terms, $meta_type );
 		}
 	}
 
@@ -482,6 +495,34 @@ abstract class Translate_Abstract {
 		$terms = $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type );
 
 		return empty( $terms ) ? false : array_shift( $terms );
+	}
+
+
+	/**
+	 * Term values used to be stored as 'slug'.
+	 *
+	 * This method translates a possible slug to a term id.
+	 * If a number is passed, the int value of the number is returned.
+	 *
+	 * @param string     $key   - The field key.
+	 * @param string|int $value - The term value.
+	 *
+	 * @return int|null
+	 */
+	protected function get_term_id_from_slug( string $key, $value ) : ?int {
+		if ( ! is_numeric( $value ) ) {
+			$field = $this->get_field( $key );
+			if ( null === $field ) {
+				return null;
+			}
+			$term = get_term_by( 'slug', $value, $field->taxonomy );
+			if ( is_a( $term, \WP_Term::class ) ) {
+				return $term->term_id;
+			}
+			return null;
+		}
+
+		return (int) $value;
 	}
 
 
