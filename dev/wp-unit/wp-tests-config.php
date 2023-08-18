@@ -34,6 +34,11 @@ $config_defaults = [
 	'WP_UNIT_DIR'               => getenv( 'WP_UNIT_DIR' ),
 ];
 
+// Not actually needed, here to silence so PHPStorm inspections in unit tests.
+if ( ! defined( 'WP_CONTENT_DIR' ) ) {
+	define( 'WP_CONTENT_DIR', WP_SITE_ROOT . 'wp-content' );
+}
+
 foreach ( $config_defaults as $config_default_key => $config_default_value ) {
 	if ( ! defined( $config_default_key ) ) {
 		define( $config_default_key, $config_default_value );

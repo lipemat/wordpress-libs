@@ -90,9 +90,9 @@ class ResourcesTest extends \WP_UnitTestCase {
 		ob_start();
 		wp_scripts()->do_item( 'react' );
 		$script = ob_get_clean();
-		self::assertStringContainsString( "src='https://unpkg.com/react@" . $react_version . "/umd/react.production.min.js'", $script );
-		self::assertStringContainsString( 'integrity="', $script );
-		self::assertStringContainsString( 'crossorigin="anonymous"', $script );
+		$this->assertStringContainsString( "src='https://unpkg.com/react@" . $react_version . "/umd/react.production.min.js'", $script );
+		$this->assertStringContainsString( "integrity='", $script );
+		$this->assertStringContainsString( "crossorigin='anonymous'", $script );
 
 		// Simulate admin screens.
 		set_current_screen( 'widgets.php' );
@@ -123,11 +123,61 @@ class ResourcesTest extends \WP_UnitTestCase {
 
 		ob_start();
 		wp_scripts()->do_item( __METHOD__ );
-		$this->assertEquals( '<script integrity="sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7" crossorigin="anonymous" src=\'https://unpkg.com/jquery@3.1.1/dist/jquery.min.js\' id=\'Lipe\Lib\Theme\ResourcesTest::test_unpkg_integrity-js\'></script>' . "\n", ob_get_clean() );
+		$this->assertEquals( "<script integrity='sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7' crossorigin='anonymous' src='https://unpkg.com/jquery@3.1.1/dist/jquery.min.js' id='Lipe\Lib\Theme\ResourcesTest::test_unpkg_integrity-js'></script>" . "\n", ob_get_clean() );
 		$cache = get_network_option( 0, Resources::INTEGRITY, [] );
 		$this->assertEquals( 'sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7', $cache['https://unpkg.com/jquery@3.1.1/dist/jquery.min.js'] );
 		$this->assertCount( 1, $this->requests );
 
 		$this->assertFalse( Resources::in()->unpkg_integrity( 'not-exits', 'https://unpkg.com/not-exists/script' ) );
+	}
+
+
+	public function test_async_javascript() : void {
+		[ $url, $callback ] = $this->get_script_handler();
+		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+
+		[ $url, $callback, $handle ] = $this->get_script_handler();
+		Resources::in()->async_javascript( $handle );
+		$this->assertEquals( "<script async src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+	}
+
+
+	public function test_defer_javascript() : void {
+		[ $url, $callback ] = $this->get_script_handler();
+		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+
+		[ $url, $callback, $handle ] = $this->get_script_handler();
+		Resources::in()->defer_javascript( $handle );
+		$this->assertEquals( "<script defer src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+	}
+
+
+	public function test_crossorigin_javascript() : void {
+		[ $url, $callback ] = $this->get_script_handler();
+		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+
+		[ $url, $callback, $handle ] = $this->get_script_handler();
+		Resources::in()->crossorigin_javascript( $handle );
+		$this->assertEquals( "<script crossorigin src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+
+		[ $url, $callback, $handle ] = $this->get_script_handler();
+		Resources::in()->crossorigin_javascript( $handle, 'anonymous' );
+		$this->assertEquals( "<script crossorigin='anonymous' src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+	}
+
+
+	/**
+	 * @return array<string,callable()>
+	 */
+	private function get_script_handler() : array {
+		$url = plugins_url( 'ResourcesTest.php', __FILE__ );
+		wp_register_script( 'arbuitrary', $url, [], null );
+
+		$callback = function() {
+			ob_start();
+			wp_scripts()->do_item( 'arbuitrary' );
+			return ob_get_clean();
+		};
+		return [ $url, $callback, 'arbuitrary' ];
 	}
 }

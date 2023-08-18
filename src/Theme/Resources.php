@@ -320,9 +320,9 @@ class Resources {
 	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
 	 * on if enqueued for the footer or header.
 	 *
-	 * @param string      $handle - The handle used to enqueued this script.
+	 * @param string                             $handle - The handle used to enqueued this script.
 	 *
-	 * @param string|null $value  - Optional value of the attribute.
+	 * @param 'use-credentials'|'anonymous'|null $value  - Optional value of the attribute.
 	 *
 	 * @return void
 	 */
@@ -334,7 +334,7 @@ class Resources {
 					if ( null === static::$crossorigin[ $handle ] ) {
 						return \str_replace( '<script', '<script crossorigin', $tag );
 					}
-					return \str_replace( '<script', '<script crossorigin="' . static::$crossorigin[ $handle ] . '"', $tag );
+					return \str_replace( '<script', "<script crossorigin='" . static::$crossorigin[ $handle ] . "'", $tag );
 				}
 				return $tag;
 			}, 11, 2 );
@@ -361,7 +361,7 @@ class Resources {
 		$this->once( function() {
 			add_filter( 'script_loader_tag', function( $tag, $handle ) {
 				if ( isset( static::$integrity[ $handle ] ) ) {
-					return str_replace( '<script', '<script integrity="' . static::$integrity[ $handle ] . '"', $tag );
+					return str_replace( '<script', "<script integrity='" . static::$integrity[ $handle ] . "'", $tag );
 				}
 				return $tag;
 			}, 11, 2 );
