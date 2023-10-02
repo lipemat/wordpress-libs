@@ -166,13 +166,17 @@ class Cache {
 	 *
 	 * @param mixed             $key - Data to convert to a string cache key.
 	 *
-	 * @return bool|string
+	 * @return false|string
 	 */
 	protected function filter_key( $key ) {
 		if ( empty( $key ) ) {
 			return false;
 		}
-		return ( \is_array( $key ) || \is_object( $key ) ) ? \hash( 'fnv1a64', wp_json_encode( $key ) ) : $key;
+		if ( \is_array( $key ) || \is_object( $key ) ) {
+			return \hash( 'fnv1a64', wp_json_encode( $key ) );
+		}
+
+		return $key;
 	}
 
 }
