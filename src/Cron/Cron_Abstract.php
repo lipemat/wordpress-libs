@@ -8,12 +8,13 @@ namespace Lipe\Lib\Cron;
 abstract class Cron_Abstract {
 	public const NAME = __CLASS__;
 
+
 	/**
 	 * Run the Task
 	 *
 	 * @return void
 	 */
-	abstract public function run() : void;
+	abstract public function run(): void;
 
 
 	/**
@@ -26,7 +27,7 @@ abstract class Cron_Abstract {
 	 *
 	 * @return string
 	 */
-	abstract public function get_recurrence() : string;
+	abstract public function get_recurrence(): string;
 
 
 	/**
@@ -34,7 +35,7 @@ abstract class Cron_Abstract {
 	 *
 	 * @return void
 	 */
-	public function init() : void {
+	public function init(): void {
 		if ( __CLASS__ === static::NAME ) {
 			_doing_it_wrong( __CLASS__, 'Cron_Abstract::NAME must be overridden by the child class.', '2.23.0' );
 			return;
@@ -50,7 +51,7 @@ abstract class Cron_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function hook() : void {
+	protected function hook(): void {
 		add_action( static::NAME, [ $this, 'run_task' ] );
 	}
 
@@ -62,7 +63,7 @@ abstract class Cron_Abstract {
 	 *
 	 * @return void
 	 */
-	public function run_task() : void {
+	public function run_task(): void {
 		update_option( static::NAME . '/last-run', time() );
 		$this->run();
 	}
@@ -73,8 +74,8 @@ abstract class Cron_Abstract {
 	 *
 	 * @return float
 	 */
-	public function get_next_run() : float {
-		return \wp_next_scheduled( static::NAME );
+	public function get_next_run(): float {
+		return wp_next_scheduled( static::NAME );
 	}
 
 
@@ -83,7 +84,7 @@ abstract class Cron_Abstract {
 	 *
 	 * @return int
 	 */
-	public function get_last_run() : int {
+	public function get_last_run(): int {
 		return get_option( static::NAME . '/last-run', 0 );
 	}
 
@@ -93,9 +94,9 @@ abstract class Cron_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function schedule_task() : void {
-		if ( ! \wp_next_scheduled( static::NAME ) ) {
-			\wp_schedule_event( time() - 1, $this->get_recurrence(), static::NAME );
+	protected function schedule_task(): void {
+		if ( ! wp_next_scheduled( static::NAME ) ) {
+			wp_schedule_event( time() - 1, $this->get_recurrence(), static::NAME );
 		}
 	}
 }
