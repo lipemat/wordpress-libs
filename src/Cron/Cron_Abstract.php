@@ -4,6 +4,8 @@ namespace Lipe\Lib\Cron;
 
 /**
  * Base class for a single cron.
+ *
+ * @deprecated 4.4.0 Will be removed in version 5. Best to port locally into your project.
  */
 abstract class Cron_Abstract {
 	public const NAME = __CLASS__;
