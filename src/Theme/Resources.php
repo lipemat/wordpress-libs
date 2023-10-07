@@ -71,7 +71,7 @@ class Resources {
 	 *
 	 * @return null|string
 	 */
-	public function get_revision() : ?string {
+	public function get_revision(): ?string {
 		return $this->once( function() {
 			$file = apply_filters( 'lipe/lib/theme/resources/revision-path', $this->get_site_root() . '.revision' );
 			if ( ! \is_readable( $file ) ) {
@@ -113,7 +113,7 @@ class Resources {
 	 *
 	 * @return string|null
 	 */
-	public function get_content_hash( string $url ) : ?string {
+	public function get_content_hash( string $url ): ?string {
 		$path = wp_parse_url( $url, PHP_URL_PATH );
 		if ( ! $path ) {
 			return null;
@@ -150,16 +150,17 @@ class Resources {
 	 * much more frequently than this file is touched by release or
 	 * other processes.
 	 *
-	 * @see Resources::get_revision()
-	 * @see Resources::get_content_hash()
-	 *
 	 * @since 3.14.0
+	 *
+	 * @see   Resources::get_content_hash()
+	 *
+	 * @see   Resources::get_revision()
 	 *
 	 * @param string $url - URL to a local script or style.
 	 *
 	 * @return int|null
 	 */
-	public function get_file_modified_time( string $url ) : ?int {
+	public function get_file_modified_time( string $url ): ?int {
 		$path = wp_parse_url( $url, PHP_URL_PATH );
 		if ( ! $path ) {
 			return null;
@@ -185,7 +186,7 @@ class Resources {
 	 *
 	 * @return string
 	 */
-	public function get_site_root() : string {
+	public function get_site_root(): string {
 		if ( \defined( 'WP_CONTENT_DIR' ) ) {
 			return trailingslashit( \dirname( \WP_CONTENT_DIR ) );
 		}
@@ -205,7 +206,7 @@ class Resources {
 	 *
 	 * @return void
 	 */
-	public function live_reload( ?string $domain = null, bool $admin_also = false ) : void {
+	public function live_reload( ?string $domain = null, bool $admin_also = false ): void {
 		if ( \defined( 'SCRIPT_DEBUG' ) && \SCRIPT_DEBUG ) {
 			$enqueue = function() use ( $domain ) {
 				$url = 'http://localhost:35729/livereload.js';
@@ -231,7 +232,7 @@ class Resources {
 	 *
 	 * @param string $css_class - Class to append.
 	 */
-	public function add_body_class( string $css_class ) : void {
+	public function add_body_class( string $css_class ): void {
 		static::$body_class[] = $css_class;
 		$this->once( function() {
 			add_filter( 'body_class', function( $classes ) {
@@ -264,7 +265,7 @@ class Resources {
 	 *
 	 * @return void
 	 */
-	public function defer_javascript( string $handle ) : void {
+	public function defer_javascript( string $handle ): void {
 		static::$deffer[] = $handle;
 		$this->once( function() {
 			add_filter( 'script_loader_tag', function( $tag, $handle ) {
@@ -298,7 +299,7 @@ class Resources {
 	 *
 	 * @return void
 	 */
-	public function async_javascript( string $handle ) : void {
+	public function async_javascript( string $handle ): void {
 		static::$async[] = $handle;
 		$this->once( function() {
 			add_filter( 'script_loader_tag', function( $tag, $handle ) {
@@ -326,7 +327,7 @@ class Resources {
 	 *
 	 * @return void
 	 */
-	public function crossorigin_javascript( string $handle, ?string $value = null ) : void {
+	public function crossorigin_javascript( string $handle, ?string $value = null ): void {
 		static::$crossorigin[ $handle ] = $value;
 		$this->once( function() {
 			add_filter( 'script_loader_tag', function( $tag, $handle ) {
@@ -355,7 +356,10 @@ class Resources {
 	 *
 	 * @return void
 	 */
-	public function integrity_javascript( string $handle, string $integrity ) : void {
+	public function integrity_javascript( string $handle, string $integrity ): void {
+		if ( '' === $integrity ) {
+			return;
+		}
 		static::$integrity[ $handle ] = $integrity;
 		$this->crossorigin_javascript( $handle, 'anonymous' );
 		$this->once( function() {
@@ -381,11 +385,11 @@ class Resources {
 	 * @notice We exclude the `version=` from the URL to match external
 	 *         site's URL for browser caching purposes.
 	 *
-	 * @param array<'jquery' | 'react' | 'react-dom' | 'lodash'> $handles - Resource handles to include.
-	 *
 	 * @since  3.2.0
+	 *
+	 * @param array<'jquery' | 'react' | 'react-dom' | 'lodash'> $handles - Resource handles to include.
 	 */
-	public function use_cdn_for_resources( array $handles ) : void {
+	public function use_cdn_for_resources( array $handles ): void {
 		// The admin will throw errors when calling `wp_deregister_script` in other actions.
 		if ( is_admin() && 'admin_enqueue_scripts' !== current_filter() ) {
 			return;
@@ -476,7 +480,7 @@ class Resources {
 	 *
 	 * @return bool
 	 */
-	public function unpkg_integrity( string $handle, string $url ) : bool {
+	public function unpkg_integrity( string $handle, string $url ): bool {
 		$cached = get_network_option( 0, static::INTEGRITY, [] );
 
 		// Add `integrity="<hash>"` to `<script>` tag.

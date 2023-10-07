@@ -142,7 +142,7 @@ class ResourcesTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_defer_javascript() : void {
+	public function test_defer_javascript(): void {
 		[ $url, $callback ] = $this->get_script_handler();
 		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
 
@@ -152,7 +152,20 @@ class ResourcesTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_crossorigin_javascript() : void {
+	public function test_integrity_javascript(): void {
+		[ $url, $callback ] = $this->get_script_handler();
+		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+
+		[ $url, $callback, $handle ] = $this->get_script_handler();
+		Resources::in()->integrity_javascript( $handle, '' );
+		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+
+		Resources::in()->integrity_javascript( $handle, 'sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7' );
+		$this->assertEquals( "<script integrity='sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7' crossorigin='anonymous' src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+	}
+
+
+	public function test_crossorigin_javascript(): void {
 		[ $url, $callback ] = $this->get_script_handler();
 		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
 
