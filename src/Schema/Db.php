@@ -14,6 +14,9 @@ use Lipe\Lib\Traits\Version;
  * @const  ID_FIELD - Primary key field.
  * @const  COLUMNS - Table columns.
  *
+ * @note   We have a PHPStan service dedicated to this class. It could be used to refine the `get` method.
+ * @link   https://github.com/lipemat/phpstan-wordpress/blob/develop/src/Services/DbGetDynamicFunctionReturnTypeExtension.php
+ *
  * @phpstan-type WHERE array<string,float|string|null>|int
  */
 abstract class Db {
@@ -86,7 +89,7 @@ abstract class Db {
 	 *
 	 * @return string
 	 */
-	public function get_table() : string {
+	public function get_table(): string {
 		return $this->table;
 	}
 
@@ -138,7 +141,6 @@ abstract class Db {
 		}
 
 		return $wpdb->get_col( $sql );
-
 	}
 
 
@@ -172,7 +174,7 @@ abstract class Db {
 	 *
 	 * @return array{total: int, total_pages: int, items: array<object|string>|object|string|void|null}
 	 */
-	public function get_paginated( $columns, int $page, int $per_page, $id_or_wheres = null, string $order_by = null ) : array {
+	public function get_paginated( $columns, int $page, int $per_page, $id_or_wheres = null, string $order_by = null ): array {
 		global $wpdb;
 
 		$count = $per_page;
@@ -301,7 +303,7 @@ abstract class Db {
 	 *
 	 * @return string
 	 */
-	protected function get_select_query( $columns, $id_or_wheres = null, $count = null, string $order_by = null ) : string {
+	protected function get_select_query( $columns, $id_or_wheres = null, $count = null, string $order_by = null ): string {
 		global $wpdb;
 
 		if ( \is_array( $columns ) ) {
@@ -366,7 +368,7 @@ abstract class Db {
 	 *
 	 * @return array
 	 */
-	protected function get_formats( array $columns ) : array {
+	protected function get_formats( array $columns ): array {
 		$formats = [];
 		foreach ( $columns as $column => $value ) {
 			if ( static::ID_FIELD === $column ) {
@@ -391,7 +393,7 @@ abstract class Db {
 	 *
 	 * @return array
 	 */
-	protected function sort_columns( array $columns ) : array {
+	protected function sort_columns( array $columns ): array {
 		$clean = [];
 
 		foreach ( static::COLUMNS as $column => $type ) {
@@ -412,7 +414,7 @@ abstract class Db {
 	 *
 	 * @return void
 	 */
-	protected function run_updates() : void {
+	protected function run_updates(): void {
 		$this->create_table();
 		if ( method_exists( $this, 'update_table' ) ) {
 			$this->update_table();
@@ -447,6 +449,5 @@ abstract class Db {
 	 *
 	 * @return void
 	 */
-	abstract protected function create_table() : void;
-
+	abstract protected function create_table(): void;
 }
