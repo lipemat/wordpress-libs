@@ -12,14 +12,21 @@ use Lipe\Lib\Query\Args_Abstract;
  * @author Mat Lipe
  * @since  4.0.0
  *
- * @see register_block_type()
+ * @see    register_block_type()
  *
- * @link https://developer.wordpress.org/reference/functions/register_block_type/
+ * @link   https://developer.wordpress.org/reference/functions/register_block_type/
  *
  * @phpstan-type Attributes array<string, array{
  *     type:string,
  *     default?:int|string,
- *     enum?:array<string|int|bool>
+ *     enum?:array<string|int|bool>,
+ *     items?: array{
+ *       type: string,
+ *       required?: array<string>,
+ *       properties?: array<string, array{
+ *          type: string,
+ *       }>
+ *     }
  * }>
  */
 class Register_Block extends Args_Abstract {
