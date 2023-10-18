@@ -82,7 +82,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return Meta_Query
 	 */
-	public function equals( $key, string $value ) : Meta_Query {
+	public function equals( $key, string $value ): Meta_Query {
 		$this->add_clause( $value, $key, '=' );
 		return $this;
 	}
@@ -96,7 +96,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_equals( $key, string $value ) : Meta_Query {
+	public function not_equals( $key, string $value ): Meta_Query {
 		$this->add_clause( $value, $key, '!=' );
 		return $this;
 	}
@@ -110,7 +110,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return Meta_Query
 	 */
-	public function greater_than( $key, string $value ) : Meta_Query {
+	public function greater_than( $key, string $value ): Meta_Query {
 		$this->add_clause( $value, $key, '>' );
 		return $this;
 	}
@@ -124,7 +124,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return Meta_Query
 	 */
-	public function greater_than_or_equal( $key, string $value ) : Meta_Query {
+	public function greater_than_or_equal( $key, string $value ): Meta_Query {
 		$this->add_clause( $value, $key, '>=' );
 		return $this;
 	}
@@ -138,7 +138,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return Meta_Query
 	 */
-	public function less_than( $key, string $value ) : Meta_Query {
+	public function less_than( $key, string $value ): Meta_Query {
 		$this->add_clause( $value, $key, '<' );
 		return $this;
 	}
@@ -152,7 +152,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return Meta_Query
 	 */
-	public function less_than_or_equal( $key, string $value ) : Meta_Query {
+	public function less_than_or_equal( $key, string $value ): Meta_Query {
 		$this->add_clause( $value, $key, '<=' );
 		return $this;
 	}
@@ -166,7 +166,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return Meta_Query
 	 */
-	public function like( $key, string $value ) : Meta_Query {
+	public function like( $key, string $value ): Meta_Query {
 		$this->add_clause( $value, $key, 'LIKE' );
 		return $this;
 	}
@@ -180,7 +180,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_like( $key, string $value ) : Meta_Query {
+	public function not_like( $key, string $value ): Meta_Query {
 		$this->add_clause( $value, $key, 'NOT LIKE' );
 		return $this;
 	}
@@ -194,7 +194,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return Meta_Query
 	 */
-	public function in( $key, array $values ) : Meta_Query {
+	public function in( $key, array $values ): Meta_Query {
 		$this->add_clause( $values, $key, 'IN' );
 		return $this;
 	}
@@ -208,7 +208,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_in( $key, array $values ) : Meta_Query {
+	public function not_in( $key, array $values ): Meta_Query {
 		$this->add_clause( $values, $key, 'NOT IN' );
 		return $this;
 	}
@@ -222,7 +222,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return Meta_Query
 	 */
-	public function between( $key, array $values ) : Meta_Query {
+	public function between( $key, array $values ): Meta_Query {
 		$this->add_clause( $values, $key, 'BETWEEN' );
 		return $this;
 	}
@@ -236,7 +236,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_between( $key, array $values ) : Meta_Query {
+	public function not_between( $key, array $values ): Meta_Query {
 		$this->add_clause( $values, $key, 'NOT BETWEEN' );
 		return $this;
 	}
@@ -249,7 +249,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return Meta_Query
 	 */
-	public function exists( $key ) : Meta_Query {
+	public function exists( $key ): Meta_Query {
 		$this->add_clause( '', $key, 'EXISTS' );
 		return $this;
 	}
@@ -262,7 +262,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return Meta_Query
 	 */
-	public function not_exists( $key ) : Meta_Query {
+	public function not_exists( $key ): Meta_Query {
 		$this->add_clause( '', $key, 'NOT EXISTS' );
 		return $this;
 	}
@@ -280,22 +280,22 @@ class Meta_Query extends Clause_Abstract {
 	 * `type_key` - MySQL data type the meta key CAST to for comparison.
 	 * Accepts 'BINARY' for case-sensitive regular expression comparisons.
 	 *
-	 * @phpstan-param static::TYPE_* $type
-	 * @phpstan-param static::KEY_*  $compare_key
+	 * @phpstan-param static::TYPE_*         $type
+	 * @phpstan-param static::KEY_*          $compare_key
 	 * @phpstan-param ''|static::TYPE_BINARY $type_key
 	 *
-	 * @param string                 $type        - Type of data.
-	 * @param string                 $compare_key - How to compare the meta_key.
-	 * @param string                 $type_key    - Support `BINARY` meta key types.
+	 * @param string                         $type        - Type of data.
+	 * @param string                         $compare_key - How to compare the meta_key.
+	 * @param string                         $type_key    - Support `BINARY` meta key types.
 	 *
 	 * @throws \LogicException - If called before a clause is available.
 	 *
 	 * @return Meta_Query
 	 */
-	public function advanced( string $type = '', string $compare_key = '', string $type_key = '' ) : Meta_Query {
+	public function advanced( string $type = '', string $compare_key = '', string $type_key = '' ): Meta_Query {
 		$current = \array_key_last( $this->clauses );
 		if ( ! is_numeric( $current ) ) {
-			throw new \LogicException( __( 'You must create a meta clause before you add advanced parameters to it!', 'lipe' ) );
+			throw new \LogicException( esc_html__( 'You must create a meta clause before you add advanced parameters to it!', 'lipe' ) );
 		}
 		$current = \array_key_last( $this->clauses );
 		$this->clauses[ $current ] = \array_merge(
@@ -313,10 +313,15 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @param Meta_Query_Interface $args_class - The class to add the meta_query to.
 	 *
+	 * @throws \LogicException - If called with access to the `meta_query` property.
+	 *
 	 * @return void
 	 */
-	public function flatten( $args_class ) : void {
+	public function flatten( $args_class ): void {
 		$this->extract_nested( $this->clauses, $this );
+		if ( ! property_exists( $args_class, 'meta_query' ) ) {
+			throw new \LogicException( esc_html__( 'The provided class does not support meta queries. Did you use the `Meta_Query_Trait`?', 'lipe' ) );
+		}
 		if ( ! isset( $args_class->meta_query ) ) {
 			$args_class->meta_query = [];
 		}
@@ -337,7 +342,7 @@ class Meta_Query extends Clause_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function add_clause( $value, $key, string $compare ) : void {
+	protected function add_clause( $value, $key, string $compare ): void {
 		$clause = \array_filter( \compact( 'key', 'value', 'compare' ) );
 		$this->clauses[] = $clause;
 	}
