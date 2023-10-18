@@ -140,7 +140,12 @@ class Tax_Query extends Clause_Abstract {
 	 * @return void
 	 */
 	protected function add_clause( $terms, string $taxonomy, string $field, string $operator, bool $children = true ): void {
-		$clause = \array_filter( compact( 'taxonomy', 'field', 'terms', 'operator' ) );
+		$clause = \array_filter( [
+			'taxonomy'         => $taxonomy,
+			'field'            => $field,
+			'terms'            => $terms,
+			'operator'         => $operator,
+		] );
 
 		if ( false === $children ) {
 			$clause['include_children'] = false;

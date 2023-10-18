@@ -1,3 +1,6 @@
+rules:
+    - Lipe\Lib\Phpstan\Rules\Expressions\NoCompactRule
+
 parameters:
     level: 6
     strictRules:

@@ -300,7 +300,11 @@ class Meta_Query extends Clause_Abstract {
 		$current = \array_key_last( $this->clauses );
 		$this->clauses[ $current ] = \array_merge(
 			$this->clauses[ $current ],
-			\array_filter( compact( 'type', 'compare_key', 'type_key' ) )
+			\array_filter( [
+				'type'        => $type,
+				'compare_key' => $compare_key,
+				'type_key'    => $type_key,
+			] )
 		);
 		return $this;
 	}
@@ -343,7 +347,10 @@ class Meta_Query extends Clause_Abstract {
 	 * @return void
 	 */
 	protected function add_clause( $value, $key, string $compare ): void {
-		$clause = \array_filter( \compact( 'key', 'value', 'compare' ) );
-		$this->clauses[] = $clause;
+		$this->clauses[] = \array_filter( [
+			'key'     => $key,
+			'value'   => $value,
+			'compare' => $compare,
+		] );
 	}
 }

@@ -46,8 +46,11 @@ class Date_Query extends Clause_Abstract {
 	 * @return $this
 	 */
 	public function after( string $year, ?string $month = null, ?string $day = null ): Date_Query {
-		$clause = \array_filter( \compact( 'year', 'month', 'day' ) );
-		$this->update_current_clause( $clause, 'after' );
+		$this->update_current_clause( \array_filter( [
+			'year'  => $year,
+			'month' => $month,
+			'day'   => $day,
+		] ), 'after' );
 		return $this;
 	}
 
@@ -83,8 +86,11 @@ class Date_Query extends Clause_Abstract {
 	 * @return $this
 	 */
 	public function before( string $year, ?string $month = null, ?string $day = null ): Date_Query {
-		$clause = \array_filter( \compact( 'year', 'month', 'day' ) );
-		$this->update_current_clause( $clause, 'before' );
+		$this->update_current_clause( \array_filter( [
+			'year'  => $year,
+			'month' => $month,
+			'day'   => $day,
+		] ), 'before' );
 		return $this;
 	}
 
@@ -313,7 +319,7 @@ class Date_Query extends Clause_Abstract {
 	/**
 	 * Generate another clause for the date query.
 	 *
-	 * @see Date_QueryTest::test_next_clause() for example of the resulting array.
+	 * @see    Date_QueryTest::test_next_clause() for example of the resulting array.
 	 *
 	 * @notice Do not use with a single taxonomy array.
 	 *

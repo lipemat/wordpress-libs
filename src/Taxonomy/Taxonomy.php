@@ -713,7 +713,11 @@ class Taxonomy {
 	 * @return void
 	 */
 	public function set_default_term( string $slug, string $name, string $description = '' ): void {
-		$this->default_term = compact( 'description', 'name', 'slug' );
+		$this->default_term = [
+			'description' => $description,
+			'name'        => $name,
+			'slug'        => $slug,
+		];
 	}
 
 
