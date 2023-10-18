@@ -393,7 +393,7 @@ class Taxonomy {
 	 *
 	 * @return void
 	 */
-	public function hook() : void {
+	public function hook(): void {
 		// So we can add and edit stuff on init hook.
 		add_action( 'wp_loaded', [ $this, 'register' ], 8, 0 );
 		add_action( 'admin_menu', [ $this, 'add_as_submenu' ] );
@@ -419,7 +419,7 @@ class Taxonomy {
 	 *
 	 * @return Capabilities
 	 */
-	public function capabilities() : Capabilities {
+	public function capabilities(): Capabilities {
 		return new Capabilities( $this );
 	}
 
@@ -440,7 +440,7 @@ class Taxonomy {
 	 *
 	 * @return void
 	 */
-	public function meta_box( string $type, bool $checked_ontop = false ) : void {
+	public function meta_box( string $type, bool $checked_ontop = false ): void {
 		new Meta_Box( $this->taxonomy, $type, $checked_ontop );
 	}
 
@@ -451,7 +451,7 @@ class Taxonomy {
 	 *
 	 * @static
 	 */
-	public static function check_rewrite_rules() : void {
+	public static function check_rewrite_rules(): void {
 		$slugs = wp_list_pluck( static::$registry, 'slug' );
 		if ( get_option( static::REGISTRY_OPTION ) !== $slugs ) {
 			flush_rewrite_rules();
@@ -467,7 +467,7 @@ class Taxonomy {
 	 *
 	 * @return Taxonomy|null
 	 */
-	public static function get_taxonomy( string $taxonomy ) : ?Taxonomy {
+	public static function get_taxonomy( string $taxonomy ): ?Taxonomy {
 		return static::$registry[ $taxonomy ] ?? null;
 	}
 
@@ -481,7 +481,7 @@ class Taxonomy {
 	 *
 	 * @return void
 	 */
-	public function post_list_query_filters( \WP_Query $query ) : void {
+	public function post_list_query_filters( \WP_Query $query ): void {
 		global $pagenow;
 
 		if ( 'edit.php' !== $pagenow || empty( $query->query_vars['post_type'] ) || ! \in_array( $query->query_vars['post_type'], $this->post_types, true ) ) {
@@ -515,7 +515,7 @@ class Taxonomy {
 	 *
 	 * @return void
 	 */
-	public function post_list_filters() : void {
+	public function post_list_filters(): void {
 		global $typenow, $wp_query;
 		$been_filtered = false;
 
@@ -566,7 +566,7 @@ class Taxonomy {
 	 *
 	 * @return void
 	 */
-	public function add_initial_terms( array $terms = [] ) : void {
+	public function add_initial_terms( array $terms = [] ): void {
 		$this->initial_terms = $terms;
 	}
 
@@ -581,7 +581,7 @@ class Taxonomy {
 	 *
 	 * @param string $column - Column slug.
 	 */
-	public function remove_column( string $column ) : void {
+	public function remove_column( string $column ): void {
 		add_filter( "manage_edit-{$this->taxonomy}_columns", function( $columns ) use ( $column ) {
 			unset( $columns[ $column ] );
 			return $columns;
@@ -596,7 +596,7 @@ class Taxonomy {
 	 *
 	 * @return void
 	 */
-	protected function insert_initial_terms() : void {
+	protected function insert_initial_terms(): void {
 		$already_defaulted = get_option( 'lipe/lib/taxonomy/defaults-registry', [] );
 
 		if ( ! isset( $already_defaulted[ $this->get_slug() ] ) ) {
@@ -625,7 +625,7 @@ class Taxonomy {
 	 *
 	 * @return string
 	 */
-	public function get_slug() : string {
+	public function get_slug(): string {
 		if ( empty( $this->slug ) ) {
 			$this->slug = \strtolower( \str_replace( ' ', '-', $this->taxonomy ) );
 		}
@@ -648,7 +648,7 @@ class Taxonomy {
 	 *
 	 * @return void
 	 */
-	public function add_as_submenu() : void {
+	public function add_as_submenu(): void {
 		global $submenu;
 		$edit_tags_file = 'edit-tags.php?taxonomy=%s';
 
@@ -688,7 +688,7 @@ class Taxonomy {
 	 *
 	 * @param string $label - The label to use for the column.
 	 */
-	public function show_admin_column( string $label ) : void {
+	public function show_admin_column( string $label ): void {
 		Actions::in()->add_filter_all( array_map( function( $post_type ) {
 			return "manage_{$post_type}_posts_columns";
 		}, $this->post_types ), function( array $columns ) use ( $label ) {
@@ -712,7 +712,7 @@ class Taxonomy {
 	 *
 	 * @return void
 	 */
-	public function set_default_term( string $slug, string $name, string $description = '' ) : void {
+	public function set_default_term( string $slug, string $name, string $description = '' ): void {
 		$this->default_term = compact( 'description', 'name', 'slug' );
 	}
 
@@ -731,7 +731,7 @@ class Taxonomy {
 	 *
 	 * @return string
 	 */
-	public function set_current_menu( string $parent_file ) : string {
+	public function set_current_menu( string $parent_file ): string {
 		$screen = \get_current_screen();
 		if ( null === $screen || null === $this->show_in_menu ) {
 			return $parent_file;
@@ -749,7 +749,7 @@ class Taxonomy {
 	 *
 	 * @return void
 	 */
-	public function register() : void {
+	public function register(): void {
 		$this->register_taxonomy();
 		static::$registry[ $this->taxonomy ] = $this;
 		if ( \count( $this->initial_terms ) > 0 ) {
@@ -764,7 +764,7 @@ class Taxonomy {
 	 * Allow using a different process for registering taxonomies via
 	 * child classes.
 	 */
-	protected function register_taxonomy() : void {
+	protected function register_taxonomy(): void {
 		register_taxonomy( $this->taxonomy, $this->post_types, $this->taxonomy_args() );
 	}
 
@@ -776,7 +776,7 @@ class Taxonomy {
 	 *
 	 * @return array
 	 */
-	protected function taxonomy_args() : array {
+	protected function taxonomy_args(): array {
 		$args = [
 			'labels'                => $this->taxonomy_labels(),
 			'args'                  => $this->args ?? null,
@@ -817,7 +817,7 @@ class Taxonomy {
 	 *
 	 * @return array
 	 */
-	protected function taxonomy_labels( string $single = null, string $plural = null ) : array {
+	protected function taxonomy_labels( string $single = null, string $plural = null ): array {
 		$single = $single ?? $this->get_label();
 		$plural = $plural ?? $this->get_label( 'plural' );
 
@@ -866,7 +866,7 @@ class Taxonomy {
 	 *
 	 * @return string
 	 */
-	protected function get_label( string $quantity = 'singular' ) : string {
+	protected function get_label( string $quantity = 'singular' ): string {
 		if ( 'plural' === $quantity ) {
 			if ( '' === $this->label_plural ) {
 				$this->set_label( $this->label_singular );
@@ -891,7 +891,7 @@ class Taxonomy {
 	 *
 	 * @return void
 	 */
-	public function set_label( string $singular = '', string $plural = '' ) : void {
+	public function set_label( string $singular = '', string $plural = '' ): void {
 		if ( '' === $singular ) {
 			$singular = ucwords( \str_replace( '_', ' ', $this->taxonomy ) );
 		}
@@ -913,7 +913,7 @@ class Taxonomy {
 	 *
 	 * @return string
 	 */
-	public function get_menu_label() : string {
+	public function get_menu_label(): string {
 		if ( '' === $this->label_menu ) {
 			$this->label_menu = $this->label_plural;
 		}
@@ -927,7 +927,7 @@ class Taxonomy {
 	 *
 	 * @return array|null
 	 */
-	protected function rewrites() : ?array {
+	protected function rewrites(): ?array {
 		if ( empty( $this->rewrite ) ) {
 			return [
 				'slug'         => $this->get_slug(),
@@ -947,7 +947,7 @@ class Taxonomy {
 	 *
 	 * @return void
 	 */
-	public function set_menu_label( string $label ) : void {
+	public function set_menu_label( string $label ): void {
 		$this->label_menu = $label;
 	}
 }

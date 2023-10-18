@@ -77,7 +77,7 @@ trait Post_Object_Trait {
 	 *
 	 * @return \WP_Post|null
 	 */
-	public function get_object() : ?\WP_Post {
+	public function get_object(): ?\WP_Post {
 		if ( null === $this->post ) {
 			$this->post = get_post( $this->post_id );
 		}
@@ -91,7 +91,7 @@ trait Post_Object_Trait {
 	 *
 	 * @return int
 	 */
-	public function get_id() : int {
+	public function get_id(): int {
 		return $this->post_id;
 	}
 
@@ -102,7 +102,7 @@ trait Post_Object_Trait {
 	 *
 	 * @return string
 	 */
-	public function get_meta_type() : string {
+	public function get_meta_type(): string {
 		return Repo::META_POST;
 	}
 
@@ -117,5 +117,4 @@ trait Post_Object_Trait {
 	public static function factory( $post = null ) {
 		return new static( $post );
 	}
-
 }

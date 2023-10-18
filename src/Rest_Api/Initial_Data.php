@@ -31,7 +31,7 @@ class Initial_Data {
 	 *
 	 * @return bool
 	 */
-	public function is_retrieving() : bool {
+	public function is_retrieving(): bool {
 		return $this->retrieving;
 	}
 
@@ -46,7 +46,7 @@ class Initial_Data {
 	 *
 	 * @return array
 	 */
-	public function get_comments_data( array $comments, bool $with_links = false, $embed = false ) : array {
+	public function get_comments_data( array $comments, bool $with_links = false, $embed = false ): array {
 		$controller = new \WP_REST_Comments_Controller();
 
 		return \array_map( function( $comment ) use ( $controller, $with_links, $embed ) {
@@ -65,7 +65,7 @@ class Initial_Data {
 	 *
 	 * @return array
 	 */
-	public function get_post_data( ?array $posts = null, bool $with_links = false, $embed = false ) : array {
+	public function get_post_data( ?array $posts = null, bool $with_links = false, $embed = false ): array {
 		if ( null === $posts && ! is_404() ) {
 			$posts = $GLOBALS['wp_query']->posts;
 		}
@@ -91,7 +91,7 @@ class Initial_Data {
 	 *
 	 * @return array
 	 */
-	public function get_user_data( array $users, bool $with_links = false, $embed = false ) : array {
+	public function get_user_data( array $users, bool $with_links = false, $embed = false ): array {
 		$controller = new \WP_REST_Users_Controller();
 
 		return \array_map( function( $user ) use ( $controller, $with_links, $embed ) {
@@ -113,7 +113,7 @@ class Initial_Data {
 	 *
 	 * @return array
 	 */
-	public function get_term_data( array $terms, bool $with_links = false, $embed = false ) : array {
+	public function get_term_data( array $terms, bool $with_links = false, $embed = false ): array {
 		return \array_map( function( $term ) use ( $with_links, $embed ) {
 			$controller = new \WP_REST_Terms_Controller( $term->taxonomy );
 
@@ -132,7 +132,7 @@ class Initial_Data {
 	 *
 	 * @return array
 	 */
-	public function get_attachments_data( array $attachments, bool $with_links = false, $embed = false ) : array {
+	public function get_attachments_data( array $attachments, bool $with_links = false, $embed = false ): array {
 		$controller = new \WP_REST_Attachments_Controller( 'attachment' );
 
 		return \array_map( function( $attachment ) use ( $controller, $with_links, $embed ) {
@@ -155,7 +155,7 @@ class Initial_Data {
 	 *
 	 * @return array
 	 */
-	protected function get_response( \WP_REST_Controller $controller, $item, bool $with_links = false, $embed = false ) : array {
+	protected function get_response( \WP_REST_Controller $controller, $item, bool $with_links = false, $embed = false ): array {
 		$this->retrieving = true;
 		// Call before get_fields to allow `rest_api_init` to fire.
 		$server = rest_get_server();
@@ -185,7 +185,7 @@ class Initial_Data {
 	 *
 	 * @return \WP_REST_Request<array>
 	 */
-	protected function get_request() : \WP_REST_Request {
+	protected function get_request(): \WP_REST_Request {
 		$request = new \WP_REST_Request();
 		$request->set_param( 'context', 'view' );
 

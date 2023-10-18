@@ -62,7 +62,7 @@ class Zip {
 	 *
 	 * @return void
 	 */
-	protected function hook() : void {
+	protected function hook(): void {
 		add_action( Api::in()->get_action( static::ACTION ), [ $this, 'handle_request' ] );
 	}
 
@@ -73,7 +73,7 @@ class Zip {
 	 *
 	 * @return void
 	 */
-	public function handle_request() : void {
+	public function handle_request(): void {
 		$this->validate_request();
 
 		//phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -98,7 +98,7 @@ class Zip {
 	 *
 	 * @return void
 	 */
-	protected function set_paths( array $files, ?string $zip_name = null ) : void {
+	protected function set_paths( array $files, ?string $zip_name = null ): void {
 		$this->file_name = \md5( implode( '|', $files ) );
 		$this->file_path = sys_get_temp_dir() . '/' . $this->file_name;
 		$this->zip_path = $this->file_path . '/' . $this->file_name;
@@ -119,7 +119,7 @@ class Zip {
 	 *
 	 * @return void
 	 */
-	public function build_zip( array $files, ?string $zip_name = null ) : void {
+	public function build_zip( array $files, ?string $zip_name = null ): void {
 		$this->set_paths( $files, $zip_name );
 		$this->serve_existing_file();
 
@@ -174,7 +174,7 @@ class Zip {
 	 *
 	 * @return void
 	 */
-	protected function validate_request() : void {
+	protected function validate_request(): void {
 		//phpcs:disable WordPress.Security.NonceVerification.Missing
 		if ( empty( $_POST[ static::KEY ] ) || ( static::get_key() !== $_POST[ static::KEY ] ) ) {
 			die( 'Incorrect key sent.' );
@@ -194,7 +194,7 @@ class Zip {
 	 *
 	 * @return void
 	 */
-	protected function serve_existing_file() : void {
+	protected function serve_existing_file(): void {
 		if ( \is_readable( $this->zip_path ) ) {
 			header( 'Pragma: public' );
 			header( 'Expires: 0' );
@@ -217,7 +217,7 @@ class Zip {
 	 *
 	 * @return string
 	 */
-	public static function get_key() : string {
+	public static function get_key(): string {
 		return crypt( \AUTH_KEY, \AUTH_SALT );
 	}
 
@@ -231,7 +231,7 @@ class Zip {
 	 * @return array
 	 * @static
 	 */
-	public static function get_post_data_to_send( array $urls, ?string $name = null ) : array {
+	public static function get_post_data_to_send( array $urls, ?string $name = null ): array {
 		return [
 			static::KEY  => static::get_key(),
 			static::NAME => $name,
@@ -247,7 +247,7 @@ class Zip {
 	 *
 	 * @return string
 	 */
-	public static function get_url_for_endpoint() : string {
+	public static function get_url_for_endpoint(): string {
 		return Api::in()->get_url( static::ACTION );
 	}
 
@@ -259,7 +259,7 @@ class Zip {
 	 *
 	 * @return void
 	 */
-	public static function init() : void {
+	public static function init(): void {
 		Api::init_once();
 		static::singleton_init();
 	}

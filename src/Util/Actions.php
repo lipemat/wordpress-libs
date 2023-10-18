@@ -23,7 +23,7 @@ class Actions {
 	 *
 	 * @return void
 	 */
-	public function add_filter_as_action( string $filter, callable $callback, int $priority = 10 ) : void {
+	public function add_filter_as_action( string $filter, callable $callback, int $priority = 10 ): void {
 		add_filter( $filter, function( ...$args ) use ( $callback ) {
 			$callback( ...$args );
 
@@ -41,7 +41,7 @@ class Actions {
 	 *
 	 * @return void
 	 */
-	public function add_action_all( array $actions, callable $callback, int $priority = 10 ) : void {
+	public function add_action_all( array $actions, callable $callback, int $priority = 10 ): void {
 		array_walk( $actions, function( $action ) use ( $callback, $priority ) {
 			add_action( $action, $callback, $priority, 10 );
 		} );
@@ -57,7 +57,7 @@ class Actions {
 	 *
 	 * @return void
 	 */
-	public function add_filter_all( array $filters, callable $callback, int $priority = 10 ) : void {
+	public function add_filter_all( array $filters, callable $callback, int $priority = 10 ): void {
 		array_walk( $filters, function( $action ) use ( $callback, $priority ) {
 			add_filter( $action, $callback, $priority, 10 );
 		} );
@@ -77,7 +77,7 @@ class Actions {
 	 *
 	 * @return void
 	 */
-	public function add_single_filter( string $filter, callable $callback, int $priority = 10 ) : void {
+	public function add_single_filter( string $filter, callable $callback, int $priority = 10 ): void {
 		$function = function( ...$args ) use ( $filter, $callback, $priority, &$function ) {
 			remove_filter( $filter, $function, $priority );
 
@@ -100,7 +100,7 @@ class Actions {
 	 *
 	 * @return void
 	 */
-	public function add_single_action( string $action, callable $callback, int $priority = 10 ) : void {
+	public function add_single_action( string $action, callable $callback, int $priority = 10 ): void {
 		$function = function( ...$args ) use ( $action, $callback, $priority, &$function ) {
 			remove_action( $action, $function, $priority );
 			$callback( ...$args );
@@ -120,7 +120,7 @@ class Actions {
 	 *
 	 * @return void
 	 */
-	public function remove_action_always( string $action, callable $callback, int $priority = 10 ) : void {
+	public function remove_action_always( string $action, callable $callback, int $priority = 10 ): void {
 		add_action( $action, function() use ( $action, $callback, $priority ) {
 			remove_action( $action, $callback, $priority );
 		}, - 1 );
@@ -138,7 +138,7 @@ class Actions {
 	 *
 	 * @return void
 	 */
-	public function remove_filter_always( string $filter, callable $callback, int $priority = 10 ) : void {
+	public function remove_filter_always( string $filter, callable $callback, int $priority = 10 ): void {
 		add_filter( $filter, function( $value ) use ( $filter, $callback, $priority ) {
 			remove_filter( $filter, $callback, $priority );
 
@@ -163,7 +163,7 @@ class Actions {
 	 *
 	 * @return void
 	 */
-	public function add_filter_during( string $filter, callable $callback, string $start, string $end, int $priority = 10 ) : void {
+	public function add_filter_during( string $filter, callable $callback, string $start, string $end, int $priority = 10 ): void {
 		add_action( $start, function() use ( $filter, $callback, $priority ) {
 			add_filter( $filter, $callback, $priority, 10 );
 		}, - 1 );
@@ -184,7 +184,7 @@ class Actions {
 	 * @param callable $callback - Callback.
 	 * @param int      $priority - Priority of the action we are adding.
 	 */
-	public function add_looping_action( string $action, callable $callback, int $priority = 10 ) : void {
+	public function add_looping_action( string $action, callable $callback, int $priority = 10 ): void {
 		$function = function( ...$args ) use ( $action, $callback, $priority, &$function ) {
 			remove_action( $action, $function, $priority );
 			$callback( ...$args );
@@ -204,7 +204,7 @@ class Actions {
 	 * @param callable $callback - Callback.
 	 * @param int      $priority - Priority of the filter we are adding.
 	 */
-	public function add_looping_filter( string $filter, callable $callback, int $priority = 10 ) : void {
+	public function add_looping_filter( string $filter, callable $callback, int $priority = 10 ): void {
 		$function = function( ...$args ) use ( $filter, $callback, $priority, &$function ) {
 			remove_filter( $filter, $function, $priority );
 			$result = $callback( ...$args );

@@ -679,7 +679,7 @@ class Args extends Args_Abstract implements Meta_Query_Interface, Date_Query_Int
 	 *
 	 * @return void
 	 */
-	public function orderby( $orderby, string $order = '' ) : void {
+	public function orderby( $orderby, string $order = '' ): void {
 		switch ( true ) {
 			case \in_array( static::ORDERBY_POST_IN, (array) $orderby, true ):
 				if ( empty( $this->post__in ) ) {
@@ -712,7 +712,7 @@ class Args extends Args_Abstract implements Meta_Query_Interface, Date_Query_Int
 	 *
 	 * @return Tax_Query
 	 */
-	public function tax_query() : Tax_Query {
+	public function tax_query(): Tax_Query {
 		$query = new Tax_Query();
 		$this->clauses[] = $query;
 		return $query;
@@ -729,7 +729,7 @@ class Args extends Args_Abstract implements Meta_Query_Interface, Date_Query_Int
 	 *
 	 * @return void
 	 */
-	public function merge_query( \WP_Query $query ) : void {
+	public function merge_query( \WP_Query $query ): void {
 		foreach ( $query->query as $arg => $value ) {
 			if ( '' !== $value && \property_exists( $this, $arg ) && ! isset( $this->{$arg} ) ) {
 				$this->{$arg} = $value;
@@ -748,7 +748,7 @@ class Args extends Args_Abstract implements Meta_Query_Interface, Date_Query_Int
 	 *
 	 * @return array
 	 */
-	public function get_light_args() : array {
+	public function get_light_args(): array {
 		return Utils::in()->get_light_query_args( $this->get_args() );
 	}
 }

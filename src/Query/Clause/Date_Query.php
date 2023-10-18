@@ -45,7 +45,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return $this
 	 */
-	public function after( string $year, ?string $month = null, ?string $day = null ) : Date_Query {
+	public function after( string $year, ?string $month = null, ?string $day = null ): Date_Query {
 		$clause = \array_filter( \compact( 'year', 'month', 'day' ) );
 		$this->update_current_clause( $clause, 'after' );
 		return $this;
@@ -61,7 +61,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function after_string( string $date ) : Date_Query {
+	public function after_string( string $date ): Date_Query {
 		$this->update_current_clause( $date, 'after' );
 		return $this;
 	}
@@ -82,7 +82,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return $this
 	 */
-	public function before( string $year, ?string $month = null, ?string $day = null ) : Date_Query {
+	public function before( string $year, ?string $month = null, ?string $day = null ): Date_Query {
 		$clause = \array_filter( \compact( 'year', 'month', 'day' ) );
 		$this->update_current_clause( $clause, 'before' );
 		return $this;
@@ -98,7 +98,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function before_string( string $date ) : Date_Query {
+	public function before_string( string $date ): Date_Query {
 		$this->update_current_clause( $date, 'before' );
 
 		return $this;
@@ -115,7 +115,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function column( string $column ) : Date_Query {
+	public function column( string $column ): Date_Query {
 		$this->update_current_clause( $column, 'column' );
 		return $this;
 	}
@@ -132,7 +132,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function compare( string $compare ) : Date_Query {
+	public function compare( string $compare ): Date_Query {
 		$this->update_current_clause( $compare, 'compare' );
 		return $this;
 	}
@@ -148,7 +148,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function inclusive( bool $inclusive = true ) : Date_Query {
+	public function inclusive( bool $inclusive = true ): Date_Query {
 		$this->update_current_clause( $inclusive, 'inclusive' );
 		return $this;
 	}
@@ -162,7 +162,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function year( $year ) : Date_Query {
+	public function year( $year ): Date_Query {
 		$this->update_current_clause( $year, 'year' );
 		return $this;
 	}
@@ -178,7 +178,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function month( $month ) : Date_Query {
+	public function month( $month ): Date_Query {
 		$this->update_current_clause( $month, 'month' );
 		return $this;
 	}
@@ -194,7 +194,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function week( $week ) : Date_Query {
+	public function week( $week ): Date_Query {
 		$this->update_current_clause( $week, 'week' );
 		return $this;
 	}
@@ -208,7 +208,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @param int|int[]                                $day - Day of the month to retrieve posts for.
 	 */
-	public function day( $day ) : Date_Query {
+	public function day( $day ): Date_Query {
 		$this->update_current_clause( $day, 'day' );
 		return $this;
 	}
@@ -224,7 +224,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function hour( $hour ) : Date_Query {
+	public function hour( $hour ): Date_Query {
 		$this->update_current_clause( $hour, 'hour' );
 		return $this;
 	}
@@ -240,7 +240,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function minute( $minute ) : Date_Query {
+	public function minute( $minute ): Date_Query {
 		$this->update_current_clause( $minute, 'minute' );
 		return $this;
 	}
@@ -256,7 +256,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function second( $second ) : Date_Query {
+	public function second( $second ): Date_Query {
 		$this->update_current_clause( $second, 'second' );
 		return $this;
 	}
@@ -272,7 +272,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function dayofyear( $dayofyear ) : Date_Query {
+	public function dayofyear( $dayofyear ): Date_Query {
 		$this->update_current_clause( $dayofyear, 'dayofyear' );
 		return $this;
 	}
@@ -288,7 +288,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function dayofweek( $dayofweek ) : Date_Query {
+	public function dayofweek( $dayofweek ): Date_Query {
 		$this->update_current_clause( $dayofweek, 'dayofweek' );
 		return $this;
 	}
@@ -304,7 +304,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function dayofweek_iso( $dayofweek_iso ) : Date_Query {
+	public function dayofweek_iso( $dayofweek_iso ): Date_Query {
 		$this->update_current_clause( $dayofweek_iso, 'dayofweek_iso' );
 		return $this;
 	}
@@ -319,7 +319,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return Date_Query
 	 */
-	public function next_clause() : Date_Query {
+	public function next_clause(): Date_Query {
 		if ( empty( $this->clauses['relation'] ) ) {
 			$this->relation();
 		}
@@ -339,7 +339,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return void
 	 */
-	public function flatten( $args_class ) : void {
+	public function flatten( $args_class ): void {
 		$this->extract_nested( $this->clauses, $this );
 		if ( ! isset( $args_class->date_query ) ) {
 			$args_class->date_query = [];
@@ -361,7 +361,7 @@ class Date_Query extends Clause_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function update_current_clause( $value, string $key ) : void {
+	protected function update_current_clause( $value, string $key ): void {
 		if ( empty( $this->clauses[ $this->current_index ] ) ) {
 			$this->clauses[ $this->current_index ] = [];
 		}

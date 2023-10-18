@@ -465,7 +465,7 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	public function hook() : void {
+	public function hook(): void {
 		// allow methods added to the init hook to customize the post type.
 		add_action( 'wp_loaded', [ $this, 'register' ], 8, 0 );
 
@@ -487,7 +487,7 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	public static function check_rewrite_rules() : void {
+	public static function check_rewrite_rules(): void {
 		$slugs = wp_list_pluck( static::$registry, 'slug' );
 		if ( get_option( static::REGISTRY_OPTION ) !== $slugs ) {
 			\flush_rewrite_rules();
@@ -501,7 +501,7 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	public function register() : void {
+	public function register(): void {
 		$this->handle_block_editor_support();
 		$this->register_post_type();
 		static::$registry[ $this->post_type ] = $this;
@@ -515,7 +515,7 @@ class Custom_Post_Type {
 	 * Allow using a different process for registering post types via
 	 * child classes.
 	 */
-	protected function register_post_type() : void {
+	protected function register_post_type(): void {
 		\register_post_type( $this->post_type, $this->post_type_args() );
 	}
 
@@ -530,7 +530,7 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	protected function handle_block_editor_support() : void {
+	protected function handle_block_editor_support(): void {
 		if ( ! isset( $this->gutenberg_compatible ) ) {
 			return;
 		}
@@ -554,7 +554,7 @@ class Custom_Post_Type {
 	 *
 	 * @return array
 	 */
-	protected function post_type_args() : array {
+	protected function post_type_args(): array {
 		$args = [
 			'labels'                => $this->post_type_labels(),
 			'description'           => $this->description ?? '',
@@ -600,7 +600,7 @@ class Custom_Post_Type {
 	 *
 	 * @return array
 	 */
-	protected function post_type_labels( string $single = null, string $plural = null ) : array {
+	protected function post_type_labels( string $single = null, string $plural = null ): array {
 		$single = $single ?? $this->get_post_type_label();
 		$plural = $plural ?? $this->get_post_type_label( 'plural' );
 
@@ -658,7 +658,7 @@ class Custom_Post_Type {
 	 *
 	 * @return string
 	 */
-	public function get_post_type_label( string $quantity = 'singular' ) : string {
+	public function get_post_type_label( string $quantity = 'singular' ): string {
 		if ( 'plural' === $quantity ) {
 			if ( empty( $this->post_type_label_plural ) ) {
 				$this->set_post_type_label( $this->post_type_label_singular );
@@ -682,7 +682,7 @@ class Custom_Post_Type {
 	 *
 	 * @param string $label - Text to use.
 	 */
-	public function set_featured_image_labels( string $label ) : void {
+	public function set_featured_image_labels( string $label ): void {
 		$lowercase = strtolower( $label );
 
 		$this->labels = wp_parse_args( $this->labels, [
@@ -702,7 +702,7 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	public function set_post_type_label( string $singular = '', string $plural = '' ) : void {
+	public function set_post_type_label( string $singular = '', string $plural = '' ): void {
 		if ( '' === $singular ) {
 			$singular = str_replace( '_', ' ', $this->post_type );
 			$singular = ucwords( $singular );
@@ -734,7 +734,7 @@ class Custom_Post_Type {
 	 *
 	 * @return Labels
 	 */
-	public function labels() : Labels {
+	public function labels(): Labels {
 		return new Labels( $this );
 	}
 
@@ -766,7 +766,7 @@ class Custom_Post_Type {
 	 *
 	 * @return string
 	 */
-	public function get_slug() : string {
+	public function get_slug(): string {
 		if ( empty( $this->slug ) ) {
 			$this->slug = strtolower( str_replace( ' ', '-', $this->post_type ) );
 		}
@@ -787,7 +787,7 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	protected function add_administrator_capabilities( ?\WP_Post_Type $post_type ) : void {
+	protected function add_administrator_capabilities( ?\WP_Post_Type $post_type ): void {
 		if ( ! $this->auto_admin_caps || null === $post_type || ( 'post' === $post_type->capability_type && empty( $this->capabilities ) ) ) {
 			return;
 		}
@@ -836,7 +836,7 @@ class Custom_Post_Type {
 	 *
 	 * @return Custom_Post_Type
 	 */
-	public function gutenberg_template( array $template, $template_lock = false ) : Custom_Post_Type {
+	public function gutenberg_template( array $template, $template_lock = false ): Custom_Post_Type {
 		$this->template = $template;
 		$this->template_lock = $template_lock;
 
@@ -851,7 +851,7 @@ class Custom_Post_Type {
 	 *
 	 * @return ?Custom_Post_Type
 	 */
-	public function get_post_type( string $post_type ) : ?Custom_Post_Type {
+	public function get_post_type( string $post_type ): ?Custom_Post_Type {
 		return static::$registry[ $post_type ] ?? null;
 	}
 
@@ -866,7 +866,7 @@ class Custom_Post_Type {
 	 *
 	 * @return array
 	 */
-	public function adjust_bulk_edit_messages( array $bulk_messages, array $bulk_counts ) : array {
+	public function adjust_bulk_edit_messages( array $bulk_messages, array $bulk_counts ): array {
 		// phpcs:disable WordPress.WP.I18n
 		$bulk_messages[ $this->post_type ] = [
 			'updated'   => _n(
@@ -911,7 +911,7 @@ class Custom_Post_Type {
 	 *
 	 * @return array
 	 */
-	public function adjust_post_updated_messages( array $messages = [] ) : array {
+	public function adjust_post_updated_messages( array $messages = [] ): array {
 		global $post, $post_ID;
 
 		$lower_label = strtolower( $this->get_post_type_label() );
@@ -951,7 +951,7 @@ class Custom_Post_Type {
 	 *
 	 * @return Capabilities
 	 */
-	public function capabilities() : Capabilities {
+	public function capabilities(): Capabilities {
 		return new Capabilities( $this );
 	}
 
@@ -966,7 +966,7 @@ class Custom_Post_Type {
 	 *
 	 * @return string
 	 */
-	public function get_post_type_archive_label( string $title ) : string {
+	public function get_post_type_archive_label( string $title ): string {
 		if ( is_post_type_archive( $this->post_type ) ) {
 			if ( '' !== $this->archive_label ) {
 				$title = $this->archive_label;
@@ -1008,7 +1008,7 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	public function add_support( $features ) : void {
+	public function add_support( $features ): void {
 		$features = (array) $features;
 		$this->supports = \array_unique( \array_merge( $this->supports, $features ) );
 	}
@@ -1024,7 +1024,7 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	public function remove_support( $features ) : void {
+	public function remove_support( $features ): void {
 		$features = (array) $features;
 		$this->supports = array_diff( $this->supports, $features );
 	}
@@ -1039,7 +1039,7 @@ class Custom_Post_Type {
 	 *
 	 * @param string $column - The column to remove.
 	 */
-	public function remove_column( string $column ) : void {
+	public function remove_column( string $column ): void {
 		add_filter( "manage_edit-{$this->post_type}_columns", function( $columns ) use ( $column ) {
 			unset( $columns[ $column ] );
 			return $columns;
@@ -1056,7 +1056,7 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	public function exclude_from_sitemaps() : void {
+	public function exclude_from_sitemaps(): void {
 		add_filter( 'wp_sitemaps_post_types', function( $types ) {
 			unset( $types[ $this->post_type ] );
 			return $types;
@@ -1073,7 +1073,7 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	public function disable_single() : void {
+	public function disable_single(): void {
 		$this->show_in_nav_menus = false;
 
 		add_filter( 'genesis_link_post_title', function( $is_link ) {
@@ -1108,7 +1108,7 @@ class Custom_Post_Type {
 	 *
 	 * @return Custom_Post_Type
 	 */
-	public static function factory( string $post_type ) : Custom_Post_Type {
+	public static function factory( string $post_type ): Custom_Post_Type {
 		return new static( $post_type );
 	}
 }

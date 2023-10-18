@@ -38,7 +38,7 @@ trait Menu_Item_Trait {
 	 *
 	 * @return \WP_Post|null
 	 */
-	public function get_object() : ?\WP_Post {
+	public function get_object(): ?\WP_Post {
 		if ( null === $this->post ) {
 			$this->post = get_post( $this->post_id );
 		}
@@ -71,5 +71,4 @@ trait Menu_Item_Trait {
 		}
 		return new static( $post );
 	}
-
 }

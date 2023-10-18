@@ -17,7 +17,7 @@ class Template {
 	 *
 	 * @return    string
 	 */
-	public function esc_attr( array $attributes ) : string {
+	public function esc_attr( array $attributes ): string {
 		$e = [];
 		foreach ( $attributes as $k => $v ) {
 			if ( \is_array( $v ) || \is_object( $v ) ) {
@@ -48,7 +48,7 @@ class Template {
 	 *
 	 * @return string
 	 */
-	public function get_template_contents( string $slug, ?string $name = null, $args = [] ) : string {
+	public function get_template_contents( string $slug, ?string $name = null, $args = [] ): string {
 		ob_start();
 		get_template_part( $slug, $name, $args );
 		return ob_get_clean();
@@ -73,7 +73,7 @@ class Template {
 	 *
 	 * @return string
 	 */
-	public function sanitize_html_class( string $css_class ) : string {
+	public function sanitize_html_class( string $css_class ): string {
 		// Strip out any %-encoded octets.
 		$sanitized = preg_replace( '/%[a-fA-F\d]{2}/', '', $css_class );
 		// Prefix any leading digits or hyphens with '_'.

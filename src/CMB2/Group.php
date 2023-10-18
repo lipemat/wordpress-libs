@@ -118,7 +118,7 @@ class Group extends Field {
 	 *
 	 * @return Group
 	 */
-	public function layout( string $layout ) : Group {
+	public function layout( string $layout ): Group {
 		if ( 'block' === $layout ) {
 			return $this;
 		}
@@ -144,7 +144,7 @@ class Group extends Field {
 	 *
 	 * @return void
 	 */
-	protected function add_field_to_group( Field $field ) : void {
+	protected function add_field_to_group( Field $field ): void {
 		if ( null === $this->box->cmb ) {
 			throw new \LogicException( __( 'You must add the group to the box before you add fields to the group.', 'lipe' ) );
 		}
@@ -166,7 +166,7 @@ class Group extends Field {
 	 *
 	 * @return array
 	 */
-	public function get_field_args() : array {
+	public function get_field_args(): array {
 		$args = parent::get_field_args();
 		unset( $args['box'], $args['fields'] );
 
@@ -185,7 +185,7 @@ class Group extends Field {
 	 *
 	 * @return void
 	 */
-	public function register_fields() : void {
+	public function register_fields(): void {
 		$this->register_meta();
 		array_map( function( Field $field ) {
 			$this->add_field_to_group( $field );
@@ -197,7 +197,7 @@ class Group extends Field {
 	 * Register the meta field with WP core for things like
 	 * `show_in_rest` and `default.
 	 */
-	protected function register_meta() : void {
+	protected function register_meta(): void {
 		$config = [
 			'single' => true,
 			'type'   => 'array',
@@ -251,7 +251,7 @@ class Group extends Field {
 	 *
 	 * @return array
 	 */
-	public function get_object_types() : array {
+	public function get_object_types(): array {
 		return $this->box->get_object_types();
 	}
 
@@ -261,7 +261,7 @@ class Group extends Field {
 	 *
 	 * @return bool
 	 */
-	public function is_group() : bool {
+	public function is_group(): bool {
 		return true;
 	}
 
@@ -273,7 +273,7 @@ class Group extends Field {
 	 *
 	 * @throws \LogicException - If trying to add to another group.
 	 */
-	public function group() : void {
+	public function group(): void {
 		throw new \LogicException( __( 'You cannot add a group to another group.', 'lipe' ) );
 	}
 }

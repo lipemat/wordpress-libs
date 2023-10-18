@@ -29,7 +29,7 @@ class Utils {
 	 *
 	 * @return array
 	 */
-	public function get_light_query_args( array $args ) : array {
+	public function get_light_query_args( array $args ): array {
 		return \array_merge( [
 			'no_found_rows'          => true,
 			'post_status'            => 'publish',

@@ -17,7 +17,7 @@ class Url {
 	 *
 	 * @return string
 	 */
-	public function get_current_url( bool $with_query = true ) : string {
+	public function get_current_url( bool $with_query = true ): string {
 		$prefix = is_ssl() ? 'https://' : 'http://';
 		$uri = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) );
 		if ( ! $with_query && '' !== $uri ) {

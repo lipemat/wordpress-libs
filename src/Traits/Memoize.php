@@ -119,7 +119,7 @@ trait Memoize {
 	 *
 	 * @return bool - Result of deleting the cache from external object cache.
 	 */
-	public function clear_single_item( string $identifier, ...$args ) : bool {
+	public function clear_single_item( string $identifier, ...$args ): bool {
 		$cache_key = $this->get_cache_key( $identifier, $args );
 		$nonce_key = "{$identifier}::once";
 		unset(
@@ -136,7 +136,7 @@ trait Memoize {
 	 *
 	 * @see Memoize::clear_single_item()
 	 */
-	public function clear_memoize_cache() : void {
+	public function clear_memoize_cache(): void {
 		$this->memoize_cache = [];
 		Cache::in()->flush_group( __CLASS__ );
 	}
@@ -158,7 +158,7 @@ trait Memoize {
 	 *
 	 * @return string
 	 */
-	protected function get_cache_key( string $identifier, array $args ) : string {
+	protected function get_cache_key( string $identifier, array $args ): string {
 		if ( \count( $args ) < 1 ) {
 			return $identifier;
 		}

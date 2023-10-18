@@ -51,7 +51,7 @@ class True_False extends \CMB2_Type_Checkbox {
 	 *
 	 * @return string
 	 */
-	protected function render_toggle_field( array $args ) : string {
+	protected function render_toggle_field( array $args ): string {
 		ob_start();
 		$args['class'] .= ' checkbox-toggle-checkbox';
 		$args = $this->parse_args( 'checkbox', $args );
@@ -84,7 +84,7 @@ class True_False extends \CMB2_Type_Checkbox {
 	 *
 	 * @return void
 	 */
-	protected function styles() : void {
+	protected function styles(): void {
 		static $displayed = false;
 		if ( $displayed ) {
 			return;

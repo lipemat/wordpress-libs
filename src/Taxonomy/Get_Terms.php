@@ -300,7 +300,7 @@ class Get_Terms extends Args_Abstract implements Meta_Query_Interface {
 	 *
 	 * @return array
 	 */
-	public function get_light_args() : array {
+	public function get_light_args(): array {
 		return \array_merge( [
 			'suppress_filters'       => false,
 			'update_term_meta_cache' => false,

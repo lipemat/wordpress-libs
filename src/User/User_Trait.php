@@ -91,7 +91,7 @@ trait User_Trait {
 	 *
 	 * @return int
 	 */
-	public function get_id() : int {
+	public function get_id(): int {
 		return $this->user_id;
 	}
 
@@ -101,7 +101,7 @@ trait User_Trait {
 	 *
 	 * @return \WP_User|null
 	 */
-	public function get_object() : ?\WP_User {
+	public function get_object(): ?\WP_User {
 		if ( null === $this->user ) {
 			$user = get_user_by( 'id', $this->user_id );
 			if ( false !== $user ) {
@@ -118,7 +118,7 @@ trait User_Trait {
 	 *
 	 * @return string
 	 */
-	public function get_meta_type() : string {
+	public function get_meta_type(): string {
 		return Repo::META_USER;
 	}
 
@@ -132,7 +132,7 @@ trait User_Trait {
 	 *
 	 * @return array
 	 */
-	protected function get_extended_properties() : array {
+	protected function get_extended_properties(): array {
 		return [
 			'deleted',
 			'description',

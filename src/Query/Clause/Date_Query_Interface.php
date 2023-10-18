@@ -13,5 +13,5 @@ interface Date_Query_Interface {
 	 *
 	 * @return Date_Query
 	 */
-	public function date_query() : Date_Query;
+	public function date_query(): Date_Query;
 }

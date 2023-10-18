@@ -16,7 +16,7 @@ trait Settings_Trait {
 	 *
 	 * @return string
 	 */
-	public function get_id() : string {
+	public function get_id(): string {
 		return static::NAME;
 	}
 
@@ -26,7 +26,7 @@ trait Settings_Trait {
 	 *
 	 * @return string
 	 */
-	public function get_meta_type() : string {
+	public function get_meta_type(): string {
 		return Repo::META_OPTION;
 	}
 
@@ -55,7 +55,7 @@ trait Settings_Trait {
 	 *
 	 * @return void
 	 */
-	public function update_option( string $key, ...$value ) : void {
+	public function update_option( string $key, ...$value ): void {
 		$this->update_meta( $key, ...$value );
 	}
 }

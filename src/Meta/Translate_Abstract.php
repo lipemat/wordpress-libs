@@ -43,7 +43,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return null|Field
 	 */
-	abstract protected function get_field( string $field_id ) : ?Field;
+	abstract protected function get_field( string $field_id ): ?Field;
 
 
 	/**
@@ -57,7 +57,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return bool
 	 */
-	public function supports_taxonomy_relationships( string $meta_type ) : bool {
+	public function supports_taxonomy_relationships( string $meta_type ): bool {
 		return 'post' === $meta_type;
 	}
 
@@ -138,7 +138,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function delete_meta_value( $object_id, string $key, string $meta_type ) : void {
+	protected function delete_meta_value( $object_id, string $key, string $meta_type ): void {
 		$field = $this->get_field( $key );
 		if ( null !== $field && null !== $field->group ) {
 			$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
@@ -165,7 +165,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return bool
 	 */
-	protected function get_checkbox_field_value( $object_id, string $key, string $meta_type ) : bool {
+	protected function get_checkbox_field_value( $object_id, string $key, string $meta_type ): bool {
 		$value = $this->get_meta_value( $object_id, $key, $meta_type );
 
 		return ( 'on' === $value );
@@ -187,7 +187,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function update_checkbox_field_value( $object_id, string $key, $checked, string $meta_type ) : void {
+	protected function update_checkbox_field_value( $object_id, string $key, $checked, string $meta_type ): void {
 		if ( empty( $checked ) ) {
 			$this->delete_meta_value( $object_id, $key, $meta_type );
 		} else {
@@ -208,7 +208,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return ?array
 	 */
-	protected function get_file_field_value( $object_id, string $key, string $meta_type ) : ?array {
+	protected function get_file_field_value( $object_id, string $key, string $meta_type ): ?array {
 		$url = $this->get_meta_value( $object_id, $key, $meta_type );
 		if ( ! empty( $url ) ) {
 			// Add the extra field so groups meta will be translated properly.
@@ -239,7 +239,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function update_file_field_value( $object_id, string $key, int $attachment_id, string $meta_type ) : void {
+	protected function update_file_field_value( $object_id, string $key, int $attachment_id, string $meta_type ): void {
 		// Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->fields[ $key ]->group ) {
 			$this->fields[ $key . '_id' ] = $this->fields[ $key ];
@@ -261,7 +261,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function delete_file_field_value( $object_id, string $key, string $meta_type ) : void {
+	protected function delete_file_field_value( $object_id, string $key, string $meta_type ): void {
 		// Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->fields[ $key ]->group ) {
 			$this->fields[ $key . '_id' ] = $this->fields[ $key ];
@@ -284,7 +284,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return array
 	 */
-	protected function get_group_field_value( $object_id, string $group_id, string $meta_type ) : array {
+	protected function get_group_field_value( $object_id, string $group_id, string $meta_type ): array {
 		$values = [];
 
 		$existing = $this->get_meta_value( $object_id, $group_id, $meta_type );
@@ -312,7 +312,7 @@ abstract class Translate_Abstract {
 	 * @param array                $values    - The values.
 	 * @param string               $meta_type - The meta type.
 	 */
-	protected function update_group_field_values( $object_id, string $group_id, array $values, string $meta_type ) : void {
+	protected function update_group_field_values( $object_id, string $group_id, array $values, string $meta_type ): void {
 		foreach ( $values as $_row => $_values ) {
 			$this->group_row = $_row;
 			foreach ( $this->get_group_fields( $group_id ) as $field ) {
@@ -360,7 +360,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return string[]
 	 */
-	protected function get_group_fields( string $group ) : array {
+	protected function get_group_fields( string $group ): array {
 		$groups = $this->once( function() {
 			$groups = [];
 			\array_map( function( Field $field ) use ( &$groups ) {
@@ -385,7 +385,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return \WP_Term[]
 	 */
-	protected function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : array {
+	protected function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ): array {
 		$taxonomy = $this->get_field( $field_id )->taxonomy;
 		if ( ! $this->supports_taxonomy_relationships( $meta_type ) ) {
 			return $this->maybe_use_main_blog( $field_id, function() use ( $object_id, $field_id, $meta_type ) {
@@ -418,7 +418,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function update_taxonomy_field_value( $object_id, string $key, array $terms, string $meta_type, bool $singular = false ) : void {
+	protected function update_taxonomy_field_value( $object_id, string $key, array $terms, string $meta_type, bool $singular = false ): void {
 		$field = $this->get_field( $key );
 		if ( null === $field ) {
 			return;
@@ -469,7 +469,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function delete_taxonomy_field_value( $object_id, string $field_id, string $meta_type ) : void {
+	protected function delete_taxonomy_field_value( $object_id, string $field_id, string $meta_type ): void {
 		if ( $this->supports_taxonomy_relationships( $meta_type ) ) {
 			$taxonomy = $this->get_field( $field_id )->taxonomy;
 			wp_delete_object_term_relationships( $object_id, $taxonomy );
@@ -509,7 +509,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return int|null
 	 */
-	protected function get_term_id_from_slug( string $key, $value ) : ?int {
+	protected function get_term_id_from_slug( string $key, $value ): ?int {
 		if ( ! is_numeric( $value ) ) {
 			$field = $this->get_field( $key );
 			if ( null === $field ) {

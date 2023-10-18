@@ -37,7 +37,7 @@ class Tax_Query extends Clause_Abstract {
 	 *
 	 * @return Tax_Query
 	 */
-	public function and( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ) : Tax_Query {
+	public function and( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ): Tax_Query {
 		$this->add_clause( $terms, $taxonomy, $field, 'AND', $children );
 		return $this;
 	}
@@ -55,7 +55,7 @@ class Tax_Query extends Clause_Abstract {
 	 *
 	 * @return Tax_Query
 	 */
-	public function in( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ) : Tax_Query {
+	public function in( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ): Tax_Query {
 		$this->add_clause( $terms, $taxonomy, $field, 'IN', $children );
 		return $this;
 	}
@@ -73,7 +73,7 @@ class Tax_Query extends Clause_Abstract {
 	 *
 	 * @return Tax_Query
 	 */
-	public function not_in( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ) : Tax_Query {
+	public function not_in( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ): Tax_Query {
 		$this->add_clause( $terms, $taxonomy, $field, 'NOT IN', $children );
 		return $this;
 	}
@@ -86,7 +86,7 @@ class Tax_Query extends Clause_Abstract {
 	 *
 	 * @return Tax_Query
 	 */
-	public function exists( string $taxonomy ) : Tax_Query {
+	public function exists( string $taxonomy ): Tax_Query {
 		$this->add_clause( '', $taxonomy, '', 'EXISTS' );
 		return $this;
 	}
@@ -99,7 +99,7 @@ class Tax_Query extends Clause_Abstract {
 	 *
 	 * @return Tax_Query
 	 */
-	public function not_exists( string $taxonomy ) : Tax_Query {
+	public function not_exists( string $taxonomy ): Tax_Query {
 		$this->add_clause( '', $taxonomy, '', 'NOT EXISTS' );
 		return $this;
 	}
@@ -114,7 +114,7 @@ class Tax_Query extends Clause_Abstract {
 	 *
 	 * @return void
 	 */
-	public function flatten( $args_class ) : void {
+	public function flatten( $args_class ): void {
 		$this->extract_nested( $this->clauses, $this );
 		if ( ! isset( $args_class->tax_query ) ) {
 			$args_class->tax_query = [];
@@ -139,7 +139,7 @@ class Tax_Query extends Clause_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function add_clause( $terms, string $taxonomy, string $field, string $operator, bool $children = true ) : void {
+	protected function add_clause( $terms, string $taxonomy, string $field, string $operator, bool $children = true ): void {
 		$clause = \array_filter( compact( 'taxonomy', 'field', 'terms', 'operator' ) );
 
 		if ( false === $children ) {

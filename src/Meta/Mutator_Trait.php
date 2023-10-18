@@ -38,7 +38,7 @@ trait Mutator_Trait {
 	 *
 	 * @return string
 	 */
-	abstract public function get_meta_type() : string;
+	abstract public function get_meta_type(): string;
 
 
 	/**
@@ -147,7 +147,7 @@ trait Mutator_Trait {
 	 *
 	 * @return void
 	 */
-	public function update_meta( string $key, ...$value ) : void {
+	public function update_meta( string $key, ...$value ): void {
 		if ( \is_callable( $value[0] ) ) {
 			$value[0] = $value[0]( $this->get_meta( $key, $value[1] ?? null ) );
 		}
@@ -163,7 +163,7 @@ trait Mutator_Trait {
 	 *
 	 * @return void
 	 */
-	public function delete_meta( string $key ) : void {
+	public function delete_meta( string $key ): void {
 		Repo::instance()->delete_value( $this->get_id(), $key, $this->get_meta_type() );
 	}
 
@@ -188,7 +188,7 @@ trait Mutator_Trait {
 	 * @param mixed|callable $value    - If a callable is passed it will be called with the
 	 *                                 previous value as the only argument.
 	 */
-	public function offsetSet( $field_id, $value ) : void {
+	public function offsetSet( $field_id, $value ): void {
 		$this->update_meta( $field_id, $value );
 	}
 
@@ -198,7 +198,7 @@ trait Mutator_Trait {
 	 *
 	 * @param string $field_id - Meta key to delete.
 	 */
-	public function offsetUnset( $field_id ) : void {
+	public function offsetUnset( $field_id ): void {
 		$this->delete_meta( $field_id );
 	}
 
@@ -210,8 +210,7 @@ trait Mutator_Trait {
 	 *
 	 * @return bool
 	 */
-	public function offsetExists( $field_id ) : bool {
+	public function offsetExists( $field_id ): bool {
 		return ! empty( $this->get_meta( $field_id ) );
 	}
-
 }

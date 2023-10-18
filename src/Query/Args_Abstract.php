@@ -42,7 +42,7 @@ abstract class Args_Abstract {
 	 *
 	 * @return array
 	 */
-	public function get_args() : array {
+	public function get_args(): array {
 		foreach ( $this->clauses as $clause ) {
 			$clause->flatten( $this );
 		}

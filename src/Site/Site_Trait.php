@@ -69,7 +69,7 @@ trait Site_Trait {
 	 *
 	 * @return \WP_Site|null
 	 */
-	public function get_object() : ?\WP_Site {
+	public function get_object(): ?\WP_Site {
 		if ( null === $this->site ) {
 			$this->site = \get_site( $this->blog_id );
 		}
@@ -83,7 +83,7 @@ trait Site_Trait {
 	 *
 	 * @return int
 	 */
-	public function get_id() : int {
+	public function get_id(): int {
 		return $this->blog_id;
 	}
 
@@ -93,7 +93,7 @@ trait Site_Trait {
 	 *
 	 * @return string
 	 */
-	public function get_meta_type() : string {
+	public function get_meta_type(): string {
 		return Repo::META_BLOG;
 	}
 
@@ -106,7 +106,7 @@ trait Site_Trait {
 	 *
 	 * @return array
 	 */
-	protected function get_extended_properties() : array {
+	protected function get_extended_properties(): array {
 		return [
 			'id',
 			'network_id',
@@ -128,5 +128,4 @@ trait Site_Trait {
 	public static function factory( $site = null ) {
 		return new static( $site );
 	}
-
 }

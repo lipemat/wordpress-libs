@@ -480,7 +480,7 @@ class Get_Comments extends Args_Abstract implements Meta_Query_Interface, Date_Q
 	 *
 	 * @return void
 	 */
-	public function orderby( $orderby, string $order = '' ) : void {
+	public function orderby( $orderby, string $order = '' ): void {
 		switch ( true ) {
 			case \in_array( static::ORDERBY_COMMENT_IN, (array) $orderby, true ):
 				if ( empty( $this->comment__in ) ) {
@@ -510,7 +510,7 @@ class Get_Comments extends Args_Abstract implements Meta_Query_Interface, Date_Q
 	 *
 	 * @return void
 	 */
-	public function merge_query( \WP_Comment_Query $query ) : void {
+	public function merge_query( \WP_Comment_Query $query ): void {
 		foreach ( $query->query_vars as $arg => $value ) {
 			if ( null === $value || '' === $value ) {
 				continue;
@@ -531,7 +531,7 @@ class Get_Comments extends Args_Abstract implements Meta_Query_Interface, Date_Q
 	 *
 	 * @return array
 	 */
-	public function get_light_args() : array {
+	public function get_light_args(): array {
 		return \array_merge( [
 			'update_comment_post_cache' => false,
 			'update_comment_meta_cache' => false,

@@ -22,7 +22,7 @@ class Arrays {
 	 *
 	 * @return array
 	 */
-	public function chunk_to_associative( array $array ) : array {
+	public function chunk_to_associative( array $array ): array {
 		$assoc = [];
 		foreach ( \array_chunk( $array, 2 ) as $pair ) {
 			if ( 2 === \count( $pair ) ) {
@@ -50,7 +50,7 @@ class Arrays {
 	 *
 	 * @return array
 	 */
-	public function clean( array $array, bool $preserve_keys = true ) : array {
+	public function clean( array $array, bool $preserve_keys = true ): array {
 		$clean = \array_unique( \array_filter( \array_map( function( $value ) {
 			if ( \is_string( $value ) ) {
 				return \trim( $value );
@@ -76,7 +76,7 @@ class Arrays {
 	 *
 	 * @return array
 	 */
-	public function map_recursive( callable $callback, array $array ) : array {
+	public function map_recursive( callable $callback, array $array ): array {
 		$output = [];
 		foreach ( $array as $key => $data ) {
 			if ( \is_array( $data ) ) {
@@ -100,7 +100,7 @@ class Arrays {
 	 *
 	 * @return array
 	 */
-	public function merge_recursive( array $args, array $defaults ) : array {
+	public function merge_recursive( array $args, array $defaults ): array {
 		foreach ( $args as $key => $val ) {
 			if ( \is_array( $val ) && isset( $defaults[ $key ] ) && \is_array( $defaults[ $key ] ) ) {
 				$defaults[ $key ] = $this->merge_recursive( $val, $defaults[ $key ] );
@@ -122,7 +122,7 @@ class Arrays {
 	 *
 	 * @return array
 	 */
-	public function map_assoc( callable $callback, array $array ) : array {
+	public function map_assoc( callable $callback, array $array ): array {
 		return \array_combine( \array_keys( $array ), \array_map( $callback, $array, \array_keys( $array ) ) );
 	}
 
@@ -135,7 +135,7 @@ class Arrays {
 	 *
 	 * @return array
 	 */
-	public function recursive_unset( string $key, array $array ) : array {
+	public function recursive_unset( string $key, array $array ): array {
 		unset( $array[ $key ] );
 		foreach ( $array as $_key => $_values ) {
 			if ( \is_array( $_values ) ) {
@@ -214,7 +214,7 @@ class Arrays {
 	 *
 	 * @return array
 	 */
-	public function flatten_assoc( callable $callback, array $array ) : array {
+	public function flatten_assoc( callable $callback, array $array ): array {
 		$pairs = \array_map( $callback, $array );
 		$array = [];
 		foreach ( $pairs as $pair ) {
@@ -237,7 +237,7 @@ class Arrays {
 	 *
 	 * @return array
 	 */
-	public function list_pluck( array $array, array $keys ) : array {
+	public function list_pluck( array $array, array $keys ): array {
 		return \array_map( function( $item ) use ( $keys ) {
 			return $this->map_assoc( function( $i, $key ) use ( $item ) {
 				if ( \is_object( $item ) && \property_exists( $item, $key ) ) {

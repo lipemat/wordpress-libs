@@ -373,7 +373,7 @@ class Box {
 	 *
 	 * @return void
 	 */
-	public function description( string $description ) : void {
+	public function description( string $description ): void {
 		foreach ( $this->get_object_types() as $_type ) {
 			add_action( "cmb2_before_{$_type}_form_{$this->id}", function () use ( $description ) {
 				?>
@@ -411,7 +411,7 @@ class Box {
 	 *
 	 * @return void
 	 */
-	public function show_in_rest( $methods = \WP_REST_Server::READABLE ) : void {
+	public function show_in_rest( $methods = \WP_REST_Server::READABLE ): void {
 		if ( false !== $methods ) {
 			$this->show_in_rest = $methods;
 		} else {
@@ -431,7 +431,7 @@ class Box {
 	 *
 	 * @return void
 	 */
-	public function add_tab( string $id, string $label ) : void {
+	public function add_tab( string $id, string $label ): void {
 		$this->tabs[ $id ] = $label;
 		Tabs::init_once();
 	}
@@ -447,7 +447,7 @@ class Box {
 	 *
 	 * @return void
 	 */
-	public function remove_box_wrap() : void {
+	public function remove_box_wrap(): void {
 		$this->title = false;
 		$this->remove_box_wrap = true;
 	}
@@ -461,7 +461,7 @@ class Box {
 	 *
 	 * @return void
 	 */
-	public function tabs_style( string $layout = 'horizontal' ) : void {
+	public function tabs_style( string $layout = 'horizontal' ): void {
 		$this->tab_style = $layout;
 	}
 
@@ -475,7 +475,7 @@ class Box {
 	 *
 	 * @return string
 	 */
-	public function get_id() : string {
+	public function get_id(): string {
 		return $this->id;
 	}
 
@@ -485,7 +485,7 @@ class Box {
 	 *
 	 * @return \CMB2
 	 */
-	public function get_box() : \CMB2 {
+	public function get_box(): \CMB2 {
 		if ( ! empty( $this->cmb ) ) {
 			return $this->cmb;
 		}
@@ -502,7 +502,7 @@ class Box {
 	 *
 	 * @return array
 	 */
-	protected function get_args() : array {
+	protected function get_args(): array {
 		$args = [];
 		foreach ( get_object_vars( $this ) as $_var => $_value ) {
 			if ( 'cmb' === $_var || ! isset( $this->{$_var} ) || 'fields' === $_var ) {
@@ -530,7 +530,7 @@ class Box {
 	 *
 	 * @return array
 	 */
-	protected function get_meta_box_callback_args() : array {
+	protected function get_meta_box_callback_args(): array {
 		if ( ! isset( $this->mb_callback_args['__block_editor_compatible_meta_box'] ) ) {
 			$this->mb_callback_args['__block_editor_compatible_meta_box'] = $this->gutenberg_compatible;
 		}
@@ -553,7 +553,7 @@ class Box {
 	 *
 	 * @return void
 	 */
-	protected function add_field_to_box( Field $field ) : void {
+	protected function add_field_to_box( Field $field ): void {
 		$box = $this->get_box();
 		$box->add_field( $field->get_field_args(), $field->position );
 		$field->box_id = $this->id;
@@ -580,7 +580,7 @@ class Box {
 	 * @param Field $field  - The field to register.
 	 * @param array $config - The config to register.
 	 */
-	public function register_meta_on_all_types( Field $field, array $config ) : void {
+	public function register_meta_on_all_types( Field $field, array $config ): void {
 		if ( ! empty( $field->default ) ) {
 			$config['default'] = $field->default;
 		}
@@ -625,5 +625,4 @@ class Box {
 			}
 		}
 	}
-
 }

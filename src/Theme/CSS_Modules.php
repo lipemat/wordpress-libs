@@ -54,7 +54,7 @@ class CSS_Modules {
 	 *
 	 * @return void
 	 */
-	public function set_path( string $path, string $file_prepend = '' ) : void {
+	public function set_path( string $path, string $file_prepend = '' ): void {
 		$this->path = $path;
 		$this->prepend = $file_prepend;
 	}
@@ -70,7 +70,7 @@ class CSS_Modules {
 	 *
 	 * @return void
 	 */
-	public function use_combined_file( string $filename ) : void {
+	public function use_combined_file( string $filename ): void {
 		$this->combined_filename = $filename;
 	}
 
@@ -82,7 +82,7 @@ class CSS_Modules {
 	 *
 	 * @return array
 	 */
-	public function styles( string $file ) : array {
+	public function styles( string $file ): array {
 		$file_with_prefix = $this->prepend . $file . '.pcss';
 		if ( '' !== $this->combined_filename ) {
 			if ( \substr( $file, 0, 3 ) === '../' ) {
@@ -106,7 +106,7 @@ class CSS_Modules {
 	 *
 	 * @return array
 	 */
-	protected function get_combined_css_classes() : array {
+	protected function get_combined_css_classes(): array {
 		return $this->once( function() {
 			try {
 				//phpcs:ignore -- Reading local file.
@@ -117,5 +117,4 @@ class CSS_Modules {
 			return (array) $classes;
 		}, __METHOD__ );
 	}
-
 }

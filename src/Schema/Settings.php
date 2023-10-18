@@ -172,7 +172,7 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	abstract protected function add_settings() : void;
+	abstract protected function add_settings(): void;
 
 
 	/**
@@ -201,7 +201,7 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	protected function fill_class_vars() : void {
+	protected function fill_class_vars(): void {
 		if ( empty( $this->title ) ) {
 			$this->title = __( 'Settings', 'lipe' );
 		}
@@ -231,7 +231,7 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	public function hook() : void {
+	public function hook(): void {
 		if ( $this->network ) {
 			add_action( 'network_admin_menu', [ $this, 'register_settings_page' ], 10, 0 );
 			add_action( 'network_admin_edit_' . $this->slug, [ $this, 'save_network_settings' ], 10, 0 );
@@ -248,7 +248,7 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	public function maybe_run_settings_save() : void {
+	public function maybe_run_settings_save(): void {
 		//phpcs:ignore
 		if ( ! empty( $_POST['settings_page_slug'] ) && ( $_POST['settings_page_slug'] === $this->slug ) && method_exists( $this, 'on_settings_save' ) ) {
 			$this->on_settings_save();
@@ -264,7 +264,7 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	public function set_default( string $field, $value ) : void {
+	public function set_default( string $field, $value ): void {
 		$this->defaults[ $field ] = $value;
 	}
 
@@ -275,7 +275,7 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	public function save_network_settings() : void {
+	public function save_network_settings(): void {
 		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], $this->slug . '-options' ) ) {
 			return;
 		}
@@ -319,7 +319,7 @@ abstract class Settings {
 	 *
 	 * @return string
 	 */
-	protected function get_field_name( string $field ) : string {
+	protected function get_field_name( string $field ): string {
 		if ( empty( $this->namespace ) ) {
 			return $field;
 		}
@@ -339,7 +339,7 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	public function register_settings_page() : void {
+	public function register_settings_page(): void {
 		if ( ! empty( $this->parent_menu_slug ) ) {
 			add_submenu_page(
 				$this->parent_menu_slug,
@@ -407,7 +407,7 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	public function field( string $field ) : void {
+	public function field( string $field ): void {
 		$field = $this->get_field_name( $field );
 
 		$value = $this->get_option( $field );
@@ -471,7 +471,7 @@ abstract class Settings {
 	 *
 	 * @return string
 	 */
-	protected function get_non_namespaced_field( string $field ) : string {
+	protected function get_non_namespaced_field( string $field ): string {
 		if ( empty( $this->namespace ) ) {
 			return $field;
 		}
@@ -487,7 +487,7 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	public function display_settings_page() : void {
+	public function display_settings_page(): void {
 		?>
 		<div class="wrap">
 			<h2><?= esc_html( $this->title ) ?></h2>
@@ -529,7 +529,7 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	protected function tabbed_form() : void {
+	protected function tabbed_form(): void {
 		reset( $this->settings );
 
 		//phpcs:ignore
@@ -609,7 +609,7 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	protected function add_setting_section( string $slug, string $title ) : void {
+	protected function add_setting_section( string $slug, string $title ): void {
 		$this->settings[ $slug ]['title'] = $title;
 		if ( empty( $this->settings[ $slug ]['fields'] ) ) {
 			$this->settings[ $slug ]['fields'] = [];
@@ -631,8 +631,7 @@ abstract class Settings {
 	 *
 	 * @return void
 	 */
-	protected function add_setting( string $section, string $field, string $label ) : void {
+	protected function add_setting( string $section, string $field, string $label ): void {
 		$this->settings[ $section ]['fields'][ $field ] = $label;
 	}
-
 }

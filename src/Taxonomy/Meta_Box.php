@@ -65,7 +65,7 @@ class Meta_Box {
 	 * @param string $post_type - The post type when on a post edit screen.
 	 * @param mixed  $post      - Post object when on a post edit screen.
 	 */
-	public function replace_default_meta_box( string $post_type, $post ) : void {
+	public function replace_default_meta_box( string $post_type, $post ): void {
 		if ( ! $post instanceof \WP_Post ) {
 			return;
 		}
@@ -106,7 +106,7 @@ class Meta_Box {
 	 * @param \WP_Post            $post     The post object.
 	 * @param array<string,mixed> $meta_box The meta box arguments.
 	 */
-	public function do_meta_box( \WP_Post $post, array $meta_box ) : void {
+	public function do_meta_box( \WP_Post $post, array $meta_box ): void {
 		$object = get_taxonomy( $this->taxonomy );
 		$selected = wp_get_object_terms( $post->ID, $this->taxonomy, [
 			'fields' => 'ids',
@@ -210,7 +210,7 @@ class Meta_Box {
 	 *
 	 * @return \Walker
 	 */
-	protected function get_walker() : \Walker {
+	protected function get_walker(): \Walker {
 		if ( 'radio' === $this->type ) {
 			return new class() extends \Walker_Category_Checklist {
 				/**
@@ -224,7 +224,7 @@ class Meta_Box {
 				 *
 				 * @return void
 				 */
-				public function start_el( &$output, $data_object, $depth = 0, $args = [], $current_object_id = 0 ) : void {
+				public function start_el( &$output, $data_object, $depth = 0, $args = [], $current_object_id = 0 ): void {
 					$tax = get_taxonomy( $args['taxonomy'] );
 					if ( ! $tax ) {
 						return;
@@ -238,14 +238,14 @@ class Meta_Box {
 
 					// @todo Next time working on this, clean it up with `ob_start()`.
 					$output .= "\n<li id='{$args['taxonomy']}-{$data_object->term_id}'>" .
-							   '<label class="selectit">' .
-							   '<input value="' . esc_attr( $value ) . '" type="radio" name="tax_input[' . esc_attr( $args['taxonomy'] ) . '][]" ' .
-							   'id="in-' . esc_attr( $args['taxonomy'] ) . '-' . esc_attr( (string) $data_object->term_id ) . '"' .
-							   checked( $checked, true, false ) .
-							   ' /> ' .
+								'<label class="selectit">' .
+								'<input value="' . esc_attr( $value ) . '" type="radio" name="tax_input[' . esc_attr( $args['taxonomy'] ) . '][]" ' .
+								'id="in-' . esc_attr( $args['taxonomy'] ) . '-' . esc_attr( (string) $data_object->term_id ) . '"' .
+								checked( $checked, true, false ) .
+								' /> ' .
 					           //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-							   esc_html( apply_filters( 'the_category', $data_object->name ) ) .
-							   '</label>';
+								esc_html( apply_filters( 'the_category', $data_object->name ) ) .
+								'</label>';
 				}
 			};
 		}

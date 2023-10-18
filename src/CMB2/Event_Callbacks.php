@@ -108,7 +108,7 @@ class Event_Callbacks {
 	 *
 	 * @return void
 	 */
-	protected function register_hooks( string $cb_type ) : void {
+	protected function register_hooks( string $cb_type ): void {
 		// Taxonomy fields added to a `post` object.
 		if ( \in_array( $this->field->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) && Repo::in()->supports_taxonomy_relationships( $this->box_type ) ) {
 			$this->track_previous_taxonomy_value();
@@ -141,7 +141,7 @@ class Event_Callbacks {
 	 *
 	 * @return void
 	 */
-	public function taxonomy_change_hooks() : void {
+	public function taxonomy_change_hooks(): void {
 		add_action( 'set_object_terms', function( ...$args ) {
 			[ $object_id, $terms, $tt_ids, $taxonomy, $append, $old_tt_ids ] = $args;
 			if ( $this->field->taxonomy !== $taxonomy || $tt_ids === $old_tt_ids ) {
@@ -179,7 +179,7 @@ class Event_Callbacks {
 	 *
 	 * @return void
 	 */
-	protected function taxonomy_delete_hooks() : void {
+	protected function taxonomy_delete_hooks(): void {
 		add_action( 'deleted_term_relationships', function( ...$args ) {
 			[ $object_id, $tt_ids, $taxonomy ] = $args;
 			if ( $this->field->taxonomy !== $taxonomy || $tt_ids === $this->previous_value ) {
@@ -199,7 +199,7 @@ class Event_Callbacks {
 	 *
 	 * @return void
 	 */
-	protected function track_previous_taxonomy_value() : void {
+	protected function track_previous_taxonomy_value(): void {
 		add_action( 'delete_term_relationships', function( ...$args ) {
 			[ $object_id, $tt_ids, $taxonomy ] = $args;
 			if ( $this->field->taxonomy !== $taxonomy ) {
@@ -221,7 +221,7 @@ class Event_Callbacks {
 	 *
 	 * @return void
 	 */
-	public function options_change_hooks() : void {
+	public function options_change_hooks(): void {
 		$action = "update_option_{$this->box->get_id()}";
 		// Network level.
 		if ( \method_exists( $this->box, 'is_network' ) && $this->box->is_network() ) {
@@ -264,7 +264,7 @@ class Event_Callbacks {
 	 *
 	 * @return void
 	 */
-	public function options_delete_hooks() : void {
+	public function options_delete_hooks(): void {
 		$action = "update_option_{$this->box->get_id()}";
 		// Network level box.
 		if ( \method_exists( $this->box, 'is_network' ) && $this->box->is_network() ) {
@@ -285,7 +285,7 @@ class Event_Callbacks {
 	 *
 	 * @return void
 	 */
-	public function meta_change_hooks() : void {
+	public function meta_change_hooks(): void {
 		add_action( "added_{$this->box_type}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key, $value ] = $args;
 			if ( $this->key === $key ) {
@@ -314,7 +314,7 @@ class Event_Callbacks {
 	 *
 	 * @return void
 	 */
-	protected function meta_delete_hooks() : void {
+	protected function meta_delete_hooks(): void {
 		add_action( "deleted_{$this->box_type}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key, $value ] = $args;
 			if ( $this->key === $key && null !== $this->previous_value ) {
@@ -331,7 +331,7 @@ class Event_Callbacks {
 	 *
 	 * @return void
 	 */
-	protected function track_previous_meta_value() : void {
+	protected function track_previous_meta_value(): void {
 		add_action( "update_{$this->box_type}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key ] = $args;
 			if ( $this->key === $key ) {
@@ -355,7 +355,7 @@ class Event_Callbacks {
 	 *
 	 * @return void
 	 */
-	public function fire_change_callback( $object_id, $value ) : void {
+	public function fire_change_callback( $object_id, $value ): void {
 		\call_user_func(
 			$this->field->change_cb,
 			$object_id,
@@ -374,7 +374,7 @@ class Event_Callbacks {
 	 *
 	 * @return void
 	 */
-	public function fire_delete_callback( $object_id ) : void {
+	public function fire_delete_callback( $object_id ): void {
 		\call_user_func(
 			$this->field->delete_cb,
 			$object_id,
@@ -383,5 +383,4 @@ class Event_Callbacks {
 			$this->box_type
 		);
 	}
-
 }

@@ -41,7 +41,7 @@ trait Box_Trait {
 	 *
 	 * @return void
 	 */
-	protected function hook() : void {
+	protected function hook(): void {
 		$this->once( function() {
 			// Be sure to run register_shorthand fields on groups after the box.
 			if ( $this->is_group() ) {
@@ -63,7 +63,7 @@ trait Box_Trait {
 	 *
 	 * @return Field_Type
 	 */
-	public function field( string $id, string $name ) : Field_Type {
+	public function field( string $id, string $name ): Field_Type {
 		$this->hook();
 		$this->fields[ $id ] = new Field( $id, $name, $this );
 
@@ -91,7 +91,7 @@ trait Box_Trait {
 	 *
 	 * @return Group
 	 */
-	public function group( string $id, ?string $title = null, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, bool $sortable = true, bool $closed = false, ?string $remove_confirm = null ) : Group {
+	public function group( string $id, ?string $title = null, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, bool $sortable = true, bool $closed = false, ?string $remove_confirm = null ): Group {
 		$this->hook();
 		$group = new Group( $id, $title, $this, $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
 		$this->fields[ $id ] = $group;
@@ -110,7 +110,7 @@ trait Box_Trait {
 	 *
 	 * @return void
 	 */
-	public function register_fields() : void {
+	public function register_fields(): void {
 		$fields = $this->get_fields();
 		$show_in_rest = $this->show_in_rest;
 
@@ -138,7 +138,7 @@ trait Box_Trait {
 	 *
 	 * @param Field $field - The field to register.
 	 */
-	protected function register_meta( Field $field ) : void {
+	protected function register_meta( Field $field ): void {
 		if ( ! $this->is_allowed_to_register_meta( $field ) ) {
 			return;
 		}
@@ -190,7 +190,7 @@ trait Box_Trait {
 	 *
 	 * @param Field $field - The field to check.
 	 */
-	protected function selectively_show_in_rest( Field $field ) : void {
+	protected function selectively_show_in_rest( Field $field ): void {
 		if ( ! empty( $field->show_in_rest ) ) {
 			$this->show_in_rest = true;
 		} else {
@@ -211,7 +211,7 @@ trait Box_Trait {
 	 *
 	 * @return array
 	 */
-	public function translate_rest_keys( Field $field, array $config ) : array {
+	public function translate_rest_keys( Field $field, array $config ): array {
 		if ( isset( $config['show_in_rest'] ) ) {
 			if ( 'post' === $this->get_object_type() ) {
 				// Post type must support 'custom-fields' to allow REST meta.
@@ -237,7 +237,7 @@ trait Box_Trait {
 	 *
 	 * @return bool
 	 */
-	public function is_allowed_to_register_meta( Field $field ) : bool {
+	public function is_allowed_to_register_meta( Field $field ): bool {
 		return \in_array( $field->data_type, [ Repo::TYPE_CHECKBOX, Repo::TYPE_DEFAULT, Repo::TYPE_FILE ], true );
 	}
 
@@ -253,7 +253,7 @@ trait Box_Trait {
 	 *
 	 * @return bool
 	 */
-	protected function is_public_rest_data( Field $field ) : bool {
+	protected function is_public_rest_data( Field $field ): bool {
 		return $field->show_in_rest && ( \WP_REST_Server::ALLMETHODS === $field->show_in_rest );
 	}
 
@@ -263,7 +263,7 @@ trait Box_Trait {
 	 *
 	 * @return Field[]|Group[]
 	 */
-	protected function get_fields() : array {
+	protected function get_fields(): array {
 		return $this->fields;
 	}
 
@@ -273,7 +273,7 @@ trait Box_Trait {
 	 *
 	 * @return bool
 	 */
-	public function is_group() : bool {
+	public function is_group(): bool {
 		return false;
 	}
 
@@ -288,7 +288,7 @@ trait Box_Trait {
 	 *
 	 * @return string
 	 */
-	public function get_object_type() : string {
+	public function get_object_type(): string {
 		switch ( $this->object_types[0] ) {
 			case 'comment':
 			case 'options-page':
@@ -309,7 +309,7 @@ trait Box_Trait {
 	 *
 	 * @return array
 	 */
-	public function get_object_types() : array {
+	public function get_object_types(): array {
 		return $this->object_types;
 	}
 }

@@ -74,7 +74,7 @@ class Versions {
 	 *
 	 * @return void
 	 */
-	protected function hook() : void {
+	protected function hook(): void {
 		add_action( 'init', [ $this, 'run_updates' ], 99999 );
 	}
 
@@ -84,7 +84,7 @@ class Versions {
 	 *
 	 * @return string
 	 */
-	public function get_version() : string {
+	public function get_version(): string {
 		return static::$version;
 	}
 
@@ -100,7 +100,7 @@ class Versions {
 	 *
 	 * @return void
 	 */
-	public function once( string $key, callable $callback, $args = null ) : void {
+	public function once( string $key, callable $callback, $args = null ): void {
 		if ( ! isset( static::$once_run_before[ $key ] ) ) {
 			static::$once[ $key ] = [
 				'callable' => $callback,
@@ -125,7 +125,7 @@ class Versions {
 	 *
 	 * @return void
 	 */
-	public function add_update( $version, callable $callback, $args = null ) : void {
+	public function add_update( $version, callable $callback, $args = null ): void {
 		if ( version_compare( static::$version, (string) $version, '<' ) ) {
 			static::$updates[] = [
 				'version'  => (string) $version,
@@ -147,7 +147,7 @@ class Versions {
 	 *
 	 * @return void
 	 */
-	public function run_updates() : void {
+	public function run_updates(): void {
 		if ( ! empty( static::$once ) ) {
 			foreach ( static::$once as $_key => $_item ) {
 				if ( ! isset( static::$once_run_before[ $_key ] ) ) {

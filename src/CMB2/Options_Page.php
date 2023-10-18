@@ -194,7 +194,7 @@ class Options_Page extends Box {
 	 *
 	 * @return void
 	 */
-	public function network( bool $is_network = true ) : void {
+	public function network( bool $is_network = true ): void {
 		if ( $is_network ) {
 			$this->admin_menu_hook = 'network_admin_menu';
 		} else {
@@ -211,7 +211,7 @@ class Options_Page extends Box {
 	 *
 	 * @return void
 	 */
-	public function save_button( ?string $text ) : void {
+	public function save_button( ?string $text ): void {
 		$this->save_button = $text;
 		if ( null === $text ) {
 			add_action( "cmb2_before_options-page_form_{$this->id}", function () {
@@ -240,7 +240,7 @@ class Options_Page extends Box {
 	 *
 	 * @return bool
 	 */
-	public function is_network() : bool {
+	public function is_network(): bool {
 		return 'network_admin_menu' === $this->admin_menu_hook;
 	}
 
@@ -255,7 +255,7 @@ class Options_Page extends Box {
 	 *
 	 * @param \CMB2 $cmb - The CMB2 object.
 	 */
-	public function run_options_hookup_on_front_end( \CMB2 $cmb ) : void {
+	public function run_options_hookup_on_front_end( \CMB2 $cmb ): void {
 		if ( ! is_admin() ) {
 			$hookup = new \CMB2_Hookup( $cmb );
 			$hookup->options_page_hooks();
@@ -272,7 +272,7 @@ class Options_Page extends Box {
 	 * @param Field $field  - The field object.
 	 * @param array $config - The field config.
 	 */
-	public function register_meta_on_all_types( Field $field, array $config ) : void {
+	public function register_meta_on_all_types( Field $field, array $config ): void {
 		unset( $config['single'] );
 
 		if ( $field->show_in_rest ) {

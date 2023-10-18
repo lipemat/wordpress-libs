@@ -75,7 +75,7 @@ abstract class Post_List_Column {
 	 *
 	 * @return void
 	 */
-	public function hook() : void {
+	public function hook(): void {
 		global $pagenow;
 		if ( 'edit.php' === $pagenow && is_admin() ) {
 			add_action( 'restrict_manage_posts', [ $this, 'render_filter' ] );
@@ -95,7 +95,7 @@ abstract class Post_List_Column {
 	 *
 	 * @return void
 	 */
-	public function set_column_position( int $position ) : void {
+	public function set_column_position( int $position ): void {
 		$this->column_position = ( $position - 1 );
 	}
 
@@ -108,7 +108,7 @@ abstract class Post_List_Column {
 	 *
 	 * @return void
 	 */
-	public function maybe_render_column( string $column, int $post_id ) : void {
+	public function maybe_render_column( string $column, int $post_id ): void {
 		if ( $column === $this->column_slug ) {
 			$this->render_column( $column, $post_id );
 		}
@@ -124,7 +124,7 @@ abstract class Post_List_Column {
 	 *
 	 * @return array
 	 */
-	public function add_column( array $columns ) : array {
+	public function add_column( array $columns ): array {
 		if ( ! empty( $this->column_position ) ) {
 			$before = \array_slice( $columns, 0, $this->column_position );
 			$after = \array_slice( $columns, $this->column_position );
@@ -152,7 +152,7 @@ abstract class Post_List_Column {
 	 *
 	 * @return void
 	 */
-	public function maybe_filter_query( \WP_Query $query ) : void {
+	public function maybe_filter_query( \WP_Query $query ): void {
 		if ( empty( $query->query_vars['post_type'] ) || ! \in_array( $query->query_vars['post_type'], $this->post_types, true ) ) {
 			return;
 		}
@@ -178,7 +178,7 @@ abstract class Post_List_Column {
 	 *
 	 * @throws \RuntimeException - If not overridden.
 	 */
-	public function filter_query( $value, \WP_Query $query ) : \WP_Query {
+	public function filter_query( $value, \WP_Query $query ): \WP_Query {
 		throw new \RuntimeException( __( 'You must override the Post_List_Column::filter_query() method if you are using Post_List_Column::set_filters()', 'lipe' ) );
 	}
 
@@ -192,7 +192,7 @@ abstract class Post_List_Column {
 	 *
 	 * @return void
 	 */
-	public function render_filter() : void {
+	public function render_filter(): void {
 		global $typenow;
 
 		if ( empty( $this->filters ) || ! \in_array( $typenow, $this->post_types, true ) ) {
@@ -246,7 +246,7 @@ abstract class Post_List_Column {
 	 *
 	 * @return void
 	 */
-	public function set_filters( array $args ) : void {
+	public function set_filters( array $args ): void {
 		$defaults = [
 			'show_all' => false,
 			'name'     => __CLASS__,
@@ -255,5 +255,4 @@ abstract class Post_List_Column {
 
 		$this->filters = wp_parse_args( $args, $defaults );
 	}
-
 }

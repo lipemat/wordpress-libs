@@ -29,7 +29,7 @@ trait Date_Query_Trait {
 	 *
 	 * @return Date_Query
 	 */
-	public function date_query() : Date_Query {
+	public function date_query(): Date_Query {
 		$query = new Date_Query();
 		$this->clauses[] = $query;
 		return $query;

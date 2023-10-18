@@ -57,7 +57,7 @@ trait Taxonomy_Trait {
 	 *
 	 * @return \WP_Term|null
 	 */
-	public function get_object() : ?\WP_Term {
+	public function get_object(): ?\WP_Term {
 		if ( null !== $this->term ) {
 			return $this->term;
 		}
@@ -72,7 +72,7 @@ trait Taxonomy_Trait {
 	 *
 	 * @return int
 	 */
-	public function get_id() : int {
+	public function get_id(): int {
 		return $this->term_id;
 	}
 
@@ -82,7 +82,7 @@ trait Taxonomy_Trait {
 	 *
 	 * @return string
 	 */
-	public function get_meta_type() : string {
+	public function get_meta_type(): string {
 		return Repo::META_TERM;
 	}
 
@@ -99,5 +99,4 @@ trait Taxonomy_Trait {
 	public static function factory( $term ) {
 		return new static( $term );
 	}
-
 }

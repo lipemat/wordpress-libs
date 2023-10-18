@@ -42,7 +42,7 @@ class Autoloader {
 	 *
 	 * @return void
 	 */
-	public static function add( string $name_space, string $path ) : void {
+	public static function add( string $name_space, string $path ): void {
 		static::instance()->add_namespace( $name_space, $path );
 	}
 
@@ -54,7 +54,7 @@ class Autoloader {
 	 *
 	 * @return void
 	 */
-	public function register( bool $prepend = true ) : void {
+	public function register( bool $prepend = true ): void {
 		spl_autoload_register( [ $this, 'maybe_load_class' ], true, $prepend );
 	}
 
@@ -62,7 +62,7 @@ class Autoloader {
 	/**
 	 * Removes this instance from the registered autoloader.
 	 */
-	public function unregister() : void {
+	public function unregister(): void {
 		spl_autoload_unregister( [ $this, 'maybe_load_class' ] );
 	}
 
@@ -75,7 +75,7 @@ class Autoloader {
 	 *
 	 * @return void
 	 */
-	protected function add_namespace( string $name_space, string $path ) : void {
+	protected function add_namespace( string $name_space, string $path ): void {
 		$name_space = trim( $name_space, '\\' ) . '\\';
 		$path = rtrim( $path, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR;
 		$this->namespaces[] = [ $name_space, $path ];
@@ -90,7 +90,7 @@ class Autoloader {
 	 *
 	 * @return bool
 	 */
-	protected function maybe_load_class( string $class_name ) : bool {
+	protected function maybe_load_class( string $class_name ): bool {
 		$file = $this->find_file( $class_name );
 		if ( null !== $file ) {
 			require $file;
@@ -110,7 +110,7 @@ class Autoloader {
 	 *
 	 * @return ?string
 	 */
-	protected function find_file( string $class_name ) : ?string {
+	protected function find_file( string $class_name ): ?string {
 		$class_name = \ltrim( $class_name, '\\' );
 
 		foreach ( $this->namespaces as $current ) {

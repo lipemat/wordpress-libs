@@ -43,7 +43,7 @@ class Api {
 	 *
 	 * @return void
 	 */
-	public function hook() : void {
+	public function hook(): void {
 		add_action( 'init', function() {
 			$this->add_endpoint();
 		} );
@@ -58,7 +58,7 @@ class Api {
 	 *
 	 * @return bool
 	 */
-	public function is_doing_api() : bool {
+	public function is_doing_api(): bool {
 		return $this->doing_api;
 	}
 
@@ -71,7 +71,7 @@ class Api {
 	 *
 	 * @return string
 	 */
-	public function get_action( string $endpoint ) : string {
+	public function get_action( string $endpoint ): string {
 		return "lipe/lib/api/api/{$endpoint}";
 	}
 
@@ -95,7 +95,7 @@ class Api {
 	 *
 	 * @return string
 	 */
-	public function get_url( ?string $endpoint = null, array $data = [] ) : string {
+	public function get_url( ?string $endpoint = null, array $data = [] ): string {
 		$url = trailingslashit( $this->get_root_url() . $endpoint );
 
 		if ( empty( $data ) ) {
@@ -123,7 +123,7 @@ class Api {
 	 *
 	 * @return string
 	 */
-	public function get_root_url() : string {
+	public function get_root_url(): string {
 		return trailingslashit( trailingslashit( get_home_url() ) . static::ENDPOINT );
 	}
 
@@ -135,7 +135,7 @@ class Api {
 	 *
 	 * @return void
 	 */
-	protected function add_endpoint() : void {
+	protected function add_endpoint(): void {
 		add_rewrite_endpoint( 'api', EP_ROOT, static::NAME );
 
 		$this->run_for_version( 'flush_rewrite_rules', static::VERSION );
@@ -152,7 +152,7 @@ class Api {
 	 *
 	 * @return void
 	 */
-	protected function handle_request( \WP $wp ) : void {
+	protected function handle_request( \WP $wp ): void {
 		if ( empty( $wp->query_vars[ static::NAME ] ) ) {
 			return;
 		}

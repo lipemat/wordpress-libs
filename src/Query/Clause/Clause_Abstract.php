@@ -48,7 +48,7 @@ abstract class Clause_Abstract {
 	 *
 	 * @return void
 	 */
-	abstract public function flatten( $args_class ) : void;
+	abstract public function flatten( $args_class ): void;
 
 
 	/**
@@ -72,7 +72,7 @@ abstract class Clause_Abstract {
 	 *
 	 * @return static
 	 */
-	public function relation( string $relation = 'AND' ) : Clause_Abstract {
+	public function relation( string $relation = 'AND' ): Clause_Abstract {
 		$this->clauses['relation'] = $relation;
 
 		return $this;
@@ -88,7 +88,7 @@ abstract class Clause_Abstract {
 	 *
 	 * @return static
 	 */
-	public function nested_clause( string $relation = 'AND' ) : Clause_Abstract {
+	public function nested_clause( string $relation = 'AND' ): Clause_Abstract {
 		if ( empty( $this->clauses['relation'] ) ) {
 			$this->relation();
 		}
@@ -107,7 +107,7 @@ abstract class Clause_Abstract {
 	 *
 	 * @return static
 	 */
-	public function parent_clause() : Clause_Abstract {
+	public function parent_clause(): Clause_Abstract {
 		if ( null === $this->parent_clause ) {
 			throw new \LogicException( __( 'You cannot switch to a parent clause if you are not already nested.', 'lipe' ) );
 		}
@@ -126,7 +126,7 @@ abstract class Clause_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function extract_nested( array &$clauses, Clause_Abstract $level ) : void {
+	protected function extract_nested( array &$clauses, Clause_Abstract $level ): void {
 		if ( ! empty( $level->nested ) ) {
 			foreach ( $level->nested as $nested ) {
 				$clauses[] = $nested->clauses;

@@ -809,7 +809,7 @@ class Field {
 	 *
 	 * @return string
 	 */
-	public function get_id() : string {
+	public function get_id(): string {
 		return $this->id;
 	}
 
@@ -821,7 +821,7 @@ class Field {
 	 *
 	 * @return string
 	 */
-	public function get_name() : string {
+	public function get_name(): string {
 		return $this->name;
 	}
 
@@ -856,7 +856,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function char_counter( bool $count_words = false, int $max = null, bool $enforce = false, array $labels = [] ) : Field {
+	public function char_counter( bool $count_words = false, int $max = null, bool $enforce = false, array $labels = [] ): Field {
 		$this->char_counter = $count_words ? 'words' : true;
 
 		if ( null !== $max ) {
@@ -895,7 +895,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function column( $position = null, string $name = null, ?callable $display_cb = null, ?bool $disable_sorting = null ) : Field {
+	public function column( $position = null, string $name = null, ?callable $display_cb = null, ?bool $disable_sorting = null ): Field {
 		$this->column = [
 			'disable_sortable' => $disable_sorting ?? false,
 			'name'             => $name ?? $this->name,
@@ -930,7 +930,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function attributes( array $attributes ) : Field {
+	public function attributes( array $attributes ): Field {
 		$this->attributes = Arrays::in()->merge_recursive( $attributes, $this->attributes );
 
 		return $this;
@@ -953,7 +953,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function default( $default_value ) : Field {
+	public function default( $default_value ): Field {
 		if ( \is_callable( $default_value ) ) {
 			$this->default_cb = $default_value;
 			if ( 'options-page' === $this->box->get_object_type() ) {
@@ -988,7 +988,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function description( string $description ) : Field {
+	public function description( string $description ): Field {
 		$this->desc = $description;
 
 		return $this;
@@ -1000,7 +1000,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function disabled() : Field {
+	public function disabled(): Field {
 		$this->attributes( [ 'disabled' => 'disabled' ] );
 
 		return $this;
@@ -1017,7 +1017,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function escape_cb( callable $callback ) : Field {
+	public function escape_cb( callable $callback ): Field {
 		$this->escape_cb = $callback;
 		return $this;
 	}
@@ -1033,7 +1033,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ) : Field {
+	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ): Field {
 		// Ugh! Hack, so I can use a method from that class.
 		$mock = new class() extends \CMB2_Field {
 			/**
@@ -1053,7 +1053,7 @@ class Field {
 			 *
 			 * @return bool
 			 */
-			public function allowed( string $type ) : bool {
+			public function allowed( string $type ): bool {
 				if ( $this->repeatable_exception( $type ) ) {
 					return false;
 				}
@@ -1085,7 +1085,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function rest_value_cb( callable $callback ) : Field {
+	public function rest_value_cb( callable $callback ): Field {
 		$this->rest_value_cb = $callback;
 		return $this;
 	}
@@ -1100,7 +1100,7 @@ class Field {
 	 *
 	 * @return $this
 	 */
-	public function position( int $position = 1 ) : Field {
+	public function position( int $position = 1 ): Field {
 		$this->position = $position;
 
 		return $this;
@@ -1112,7 +1112,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function readonly() : Field {
+	public function readonly(): Field {
 		$disable_only = [
 			'select',
 			'select_timezone',
@@ -1144,7 +1144,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function required() : Field {
+	public function required(): Field {
 		// The only way a file field may be required is if the text field is showing.
 		if ( 'file' === $this->type ) {
 			$this->options['url'] = true;
@@ -1183,7 +1183,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function show_in_rest( $methods = \WP_REST_Server::ALLMETHODS ) : Field {
+	public function show_in_rest( $methods = \WP_REST_Server::ALLMETHODS ): Field {
 		if ( null !== $this->box && $this->box->is_group() ) {
 			_doing_it_wrong( __METHOD__, "Show in rest may only be added to whole group. Not a group's field .", '2.19.0' );
 		}
@@ -1202,7 +1202,7 @@ class Field {
 	 *
 	 * @return $this
 	 */
-	public function show_on_cb( callable $func ) : Field {
+	public function show_on_cb( callable $func ): Field {
 		$this->show_on_cb = $func;
 
 		return $this;
@@ -1225,7 +1225,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function store_user_terms_in_meta( bool $use_meta = true ) : Field {
+	public function store_user_terms_in_meta( bool $use_meta = true ): Field {
 		$box = $this->get_box();
 		if ( null !== $box && ( ! \in_array( $this->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) || ! \in_array( 'user', $box->get_object_types(), true ) ) ) {
 			_doing_it_wrong( __METHOD__, 'Storing user terms in meta only applies to taxonomy fields registered on users.', '3.14.0' );
@@ -1248,7 +1248,7 @@ class Field {
 	 *
 	 * @return $this
 	 */
-	public function query_args( array $args ) : Field {
+	public function query_args( array $args ): Field {
 		$this->query_args = $args;
 
 		return $this;
@@ -1267,7 +1267,7 @@ class Field {
 	 *
 	 * @return $this
 	 */
-	public function tab( string $id ) : Field {
+	public function tab( string $id ): Field {
 		Tabs::init_once();
 
 		$this->tab = $id;
@@ -1291,7 +1291,7 @@ class Field {
 	 *
 	 * @return Field_Type
 	 */
-	public function type() : Field_Type {
+	public function type(): Field_Type {
 		return new Field_Type( $this );
 	}
 
@@ -1307,7 +1307,7 @@ class Field {
 	 *
 	 * @return string
 	 */
-	public function get_type() : string {
+	public function get_type(): string {
 		return $this->type;
 	}
 
@@ -1319,7 +1319,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function render_row_cb( callable $callback ) : Field {
+	public function render_row_cb( callable $callback ): Field {
 		$this->render_row_cb = $callback;
 
 		return $this;
@@ -1340,7 +1340,7 @@ class Field {
 	 *
 	 * @return void
 	 */
-	public function set_type( string $type, string $data_type ) : void {
+	public function set_type( string $type, string $data_type ): void {
 		$this->type = $type;
 		$this->data_type = $data_type;
 	}
@@ -1353,7 +1353,7 @@ class Field {
 	 *
 	 * @return bool
 	 */
-	public function is_using_array_data() : bool {
+	public function is_using_array_data(): bool {
 		return $this->repeatable || 'multicheck' === $this->get_type() || 'multicheck_inline' === $this->get_type();
 	}
 
@@ -1365,7 +1365,7 @@ class Field {
 	 *
 	 * @return bool
 	 */
-	public function is_using_object_data() : bool {
+	public function is_using_object_data(): bool {
 		return ! $this->repeatable && 'file_list' === $this->get_type();
 	}
 
@@ -1393,7 +1393,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function delete_cb( callable $callback ) : Field {
+	public function delete_cb( callable $callback ): Field {
 		$this->delete_cb = $callback;
 		$this->event_callbacks[] = new Event_Callbacks( $this, Event_Callbacks::TYPE_DELETE );
 		return $this;
@@ -1425,7 +1425,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function change_cb( callable $callback ) : Field {
+	public function change_cb( callable $callback ): Field {
 		$this->change_cb = $callback;
 		$this->event_callbacks[] = new Event_Callbacks( $this, Event_Callbacks::TYPE_CHANGE );
 
@@ -1445,7 +1445,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function sanitization_cb( callable $callback ) : Field {
+	public function sanitization_cb( callable $callback ): Field {
 		if ( [ 'options-page' ] !== $this->box->get_object_types() && $this->box->is_allowed_to_register_meta( $this ) ) {
 			$this->sanitize_callback = $callback;
 		} else {
@@ -1528,7 +1528,7 @@ class Field {
 	 *
 	 * @return ?\CMB2_Field
 	 */
-	public function get_cmb2_field() : ?\CMB2_Field {
+	public function get_cmb2_field(): ?\CMB2_Field {
 		return cmb2_get_field( $this->box->get_id(), $this->get_id() );
 	}
 
@@ -1543,7 +1543,7 @@ class Field {
 	 *
 	 * @return array
 	 */
-	public function get_field_args() : array {
+	public function get_field_args(): array {
 		if ( empty( $this->type ) ) {
 			throw new \LogicException( __( 'You must specify a field type (use $field->type() ).', 'lipe' ) );
 		}
@@ -1569,7 +1569,7 @@ class Field {
 	 *
 	 * @throws \LogicException - When trying to add a field to another field.
 	 */
-	public function field( string $id, string $name ) : Field_Type {
+	public function field( string $id, string $name ): Field_Type {
 		throw new \LogicException( __( 'You cannot add a field to another field.', 'lipe' ) );
 	}
 }

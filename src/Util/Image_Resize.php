@@ -37,7 +37,7 @@ class Image_Resize {
 	 *
 	 * @return void
 	 */
-	public function hook() : void {
+	public function hook(): void {
 		if ( \defined( 'WP_CLI' ) && \WP_CLI ) {
 			return;
 		}
@@ -53,7 +53,7 @@ class Image_Resize {
 	 *
 	 * @return array<string, array{width: int, height: int, crop: bool}>
 	 */
-	public function get_image_sizes() : array {
+	public function get_image_sizes(): array {
 		return $this->image_sizes;
 	}
 
@@ -61,7 +61,7 @@ class Image_Resize {
 	/**
 	 * Convert other add_image_sizes from other plugins to the attribute of the class.
 	 */
-	public function add_other_image_sizes() : void {
+	public function add_other_image_sizes(): void {
 		global $_wp_additional_image_sizes;
 
 		do_action( 'lipe/lib/util/before_add_other_image_sizes' );
@@ -87,7 +87,7 @@ class Image_Resize {
 	 *
 	 * @return void
 	 */
-	public function add_image_size( string $name, $width, $height, bool $crop = false ) : void {
+	public function add_image_size( string $name, $width, $height, bool $crop = false ): void {
 		$this->image_sizes[ $name ] = [
 			'width'  => absint( $width ),
 			'height' => absint( $height ),
@@ -119,7 +119,7 @@ class Image_Resize {
 	 *
 	 * @return array{sizes: array<string, META>}
 	 */
-	public function populate_srcset_sizes( array $meta, array $size_array, string $src, int $attachment_id ) : array {
+	public function populate_srcset_sizes( array $meta, array $size_array, string $src, int $attachment_id ): array {
 		[ $width, $height ] = $size_array;
 		if ( $width < 1 ) {
 			return $meta;
@@ -439,7 +439,7 @@ class Image_Resize {
 	 *
 	 * @return array{width: int, height: int, url: string}|array<null>
 	 */
-	protected function resize( int $width, int $height, int $attach_id, ?string $img_url = null, bool $crop = false ) : array {
+	protected function resize( int $width, int $height, int $attach_id, ?string $img_url = null, bool $crop = false ): array {
 		if ( 0 !== $attach_id ) {
 			$image_src = wp_get_attachment_image_src( $attach_id, 'full' );
 			$file_path = get_attached_file( $attach_id );

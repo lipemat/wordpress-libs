@@ -55,7 +55,7 @@ class Crypt {
 	 *
 	 * @return string
 	 */
-	public function decrypt( string $message ) : ?string {
+	public function decrypt( string $message ): ?string {
 		try {
 			$json = json_decode( base64_decode( $message, true ), true, 512, JSON_THROW_ON_ERROR );
 		} catch ( \JsonException $e ) {
@@ -86,7 +86,7 @@ class Crypt {
 	 *
 	 * @return string
 	 */
-	public function encrypt( string $plaintext ) : ?string {
+	public function encrypt( string $plaintext ): ?string {
 		try {
 			$iv = random_bytes( openssl_cipher_iv_length( static::METHOD ) );
 			$salt = random_bytes( 256 );
@@ -117,7 +117,7 @@ class Crypt {
 	 *
 	 * @return int
 	 */
-	protected function get_key_size() : int {
+	protected function get_key_size(): int {
 		return preg_replace( '/\D/', '', static::METHOD ) / 4;
 	}
 

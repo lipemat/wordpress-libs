@@ -13,5 +13,5 @@ interface Meta_Query_Interface {
 	 *
 	 * @return Meta_Query
 	 */
-	public function meta_query() : Meta_Query;
+	public function meta_query(): Meta_Query;
 }

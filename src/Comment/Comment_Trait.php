@@ -62,7 +62,7 @@ trait Comment_Trait {
 	 *
 	 * @return \WP_Comment|null
 	 */
-	public function get_object() : ?\WP_Comment {
+	public function get_object(): ?\WP_Comment {
 		if ( null === $this->comment ) {
 			$this->comment = get_comment( $this->comment_id );
 		}
@@ -76,7 +76,7 @@ trait Comment_Trait {
 	 *
 	 * @return int
 	 */
-	public function get_id() : int {
+	public function get_id(): int {
 		return $this->comment_id;
 	}
 
@@ -89,7 +89,7 @@ trait Comment_Trait {
 	 *
 	 * @return \WP_Post|null
 	 */
-	public function get_comment_post() : ?\WP_Post {
+	public function get_comment_post(): ?\WP_Post {
 		return get_post( (int) $this->get_object()->comment_post_ID );
 	}
 
@@ -99,7 +99,7 @@ trait Comment_Trait {
 	 *
 	 * @return string
 	 */
-	public function get_meta_type() : string {
+	public function get_meta_type(): string {
 		return Repo::META_COMMENT;
 	}
 
@@ -114,5 +114,4 @@ trait Comment_Trait {
 	public static function factory( $comment ) {
 		return new static( $comment );
 	}
-
 }

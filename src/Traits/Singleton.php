@@ -24,7 +24,7 @@ trait Singleton {
 	 *
 	 * @return void
 	 */
-	public static function init() : void {
+	public static function init(): void {
 		static::$instance = static::instance();
 		// @phpstan-ignore-next-line -- Some contexts will always return true/false.
 		if ( method_exists( static::$instance, 'hook' ) ) {
@@ -42,7 +42,7 @@ trait Singleton {
 	 *
 	 * @return void
 	 */
-	public static function init_once() : void {
+	public static function init_once(): void {
 		if ( ! static::$inited ) {
 			static::init();
 		}

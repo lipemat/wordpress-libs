@@ -380,7 +380,7 @@ class Get_Users extends Args_Abstract implements Meta_Query_Interface {
 	 *
 	 * @return void
 	 */
-	public function orderby( string $orderby ) : void {
+	public function orderby( string $orderby ): void {
 		$this->orderby = $orderby;
 	}
 
@@ -395,7 +395,7 @@ class Get_Users extends Args_Abstract implements Meta_Query_Interface {
 	 *
 	 * @return void
 	 */
-	public function merge_query( \WP_User_Query $query ) : void {
+	public function merge_query( \WP_User_Query $query ): void {
 		foreach ( $query->query_vars as $arg => $value ) {
 			if ( '' !== $value && \property_exists( $this, $arg ) && ! isset( $this->{$arg} ) ) {
 				$this->{$arg} = $value;

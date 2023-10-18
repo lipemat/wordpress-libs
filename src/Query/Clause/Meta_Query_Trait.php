@@ -82,7 +82,7 @@ trait Meta_Query_Trait {
 	 *
 	 * @return Meta_Query
 	 */
-	public function meta_query() : Meta_Query {
+	public function meta_query(): Meta_Query {
 		$query = new Meta_Query();
 		$this->clauses[] = $query;
 		return $query;

@@ -54,7 +54,7 @@ class Tabs {
 	 *
 	 * @return void
 	 */
-	protected function hook() : void {
+	protected function hook(): void {
 		add_action( 'cmb2_before_form', [ $this, 'opening_div' ], 10, 4 );
 		add_action( 'cmb2_after_form', [ $this, 'closing_div' ], 20, 0 );
 
@@ -75,7 +75,7 @@ class Tabs {
 	 *
 	 * @return void
 	 */
-	public function opening_div( $cmb_id, $object_id, $object_type, $cmb ) : void {
+	public function opening_div( $cmb_id, $object_id, $object_type, $cmb ): void {
 		if ( ! (bool) $cmb->prop( 'tabs' ) ) {
 			return;
 		}
@@ -102,7 +102,7 @@ class Tabs {
 	 *
 	 * @return void
 	 */
-	public function closing_div() : void {
+	public function closing_div(): void {
 		if ( ! $this->has_tabs ) {
 			return;
 		}
@@ -110,7 +110,6 @@ class Tabs {
 
 		$this->has_tabs = false;
 		$this->fields_output = [];
-
 	}
 
 
@@ -124,7 +123,7 @@ class Tabs {
 	 *
 	 * @return void
 	 */
-	public function render_nav( $cmb_id, $object_id, $object_type, $cmb ) : void {
+	public function render_nav( $cmb_id, $object_id, $object_type, $cmb ): void {
 		$tabs = $cmb->prop( 'tabs' );
 
 		if ( (bool) $tabs ) {
@@ -164,7 +163,7 @@ class Tabs {
 	 *
 	 * @return array
 	 */
-	public function add_wrap_class( array $classes ) : array {
+	public function add_wrap_class( array $classes ): array {
 		if ( $this->has_tabs ) {
 			$classes[] = 'cmb-tabs-panel';
 			if ( ! empty( $this->fields_output ) ) {
@@ -187,16 +186,14 @@ class Tabs {
 	 *
 	 * @return void
 	 */
-	public function render_field( array $field_args, \CMB2_Field $field ) : void {
+	public function render_field( array $field_args, \CMB2_Field $field ): void {
 		ob_start();
 		if ( isset( $field_args['tab_content_cb'] ) && \is_callable( $field_args['tab_content_cb'] ) ) {
 			$field_args['tab_content_cb']( $field_args, $field );
-		} else {
-			if ( 'group' === $field_args['type'] ) {
+		} elseif ( 'group' === $field_args['type'] ) {
 				$this->cmb->render_group_callback( $field_args, $field );
-			} else {
-				$field->render_field_callback();
-			}
+		} else {
+			$field->render_field_callback();
 		}
 		$output = ob_get_clean();
 		echo $this->capture_fields( $output, $field_args ); //phpcs:ignore
@@ -213,7 +210,7 @@ class Tabs {
 	 *
 	 * @return void
 	 */
-	public function show_panels( $cmb_id, $object_id, $object_type, $cmb ) : void {
+	public function show_panels( $cmb_id, $object_id, $object_type, $cmb ): void {
 		if ( ! $this->has_tabs || empty( $this->fields_output ) ) {
 			return;
 		}
@@ -239,7 +236,7 @@ class Tabs {
 	 *
 	 * @return string
 	 */
-	public function capture_fields( string $output, array $field_args ) : string {
+	public function capture_fields( string $output, array $field_args ): string {
 		if ( ! $this->has_tabs || ! isset( $field_args['tab'] ) ) {
 			return $output;
 		}
@@ -259,7 +256,7 @@ class Tabs {
 	 *
 	 * @return void
 	 */
-	protected function styles() : void {
+	protected function styles(): void {
 		static $displayed = false;
 		if ( $displayed ) {
 			return;
@@ -646,6 +643,5 @@ class Tabs {
 			}
 		</style>
 		<?php
-
 	}
 }

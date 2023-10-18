@@ -47,7 +47,7 @@ class Route {
 	 *
 	 * @return void
 	 */
-	public static function add( string $url, array $args ) : void {
+	public static function add( string $url, array $args ): void {
 		static::$routes[ $url ] = $args;
 	}
 
@@ -63,7 +63,7 @@ class Route {
 	 *
 	 * @return void
 	 */
-	public static function register_post_type() : void {
+	public static function register_post_type(): void {
 		$args = [
 			'public'              => false,
 			'show_ui'             => false,
@@ -84,7 +84,7 @@ class Route {
 	 *
 	 * @return void
 	 */
-	public function hook() : void {
+	public function hook(): void {
 		add_filter( 'query_vars', [ $this, 'add_query_var' ] );
 		add_action( 'init', [ $this, 'setup_endpoints' ] );
 		add_action( 'init', [ __CLASS__, 'register_post_type' ] );
@@ -106,7 +106,7 @@ class Route {
 	 *
 	 * @return void
 	 */
-	public function maybe_add_post_hooks( \WP_Query $query ) : void {
+	public function maybe_add_post_hooks( \WP_Query $query ): void {
 		if ( isset( $query->query_vars[ static::QUERY_VAR ] ) ) {
 			$this->add_post_hooks();
 		}
@@ -122,7 +122,7 @@ class Route {
 	 *
 	 * @return void
 	 */
-	protected function add_post_hooks() : void {
+	protected function add_post_hooks(): void {
 		add_filter( 'the_title', [ $this, 'get_title' ], 10, 2 );
 		add_filter( 'single_post_title', [ $this, 'get_title' ], 10, 2 );
 		add_filter( 'body_class', [ $this, 'adjust_body_class' ], 99 );
@@ -142,7 +142,7 @@ class Route {
 	 *
 	 * @return array
 	 */
-	public function adjust_body_class( array $classes ) : array {
+	public function adjust_body_class( array $classes ): array {
 		$post = get_post();
 
 		foreach ( $classes as $k => $_class ) {
@@ -170,7 +170,7 @@ class Route {
 	 *
 	 * @return null|array{title:string, template:string}
 	 */
-	public function get_current_route() : ?array {
+	public function get_current_route(): ?array {
 		$route = get_query_var( static::QUERY_VAR );
 		if ( empty( $route ) || empty( static::$routes[ $route ] ) ) {
 			return null;
@@ -186,7 +186,7 @@ class Route {
 	 *
 	 * @return void
 	 */
-	public function maybe_flush_rules() : void {
+	public function maybe_flush_rules(): void {
 		$hash = \hash( 'fnv1a64', wp_json_encode( static::$routes ) );
 		if ( get_option( static::OPTION ) !== $hash ) {
 			flush_rewrite_rules();
@@ -204,7 +204,7 @@ class Route {
 	 *
 	 * @return array
 	 */
-	public function add_query_var( array $vars ) : array {
+	public function add_query_var( array $vars ): array {
 		$vars[] = static::QUERY_VAR;
 		$vars[] = static::PARAM_QUERY_VAR;
 
@@ -218,7 +218,7 @@ class Route {
 	 *
 	 * @return void
 	 */
-	public function setup_endpoints() : void {
+	public function setup_endpoints(): void {
 		foreach ( static::$routes as $_route => $_args ) {
 			add_rewrite_rule( $_route . '/([^/]+)/?.?', 'index.php?post_type=' . static::NAME . '&p=' . static::get_post_id() . '&' . static::QUERY_VAR . '=' . $_route . '&' . static::PARAM_QUERY_VAR . '=$matches[1]', 'top' );
 
@@ -234,7 +234,7 @@ class Route {
 	 *
 	 * @return int
 	 */
-	protected static function get_post_id() : int {
+	protected static function get_post_id(): int {
 		if ( static::$post_id > 0 ) {
 			return static::$post_id;
 		}
@@ -271,7 +271,7 @@ class Route {
 	 *
 	 * @return int The ID of the new post
 	 */
-	protected static function make_post() : int {
+	protected static function make_post(): int {
 		$post = [
 			'post_title'  => 'Lipe Libs Placeholder Post',
 			'post_status' => 'publish',
@@ -291,7 +291,7 @@ class Route {
 	 *
 	 * @return string
 	 */
-	public function override_template() : string {
+	public function override_template(): string {
 		return $this->get_current_route()['template'];
 	}
 
@@ -303,7 +303,7 @@ class Route {
 	 *
 	 * @return bool
 	 */
-	public function is_current_route( string $route ) : bool {
+	public function is_current_route( string $route ): bool {
 		return get_query_var( static::QUERY_VAR ) === $route;
 	}
 
@@ -316,7 +316,7 @@ class Route {
 	 *
 	 * @return string
 	 */
-	public function get_url_parameter() : string {
+	public function get_url_parameter(): string {
 		return get_query_var( static::PARAM_QUERY_VAR );
 	}
 
@@ -329,7 +329,7 @@ class Route {
 	 *
 	 * @return string
 	 */
-	public function get_title( string $title, $post ) : string {
+	public function get_title( string $title, $post ): string {
 		$_post = get_post( $post );
 		if ( static::get_post_id() === $_post->ID ) {
 			$route = $this->get_current_route();
@@ -339,5 +339,4 @@ class Route {
 
 		return $title;
 	}
-
 }

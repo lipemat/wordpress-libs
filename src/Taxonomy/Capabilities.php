@@ -37,7 +37,7 @@ class Capabilities {
 	 *
 	 * @return $this
 	 */
-	public function manage_terms( string $capability = 'manage_categories' ) : Capabilities {
+	public function manage_terms( string $capability = 'manage_categories' ): Capabilities {
 		$this->taxonomy->capabilities['manage_terms'] = $capability;
 		return $this;
 	}
@@ -50,7 +50,7 @@ class Capabilities {
 	 *
 	 * @return $this
 	 */
-	public function edit_terms( string $capability = 'manage_categories' ) : Capabilities {
+	public function edit_terms( string $capability = 'manage_categories' ): Capabilities {
 		$this->taxonomy->capabilities['edit_terms'] = $capability;
 		return $this;
 	}
@@ -63,7 +63,7 @@ class Capabilities {
 	 *
 	 * @return $this
 	 */
-	public function delete_terms( string $capability = 'manage_categories' ) : Capabilities {
+	public function delete_terms( string $capability = 'manage_categories' ): Capabilities {
 		$this->taxonomy->capabilities['delete_terms'] = $capability;
 		return $this;
 	}
@@ -76,7 +76,7 @@ class Capabilities {
 	 *
 	 * @return $this
 	 */
-	public function assign_terms( string $capability = 'edit_posts' ) : Capabilities {
+	public function assign_terms( string $capability = 'edit_posts' ): Capabilities {
 		$this->taxonomy->capabilities['assign_terms'] = $capability;
 		return $this;
 	}

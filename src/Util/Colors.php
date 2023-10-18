@@ -20,7 +20,7 @@ class Colors {
 	 *
 	 * @return string
 	 */
-	public function hex_to_rgba( string $color, float $transparency = 1.0 ) : string {
+	public function hex_to_rgba( string $color, float $transparency = 1.0 ): string {
 		if ( empty( $color ) || '#' !== $color[0] ) {
 			return $color;
 		}
@@ -51,7 +51,7 @@ class Colors {
 	 *
 	 * @return string
 	 */
-	public function rgba_to_hex( string $rgba ) : string {
+	public function rgba_to_hex( string $rgba ): string {
 		if ( empty( $rgba ) || '#' === $rgba[0] ) {
 			return $rgba;
 		}

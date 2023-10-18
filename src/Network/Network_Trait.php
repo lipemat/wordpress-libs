@@ -58,7 +58,7 @@ trait Network_Trait {
 	 *
 	 * @return \WP_Network|null
 	 */
-	public function get_object() : ?\WP_Network {
+	public function get_object(): ?\WP_Network {
 		if ( null === $this->network ) {
 			$this->network = get_network( $this->network_id );
 		}
@@ -72,7 +72,7 @@ trait Network_Trait {
 	 *
 	 * @return int
 	 */
-	public function get_id() : int {
+	public function get_id(): int {
 		return $this->network_id;
 	}
 
@@ -96,7 +96,7 @@ trait Network_Trait {
 	 * @param string $key      - Meta key.
 	 * @param mixed  ...$value - Value to set.
 	 */
-	public function update_meta( string $key, ...$value ) : void {
+	public function update_meta( string $key, ...$value ): void {
 		if ( \is_callable( $value[0] ) ) {
 			$value[0] = $value[0]( $this->get_meta( $key, $value[1] ?? null ) );
 		}
@@ -109,7 +109,7 @@ trait Network_Trait {
 	 *
 	 * @param string $key - Meta key.
 	 */
-	public function delete_meta( string $key ) : void {
+	public function delete_meta( string $key ): void {
 		delete_network_option( $this->network_id, $key );
 	}
 
@@ -119,7 +119,7 @@ trait Network_Trait {
 	 *
 	 * @return string
 	 */
-	public function get_meta_type() : string {
+	public function get_meta_type(): string {
 		return 'site';
 	}
 
@@ -134,5 +134,4 @@ trait Network_Trait {
 	public static function factory( $network = null ) {
 		return new static( $network );
 	}
-
 }

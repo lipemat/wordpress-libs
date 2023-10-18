@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <ruleset name="WP Libs - Rules">
-	<!-- See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml -->
+	<!-- See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-Ruleset -->
 
 	<description>Ruleset for WordPress Libs</description>
-	<version>4.0.3</version>
+	<version>4.2.0</version>
 
 	<!-- Include when not specified -->
 	<file>./src</file>
@@ -14,8 +14,10 @@
 	<!-- Cache between runs -->
 	<arg name="cache" value="./.phpcs.cache" />
 
+	<!-- @see https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#various-sniffs-set-the-minimum-supported-wp-version -->
+	<config name="minimum_wp_version" value="5.8" />
+
 	<!-- @see https://github.com/PHPCompatibility/PHPCompatibilityWP#how-to-use -->
-	<config name="minimum_supported_wp_version" value="5.8" />
 	<config name="testVersion" value="7.4-" />
 
 	<rule ref="LipePlugin">
@@ -25,6 +27,7 @@
 	</rule>
 
 	<!-- Allow the "lipe" or "Lipe" prefix for hooks, namespaces and functions -->
+	<!-- https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#wordpressnamingconventionsprefixallglobals-prefix-everything-in-the-global-namespace -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">
@@ -37,7 +40,10 @@
 	<!-- Translations -->
 	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<property name="text_domain" type="array" value="lipe" />
+			<!-- https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#wordpresswpi18n-setting-your-text-domain -->
+			<property name="text_domain" type="array">
+				<element value="lipe" />
+			</property>
 		</properties>
 	</rule>
 </ruleset>

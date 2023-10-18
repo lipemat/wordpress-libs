@@ -125,7 +125,7 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	abstract public function render( \WP_Post $post ) : void;
+	abstract public function render( \WP_Post $post ): void;
 
 
 	/**
@@ -136,7 +136,7 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	abstract protected function save( int $post_id, \WP_Post $post ) : void;
+	abstract protected function save( int $post_id, \WP_Post $post ): void;
 
 
 	/**
@@ -193,7 +193,7 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	protected static function hook() : void {
+	protected static function hook(): void {
 		add_action( 'post_submitbox_misc_actions', [
 			__CLASS__,
 			'display_nonce',
@@ -213,12 +213,12 @@ abstract class Meta_Box {
 	 *
 	 * @return string A unique identifier for this meta box.
 	 */
-	protected static function build_id( string $post_type, string $class_name ) : string {
+	protected static function build_id( string $post_type, string $class_name ): string {
 		static $append = 0;
 		$id = $post_type . '-' . $class_name;
 		$appended = $id . ( $append ? '-' . $append : '' );
 		if ( isset( static::$registry[ $post_type ][ $appended ] ) ) {
-			$append ++;
+			++$append;
 		}
 		$id .= ( $append ? '-' . $append : '' );
 
@@ -232,7 +232,7 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	public static function display_nonce() : void {
+	public static function display_nonce(): void {
 		if ( ! empty( static::$registry[ (string) get_post_type() ] ) ) {
 			wp_nonce_field( static::NONCE_ACTION, static::NONCE_NAME );
 		}
@@ -247,7 +247,7 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	public static function save_meta_boxes( int $post_id, \WP_Post $post ) : void {
+	public static function save_meta_boxes( int $post_id, \WP_Post $post ): void {
 		if ( ! static::should_meta_boxes_be_saved( $post_id, $post ) ) {
 			return;
 		}
@@ -259,7 +259,6 @@ abstract class Meta_Box {
 		foreach ( (array) static::$registry[ $post->post_type ] as $meta_box ) {
 			$meta_box->save( $post_id, $post );
 		}
-
 	}
 
 
@@ -271,7 +270,7 @@ abstract class Meta_Box {
 	 *
 	 * @return bool
 	 */
-	protected static function should_meta_boxes_be_saved( int $post_id, \WP_Post $post ) : bool {
+	protected static function should_meta_boxes_be_saved( int $post_id, \WP_Post $post ): bool {
 		// make sure this is a valid submission.
 		if ( ! isset( $_POST[ static::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ static::NONCE_NAME ], static::NONCE_ACTION ) ) {
 			return false;
@@ -294,7 +293,7 @@ abstract class Meta_Box {
 	 *
 	 * @return Meta_Box|null
 	 */
-	public static function get_meta_box_by_id( string $post_type, string $id ) : ?Meta_Box {
+	public static function get_meta_box_by_id( string $post_type, string $id ): ?Meta_Box {
 		return static::$registry[ $post_type ][ $id ] ?? null;
 	}
 
@@ -307,7 +306,7 @@ abstract class Meta_Box {
 	 *
 	 * @return bool
 	 */
-	public static function has_meta_box( string $post_type, string $class_name ) : bool {
+	public static function has_meta_box( string $post_type, string $class_name ): bool {
 		return null !== static::get_meta_box( $post_type, $class_name );
 	}
 
@@ -323,7 +322,7 @@ abstract class Meta_Box {
 	 *
 	 * @return Meta_Box|null
 	 */
-	public static function get_meta_box( string $post_type, string $class_name ) : ?Meta_Box {
+	public static function get_meta_box( string $post_type, string $class_name ): ?Meta_Box {
 		if ( ! isset( static::$registry[ $post_type ] ) ) {
 			return null;
 		}
@@ -380,7 +379,7 @@ abstract class Meta_Box {
 	 * @action 'add_meta_boxes_' . $post_type
 	 * @return void
 	 */
-	public function register_meta_box() : void {
+	public function register_meta_box(): void {
 		add_meta_box( $this->get_id(), $this->get_title(), [
 			$this,
 			'render',
@@ -393,7 +392,7 @@ abstract class Meta_Box {
 	 *
 	 * @return string
 	 */
-	public function get_id() : string {
+	public function get_id(): string {
 		return $this->id;
 	}
 
@@ -403,7 +402,7 @@ abstract class Meta_Box {
 	 *
 	 * @return string
 	 */
-	public function get_title() : string {
+	public function get_title(): string {
 		return $this->title;
 	}
 
@@ -413,7 +412,7 @@ abstract class Meta_Box {
 	 *
 	 * @return 'advanced'|'normal'|'side'
 	 */
-	public function get_context() : string {
+	public function get_context(): string {
 		return $this->context;
 	}
 
@@ -423,7 +422,7 @@ abstract class Meta_Box {
 	 *
 	 * @return 'core'|'default'|'high'|'low'
 	 */
-	public function get_priority() : string {
+	public function get_priority(): string {
 		return $this->priority;
 	}
 
@@ -433,7 +432,7 @@ abstract class Meta_Box {
 	 *
 	 * @return array
 	 */
-	protected function get_callback_args() : array {
+	protected function get_callback_args(): array {
 		if ( ! isset( $this->callback_args['__block_editor_compatible_meta_box'] ) ) {
 			$this->callback_args['__block_editor_compatible_meta_box'] = $this->gutenberg_compatible;
 		}
@@ -454,7 +453,7 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	public function set_callback_args( ?array $args ) : void {
+	public function set_callback_args( ?array $args ): void {
 		$this->callback_args = $args;
 	}
 
@@ -467,7 +466,7 @@ abstract class Meta_Box {
 	 *
 	 * @return array
 	 */
-	public function get_values( int $post_id, $fields ) : array {
+	public function get_values( int $post_id, $fields ): array {
 		$meta = [];
 
 		foreach ( (array) $fields as $this_field ) {
@@ -489,7 +488,7 @@ abstract class Meta_Box {
 	 *
 	 * @return void
 	 */
-	protected static function init_once() : void {
+	protected static function init_once(): void {
 		static $is_init = false;
 		if ( ! $is_init ) {
 			static::hook();

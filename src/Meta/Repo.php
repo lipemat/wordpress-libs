@@ -37,7 +37,7 @@ class Repo extends Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	public function register_field( Field $field ) : void {
+	public function register_field( Field $field ): void {
 		$this->fields[ $field->get_id() ] = $field;
 	}
 
@@ -49,7 +49,7 @@ class Repo extends Translate_Abstract {
 	 *
 	 * @return null|Field
 	 */
-	protected function get_field( string $field_id ) : ?Field {
+	protected function get_field( string $field_id ): ?Field {
 		return $this->fields[ $field_id ] ?? null;
 	}
 
@@ -63,7 +63,7 @@ class Repo extends Translate_Abstract {
 	 *
 	 * @return string
 	 */
-	protected function get_field_data_type( string $field_id ) : string {
+	protected function get_field_data_type( string $field_id ): string {
 		$field = $this->get_field( $field_id );
 		if ( null !== $field ) {
 			return $field->data_type;
@@ -101,7 +101,6 @@ class Repo extends Translate_Abstract {
 		}
 
 		return $this->get_meta_value( $object_id, $field_id, $meta_type );
-
 	}
 
 
@@ -120,7 +119,7 @@ class Repo extends Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	public function update_value( $object_id, string $field_id, $value, string $meta_type = 'post' ) : void {
+	public function update_value( $object_id, string $field_id, $value, string $meta_type = 'post' ): void {
 		switch ( $this->get_field_data_type( $field_id ) ) {
 			case static::TYPE_CHECKBOX:
 				$this->update_checkbox_field_value( $object_id, $field_id, $value, $meta_type );
@@ -140,7 +139,6 @@ class Repo extends Translate_Abstract {
 			default:
 				$this->update_meta_value( $object_id, $field_id, $value, $meta_type );
 		}
-
 	}
 
 
@@ -158,7 +156,7 @@ class Repo extends Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	public function delete_value( $object_id, string $field_id, string $meta_type ) : void {
+	public function delete_value( $object_id, string $field_id, string $meta_type ): void {
 		switch ( $this->get_field_data_type( $field_id ) ) {
 			case static::TYPE_FILE:
 				$this->delete_file_field_value( $object_id, $field_id, $meta_type );
@@ -173,5 +171,4 @@ class Repo extends Translate_Abstract {
 				$this->delete_meta_value( $object_id, $field_id, $meta_type );
 		}
 	}
-
 }

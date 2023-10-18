@@ -34,7 +34,7 @@ class Term_Select_2 {
 	 *
 	 * @return void
 	 */
-	protected function hook() : void {
+	protected function hook(): void {
 		add_action( 'cmb2_render_' . static::NAME, [ $this, 'render' ], 10, 5 );
 		add_filter( 'cmb2_sanitize_' . static::NAME, [ $this, 'assign_terms_during_save' ], 10, 4 );
 		add_filter( 'cmb2_types_esc_' . static::NAME, [ $this, 'esc_repeater_values' ], 10, 3 );
@@ -54,7 +54,7 @@ class Term_Select_2 {
 	 *
 	 * @return void
 	 */
-	public function ajax_get_terms() : void {
+	public function ajax_get_terms(): void {
 		//phpcs:disable
 		$search = sanitize_text_field( $_POST['q'] ?? '' );
 		$terms = get_terms( [
@@ -81,7 +81,7 @@ class Term_Select_2 {
 	 *
 	 * @return void
 	 */
-	public function js() : void {
+	public function js(): void {
 		wp_enqueue_style( 'select2-css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css', [], null ); //phpcs:ignore
 		wp_enqueue_script( 'select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js', [], null ); //phpcs:ignore
 	}
@@ -98,7 +98,7 @@ class Term_Select_2 {
 	 *
 	 * @return void
 	 */
-	public function render( CMB2_Field $field, $value, $object_id, string $object_type, CMB2_Types $field_type_object ) : void {
+	public function render( CMB2_Field $field, $value, $object_id, string $object_type, CMB2_Types $field_type_object ): void {
 		if ( empty( $value ) ) {
 			$value = null;
 		}
@@ -132,7 +132,7 @@ class Term_Select_2 {
 	 *
 	 * @return void
 	 */
-	protected function js_inline( CMB2_Field $field, CMB2_Types $field_type_object ) : void {
+	protected function js_inline( CMB2_Field $field, CMB2_Types $field_type_object ): void {
 		static $rendered = [];
 		if ( isset( $rendered[ $field->id() ] ) ) {
 			return;

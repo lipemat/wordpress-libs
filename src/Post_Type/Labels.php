@@ -43,7 +43,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function name( string $label ) : Labels {
+	public function name( string $label ): Labels {
 		$this->cpt->labels['name'] = $label;
 		return $this;
 	}
@@ -58,7 +58,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function singular_name( string $label ) : Labels {
+	public function singular_name( string $label ): Labels {
 		$this->cpt->labels['singular_name'] = $label;
 		return $this;
 	}
@@ -71,7 +71,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function add_new( string $label ) : Labels {
+	public function add_new( string $label ): Labels {
 		$this->cpt->labels['add_new'] = $label;
 		return $this;
 	}
@@ -86,7 +86,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function add_new_item( string $label ) : Labels {
+	public function add_new_item( string $label ): Labels {
 		$this->cpt->labels['add_new_item'] = $label;
 		return $this;
 	}
@@ -101,7 +101,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function edit_item( string $label ) : Labels {
+	public function edit_item( string $label ): Labels {
 		$this->cpt->labels['edit_item'] = $label;
 		return $this;
 	}
@@ -116,7 +116,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function new_item( string $label ) : Labels {
+	public function new_item( string $label ): Labels {
 		$this->cpt->labels['new_item'] = $label;
 		return $this;
 	}
@@ -131,7 +131,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function view_item( string $label ) : Labels {
+	public function view_item( string $label ): Labels {
 		$this->cpt->labels['view_item'] = $label;
 		return $this;
 	}
@@ -146,7 +146,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function view_items( string $label ) : Labels {
+	public function view_items( string $label ): Labels {
 		$this->cpt->labels['view_items'] = $label;
 		return $this;
 	}
@@ -161,7 +161,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function search_items( string $label ) : Labels {
+	public function search_items( string $label ): Labels {
 		$this->cpt->labels['search_items'] = $label;
 		return $this;
 	}
@@ -176,7 +176,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function not_found( string $label ) : Labels {
+	public function not_found( string $label ): Labels {
 		$this->cpt->labels['not_found'] = $label;
 		return $this;
 	}
@@ -191,7 +191,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function not_found_in_trash( string $label ) : Labels {
+	public function not_found_in_trash( string $label ): Labels {
 		$this->cpt->labels['not_found_in_trash'] = $label;
 		return $this;
 	}
@@ -207,7 +207,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function parent_item_colon( string $label ) : Labels {
+	public function parent_item_colon( string $label ): Labels {
 		$this->cpt->labels['parent_item_colon'] = $label;
 		return $this;
 	}
@@ -222,7 +222,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function all_items( string $label ) : Labels {
+	public function all_items( string $label ): Labels {
 		$this->cpt->labels['all_items'] = $label;
 		return $this;
 	}
@@ -237,7 +237,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function archives( string $label ) : Labels {
+	public function archives( string $label ): Labels {
 		$this->cpt->labels['archives'] = $label;
 		return $this;
 	}
@@ -252,7 +252,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function attributes( string $label ) : Labels {
+	public function attributes( string $label ): Labels {
 		$this->cpt->labels['attributes'] = $label;
 		return $this;
 	}
@@ -267,7 +267,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function insert_into_item( string $label ) : Labels {
+	public function insert_into_item( string $label ): Labels {
 		$this->cpt->labels['insert_into_item'] = $label;
 		return $this;
 	}
@@ -282,7 +282,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function uploaded_to_this_item( string $label ) : Labels {
+	public function uploaded_to_this_item( string $label ): Labels {
 		$this->cpt->labels['uploaded_to_this_item'] = $label;
 		return $this;
 	}
@@ -299,7 +299,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function featured_image( string $label ) : Labels {
+	public function featured_image( string $label ): Labels {
 		$this->cpt->labels['featured_image'] = $label;
 		return $this;
 	}
@@ -316,7 +316,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function set_featured_image( string $label ) : Labels {
+	public function set_featured_image( string $label ): Labels {
 		$this->cpt->labels['set_featured_image'] = $label;
 		return $this;
 	}
@@ -333,7 +333,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function remove_featured_image( string $label ) : Labels {
+	public function remove_featured_image( string $label ): Labels {
 		$this->cpt->labels['remove_featured_image'] = $label;
 		return $this;
 	}
@@ -350,7 +350,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function use_featured_image( string $label ) : Labels {
+	public function use_featured_image( string $label ): Labels {
 		$this->cpt->labels['use_featured_image'] = $label;
 		return $this;
 	}
@@ -365,7 +365,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function menu_name( string $label ) : Labels {
+	public function menu_name( string $label ): Labels {
 		$this->cpt->labels['menu_name'] = $label;
 		return $this;
 	}
@@ -380,7 +380,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function filter_items_list( string $label ) : Labels {
+	public function filter_items_list( string $label ): Labels {
 		$this->cpt->labels['filter_items_list'] = $label;
 		return $this;
 	}
@@ -395,7 +395,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function filter_by_date( string $label ) : Labels {
+	public function filter_by_date( string $label ): Labels {
 		$this->cpt->labels['filter_by_date'] = $label;
 		return $this;
 	}
@@ -410,7 +410,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function items_list_navigation( string $label ) : Labels {
+	public function items_list_navigation( string $label ): Labels {
 		$this->cpt->labels['items_list_navigation'] = $label;
 		return $this;
 	}
@@ -425,7 +425,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function items_list( string $label ) : Labels {
+	public function items_list( string $label ): Labels {
 		$this->cpt->labels['items_list'] = $label;
 		return $this;
 	}
@@ -440,7 +440,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function item_published( string $label ) : Labels {
+	public function item_published( string $label ): Labels {
 		$this->cpt->labels['item_published'] = $label;
 		return $this;
 	}
@@ -455,7 +455,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function item_published_privately( string $label ) : Labels {
+	public function item_published_privately( string $label ): Labels {
 		$this->cpt->labels['item_published_privately'] = $label;
 		return $this;
 	}
@@ -470,7 +470,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function item_reverted_to_draft( string $label ) : Labels {
+	public function item_reverted_to_draft( string $label ): Labels {
 		$this->cpt->labels['item_reverted_to_draft'] = $label;
 		return $this;
 	}
@@ -485,7 +485,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function item_scheduled( string $label ) : Labels {
+	public function item_scheduled( string $label ): Labels {
 		$this->cpt->labels['item_scheduled'] = $label;
 		return $this;
 	}
@@ -500,7 +500,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function item_updated( string $label ) : Labels {
+	public function item_updated( string $label ): Labels {
 		$this->cpt->labels['item_updated'] = $label;
 		return $this;
 	}
@@ -515,7 +515,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function item_link( string $label ) : Labels {
+	public function item_link( string $label ): Labels {
 		$this->cpt->labels['item_link'] = $label;
 		return $this;
 	}
@@ -530,7 +530,7 @@ class Labels {
 	 *
 	 * @return $this
 	 */
-	public function item_link_description( string $label ) : Labels {
+	public function item_link_description( string $label ): Labels {
 		$this->cpt->labels['item_link_description'] = $label;
 		return $this;
 	}

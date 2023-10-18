@@ -48,7 +48,7 @@ class Class_Names implements \ArrayAccess {
 	 *
 	 * @return array
 	 */
-	public function get_classes() : array {
+	public function get_classes(): array {
 		$clean = Arrays::in()->clean( $this->classes );
 		return \array_values( \array_map( [ Template::in(), 'sanitize_html_class' ], $clean ) );
 	}
@@ -64,7 +64,7 @@ class Class_Names implements \ArrayAccess {
 	 *
 	 * @return void
 	 */
-	protected function parse_classes( $classes ) : void {
+	protected function parse_classes( $classes ): void {
 		if ( \is_string( $classes ) ) {
 			$this->classes[] = $classes;
 			return;
@@ -112,7 +112,7 @@ class Class_Names implements \ArrayAccess {
 	 *
 	 * @return bool
 	 */
-	public function offsetExists( $offset ) : bool {
+	public function offsetExists( $offset ): bool {
 		return false !== $this->get_classes_key( $offset );
 	}
 
@@ -138,7 +138,7 @@ class Class_Names implements \ArrayAccess {
 	 *
 	 * @return void
 	 */
-	public function offsetSet( $offset, $value ) : void {
+	public function offsetSet( $offset, $value ): void {
 		if ( ! empty( $value ) ) {
 			$this->parse_classes( $offset );
 		} else {
@@ -154,7 +154,7 @@ class Class_Names implements \ArrayAccess {
 	 *
 	 * @return void
 	 */
-	public function offsetUnset( $offset ) : void {
+	public function offsetUnset( $offset ): void {
 		if ( $this->offsetExists( $offset ) ) {
 			unset( $this->classes[ (int) $this->get_classes_key( $offset ) ] );
 		}

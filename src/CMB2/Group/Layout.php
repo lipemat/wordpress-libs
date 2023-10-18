@@ -21,7 +21,7 @@ class Layout {
 	 *
 	 * @return bool
 	 */
-	protected function is_table( \CMB2_Field $field_group ) : bool {
+	protected function is_table( \CMB2_Field $field_group ): bool {
 		return ( 'table' === $field_group->args( 'layout' ) );
 	}
 
@@ -33,7 +33,7 @@ class Layout {
 	 *
 	 * @return bool
 	 */
-	protected function is_repeatable( \CMB2_Field $field_group ) : bool {
+	protected function is_repeatable( \CMB2_Field $field_group ): bool {
 		return (bool) $field_group->args( 'repeatable' );
 	}
 
@@ -49,7 +49,7 @@ class Layout {
 	 *
 	 * @return \CMB2_Field|null Group field object.
 	 */
-	public function render_group_callback( $field_args, \CMB2_Field $field_group ) : ?\CMB2_Field {
+	public function render_group_callback( $field_args, \CMB2_Field $field_group ): ?\CMB2_Field {
 		$cmb = \CMB2_Boxes::get( $field_group->cmb_id );
 		// If field is requesting to be conditionally shown.
 		if ( ! $field_group->should_show() ) {
@@ -96,7 +96,7 @@ class Layout {
 		if ( ! empty( $group_val ) ) {
 			foreach ( $group_val as $group_key => $field_id ) {
 				$this->render_group_table_row( $field_group );
-				$field_group->index ++;
+				++$field_group->index;
 			}
 		} else {
 			$this->render_group_table_row( $field_group );
@@ -114,7 +114,6 @@ class Layout {
 		$field_group->peform_param_callback( 'after_group' );
 
 		return $field_group;
-
 	}
 
 
@@ -123,7 +122,7 @@ class Layout {
 	 *
 	 * @param  \CMB2_Field $field_group CMB2_Field group field object.
 	 */
-	public function render_group_table_header( $field_group ) : void {
+	public function render_group_table_header( $field_group ): void {
 		?>
 		<tr class="cmb-row">
 			<?php
@@ -155,7 +154,7 @@ class Layout {
 	 *
 	 * @return \CMB2
 	 */
-	public function render_group_table_row( \CMB2_Field $field_group ) : \CMB2 {
+	public function render_group_table_row( \CMB2_Field $field_group ): \CMB2 {
 		$field_group->peform_param_callback( 'before_group_row' );
 		$closed_class = (bool) $field_group->options( 'closed' ) ? ' closed' : '';
 		$confirm_deletion = $field_group->options( 'remove_confirm' );
@@ -242,7 +241,7 @@ class Layout {
 	 * @param array       $field_args  Array of field arguments.
 	 * @param \CMB2_Field $field_group CMB2_Field group field object.
 	 */
-	protected function render_field( array $field_args, \CMB2_Field $field_group ) : void {
+	protected function render_field( array $field_args, \CMB2_Field $field_group ): void {
 		$cmb = \CMB2_Boxes::get( $field_group->cmb_id );
 		if ( 'hidden' === $field_args['type'] ) {
 			// Save rendering for after the metabox.
@@ -259,7 +258,7 @@ class Layout {
 	 *
 	 * @return void
 	 */
-	protected function styles() : void {
+	protected function styles(): void {
 		$this->once( function() {
 			?>
 			<style>
@@ -398,6 +397,5 @@ class Layout {
 			</style>
 			<?php
 		}, __METHOD__ );
-
 	}
 }

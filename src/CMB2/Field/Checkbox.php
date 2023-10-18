@@ -30,7 +30,7 @@ class Checkbox {
 	 *
 	 * @return \CMB2_Field|null
 	 */
-	public function render_field_callback( array $args, \CMB2_Field $field ) : ?\CMB2_Field {
+	public function render_field_callback( array $args, \CMB2_Field $field ): ?\CMB2_Field {
 		if ( ! $field->should_show() || ( ! is_admin() && ! (bool) $field->args( 'on_front' ) ) ) {
 			return null;
 		}
@@ -81,7 +81,7 @@ class Checkbox {
 	 *
 	 * @return void
 	 */
-	protected function styles() : void {
+	protected function styles(): void {
 		$this->once( function() {
 			?>
 			<style>
