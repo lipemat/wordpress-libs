@@ -415,6 +415,7 @@ abstract class Translate_Abstract {
 	 * @param string               $key       - The meta key.
 	 * @param int[]                $terms     - Term ids.
 	 * @param string               $meta_type - The meta type.
+	 * @param bool                 $singular  - Is the meta of type singular.
 	 *
 	 * @return void
 	 */

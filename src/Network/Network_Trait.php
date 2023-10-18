@@ -80,13 +80,13 @@ trait Network_Trait {
 	/**
 	 * Get a value from the `sitemeta` table for this network.
 	 *
-	 * @param string     $key     - Meta key.
-	 * @param null|mixed $default - Default value if meta key is not set.
+	 * @param string     $key           - Meta key.
+	 * @param null|mixed $default_value - Default value if meta key is not set.
 	 *
 	 * @return mixed|false
 	 */
-	public function get_meta( string $key, $default = null ) {
-		return get_network_option( $this->network_id, $key, $default );
+	public function get_meta( string $key, $default_value = null ) {
+		return get_network_option( $this->network_id, $key, $default_value );
 	}
 
 

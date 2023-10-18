@@ -1063,7 +1063,7 @@ class Field {
 		};
 		if ( ! $mock->allowed( $this->get_type() ) ) {
 			/* translators: {field type} */
-			throw new \LogicException( sprintf( __( 'Fields of `%s` type do not support repeating.', 'lipe' ), $this->get_type() ) );
+			throw new \LogicException( sprintf( esc_html__( 'Fields of `%s` type do not support repeating.', 'lipe' ), esc_html( $this->get_type() ) ) );
 		}
 		$this->repeatable = $repeatable;
 		$this->text['add_row_text'] = $add_row_text;
@@ -1545,7 +1545,7 @@ class Field {
 	 */
 	public function get_field_args(): array {
 		if ( empty( $this->type ) ) {
-			throw new \LogicException( __( 'You must specify a field type (use $field->type() ).', 'lipe' ) );
+			throw new \LogicException( esc_html__( 'You must specify a field type (use $field->type() ).', 'lipe' ) );
 		}
 		$args = [];
 		foreach ( \get_object_vars( $this ) as $_var => $_value ) {
@@ -1569,7 +1569,7 @@ class Field {
 	 *
 	 * @throws \LogicException - When trying to add a field to another field.
 	 */
-	public function field( string $id, string $name ): Field_Type {
-		throw new \LogicException( __( 'You cannot add a field to another field.', 'lipe' ) );
+	public function field( string $id, string $name ): Field_Type { //phpcs:ignore -- Signature must match parent.
+		throw new \LogicException( esc_html__( 'You cannot add a field to another field.', 'lipe' ) );
 	}
 }

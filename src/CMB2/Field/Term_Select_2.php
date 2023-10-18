@@ -118,7 +118,7 @@ class Term_Select_2 {
 
 		$attrs = $field_type_object->concat_attrs( $a, [ 'desc', 'options' ] );
 		echo \sprintf( '<select%s>%s</select>%s', $attrs, $a['options'], $a['desc'] ); //phpcs:ignore
-		$this->js_inline( $field, $field_type_object );
+		$this->js_inline( $field );
 	}
 
 
@@ -128,11 +128,10 @@ class Term_Select_2 {
 	 * The main issue is repeaters.
 	 *
 	 * @param \CMB2_Field $field             This field object.
-	 * @param \CMB2_Types $field_type_object The field type object.
 	 *
 	 * @return void
 	 */
-	protected function js_inline( CMB2_Field $field, CMB2_Types $field_type_object ): void {
+	protected function js_inline( CMB2_Field $field ): void {
 		static $rendered = [];
 		if ( isset( $rendered[ $field->id() ] ) ) {
 			return;

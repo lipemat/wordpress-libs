@@ -146,7 +146,7 @@ class Group extends Field {
 	 */
 	protected function add_field_to_group( Field $field ): void {
 		if ( null === $this->box->cmb ) {
-			throw new \LogicException( __( 'You must add the group to the box before you add fields to the group.', 'lipe' ) );
+			throw new \LogicException( esc_html__( 'You must add the group to the box before you add fields to the group.', 'lipe' ) );
 		}
 
 		$field->group = $this->get_id();
@@ -274,6 +274,6 @@ class Group extends Field {
 	 * @throws \LogicException - If trying to add to another group.
 	 */
 	public function group(): void {
-		throw new \LogicException( __( 'You cannot add a group to another group.', 'lipe' ) );
+		throw new \LogicException( esc_html__( 'You cannot add a group to another group.', 'lipe' ) );
 	}
 }

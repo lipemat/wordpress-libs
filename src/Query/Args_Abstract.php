@@ -71,8 +71,8 @@ abstract class Args_Abstract {
 	 *
 	 * @return void
 	 */
-	public function __set( string $name, $value ) {
+	public function __set( string $name, $value ) { //phpcs:ignore -- $value is required in the magic method.
 		/* translators: {property name} {class name} */
-		throw new \LogicException( sprintf( __( 'Attempting to use the non-existent `%1$s` argument on %2$s.', 'lipe' ), $name, __CLASS__ ) );
+		throw new \LogicException( sprintf( esc_html__( 'Attempting to use the non-existent `%1$s` argument on %2$s.', 'lipe' ), esc_html( $name ), __CLASS__ ) );
 	}
 }

@@ -272,7 +272,7 @@ abstract class Meta_Box {
 	 */
 	protected static function should_meta_boxes_be_saved( int $post_id, \WP_Post $post ): bool {
 		// make sure this is a valid submission.
-		if ( ! isset( $_POST[ static::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ static::NONCE_NAME ], static::NONCE_ACTION ) ) {
+		if ( ! isset( $_POST[ static::NONCE_NAME ] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ static::NONCE_NAME ] ) ), static::NONCE_ACTION ) ) {
 			return false;
 		}
 

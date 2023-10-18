@@ -484,12 +484,12 @@ class Get_Comments extends Args_Abstract implements Meta_Query_Interface, Date_Q
 		switch ( true ) {
 			case \in_array( static::ORDERBY_COMMENT_IN, (array) $orderby, true ):
 				if ( empty( $this->comment__in ) ) {
-					throw new \LogicException( __( 'You cannot order by `comment__in` unless you specify the comment ins.', 'lipe' ) );
+					throw new \LogicException( esc_html__( 'You cannot order by `comment__in` unless you specify the comment ins.', 'lipe' ) );
 				}
 				break;
 			case \in_array( static::ORDERBY_META_VALUE, (array) $orderby, true ):
 				if ( empty( $this->meta_key ) ) {
-					throw new \LogicException( __( 'You cannot order by `meta_value` unless you specify the `meta_key`.', 'lipe' ) );
+					throw new \LogicException( esc_html__( 'You cannot order by `meta_value` unless you specify the `meta_key`.', 'lipe' ) );
 				}
 		}
 		$this->orderby = $orderby;

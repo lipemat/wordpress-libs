@@ -245,10 +245,11 @@ class Route {
 		}
 
 		$posts = get_posts( [
-			'post_type'      => static::NAME,
-			'post_status'    => 'publish',
-			'posts_per_page' => 1,
-			'fields'         => 'ids',
+			'fields'           => 'ids',
+			'post_status'      => 'publish',
+			'post_type'        => static::NAME,
+			'posts_per_page'   => 1,
+			'suppress_filters' => false,
 		] );
 		if ( isset( $posts[0] ) ) {
 			static::$post_id = $posts[0];

@@ -276,7 +276,7 @@ abstract class Settings {
 	 * @return void
 	 */
 	public function save_network_settings(): void {
-		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], $this->slug . '-options' ) ) {
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), $this->slug . '-options' ) ) {
 			return;
 		}
 
@@ -558,7 +558,7 @@ abstract class Settings {
 
 			foreach ( $this->settings as $section => $params ) {
 				printf( '<div class="tab-content" id="tab-%s" %s>',
-					$section,
+					esc_html( $section ),
 					$section !== $tab ? 'style="display:none;"' : ''
 				);
 				?>

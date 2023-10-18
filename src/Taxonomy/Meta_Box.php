@@ -104,9 +104,8 @@ class Meta_Box {
 	 * Displays the custom meta box on the post editing screen.
 	 *
 	 * @param \WP_Post            $post     The post object.
-	 * @param array<string,mixed> $meta_box The meta box arguments.
 	 */
-	public function do_meta_box( \WP_Post $post, array $meta_box ): void {
+	public function do_meta_box( \WP_Post $post ): void {
 		$object = get_taxonomy( $this->taxonomy );
 		$selected = wp_get_object_terms( $post->ID, $this->taxonomy, [
 			'fields' => 'ids',
@@ -224,7 +223,7 @@ class Meta_Box {
 				 *
 				 * @return void
 				 */
-				public function start_el( &$output, $data_object, $depth = 0, $args = [], $current_object_id = 0 ): void {
+				public function start_el( &$output, $data_object, $depth = 0, $args = [], $current_object_id = 0 ): void { //phpcs:ignore -- Signature must match parent.
 					$tax = get_taxonomy( $args['taxonomy'] );
 					if ( ! $tax ) {
 						return;

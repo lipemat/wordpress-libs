@@ -178,8 +178,9 @@ abstract class Post_List_Column {
 	 *
 	 * @throws \RuntimeException - If not overridden.
 	 */
+	//phpcs:ignore -- @todo rethink if/how this method is used. Should it be abstract?
 	public function filter_query( $value, \WP_Query $query ): \WP_Query {
-		throw new \RuntimeException( __( 'You must override the Post_List_Column::filter_query() method if you are using Post_List_Column::set_filters()', 'lipe' ) );
+		throw new \RuntimeException( esc_html__( 'You must override the Post_List_Column::filter_query() method if you are using Post_List_Column::set_filters()', 'lipe' ) );
 	}
 
 

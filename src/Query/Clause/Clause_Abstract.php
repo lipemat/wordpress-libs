@@ -109,7 +109,7 @@ abstract class Clause_Abstract {
 	 */
 	public function parent_clause(): Clause_Abstract {
 		if ( null === $this->parent_clause ) {
-			throw new \LogicException( __( 'You cannot switch to a parent clause if you are not already nested.', 'lipe' ) );
+			throw new \LogicException( esc_html__( 'You cannot switch to a parent clause if you are not already nested.', 'lipe' ) );
 		}
 		return $this->parent_clause;
 	}

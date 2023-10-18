@@ -123,6 +123,7 @@ class Zip {
 		$this->set_paths( $files, $zip_name );
 		$this->serve_existing_file();
 
+		//phpcs:ignore -- @todo Convert to `WP_Filesystem` calls.
 		if ( ! is_dir( $this->file_path ) && ! mkdir( $this->file_path ) && ! is_dir( $this->file_path ) ) {
 			die( 'Unable to create zip file' );
 		}
@@ -157,7 +158,7 @@ class Zip {
 		$zip->close();
 
 		foreach ( $success as $file ) {
-			unlink( $file );
+			wp_delete_file( $file );
 		}
 
 		// if at least one file made it.
