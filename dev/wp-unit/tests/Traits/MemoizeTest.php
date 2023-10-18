@@ -106,7 +106,7 @@ class MemoizeTest extends \WP_UnitTestCase {
 			public function heavy_persistent( ...$args ) {
 				return $this->persistent( function( ...$passed ) {
 					return [ $passed[0], microtime( true ), $passed[1] ?? null ];
-				}, __METHOD__, 0, ...$args );
+				}, 'heavy_persistent', 0, ...$args );
 			}
 		};
 		$second = $other->heavy_persistent( [] );
