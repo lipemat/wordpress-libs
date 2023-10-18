@@ -304,6 +304,15 @@ class Field {
 	public string $date_format;
 
 	/**
+	 * Options to pass to the a datepicker field.
+	 *
+	 * @see Field_Type::field_type_date()
+	 *
+	 * @var array
+	 */
+	public array $date_picker_options;
+
+	/**
 	 * Specify a default value for the field.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#default
