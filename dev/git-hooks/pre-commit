@@ -84,7 +84,7 @@ else
 fi
 
 function php_code_sniffer() {
-    if [[ "$PHP_FILES" != "" ]]; then
+    if [[ "$PHP_FILES" ]]; then
         if [[ ! -f ${PROJECT}/phpcs.xml ]] && [[ ! -f ${PROJECT}/phpcs.xml.dist ]]; then
             echo "${YELLOW}[pre-commit]${RED} ${PROJECT}/phpcs.xml or ${PROJECT}/phpcs.xml.dist not found!"
             exit_reset_colors
@@ -93,7 +93,7 @@ function php_code_sniffer() {
             FILES="$FILES ${PROJECT}/${FILE}"
         done
         echo "${YELLOW}[pre-commit]${BLUE} Running PHPCS... ${WHITE}"
-        OUTPUT=$(${PHPCS} --encoding=utf-8 -s -p ${FILES})
+        OUTPUT=$(${PHPCS} --encoding=utf-8 -s -p)
         if [[ $? != 0 ]]; then
             echo
             echo "${BLUE}PHPCS failed. Fix the error before commit!"
@@ -101,11 +101,11 @@ function php_code_sniffer() {
             echo
             echo "${YELLOW}For automatic fixes run"
             echo
-            echo "${WHITE}phpcbf $FILES"
+            echo "${WHITE}phpcbf${FILES}"
             echo
             exit_reset_colors
         fi
-        echo "${YELLOW}[pre-commit]${GREEN} PHPCS Passed!${WHITE}"
+        echo "${YELLOW}[pre-commit]${GREEN} PHPCS Passed!${RESET_COLOR}"
     fi
 }
 php_code_sniffer &
