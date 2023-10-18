@@ -614,6 +614,14 @@ class Field {
 	public $show_on_cb;
 
 	/**
+	 * When using a field of a select type this defines whether we should
+	 * show a " no option" option and what the value of said option will be.
+	 *
+	 * @var bool|string
+	 */
+	public $show_option_none;
+
+	/**
 	 * Save terms assigned to users as meta instead of the default
 	 * object terms system.
 	 *
