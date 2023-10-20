@@ -250,4 +250,13 @@ class Register_Block extends Args_Abstract {
 	 * @var array<int, array<string, mixed>>
 	 */
 	public array $variations;
+
+	/**
+	 * Block hooks available in WP 6.4+.
+	 *
+	 * @link https://make.wordpress.org/core/2023/10/15/introducing-block-hooks-for-dynamic-blocks/
+	 *
+	 * @var array<string, 'before'|'after'|'first_child'|'last_child'>
+	 */
+	public array $block_hooks;
 }
