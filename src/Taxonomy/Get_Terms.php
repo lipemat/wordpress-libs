@@ -14,7 +14,7 @@ use Lipe\Lib\Query\Clause\Meta_Query_Trait;
  * @author Mat Lipe
  * @since  4.0.0
  *
- * @link https://developer.wordpress.org/reference/classes/wp_term_query/__construct/
+ * @link   https://developer.wordpress.org/reference/classes/wp_term_query/__construct/
  */
 class Get_Terms extends Args_Abstract implements Meta_Query_Interface {
 	use Meta_Query_Trait;
@@ -277,6 +277,15 @@ class Get_Terms extends Args_Abstract implements Meta_Query_Interface {
 	public string $cache_domain;
 
 	/**
+	 * Whether to cache term information.
+	 *
+	 * Default true.
+	 *
+	 * @var bool
+	 */
+	public bool $cache_results;
+
+	/**
 	 * Whether to prime meta caches for matched terms.
 	 *
 	 * Default true.
@@ -302,6 +311,7 @@ class Get_Terms extends Args_Abstract implements Meta_Query_Interface {
 	 */
 	public function get_light_args(): array {
 		return \array_merge( [
+			'cache_results'          => true,
 			'suppress_filters'       => false,
 			'update_term_meta_cache' => false,
 		], $this->get_args() );
