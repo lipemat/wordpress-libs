@@ -14,7 +14,7 @@ use mocks\Post_Mock;
  * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
  */
 class FieldTest extends \WP_Test_REST_TestCase {
-	public function setUp() : void {
+	public function setUp(): void {
 		parent::setUp();
 
 		Repo::in()->clear_memoize_cache();
@@ -30,7 +30,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 	}
 
 
-	public function test_field_type_array() : void {
+	public function test_field_type_array(): void {
 		$field = new Field( 't', 'test' );
 		$field->type()->text_date( 'M', 'time_key', [ 'passive' => 1 ] );
 		$field->attributes = [ 'directly' => 1 ];
@@ -42,7 +42,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 	}
 
 
-	public function test_taxonomy_retrieval() : void {
+	public function test_taxonomy_retrieval(): void {
 		$term = self::factory()->category->create_and_get();
 		update_term_meta( $term->term_id, 'tc', [ $term->slug ] );
 		$terms = Repo::in()->get_value( $term->term_id, 'tc', 'term' );
@@ -50,7 +50,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 	}
 
 
-	public function test_term_select() : void {
+	public function test_term_select(): void {
 		$term = self::factory()->tag->create_and_get();
 
 		$object = Post_Mock::factory( self::factory()->post->create_and_get() );
@@ -73,7 +73,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 	}
 
 
-	public function test_show_in_rest() : void {
+	public function test_show_in_rest(): void {
 		$box = new Box( 'rested', [ 'post' ], 'Sanitize Box' );
 		$box->field( 'unit-testing/t1', 'TEST 1' )
 		    ->text()
@@ -107,7 +107,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 	}
 
 
-	public function test_defaults() : void {
+	public function test_defaults(): void {
 		$post = self::factory()->post->create_and_get();
 		$box = new Box( 'defaulted', [ 'post' ], 'Default Box' );
 		$box->field( 'd1', 'Default 1' )
@@ -131,7 +131,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 	}
 
 
-	public function test_default_callback() : void {
+	public function test_default_callback(): void {
 		$box = new Box( __FUNCTION__, [ 'post' ], __METHOD__ );
 		$box->field( 'd1', __METHOD__ . '-d1' )
 		    ->text();
@@ -150,7 +150,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 	}
 
 
-	public function test_options_defaults() : void {
+	public function test_options_defaults(): void {
 		$c = new class implements \ArrayAccess {
 			use Settings_Trait;
 
@@ -174,7 +174,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 	}
 
 
-	public function test_object_subtypes() : void {
+	public function test_object_subtypes(): void {
 		$box = new Box( 'object_subtypes', [ 'page' ], 'Sanitize Box' );
 		$box->field( 'tos', 'TEST 1' )
 		    ->text()
@@ -204,5 +204,42 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		$request->set_query_params( [ 'domain' => 'unit-testx2.com', 'site_name' => 'Unit Testx' ] );
 		$response = rest_get_server()->dispatch( $request );
 		$this->assertArrayNotHasKey( 'tos', $response->data['meta'] );
+	}
+
+
+	/**
+	 * @requires wp_post_revision_meta_keys
+	 */
+	public function test_revision_support(): void {
+		$this->assertNotContains( 'tos', wp_post_revision_meta_keys( 'page' ) );
+
+		$box = new Box( 'object_subtypes', [ 'page' ], 'Sanitize Box' );
+		$box->field( 'tos', 'TEST 1' )
+		    ->text()
+		    ->revisions_enabled( true );
+		$box->register_fields();
+		$this->assertContains( 'tos', wp_post_revision_meta_keys( 'page' ) );
+
+		$box->field( 'tos', 'TEST 1' )
+		    ->text()
+		    ->revisions_enabled( false );
+		$box->register_fields();
+		$this->assertNotContains( 'tos', wp_post_revision_meta_keys( 'page' ) );
+
+		$box = new Options_Page( 'options', 'Sanitize Box' );
+		$box->field( 'tos', 'TEST 1' )
+		    ->text()
+		    ->revisions_enabled( false );
+		$box->register_fields();
+		// So we can reuse the same method saying "doing it wrong".
+		$this->assertCount( 1, $this->caught_doing_it_wrong );
+		$this->caught_doing_it_wrong = [];
+
+		$box = new Term_Box( 'options', [ 'category' ], 'Sanitize Box' );
+		$box->field( 'tos', 'TEST 1' )
+		    ->text()
+		    ->revisions_enabled( false );
+		$this->setExpectedIncorrectUsage( 'Lipe\Lib\CMB2\Field::revisions_enabled' );
+		$box->register_fields();
 	}
 }

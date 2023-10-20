@@ -18,18 +18,6 @@ use Lipe\Lib\Util\Arrays;
  */
 class Field {
 	/**
-	 * The data key. If using for posts, will be the post-meta key.
-	 * If using for an option's page, will be the array key.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#id
-	 *
-	 * @example 'namespace_first_name',
-	 *
-	 * @var string
-	 */
-	protected string $id = '';
-
-	/**
 	 * ID of meta box this field is assigned to.
 	 *
 	 * @internal
@@ -39,15 +27,6 @@ class Field {
 	public string $box_id;
 
 	/**
-	 * The field label
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#name
-	 *
-	 * @var ?string
-	 */
-	protected ?string $name = null;
-
-	/**
 	 * A custom callback to return the label for the field
 	 *
 	 * Part of cmb2 core but undocumented
@@ -55,21 +34,6 @@ class Field {
 	 * @var callable
 	 */
 	public $label_cb;
-
-	/**
-	 * The type of field
-	 * Calling Field::type() will return the Field_Type object, which
-	 * will auto complete any type.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#type
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
-	 *
-	 * @see  Field_Type;
-	 * @see  Field::type;
-	 *
-	 * @var string;
-	 */
-	protected string $type;
 
 	/**
 	 * Used by the Repo to determine the data type of this field.
@@ -225,17 +189,6 @@ class Field {
 	public $after_display_wrap;
 
 	/**
-	 * Enable a character/word counter for a 'textarea', 'wysiwyg', or 'text' type field.
-	 *
-	 * @internal
-	 *
-	 * @phpstan-var true|'words'
-	 *
-	 * @var bool|string
-	 */
-	protected $char_counter;
-
-	/**
 	 * Used in conjunction with `char_counter` to count character/words remaining.
 	 *
 	 * @var int
@@ -322,28 +275,6 @@ class Field {
 	 * @var string|array
 	 */
 	public $default;
-
-	/**
-	 * Specify a callback to retrieve default value for the field.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#default_cb
-	 *
-	 * @internal
-	 *
-	 * @var callable
-	 */
-	protected $default_cb;
-
-	/**
-	 * Field description. Usually under or adjacent to the field input.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#desc
-	 *
-	 * @internal
-	 *
-	 * @var string
-	 */
-	protected string $desc = '';
 
 	/**
 	 * To be used with $this->column or $this->column().
@@ -482,39 +413,6 @@ class Field {
 	public $render_row_cb;
 
 	/**
-	 * Supported by most field types, and will make the individual field a repeatable one.
-	 *
-	 * To customize Add Row button label, set
-	 * $this->text[ 'add_row_text' ] = 'Add Row':
-	 *
-	 * @see     Field::repeatable()
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#repeatable
-	 * @link    https://github.com/WebDevStudios/CMB2/wiki/Field-Types#types
-	 *
-	 * @internal
-	 *
-	 * @var bool
-	 */
-	protected bool $repeatable = false;
-
-	/**
-	 * Filter the value which is returned in the rest api responses
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#rest_value_cb
-	 * @link    https://github.com/CMB2/CMB2/wiki/REST-API#overriding-a-returned-value-for-a-individual-field
-	 *
-	 * @see     Field::rest_value_cb()
-	 *
-	 * @example 'intval'
-	 *
-	 * @internal
-	 *
-	 * @var callable
-	 */
-	protected $rest_value_cb;
-
-	/**
 	 * New field parameter for taxonomy fields, 'remove_default'
 	 * which allows disabling the default taxonomy metabox.
 	 *
@@ -554,9 +452,9 @@ class Field {
 	 * up every time CMB2 saves the field. Instead, we set this property when a field
 	 * may be registered with `register_meta`.
 	 *
-	 * @internal
-	 *
 	 * @see Field::$sanitization_cb
+	 *
+	 * @internal
 	 *
 	 * @var callable|null
 	 */
@@ -631,21 +529,6 @@ class Field {
 	public $show_option_none;
 
 	/**
-	 * Save terms assigned to users as meta instead of the default
-	 * object terms system.
-	 *
-	 * Prevent conflicts with User ID and Post ID in the same
-	 * `term_relationship` table.
-	 *
-	 * @notice Required lipemat version of CMB2 to support this argument.
-	 *
-	 * @see    \CMB2_Type_Taxonomy_Base::get_object_terms
-	 *
-	 * @var bool
-	 */
-	protected bool $store_user_terms_in_meta = true;
-
-	/**
 	 * Id of boxes tab, which this field should display in.
 	 * The tab must be first registered with the box.
 	 *
@@ -657,15 +540,6 @@ class Field {
 	 * @var string
 	 */
 	public string $tab;
-
-	/**
-	 * A render row cb to use inside a tab.
-	 * Stored here, so we can set the `render_row_cb` to the tab's
-	 * method an keep outside `render_row_cb` intact.
-	 *
-	 * @var callable
-	 */
-	protected $tab_content_cb;
 
 	/**
 	 * Used for date/timestamp fields.
@@ -737,24 +611,6 @@ class Field {
 	public array $query_args;
 
 	/**
-	 * Parent class calling this Field.
-	 * For any conditional logic where we need to know
-	 * which class is currently using this.
-	 *
-	 * @var Box|Group|null
-	 */
-	protected $box;
-
-	/**
-	 * Callback Event handlers registered with this field.
-	 *
-	 * @internal
-	 *
-	 * @var Event_Callbacks[]
-	 */
-	protected array $event_callbacks = [];
-
-	/**
 	 * Internal property to hold a callback function when
 	 * a meta key is deleted.
 	 *
@@ -777,6 +633,163 @@ class Field {
 	 * @var callable
 	 */
 	public $change_cb;
+
+	/**
+	 * Enable revision support for 'post' objects.
+	 *
+	 * @since WP 6.4.
+	 *
+	 * @see   register_meta()
+	 *
+	 * @internal
+	 *
+	 * @var bool
+	 */
+	public bool $revisions_enabled;
+
+	/**
+	 * The data key. If using for posts, will be the post-meta key.
+	 * If using for an option's page, will be the array key.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#id
+	 *
+	 * @example 'namespace_first_name',
+	 *
+	 * @var string
+	 */
+	protected string $id = '';
+
+	/**
+	 * The field label
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#name
+	 *
+	 * @var ?string
+	 */
+	protected ?string $name = null;
+
+	/**
+	 * The type of field
+	 * Calling Field::type() will return the Field_Type object, which
+	 * will auto complete any type.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#type
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
+	 *
+	 * @see  Field_Type;
+	 * @see  Field::type;
+	 *
+	 * @var string;
+	 */
+	protected string $type;
+
+	/**
+	 * Enable a character/word counter for a 'textarea', 'wysiwyg', or 'text' type field.
+	 *
+	 * @internal
+	 *
+	 * @phpstan-var true|'words'
+	 *
+	 * @var bool|string
+	 */
+	protected $char_counter;
+
+	/**
+	 * Specify a callback to retrieve default value for the field.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#default_cb
+	 *
+	 * @internal
+	 *
+	 * @var callable
+	 */
+	protected $default_cb;
+
+	/**
+	 * Field description. Usually under or adjacent to the field input.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#desc
+	 *
+	 * @internal
+	 *
+	 * @var string
+	 */
+	protected string $desc = '';
+
+	/**
+	 * Supported by most field types, and will make the individual field a repeatable one.
+	 *
+	 * To customize Add Row button label, set
+	 * $this->text[ 'add_row_text' ] = 'Add Row':
+	 *
+	 * @see     Field::repeatable()
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#repeatable
+	 * @link    https://github.com/WebDevStudios/CMB2/wiki/Field-Types#types
+	 *
+	 * @internal
+	 *
+	 * @var bool
+	 */
+	protected bool $repeatable = false;
+
+	/**
+	 * Filter the value which is returned in the rest api responses
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#rest_value_cb
+	 * @link    https://github.com/CMB2/CMB2/wiki/REST-API#overriding-a-returned-value-for-a-individual-field
+	 *
+	 * @see     Field::rest_value_cb()
+	 *
+	 * @example 'intval'
+	 *
+	 * @internal
+	 *
+	 * @var callable
+	 */
+	protected $rest_value_cb;
+
+	/**
+	 * Save terms assigned to users as meta instead of the default
+	 * object terms system.
+	 *
+	 * Prevent conflicts with User ID and Post ID in the same
+	 * `term_relationship` table.
+	 *
+	 * @notice Required lipemat version of CMB2 to support this argument.
+	 *
+	 * @see    \CMB2_Type_Taxonomy_Base::get_object_terms
+	 *
+	 * @var bool
+	 */
+	protected bool $store_user_terms_in_meta = true;
+
+	/**
+	 * A render row cb to use inside a tab.
+	 * Stored here, so we can set the `render_row_cb` to the tab's
+	 * method an keep outside `render_row_cb` intact.
+	 *
+	 * @var callable
+	 */
+	protected $tab_content_cb;
+
+	/**
+	 * Parent class calling this Field.
+	 * For any conditional logic where we need to know
+	 * which class is currently using this.
+	 *
+	 * @var Box|Group|null
+	 */
+	protected $box;
+
+	/**
+	 * Callback Event handlers registered with this field.
+	 *
+	 * @internal
+	 *
+	 * @var Event_Callbacks[]
+	 */
+	protected array $event_callbacks = [];
 
 
 	/**
@@ -1155,6 +1168,33 @@ class Field {
 
 
 	/**
+	 * Enable revision support for this meta_key.
+	 * Can only be used when the object type is 'post'.
+	 *
+	 * @param bool $enable - Enable revisions on this field.
+	 *
+	 * @return $this
+	 */
+	public function revisions_enabled( bool $enable = true ): Field {
+		$box = $this->get_box();
+		if ( null === $box ) {
+			_doing_it_wrong( __METHOD__, 'The box is not available for enabling revisions.', '4.5.0' );
+			return $this;
+		}
+		if ( $box->is_group() ) {
+			_doing_it_wrong( __METHOD__, "Revision may only be enabled on a group. Not a group's field .", '4.5.0' );
+			return $this;
+		}
+		if ( 'post' !== $box->get_object_type() ) {
+			_doing_it_wrong( __METHOD__, "Revisions are only supported on 'post' objects.", '4.5.0' );
+			return $this;
+		}
+		$this->revisions_enabled = $enable;
+		return $this;
+	}
+
+
+	/**
 	 * Override the box's `show_in_rest` value for this field.
 	 *
 	 * If the box's `show_in_rest` is false, and a non `false` parameter
@@ -1313,6 +1353,26 @@ class Field {
 
 
 	/**
+	 * Set a Fields Type and register the type with Meta\Repo
+	 *
+	 * @phpstan-param REPO::TYPE_* $type
+	 *
+	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types
+	 *
+	 * @internal
+	 *
+	 * @param string               $type      - CMB2 field type.
+	 * @param string               $data_type - Field data structure type.
+	 *
+	 * @return void
+	 */
+	public function set_type( string $type, string $data_type ): void {
+		$this->type = $type;
+		$this->data_type = $data_type;
+	}
+
+
+	/**
 	 * Callback to render the field's row.
 	 *
 	 * @param callable $callback - The callback to render the field's row.
@@ -1323,26 +1383,6 @@ class Field {
 		$this->render_row_cb = $callback;
 
 		return $this;
-	}
-
-
-	/**
-	 * Set a Fields Type and register the type with Meta\Repo
-	 *
-	 * @phpstan-param REPO::TYPE_* $type
-	 *
-	 * @param string               $type      - CMB2 field type.
-	 * @param string               $data_type - Field data structure type.
-	 *
-	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types
-	 *
-	 * @internal
-	 *
-	 * @return void
-	 */
-	public function set_type( string $type, string $data_type ): void {
-		$this->type = $type;
-		$this->data_type = $data_type;
 	}
 
 
@@ -1466,11 +1506,11 @@ class Field {
 	 *
 	 * @filter default_{$meta_type}_metadata 11, 3
 	 *
-	 * @param mixed      $value     - Empty or a value set by another filter.
+	 * @internal
+	 *
+	 * @param mixed      $value     - Empty, or a value set by another filter.
 	 * @param string|int $object_id - Current post/term/user id.
 	 * @param string     $meta_key  - Meta key being filtered.
-	 *
-	 * @internal
 	 *
 	 * @return mixed
 	 */

@@ -29,44 +29,6 @@ class Box {
 	protected const EXCLUDE_CMB2_REST_ENDPOINT = 'lipe/lib/cmb2/box/exclude-cmb2-rest-endpoint';
 
 	/**
-	 * The id of metabox
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#id
-	 *
-	 * @var string
-	 */
-	protected string $id;
-
-	/**
-	 * The context within the screen where the boxes should display.
-	 * Available contexts vary from screen to screen.
-	 *
-	 * @see     Box
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#context
-	 * @example 'normal', 'side', 'advanced' 'form_top',
-	 *          'before_permalink', 'after_title', 'after_editor'
-	 *
-	 * @var string
-	 */
-	protected string $context;
-
-	/**
-	 * Title display in the admin metabox.
-	 *
-	 * To keep from registering an actual post-screen metabox,
-	 * omit the 'title' property from the metabox registration array.
-	 * (WordPress will not display metaboxes without titles anyway)
-	 * This is a good solution if you want to handle outputting your
-	 * metaboxes/fields elsewhere in the post-screen.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#title
-	 *
-	 * @var string|false
-	 */
-	protected $title = '';
-
-	/**
 	 * Priority of the metabox in its context.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#priority
@@ -331,6 +293,51 @@ class Box {
 	public array $tabs = [];
 
 	/**
+	 * The CMB2 object
+	 *
+	 * @var \CMB2
+	 */
+	public \CMB2 $cmb;
+
+	/**
+	 * The id of metabox
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#id
+	 *
+	 * @var string
+	 */
+	protected string $id;
+
+	/**
+	 * The context within the screen where the boxes should display.
+	 * Available contexts vary from screen to screen.
+	 *
+	 * @see     Box
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#context
+	 * @example 'normal', 'side', 'advanced' 'form_top',
+	 *          'before_permalink', 'after_title', 'after_editor'
+	 *
+	 * @var string
+	 */
+	protected string $context;
+
+	/**
+	 * Title display in the admin metabox.
+	 *
+	 * To keep from registering an actual post-screen metabox,
+	 * omit the 'title' property from the metabox registration array.
+	 * (WordPress will not display metaboxes without titles anyway)
+	 * This is a good solution if you want to handle outputting your
+	 * metaboxes/fields elsewhere in the post-screen.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#title
+	 *
+	 * @var string|false
+	 */
+	protected $title = '';
+
+	/**
 	 * Tabs to display either vertical or horizontal
 	 *
 	 * @see     Box::tabs_style()
@@ -339,24 +346,24 @@ class Box {
 	 */
 	protected string $tab_style = 'vertical';
 
-	/**
-	 * The CMB2 object
-	 *
-	 * @var \CMB2
-	 */
-	public \CMB2 $cmb;
-
 
 	/**
 	 * Register a new meta box.
 	 *
 	 * @phpstan-param 'normal'|'side'|'advanced'|'form_top'|'before_permalink'| 'after_title'|'after_editor' $context
 	 *
-	 * @param string      $id - ID of this box.
-	 * @param array       $object_types - [post type slugs], or 'user', 'term',
-	 *                                  'comment', or 'options-page'.
-	 * @param string|null $title - Title of this box.
-	 * @param string      $context - Location the meta box will display.
+	 * @param string                                                                                         $id           - ID of this
+	 *                                                                                                                     box.
+	 * @param array                                                                                          $object_types - [post type
+	 *                                                                                                                     slugs], or
+	 *                                                                                                                     'user', 'term',
+	 *                                                                                                                     'comment', or
+	 *                                                                                                                     'options-page'.
+	 * @param string|null                                                                                    $title        - Title of this
+	 *                                                                                                                     box.
+	 * @param string                                                                                         $context      - Location the
+	 *                                                                                                                     meta box will
+	 *                                                                                                                     display.
 	 */
 	public function __construct( string $id, array $object_types, ?string $title = null, string $context = 'normal' ) {
 		$this->id = $id;
@@ -375,7 +382,7 @@ class Box {
 	 */
 	public function description( string $description ): void {
 		foreach ( $this->get_object_types() as $_type ) {
-			add_action( "cmb2_before_{$_type}_form_{$this->id}", function () use ( $description ) {
+			add_action( "cmb2_before_{$_type}_form_{$this->id}", function() use ( $description ) {
 				?>
 				<div class="cmb-row">
 					<p>
@@ -594,6 +601,9 @@ class Box {
 				return \call_user_func( $field->sanitize_callback, $value, $field->get_field_args(), $field->get_cmb2_field() );
 			};
 		}
+		if ( isset( $field->revisions_enabled ) ) {
+			$config['revisions_enabled'] = $field->revisions_enabled;
+		}
 
 		// Nothing to register.
 		if ( 3 > \count( $config ) ) {
@@ -602,12 +612,11 @@ class Box {
 
 		$type = $this->get_object_type();
 		$sub_types = $this->object_types;
-		if ( 'term' === $this->get_object_type() ) {
-			$type = 'term';
+		if ( 'term' === $type ) {
 			if ( isset( $this->taxonomies ) ) {
 				$sub_types = $this->taxonomies;
 			}
-		} elseif ( \in_array( $this->get_object_type(), [ 'user', 'comment' ], true ) ) {
+		} elseif ( \in_array( $type, [ 'user', 'comment' ], true ) ) {
 			$sub_types = [ false ];
 		}
 
