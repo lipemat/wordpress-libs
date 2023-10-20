@@ -8,7 +8,7 @@ class ResourcesTest extends \WP_UnitTestCase {
 	private $requests = [];
 
 
-	public function setUp() : void {
+	public function setUp(): void {
 		parent::setUp();
 		$this->requests = [];
 
@@ -25,7 +25,7 @@ class ResourcesTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_get_revision() : void {
+	public function test_get_revision(): void {
 		file_put_contents( Resources::in()->get_site_root() . '.revision', 'XX' );
 		$this->assertEquals( 'XX', Resources::in()->get_revision() );
 
@@ -52,19 +52,20 @@ class ResourcesTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_get_content_hash() : void {
+	public function test_get_content_hash(): void {
 		$this->assertEquals( hash_file( 'fnv1a64', __FILE__ ), Resources::in()->get_content_hash( plugins_url( 'ResourcesTest.php', __FILE__ ) ) );
 		$this->assertEquals( hash_file( 'fnv1a64', __FILE__ ), Resources::in()->get_content_hash( plugins_url( 'ResourcesTest.php', __FILE__ ) ) );
 		$this->assertNull( Resources::in()->get_content_hash( 'http://i-dont-exist/anywhere' ) );
 	}
 
-	public function test_get_file_modified_time() : void {
+
+	public function test_get_file_modified_time(): void {
 		$this->assertEquals( filemtime( __FILE__ ), Resources::in()->get_file_modified_time( plugins_url( 'ResourcesTest.php', __FILE__ ) ) );
 		$this->assertNull( Resources::in()->get_content_hash( 'http://i-dont-exist/anywhere' ) );
 
 		$time = time();
 		touch( __FILE__, $time );
-	    filemtime( __FILE__ ); //prime the time.
+		filemtime( __FILE__ ); //prime the time.
 		$this->assertEquals( $time, Resources::in()->get_file_modified_time( plugins_url( 'ResourcesTest.php', __FILE__ ) ) );
 	}
 
@@ -73,7 +74,7 @@ class ResourcesTest extends \WP_UnitTestCase {
 	 * Verify functionality of switching WP Core resources to
 	 * unpkg CDN.
 	 */
-	public function test_use_cdn_for_resources() : void {
+	public function test_use_cdn_for_resources(): void {
 		$react_version = wp_scripts()->query( 'react' )->ver;
 		$lodash_version = wp_scripts()->query( 'lodash' )->ver;
 		$jquery_version = wp_scripts()->query( 'jquery' )->ver;
@@ -89,7 +90,7 @@ class ResourcesTest extends \WP_UnitTestCase {
 
 		ob_start();
 		wp_scripts()->do_item( 'react' );
-		$script = ob_get_clean();
+		$script = \str_replace( '"', "'", ob_get_clean() );
 		$this->assertStringContainsString( "src='https://unpkg.com/react@" . $react_version . "/umd/react.production.min.js'", $script );
 		$this->assertStringContainsString( "integrity='", $script );
 		$this->assertStringContainsString( "crossorigin='anonymous'", $script );
@@ -112,7 +113,7 @@ class ResourcesTest extends \WP_UnitTestCase {
 	 * Make sure the appropriate integrity and crossorigin are added when
 	 * using the unpkg integrity.
 	 */
-	public function test_unpkg_integrity() : void {
+	public function test_unpkg_integrity(): void {
 		$this->assertArrayNotHasKey( 'https://unpkg.com/jquery@3.1.1/dist/jquery.min.js', get_network_option( 0, Resources::INTEGRITY, [] ) );
 		$this->assertEmpty( $this->requests );
 
@@ -123,7 +124,7 @@ class ResourcesTest extends \WP_UnitTestCase {
 
 		ob_start();
 		wp_scripts()->do_item( __METHOD__ );
-		$this->assertEquals( "<script integrity='sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7' crossorigin='anonymous' src='https://unpkg.com/jquery@3.1.1/dist/jquery.min.js' id='Lipe\Lib\Theme\ResourcesTest::test_unpkg_integrity-js'></script>" . "\n", ob_get_clean() );
+		$this->assertEquals( "<script integrity='sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7' crossorigin='anonymous' src='https://unpkg.com/jquery@3.1.1/dist/jquery.min.js' id='Lipe\Lib\Theme\ResourcesTest::test_unpkg_integrity-js'></script>" . "\n", str_replace( '"', "'", ob_get_clean() ) );
 		$cache = get_network_option( 0, Resources::INTEGRITY, [] );
 		$this->assertEquals( 'sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7', $cache['https://unpkg.com/jquery@3.1.1/dist/jquery.min.js'] );
 		$this->assertCount( 1, $this->requests );
@@ -132,7 +133,7 @@ class ResourcesTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_async_javascript() : void {
+	public function test_async_javascript(): void {
 		[ $url, $callback ] = $this->get_script_handler();
 		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
 
@@ -182,14 +183,14 @@ class ResourcesTest extends \WP_UnitTestCase {
 	/**
 	 * @return array<string,callable()>
 	 */
-	private function get_script_handler() : array {
+	private function get_script_handler(): array {
 		$url = plugins_url( 'ResourcesTest.php', __FILE__ );
 		wp_register_script( 'arbuitrary', $url, [], null );
 
 		$callback = function() {
 			ob_start();
 			wp_scripts()->do_item( 'arbuitrary' );
-			return ob_get_clean();
+			return \str_replace( '"', "'", ob_get_clean() );
 		};
 		return [ $url, $callback, 'arbuitrary' ];
 	}
