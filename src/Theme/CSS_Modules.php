@@ -36,7 +36,6 @@ class CSS_Modules {
 	 */
 	protected string $prepend = '';
 
-
 	/**
 	 * Name of JSON file when using a combined JSON file.
 	 *
@@ -85,7 +84,7 @@ class CSS_Modules {
 	public function styles( string $file ): array {
 		$file_with_prefix = $this->prepend . $file . '.pcss';
 		if ( '' !== $this->combined_filename ) {
-			if ( \substr( $file, 0, 3 ) === '../' ) {
+			if ( 0 === \strpos( $file, '../' ) ) {
 				$file_with_prefix = \substr( $file, 3 ) . '.pcss';
 			}
 			return $this->get_combined_css_classes()[ $file_with_prefix ] ?? [];
@@ -93,7 +92,11 @@ class CSS_Modules {
 
 		try {
 			//phpcs:ignore -- Reading local file.
-			$classes = json_decode( file_get_contents( trailingslashit( $this->path ) . "{$file_with_prefix}.json" ), true, 3, JSON_THROW_ON_ERROR );
+			$file_contents = @\file_get_contents( trailingslashit( $this->path ) . "{$file_with_prefix}.json" );
+			if ( false === $file_contents ) {
+				return [];
+			}
+			$classes = json_decode( $file_contents, true, 3, JSON_THROW_ON_ERROR );
 		} catch ( \JsonException $exception ) {
 			return [];
 		}
@@ -110,7 +113,11 @@ class CSS_Modules {
 		return $this->once( function() {
 			try {
 				//phpcs:ignore -- Reading local file.
-				$classes = \json_decode( \file_get_contents( trailingslashit( $this->path ) . $this->combined_filename ), true, 3, JSON_THROW_ON_ERROR );
+				$file_contents = @\file_get_contents( trailingslashit( $this->path ) . $this->combined_filename );
+				if ( false === $file_contents ) {
+					return [];
+				}
+				$classes = \json_decode( $file_contents, true, 3, JSON_THROW_ON_ERROR );
 			} catch ( \JsonException $exception ) {
 				return [];
 			}
