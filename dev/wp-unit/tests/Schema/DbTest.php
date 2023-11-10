@@ -55,7 +55,7 @@ class DbTest extends \WP_UnitTestCase {
 		\array_walk( $results['items'], function( $item ) use ( $expected, $multiple ) {
 			if ( $multiple ) {
 				foreach ( $expected as $column ) {
-					$this->assertObjectHasAttribute( $column, $item );
+					$this->assertTrue( property_exists( $item, $column ) );
 				}
 				$this->assertSameSize( $expected, (array) $item );
 			} else {
