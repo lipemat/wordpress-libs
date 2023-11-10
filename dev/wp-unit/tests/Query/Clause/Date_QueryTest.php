@@ -12,7 +12,7 @@ use Lipe\Lib\Query\Args;
 class Date_QueryTest extends \WP_UnitTestCase {
 
 	public function test_after() : void {
-		$args = new Args();
+		$args = new Args( [] );
 		$args->date_query()
 		     ->after( '1200', '14', '0' )
 		     ->column( 'fake-db-column' );
@@ -29,7 +29,7 @@ class Date_QueryTest extends \WP_UnitTestCase {
 			],
 		], $args->get_args() );
 
-		$args = new Args();
+		$args = new Args( []);
 		$args->date_query()
 		     ->after_string( '2022-04-14' );
 		$this->assertEquals( [
@@ -43,7 +43,7 @@ class Date_QueryTest extends \WP_UnitTestCase {
 
 
 	public function test_before() : void {
-		$args = new Args();
+		$args = new Args( [] );
 		$args->date_query()
 		     ->before( '1200', '01', '20' )
 		     ->inclusive();
@@ -64,7 +64,7 @@ class Date_QueryTest extends \WP_UnitTestCase {
 
 
 	public function test_next_clause() : void {
-		$args = new Args();
+		$args = new Args( [] );
 		$args->date_query()
 		     ->before( '1200', '01', '20' )
 		     ->inclusive()

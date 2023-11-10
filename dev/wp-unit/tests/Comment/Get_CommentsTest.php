@@ -65,7 +65,7 @@ class Get_CommentsTest extends \WP_UnitTestCase {
 		] );
 		$previous = $query->query_vars;
 
-		$args = new Get_Comments();
+		$args = new Get_Comments( [] );
 		$args->karma = 4;
 		$args->orderby( 'user_id' );
 		$args->merge_query( $query );

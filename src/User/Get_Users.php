@@ -3,11 +3,10 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\User;
 
-use Lipe\Lib\Query\Args_Abstract;
+use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Query\Args_Interface;
 use Lipe\Lib\Query\Clause\Meta_Query_Interface;
 use Lipe\Lib\Query\Clause\Meta_Query_Trait;
-
-//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
 
 /**
  * A fluent interface for the `get_users` function in WordPress.
@@ -17,8 +16,9 @@ use Lipe\Lib\Query\Clause\Meta_Query_Trait;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_user_query/prepare_query/
  */
-class Get_Users extends Args_Abstract implements Meta_Query_Interface {
+class Get_Users implements Meta_Query_Interface, Args_Interface {
 	use Meta_Query_Trait;
+	use Args_Trait;
 
 	public const FIELD_ID           = 'ID';
 	public const FIELD_DISPLAY_NAME = 'display_name';

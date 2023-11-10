@@ -3,13 +3,12 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Comment;
 
-use Lipe\Lib\Query\Args_Abstract;
+use Lipe\Lib\Query\Args_Interface;
+use Lipe\Lib\Query\Args_Trait;
 use Lipe\Lib\Query\Clause\Date_Query_Interface;
 use Lipe\Lib\Query\Clause\Date_Query_Trait;
 use Lipe\Lib\Query\Clause\Meta_Query_Interface;
 use Lipe\Lib\Query\Clause\Meta_Query_Trait;
-
-//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
 
 /**
  * A fluent interface for the `get_comments` function in WordPress.
@@ -19,7 +18,8 @@ use Lipe\Lib\Query\Clause\Meta_Query_Trait;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_comment_query/__construct/
  */
-class Get_Comments extends Args_Abstract implements Meta_Query_Interface, Date_Query_Interface {
+class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, Args_Interface {
+	use Args_Trait;
 	use Date_Query_Trait;
 	use Meta_Query_Trait;
 
@@ -471,7 +471,7 @@ class Get_Comments extends Args_Abstract implements Meta_Query_Interface, Date_Q
 	 *   - 'meta_value'
 	 *
 	 * @phpstan-param self::ORDERBY*|array<int,self::ORDERBY*> $orderby
-	 * @phpstan-param 'ASC'|'DESC'|'' $order
+	 * @phpstan-param 'ASC'|'DESC'|''                          $order
 	 *
 	 * @param string|array                                     $orderby - Comment field to order by.
 	 * @param string                                           $order   - Optional order of the order by.

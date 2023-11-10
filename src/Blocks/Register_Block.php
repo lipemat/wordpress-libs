@@ -4,7 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Blocks;
 
-use Lipe\Lib\Query\Args_Abstract;
+use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Query\Args_Interface;
 
 /**
  * A fluent interface for calling `register_block_type`.
@@ -29,7 +30,9 @@ use Lipe\Lib\Query\Args_Abstract;
  *     }
  * }>
  */
-class Register_Block extends Args_Abstract {
+class Register_Block implements Args_Interface {
+	use Args_Trait;
+
 	/**
 	 * Block API version.
 	 *

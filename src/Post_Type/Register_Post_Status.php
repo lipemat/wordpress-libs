@@ -3,7 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Post_Type;
 
-use Lipe\Lib\Query\Args_Abstract;
+use Lipe\Lib\Query\Args_Interface;
+use Lipe\Lib\Query\Args_Trait;
 
 /**
  * A fluent interface for the `register_post_status` function in WordPress.
@@ -13,7 +14,9 @@ use Lipe\Lib\Query\Args_Abstract;
  *
  * @link   https://developer.wordpress.org/reference/functions/register_post_status/
  */
-class Register_Post_Status extends Args_Abstract {
+class Register_Post_Status implements Args_Interface {
+	use Args_Trait;
+
 	/**
 	 * A descriptive name for the post status marked for translation.
 	 *

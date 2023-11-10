@@ -3,8 +3,6 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Query\Clause;
 
-use Lipe\Lib\Query\Args;
-
 /**
  * Generate a `tax_query` argument for a `WP_Query.
  *
@@ -13,11 +11,18 @@ use Lipe\Lib\Query\Args;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters
  *
- * @extends Clause_Abstract<Args>
+ * @implements Clause_Interface<Tax_Query, Tax_Query_Interface>
  *
  * @internal
  */
-class Tax_Query extends Clause_Abstract {
+class Tax_Query implements Clause_Interface {
+	/**
+	 * Pass generic to trait.
+	 *
+	 * @use Clause_Trait<Tax_Query>
+	 */
+	use Clause_Trait;
+
 	public const FIELD_ID          = 'term_id';
 	public const FIELD_NAME        = 'name';
 	public const FIELD_NONE        = '';
@@ -110,16 +115,18 @@ class Tax_Query extends Clause_Abstract {
 	 *
 	 * @internal
 	 *
-	 * @param Args $args_class - Args class, which supports properties this method will assign.
+	 * @param Tax_Query_Interface $args_class - Args class, which supports properties this method will assign.
+	 *
+	 * @throws \LogicException - If the `tax_query` property is not defined on the args class.
 	 *
 	 * @return void
 	 */
 	public function flatten( $args_class ): void {
 		$this->extract_nested( $this->clauses, $this );
-		if ( ! isset( $args_class->tax_query ) ) {
-			$args_class->tax_query = [];
+		if ( ! property_exists( $args_class, 'tax_query' ) ) {
+			throw new \LogicException( 'The `tax_query` property is required on the class using the `Tax_Query` trait.' );
 		}
-		$args_class->tax_query = \array_merge( $args_class->tax_query, $this->clauses );
+		$args_class->tax_query = \array_merge( $args_class->tax_query ?? [], $this->clauses );
 	}
 
 

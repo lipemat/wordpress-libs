@@ -11,11 +11,18 @@ namespace Lipe\Lib\Query\Clause;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters
  *
- * @extends Clause_Abstract<Meta_Query_Interface>
+ * @implements  Clause_Interface<Meta_Query, Meta_Query_Interface>
  *
  * @internal
  */
-class Meta_Query extends Clause_Abstract {
+class Meta_Query implements Clause_Interface {
+	/**
+	 * Pass generic to trait.
+	 *
+	 * @use Clause_Trait<Meta_Query>
+	 */
+	use Clause_Trait;
+
 	/**
 	 * Compare in meta clauses.
 	 */

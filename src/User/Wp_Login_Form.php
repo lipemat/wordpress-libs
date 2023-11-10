@@ -3,7 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\User;
 
-use Lipe\Lib\Query\Args_Abstract;
+use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Query\Args_Interface;
 
 /**
  * A fluent interface for the `wp_login_form` function in WordPress.
@@ -13,7 +14,9 @@ use Lipe\Lib\Query\Args_Abstract;
  *
  * @link   https://developer.wordpress.org/reference/functions/wp_login_form/#parameters
  */
-class Wp_Login_Form extends Args_Abstract {
+class Wp_Login_Form implements Args_Interface {
+	use Args_Trait;
+
 	/**
 	 *  Whether to display the login form or return the form HTML code.
 	 *

@@ -7,8 +7,7 @@ use Lipe\Lib\Query\Clause\Date_Query_Trait;
 use Lipe\Lib\Query\Clause\Meta_Query_Interface;
 use Lipe\Lib\Query\Clause\Meta_Query_Trait;
 use Lipe\Lib\Query\Clause\Tax_Query;
-
-//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
+use Lipe\Lib\Query\Clause\Tax_Query_Interface;
 
 /**
  * A fluent interface for constructing a `\WP_Query`.
@@ -23,7 +22,8 @@ use Lipe\Lib\Query\Clause\Tax_Query;
  * @link   https://developer.wordpress.org/reference/classes/wp_query/
  * @link   https://developer.wordpress.org/reference/classes/WP_Query/parse_query/
  */
-class Args extends Args_Abstract implements Meta_Query_Interface, Date_Query_Interface {
+class Args implements Meta_Query_Interface, Date_Query_Interface, Args_Interface, Tax_Query_Interface {
+	use Args_Trait;
 	use Date_Query_Trait;
 	use Meta_Query_Trait;
 

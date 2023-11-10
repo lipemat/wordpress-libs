@@ -3,7 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Api;
 
-use Lipe\Lib\Query\Args_Abstract;
+use Lipe\Lib\Query\Args_Interface;
+use Lipe\Lib\Query\Args_Trait;
 
 /**
  * A fluent interface for calling the `wp_remote_*` functions.
@@ -21,7 +22,9 @@ use Lipe\Lib\Query\Args_Abstract;
  * @link   https://developer.wordpress.org/reference/functions/wp_remote_post/
  * @link   https://developer.wordpress.org/reference/classes/wp_http/request/
  */
-class Wp_Remote extends Args_Abstract {
+class Wp_Remote implements Args_Interface {
+	use Args_Trait;
+
 	public const METHOD_GET     = 'GET';
 	public const METHOD_POST    = 'POST';
 	public const METHOD_HEAD    = 'HEAD';
@@ -30,15 +33,6 @@ class Wp_Remote extends Args_Abstract {
 	public const METHOD_TRACE   = 'TRACE';
 	public const METHOD_OPTIONS = 'OPTIONS';
 	public const METHOD_PATCH   = 'PATCH';
-
-	/**
-	 * Map of args to their wp_remote_* counterparts.
-	 *
-	 * @var array<string, string>
-	 */
-	protected array $map = [
-		'user_agent' => 'user-agent',
-	];
 
 	/**
 	 * Request method.
@@ -208,4 +202,13 @@ class Wp_Remote extends Args_Abstract {
 	 * @var int
 	 */
 	public int $limit_response_size;
+
+	/**
+	 * Map of args to their wp_remote_* counterparts.
+	 *
+	 * @var array<string, string>
+	 */
+	protected array $map = [
+		'user_agent' => 'user-agent',
+	];
 }

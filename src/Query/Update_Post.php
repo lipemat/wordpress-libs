@@ -10,12 +10,14 @@ namespace Lipe\Lib\Query;
  * @author Mat Lipe
  * @since  4.0.0
  *
- * @see wp_insert_post()
- * @see wp_update_post()
+ * @see    wp_insert_post()
+ * @see    wp_update_post()
  *
- * @link https://developer.wordpress.org/reference/functions/wp_insert_post/
+ * @link   https://developer.wordpress.org/reference/functions/wp_insert_post/
  */
-class Update_Post extends Args_Abstract {
+class Update_Post implements Args_Interface {
+	use Args_Trait;
+
 	/**
 	 * The post ID. If equal to something other than 0, the post with that ID will be updated.
 	 *

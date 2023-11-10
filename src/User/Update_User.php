@@ -4,7 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\User;
 
-use Lipe\Lib\Query\Args_Abstract;
+use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Query\Args_Interface;
 
 /**
  * A fluent interface for `wp_insert_user` and `wp_update_user`.
@@ -12,12 +13,14 @@ use Lipe\Lib\Query\Args_Abstract;
  * @author Mat Lipe
  * @since  4.0.0
  *
- * @see wp_insert_user()
- * @see wp_update_user()
+ * @see    wp_insert_user()
+ * @see    wp_update_user()
  *
- * @link https://developer.wordpress.org/reference/functions/wp_insert_user/
+ * @link   https://developer.wordpress.org/reference/functions/wp_insert_user/
  */
-class Update_User extends Args_Abstract {
+class Update_User implements Args_Interface {
+	use Args_Trait;
+
 	/**
 	 * User ID. If supplied, the user will be updated.
 	 *
