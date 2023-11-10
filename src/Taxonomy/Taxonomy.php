@@ -23,6 +23,13 @@ class Taxonomy {
 	protected const REGISTRY_OPTION = 'lipe/lib/schema/taxonomy_registry';
 
 	/**
+	 * Track the register taxonomies for later use.
+	 *
+	 * @var Taxonomy[]
+	 */
+	protected static array $registry = [];
+
+	/**
 	 * Array of arguments to automatically use inside `wp_get_object_terms()` for this taxonomy.
 	 *
 	 * @var array<string,mixed>
@@ -321,13 +328,6 @@ class Taxonomy {
 	protected $default_term;
 
 	/**
-	 * Track the register taxonomies for later use.
-	 *
-	 * @var Taxonomy[]
-	 */
-	protected static array $registry = [];
-
-	/**
 	 * The singular label for the taxonomy.
 	 *
 	 * @var string
@@ -367,18 +367,34 @@ class Taxonomy {
 	/**
 	 * Add hooks to register taxonomy.
 	 *
+	 * @todo Remove default parameters in version 5.
+	 *
 	 * @param string       $taxonomy          - Taxonomy Slug (will convert a title to a slug as well).
 	 * @param string|array $post_types        - May also be set by $this->post_types = array.
 	 * @param string|bool  $show_admin_column - Whether to generate a post list column or not.
 	 *                                        If a `string is passed` it wil be used for the
 	 *                                        column label.
 	 * @param bool         $post_list_filter  - Auto generate a post list filter for this taxonomy.
+	 *
+	 * @phpstan-ignore-next-line -- Using default parameters for backwards compatibility.
 	 */
-	public function __construct( string $taxonomy, $post_types = [], $show_admin_column = false, bool $post_list_filter = false ) {
-		$this->post_types = (array) $post_types;
+	public function __construct( string $taxonomy, $post_types = [ -1 ], $show_admin_column = '0', bool $post_list_filter = false ) {
+		if ( [ - 1 ] === $post_types ) {
+			_doing_it_wrong( __METHOD__, '4.5.0', 'The `$post_types` argument is required. To not use post types, pass an empty array.' );
+			$post_types = [];
 
+		}
+		if ( true === $post_list_filter ) {
+			_deprecated_argument( __METHOD__, '4.5.0', 'The `$post_list_filter` argument is deprecated. Use the `Taxonomy::post_list_filter()` method instead.');
+		}
+		if ( '0' !== $show_admin_column ) {
+			_deprecated_argument( __METHOD__, '4.5.0', 'The `$show_admin_column` argument is deprecated. Use the `Taxonomy::show_admin_column()` method instead.');
+			$show_admin_column = false;
+		}
+
+		$this->post_types = (array) $post_types;
 		$this->show_admin_column = (bool) $show_admin_column;
-		$this->post_list_filter = $post_list_filter;
+		$this->post_list_filter( $post_list_filter );
 		$this->taxonomy = \strtolower( \str_replace( ' ', '_', $taxonomy ) );
 		$this->hook();
 
@@ -442,33 +458,6 @@ class Taxonomy {
 	 */
 	public function meta_box( string $type, bool $checked_ontop = false ): void {
 		new Meta_Box( $this->taxonomy, $type, $checked_ontop );
-	}
-
-
-	/**
-	 * If the taxonomies registered through this API have changed,
-	 * rewrite rules need to be flushed.
-	 *
-	 * @static
-	 */
-	public static function check_rewrite_rules(): void {
-		$slugs = wp_list_pluck( static::$registry, 'slug' );
-		if ( get_option( static::REGISTRY_OPTION ) !== $slugs ) {
-			flush_rewrite_rules();
-			update_option( static::REGISTRY_OPTION, $slugs );
-		}
-	}
-
-
-	/**
-	 * Get a registered taxonomy object.
-	 *
-	 * @param string $taxonomy - Taxonomy slug.
-	 *
-	 * @return Taxonomy|null
-	 */
-	public static function get_taxonomy( string $taxonomy ): ?Taxonomy {
-		return static::$registry[ $taxonomy ] ?? null;
 	}
 
 
@@ -689,12 +678,25 @@ class Taxonomy {
 	 * @param string $label - The label to use for the column.
 	 */
 	public function show_admin_column( string $label ): void {
+		$this->show_admin_column = true;
 		Actions::in()->add_filter_all( array_map( function( $post_type ) {
 			return "manage_{$post_type}_posts_columns";
 		}, $this->post_types ), function( array $columns ) use ( $label ) {
 			$columns[ 'taxonomy-' . $this->taxonomy ] = $label;
 			return $columns;
 		} );
+	}
+
+
+	/**
+	 * Enable/disable a post list filter for this taxonomy.
+	 *
+	 * @param bool $enabled - Whether to enable the post list filter.
+	 *
+	 * @return void
+	 */
+	public function post_list_filter( bool $enabled = true ): void {
+		$this->post_list_filter = $enabled;
 	}
 
 
@@ -953,5 +955,32 @@ class Taxonomy {
 	 */
 	public function set_menu_label( string $label ): void {
 		$this->label_menu = $label;
+	}
+
+
+	/**
+	 * If the taxonomies registered through this API have changed,
+	 * rewrite rules need to be flushed.
+	 *
+	 * @static
+	 */
+	public static function check_rewrite_rules(): void {
+		$slugs = wp_list_pluck( static::$registry, 'slug' );
+		if ( get_option( static::REGISTRY_OPTION ) !== $slugs ) {
+			flush_rewrite_rules();
+			update_option( static::REGISTRY_OPTION, $slugs );
+		}
+	}
+
+
+	/**
+	 * Get a registered taxonomy object.
+	 *
+	 * @param string $taxonomy - Taxonomy slug.
+	 *
+	 * @return Taxonomy|null
+	 */
+	public static function get_taxonomy( string $taxonomy ): ?Taxonomy {
+		return static::$registry[ $taxonomy ] ?? null;
 	}
 }
