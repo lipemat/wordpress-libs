@@ -358,7 +358,7 @@ class Box {
 	 *
 	 * @param string      $id           - ID of this box.
 	 * @param array       $object_types - [post type slugs], or 'user', 'term', 'comment', or 'options-page'.
-	 * @param string|null $title        - Title of this box.
+	 * @param string|null|false $title  - Title of this box.
 	 * @param string      $context      - Location the meta box will display.
 	 *
 	 * @phpstan-ignore-next-line -- Default value until version 5.
@@ -370,7 +370,7 @@ class Box {
 		}
 		$this->id = $id;
 		$this->object_types = $object_types;
-		$this->title = $title;
+		$this->title = $title ?? false;
 		$this->context = $context;
 	}
 

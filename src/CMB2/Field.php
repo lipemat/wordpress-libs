@@ -833,7 +833,7 @@ class Field {
 	 * @return string
 	 */
 	public function get_name(): string {
-		return $this->name;
+		return (string) $this->name;
 	}
 
 
@@ -965,6 +965,9 @@ class Field {
 	 * @return Field
 	 */
 	public function default( $default_value ): Field {
+		if ( null === $this->box ) {
+			return $this;
+		}
 		if ( \is_callable( $default_value ) ) {
 			$this->default_cb = $default_value;
 			if ( 'options-page' === $this->box->get_object_type() ) {
@@ -1355,6 +1358,7 @@ class Field {
 	 * Set a Fields Type and register the type with Meta\Repo
 	 *
 	 * @phpstan-param REPO::TYPE_* $type
+	 * @phpstan-param REPO::TYPE_* $data_type
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
@@ -1485,6 +1489,9 @@ class Field {
 	 * @return Field
 	 */
 	public function sanitization_cb( callable $callback ): Field {
+		if ( null === $this->box ) {
+			return $this;
+		}
 		if ( [ 'options-page' ] !== $this->box->get_object_types() && $this->box->is_allowed_to_register_meta( $this ) ) {
 			$this->sanitize_callback = $callback;
 		} else {
@@ -1514,7 +1521,7 @@ class Field {
 	 * @return mixed
 	 */
 	public function default_meta_callback( $value, $object_id, string $meta_key ) {
-		if ( $this->get_id() !== $meta_key ) {
+		if ( null === $this->box || $this->get_id() !== $meta_key ) {
 			return $value;
 		}
 
@@ -1522,7 +1529,7 @@ class Field {
 		remove_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11 );
 		$cmb2_field = $this->get_cmb2_field();
 		if ( null !== $cmb2_field ) {
-			$cmb2_field->object_id( $object_id );
+			$cmb2_field->object_id( $object_id ); // @phpstan-ignore-line -- The object id must accept a string for options.
 			add_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11, 3 );
 			return \call_user_func( $this->default_cb, $cmb2_field->properties, $cmb2_field );
 		}
@@ -1568,6 +1575,9 @@ class Field {
 	 * @return ?\CMB2_Field
 	 */
 	public function get_cmb2_field(): ?\CMB2_Field {
+		if ( null === $this->box ) {
+			return null;
+		}
 		return cmb2_get_field( $this->box->get_id(), $this->get_id() );
 	}
 

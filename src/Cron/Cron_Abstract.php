@@ -74,10 +74,10 @@ abstract class Cron_Abstract {
 	/**
 	 * Get the timestamp this cron will run next.
 	 *
-	 * @return float
+	 * @return int
 	 */
-	public function get_next_run(): float {
-		return wp_next_scheduled( static::NAME );
+	public function get_next_run(): int {
+		return (int) wp_next_scheduled( static::NAME );
 	}
 
 
@@ -97,7 +97,7 @@ abstract class Cron_Abstract {
 	 * @return void
 	 */
 	protected function schedule_task(): void {
-		if ( ! wp_next_scheduled( static::NAME ) ) {
+		if ( false === wp_next_scheduled( static::NAME ) ) {
 			wp_schedule_event( time() - 1, $this->get_recurrence(), static::NAME );
 		}
 	}

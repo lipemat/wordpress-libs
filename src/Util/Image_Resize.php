@@ -17,6 +17,8 @@ use Lipe\Lib\Traits\Singleton;
  * @notice   The image sizes cannot be relied on in wp.media when using this.
  *         If you need a custom resized image using normal JS wp conventions you will have
  *         to do an ajax call, which uses php to retrieve.
+ *
+ * @phpstan-type META array{file: string, width: string, height: int, mime-type: string}
  */
 class Image_Resize {
 	use Singleton;
@@ -106,8 +108,6 @@ class Image_Resize {
 	 *
 	 * @since            3.8.0
 	 *
-	 * @phpstan-template META array{file: string, width: string, height: int, mime-type: string}
-	 *
 	 * @phpstan-param  array{sizes: array<string, META>} $meta          - Existing image sizes and information.
 	 *
 	 * @param array                                      $meta          - Image size information.
@@ -130,9 +130,9 @@ class Image_Resize {
 				if ( ! empty( $image ) ) {
 					$meta['sizes'][ $size ] = [
 						'file'      => wp_basename( $image[0] ),
-						'width'     => $image[1],
-						'height'    => $image[2],
-						'mime-type' => wp_get_image_mime( get_attached_file( $attachment_id ) ),
+						'width'     => (string) $image[1],
+						'height'    => (int) $image[2],
+						'mime-type' => (string) wp_get_image_mime( (string) get_attached_file( $attachment_id ) ),
 					];
 				}
 			}
@@ -227,7 +227,9 @@ class Image_Resize {
 			// thumbnail of specified post.
 		} elseif ( ! empty( $args['post_id'] ) ) {
 			$image_id = get_post_thumbnail_id( $args['post_id'] );
-			$image_url = wp_get_attachment_url( $image_id );
+			if ( false !== $image_id ) {
+				$image_url = wp_get_attachment_url( $image_id );
+			}
 			// or from SRC.
 		} elseif ( ! empty( $args['src'] ) ) {
 			$image_id = null;
@@ -235,7 +237,9 @@ class Image_Resize {
 			// or the post thumbnail of current post.
 		} elseif ( has_post_thumbnail() ) {
 			$image_id = get_post_thumbnail_id();
-			$image_url = wp_get_attachment_url( $image_id );
+			if ( false !== $image_id ) {
+				$image_url = wp_get_attachment_url( $image_id );
+			}
 			// if we are currently on an attachment.
 		} elseif ( is_attachment() ) {
 			global $post;
@@ -243,7 +247,7 @@ class Image_Resize {
 			$image_url = wp_get_attachment_url( $image_id );
 		}
 
-		if ( ! isset( $image_url ) || ( empty( $image_url ) && empty( $image_id ) ) ) {
+		if ( ! isset( $image_url ) || ( false === $image_url && empty( $image_id ) ) ) {
 			return null;
 		}
 
@@ -305,7 +309,7 @@ class Image_Resize {
 		}
 
 		// Maybe need resize.
-		if ( ! empty( $width ) || ! empty( $height ) ) {
+		if ( false !== $image_url && ( ! empty( $width ) || ! empty( $height ) ) ) {
 			if ( isset( $height, $width, $crop, $image_id ) ) {
 				$image = $this->resize( (int) $width, (int) $height, (int) $image_id, $image_url, $crop );
 			}
@@ -320,7 +324,7 @@ class Image_Resize {
 		/* BEGIN OUTPUT */
 
 		// Return null, if no image URL.
-		if ( empty( $image_url ) ) {
+		if ( ! \is_string( $image_url ) || '' === $image_url ) {
 			return null;
 		}
 
@@ -440,32 +444,41 @@ class Image_Resize {
 	 * @return array{width: int, height: int, url: string}|array<null>
 	 */
 	protected function resize( int $width, int $height, int $attach_id, ?string $img_url = null, bool $crop = false ): array {
+		$file_path = false;
+		$image_src = [];
 		if ( 0 !== $attach_id ) {
 			$image_src = wp_get_attachment_image_src( $attach_id, 'full' );
 			$file_path = get_attached_file( $attach_id );
+			if ( false === $image_src || false === $file_path ) {
+				return [];
+			}
 			// this is not an attachment, let's use the image url.
 		} elseif ( null !== $img_url ) {
 			$uploads_dir = wp_upload_dir();
 			if ( false !== strpos( $img_url, $uploads_dir['baseurl'] ) ) {
-				$file_path = str_replace( $uploads_dir['baseurl'], $uploads_dir['basedir'], $img_url );
+				$file_path = \str_replace( $uploads_dir['baseurl'], $uploads_dir['basedir'], $img_url );
 			} else {
 				$file_path = wp_parse_url( esc_url( $img_url ) );
 				if ( \is_array( $file_path ) ) {
-					$file_path = sanitize_text_field( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ?? '' ) ) . $file_path['path'];
+					if ( isset( $file_path['path'] ) ) {
+						$file_path = sanitize_text_field( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ?? '' ) ) . $file_path['path'];
+					} else {
+						$file_path = false;
+					}
 				}
 			}
-			if ( ! file_exists( $file_path ) ) {
+			if ( false === $file_path || ! file_exists( $file_path ) ) {
 				return [];
 			}
 			$orig_size = getimagesize( $file_path );
-			if ( $orig_size ) {
+			if ( false !== $orig_size ) {
 				$image_src[0] = $img_url;
 				$image_src[1] = $orig_size[0];
 				$image_src[2] = $orig_size[1];
 			}
 		}
 
-		if ( empty( $file_path ) || empty( $image_src ) ) {
+		if ( false === $file_path || '' === $file_path || 0 === \count( $image_src ) ) {
 			return [];
 		}
 		$file_info = pathinfo( $file_path );
@@ -473,12 +486,12 @@ class Image_Resize {
 			return [];
 		}
 
-		$base_file = $file_info['dirname'] . '/' . $file_info['filename'] . '.' . $file_info['extension'];
+		$extension = '.' . $file_info['extension']; // @phpstan-ignore-line -- $file_info['extension'] is always set.
+		$base_file = $file_info['dirname'] . '/' . $file_info['filename'] . $extension;
 		if ( ! file_exists( $base_file ) ) {
 			return [];
 		}
 
-		$extension = '.' . $file_info['extension'];
 		// the image path without the extension.
 		$no_ext_path = $file_info['dirname'] . '/' . $file_info['filename'];
 		$cropped_img_path = $no_ext_path . '-' . $width . 'x' . $height . $extension;
@@ -538,12 +551,16 @@ class Image_Resize {
 				}
 			}
 
-			if ( ! \file_exists( $new_img_path ) ) {
+			if ( false === $new_img_path || ! \file_exists( $new_img_path ) ) {
 				return [];
 			}
 
 			$new_img_size = (array) getimagesize( $new_img_path );
-			$new_img = str_replace( basename( $image_src[0] ), basename( $new_img_path ), $image_src[0] );
+			if ( [ false ] === $new_img_size ) {
+				return [];
+			}
+
+			$new_img = \str_replace( basename( $image_src[0] ), basename( $new_img_path ), $image_src[0] );
 
 			// resized output.
 			$image = [

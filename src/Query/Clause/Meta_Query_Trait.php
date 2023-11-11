@@ -80,6 +80,9 @@ trait Meta_Query_Trait {
 	 *
 	 * @link https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters
 	 *
+	 * @note A stub override is required to provide the correct return type.
+	 * @see  dev/stubs/query-clauses.php
+	 *
 	 * @return Meta_Query
 	 */
 	public function meta_query(): Meta_Query {

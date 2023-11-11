@@ -6,8 +6,6 @@ namespace Lipe\Lib\CMB2;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Taxonomy\Get_Terms;
 
-//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
-
 /**
  * Event callback handling for CMB2 fields.
  *
@@ -51,7 +49,7 @@ class Event_Callbacks {
 	 * Box type this field is registered on.
 	 *
 	 * Usually the box type corresponds to the meta type use for
-	 * WP hooks but its not an exact match as box types are limited.
+	 * WP hooks, but it is not an exact match as box types are limited.
 	 *
 	 * @see Box_Trait::get_object_type
 	 *
@@ -87,10 +85,16 @@ class Event_Callbacks {
 	 *
 	 * @param Field                  $field   - Field to register events for.
 	 * @param string                 $cb_type - Callback type, either 'change' or 'delete'.
+	 *
+	 * @throws \InvalidArgumentException -- If the field is not registered on a box.
 	 */
 	public function __construct( Field $field, string $cb_type ) {
 		$this->field = $field;
-		$this->box = $this->field->get_box();
+		$box = $this->field->get_box();
+		if ( ! $box instanceof Box ) {
+			throw new \InvalidArgumentException( 'Field must be registered on a box.' );
+		}
+		$this->box = $box;
 		$this->box_type = $this->box->get_object_type();
 		$this->key = $field->get_id();
 		$this->object_types = $this->box->get_object_types();

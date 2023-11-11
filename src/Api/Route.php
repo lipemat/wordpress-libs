@@ -144,6 +144,9 @@ class Route {
 	 */
 	public function adjust_body_class( array $classes ): array {
 		$post = get_post();
+		if ( ! $post instanceof \WP_Post ) {
+			return $classes;
+		}
 
 		foreach ( $classes as $k => $_class ) {
 			if ( false !== strpos( $_class, 'postid' ) ) {
@@ -156,6 +159,9 @@ class Route {
 		}
 
 		$route = $this->get_current_route();
+		if ( null === $route ) {
+			return $classes;
+		}
 		$classes[] = sanitize_title_with_dashes( $route['title'] );
 		$template = explode( '/', $route['template'] );
 		$classes[] = 'page-template-' . str_replace( '.', '-', end( $template ) );
@@ -187,7 +193,7 @@ class Route {
 	 * @return void
 	 */
 	public function maybe_flush_rules(): void {
-		$hash = \hash( 'fnv1a64', wp_json_encode( static::$routes ) );
+		$hash = \hash( 'fnv1a64', (string) wp_json_encode( static::$routes ) );
 		if ( get_option( static::OPTION ) !== $hash ) {
 			flush_rewrite_rules();
 			update_option( static::OPTION, $hash );
@@ -293,7 +299,11 @@ class Route {
 	 * @return string
 	 */
 	public function override_template(): string {
-		return $this->get_current_route()['template'];
+		$route = $this->get_current_route();
+		if ( null === $route ) {
+			return '';
+		}
+		return $route['template'];
 	}
 
 
@@ -328,12 +338,17 @@ class Route {
 	 * @param string       $title - The current title.
 	 * @param int|\WP_Post $post  - The current post.
 	 *
+	 * @throws \LogicException -- If we fail to get the current route.
+	 *
 	 * @return string
 	 */
 	public function get_title( string $title, $post ): string {
 		$_post = get_post( $post );
-		if ( static::get_post_id() === $_post->ID ) {
+		if ( null === $_post || static::get_post_id() === $_post->ID ) {
 			$route = $this->get_current_route();
+			if ( null === $route ) {
+				return $title;
+			}
 
 			return $route['title'];
 		}

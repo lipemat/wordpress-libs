@@ -115,7 +115,7 @@ class Resources {
 	 */
 	public function get_content_hash( string $url ): ?string {
 		$path = wp_parse_url( $url, PHP_URL_PATH );
-		if ( ! $path ) {
+		if ( ! \is_string( $path ) ) {
 			return null;
 		}
 
@@ -162,7 +162,7 @@ class Resources {
 	 */
 	public function get_file_modified_time( string $url ): ?int {
 		$path = wp_parse_url( $url, PHP_URL_PATH );
-		if ( ! $path ) {
+		if ( ! \is_string( $path ) ) {
 			return null;
 		}
 
@@ -403,31 +403,37 @@ class Resources {
 			unset( $handles[ $jquery ] );
 		}
 
+		$jquery = wp_scripts()->query( 'jquery' )->ver ?? 0;
+		$jquery_migrate = wp_scripts()->query( 'jquery-migrate' )->ver ?? 0;
+		$lodash = wp_scripts()->query( 'lodash' )->ver ?? 0;
+		$react = wp_scripts()->query( 'react' )->ver ?? 0;
+		$react_dom = wp_scripts()->query( 'react-dom' )->ver ?? 0;
+
 		$cdn = [
 			'jquery-core'    => [
-				'dev'    => 'https://unpkg.com/jquery@' . wp_scripts()->query( 'jquery' )->ver . '/dist/jquery.js',
-				'min'    => 'https://unpkg.com/jquery@' . wp_scripts()->query( 'jquery' )->ver . '/dist/jquery.min.js',
+				'dev' => 'https://unpkg.com/jquery@' . $jquery . '/dist/jquery.js',
+				'min' => 'https://unpkg.com/jquery@' . $jquery . '/dist/jquery.min.js',
 				'footer' => false,
 			],
 			'jquery-migrate' => [
-				'dev'    => 'https://unpkg.com/jquery-migrate@' . wp_scripts()->query( 'jquery-migrate' )->ver . '/dist/jquery-migrate.js',
-				'min'    => 'https://unpkg.com/jquery-migrate@' . wp_scripts()->query( 'jquery-migrate' )->ver . '/dist/jquery-migrate.min.js',
+				'dev' => 'https://unpkg.com/jquery-migrate@' . $jquery_migrate . '/dist/jquery-migrate.js',
+				'min' => 'https://unpkg.com/jquery-migrate@' . $jquery_migrate . '/dist/jquery-migrate.min.js',
 				'footer' => false,
 			],
 			'lodash'         => [
-				'dev'    => 'https://unpkg.com/lodash@' . wp_scripts()->query( 'lodash' )->ver . '/lodash.js',
-				'min'    => 'https://unpkg.com/lodash@' . wp_scripts()->query( 'lodash' )->ver . '/lodash.min.js',
+				'dev' => 'https://unpkg.com/lodash@' . $lodash . '/lodash.js',
+				'min' => 'https://unpkg.com/lodash@' . $lodash . '/lodash.min.js',
 				'footer' => true,
 				'inline' => 'window.lodash = _.noConflict();',
 			],
 			'react'          => [
-				'dev'    => 'https://unpkg.com/react@' . wp_scripts()->query( 'react' )->ver . '/umd/react.development.js',
-				'min'    => 'https://unpkg.com/react@' . wp_scripts()->query( 'react' )->ver . '/umd/react.production.min.js',
+				'dev' => 'https://unpkg.com/react@' . $react . '/umd/react.development.js',
+				'min' => 'https://unpkg.com/react@' . $react . '/umd/react.production.min.js',
 				'footer' => true,
 			],
 			'react-dom'      => [
-				'dev'    => 'https://unpkg.com/react-dom@' . wp_scripts()->query( 'react-dom' )->ver . '/umd/react-dom.development.js',
-				'min'    => 'https://unpkg.com/react-dom@' . wp_scripts()->query( 'react-dom' )->ver . '/umd/react-dom.production.min.js',
+				'dev' => 'https://unpkg.com/react-dom@' . $react_dom . '/umd/react-dom.development.js',
+				'min' => 'https://unpkg.com/react-dom@' . $react_dom . '/umd/react-dom.production.min.js',
 				'footer' => true,
 			],
 		];
@@ -435,7 +441,7 @@ class Resources {
 		foreach ( $handles as $handle ) {
 			$deps = [];
 			$core = wp_scripts()->query( $handle );
-			if ( ! empty( $core ) ) {
+			if ( ! \is_bool( $core ) && is_a( $core, \_WP_Dependency::class ) ) {
 				$deps = $core->deps;
 				wp_deregister_script( $handle );
 			}

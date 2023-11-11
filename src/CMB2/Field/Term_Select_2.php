@@ -144,7 +144,7 @@ class Term_Select_2 {
 			static::CREATE_NEW_TERMS => $field->args( static::CREATE_NEW_TERMS ),
 		];
 		$url = \add_query_arg( $url_args, admin_url( 'admin-ajax.php' ) );
-		$no_results_text = $field->args( 'text' )['no_terms_text'] ?? get_taxonomy( $url_args['taxonomy'] )->labels->not_found;
+		$no_results_text = $field->args( 'text' )['no_terms_text'] ?? get_taxonomy( $url_args['taxonomy'] )->labels->not_found ?? '';
 
 		$id = $field->id();
 
@@ -232,6 +232,9 @@ class Term_Select_2 {
 				] );
 			}
 		}
+		if ( is_wp_error( $options ) ) {
+			return '';
+		}
 
 		$selected_items = '';
 		$other_items = '';
@@ -246,7 +249,7 @@ class Term_Select_2 {
 			];
 
 			// Split options into those, which are selected and the rest.
-			if ( empty( $option_value ) || \in_array( $option_value, $field_escaped_value, true ) ) {
+			if ( empty( $option_value ) || \in_array( $option_value, (array) $field_escaped_value, true ) ) {
 				$option['checked'] = true;
 				$selected_items .= $select->select_option( $option );
 			} else {
@@ -309,7 +312,7 @@ class Term_Select_2 {
 		}
 
 		if ( ! empty( $id ) && $field_args[ self::SAVE_AS_TERMS ] ) {
-			wp_add_object_terms( $id, \array_map( '\intval', $meta_value ), $this->get_taxonomy( $field_args ) );
+			wp_add_object_terms( (int) $id, \array_map( '\intval', $meta_value ), $this->get_taxonomy( $field_args ) );
 		}
 
 		return $meta_value;

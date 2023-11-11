@@ -52,7 +52,7 @@ class Layout {
 	public function render_group_callback( $field_args, \CMB2_Field $field_group ): ?\CMB2_Field {
 		$cmb = \CMB2_Boxes::get( $field_group->cmb_id );
 		// If field is requesting to be conditionally shown.
-		if ( ! $field_group->should_show() ) {
+		if ( \is_bool( $cmb ) || ! $field_group->should_show() ) {
 			return null;
 		}
 
@@ -152,9 +152,9 @@ class Layout {
 	 *
 	 * @param \CMB2_Field $field_group CMB2_Field group field object.
 	 *
-	 * @return \CMB2
+	 * @return \CMB2|bool
 	 */
-	public function render_group_table_row( \CMB2_Field $field_group ): \CMB2 {
+	public function render_group_table_row( \CMB2_Field $field_group ) {
 		$field_group->peform_param_callback( 'before_group_row' );
 		$closed_class = (bool) $field_group->options( 'closed' ) ? ' closed' : '';
 		$confirm_deletion = $field_group->options( 'remove_confirm' );
@@ -243,12 +243,18 @@ class Layout {
 	 */
 	protected function render_field( array $field_args, \CMB2_Field $field_group ): void {
 		$cmb = \CMB2_Boxes::get( $field_group->cmb_id );
+		if ( \is_bool( $cmb ) ) {
+			return;
+		}
 		if ( 'hidden' === $field_args['type'] ) {
 			// Save rendering for after the metabox.
 			$cmb->add_hidden_field( $field_args, $field_group );
 		} else {
 			$field_args['show_names'] = false;
-			$cmb->get_field( $field_args, $field_group )->render_field();
+			$field = $cmb->get_field( $field_args, $field_group );
+			if ( false !== $field ) {
+				$field->render_field();
+			}
 		}
 	}
 

@@ -5,7 +5,7 @@ includes:
     - %rootDir%/../../../rules.neon
 
 parameters:
-    level: 6
+    level: 8
     lipemat:
         noExtends: true
         allowedToBeExtended:
@@ -19,9 +19,10 @@ parameters:
         # Construct empty() is not allowed.
         disallowedConstructs: false
         noVariableVariables: false
+    checkMissingIterableValueType: false
     paths:
         - src
     scanFiles:
+        - dev/stubs/query-clauses.php
         - dev/stubs/wp-smush.php
         - %rootDir%/../../../stubs/cmb2/cmb2-2.10.php
-    checkMissingIterableValueType: false

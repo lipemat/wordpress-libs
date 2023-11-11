@@ -143,6 +143,10 @@ class Zip {
 			}
 
 			$parts = wp_parse_url( $file );
+			if ( false === $parts || ! isset( $parts['path'] ) ) {
+				echo esc_html( "Failed to copy $file...\n" );
+				continue;
+			}
 			$parts = pathinfo( $parts['path'] );
 			$temp = $this->file_path . '/' . $parts['basename'];
 

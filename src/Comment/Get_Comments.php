@@ -203,7 +203,7 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, Args_I
 	 *
 	 * Default: 'comment_date_gmt'.
 	 *
-	 * @phpstan-var self::ORDERBY*|array{self::ORDERBY*}|string
+	 * @phpstan-var self::ORDERBY*|array<self::ORDERBY*>|string
 	 *
 	 * @var string|array<int,string>
 	 */

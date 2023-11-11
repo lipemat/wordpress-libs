@@ -230,10 +230,10 @@ class Arrays {
 	 * Works the same as `wp_list_pluck` except it supports multiple keys
 	 * and will return an array of arrays instead of a single array.
 	 *
-	 * @param array<array|object> $array - List of objects or arrays.
-	 * @param array               $keys  - List of keys to return.
-	 *
 	 * @since 3.5.0
+	 *
+	 * @param array<array|object> $array - List of objects or arrays.
+	 * @param array<string|int>   $keys  - List of keys to return.
 	 *
 	 * @return array
 	 */
@@ -244,7 +244,7 @@ class Arrays {
 					return $item->{$key};
 				}
 
-				return $item[ $key ];
+				return $item[ $key ] ?? '';
 			}, \array_flip( $keys ) );
 		}, $array );
 	}

@@ -153,6 +153,8 @@ class Initial_Data {
 	 * @param bool                        $with_links - To include links inside the response.
 	 * @param bool|string[]               $embed      - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
+	 * @throws \RuntimeException -- If response was a WP_Error.
+	 *
 	 * @return array
 	 */
 	protected function get_response( \WP_REST_Controller $controller, $item, bool $with_links = false, $embed = false ): array {
@@ -164,18 +166,20 @@ class Initial_Data {
 		$fields = $controller->get_fields_for_response( $request );
 		if ( ! $with_links ) {
 			$key = \array_search( '_links', $fields, true );
-			if ( $key ) {
+			if ( false !== $key ) {
 				unset( $fields[ $key ] );
 			}
 			$request->set_param( '_fields', \array_unique( $fields ) );
 		}
 
-		$data = $server->response_to_data(
-			$controller->prepare_item_for_response( $item, $request ),
-			$embed
-		);
-		$this->retrieving = false;
-		return $data;
+		$response = $controller->prepare_item_for_response( $item, $request );
+		if ( ! is_wp_error( $response ) ) {
+			$data = $server->response_to_data( $response, $embed );
+			$this->retrieving = false;
+			return $data;
+		}
+
+		throw new \RuntimeException( esc_html( $response->get_error_message() ) );
 	}
 
 

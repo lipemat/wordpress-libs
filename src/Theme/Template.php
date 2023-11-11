@@ -49,9 +49,9 @@ class Template {
 	 * @return string
 	 */
 	public function get_template_contents( string $slug, ?string $name = null, $args = [] ): string {
-		ob_start();
+		\ob_start();
 		get_template_part( $slug, $name, $args );
-		return ob_get_clean();
+		return (string) \ob_get_clean();
 	}
 
 
@@ -76,7 +76,10 @@ class Template {
 	public function sanitize_html_class( string $css_class ): string {
 		// Strip out any %-encoded octets.
 		$sanitized = preg_replace( '/%[a-fA-F\d]{2}/', '', $css_class );
+		if ( null === $sanitized ) {
+			return '';
+		}
 		// Prefix any leading digits or hyphens with '_'.
-		return \preg_replace( '/^([\d-])/', '_$1', $sanitized );
+		return (string) \preg_replace( '/^([\d-])/', '_$1', $sanitized );
 	}
 }

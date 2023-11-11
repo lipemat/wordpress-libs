@@ -147,14 +147,16 @@ class Group extends Field {
 	 * @return void
 	 */
 	protected function add_field_to_group( Field $field ): void {
-		if ( null === $this->box->cmb ) {
+		if ( null === $this->box || ! property_exists( $this->box, 'cmb' ) || null === $this->box->cmb ) {
 			throw new \LogicException( esc_html__( 'You must add the group to the box before you add fields to the group.', 'lipe' ) );
 		}
 
 		$field->group = $this->get_id();
 		$field->box_id = $this->box_id;
 		$box = $this->box->get_box();
-		$box->add_group_field( $this->id, $field->get_field_args(), $field->position );
+		if ( $box instanceof \CMB2 ) {
+			$box->add_group_field( $this->id, $field->get_field_args(), $field->position );
+		}
 
 		Repo::in()->register_field( $field );
 	}
@@ -204,7 +206,7 @@ class Group extends Field {
 			'single' => true,
 			'type'   => 'array',
 		];
-		if ( $this->show_in_rest && $this->is_public_rest_data( $this ) ) {
+		if ( (bool) $this->show_in_rest && $this->is_public_rest_data( $this ) ) {
 			$properties = [];
 			foreach ( $this->get_fields() as $field ) {
 				$properties[ $field->get_id() ] = [
@@ -243,7 +245,9 @@ class Group extends Field {
 			];
 		}
 
-		$this->box->register_meta_on_all_types( $this, $config );
+		if ( $this->box instanceof Box ) {
+			$this->box->register_meta_on_all_types( $this, $config );
+		}
 	}
 
 
@@ -254,7 +258,10 @@ class Group extends Field {
 	 * @return array
 	 */
 	public function get_object_types(): array {
-		return $this->box->get_object_types();
+		if ( $this->box instanceof Box ) {
+			return $this->box->get_object_types();
+		}
+		return [];
 	}
 
 

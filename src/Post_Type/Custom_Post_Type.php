@@ -919,7 +919,7 @@ class Custom_Post_Type {
 		$preview_link = false;
 		// phpcs:disable WordPress.WP.I18n
 		if ( false !== $this->public && false !== $this->publicly_queryable ) {
-			$url = esc_url( get_permalink( $post_ID ) );
+			$url = esc_url( (string) get_permalink( $post_ID ) );
 			$preview_url = add_query_arg( 'preview', 'true', $url );
 			$view_link = '<a href="' . $url . '">' . sprintf( __( 'View the %s...' ), $this->get_post_type_label(), $lower_label ) . '</a>';
 			$preview_link = '<a target="_blank" href="' . $preview_url . '">' . sprintf( 'Preview %s', $lower_label ) . '</a>';

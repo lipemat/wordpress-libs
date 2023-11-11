@@ -49,7 +49,7 @@ abstract class Translate_Abstract {
 	 *
 	 * Really, only `post` is currently supported.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
+	 * @phpstan-param Repo::META_*|string $meta_type
 	 *
 	 * @param string               $meta_type - The meta type.
 	 *
@@ -77,13 +77,16 @@ abstract class Translate_Abstract {
 			$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
 			$value = $group[ $this->group_row ][ $key ] ?? null;
 		} elseif ( Repo::META_OPTION === $meta_type ) {
-			$value = cmb2_options( $object_id )->get( $key, null );
+			$value = cmb2_options( (string) $object_id )->get( $key, null );
 		} else {
-			$value = get_metadata( $meta_type, $object_id, $key, true );
+			$value = get_metadata( $meta_type, (int) $object_id, $key, true );
 		}
 
 		if ( null !== $field && null !== $field->escape_cb ) {
-			return $field->get_cmb2_field()->escaped_value( 'esc_attr', $value );
+			$field = $field->get_cmb2_field();
+			if ( null !== $field ) {
+				return $field->escaped_value( 'esc_attr', $value );
+			}
 		}
 
 		return $value;
@@ -107,7 +110,7 @@ abstract class Translate_Abstract {
 		if ( null !== $field ) {
 			$cmb2_field = $field->get_cmb2_field();
 			if ( null !== $cmb2_field ) {
-				$cmb2_field->object_id( $object_id ); // Store object id for later use.
+				$cmb2_field->object_id( $object_id ); // @phpstan-ignore-line -- Could be string or int.
 				if ( null !== $field->sanitization_cb ) {
 					$value = $cmb2_field->sanitization_cb( $value );
 				}
@@ -118,10 +121,10 @@ abstract class Translate_Abstract {
 		}
 
 		if ( Repo::META_OPTION === $meta_type ) {
-			return cmb2_options( $object_id )->update( $key, $value, true );
+			return cmb2_options( (string) $object_id )->update( $key, $value, true );
 		}
 
-		return update_metadata( $meta_type, $object_id, $key, $value );
+		return update_metadata( $meta_type, (int) $object_id, $key, $value );
 	}
 
 
@@ -145,9 +148,9 @@ abstract class Translate_Abstract {
 		}
 
 		if ( Repo::META_OPTION === $meta_type ) {
-			cmb2_options( $object_id )->remove( $key, true );
+			cmb2_options( (string) $object_id )->remove( $key, true );
 		} else {
-			delete_metadata( $meta_type, $object_id, $key );
+			delete_metadata( $meta_type, (int) $object_id, $key );
 		}
 	}
 
@@ -339,13 +342,13 @@ abstract class Translate_Abstract {
 	 * @return bool|int
 	 */
 	protected function update_group_sub_field_value( $object_id, string $key, $value, string $meta_type ) {
-		$group = $this->get_meta_value( $object_id, $this->fields[ $key ]->group, $meta_type );
+		$group = $this->get_meta_value( $object_id, (string) $this->fields[ $key ]->group, $meta_type );
 		if ( ! \is_array( $group ) ) {
 			$group = [];
 		}
 		$group[ $this->group_row ][ $key ] = $value;
 
-		return $this->update_meta_value( $object_id, $this->fields[ $key ]->group, $group, $meta_type );
+		return $this->update_meta_value( $object_id, (string) $this->fields[ $key ]->group, $group, $meta_type );
 	}
 
 
@@ -377,14 +380,22 @@ abstract class Translate_Abstract {
 	 * CMB2 saves taxonomy fields as terms or meta value for options.
 	 * We pull from either here.
 	 *
-	 * @param string|int $object_id - The object id.
-	 * @param string     $field_id  - The field id.
-	 * @param string     $meta_type - The meta type.
+	 * @phpstan-param Repo::META_* $meta_type
+	 *
+	 * @param string|int           $object_id - The object id.
+	 * @param string               $field_id  - The field id.
+	 * @param string               $meta_type - The meta type.
+	 *
+	 * @throws \RuntimeException -- If we received a WP_Error.
 	 *
 	 * @return \WP_Term[]
 	 */
 	protected function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ): array {
-		$taxonomy = $this->get_field( $field_id )->taxonomy;
+		$field = $this->get_field( $field_id );
+		if ( null === $field ) {
+			return [];
+		}
+		$taxonomy = $field->taxonomy;
 		if ( ! $this->supports_taxonomy_relationships( $meta_type ) ) {
 			return $this->maybe_use_main_blog( $field_id, function() use ( $object_id, $field_id, $meta_type ) {
 				$meta_value = (array) $this->get_meta_value( $object_id, $field_id, $meta_type );
@@ -398,8 +409,15 @@ abstract class Translate_Abstract {
 				}, $meta_value ) );
 			} );
 		}
+		$terms = get_the_terms( (int) $object_id, $taxonomy );
+		if ( is_wp_error( $terms ) ) {
+			throw new \RuntimeException( esc_html( $terms->get_error_message() ) );
+		}
+		if ( false === $terms ) {
+			return [];
+		}
 
-		return \array_filter( (array) get_the_terms( $object_id, $taxonomy ) );
+		return \array_filter( $terms );
 	}
 
 
@@ -423,7 +441,10 @@ abstract class Translate_Abstract {
 			return;
 		}
 		if ( null !== $field->sanitization_cb ) {
-			$terms = $field->get_cmb2_field()->sanitization_cb( $terms );
+			$cmb2_field = $field->get_cmb2_field();
+			if ( null !== $cmb2_field ) {
+				$terms = $cmb2_field->sanitization_cb( $terms );
+			}
 		}
 
 		// Stored as term relationship.
@@ -432,7 +453,7 @@ abstract class Translate_Abstract {
 				// Term ids are perceived as term slug when strings.
 				return is_numeric( $term ) ? (int) $term : $term;
 			}, $terms );
-			wp_set_object_terms( $object_id, $terms, $field->taxonomy );
+			wp_set_object_terms( (int) $object_id, $terms, $field->taxonomy );
 			return;
 		}
 
@@ -470,8 +491,12 @@ abstract class Translate_Abstract {
 	 */
 	protected function delete_taxonomy_field_value( $object_id, string $field_id, string $meta_type ): void {
 		if ( $this->supports_taxonomy_relationships( $meta_type ) ) {
-			$taxonomy = $this->get_field( $field_id )->taxonomy;
-			wp_delete_object_term_relationships( $object_id, $taxonomy );
+			$field = $this->get_field( $field_id );
+			if ( null === $field ) {
+				return;
+			}
+			$taxonomy = $field->taxonomy;
+			wp_delete_object_term_relationships( (int) $object_id, $taxonomy );
 		} else {
 			$this->delete_meta_value( $object_id, $field_id, $meta_type );
 		}
@@ -515,7 +540,7 @@ abstract class Translate_Abstract {
 				return null;
 			}
 			$term = get_term_by( 'slug', $value, $field->taxonomy );
-			if ( is_a( $term, \WP_Term::class ) ) {
+			if ( false !== $term && \is_a( $term, \WP_Term::class ) ) {
 				return $term->term_id;
 			}
 			return null;
@@ -538,10 +563,16 @@ abstract class Translate_Abstract {
 	 * @param string   $field_id - The field id.
 	 * @param callable $callback - Any callback.
 	 *
+	 * @throws \RuntimeException -- If the field does not exist.
+	 *
 	 * @return mixed;
 	 */
 	protected function maybe_use_main_blog( string $field_id, callable $callback ) {
-		$box = $this->get_field( $field_id )->get_box();
+		$field = $this->get_field( $field_id );
+		if ( null === $field ) {
+			throw new \RuntimeException( esc_html( "Field with id `{$field_id}` does not exist." ) );
+		}
+		$box = $field->get_box();
 		$is_network = null !== $box && \method_exists( $box, 'is_network' ) && $box->is_network();
 		if ( $is_network ) {
 			switch_to_blog( get_main_site_id() );

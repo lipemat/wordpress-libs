@@ -212,7 +212,7 @@ class Options_Page extends Box {
 	 * @return void
 	 */
 	public function save_button( ?string $text ): void {
-		$this->save_button = $text;
+		$this->save_button = $text ?? '';
 		if ( null === $text ) {
 			add_action( "cmb2_before_options-page_form_{$this->id}", function () {
 				// Hide, so we never see it with FOUC. Remove, so we can't submit the form via enter.
@@ -275,7 +275,7 @@ class Options_Page extends Box {
 	public function register_meta_on_all_types( Field $field, array $config ): void {
 		unset( $config['single'] );
 
-		if ( $field->show_in_rest ) {
+		if ( \is_string( $field->show_in_rest ) || true === $field->show_in_rest ) {
 			$config = $this->translate_rest_keys( $field, $config );
 			add_filter( 'rest_pre_get_setting', function ( $pre, $option ) use ( $field, $config ) {
 				if ( isset( $config['show_in_rest'] ) && $option === $config['show_in_rest']['name'] ) {

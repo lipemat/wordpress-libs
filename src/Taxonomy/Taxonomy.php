@@ -525,10 +525,13 @@ class Taxonomy {
 		$args['name'] = $this->taxonomy;
 
 		if ( ! empty( $wp_query->query[ $this->taxonomy ] ) ) {
-			if ( is_numeric( $wp_query->query[ $this->taxonomy ] ) ) {
-				$args['selected'] = $wp_query->query[ $this->taxonomy ];
+			if ( \is_numeric( $wp_query->query[ $this->taxonomy ] ) ) {
+				$args['selected'] = (string) $wp_query->query[ $this->taxonomy ];
 			} else {
-				$args['selected'] = get_term_by( 'slug', $wp_query->query[ $this->taxonomy ], $this->taxonomy )->term_id;
+				$term = get_term_by( 'slug', $wp_query->query[ $this->taxonomy ], $this->taxonomy );
+				if ( $term instanceof \WP_Term ) {
+					$args['selected'] = $term->term_id;
+				}
 			}
 			$been_filtered = true;
 		}
@@ -594,7 +597,7 @@ class Taxonomy {
 				'taxonomy' => $this->taxonomy,
 				'fields'   => 'count',
 			] );
-			if ( 0 === (int) $existing ) {
+			if ( \is_numeric( $existing ) && 0 === (int) $existing ) {
 				foreach ( $this->initial_terms as $slug => $term ) {
 					$args = [];
 					if ( ! \is_numeric( $slug ) ) {
@@ -646,7 +649,7 @@ class Taxonomy {
 			$parent = $this->show_in_menu;
 			$order = 100;
 			if ( false !== $tax ) {
-				if ( \is_array( $parent ) ) {
+				if ( \is_array( $parent ) && \is_array( $this->show_in_menu ) ) {
 					$parent = \key( $this->show_in_menu );
 					$order = \reset( $this->show_in_menu );
 				}
@@ -743,7 +746,7 @@ class Taxonomy {
 			return $parent_file;
 		}
 		if ( "edit-{$this->taxonomy}" === $screen->id && $this->taxonomy === $screen->taxonomy ) {
-			return \is_array( $this->show_in_menu ) ? key( $this->show_in_menu ) : $this->show_in_menu;
+			return \is_array( $this->show_in_menu ) ? (string) \key( $this->show_in_menu ) : (string) $this->show_in_menu;
 		}
 
 		return $parent_file;
@@ -931,9 +934,9 @@ class Taxonomy {
 	/**
 	 * Build rewrite args or pass the class var if set.
 	 *
-	 * @return array|null
+	 * @return array|bool|null
 	 */
-	protected function rewrites(): ?array {
+	protected function rewrites() {
 		if ( empty( $this->rewrite ) ) {
 			return [
 				'slug'         => $this->get_slug(),

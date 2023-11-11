@@ -57,7 +57,7 @@ class Crypt {
 	 */
 	public function decrypt( string $message ): ?string {
 		try {
-			$json = json_decode( base64_decode( $message, true ), true, 512, JSON_THROW_ON_ERROR );
+			$json = json_decode( (string) base64_decode( $message, true ), true, 512, JSON_THROW_ON_ERROR );
 		} catch ( \JsonException $e ) {
 			error_log( "Unable to decrypt message: {$message}. {$e->getMessage()}" ); //phpcs:ignore
 			return null;
@@ -65,15 +65,15 @@ class Crypt {
 		$iterations = (int) abs( $json['iterations'] ?? static::ITERATIONS );
 
 		try {
-			$salt = hex2bin( $json['salt'] );
-			$iv = hex2bin( $json['iv'] );
-			$hash_key = hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, $iterations, $this->get_key_size() ) );
+			$salt = (string) hex2bin( $json['salt'] );
+			$iv = (string) hex2bin( $json['iv'] );
+			$hash_key = (string) hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, $iterations, $this->get_key_size() ) );
 		} catch ( \Exception $e ) {
 			error_log( "Unable to decrypt message: {$message}. {$e->getMessage()}" ); //phpcs:ignore
 			return null;
 		}
 
-		return openssl_decrypt( base64_decode( $json['ciphertext'], true ), static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv );
+		return (string) openssl_decrypt( (string) base64_decode( $json['ciphertext'], true ), static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv );
 	}
 
 
@@ -88,23 +88,23 @@ class Crypt {
 	 */
 	public function encrypt( string $plaintext ): ?string {
 		try {
-			$iv = random_bytes( openssl_cipher_iv_length( static::METHOD ) );
+			$iv = random_bytes( max( 1, (int) openssl_cipher_iv_length( static::METHOD ) ) );
 			$salt = random_bytes( 256 );
 		} catch ( \Exception $e ) {
 			return null;
 		}
 
-		$hash_key = hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, static::ITERATIONS, $this->get_key_size() ) );
+		$hash_key = (string) hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, static::ITERATIONS, $this->get_key_size() ) );
 
 		$output = [
-			'ciphertext' => base64_encode( openssl_encrypt( $plaintext, static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv ) ),
+			'ciphertext' => base64_encode( (string) openssl_encrypt( $plaintext, static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv ) ),
 			'iv'         => bin2hex( $iv ),
 			'salt'       => bin2hex( $salt ),
 			'iterations' => static::ITERATIONS,
 		];
 		unset( $iv, $salt, $hash_key );
 
-		return base64_encode( wp_json_encode( $output ) );
+		return base64_encode( (string) wp_json_encode( $output ) );
 	}
 
 

@@ -195,7 +195,7 @@ class Tabs {
 		} else {
 			$field->render_field_callback();
 		}
-		$output = ob_get_clean();
+		$output = (string) \ob_get_clean();
 		echo $this->capture_fields( $output, $field_args ); //phpcs:ignore
 	}
 

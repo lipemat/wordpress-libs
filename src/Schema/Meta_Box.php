@@ -23,7 +23,7 @@ abstract class Meta_Box {
 	/**
 	 * Store the registered meta box for later registering with WP.
 	 *
-	 * @var Meta_Box[]
+	 * @var array<string, array<string, Meta_Box>>
 	 */
 	protected static array $registry = [];
 
@@ -46,7 +46,7 @@ abstract class Meta_Box {
 	 *
 	 * Determines where the meta box will display in the editor screen.
 	 *
-	 * @var string
+	 * @var 'advanced'|'normal'|'side'
 	 */
 	public string $context;
 
@@ -356,12 +356,12 @@ abstract class Meta_Box {
 	 */
 	protected static function should_meta_boxes_be_saved( int $post_id, \WP_Post $post ): bool {
 		// make sure this is a valid submission.
-		if ( ! isset( $_POST[ static::NONCE_NAME ] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ static::NONCE_NAME ] ) ), static::NONCE_ACTION ) ) {
+		if ( ! isset( $_POST[ static::NONCE_NAME ] ) || false === wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ static::NONCE_NAME ] ) ), static::NONCE_ACTION ) ) {
 			return false;
 		}
 
 		// don't do anything on autosave, auto-draft, bulk edit, or quick edit.
-		if ( 'auto-draft' === $post->post_status || isset( $_GET['bulk_edit'] ) || wp_is_post_autosave( $post_id ) || wp_doing_ajax() || wp_is_post_revision( $post_id ) ) {
+		if ( 'auto-draft' === $post->post_status || isset( $_GET['bulk_edit'] ) || false !== wp_is_post_autosave( $post_id ) || wp_doing_ajax() || false !== wp_is_post_revision( $post_id ) ) {
 			return false;
 		}
 
@@ -419,7 +419,7 @@ abstract class Meta_Box {
 		}
 		remove_action( 'save_post', [ __CLASS__, 'save_meta_boxes' ] );
 
-		foreach ( (array) static::$registry[ $post->post_type ] as $meta_box ) {
+		foreach ( static::$registry[ $post->post_type ] as $meta_box ) {
 			$meta_box->save( $post_id, $post );
 		}
 	}
@@ -466,7 +466,7 @@ abstract class Meta_Box {
 		if ( ! isset( static::$registry[ $post_type ] ) ) {
 			return null;
 		}
-		foreach ( (array) static::$registry[ $post_type ] as $meta_box ) {
+		foreach ( static::$registry[ $post_type ] as $meta_box ) {
 			if ( \get_class( $meta_box ) === $class_name ) {
 				return $meta_box;
 			}
@@ -490,10 +490,10 @@ abstract class Meta_Box {
 	 * @type [] $callback_args - will be assigned as $this->callback_args
 	 *                                     can be retrieved via $this->get_callback_args().
 	 *                                     }
-	 * @return Meta_Box|Meta_Box[]
+	 * @return static|static[]
 	 */
 	public static function register( $post_type = null, array $args = [] ) {
-		$class = null;
+		$class = [];
 		if ( null === $post_type ) {
 			foreach ( get_post_types() as $_post_type ) {
 				$class[] = new static( $_post_type, $args );

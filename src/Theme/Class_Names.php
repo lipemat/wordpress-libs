@@ -25,7 +25,7 @@ class Class_Names implements \ArrayAccess {
 	/**
 	 * Classes to parse.
 	 *
-	 * @var array
+	 * @var array<int, string>
 	 */
 	protected array $classes = [];
 
@@ -139,7 +139,10 @@ class Class_Names implements \ArrayAccess {
 	 * @return void
 	 */
 	public function offsetSet( $offset, $value ): void {
-		if ( ! empty( $value ) ) {
+		if ( null === $offset ) {
+			return;
+		}
+		if ( false !== $value ) {
 			$this->parse_classes( $offset );
 		} else {
 			$this->offsetUnset( $offset );

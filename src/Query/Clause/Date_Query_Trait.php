@@ -27,6 +27,9 @@ trait Date_Query_Trait {
 	 *
 	 * @link https://developer.wordpress.org/reference/classes/wp_query/#date-parameters
 	 *
+	 * @note A stub override is required to provide the correct return type.
+	 * @see  dev/stubs/query-clauses.php
+	 *
 	 * @return Date_Query
 	 */
 	public function date_query(): Date_Query {

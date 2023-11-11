@@ -152,6 +152,17 @@ abstract class Settings {
 
 
 	/**
+	 * Settings constructor.
+	 */
+	public function __construct() {
+		$this->add_settings();
+		$this->set_vars();
+		$this->fill_class_vars();
+		$this->hook();
+	}
+
+
+	/**
 	 * Method used to set the settings
 	 * Separate from set_vars to keep things cleaner.
 	 *
@@ -183,17 +194,6 @@ abstract class Settings {
 	 * @return void
 	 */
 	abstract protected function set_vars();
-
-
-	/**
-	 * Settings constructor.
-	 */
-	public function __construct() {
-		$this->add_settings();
-		$this->set_vars();
-		$this->fill_class_vars();
-		$this->hook();
-	}
 
 
 	/**
@@ -276,7 +276,7 @@ abstract class Settings {
 	 * @return void
 	 */
 	public function save_network_settings(): void {
-		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), $this->slug . '-options' ) ) {
+		if ( ! isset( $_POST['_wpnonce'] ) || false === wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), $this->slug . '-options' ) ) {
 			return;
 		}
 
@@ -365,7 +365,7 @@ abstract class Settings {
 			add_settings_section(
 				$section,
 				$params['title'],
-				[ $this, $section . '_description' ],
+				[ $this, $section . '_description' ], // @phpstan-ignore-line -- This is a dynamic method call.
 				$this->slug
 			);
 

@@ -80,7 +80,7 @@ interface Clause_Interface {
 	 * @throws \LogicException - If we are not in a nested class.
 	 *
 	 * @phpstan-return CLAUSE
-	 * @return Clause_Interface<CLAUSE>
+	 * @return Clause_Interface<CLAUSE, FLATTEN>
 	 */
 	public function parent_clause(): Clause_Interface;
 }

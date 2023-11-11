@@ -41,6 +41,8 @@ class Field_Type {
 	/**
 	 * Set the field properties based on an array or args.
 	 *
+	 * @phpstan-param REPO::TYPE_* $data_type
+	 *
 	 * @param array  $args      - [$key => $value].
 	 * @param string $data_type - a type of data to return [Repo::DEFAULT, Repo::CHECKBOX, Repo::FILE, Repo::TAXONOMY ].
 	 *

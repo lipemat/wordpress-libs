@@ -74,7 +74,7 @@ class True_False extends \CMB2_Type_Checkbox {
 		<?php
 		$this->styles();
 
-		return ob_get_clean();
+		return (string) \ob_get_clean();
 	}
 
 	/**

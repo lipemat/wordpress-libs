@@ -9,9 +9,9 @@ use Lipe\Lib\Traits\Singleton;
  * and simplifies the flushing of groups.
  *
  * @example Cache::init(); To optionally generate the clear cache button.
- * @example Cache::set( $key, $value );
+ * @example Cache::set($key, $value);
  *
- * @phpstan-type CACHE_KEY array|string|object
+ * @phpstan-type CACHE_KEY array|string|object|int
  */
 class Cache {
 	use Singleton;
@@ -116,7 +116,7 @@ class Cache {
 	 * @return void
 	 */
 	public function maybe_clear_cache(): void {
-		if ( empty( $_REQUEST[ static::QUERY_ARG ] ) || empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( \wp_unslash( $_REQUEST['_wpnonce'] ) ), static::QUERY_ARG ) ) {
+		if ( empty( $_REQUEST[ static::QUERY_ARG ] ) || empty( $_REQUEST['_wpnonce'] ) || false === wp_verify_nonce( sanitize_text_field( \wp_unslash( $_REQUEST['_wpnonce'] ) ), static::QUERY_ARG ) ) {
 			return;
 		}
 		wp_cache_flush();
@@ -166,14 +166,11 @@ class Cache {
 	 *
 	 * @param mixed             $key - Data to convert to a string cache key.
 	 *
-	 * @return false|string
+	 * @return int|string
 	 */
 	protected function filter_key( $key ) {
-		if ( empty( $key ) ) {
-			return false;
-		}
 		if ( \is_array( $key ) || \is_object( $key ) ) {
-			return \hash( 'fnv1a64', wp_json_encode( $key ) );
+			return \hash( 'fnv1a64', (string) wp_json_encode( $key ) );
 		}
 
 		return $key;

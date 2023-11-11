@@ -168,6 +168,6 @@ trait Memoize {
 			return $identifier;
 		}
 
-		return \hash( 'fnv1a64', wp_json_encode( [ $args, $identifier ] ) );
+		return \hash( 'fnv1a64', (string) wp_json_encode( [ $args, $identifier ] ) );
 	}
 }

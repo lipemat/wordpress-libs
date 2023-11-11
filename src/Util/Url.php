@@ -38,7 +38,7 @@ class Url {
 	 * @return string|array|null
 	 */
 	public function get_query_arg( string $url, string $key ) {
-		$query_str = wp_parse_url( $url, PHP_URL_QUERY );
+		$query_str = (string) wp_parse_url( $url, PHP_URL_QUERY );
 		wp_parse_str( $query_str, $query_vars );
 		return $query_vars[ $key ] ?? null;
 	}

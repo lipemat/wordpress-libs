@@ -73,7 +73,7 @@ class Meta_Box {
 			return;
 		}
 		$object = get_taxonomy( $this->taxonomy );
-		if ( ! current_user_can( $object->cap->assign_terms ) ) {
+		if ( false === $object || ! current_user_can( $object->cap->assign_terms ) ) {
 			return;
 		}
 
@@ -105,9 +105,15 @@ class Meta_Box {
 	 */
 	public function do_meta_box( \WP_Post $post ): void {
 		$object = get_taxonomy( $this->taxonomy );
+		if ( false === $object ) {
+			return;
+		}
 		$selected = wp_get_object_terms( $post->ID, $this->taxonomy, [
 			'fields' => 'ids',
 		] );
+		if ( is_wp_error( $selected ) ) {
+			return;
+		}
 		$walker = $this->get_walker();
 		if ( ! isset( $object->labels->no_item ) || '' === $object->labels->no_item ) {
 			$object->labels->no_item = esc_html__( 'Not specified', 'lipe' );
@@ -212,7 +218,7 @@ class Meta_Box {
 				 * Starts the element output.
 				 *
 				 * @param string $output            Passed by reference. Used to append additional content.
-				 * @param object $data_object       The current item's term data object.
+				 * @param \WP_Term $data_object     The current item's term data object.
 				 * @param int    $depth             Depth of the current item.
 				 * @param array  $args              An array of arguments.
 				 * @param int    $current_object_id ID of the current item.
@@ -221,7 +227,7 @@ class Meta_Box {
 				 */
 				public function start_el( &$output, $data_object, $depth = 0, $args = [], $current_object_id = 0 ): void { //phpcs:ignore -- Signature must match parent.
 					$tax = get_taxonomy( $args['taxonomy'] );
-					if ( ! $tax ) {
+					if ( false === $tax ) {
 						return;
 					}
 
@@ -234,7 +240,7 @@ class Meta_Box {
 					// @todo Next time working on this, clean it up with `ob_start()`.
 					$output .= "\n<li id='{$args['taxonomy']}-{$data_object->term_id}'>" .
 								'<label class="selectit">' .
-								'<input value="' . esc_attr( $value ) . '" type="radio" name="tax_input[' . esc_attr( $args['taxonomy'] ) . '][]" ' .
+								'<input value="' . esc_attr( (string) $value ) . '" type="radio" name="tax_input[' . esc_attr( $args['taxonomy'] ) . '][]" ' .
 								'id="in-' . esc_attr( $args['taxonomy'] ) . '-' . esc_attr( (string) $data_object->term_id ) . '"' .
 								checked( $checked, true, false ) .
 								' /> ' .

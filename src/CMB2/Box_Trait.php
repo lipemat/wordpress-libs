@@ -153,7 +153,7 @@ trait Box_Trait {
 			$config['type'] = 'object';
 		}
 
-		if ( $field->show_in_rest && $this->is_public_rest_data( $field ) ) {
+		if ( (bool) $field->show_in_rest && $this->is_public_rest_data( $field ) ) {
 			$config['show_in_rest'] = $field->show_in_rest;
 			if ( $field->is_using_array_data() ) {
 				$config['show_in_rest'] = [
@@ -254,7 +254,7 @@ trait Box_Trait {
 	 * @return bool
 	 */
 	protected function is_public_rest_data( Field $field ): bool {
-		return $field->show_in_rest && ( \WP_REST_Server::ALLMETHODS === $field->show_in_rest );
+		return (bool) $field->show_in_rest && ( \WP_REST_Server::ALLMETHODS === $field->show_in_rest );
 	}
 
 
