@@ -176,7 +176,7 @@ class Options_Page extends Box {
 	 * @param string      $id    - Options page id.
 	 * @param string|null $title - Options page title.
 	 */
-	public function __construct( string $id, ?string $title = null ) {
+	public function __construct( string $id, ?string $title ) {
 		if ( null === $this->option_key ) {
 			$this->option_key = $id;
 		}

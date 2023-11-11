@@ -4,6 +4,8 @@ namespace Lipe\Lib\CMB2\Field;
 
 /**
  * True/False checkbox toggle field.
+ *
+ * @phpstan-ignore-next-line -- We need to extend the CMB2 class for now.
  */
 class True_False extends \CMB2_Type_Checkbox {
 

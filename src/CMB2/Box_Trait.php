@@ -289,15 +289,11 @@ trait Box_Trait {
 	 * @return string
 	 */
 	public function get_object_type(): string {
-		switch ( $this->object_types[0] ) {
-			case 'comment':
-			case 'options-page':
-			case 'user':
-			case 'term':
-				return $this->object_types[0];
-			default:
-				return 'post';
+		if ( \in_array( $this->object_types[0], [ 'comment', 'options-page', 'user', 'term' ], true ) ) {
+			return $this->object_types[0];
 		}
+
+		return 'post';
 	}
 
 

@@ -24,7 +24,7 @@ class Translate_AbstractTest extends \WP_UnitTestCase {
 				if ( '_' !== $field_id ) {
 					return null;
 				}
-				$field = new Field( $field_id, $field_id );
+				$field = new Field( $field_id, $field_id, null );
 				$field->taxonomy = 'category';
 				return $field;
 			}

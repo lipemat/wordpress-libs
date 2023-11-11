@@ -4,8 +4,6 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy;
 
-//phpcs:disable WordPress.WhiteSpace.PrecisionAlignment.Found
-
 /**
  * Custom output for various meta box styles.
  *
@@ -111,41 +109,39 @@ class Meta_Box {
 			'fields' => 'ids',
 		] );
 		$walker = $this->get_walker();
-		$none = $object->labels->no_item ?: esc_html__( 'Not specified' ); //phpcs:ignore
+		if ( ! isset( $object->labels->no_item ) || '' === $object->labels->no_item ) {
+			$object->labels->no_item = esc_html__( 'Not specified', 'lipe' );
+		}
 
 		?>
 		<div id="taxonomy-<?= esc_attr( $this->taxonomy ) ?>" class="categorydiv lipe-libs-terms-box">
 			<?php
-			switch ( $this->type ) {
-				case 'dropdown':
-					printf(
-						'<label for="%1$s" class="screen-reader-text">%2$s</label>',
-						esc_attr( "{$this->taxonomy}dropdown" ),
-						esc_html( $object->labels->singular_name )
-					);
+			if ( 'dropdown' === $this->type ) {
+				printf(
+					'<label for="%1$s" class="screen-reader-text">%2$s</label>',
+					esc_attr( "{$this->taxonomy}dropdown" ),
+					esc_html( $object->labels->singular_name )
+				);
 
-					$dropdown_args = [
-						'option_none_value' => ( is_taxonomy_hierarchical( $this->taxonomy ) ? '-1' : '' ),
-						'show_option_none'  => $none,
-						'hide_empty'        => false,
-						'hierarchical'      => true,
-						'show_count'        => false,
-						'orderby'           => 'name',
-						'selected'          => \count( $selected ) < 1 ? 0 : \reset( $selected ),
-						'id'                => "{$this->taxonomy}dropdown",
-						'name'              => is_taxonomy_hierarchical( $this->taxonomy ) ? "tax_input[{$this->taxonomy}][]" : "tax_input[{$this->taxonomy}]",
-						'taxonomy'          => $this->taxonomy,
-					];
+				$dropdown_args = [
+					'option_none_value' => ( is_taxonomy_hierarchical( $this->taxonomy ) ? '-1' : '' ),
+					'show_option_none'  => $object->labels->no_item,
+					'hide_empty'        => false,
+					'hierarchical'      => true,
+					'show_count'        => false,
+					'orderby'           => 'name',
+					'selected'          => \count( $selected ) < 1 ? 0 : \reset( $selected ),
+					'id'                => "{$this->taxonomy}dropdown",
+					'name'              => is_taxonomy_hierarchical( $this->taxonomy ) ? "tax_input[{$this->taxonomy}][]" : "tax_input[{$this->taxonomy}]",
+					'taxonomy'          => $this->taxonomy,
+				];
 
-					wp_dropdown_categories( $dropdown_args );
-					break;
-
-				case 'checklist':
-				default:
-					?>
+				wp_dropdown_categories( $dropdown_args );
+			} else {
+				?>
 					<style>
 						/* Style for the 'none' item: */
-						#<?php echo esc_attr( $this->taxonomy ); ?>-0 {
+						#<?= esc_attr( $this->taxonomy ) ?>-0 {
 							color: #888;
 							border-top: 1px solid #eee;
 							margin-top: 5px;
@@ -180,7 +176,7 @@ class Meta_Box {
 						$output = '';
 						$o = (object) [
 							'term_id' => 0,
-							'name'    => $none,
+							'name'    => $object->labels->no_item,
 							'slug'    => 'none',
 						];
 						$args = [
@@ -196,7 +192,6 @@ class Meta_Box {
 						?>
 					</ul>
 					<?php
-					break;
 			}
 			?>
 		</div>
@@ -211,6 +206,7 @@ class Meta_Box {
 	 */
 	protected function get_walker(): \Walker {
 		if ( 'radio' === $this->type ) {
+			// @phpstan-ignore-next-line
 			return new class() extends \Walker_Category_Checklist {
 				/**
 				 * Starts the element output.

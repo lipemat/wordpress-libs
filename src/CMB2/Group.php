@@ -99,6 +99,8 @@ class Group extends Field {
 	 * @param string|null $remove_confirm          - A message to display when a user attempts
 	 *                                             to delete a group.
 	 *                                             (Defaults to null/false for no confirmation).
+	 *
+	 * @phpstan-ignore-next-line -- Too many default arguments to account for.
 	 */
 	public function __construct( string $id, ?string $title, Box $box, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, bool $sortable = true, bool $closed = false, ?string $remove_confirm = null ) {
 		$this->type()->group( $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );

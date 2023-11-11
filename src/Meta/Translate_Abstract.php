@@ -6,8 +6,6 @@ namespace Lipe\Lib\Meta;
 use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\Traits\Memoize;
 
-//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
-
 /**
  * Translate the fields into the correct data types.
  */

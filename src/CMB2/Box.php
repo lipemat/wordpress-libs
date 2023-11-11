@@ -11,6 +11,8 @@ use Lipe\Lib\Meta\Repo;
  * Main meta box class.
  *
  * A fluent interface for CMB2 meta box properties.
+ *
+ * @phpstan-type CONTEXT 'normal'|'side'|'advanced'|'form_top'|'before_permalink'| 'after_title'|'after_editor'
  */
 class Box {
 	public const TYPE_COMMENT = 'comment';
@@ -350,25 +352,39 @@ class Box {
 	/**
 	 * Register a new meta box.
 	 *
-	 * @phpstan-param 'normal'|'side'|'advanced'|'form_top'|'before_permalink'| 'after_title'|'after_editor' $context
+	 * @todo                     Remove the deprecated $context parameter in version 5.
 	 *
-	 * @param string                                                                                         $id           - ID of this
-	 *                                                                                                                     box.
-	 * @param array                                                                                          $object_types - [post type
-	 *                                                                                                                     slugs], or
-	 *                                                                                                                     'user', 'term',
-	 *                                                                                                                     'comment', or
-	 *                                                                                                                     'options-page'.
-	 * @param string|null                                                                                    $title        - Title of this
-	 *                                                                                                                     box.
-	 * @param string                                                                                         $context      - Location the
-	 *                                                                                                                     meta box will
-	 *                                                                                                                     display.
+	 * @phpstan-param            '-1'|CONTEXT    $context
+	 *
+	 * @param string      $id           - ID of this box.
+	 * @param array       $object_types - [post type slugs], or 'user', 'term', 'comment', or 'options-page'.
+	 * @param string|null $title        - Title of this box.
+	 * @param string      $context      - Location the meta box will display.
+	 *
+	 * @phpstan-ignore-next-line -- Default value until version 5.
 	 */
-	public function __construct( string $id, array $object_types, ?string $title = null, string $context = 'normal' ) {
+	public function __construct( string $id, array $object_types, ?string $title, string $context = '-1' ) {
+		if ( '-1' !== $context ) {
+			_deprecated_argument( __METHOD__, '4.5.0', 'The $context parameter is deprecated. Use the `context` method instead.' );
+			$context = 'normal';
+		}
 		$this->id = $id;
 		$this->object_types = $object_types;
 		$this->title = $title;
+		$this->context = $context;
+	}
+
+
+	/**
+	 * Set the display location of the meta box.
+	 *
+	 * @phpstan-param CONTEXT $context
+	 *
+	 * @param string          $context - Location the metabox will display.
+	 *
+	 * @return void
+	 */
+	public function context( string $context ): void {
 		$this->context = $context;
 	}
 

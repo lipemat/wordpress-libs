@@ -1,8 +1,19 @@
-rules:
-    - Lipe\Lib\Phpstan\Rules\Expressions\NoCompactRule
+# @version 2.0.0
+
+includes:
+    # Include the lipemat phpstan rules.
+    - %rootDir%/../../../rules.neon
 
 parameters:
     level: 6
+    lipemat:
+        noExtends: true
+        allowedToBeExtended:
+            - Lipe\Lib\Query\Args
+            - Lipe\Lib\Meta\Translate_Abstract
+            - Lipe\Lib\CMB2\Box
+            - Lipe\Lib\CMB2\Field
+        nonDistributed: false
     strictRules:
         allRules: true
         # Construct empty() is not allowed.

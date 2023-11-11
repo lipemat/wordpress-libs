@@ -680,21 +680,18 @@ class Args implements Meta_Query_Interface, Date_Query_Interface, Args_Interface
 	 * @return void
 	 */
 	public function orderby( $orderby, string $order = '' ): void {
-		switch ( true ) {
-			case \in_array( static::ORDERBY_POST_IN, (array) $orderby, true ):
-				if ( empty( $this->post__in ) ) {
-					throw new \LogicException( esc_html__( 'You cannot order by `post__in` unless you specify the post ins.', 'lipe' ) );
-				}
-				break;
-			case \in_array( static::ORDERBY_NAME_IN, (array) $orderby, true ):
-				if ( empty( $this->post__name__in ) ) {
-					throw new \LogicException( esc_html__( 'You cannot order by `post__name__in` unless you specify the post name ins.', 'lipe' ) );
-				}
-				break;
-			case \in_array( static::ORDERBY_PARENT_IN, (array) $orderby, true ):
-				if ( empty( $this->post_parent__in ) ) {
-					throw new \LogicException( esc_html__( 'You cannot order by `post_parent__in` unless you specify the post parent ins.', 'lipe' ) );
-				}
+		if ( \in_array( static::ORDERBY_POST_IN, (array) $orderby, true ) ) {
+			if ( empty( $this->post__in ) ) {
+				throw new \LogicException( esc_html__( 'You cannot order by `post__in` unless you specify the post ins.', 'lipe' ) );
+			}
+		} elseif ( \in_array( static::ORDERBY_NAME_IN, (array) $orderby, true ) ) {
+			if ( empty( $this->post__name__in ) ) {
+				throw new \LogicException( esc_html__( 'You cannot order by `post__name__in` unless you specify the post name ins.', 'lipe' ) );
+			}
+		} elseif ( \in_array( static::ORDERBY_PARENT_IN, (array) $orderby, true ) ) {
+			if ( empty( $this->post_parent__in ) ) {
+				throw new \LogicException( esc_html__( 'You cannot order by `post_parent__in` unless you specify the post parent ins.', 'lipe' ) );
+			}
 		}
 
 		$this->orderby = $orderby;

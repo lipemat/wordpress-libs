@@ -45,6 +45,29 @@ abstract class Post_List_Column {
 
 
 	/**
+	 * Post_List_Column constructor.
+	 *
+	 * @todo Remove default value for $post_types in version 5.
+	 *
+	 * @param string $column_label - The column label.
+	 * @param array  $post_types   - The post types to add the column to.
+	 *
+	 * @phpstan-ignore-next-line -- Keeping default value intact until version 5.
+	 */
+	public function __construct( string $column_label, array $post_types = [ - 1 ] ) {
+		if ( [ - 1 ] === $post_types ) {
+			_doing_it_wrong( __METHOD__, 'You must pass post types to `Post_List_Column::__construct()`', '4.5.0' );
+			$post_types = [ 'post' ];
+		}
+
+		$this->column_label = $column_label;
+		$this->column_slug = sanitize_title_with_dashes( $this->column_label );
+		$this->post_types = $post_types;
+		$this->hook();
+	}
+
+
+	/**
 	 * Renders the output of the column in each row
 	 * of the posts list
 	 *
@@ -54,20 +77,6 @@ abstract class Post_List_Column {
 	 * @return void
 	 */
 	abstract protected function render_column( string $column, int $post_id );
-
-
-	/**
-	 * Post_List_Column constructor.
-	 *
-	 * @param string $column_label - The column label.
-	 * @param array  $post_types   - The post types to add the column to.
-	 */
-	public function __construct( string $column_label, $post_types = [ 'post' ] ) {
-		$this->column_label = $column_label;
-		$this->column_slug = sanitize_title_with_dashes( $this->column_label );
-		$this->post_types = $post_types;
-		$this->hook();
-	}
 
 
 	/**

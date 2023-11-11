@@ -8,8 +8,6 @@ use Lipe\Lib\CMB2\Box\Tabs;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
 
-//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
-
 /**
  * A fluent interface for a CMB2 field.
  *
@@ -803,7 +801,7 @@ class Field {
 	 * @param string|null    $name - Name of the field.
 	 * @param Box|Group|null $box  - Parent class using this Field.
 	 */
-	public function __construct( string $id, ?string $name, $box = null ) {
+	public function __construct( string $id, ?string $name, $box ) {
 		$this->id = $id;
 		$this->name = $name;
 		$this->box = $box;
@@ -1048,12 +1046,13 @@ class Field {
 	 */
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ): Field {
 		// Ugh! Hack, so I can use a method from that class.
+		// @phpstan-ignore-next-line -- This is a hack.
 		$mock = new class() extends \CMB2_Field {
 			/**
 			 * Construct the mock class.
 			 *
 			 * @phpstan-ignore-next-line
-			 * @noinspection MagicMethodsValidityInspection PhpMissingParentConstructorInspection
+			 * @noinspection MagicMethodsValidityInspection, PhpMissingParentConstructorInspection
 			 */
 			public function __construct() {
 			}

@@ -6,8 +6,6 @@ namespace Lipe\Lib\Meta;
 use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\Traits\Singleton;
 
-//phpcs:disable Squiz.Commenting.FunctionComment.SpacingAfterParamType
-
 /**
  * Repo to hold the different field types for our meta keys
  * and return the appropriate data based on field type.
@@ -87,6 +85,7 @@ class Repo extends Translate_Abstract {
 	 * @return mixed
 	 */
 	public function get_value( $object_id, string $field_id, string $meta_type = 'post' ) {
+		// @phpstan-ignore-next-line -- Switch to `match` when PHP 8 is required.
 		switch ( $this->get_field_data_type( $field_id ) ) {
 			case static::TYPE_CHECKBOX:
 				return $this->get_checkbox_field_value( $object_id, $field_id, $meta_type );
@@ -120,6 +119,7 @@ class Repo extends Translate_Abstract {
 	 * @return void
 	 */
 	public function update_value( $object_id, string $field_id, $value, string $meta_type = 'post' ): void {
+		// @phpstan-ignore-next-line -- Switch to `match` when PHP 8 is required.
 		switch ( $this->get_field_data_type( $field_id ) ) {
 			case static::TYPE_CHECKBOX:
 				$this->update_checkbox_field_value( $object_id, $field_id, $value, $meta_type );
@@ -157,6 +157,7 @@ class Repo extends Translate_Abstract {
 	 * @return void
 	 */
 	public function delete_value( $object_id, string $field_id, string $meta_type ): void {
+		// @phpstan-ignore-next-line -- Switch to `match` when PHP 8 is required.
 		switch ( $this->get_field_data_type( $field_id ) ) {
 			case static::TYPE_FILE:
 				$this->delete_file_field_value( $object_id, $field_id, $meta_type );

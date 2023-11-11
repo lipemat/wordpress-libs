@@ -31,7 +31,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 
 
 	public function test_field_type_array(): void {
-		$field = new Field( 't', 'test' );
+		$field = new Field( 't', 'test', null );
 		$field->type()->text_date( 'M', 'time_key', [ 'passive' => 1 ] );
 		$field->attributes = [ 'directly' => 1 ];
 
