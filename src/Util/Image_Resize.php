@@ -18,6 +18,8 @@ use Lipe\Lib\Traits\Singleton;
  *         If you need a custom resized image using normal JS wp conventions you will have
  *         to do an ajax call, which uses php to retrieve.
  *
+ * @deprecated Will be removed in version 5. Port into your local codebase.
+ *
  * @phpstan-type META array{file: string, width: string, height: int, mime-type: string}
  */
 class Image_Resize {
@@ -43,6 +45,9 @@ class Image_Resize {
 		if ( \defined( 'WP_CLI' ) && \WP_CLI ) {
 			return;
 		}
+
+		_deprecated_file( __CLASS__, '4.5.0', 'a local copy' );
+
 		add_action( 'init', [ $this, 'add_other_image_sizes' ] );
 		add_filter( 'image_downsize', [ $this, 'convert_image_downsize' ], 10, 3 );
 		add_filter( 'wp_calculate_image_srcset_meta', [ $this, 'populate_srcset_sizes' ], 10, 4 );
