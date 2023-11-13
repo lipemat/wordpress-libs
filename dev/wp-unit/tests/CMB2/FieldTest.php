@@ -208,7 +208,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 
 
 	/**
-	 * @requires wp_post_revision_meta_keys
+	 * @requires function wp_post_revision_meta_keys
 	 */
 	public function test_revision_support(): void {
 		$this->assertNotContains( 'tos', wp_post_revision_meta_keys( 'page' ) );
