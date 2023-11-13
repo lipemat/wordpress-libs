@@ -12,7 +12,7 @@ namespace Lipe\Lib\Query\Clause {
 
 	trait Date_Query_Trait {
 		/**
-		 * @return Clause_Interface<Data_Query, static>
+		 * @return Clause_Interface<Date_Query, static>
 		 */
 		public function date_query() {
 		}
