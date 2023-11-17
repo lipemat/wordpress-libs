@@ -362,7 +362,7 @@ class Layout {
 				.cmb-group-table .cmb-group-table-control .cmb-remove-group-row span {
 					color: #F55E4F !important;
 					font-size: 23px;
-					margin: 3px 0 0 -1px;
+					margin: -1px 0 0 -2px;
 				}
 
 				.cmb-repeatable-group.sortable .cmb-group-table-control:first-child {

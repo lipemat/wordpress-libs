@@ -337,12 +337,6 @@ class Tabs {
 				font-weight: 600;
 			}
 
-			.cmb-tabs .cmb-type-group .cmb-row,
-			.cmb-tabs .cmb2-postbox .cmb-row {
-				margin: 0 0 0.8em !important;
-				padding: 0 0 0.8em !important;
-			}
-
 			.cmb-tabs span.cmb2-metabox-description {
 				display: block;
 			}
