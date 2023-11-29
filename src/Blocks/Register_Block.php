@@ -19,7 +19,7 @@ use Lipe\Lib\Query\Args_Interface;
  *
  * @phpstan-type Attributes array<string, array{
  *     type:string,
- *     default?:int|string|bool,
+ *     default?:mixed,
  *     enum?:array<string|int|bool>,
  *     items?: array{
  *       type: string,
