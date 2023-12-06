@@ -2,6 +2,7 @@
 
 namespace Lipe\Lib\Util;
 
+use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
 
 /**
@@ -9,6 +10,7 @@ use Lipe\Lib\Traits\Singleton;
  */
 class Actions {
 	use Singleton;
+	use Memoize;
 
 
 	/**
@@ -80,10 +82,11 @@ class Actions {
 	public function add_single_filter( string $filter, callable $callback, int $priority = 10 ): void {
 		$function = function( ...$args ) use ( $filter, $callback, $priority, &$function ) {
 			remove_filter( $filter, $function, $priority );
-
 			return $callback( ...$args );
 		};
-		add_filter( $filter, $function, $priority, 10 );
+		$this->memoize( function( $filter, $callback, $priority ) use ( $function ) {
+			add_filter( $filter, $function, $priority, 10 );
+		}, __METHOD__, $filter, $callback, $priority );
 	}
 
 
@@ -105,7 +108,9 @@ class Actions {
 			remove_action( $action, $function, $priority );
 			$callback( ...$args );
 		};
-		add_action( $action, $function, $priority, 10 );
+		$this->memoize( function( $action, $callback, $priority ) use ( $function ) {
+			add_action( $action, $function, $priority, 10 );
+		}, __METHOD__, $action, $callback, $priority );
 	}
 
 
