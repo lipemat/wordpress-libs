@@ -19,6 +19,7 @@ parameters:
         # Construct empty() is not allowed.
         disallowedConstructs: false
         noVariableVariables: false
+    # Array value type is required.
     checkMissingIterableValueType: false
     paths:
         - src
