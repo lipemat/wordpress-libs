@@ -18,7 +18,9 @@ use Lipe\Lib\Util\Arrays;
  *          // Conditionally add an active class as we go.
  *          $class[ 'active' ] = isset( $_POST['domain_list'] );
  *
- * @phpstan-type CSS_CLASSES array<int, string>|array<string, bool>|array<array<string, bool>>
+ * @todo Once PHP 8.1 is required, complete unit tests for BackedEnum.
+ *
+ * @phpstan-type CSS_CLASSES string|\BackedEnum|array<int, string|\BackedEnum>|array<string, bool>|array<array<string, bool>|array<string|\BackedEnum>>
  *
  * @implements \ArrayAccess<string, array|string>
  */
@@ -35,9 +37,9 @@ class Class_Names implements \ArrayAccess {
 	/**
 	 * Accepts any number of arrays or strings.
 	 *
-	 * @phpstan-param string|CSS_CLASSES ...$classes
+	 * @phpstan-param CSS_CLASSES      ...$classes
 	 *
-	 * @param string|array ...$classes - Classes to parse.
+	 * @param string|\BackedEnum|array ...$classes - Classes to parse.
 	 */
 	public function __construct( ...$classes ) {
 		\array_walk( $classes, [ $this, 'parse_classes' ] );
@@ -64,15 +66,19 @@ class Class_Names implements \ArrayAccess {
 	 * Allows us to pass any combination of arrays or strings
 	 * and still get the appropriate classes
 	 *
-	 * @phpstan-param string|CSS_CLASSES $classes
+	 * @phpstan-param CSS_CLASSES      $classes
 	 *
-	 * @param string|array $classes - Classes to parse.
+	 * @param string|\BackedEnum|array $classes - Classes to parse.
 	 *
 	 * @return void
 	 */
 	protected function parse_classes( $classes ): void {
 		if ( \is_string( $classes ) ) {
 			$this->classes[] = $classes;
+			return;
+		}
+		if ( $classes instanceof \BackedEnum ) {
+			$this->classes[] = (string) $classes->value;
 			return;
 		}
 		foreach ( $classes as $_class => $_state ) {
@@ -82,6 +88,8 @@ class Class_Names implements \ArrayAccess {
 				if ( $_state ) {
 					$this->classes[] = $_class;
 				}
+			} elseif ( $_state instanceof \BackedEnum ) {
+				$this->classes[] = (string) $_state->value;
 			} elseif ( \is_string( $_state ) ) {
 				$this->classes[] = $_state;
 			}
@@ -92,11 +100,14 @@ class Class_Names implements \ArrayAccess {
 	/**
 	 * Get the index of a class name if it exists.
 	 *
-	 * @param string $css_class - Class name to search for.
+	 * @param string|\BackedEnum $css_class - Class name to search for.
 	 *
 	 * @return int|false
 	 */
-	protected function get_classes_key( string $css_class ) {
+	protected function get_classes_key( $css_class ) {
+		if ( $css_class instanceof \BackedEnum ) {
+			$css_class = (string) $css_class->value;
+		}
 		return \array_search( $css_class, $this->classes, true );
 	}
 
@@ -114,7 +125,7 @@ class Class_Names implements \ArrayAccess {
 	/**
 	 * Check if a class name exists in the list.
 	 *
-	 * @param string $offset - Class name.
+	 * @param string|\BackedEnum $offset - Class name.
 	 *
 	 * @return bool
 	 */
@@ -126,7 +137,7 @@ class Class_Names implements \ArrayAccess {
 	/**
 	 * Get a class name from the list.
 	 *
-	 * @param string $offset - Class name.
+	 * @param string|\BackedEnum $offset - Class name.
 	 *
 	 * @return string
 	 */
@@ -139,7 +150,7 @@ class Class_Names implements \ArrayAccess {
 	/**
 	 * Add or remove a class name from the list.
 	 *
-	 * @param ?string $offset - Class name.
+	 * @param null|string|\BackedEnum $offset - Class name.
 	 * @param string|array|bool $value  - True to add class or false to remove it.
 	 *
 	 * @return void
@@ -159,7 +170,7 @@ class Class_Names implements \ArrayAccess {
 	/**
 	 * Remove a class name from the list.
 	 *
-	 * @param string $offset - Class name.
+	 * @param string|\BackedEnum $offset - Class name.
 	 *
 	 * @return void
 	 */
