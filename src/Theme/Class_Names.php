@@ -18,6 +18,8 @@ use Lipe\Lib\Util\Arrays;
  *          // Conditionally add an active class as we go.
  *          $class[ 'active' ] = isset( $_POST['domain_list'] );
  *
+ * @phpstan-type CSS_CLASSES array<int, string>|array<string, bool>|array<array<string, bool>>
+ *
  * @implements \ArrayAccess<string, array|string>
  */
 class Class_Names implements \ArrayAccess {
@@ -33,6 +35,8 @@ class Class_Names implements \ArrayAccess {
 	/**
 	 * Accepts any number of arrays or strings.
 	 *
+	 * @phpstan-param string|CSS_CLASSES ...$classes
+	 *
 	 * @param string|array ...$classes - Classes to parse.
 	 */
 	public function __construct( ...$classes ) {
@@ -46,7 +50,7 @@ class Class_Names implements \ArrayAccess {
 	 * @see Class_Names::__toString
 	 * @interal
 	 *
-	 * @return array
+	 * @return array<string>
 	 */
 	public function get_classes(): array {
 		$clean = Arrays::in()->clean( $this->classes );
@@ -60,6 +64,8 @@ class Class_Names implements \ArrayAccess {
 	 * Allows us to pass any combination of arrays or strings
 	 * and still get the appropriate classes
 	 *
+	 * @phpstan-param string|CSS_CLASSES $classes
+	 *
 	 * @param string|array $classes - Classes to parse.
 	 *
 	 * @return void
@@ -72,11 +78,11 @@ class Class_Names implements \ArrayAccess {
 		foreach ( $classes as $_class => $_state ) {
 			if ( \is_array( $_state ) ) {
 				$this->parse_classes( $_state );
-			} elseif ( \is_string( $_class ) ) {
+			} elseif ( \is_string( $_class ) && \is_bool( $_state ) ) {
 				if ( $_state ) {
 					$this->classes[] = $_class;
 				}
-			} else {
+			} elseif ( \is_string( $_state ) ) {
 				$this->classes[] = $_state;
 			}
 		}
@@ -133,7 +139,7 @@ class Class_Names implements \ArrayAccess {
 	/**
 	 * Add or remove a class name from the list.
 	 *
-	 * @param ?string           $offset - Class name.
+	 * @param ?string $offset - Class name.
 	 * @param string|array|bool $value  - True to add class or false to remove it.
 	 *
 	 * @return void
