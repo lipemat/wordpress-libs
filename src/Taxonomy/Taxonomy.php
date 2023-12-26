@@ -389,6 +389,7 @@ class Taxonomy {
 		}
 		if ( '0' !== $show_admin_column ) {
 			_deprecated_argument( __METHOD__, '4.5.0', 'The `$show_admin_column` argument is deprecated. Use the `Taxonomy::show_admin_column()` method instead.');
+		} else {
 			$show_admin_column = false;
 		}
 
@@ -668,20 +669,19 @@ class Taxonomy {
 
 
 	/**
-	 * Change the admin column's label to a provided string.
+	 * Enable the admin post lists column for this taxonomy.
+	 * Optionally set the label for the column. Defaults to the taxonomy label.
 	 *
-	 * Add support for specifying the label to use instead of just
-	 * generating the column or not.
+	 * WP core does not support changing the label using `show_admin_column` so
+	 * we use a filter to change the label.
 	 *
-	 * Automatically called within __construct() but may be called
-	 * directly if desired.
-	 *
-	 * @see   Taxonomy::__construct()
-	 *
-	 * @param string $label - The label to use for the column.
+	 * @param string $label - Optional label to use for the column.
 	 */
-	public function show_admin_column( string $label ): void {
+	public function show_admin_column( string $label = '' ): void {
 		$this->show_admin_column = true;
+		if ( '' === $label ) {
+			return;
+		}
 		Actions::in()->add_filter_all( array_map( function( $post_type ) {
 			return "manage_{$post_type}_posts_columns";
 		}, $this->post_types ), function( array $columns ) use ( $label ) {
