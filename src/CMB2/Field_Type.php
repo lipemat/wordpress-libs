@@ -688,8 +688,8 @@ class Field_Type {
 		Term_Select_2::init_once();
 
 		$_args = $this->field_type_taxonomy( Term_Select_2::NAME, $taxonomy, $no_terms_text, $remove_default );
-		$_args[ Term_Select_2::SAVE_AS_TERMS ] = $save_as_terms;
-		$_args[ Term_Select_2::CREATE_NEW_TERMS ] = $create_new_terms;
+		$this->field->term_select_2_save_as_terms = $save_as_terms;
+		$this->field->term_select_2_create_terms  = $create_new_terms;
 
 		return $this->set( $_args, Repo::TYPE_TAXONOMY );
 	}

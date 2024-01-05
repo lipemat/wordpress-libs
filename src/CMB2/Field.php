@@ -763,6 +763,29 @@ class Field {
 	protected bool $store_user_terms_in_meta = true;
 
 	/**
+	 * Used by the term_select_2 field type to append the terms to the object
+	 * as well as storing them in meta.
+	 *
+	 * @see \Lipe\Lib\CMB2\Field\Term_Select_2::assign_terms_during_save
+	 *
+	 * @interal
+	 *
+	 * @var bool
+	 */
+	public bool $term_select_2_save_as_terms = false;
+
+	/**
+	 * Used by the term_select_2 field type to allow creating new terms.
+	 *
+	 * @see \Lipe\Lib\CMB2\Field\Term_Select_2::assign_terms_during_save
+	 *
+	 * @interal
+	 *
+	 * @var bool
+	 */
+	public bool $term_select_2_create_terms = false;
+
+	/**
 	 * A render row cb to use inside a tab.
 	 * Stored here, so we can set the `render_row_cb` to the tab's
 	 * method an keep outside `render_row_cb` intact.
