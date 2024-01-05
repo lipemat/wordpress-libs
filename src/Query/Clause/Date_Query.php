@@ -3,6 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Query\Clause;
 
+use Lipe\Lib\Query\Args_Interface;
+
 /**
  * Generate a `date_query` argument for a `WP_Query.
  *
@@ -347,10 +349,15 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @param Date_Query_Interface $args_class - Args class, which supports properties this method will assign.
 	 *
+	 * @throws \LogicException - If the provided class does have a `date_query` property.
+	 *
 	 * @return void
 	 */
 	public function flatten( $args_class ): void {
 		$this->extract_nested( $this->clauses, $this );
+		if ( ! property_exists( $args_class, 'date_query' ) ) {
+			throw new \LogicException( esc_html__('The provided class does not support date queries. Did you use `Date_Query_Trait`?', 'lipe' ) );
+		}
 		if ( ! isset( $args_class->date_query ) ) {
 			$args_class->date_query = [];
 		}
