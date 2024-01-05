@@ -34,7 +34,6 @@ class Date_Query implements Clause_Interface {
 	 */
 	protected int $current_index = 0;
 
-
 	/**
 	 * Date to retrieve posts after (array version).
 	 *

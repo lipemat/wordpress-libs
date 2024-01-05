@@ -25,7 +25,6 @@ class Term_Select_2 {
 	public const NAME = 'lipe/lib/cmb2/field-types/term-select-2';
 
 	public const GET_TERMS        = 'lipe/lib/cmb2/field-types/term-select-2/ajax';
-	public const SAVE_AS_TERMS    = 'save_as_terms';
 	public const CREATE_NEW_TERMS = 'create_terms';
 
 
@@ -296,12 +295,12 @@ class Term_Select_2 {
 	 *
 	 * @return array|null
 	 */
-	public function assign_terms_during_save( $check, $meta_value, $id, array $field_args ) : ?array {
+	public function assign_terms_during_save( $check, $meta_value, $id, array $field_args ): ?array {
 		if ( ! \is_array( $meta_value ) || empty( $meta_value ) ) {
 			return $check;
 		}
 
-		if ( $field_args[ self::CREATE_NEW_TERMS ] ) {
+		if ( $field_args['term_select_2_create_terms'] ) {
 			if ( $field_args['repeatable'] ) {
 				foreach ( $meta_value as $k => $terms ) {
 					$meta_value[ $k ] = $this->create_terms( $terms, $this->get_taxonomy( $field_args ) );
@@ -311,7 +310,7 @@ class Term_Select_2 {
 			}
 		}
 
-		if ( ! empty( $id ) && $field_args[ self::SAVE_AS_TERMS ] ) {
+		if ( ! empty( $id ) && $field_args['term_select_2_save_as_terms'] ) {
 			wp_add_object_terms( (int) $id, \array_map( '\intval', $meta_value ), $this->get_taxonomy( $field_args ) );
 		}
 
