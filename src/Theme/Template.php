@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Theme;
 
@@ -13,7 +14,7 @@ class Template {
 	/**
 	 * Render of an array of attributes to be used in HTML markup.
 	 *
-	 * @param array $attributes - Array of attributes to sanitize, implode and return.
+	 * @param array<string, mixed> $attributes - Array of attributes to sanitize, implode and return.
 	 *
 	 * @return    string
 	 */
@@ -22,12 +23,15 @@ class Template {
 		foreach ( $attributes as $k => $v ) {
 			if ( \is_array( $v ) || \is_object( $v ) ) {
 				$v = wp_json_encode( $v );
-			} elseif ( \is_bool( $v ) ) {
-				$v = $v ? 1 : 0;
+			} elseif ( true === $v ) {
+				$e[] = $k;
+				continue;
+			} elseif ( false === $v ) {
+				$v = '0';
 			} elseif ( \is_string( $v ) ) {
-				$v = trim( $v );
+				$v = \trim( $v );
 			}
-			$e[] = $k . '="' . \esc_attr( $v ) . '"';
+			$e[] = $k . '="' . esc_attr( (string) $v ) . '"';
 		}
 
 		return \implode( ' ', $e );
@@ -39,12 +43,10 @@ class Template {
 	 *
 	 * Same as `get_template_part` but instead of echoing, it returns.
 	 *
-	 * @param string      $slug The slug name for the generic template.
-	 * @param string|null $name The name of the specialised template.
-	 * @param mixed       $args Optional. Additional arguments passed to the template.
+	 * @param string  $slug     The slug name for the generic template.
+	 * @param ?string $name     The name of the specialised template.
+	 * @param mixed   $args     Optional. Additional arguments passed to the template.
 	 *                          Default empty array.
-	 *
-	 * @since 3.7.0
 	 *
 	 * @return string
 	 */
@@ -66,8 +68,6 @@ class Template {
 	 *
 	 * @link  https://www.w3.org/TR/CSS21/syndata.html#characters
 	 * @link  https://core.trac.wordpress.org/ticket/33924
-	 *
-	 * @since 3.11.0
 	 *
 	 * @param string $css_class - Unsanitized CSS class.
 	 *
