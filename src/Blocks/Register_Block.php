@@ -241,14 +241,21 @@ class Register_Block implements Args_Interface {
 	public array $editor_style_handles;
 
 	/**
-	 * Block type front end and editor style handles.
+	 * Block type front-end and editor style handles.
 	 *
 	 * @var array<int, string>
 	 */
 	public array $style_handles;
 
 	/**
-	 * Block type front end only script handles.
+	 * Block type front-end only style handles.
+	 *
+	 * @var array<int, string>
+	 */
+	public array $view_style_handles;
+
+	/**
+	 * Block type front-end only script handles.
 	 *
 	 * @var array<int, string>
 	 */
