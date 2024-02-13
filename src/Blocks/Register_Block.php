@@ -150,6 +150,13 @@ class Register_Block implements Args_Interface {
 	public array $attributes;
 
 	/**
+	 * Limit blocks allowed to be direct children when InnerBlocks are used.
+	 *
+	 * @var array<int, string>
+	 */
+	public array $allowed_blocks;
+
+	/**
 	 * Context values inherited by blocks of this type.
 	 *
 	 * @var array<int, string>
