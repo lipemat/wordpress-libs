@@ -298,10 +298,10 @@ class Taxonomy {
 	 * Usually calling `Taxonomy::set_label` covers any required changes.
 	 * Updating this property will fine tune existing or set special not included ones.
 	 *
-	 * @example  `['name_field_description' => [ $description, $description ]]`
-	 *
 	 * @see      get_taxonomy_labels
 	 * @see      Taxonomy::taxonomy_labels()
+	 *
+	 * @example  `['name_field_description' => [ $description, $description ]]`
 	 *
 	 * @var array<string,string>
 	 */
@@ -367,7 +367,7 @@ class Taxonomy {
 	/**
 	 * Add hooks to register taxonomy.
 	 *
-	 * @todo Remove default parameters in version 5.
+	 * @todo                     Remove default parameters in version 5.
 	 *
 	 * @param string       $taxonomy          - Taxonomy Slug (will convert a title to a slug as well).
 	 * @param string|array $post_types        - May also be set by $this->post_types = array.
@@ -378,17 +378,16 @@ class Taxonomy {
 	 *
 	 * @phpstan-ignore-next-line -- Using default parameters for backwards compatibility.
 	 */
-	public function __construct( string $taxonomy, $post_types = [ -1 ], $show_admin_column = '0', bool $post_list_filter = false ) {
+	public function __construct( string $taxonomy, $post_types = [ - 1 ], $show_admin_column = '0', bool $post_list_filter = false ) {
 		if ( [ - 1 ] === $post_types ) {
 			_doing_it_wrong( __METHOD__, '4.5.0', 'The `$post_types` argument is required. To not use post types, pass an empty array.' );
 			$post_types = [];
-
 		}
 		if ( true === $post_list_filter ) {
-			_deprecated_argument( __METHOD__, '4.5.0', 'The `$post_list_filter` argument is deprecated. Use the `Taxonomy::post_list_filter()` method instead.');
+			_deprecated_argument( __METHOD__, '4.5.0', 'The `$post_list_filter` argument is deprecated. Use the `Taxonomy::post_list_filter()` method instead.' );
 		}
 		if ( '0' !== $show_admin_column ) {
-			_deprecated_argument( __METHOD__, '4.5.0', 'The `$show_admin_column` argument is deprecated. Use the `Taxonomy::show_admin_column()` method instead.');
+			_deprecated_argument( __METHOD__, '4.5.0', 'The `$show_admin_column` argument is deprecated. Use the `Taxonomy::show_admin_column()` method instead.' );
 		} else {
 			$show_admin_column = false;
 		}
@@ -415,14 +414,10 @@ class Taxonomy {
 		add_action( 'wp_loaded', [ $this, 'register' ], 8, 0 );
 		add_action( 'admin_menu', [ $this, 'add_as_submenu' ] );
 
-		if ( $this->post_list_filter ) {
-			add_action( 'restrict_manage_posts', [ $this, 'post_list_filters' ] );
-			if ( is_admin() ) {
-				add_action( 'parse_tax_query', [ $this, 'post_list_query_filters' ] );
-			}
-		}
-
-		if ( is_admin() ) { // If some taxonomies are not registered on the front end.
+		add_action( 'restrict_manage_posts', [ $this, 'post_list_filters' ] );
+		if ( is_admin() ) {
+			add_action( 'parse_tax_query', [ $this, 'post_list_query_filters' ] );
+			// If some taxonomies are not registered on the front end.
 			Actions::in()->add_single_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 1000 );
 		}
 	}
@@ -452,8 +447,8 @@ class Taxonomy {
 	 *
 	 * @phpstan-param 'radio'|'dropdown'|'simple' $type
 	 *
-	 * @param string $type - The type of UI to render.
-	 * @param bool   $checked_ontop - Move checked items to top.
+	 * @param string                              $type          - The type of UI to render.
+	 * @param bool                                $checked_ontop - Move checked items to top.
 	 *
 	 * @return void
 	 */
@@ -509,7 +504,7 @@ class Taxonomy {
 		global $typenow, $wp_query;
 		$been_filtered = false;
 
-		if ( ! \in_array( $typenow, $this->post_types, true ) ) {
+		if ( ! $this->post_list_filter || ! \in_array( $typenow, $this->post_types, true ) ) {
 			return;
 		}
 
@@ -579,37 +574,6 @@ class Taxonomy {
 			unset( $columns[ $column ] );
 			return $columns;
 		} );
-	}
-
-
-	/**
-	 * Inserts any specified terms for a new taxonomy.
-	 * Will run only once when term is first registered.
-	 * Will only run on fresh taxonomies with no existing terms.
-	 *
-	 * @return void
-	 */
-	protected function insert_initial_terms(): void {
-		$already_defaulted = get_option( 'lipe/lib/taxonomy/defaults-registry', [] );
-
-		if ( ! isset( $already_defaulted[ $this->get_slug() ] ) ) {
-			// Don't do anything if the taxonomy already has terms.
-			$existing = get_terms( [
-				'taxonomy' => $this->taxonomy,
-				'fields'   => 'count',
-			] );
-			if ( \is_numeric( $existing ) && 0 === (int) $existing ) {
-				foreach ( $this->initial_terms as $slug => $term ) {
-					$args = [];
-					if ( ! \is_numeric( $slug ) ) {
-						$args['slug'] = $slug;
-					}
-					wp_insert_term( $term, $this->taxonomy, $args );
-				}
-			}
-			$already_defaulted[ $this->get_slug() ] = 1;
-			update_option( 'lipe/lib/taxonomy/defaults-registry', $already_defaulted, true );
-		}
 	}
 
 
@@ -768,6 +732,88 @@ class Taxonomy {
 
 
 	/**
+	 * Sets the singular and plural labels automatically
+	 *
+	 * @param string $singular - The singular label to use.
+	 * @param string $plural   - The plural label to use.
+	 *
+	 * @return void
+	 */
+	public function set_label( string $singular = '', string $plural = '' ): void {
+		if ( '' === $singular ) {
+			$singular = ucwords( \str_replace( '_', ' ', $this->taxonomy ) );
+		}
+		if ( '' === $plural ) {
+			if ( 'y' === \substr( $singular, - 1 ) ) {
+				$plural = \substr( $singular, 0, - 1 ) . 'ies';
+			} else {
+				$plural = $singular . 's';
+			}
+		}
+
+		$this->label_singular = $singular;
+		$this->label_plural = $plural;
+	}
+
+
+	/**
+	 * Returns the set menu label, or the plural label if not set.
+	 *
+	 * @return string
+	 */
+	public function get_menu_label(): string {
+		if ( '' === $this->label_menu ) {
+			$this->label_menu = $this->label_plural;
+		}
+
+		return $this->label_menu;
+	}
+
+
+	/**
+	 * Sets the label for the menu
+	 *
+	 * @param string $label - The label to set it to.
+	 *
+	 * @return void
+	 */
+	public function set_menu_label( string $label ): void {
+		$this->label_menu = $label;
+	}
+
+
+	/**
+	 * Inserts any specified terms for a new taxonomy.
+	 * Will run only once when term is first registered.
+	 * Will only run on fresh taxonomies with no existing terms.
+	 *
+	 * @return void
+	 */
+	protected function insert_initial_terms(): void {
+		$already_defaulted = get_option( 'lipe/lib/taxonomy/defaults-registry', [] );
+
+		if ( ! isset( $already_defaulted[ $this->get_slug() ] ) ) {
+			// Don't do anything if the taxonomy already has terms.
+			$existing = get_terms( [
+				'taxonomy' => $this->taxonomy,
+				'fields'   => 'count',
+			] );
+			if ( \is_numeric( $existing ) && 0 === (int) $existing ) {
+				foreach ( $this->initial_terms as $slug => $term ) {
+					$args = [];
+					if ( ! \is_numeric( $slug ) ) {
+						$args['slug'] = $slug;
+					}
+					wp_insert_term( $term, $this->taxonomy, $args );
+				}
+			}
+			$already_defaulted[ $this->get_slug() ] = 1;
+			update_option( 'lipe/lib/taxonomy/defaults-registry', $already_defaulted, true );
+		}
+	}
+
+
+	/**
 	 * Register this taxonomy with WordPress
 	 *
 	 * Allow using a different process for registering taxonomies via
@@ -893,45 +939,6 @@ class Taxonomy {
 
 
 	/**
-	 * Sets the singular and plural labels automatically
-	 *
-	 * @param string $singular - The singular label to use.
-	 * @param string $plural   - The plural label to use.
-	 *
-	 * @return void
-	 */
-	public function set_label( string $singular = '', string $plural = '' ): void {
-		if ( '' === $singular ) {
-			$singular = ucwords( \str_replace( '_', ' ', $this->taxonomy ) );
-		}
-		if ( '' === $plural ) {
-			if ( 'y' === \substr( $singular, - 1 ) ) {
-				$plural = \substr( $singular, 0, - 1 ) . 'ies';
-			} else {
-				$plural = $singular . 's';
-			}
-		}
-
-		$this->label_singular = $singular;
-		$this->label_plural = $plural;
-	}
-
-
-	/**
-	 * Returns the set menu label, or the plural label if not set.
-	 *
-	 * @return string
-	 */
-	public function get_menu_label(): string {
-		if ( '' === $this->label_menu ) {
-			$this->label_menu = $this->label_plural;
-		}
-
-		return $this->label_menu;
-	}
-
-
-	/**
 	 * Build rewrite args or pass the class var if set.
 	 *
 	 * @return array|bool|null
@@ -946,18 +953,6 @@ class Taxonomy {
 		}
 
 		return $this->rewrite;
-	}
-
-
-	/**
-	 * Sets the label for the menu
-	 *
-	 * @param string $label - The label to set it to.
-	 *
-	 * @return void
-	 */
-	public function set_menu_label( string $label ): void {
-		$this->label_menu = $label;
 	}
 
 
