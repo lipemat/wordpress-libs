@@ -4,6 +4,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Blocks;
 
+use Lipe\Lib\Blocks\Args\Supports;
 use Lipe\Lib\Query\Args_Trait;
 use Lipe\Lib\Query\Args_Interface;
 
@@ -104,19 +105,20 @@ class Register_Block implements Args_Interface {
 	 *
 	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-styles/
 	 *
-	 * @var array<int, array<string, mixed>>
-	 * @phpstan-var array<int, array{
+	 * @var array<int, array{
 	 *   name: string,
 	 *   label: string,
-	 *   inline_style: string,
-	 *   style_handle: string,
-	 *   is_default: bool,
+	 *   inline_style?: string,
+	 *   style_handle?: string,
+	 *   is_default?: bool,
 	 * }>
 	 */
 	public array $styles;
 
 	/**
 	 * Supported features.
+	 *
+	 * @see  Register_Block::supports()
 	 *
 	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/
 	 *
@@ -276,4 +278,20 @@ class Register_Block implements Args_Interface {
 	 * @var array<string, 'before'|'after'|'first_child'|'last_child'>
 	 */
 	public array $block_hooks;
+
+
+	/**
+	 * Supported features via a subclass fluent interface.
+	 *
+	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/
+	 *
+	 * @return Supports
+	 */
+	public function supports(): Supports {
+		if ( isset( $this->sub_args['supports'] ) && $this->sub_args['supports'] instanceof Supports ) {
+			return $this->sub_args['supports'];
+		}
+		$this->sub_args['supports'] = new Supports();
+		return $this->sub_args['supports'];
+	}
 }
