@@ -786,6 +786,13 @@ class Field {
 	public bool $term_select_2_create_terms = false;
 
 	/**
+	 * Used by the `text_url` field type to specify the protocols allowed.
+	 *
+	 * @var ?string[]
+	 */
+	public ?array $protocols = null;
+
+	/**
 	 * A render row cb to use inside a tab.
 	 * Stored here, so we can set the `render_row_cb` to the tab's
 	 * method an keep outside `render_row_cb` intact.

@@ -4,6 +4,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Blocks;
 
+use Lipe\Lib\Blocks\Args\Supports;
 use Lipe\Lib\Query\Args_Trait;
 use Lipe\Lib\Query\Args_Interface;
 
@@ -104,19 +105,20 @@ class Register_Block implements Args_Interface {
 	 *
 	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-styles/
 	 *
-	 * @var array<int, array<string, mixed>>
-	 * @phpstan-var array<int, array{
+	 * @var array<int, array{
 	 *   name: string,
 	 *   label: string,
-	 *   inline_style: string,
-	 *   style_handle: string,
-	 *   is_default: bool,
+	 *   inline_style?: string,
+	 *   style_handle?: string,
+	 *   is_default?: bool,
 	 * }>
 	 */
 	public array $styles;
 
 	/**
 	 * Supported features.
+	 *
+	 * @see  Register_Block::supports()
 	 *
 	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/
 	 *
@@ -148,6 +150,13 @@ class Register_Block implements Args_Interface {
 	 * @var array<string, array<string, mixed>>
 	 */
 	public array $attributes;
+
+	/**
+	 * Limit blocks allowed to be direct children when InnerBlocks are used.
+	 *
+	 * @var array<int, string>
+	 */
+	public array $allowed_blocks;
 
 	/**
 	 * Context values inherited by blocks of this type.
@@ -234,14 +243,21 @@ class Register_Block implements Args_Interface {
 	public array $editor_style_handles;
 
 	/**
-	 * Block type front end and editor style handles.
+	 * Block type front-end and editor style handles.
 	 *
 	 * @var array<int, string>
 	 */
 	public array $style_handles;
 
 	/**
-	 * Block type front end only script handles.
+	 * Block type front-end only style handles.
+	 *
+	 * @var array<int, string>
+	 */
+	public array $view_style_handles;
+
+	/**
+	 * Block type front-end only script handles.
 	 *
 	 * @var array<int, string>
 	 */
@@ -262,4 +278,20 @@ class Register_Block implements Args_Interface {
 	 * @var array<string, 'before'|'after'|'first_child'|'last_child'>
 	 */
 	public array $block_hooks;
+
+
+	/**
+	 * Supported features via a subclass fluent interface.
+	 *
+	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/
+	 *
+	 * @return Supports
+	 */
+	public function supports(): Supports {
+		if ( isset( $this->sub_args['supports'] ) && $this->sub_args['supports'] instanceof Supports ) {
+			return $this->sub_args['supports'];
+		}
+		$this->sub_args['supports'] = new Supports();
+		return $this->sub_args['supports'];
+	}
 }
