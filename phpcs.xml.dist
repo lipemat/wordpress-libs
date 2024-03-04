@@ -24,6 +24,9 @@
 		<exclude name="Generic.PHP.DisallowShortOpenTag.EchoFound" />
 
 		<exclude name="LipePlugin.TypeHints.PreventStrictTypes" />
+
+		<!-- @todo Remove exclude when miniumum PHP version is 8.0 -->
+		<exclude name="PHPCompatibility.Attributes.NewAttributes.Found" />
 	</rule>
 
 	<!-- Allow the "lipe" or "Lipe" prefix for hooks, namespaces and functions -->
