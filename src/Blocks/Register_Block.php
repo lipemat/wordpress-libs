@@ -271,6 +271,13 @@ class Register_Block implements Args_Interface {
 	public array $variations;
 
 	/**
+	 * Block variations callback.
+	 *
+	 * @var callable(): array<int, array<string, mixed>>
+	 */
+	public $variation_callback;
+
+	/**
 	 * Block hooks available in WP 6.4+.
 	 *
 	 * @link https://make.wordpress.org/core/2023/10/15/introducing-block-hooks-for-dynamic-blocks/
