@@ -3,6 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Query\Clause;
 
+use Lipe\Lib\Query\Args_Interface;
+
 /**
  * Generate a `tax_query` argument for a `WP_Query.
  *
@@ -11,7 +13,7 @@ namespace Lipe\Lib\Query\Clause;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters
  *
- * @implements Clause_Interface<Tax_Query, Tax_Query_Interface>
+ * @implements Clause_Interface<Tax_Query>
  *
  * @internal
  */
@@ -115,7 +117,7 @@ class Tax_Query implements Clause_Interface {
 	 *
 	 * @internal
 	 *
-	 * @param Tax_Query_Interface $args_class - Args class, which supports properties this method will assign.
+	 * @param Args_Interface $args_class - Args class, which supports properties this method will assign.
 	 *
 	 * @throws \LogicException - If the `tax_query` property is not defined on the args class.
 	 *
@@ -148,10 +150,10 @@ class Tax_Query implements Clause_Interface {
 	 */
 	protected function add_clause( $terms, string $taxonomy, string $field, string $operator, bool $children = true ): void {
 		$clause = \array_filter( [
-			'taxonomy'         => $taxonomy,
-			'field'            => $field,
-			'terms'            => $terms,
-			'operator'         => $operator,
+			'taxonomy' => $taxonomy,
+			'field'    => $field,
+			'terms'    => $terms,
+			'operator' => $operator,
 		] );
 
 		if ( false === $children ) {

@@ -12,7 +12,6 @@ use Lipe\Lib\Query\Args_Interface;
  * @since  November 2023
  *
  * @template CLAUSE of Clause_Interface
- * @template FLATTEN
  */
 interface Clause_Interface {
 	/**
@@ -24,7 +23,7 @@ interface Clause_Interface {
 	/**
 	 * Set the parent clause when constructing a child clause.
 	 *
-	 * @phpstan-param CLAUSE           $parent_clause
+	 * @phpstan-param CLAUSE   $parent_clause
 	 *
 	 * @param Clause_Interface $parent_clause - Clause to put the next clause under.
 	 *
@@ -38,9 +37,7 @@ interface Clause_Interface {
 	 *
 	 * @interal
 	 *
-	 * @phpstan-param FLATTEN $args_class
-	 *
-	 * @param Args_Interface  $args_class - Args class, which supports properties this method will assign.
+	 * @param Args_Interface $args_class - Args class, which supports properties this method will assign.
 	 *
 	 * @return void
 	 */
@@ -80,7 +77,7 @@ interface Clause_Interface {
 	 * @throws \LogicException - If we are not in a nested class.
 	 *
 	 * @phpstan-return CLAUSE
-	 * @return Clause_Interface<CLAUSE, FLATTEN>
+	 * @return Clause_Interface<CLAUSE>
 	 */
 	public function parent_clause(): Clause_Interface;
 }

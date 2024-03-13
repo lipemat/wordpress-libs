@@ -3,6 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Query\Clause;
 
+use Lipe\Lib\Query\Args_Interface;
+
 /**
  * Generate a `meta_query` argument for various WP queries.
  *
@@ -11,7 +13,7 @@ namespace Lipe\Lib\Query\Clause;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters
  *
- * @implements  Clause_Interface<Meta_Query, Meta_Query_Interface>
+ * @implements  Clause_Interface<Meta_Query>
  *
  * @internal
  */
@@ -322,7 +324,7 @@ class Meta_Query implements Clause_Interface {
 	 *
 	 * @interal
 	 *
-	 * @param Meta_Query_Interface $args_class - The class to add the meta_query to.
+	 * @param Args_Interface $args_class - The class to add the meta_query to.
 	 *
 	 * @throws \LogicException - If called with access to the `meta_query` property.
 	 *

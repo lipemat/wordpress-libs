@@ -1,4 +1,4 @@
-# @version 2.0.0
+# @version 2.1.0
 
 includes:
     # Include the lipemat phpstan rules.
@@ -24,6 +24,5 @@ parameters:
     paths:
         - src
     scanFiles:
-        - dev/stubs/query-clauses.php
         - dev/stubs/wp-smush.php
         - %rootDir%/../../../stubs/cmb2/cmb2-2.10.php
