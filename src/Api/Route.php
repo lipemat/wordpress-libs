@@ -16,10 +16,11 @@ class Route {
 
 	protected const NAME = 'lipe/lib/util/route';
 
-	protected const QUERY_VAR       = 'lipe/lib/util/route_template';
-	protected const PARAM_QUERY_VAR = 'lipe/lib/util/route_param';
-	protected const OPTION          = 'lipe/lib/util/route_cache';
-	protected const POST_ID_OPTION  = 'lipe/lib/util/route_post_id';
+	protected const POST_TYPE       = 'lipe-lib-util-route';
+	protected const QUERY_VAR       = 'lipe/lib/util/route/template';
+	protected const PARAM_QUERY_VAR = 'lipe/lib/util/route/param';
+	protected const OPTION          = 'lipe/lib/util/route/cache';
+	protected const POST_ID_OPTION  = 'lipe/lib/util/route/post-id';
 
 	/**
 	 * The id of the placeholder post.
@@ -75,7 +76,7 @@ class Route {
 			'has_archive'         => false,
 			'rewrite'             => false,
 		];
-		register_post_type( static::NAME, $args );
+		register_post_type( static::POST_TYPE, $args );
 	}
 
 
@@ -109,6 +110,7 @@ class Route {
 	public function maybe_add_post_hooks( \WP_Query $query ): void {
 		if ( isset( $query->query_vars[ static::QUERY_VAR ] ) ) {
 			$this->add_post_hooks();
+			$query->set( 'post_type', static::POST_TYPE );
 		}
 	}
 
@@ -226,9 +228,9 @@ class Route {
 	 */
 	public function setup_endpoints(): void {
 		foreach ( static::$routes as $_route => $_args ) {
-			add_rewrite_rule( $_route . '/([^/]+)/?.?', 'index.php?post_type=' . static::NAME . '&p=' . static::get_post_id() . '&' . static::QUERY_VAR . '=' . $_route . '&' . static::PARAM_QUERY_VAR . '=$matches[1]', 'top' );
+			add_rewrite_rule( $_route . '/([^/]+)/?.?', 'index.php?post_type=' . static::POST_TYPE . '&p=' . static::get_post_id() . '&' . static::QUERY_VAR . '=' . $_route . '&' . static::PARAM_QUERY_VAR . '=$matches[1]', 'top' );
 
-			add_rewrite_rule( $_route, 'index.php?post_type=' . static::NAME . '&p=' . static::get_post_id() . '&' . static::QUERY_VAR . '=' . $_route, 'top' );
+			add_rewrite_rule( $_route, 'index.php?post_type=' . static::POST_TYPE . '&p=' . static::get_post_id() . '&' . static::QUERY_VAR . '=' . $_route, 'top' );
 		}
 	}
 
@@ -253,7 +255,7 @@ class Route {
 		$posts = get_posts( [
 			'fields'           => 'ids',
 			'post_status'      => 'publish',
-			'post_type'        => static::NAME,
+			'post_type' => static::POST_TYPE,
 			'posts_per_page'   => 1,
 			'suppress_filters' => false,
 		] );
@@ -282,7 +284,7 @@ class Route {
 		$post = [
 			'post_title'  => 'Lipe Libs Placeholder Post',
 			'post_status' => 'publish',
-			'post_type'   => static::NAME,
+			'post_type' => static::POST_TYPE,
 		];
 		$id = wp_insert_post( $post );
 		if ( is_wp_error( $id ) ) { // @phpstan-ignore-line
