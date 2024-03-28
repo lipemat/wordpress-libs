@@ -352,12 +352,14 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @throws \LogicException - If the provided class does have a `date_query` property.
 	 *
+	 * @throws \LogicException - If called with access to the `date_query` property.
+	 *
 	 * @return void
 	 */
 	public function flatten( $args_class ): void {
 		$this->extract_nested( $this->clauses, $this );
 		if ( ! property_exists( $args_class, 'date_query' ) ) {
-			throw new \LogicException( esc_html__( 'The provided class does not support date queries. Did you use `Date_Query_Trait`?', 'lipe' ) );
+			throw new \LogicException( esc_html__( 'The provided class does not support date queries. Did you use the `Date_Query_Trait`?', 'lipe' ) );
 		}
 		if ( ! isset( $args_class->date_query ) ) {
 			$args_class->date_query = [];
