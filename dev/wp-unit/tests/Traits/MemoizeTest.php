@@ -31,7 +31,7 @@ class MemoizeTestTrait {
 	}
 
 
-	public function get_key( string $identifier, array $args ) : string {
+	public function get_key( string $identifier, array $args ): string {
 		return $this->get_cache_key( $identifier, $args );
 	}
 }
@@ -43,14 +43,14 @@ class MemoizeTest extends \WP_UnitTestCase {
 	private $trait;
 
 
-	public function setUp() : void {
+	public function setUp(): void {
 		$this->trait = new MemoizeTestTrait();
 
 		parent::setUp();
 	}
 
 
-	public function test_memoize_method() : void {
+	public function test_memoize_method(): void {
 		$first = $this->trait->heavy_memo( [ 'first' ] )[1];
 		$this->assertEquals( [ 'first' ], $this->trait->heavy_memo( [ 'first' ] )[0] );
 		$this->assertEquals( 'chair', $this->trait->heavy_memo( 'purse', 'chair' )[2] );
@@ -64,7 +64,29 @@ class MemoizeTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_once_method() : void {
+	public function test_memoize_with_clousures(): void {
+		$closure_false = fn() => false;
+		$closure_true = fn() => true;
+		$closure_1 = $this->trait->heavy_memo( [ 'close', $closure_false ] )[1];
+		$this->assertFalse( $this->trait->heavy_memo( [ 'close', $closure_false ] )[0][1]() );
+		$closure_2 = $this->trait->heavy_memo( [ 'close', $closure_true ] )[1];
+		$this->assertNotEquals( $closure_1, $closure_2 );
+		$this->assertEquals( $closure_1, $this->trait->heavy_memo( [ 'close', $closure_false ] )[1] );
+		$this->assertTrue( $this->trait->heavy_memo( [ 'close', $closure_true ] )[0][1]() );
+		$this->assertEquals( $closure_2, $this->trait->heavy_memo( [ 'close', $closure_true ] )[1] );
+
+		$closure_3 = $this->trait->heavy_memo( [ $closure_false ] )[1];
+		$this->assertFalse( $this->trait->heavy_memo( [ $closure_false ] )[0][0]() );
+		$this->assertEquals( $closure_3, $this->trait->heavy_memo( [ $closure_false ] )[1] );
+		$closure_4 = $this->trait->heavy_memo( [ $closure_true ] )[1];
+		$this->assertNotEquals( $closure_3, $closure_4 );
+		$this->assertNotEquals( $closure_3, $this->trait->heavy_memo( [ $closure_true ] )[1] );
+		$this->assertTrue( $this->trait->heavy_memo( [ $closure_true ] )[0][0]() );
+		$this->assertNotEquals( $closure_3, $this->trait->heavy_memo( [ $closure_true ] )[1] );
+	}
+
+
+	public function test_once_method(): void {
 		$first = $this->trait->heavy_once( 'purse', 'chair' );
 		$this->assertEquals( 'chair', $first[2] );
 		$this->assertEquals( $first, $this->trait->heavy_once( [ 'first' ] ) );
@@ -77,7 +99,7 @@ class MemoizeTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_persistent_method() : void {
+	public function test_persistent_method(): void {
 		$first = $this->trait->heavy_persistent( [ 'purse' ] )[1];
 		$this->assertEquals( [ 'purse' ], $this->trait->heavy_persistent( [ 'purse' ] )[0] );
 		$this->assertEquals( 'chair', $this->trait->heavy_persistent( 'purse', 'chair' )[2] );
@@ -115,7 +137,7 @@ class MemoizeTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_clear_single_item() : void {
+	public function test_clear_single_item(): void {
 		$once = $this->trait->heavy_once( 'purse', 'chair' );
 		$mem = $this->trait->heavy_memo( [ 'first' ] );
 		$persist = $this->trait->heavy_persistent( [ 'persist' ] );
@@ -144,7 +166,7 @@ class MemoizeTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_get_cache_key() : void {
+	public function test_get_cache_key(): void {
 		$this->assertEquals( 'www', $this->trait->get_key( 'www', [] ) );
 		$this->assertEquals( 'www', $this->trait->get_key( 'www', [ [] ] ) );
 
