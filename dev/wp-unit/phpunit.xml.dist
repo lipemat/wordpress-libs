@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Version 1.2.0 -->
-<phpunit backupGlobals="false"
-		 backupStaticAttributes="false"
-		 colors="true"
-		 convertDeprecationsToExceptions="true"
-		 convertErrorsToExceptions="true"
-		 convertNoticesToExceptions="true"
-		 convertWarningsToExceptions="true"
-		 processIsolation="false"
-		 stopOnFailure="true"
-		 bootstrap="bootstrap.php"
+<!-- Version 2.0.1 -->
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+	beStrictAboutOutputDuringTests="true"
+	bootstrap="bootstrap.php"
+	cacheDirectory=".phpunit.cache"
+	colors="true"
+	displayDetailsOnIncompleteTests="true"
+	displayDetailsOnSkippedTests="true"
+	displayDetailsOnTestsThatTriggerDeprecations="true"
+	displayDetailsOnTestsThatTriggerWarnings="true"
+	stopOnError="true"
+	stopOnFailure="true"
 >
 	<php>
 		<env name="HTTP_HOST" value="wp-libs.loc" />
@@ -19,4 +22,9 @@
 			<directory>./tests</directory>
 		</testsuite>
 	</testsuites>
+	<source>
+		<include>
+			<directory>../../src</directory>
+		</include>
+	</source>
 </phpunit>

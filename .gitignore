@@ -1,6 +1,26 @@
 # system/hidden files
+*.bak
+*.sublime-project
+*.sublime-workspace
+*.swp
+*~
+.DS_Store
+.DS_Store?
+.Trashes
+.cvs
+.eslintcache
 .phpcs.cache
+.phpunit.cache
 .phpunit.result.cache
+.project
+.ready
+.sass-cache
+.stylelintcache
+.svn
+Thumbs.db
+ehthumbs.db
+tsconfig.tsbuildinfo
+
 
 # local configs
 local-config.php
