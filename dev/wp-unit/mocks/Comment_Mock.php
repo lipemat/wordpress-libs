@@ -6,7 +6,7 @@ namespace mocks;
 use Lipe\Lib\Comment\Comment_Trait;
 
 /**
- * Mock Comment Object for interacting with the Post_Object_Trait
+ * Mock Comment Object for interacting with the Comment_Trait
  *
  * @author Mat Lipe
  * @since  February 2023
