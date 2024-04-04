@@ -41,45 +41,52 @@ class TemplateTest extends \WP_UnitTestCase {
 	}
 
 
-	public function providerEscAttr(): array {
+	public static function providerEscAttr(): array {
 		return [
-			'empty'  => [
+			'empty'       => [
 				[],
 				'',
 			],
-			'single' => [
+			'single'      => [
 				[
 					'foo' => 'bar',
 				],
 				'foo="bar"',
 			],
-			'double' => [
+			'double'      => [
 				[
 					'foo' => 'bar',
 					'baz' => 'qux',
 				],
 				'foo="bar" baz="qux"',
 			],
-			'bool'   => [
+			'bool'        => [
 				[
 					'foo' => false,
 					'baz' => true,
 				],
 				'foo="0" baz',
 			],
-			'array'  => [
+			'array'       => [
 				[
 					'foo' => 'bar',
 					'baz' => [ 'qux' ],
 				],
 				'foo="bar" baz="[&quot;qux&quot;]"',
 			],
-			'object' => [
+			'object'      => [
 				[
 					'foo' => 'bar',
 					'baz' => (object) [ 'qux' ],
 				],
 				'foo="bar" baz="{&quot;0&quot;:&quot;qux&quot;}"',
+			],
+			'HTML in key' => [
+				[
+					'break/&gt;'   => 'bar',
+					'<h1>tag</h1>' => ' spaced ',
+				],
+				'break/&gt;="bar" &lt;h1&gt;tag&lt;/h1&gt;="spaced"',
 			],
 		];
 	}

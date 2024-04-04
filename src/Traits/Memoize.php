@@ -2,6 +2,7 @@
 
 namespace Lipe\Lib\Traits;
 
+use Lipe\Lib\Util\Arrays;
 use Lipe\Lib\Util\Cache;
 
 /**
@@ -99,7 +100,10 @@ trait Memoize {
 	 * @return mixed
 	 */
 	public function memoize( callable $callback, string $identifier, ...$args ) {
-		$key = $this->get_cache_key( $identifier, $args );
+		// Closure use their object id to differenciate.
+		$cache_args = Arrays::in()->map_recursive( fn( $arg ) => $arg instanceof \Closure ? 'clousure-' . \spl_object_id( $arg ) : $arg, $args );
+
+		$key = $this->get_cache_key( $identifier, $cache_args );
 		if ( ! \array_key_exists( $key, $this->memoize_cache ) ) {
 			$this->memoize_cache[ $key ] = $callback( ...$args );
 		}

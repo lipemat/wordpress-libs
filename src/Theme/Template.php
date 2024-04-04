@@ -31,10 +31,10 @@ class Template {
 			} elseif ( \is_string( $v ) ) {
 				$v = \trim( $v );
 			}
-			$e[] = $k . '="' . esc_attr( (string) $v ) . '"';
+			$e[] = \str_replace( ' ', '', esc_html( $k ) ) . '="' . \trim( esc_attr( (string) $v ) ) . '"';
 		}
 
-		return \implode( ' ', $e );
+		return \trim( \implode( ' ', $e ) );
 	}
 
 

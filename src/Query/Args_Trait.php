@@ -3,7 +3,6 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Query;
 
-use Lipe\Lib\Query\Clause\Clause_Interface;
 use Lipe\Lib\Query\Clause\Date_Query;
 use Lipe\Lib\Query\Clause\Meta_Query;
 use Lipe\Lib\Query\Clause\Tax_Query;
@@ -18,7 +17,7 @@ trait Args_Trait {
 	/**
 	 * Various sub-clauses to be flattened via `get_args`.
 	 *
-	 * @var array<Clause_Interface<Date_Query|Meta_Query|Tax_Query, static>>
+	 * @var array<Date_Query|Meta_Query|Tax_Query>
 	 */
 	protected array $clauses = [];
 

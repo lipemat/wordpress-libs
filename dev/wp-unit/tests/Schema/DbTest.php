@@ -16,17 +16,17 @@ class DbTest extends \WP_UnitTestCase {
 	];
 
 
-	private function mock_db() : Db {
+	private function mock_db(): Db {
 		return new class extends Db {
 			public const NAME    = 'options';
 			public const COLUMNS = DbTest::COLUMNS;
 
 
-			protected function create_table() : void {
+			protected function create_table(): void {
 			}
 
 
-			protected function update_required() : bool {
+			protected function update_required(): bool {
 				return false;
 			}
 		};
@@ -36,7 +36,7 @@ class DbTest extends \WP_UnitTestCase {
 	/**
 	 * @dataProvider columns_data_provider
 	 */
-	public function test_get_paginated( $columns, $expected, $multiple ) : void {
+	public function test_get_paginated( $columns, $expected, $multiple ): void {
 		global $wpdb;
 		$results = $this->mock_db()->get_paginated( $columns, 3, 10, [
 			// Arbitrary where to assure the WHERE is working.
@@ -69,7 +69,7 @@ class DbTest extends \WP_UnitTestCase {
 	}
 
 
-	public function columns_data_provider() : array {
+	public static function columns_data_provider(): array {
 		return [
 			[ '*', array_keys( self::COLUMNS ), true ],
 			[ 'option_name', [ 'option_name' ], false ],

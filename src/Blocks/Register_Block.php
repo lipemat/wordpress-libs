@@ -264,11 +264,25 @@ class Register_Block implements Args_Interface {
 	public array $view_script_handles;
 
 	/**
+	 * Block type front-end only module script handles.
+	 *
+	 * @var array<int, string>
+	 */
+	public array $view_script_module_ids;
+
+	/**
 	 * Block variations.
 	 *
 	 * @var array<int, array<string, mixed>>
 	 */
 	public array $variations;
+
+	/**
+	 * Block variations callback.
+	 *
+	 * @var callable(): array<int, array<string, mixed>>
+	 */
+	public $variation_callback;
 
 	/**
 	 * Block hooks available in WP 6.4+.

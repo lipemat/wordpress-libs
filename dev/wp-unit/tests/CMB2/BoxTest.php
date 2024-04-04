@@ -22,8 +22,7 @@ class BoxTest extends \WP_UnitTestCase {
 	public function setUp() : void {
 		parent::setUp();
 
-		$this->attachment_id =
-			self::factory()->attachment->create_upload_object( DIR_TESTDATA . '/images/test-image.png' );
+		$this->attachment_id = self::factory()->attachment->create();
 
 		\CMB2_Bootstrap_2101::initiate()->include_cmb();
 		do_action( 'cmb2_init' );
@@ -96,10 +95,17 @@ class BoxTest extends \WP_UnitTestCase {
 
 
 	public function test_comment() : void {
+		global $wp_meta_boxes;
 		$comment = self::factory()->comment->create_and_get();
 		update_comment_meta( $comment->comment_ID, 'priv', 'testing u' );
 		$comment = Comment_Mock::factory( $comment );
 		$this->assertEquals( 'testing u', $comment->get_meta( 'priv' ) );
+
+		$box = new Comment_Box( 'comment-only', 'Comment Only Box' );
+		$box->field( 'trigger', 'Trigger the hookup' )
+		    ->text();
+		$this->assertSame( 'normal', get_private_property( $box, 'context' ) );
+		$this->assertSame( 'normal', call_private_method( $box, 'get_args' )['context'] );
 	}
 
 
@@ -236,5 +242,17 @@ class BoxTest extends \WP_UnitTestCase {
 		$this->assertEquals( get_term( 1, 'category' ), $object->get_option( 'singc' ) );
 
 		$this->assertEquals( get_terms( 'taxonomy=category&hide_empty=0' ), $object->get_option( 'muc' ) );
+	}
+
+
+	public function test_no_title(): void {
+		$box = new Box( 'no-title', [ 'post' ], null );
+		$this->assertArrayNotHasKey( 'title', call_private_method( $box, 'get_args' ) );
+
+		$box = new Box( 'no-title', [ 'post' ], '' );
+		$this->assertArrayHasKey( 'title', call_private_method( $box, 'get_args' ) );
+
+		$box->remove_box_wrap();
+		$this->assertArrayHasKey( 'remove_box_wrap', call_private_method( $box, 'get_args' ) );
 	}
 }

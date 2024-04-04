@@ -12,9 +12,17 @@ use Lipe\Lib\Meta\Repo;
  *
  * A fluent interface for CMB2 meta box properties.
  *
- * @phpstan-type CONTEXT 'normal'|'side'|'advanced'|'form_top'|'before_permalink'| 'after_title'|'after_editor'
  */
 class Box {
+	public const CONTEXT_NORMAL   = 'normal';
+	public const CONTEXT_SIDE     = 'side';
+	public const CONTEXT_ADVANCED = 'advanced';
+	// Custom Contexts https://github.com/CMB2/CMB2/releases/tag/v2.2.4.
+	public const CONTEXT_FORM_TOP         = 'form_top';
+	public const CONTEXT_BEFORE_PERMALINK = 'before_permalink';
+	public const CONTEXT_AFTER_TITLE      = 'after_title';
+	public const CONTEXT_AFTER_EDITOR     = 'after_editor';
+
 	public const TYPE_COMMENT = 'comment';
 	public const TYPE_OPTIONS = 'options-page';
 	public const TYPE_USER    = 'user';
@@ -314,12 +322,11 @@ class Box {
 	 * The context within the screen where the boxes should display.
 	 * Available contexts vary from screen to screen.
 	 *
-	 * @see     Box
-	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#context
 	 * @example 'normal', 'side', 'advanced' 'form_top',
 	 *          'before_permalink', 'after_title', 'after_editor'
 	 *
+	 * @phpstan-var self::CONTEXT_*
 	 * @var string
 	 */
 	protected string $context;
@@ -328,14 +335,15 @@ class Box {
 	 * Title display in the admin metabox.
 	 *
 	 * To keep from registering an actual post-screen metabox,
-	 * omit the 'title' property from the metabox registration array.
+	 * omit the 'title' property from the metabox registration array
+	 * by setting it to `null`.
 	 * (WordPress will not display metaboxes without titles anyway)
 	 * This is a good solution if you want to handle outputting your
 	 * metaboxes/fields elsewhere in the post-screen.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#title
 	 *
-	 * @var string|false
+	 * @var ?string
 	 */
 	protected $title = '';
 
@@ -352,33 +360,22 @@ class Box {
 	/**
 	 * Register a new meta box.
 	 *
-	 * @todo                     Remove the deprecated $context parameter in version 5.
-	 *
-	 * @phpstan-param            '-1'|CONTEXT    $context
-	 *
 	 * @param string      $id           - ID of this box.
 	 * @param array       $object_types - [post type slugs], or 'user', 'term', 'comment', or 'options-page'.
-	 * @param string|null|false $title  - Title of this box.
-	 * @param string      $context      - Location the meta box will display.
+	 * @param string|null $title - Title of this box (false to omit displaying).
 	 *
-	 * @phpstan-ignore-next-line -- Default value until version 5.
 	 */
-	public function __construct( string $id, array $object_types, ?string $title, string $context = '-1' ) {
-		if ( '-1' !== $context ) {
-			_deprecated_argument( __METHOD__, '4.5.0', 'The $context parameter is deprecated. Use the `context` method instead.' );
-			$context = 'normal';
-		}
+	public function __construct( string $id, array $object_types, ?string $title ) {
 		$this->id = $id;
 		$this->object_types = $object_types;
-		$this->title = $title ?? false;
-		$this->context = $context;
+		$this->title = $title;
 	}
 
 
 	/**
 	 * Set the display location of the meta box.
 	 *
-	 * @phpstan-param CONTEXT $context
+	 * @phpstan-param self::CONTEXT_* $context
 	 *
 	 * @param string          $context - Location the metabox will display.
 	 *
@@ -471,7 +468,7 @@ class Box {
 	 * @return void
 	 */
 	public function remove_box_wrap(): void {
-		$this->title = false;
+		$this->title = null;
 		$this->remove_box_wrap = true;
 	}
 
