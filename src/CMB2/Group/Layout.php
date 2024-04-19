@@ -396,6 +396,10 @@ class Layout {
 					margin: -10px 0 0 -10px;
 				}
 
+				.cmb2-options-page .cmb-repeatable-group .cmb-group-name {
+					margin: 0 0 10px 0;
+				}
+
 				.cmb-layout-description {
 					margin: -10px 0 0 0 !important;
 					padding: 0 0 3px 3px !important;
