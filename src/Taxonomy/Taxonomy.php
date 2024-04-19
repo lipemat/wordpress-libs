@@ -539,7 +539,8 @@ class Taxonomy {
 			<a
 				style="margin: 0 4px 0 1px;"
 				href="<?php echo esc_url( admin_url( 'edit.php?post_type=' . esc_attr( $post_type ) ) ); ?>"
-				class="button">
+				class="button"
+			>
 				<?php esc_html_e( 'Clear Filters', 'lipe' ); ?>
 			</a>
 			<?php
@@ -872,7 +873,7 @@ class Taxonomy {
 	 *
 	 * @return array
 	 */
-	protected function taxonomy_labels( string $single = null, string $plural = null ): array {
+	protected function taxonomy_labels( ?string $single = null, ?string $plural = null ): array {
 		$single = $single ?? $this->get_label();
 		$plural = $plural ?? $this->get_label( 'plural' );
 

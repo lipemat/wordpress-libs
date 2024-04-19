@@ -897,7 +897,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function char_counter( bool $count_words = false, int $max = null, bool $enforce = false, array $labels = [] ): Field {
+	public function char_counter( bool $count_words = false, ?int $max = null, bool $enforce = false, array $labels = [] ): Field {
 		$this->char_counter = $count_words ? 'words' : true;
 
 		if ( null !== $max ) {
@@ -936,7 +936,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function column( $position = null, string $name = null, ?callable $display_cb = null, ?bool $disable_sorting = null ): Field {
+	public function column( $position = null, ?string $name = null, ?callable $display_cb = null, ?bool $disable_sorting = null ): Field {
 		$this->column = [
 			'disable_sortable' => $disable_sorting ?? false,
 			'name'             => $name ?? $this->name,
