@@ -1,9 +1,14 @@
 .cmb-row {
 	&.checkbox-compact {
 		padding: .5em 0 !important;
+
+		.cmb2-options-page & {
+			padding: 1em !important;
+		}
 	}
 
 	&.checkbox-compact label {
 		display: inline-block !important;
+
 	}
 }
