@@ -43,8 +43,8 @@ class Field_Type {
 	 *
 	 * @phpstan-param REPO::TYPE_* $data_type
 	 *
-	 * @param array  $args      - [$key => $value].
-	 * @param string $data_type - a type of data to return [Repo::DEFAULT, Repo::CHECKBOX, Repo::FILE, Repo::TAXONOMY ].
+	 * @param array                $args      - [$key => $value].
+	 * @param string               $data_type - a type of data to return [Repo::DEFAULT, Repo::CHECKBOX, Repo::FILE, Repo::TAXONOMY ].
 	 *
 	 * @return Field
 	 */
@@ -220,7 +220,7 @@ class Field_Type {
 	 *
 	 * @return Field
 	 */
-	public function textarea( int $rows = null ): Field {
+	public function textarea( ?int $rows = null ): Field {
 		if ( null !== $rows ) {
 			$this->field->attributes( [ 'rows' => $rows ] );
 		}
@@ -337,13 +337,13 @@ class Field_Type {
 	 * You can also limit it to only allowing attachments
 	 * (can't manually type in a URL) by setting `$show_text_input` to false.
 	 *
-	 * @param string      $button_text     - (default 'Add Image' ).
-	 * @param bool|null   $show_text_input - (default true) May not be turned off for required fields.
-	 * @param string|null $preview_size    - (default full).
-	 *
 	 * @see     Field_Type::file()
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#file
+	 *
+	 * @param string      $button_text     - (default 'Add Image' ).
+	 * @param bool|null   $show_text_input - (default true) May not be turned off for required fields.
+	 * @param string|null $preview_size    - (default full).
 	 *
 	 * @return Field
 	 */
@@ -361,7 +361,7 @@ class Field_Type {
 	 *
 	 * @phpstan-param 'compact'|'block' $layout
 	 *
-	 * @param string $layout - compact, block (cmb2 default is block).
+	 * @param string                    $layout - compact, block (cmb2 default is block).
 	 *
 	 * @return Field
 	 */
@@ -495,10 +495,10 @@ class Field_Type {
 	/**
 	 * A field with multiple checkboxes (and multiple can be selected)
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
+	 *
 	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
 	 * @param bool           $select_all          - display select all button or not.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
 	 *
 	 * @return Field
 	 */
@@ -513,10 +513,10 @@ class Field_Type {
 	/**
 	 * A field with multiple checkboxes (and multiple can be selected)
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
+	 *
 	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
 	 * @param bool           $select_all          - display select all button or not.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
 	 *
 	 * @return Field
 	 */
@@ -531,10 +531,10 @@ class Field_Type {
 	/**
 	 * Standard radio buttons.
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio
+	 *
 	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
 	 * @param bool|string    $show_option_none    - disable or set the text of the option.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio
 	 *
 	 * @return Field
 	 */
@@ -548,10 +548,10 @@ class Field_Type {
 	/**
 	 * Inline radio buttons.
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio_inline
+	 *
 	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
 	 * @param bool|string    $show_option_none    - disable or set the text of the option.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio_inline
 	 *
 	 * @return Field
 	 */
@@ -565,10 +565,10 @@ class Field_Type {
 	/**
 	 * Standard select dropdown.
 	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#select
+	 *
 	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
 	 * @param bool|string    $show_option_none    - disable or set the text of the option.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#select
 	 *
 	 * @return Field
 	 */
@@ -689,7 +689,7 @@ class Field_Type {
 
 		$_args = $this->field_type_taxonomy( Term_Select_2::NAME, $taxonomy, $no_terms_text, $remove_default );
 		$this->field->term_select_2_save_as_terms = $save_as_terms;
-		$this->field->term_select_2_create_terms  = $create_new_terms;
+		$this->field->term_select_2_create_terms = $create_new_terms;
 
 		return $this->set( $_args, Repo::TYPE_TAXONOMY );
 	}
@@ -758,11 +758,11 @@ class Field_Type {
 	/**
 	 * A metabox with TinyMCE editor (same as WordPress' visual editor).
 	 *
-	 * @param array $mce_options - standard WP mce options.
-	 *
 	 * @see  \_WP_Editors::parse_settings()
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#wysiwyg
+	 *
+	 * @param array $mce_options - standard WP mce options.
 	 *
 	 * @return Field
 	 */
@@ -789,17 +789,17 @@ class Field_Type {
 	 * You can also limit it to only allowing attachments
 	 * (can't manually type in a URL), also useful if you plan to use the attachment ID.
 	 *
-	 * @param string $button_text     - (default 'Add File' ).
-	 * @param string $file_mime_type  - (default all).
-	 * @param bool   $show_text_input - (default true) May not be turned off for required fields.
-	 * @param string $preview_size    - (default full).
-	 * @param string $select_text     - Media manager button label (default: Use this file).
-	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#file
 	 *
 	 * @example file( 'Add PDF', 'application/pdf', true );
 	 *
 	 * @example file( 'Add Image', 'image', false );
+	 *
+	 * @param string $button_text     - (default 'Add File' ).
+	 * @param string $file_mime_type  - (default all).
+	 * @param bool   $show_text_input - (default true) May not be turned off for required fields.
+	 * @param string $preview_size    - (default full).
+	 * @param string $select_text     - Media manager button label (default: Use this file).
 	 *
 	 * @return Field
 	 */

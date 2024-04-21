@@ -25,7 +25,6 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		$box->field( 'tc', 'Category' )
 		    ->taxonomy_multicheck( 'category' );
 
-		\CMB2_Bootstrap_2101::initiate()->include_cmb();
 		do_action( 'cmb2_init' );
 	}
 

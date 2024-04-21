@@ -51,7 +51,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_*|string $meta_type
 	 *
-	 * @param string               $meta_type - The meta type.
+	 * @param string                      $meta_type - The meta type.
 	 *
 	 * @return bool
 	 */
@@ -324,6 +324,12 @@ abstract class Translate_Abstract {
 				}
 			}
 		}
+
+		// Delete rows which no longer exist.
+		$existing = Repo::in()->get_value( $object_id, $group_id, $meta_type );
+		foreach ( \array_diff_key( $existing, $values ) as $_row => $_values ) {
+			$this->delete_group_row( $object_id, $group_id, $_row, $meta_type );
+		}
 	}
 
 
@@ -353,11 +359,42 @@ abstract class Translate_Abstract {
 
 
 	/**
-	 * Get all the fields assigned to this group.
+	 * Update a row from a group.
 	 *
-	 * @param string $group - The group id.
+	 * We must loop through the individual files to trigger any hooks
+	 * and/or remove taxonomy relationships.
+	 *
+	 * @phpstan-param Repo::META_* $meta_type
 	 *
 	 * @internal
+	 *
+	 * @param string|int           $object_id - The object id.
+	 * @param string               $group_id  - The meta key.
+	 * @param int                  $row       - The row index in the group.
+	 * @param string               $meta_type - The meta type.
+	 *
+	 * @return bool|int
+	 */
+	protected function delete_group_row( $object_id, string $group_id, int $row, string $meta_type ): void {
+		$this->group_row = $row;
+		foreach ( $this->get_group_fields( $group_id ) as $field ) {
+			Repo::in()->delete_value( $object_id, $field, $meta_type );
+		}
+		$group = $this->get_meta_value( $object_id, $group_id, $meta_type );
+		if ( ! \is_array( $group ) ) {
+			$group = [];
+		}
+		unset( $group[ $row ] );
+		$this->update_meta_value( $object_id, $group_id, $group, $meta_type );
+	}
+
+
+	/**
+	 * Get all the fields assigned to this group.
+	 *
+	 * @internal
+	 *
+	 * @param string $group - The group id.
 	 *
 	 * @return string[]
 	 */

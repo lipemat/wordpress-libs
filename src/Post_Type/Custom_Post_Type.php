@@ -67,7 +67,7 @@ class Custom_Post_Type {
 	 *
 	 * `$capability_type` is used as a base to build capabilities by default.
 	 *
-	 * @see `get_post_type_capabilities()`.
+	 * @see    `get_post_type_capabilities()`.
 	 *
 	 * @phpstan-var array{
 	 *     edit_post?: string,
@@ -600,9 +600,9 @@ class Custom_Post_Type {
 	 *
 	 * Adds labels to $this->Labels.
 	 *
-	 * @see   Custom_Post_Type::$labels
-	 *
 	 * @since 4.0.0
+	 *
+	 * @see   Custom_Post_Type::$labels
 	 *
 	 * @return Labels
 	 */
@@ -1007,7 +1007,7 @@ class Custom_Post_Type {
 	 *
 	 * @return array
 	 */
-	protected function post_type_labels( string $single = null, string $plural = null ): array {
+	protected function post_type_labels( ?string $single = null, ?string $plural = null ): array {
 		$single = $single ?? $this->get_post_type_label();
 		$plural = $plural ?? $this->get_post_type_label( 'plural' );
 

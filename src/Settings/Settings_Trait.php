@@ -7,6 +7,20 @@ use Lipe\Lib\Meta\Repo;
 
 /**
  * CMB2 registered settings pages.
+ *
+ * @example ```php
+ * class My_Settings {
+ * @use Settings_Trait<array{
+ *              'my_option': string,
+ *              'another_option': int,
+ *   }>
+ *   use Settings_Trait;
+ * }
+ * ```
+ * @note    Class constants can't be used as keys in the generic
+ *          due to PHPStan limitations, use the full string.
+ *
+ * @template OPTIONS of array<string, mixed>
  */
 trait Settings_Trait {
 	use Mutator_Trait;
@@ -34,9 +48,16 @@ trait Settings_Trait {
 	/**
 	 * Get an option from the Meta repo.
 	 *
-	 * @param string $key           - Option key.
-	 * @param mixed  $default_value - Default value if option is not set.
+	 * @template T of static::*
+	 * @template D of mixed
 	 *
+	 * @phpstan-param T $key
+	 * @phpstan-param D $default_value
+	 *
+	 * @param string    $key           - Option key.
+	 * @param mixed     $default_value - Default value if option is not set.
+	 *
+	 * @phpstan-return D|OPTIONS[T]
 	 * @return mixed
 	 */
 	public function get_option( string $key, $default_value = null ) {
@@ -47,15 +68,25 @@ trait Settings_Trait {
 	/**
 	 * Update an option.
 	 *
-	 * @param string         $key      - Option key.
-	 * @param mixed|callable ...$value - If a callable is passed it will be called with the
-	 *                                 previous value as the only argument.
-	 *                                 If a callable is passed with an additional argument,
-	 *                                 it will be used as the default value for `$this->get_meta()`.
+	 * If a callable is passed, it will be called with the previous value
+	 * as the only argument.
+	 * If `$callback_default` is passed, it will be used as the default value for `$this->get_meta()`.
+	 *
+	 * @template T of static::*
+	 * @template D of mixed
+	 *
+	 * @phpstan-param T      $key
+	 * @phpstan-param D      $callback_default
+	 *
+	 * @phpstan-param OPTIONS[T]|(callable( D|OPTIONS[T]): OPTIONS[T]) $value
+	 *
+	 * @param string         $key              - Option key.
+	 * @param mixed|callable $value            - Option value.
+	 * @param mixed          $callback_default - Default value for get during callback.
 	 *
 	 * @return void
 	 */
-	public function update_option( string $key, ...$value ): void {
-		$this->update_meta( $key, ...$value );
+	public function update_option( string $key, $value, $callback_default = null ): void {
+		$this->update_meta( $key, $value, $callback_default );
 	}
 }

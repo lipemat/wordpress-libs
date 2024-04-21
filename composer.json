@@ -12,7 +12,7 @@
     "php": ">=7.4.0"
   },
   "require-dev": {
-    "lipemat/cmb2": "^2.10.1.4"
+    "lipemat/cmb2": "^2.10.1.10"
   },
   "scripts": {
     "git-hooks": "dev/bin/git-hooks.sh"

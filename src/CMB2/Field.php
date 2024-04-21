@@ -646,6 +646,36 @@ class Field {
 	public bool $revisions_enabled;
 
 	/**
+	 * Used by the term_select_2 field type to append the terms to the object
+	 * as well as storing them in meta.
+	 *
+	 * @see \Lipe\Lib\CMB2\Field\Term_Select_2::assign_terms_during_save
+	 *
+	 * @interal
+	 *
+	 * @var bool
+	 */
+	public bool $term_select_2_save_as_terms = false;
+
+	/**
+	 * Used by the term_select_2 field type to allow creating new terms.
+	 *
+	 * @see \Lipe\Lib\CMB2\Field\Term_Select_2::assign_terms_during_save
+	 *
+	 * @interal
+	 *
+	 * @var bool
+	 */
+	public bool $term_select_2_create_terms = false;
+
+	/**
+	 * Used by the `text_url` field type to specify the protocols allowed.
+	 *
+	 * @var ?string[]
+	 */
+	public ?array $protocols = null;
+
+	/**
 	 * The data key. If using for posts, will be the post-meta key.
 	 * If using for an option's page, will be the array key.
 	 *
@@ -763,36 +793,6 @@ class Field {
 	protected bool $store_user_terms_in_meta = true;
 
 	/**
-	 * Used by the term_select_2 field type to append the terms to the object
-	 * as well as storing them in meta.
-	 *
-	 * @see \Lipe\Lib\CMB2\Field\Term_Select_2::assign_terms_during_save
-	 *
-	 * @interal
-	 *
-	 * @var bool
-	 */
-	public bool $term_select_2_save_as_terms = false;
-
-	/**
-	 * Used by the term_select_2 field type to allow creating new terms.
-	 *
-	 * @see \Lipe\Lib\CMB2\Field\Term_Select_2::assign_terms_during_save
-	 *
-	 * @interal
-	 *
-	 * @var bool
-	 */
-	public bool $term_select_2_create_terms = false;
-
-	/**
-	 * Used by the `text_url` field type to specify the protocols allowed.
-	 *
-	 * @var ?string[]
-	 */
-	public ?array $protocols = null;
-
-	/**
 	 * A render row cb to use inside a tab.
 	 * Stored here, so we can set the `render_row_cb` to the tab's
 	 * method an keep outside `render_row_cb` intact.
@@ -897,7 +897,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function char_counter( bool $count_words = false, int $max = null, bool $enforce = false, array $labels = [] ): Field {
+	public function char_counter( bool $count_words = false, ?int $max = null, bool $enforce = false, array $labels = [] ): Field {
 		$this->char_counter = $count_words ? 'words' : true;
 
 		if ( null !== $max ) {
@@ -936,7 +936,7 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function column( $position = null, string $name = null, ?callable $display_cb = null, ?bool $disable_sorting = null ): Field {
+	public function column( $position = null, ?string $name = null, ?callable $display_cb = null, ?bool $disable_sorting = null ): Field {
 		$this->column = [
 			'disable_sortable' => $disable_sorting ?? false,
 			'name'             => $name ?? $this->name,
@@ -1078,35 +1078,7 @@ class Field {
 	 * @return Field
 	 */
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ): Field {
-		// Ugh! Hack, so I can use a method from that class.
-		// @phpstan-ignore-next-line -- This is a hack.
-		$mock = new class() extends \CMB2_Field {
-			/**
-			 * Construct the mock class.
-			 *
-			 * @phpstan-ignore-next-line
-			 * @noinspection MagicMethodsValidityInspection, PhpMissingParentConstructorInspection
-			 */
-			public function __construct() {
-			}
-
-
-			/**
-			 * Check if the field type is allowed to be repeatable.
-			 *
-			 * @param string $type - The field type.
-			 *
-			 * @return bool
-			 */
-			public function allowed( string $type ): bool {
-				if ( $this->repeatable_exception( $type ) ) {
-					return false;
-				}
-				// Cases not covered by CMB2.
-				return 'file_list' !== $type;
-			}
-		};
-		if ( ! $mock->allowed( $this->get_type() ) ) {
+		if ( method_exists( \CMB2_Utils::class, 'does_not_support_repeating' ) && \CMB2_Utils::does_not_support_repeating( $this->get_type() ) ) {
 			/* translators: {field type} */
 			throw new \LogicException( sprintf( esc_html__( 'Fields of `%s` type do not support repeating.', 'lipe' ), esc_html( $this->get_type() ) ) );
 		}

@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "start": "sass --watch ./ --style compressed"
+  }
+}

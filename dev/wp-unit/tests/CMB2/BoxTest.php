@@ -19,17 +19,16 @@ class BoxTest extends \WP_UnitTestCase {
 	private $attachment_id;
 
 
-	public function setUp() : void {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->attachment_id = self::factory()->attachment->create();
 
-		\CMB2_Bootstrap_2101::initiate()->include_cmb();
 		do_action( 'cmb2_init' );
 	}
 
 
-	public function tearDown() : void {
+	public function tearDown(): void {
 		switch_to_blog( 1 );
 		wp_delete_attachment( $this->attachment_id, true );
 
@@ -37,7 +36,7 @@ class BoxTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_escape_and_sanitize() : void {
+	public function test_escape_and_sanitize(): void {
 		$post = self::factory()->post->create_and_get();
 		$sanitize = function( $value ) {
 			return str_replace( [ '-', 'x' ], [ 'F', '-' ], $value );
@@ -64,7 +63,7 @@ class BoxTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_shorthand_registering() : void {
+	public function test_shorthand_registering(): void {
 		$box = new Box( 'ids', [ 'post' ], 'Test Box' );
 		$box->field( 't1', 'TEST 1' )
 		    ->multicheck( [
@@ -94,7 +93,7 @@ class BoxTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_comment() : void {
+	public function test_comment(): void {
 		global $wp_meta_boxes;
 		$comment = self::factory()->comment->create_and_get();
 		update_comment_meta( $comment->comment_ID, 'priv', 'testing u' );
@@ -109,7 +108,7 @@ class BoxTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_terms() : void {
+	public function test_terms(): void {
 		$term = self::factory()->category->create_and_get();
 		update_term_meta( $term->term_id, 'labe', 'testing' );
 		$cat = Term_Mock::factory( $term );
@@ -117,7 +116,7 @@ class BoxTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_user() : void {
+	public function test_user(): void {
 		$user = self::factory()->user->create_and_get();
 		update_user_meta( $user->ID, 'surr', 'testing u' );
 		$object = User_Mock::factory( $user );
@@ -127,7 +126,7 @@ class BoxTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_settings() : void {
+	public function test_settings(): void {
 		$term = get_term( 1, 'category' );
 		$box = new Options_Page( 'op', null );
 		$box->field( 'f', '' )
@@ -161,7 +160,7 @@ class BoxTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_post() : void {
+	public function test_post(): void {
 		$post = self::factory()->post->create_and_get();
 		$box = new Box( 'post-only', [ Post_Mock::NAME ], 'Post Only Box' );
 		$box->field( 'fe', 'TEST 1' )
@@ -177,7 +176,7 @@ class BoxTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_network_options() : void {
+	public function test_network_options(): void {
 		switch_to_blog( 1 );
 		$box = new Options_Page( 'nop', null );
 		$box->field( 'nf', '' )
@@ -222,7 +221,7 @@ class BoxTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_multiple_vs_singular_terms() : void {
+	public function test_multiple_vs_singular_terms(): void {
 		$box = new Options_Page( 'mup', null );
 		$box->field( 'singc', '' )
 		    ->taxonomy_radio( 'category' );

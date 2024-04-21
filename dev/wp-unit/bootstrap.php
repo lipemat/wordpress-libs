@@ -25,3 +25,5 @@ if ( is_readable( dirname( __DIR__, 4 ) . '/autoload.php' ) ) {
 foreach ( glob( __DIR__ . '/mocks/*.php' ) as $file ) {
 	require $file;
 }
+
+\CMB2_Bootstrap_2101::initiate()->include_cmb();

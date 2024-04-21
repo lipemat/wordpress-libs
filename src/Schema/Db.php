@@ -29,11 +29,6 @@ abstract class Db {
 	public const    NAME = __CLASS__;
 
 	/**
-	 * Primary key of the table. Typically, auto increment.
-	 */
-	protected const ID_FIELD = __CLASS__;
-
-	/**
 	 * Database columns with corresponding data type.
 	 * Used to sanitize queries with any of the built-in sprintf specifiers.
 	 *
@@ -60,6 +55,11 @@ abstract class Db {
 	 * Bump to run `create_table` again when the table scheme changes.
 	 */
 	public const DB_VERSION = 1;
+
+	/**
+	 * Primary key of the table. Typically, auto increment.
+	 */
+	protected const ID_FIELD = __CLASS__;
 
 	/**
 	 * Holds the database name with the prefix included.
@@ -120,7 +120,7 @@ abstract class Db {
 	 *
 	 * @return null|object|array<object>|\stdClass|string|array<string>
 	 */
-	public function get( $columns, $id_or_wheres = null, $count = null, string $order_by = null ) {
+	public function get( $columns, $id_or_wheres = null, $count = null, ?string $order_by = null ) {
 		global $wpdb;
 
 		if ( \is_array( $columns ) ) {
@@ -174,7 +174,7 @@ abstract class Db {
 	 *
 	 * @return array{total: int, total_pages: int, items: array<object|string>|object|string|void|null}
 	 */
-	public function get_paginated( $columns, int $page, int $per_page, $id_or_wheres = null, string $order_by = null ): array {
+	public function get_paginated( $columns, int $page, int $per_page, $id_or_wheres = null, ?string $order_by = null ): array {
 		global $wpdb;
 
 		$count = $per_page;
@@ -303,7 +303,7 @@ abstract class Db {
 	 *
 	 * @return string
 	 */
-	protected function get_select_query( $columns, $id_or_wheres = null, $count = null, string $order_by = null ): string {
+	protected function get_select_query( $columns, $id_or_wheres = null, $count = null, ?string $order_by = null ): string {
 		global $wpdb;
 
 		if ( \is_array( $columns ) ) {
