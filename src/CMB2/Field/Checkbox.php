@@ -3,6 +3,7 @@
 namespace Lipe\Lib\CMB2\Field;
 
 use Lipe\Lib\CMB2\Field_Type;
+use Lipe\Lib\Libs\Styles;
 use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
 
@@ -15,18 +16,17 @@ class Checkbox {
 	use Singleton;
 	use Memoize;
 
-
 	/**
 	 * Displays the checkbox in a more compact form.
 	 * Useful for checkboxes in side meta boxes.
 	 *
 	 * Copied mostly from CMB2_Field::render_field_callback()
 	 *
-	 * @param  array       $args  Array of field arguments for the group field parent.
-	 * @param  \CMB2_Field $field The CMB2_Field group object.
-	 *
-	 * @see Field_Type::checkbox()
+	 * @see     Field_Type::checkbox()
 	 * @example $box->field()->checkbox('compact')
+	 *
+	 * @param array       $args  Array of field arguments for the group field parent.
+	 * @param \CMB2_Field $field The CMB2_Field group object.
 	 *
 	 * @return \CMB2_Field|null
 	 */
@@ -38,6 +38,8 @@ class Checkbox {
 		if ( 'block' === $field->args( 'layout' ) ) {
 			return $field->render_field_callback();
 		}
+
+		Styles::in()->enqueue( Styles::CHECKBOX );
 
 		$field->peform_param_callback( 'before_row' );
 
@@ -54,11 +56,10 @@ class Checkbox {
 			if ( (bool) $field->get_param_callback_result( 'label_cb' ) ) {
 				$field->peform_param_callback( 'label_cb' );
 			}
-			echo '<br />';
 		} else {
 			$field->peform_param_callback( 'label_cb' );
-			echo '<br />';
 		}
+		echo '<br />';
 
 		$_field->args['description'] = $field->args['description'];
 		$types->_desc( false, true );
@@ -67,33 +68,9 @@ class Checkbox {
 
 		echo "\n\t</div>";
 
-		$this->styles();
-
 		$field->peform_param_callback( 'after_row' );
 
 		// For chaining.
 		return $field;
-	}
-
-
-	/**
-	 * Add styles for the checkbox field.
-	 *
-	 * @return void
-	 */
-	protected function styles(): void {
-		$this->once( function() {
-			?>
-			<style>
-				.checkbox-compact {
-					padding: 0 0 1em !important;
-				}
-
-				.checkbox-compact label {
-					display: inline-block !important;
-				}
-			</style>
-			<?php
-		}, __METHOD__, [] );
 	}
 }
