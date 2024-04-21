@@ -31,7 +31,7 @@ class GroupTest extends \WP_UnitTestCase {
 	private $attachment_id;
 
 
-	public function setUp() : void {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->post = self::factory()->post->create_and_get();
@@ -56,14 +56,14 @@ class GroupTest extends \WP_UnitTestCase {
 	}
 
 
-	public function tearDown() : void {
+	public function tearDown(): void {
 		wp_delete_attachment( $this->attachment_id, true );
 
 		parent::tearDown();
 	}
 
 
-	public function test_get_sub_field_data() : void {
+	public function test_get_sub_field_data(): void {
 		$object = Post_Mock::factory( $this->post );
 		$object['G'] = [
 			[
@@ -90,7 +90,7 @@ class GroupTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_set_sub_field_data() : void {
+	public function test_set_sub_field_data(): void {
 		$object = Post_Mock::factory( $this->post );
 		$object['G'] = [
 			[
@@ -117,7 +117,7 @@ class GroupTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_delete_sub_field_data() : void {
+	public function test_delete_sub_field_data(): void {
 		$object = Post_Mock::factory( $this->post );
 		$object->update_meta( 'G', [
 			[
@@ -163,5 +163,44 @@ class GroupTest extends \WP_UnitTestCase {
 		$this->assertEmpty( $object->get_meta( 'G' )[0]['T'] );
 		$this->assertNotEmpty( $object->get_meta( 'G' )[1]['F'] );
 		$this->assertEmpty( $object->get_meta( 'G' )[1]['C'] );
+	}
+
+
+	public function test_updating_repeable_group(): void {
+		$b = new Box( 'Y', [ 'post' ], 'Y' );
+		$g = $b->group( 'R', 'R' );
+		$g->repeatable( true );
+		$g->field( 'CX', 'Checkbox' )
+		  ->checkbox();
+		do_action( 'cmb2_init' );
+		$object = Post_Mock::factory( $this->post );
+
+		$object->update_meta( 'R', [
+			[
+				'CX' => 'on',
+			],
+			[
+				'CX' => 'on',
+			],
+		] );
+		$this->assertSame( [
+			[
+				'CX' => true,
+			],
+			[
+				'CX' => true,
+			],
+		], $object->get_meta( 'R' ) );
+
+		$object->update_meta( 'R', [
+			[
+				'CX' => 'on',
+			],
+		] );
+		$this->assertSame( [
+			[
+				'CX' => true,
+			],
+		], $object->get_meta( 'R' ) );
 	}
 }
