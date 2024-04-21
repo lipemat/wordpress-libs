@@ -16,7 +16,8 @@ use Lipe\Lib\Traits\Singleton;
 final class Styles {
 	use Singleton;
 
-	public const CHECKBOX = 'checkbox';
+	public const CHECKBOX     = 'checkbox';
+	public const GROUP_LAYOUT = 'group-layout';
 
 
 	/**

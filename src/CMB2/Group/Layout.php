@@ -3,6 +3,7 @@
 namespace Lipe\Lib\CMB2\Group;
 
 use Lipe\Lib\CMB2\Group;
+use Lipe\Lib\Libs\Styles;
 use Lipe\Lib\Theme\Class_Names;
 use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
@@ -60,11 +61,19 @@ class Layout {
 
 		$field_group->peform_param_callback( 'before_group' );
 
-		$desc      = $field_group->args( 'description' );
-		$label     = $field_group->args( 'name' );
+		$desc = $field_group->args( 'description' );
+		$label = $field_group->args( 'name' );
 		$group_val = (array) $field_group->value();
 
-		echo '<div class="cmb-row cmb-repeat-group-wrap cmb-group-table cmb-group-display-' . esc_attr( $field_group->args( 'layout' ) ) . ' ' . esc_attr( $field_group->row_classes() ), '" data-fieldtype="group"><div class="cmb-td"><div data-groupid="' . esc_attr( $field_group->id() ) . '" id="' . esc_attr( $field_group->id() ) . '_repeat" ' . $cmb->group_wrap_attributes( $field_group ) . '>'; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$classnames = new Class_Names( $field_group->row_classes(), [
+			'cmb-row',
+			'cmb-repeat-group-wrap',
+			'cmb-group-table',
+			'cmb-group-display-' . $field_group->args( 'layout' ),
+			'cmb2-group-context-' . $field_group->args( 'context' ),
+		], );
+
+		echo '<div class="' . $classnames . '" data-fieldtype="group"><div class="cmb-td"><div data-groupid="' . esc_attr( $field_group->id() ) . '" id="' . esc_attr( $field_group->id() ) . '_repeat" ' . $cmb->group_wrap_attributes( $field_group ) . '>'; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		if ( \is_string( $desc ) || \is_string( $label ) ) {
 			$classnames = new Class_Names( [
@@ -96,7 +105,7 @@ class Layout {
 		if ( ! empty( $group_val ) ) {
 			foreach ( $group_val as $group_key => $field_id ) {
 				$this->render_group_table_row( $field_group );
-				++$field_group->index;
+				++ $field_group->index;
 			}
 		} else {
 			$this->render_group_table_row( $field_group );
@@ -105,12 +114,27 @@ class Layout {
 		echo '</table>';
 
 		if ( $this->is_repeatable( $field_group ) ) {
-			echo '<div class="cmb-row"><div class="cmb-td"><p class="cmb-add-row"><button type="button" data-selector="' . esc_attr( $field_group->id() ) . '_repeat" data-grouptitle="{#}" class="cmb-add-group-row button-secondary">' . esc_html( $field_group->options( 'add_button' ) ) . '</button></p></div></div>';
+			?>
+			<div class="cmb-row">
+				<div class="cmb-td">
+					<p class="cmb-add-row">
+						<button
+							type="button"
+							data-selector="<?= esc_attr( $field_group->id() ) ?>_repeat"
+							data-grouptitle="{#}"
+							class="cmb-add-group-row button-secondary"
+						>
+							<?= esc_html( $field_group->options( 'add_button' ) ) ?>
+						</button>
+					</p>
+				</div>
+			</div>
+			<?php
 		}
 
 		echo '</div></div></div>';
 
-		$this->styles();
+		Styles::in()->enqueue( Styles::GROUP_LAYOUT );
 		$field_group->peform_param_callback( 'after_group' );
 
 		return $field_group;
@@ -120,7 +144,7 @@ class Layout {
 	/**
 	 * Render a repeatable group row table header
 	 *
-	 * @param  \CMB2_Field $field_group CMB2_Field group field object.
+	 * @param \CMB2_Field $field_group CMB2_Field group field object.
 	 */
 	public function render_group_table_header( $field_group ): void {
 		?>
@@ -128,7 +152,7 @@ class Layout {
 			<?php
 			if ( $this->is_repeatable( $field_group ) ) {
 				?>
-				<th> </th>
+				<th></th>
 				<?php
 			}
 			foreach ( $field_group->args( 'fields' ) as $_field ) {
@@ -136,7 +160,7 @@ class Layout {
 			}
 			if ( $this->is_repeatable( $field_group ) ) {
 				?>
-				<th> </th>
+				<th></th>
 				<?php
 			}
 			?>
@@ -164,7 +188,8 @@ class Layout {
 		<tr
 			id="cmb-group-<?= esc_attr( $field_group->id() ) ?>-<?= esc_attr( $field_group->index ) ?>"
 			class="cmb-row cmb-repeatable-grouping<?= esc_attr( $closed_class ) ?>"
-			data-iterator="<?= esc_attr( $field_group->index ) ?>">
+			data-iterator="<?= esc_attr( $field_group->index ) ?>"
+		>
 			<?php
 			if ( $this->is_repeatable( $field_group ) ) {
 				?>
@@ -256,156 +281,5 @@ class Layout {
 				$field->render_field();
 			}
 		}
-	}
-
-
-	/**
-	 * Render the CSS for the group.
-	 *
-	 * @return void
-	 */
-	protected function styles(): void {
-		$this->once( function() {
-			?>
-			<style>
-				.cmb-group-table table {
-					width: 100%;
-				}
-
-				.cmb-layout-non-repeatable,
-				.cmb-group-table th {
-					border-top: #DFDFDF solid 1px;
-				}
-
-				.cmb-group-table tr {
-					background: #fff;
-				}
-
-				.cmb-group-table td:last-child,
-				.cmb-group-table th:last-child {
-					border-right: #DFDFDF solid 1px;
-				}
-
-				.cmb-group-table th,
-				.cmb-group-table td {
-					border-left: #DFDFDF solid 1px;
-					border-bottom: #DFDFDF solid 1px;
-					padding: 8px !important;
-					vertical-align: top;
-					text-align: left;
-				}
-
-				.cmb-group-table.cmb-group-display-row td {
-					padding-bottom: 0 !important;
-				}
-
-				.cmb-group-table .cmb-th {
-					width: 50%;
-					padding: 0 10px;
-					margin: 0 0 -10px 0;
-					border-bottom: 1px solid #e9e9e9
-				}
-
-				.cmb-group-table .cmb-group-row-fields {
-					padding: 0 !important;
-					margin: 0 !important;
-				}
-
-				.cmb-group-row-fields td,
-				.cmb-group-row-fields th {
-					border: none !important;
-					border-bottom: #EEEEEE solid 1px !important;
-				}
-
-				.cmb-group-row-fields tr:last-of-type td {
-					border-bottom: none !important;
-				}
-
-				.cmb-group-row-fields th {
-					width: 20%;
-					vertical-align: top;
-					background: #F9F9F9;
-					border-right: 1px solid #E1E1E1 !important;
-				}
-
-				.cmb-group-table-control {
-					width: 16px;
-					padding: 0 !important;
-					vertical-align: middle !important;
-					text-align: center !important;
-					background: #f4f4f4;
-					text-shadow: #fff 0 1px 0;
-				}
-
-				.cmb-group-table .cmb-group-table-control a {
-					float: none !important;
-					display: block !important;
-					margin: 5px 0 !important;
-					text-align: center !important;
-				}
-
-				.cmb-group-table-control a,
-				.cmb-group-table-control h3 {
-					color: #aaa !important;
-				}
-
-				.cmb-group-table-control a:hover,
-				.cmb-group-table-control:hover h3 {
-					color: #23282d !important;
-				}
-
-				.cmb-group-table .cmb-group-table-control .cmb-remove-group-row {
-
-					margin-top: 12px !important;
-				}
-
-				.cmb-group-table .cmb-group-table-control .cmb-remove-group-row span {
-					color: #F55E4F !important;
-					font-size: 23px;
-					margin: -1px 0 0 -2px;
-				}
-
-				.cmb-repeatable-group.sortable .cmb-group-table-control:first-child {
-					cursor: move;
-				}
-
-				.cmb-group-table .ui-sortable-helper {
-					border-top: 1px solid #e9e9e9;
-				}
-
-				.cmb-group-table .cmb-group-title {
-					position: relative;
-					background: none;
-					margin: 0 !important;
-					padding: 0 !important;
-				}
-
-				.cmb-group-table th {
-					width: auto;
-				}
-
-				.cmb-group-table .cmb-repeat-group-field {
-					padding: 0 !important;
-					margin: 0 0 0.5em !important;
-				}
-
-				.cmb2-options-page .cmb-repeatable-group .cmb-group-name,
-				#poststuff .cmb-repeatable-group h2.cmb-group-name {
-					font-size: 18px;
-					font-weight: 500;
-					margin: -10px 0 0 -10px;
-				}
-
-				.cmb2-options-page .cmb-repeatable-group .cmb-group-name {
-					margin: 0 0 10px 0;
-				}
-
-				.cmb-layout-description {
-					margin: -10px 0 0 0 !important;
-					padding: 0 0 3px 3px !important;
-				}
-			</style>
-			<?php
-		}, __METHOD__ );
 	}
 }
