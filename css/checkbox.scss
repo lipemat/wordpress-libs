@@ -1,0 +1,9 @@
+.cmb-row {
+	&.checkbox-compact {
+		padding: .5em 0 !important;
+	}
+
+	&.checkbox-compact label {
+		display: inline-block !important;
+	}
+}
