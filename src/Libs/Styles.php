@@ -13,7 +13,7 @@ use Lipe\Lib\Traits\Singleton;
  *
  * @internal
  */
-final class Styles {
+class Styles {
 	use Singleton;
 
 	public const CHECKBOX     = 'checkbox';
@@ -40,7 +40,7 @@ final class Styles {
 	 *
 	 * @return string
 	 */
-	private function get_version(): string {
-		return file_get_contents( \dirname( __DIR__, 2 ) . '/VERSION' );
+	protected function get_version(): string {
+		return (string) file_get_contents( \dirname( __DIR__, 2 ) . '/VERSION' );
 	}
 }
