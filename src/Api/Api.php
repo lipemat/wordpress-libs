@@ -28,7 +28,7 @@ class Api {
 	public const FORMAT       = '_format';
 	public const FORMAT_ASSOC = 'assoc';
 
-	protected const VERSION = '2.1.0';
+	protected const VERSION = '2.2.0';
 
 	/**
 	 * Are we currently handling an api request?
@@ -50,6 +50,9 @@ class Api {
 		add_action( 'parse_request', function( \WP $wp ) {
 			$this->handle_request( $wp );
 		} );
+		add_action( 'wp_loaded', function() {
+			$this->run_for_version( 'flush_rewrite_rules', static::VERSION );
+		}, PHP_INT_MAX );
 	}
 
 
@@ -79,6 +82,10 @@ class Api {
 	/**
 	 * Get the url used to hit the api endpoint.
 	 *
+	 * @example get_api_url( 'load_more', [ 'page => 2 ] );
+	 *
+	 * @example get_api_url( 'load_more', [ 'page', 2 ] );
+	 *
 	 * @param string|null $endpoint - Same action provided to the `get_action` method
 	 *                              of this class when calling `add_action()`.
 	 *                              Should be a url friendly slug which is unique to
@@ -88,10 +95,6 @@ class Api {
 	 *                              Numeric arrays will have values spread in order.
 	 *                              Associative arrays will resolve to an
 	 *                              array of key values, just as provided.
-	 *
-	 * @example get_api_url( 'load_more', [ 'page => 2 ] );
-	 *
-	 * @example get_api_url( 'load_more', [ 'page', 2 ] );
 	 *
 	 * @return string
 	 */
@@ -105,7 +108,7 @@ class Api {
 		if ( \array_values( $data ) === $data ) {
 			$url .= trailingslashit( implode( '/', $data ) );
 		} else {
-			\array_walk_recursive( $data, function ( $value, $param ) use ( &$url ) {
+			\array_walk_recursive( $data, function( $value, $param ) use ( &$url ) {
 				$url .= "{$param}/{$value}/";
 			} );
 			$url = add_query_arg( [ static::FORMAT => static::FORMAT_ASSOC ], $url );
@@ -137,8 +140,6 @@ class Api {
 	 */
 	protected function add_endpoint(): void {
 		add_rewrite_endpoint( 'api', EP_ROOT, static::NAME );
-
-		$this->run_for_version( 'flush_rewrite_rules', static::VERSION );
 	}
 
 
