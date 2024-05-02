@@ -18,7 +18,7 @@ use Lipe\Lib\Query\Args_Interface;
  *
  * @link   https://developer.wordpress.org/reference/functions/register_block_type/
  *
- * @phpstan-type Attributes array<string, array{
+ * @phpstan-type ATTR_SHAPE array{
  *     type:string,
  *     default?:mixed,
  *     enum?:array<string|int|bool>,
@@ -29,7 +29,8 @@ use Lipe\Lib\Query\Args_Interface;
  *          type: string,
  *       }>
  *     }
- * }>
+ * }
+ * @phpstan-type Attributes array<string, ATTR_SHAPE>
  */
 class Register_Block implements Args_Interface {
 	use Args_Trait;
