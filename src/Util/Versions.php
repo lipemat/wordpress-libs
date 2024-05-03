@@ -117,11 +117,11 @@ class Versions {
 	 *
 	 * To be used when items have pre-requisites that must be run in a particular order.
 	 *
+	 * @uses self::$updates
+	 *
 	 * @param string|float $version  - The version to check against.
 	 * @param callable     $callback - Method or function to run if the version checks out.
 	 * @param mixed        $args     - Args to pass to the function.
-	 *
-	 * @uses self::$updates
 	 *
 	 * @return void
 	 */
@@ -148,7 +148,7 @@ class Versions {
 	 * @return void
 	 */
 	public function run_updates(): void {
-		if ( ! empty( static::$once ) ) {
+		if ( \count( static::$once ) > 0 ) {
 			foreach ( static::$once as $_key => $_item ) {
 				if ( ! isset( static::$once_run_before[ $_key ] ) ) {
 					static::$once_run_before[ $_key ] = 1;
@@ -159,8 +159,8 @@ class Versions {
 			update_option( static::ONCE, static::$once_run_before );
 		}
 
-		if ( ! empty( static::$updates ) ) {
-			\usort( static::$updates, function ( $a, $b ) {
+		if ( \count( static::$updates ) > 0 ) {
+			\usort( static::$updates, function( $a, $b ) {
 				return version_compare( $a['version'], $b['version'] );
 			} );
 
