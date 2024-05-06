@@ -75,6 +75,9 @@ abstract class Translate_Abstract {
 		$field = $this->get_field( $key );
 		if ( null !== $field && null !== $field->group ) {
 			$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
+			if ( '' === $group && null !== $field->default ) {
+				return $field->default;
+			}
 			$value = $group[ $this->group_row ][ $key ] ?? null;
 		} elseif ( Repo::META_OPTION === $meta_type ) {
 			$value = cmb2_options( (string) $object_id )->get( $key, null );

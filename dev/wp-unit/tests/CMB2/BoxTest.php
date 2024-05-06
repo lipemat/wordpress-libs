@@ -82,14 +82,22 @@ class BoxTest extends \WP_UnitTestCase {
 		$group->field( 't2', 'TEST 2' )
 		      ->checkbox()
 		      ->column( 4 )
-		      ->position( 9 );
+		      ->position( 9 )
+		      ->default( 'on' );
 
+		/** @var Group $group */
 		$group = call_private_method( $box, 'get_fields' )['g1'];
+		/** @var Field $field */
 		$field = call_private_method( $group, 'get_fields' )['t2'];
 
 		$this->assertEquals( 4, $field->column['position'] );
 		$this->assertEquals( 9, $field->position );
 		$this->assertEquals( 'checkbox', $field->get_type() );
+		$this->assertEquals( 'on', $field->default );
+
+		do_action( 'cmb2_init' );
+		$post = Post_Mock::factory( self::factory()->post->create_and_get() );
+		$this->assertTrue( $post->get_meta( 't2' ) );
 	}
 
 
