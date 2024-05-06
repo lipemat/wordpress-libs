@@ -289,7 +289,10 @@ trait Box_Trait {
 	 * @return string
 	 */
 	public function get_object_type(): string {
-		if ( \in_array( $this->object_types[0], [ 'comment', 'options-page', 'user', 'term' ], true ) ) {
+		if ( $this instanceof Group && $this->get_box() instanceof Box ) {
+			return $this->get_box()->get_object_type();
+		}
+		if ( isset( $this->object_types[0] ) && \in_array( $this->object_types[0], [ 'comment', 'options-page', 'user', 'term' ], true ) ) {
 			return $this->object_types[0];
 		}
 

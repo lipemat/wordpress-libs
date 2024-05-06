@@ -725,9 +725,12 @@ class Field {
 	/**
 	 * Specify a callback to retrieve default value for the field.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#default_cb
+	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#default_cb
 	 *
 	 * @internal
+	 *
+	 * @notice Not currently support for retrieval of group sub-fields but
+	 *         works to populate defaults in the admin.
 	 *
 	 * @var callable
 	 */
@@ -989,6 +992,9 @@ class Field {
 	 *
 	 * @notice  checkboxes are tricky
 	 *          https://github.com/CMB2/CMB2/wiki/Tips-&-Tricks#setting-a-default-value-for-a-checkbox
+	 *
+	 * @notice  A callback is not currently supported for retrieval of a group
+	 *          sub-field, but works in the admin to populate fields.
 	 *
 	 * @param string|callable $default_value - A default value, or a function which will return a value.
 	 *

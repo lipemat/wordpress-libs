@@ -75,6 +75,9 @@ abstract class Translate_Abstract {
 		$field = $this->get_field( $key );
 		if ( null !== $field && null !== $field->group ) {
 			$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
+			if ( '' === $group && null !== $field->default ) {
+				return $field->default;
+			}
 			$value = $group[ $this->group_row ][ $key ] ?? null;
 		} elseif ( Repo::META_OPTION === $meta_type ) {
 			$value = cmb2_options( (string) $object_id )->get( $key, null );
@@ -359,7 +362,7 @@ abstract class Translate_Abstract {
 
 
 	/**
-	 * Update a row from a group.
+	 * Delete a row from a group.
 	 *
 	 * We must loop through the individual files to trigger any hooks
 	 * and/or remove taxonomy relationships.
@@ -375,7 +378,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return bool|int
 	 */
-	protected function delete_group_row( $object_id, string $group_id, int $row, string $meta_type ): void {
+	protected function delete_group_row( $object_id, string $group_id, int $row, string $meta_type ) {
 		$this->group_row = $row;
 		foreach ( $this->get_group_fields( $group_id ) as $field ) {
 			Repo::in()->delete_value( $object_id, $field, $meta_type );
@@ -385,7 +388,7 @@ abstract class Translate_Abstract {
 			$group = [];
 		}
 		unset( $group[ $row ] );
-		$this->update_meta_value( $object_id, $group_id, $group, $meta_type );
+		return $this->update_meta_value( $object_id, $group_id, $group, $meta_type );
 	}
 
 
