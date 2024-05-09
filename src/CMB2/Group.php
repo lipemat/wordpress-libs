@@ -4,6 +4,7 @@ namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Group\Layout;
 use Lipe\Lib\Meta\Repo;
+use Lipe\Lib\Util\Arrays;
 
 /**
  * Group field type, which implement much of the
@@ -245,6 +246,7 @@ class Group extends Field {
 					],
 				],
 			];
+			$config['sanitize_callback'] = [ $this, 'untranslate_sub_field_rest_keys' ];
 		}
 
 		if ( $this->box instanceof Box ) {
@@ -320,6 +322,40 @@ class Group extends Field {
 
 
 	/**
+	 * Map this groups fields back to their original keys when updating
+	 * the metadata via the REST API.
+	 *
+	 * @param array $group_values - Group values sent to the REST API.
+	 *
+	 * @return array
+	 */
+	public function untranslate_sub_field_rest_keys( array $group_values ): array {
+		if ( \function_exists( 'wp_is_rest_endpoint' ) ) {
+			if ( ! wp_is_rest_endpoint() ) {
+				return $group_values;
+			}
+		} elseif ( ! \defined( 'REST_REQUEST' ) || ! REST_REQUEST ) {
+			return $group_values;
+		}
+
+		$map = Arrays::in()->flatten_assoc( function( Field $field ) {
+			return [ $this->translate_sub_field_rest_key( $field ) => $field ];
+		}, $this->get_fields() );
+
+		return \array_map( function( $group ) use ( $map ) {
+			foreach ( $group as $key => $value ) {
+				if ( ! isset( $map[ $key ] ) ) {
+					continue;
+				}
+				unset( $group[ $key ] );
+				$group[ $map[ $key ]->get_id() ] = $value;
+			}
+			return $group;
+		}, $group_values );
+	}
+
+
+	/**
 	 * Translate the group field key for the REST API.
 	 *
 	 * If the field has a `rest_group_short` property, either shorten
@@ -337,9 +373,7 @@ class Group extends Field {
 		if ( \is_string( $field->rest_group_short ) ) {
 			return $field->rest_group_short;
 		}
-		if ( $this->box instanceof Box ) {
-			return $this->box->get_short_name( $field );
-		}
-		return $field->get_id();
+
+		return $field->get_rest_short_name();
 	}
 }

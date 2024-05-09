@@ -223,7 +223,7 @@ trait Box_Trait {
 			if ( ! \is_array( $config['show_in_rest'] ) ) {
 				$config['show_in_rest'] = [];
 			}
-			$config['show_in_rest']['name'] = $this->get_short_name( $field );
+			$config['show_in_rest']['name'] = $field->get_rest_short_name();
 		}
 		return $config;
 	}
@@ -238,19 +238,6 @@ trait Box_Trait {
 	 */
 	public function is_allowed_to_register_meta( Field $field ): bool {
 		return \in_array( $field->data_type, [ Repo::TYPE_CHECKBOX, Repo::TYPE_DEFAULT, Repo::TYPE_FILE ], true );
-	}
-
-
-	/**
-	 * Get the short name of a field for use in the REST API.
-	 *
-	 * @param Field $field - The field to get the short name for.
-	 *
-	 * @return string
-	 */
-	public function get_short_name( Field $field ): string {
-		$name = \explode( '/', $field->get_id() );
-		return \end( $name );
 	}
 
 

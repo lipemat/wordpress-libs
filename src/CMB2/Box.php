@@ -362,7 +362,7 @@ class Box {
 	 *
 	 * @param string      $id           - ID of this box.
 	 * @param array       $object_types - [post type slugs], or 'user', 'term', 'comment', or 'options-page'.
-	 * @param string|null $title - Title of this box (false to omit displaying).
+	 * @param string|null $title        - Title of this box (false to omit displaying).
 	 *
 	 */
 	public function __construct( string $id, array $object_types, ?string $title ) {
@@ -377,7 +377,7 @@ class Box {
 	 *
 	 * @phpstan-param self::CONTEXT_* $context
 	 *
-	 * @param string          $context - Location the metabox will display.
+	 * @param string                  $context - Location the metabox will display.
 	 *
 	 * @return void
 	 */
@@ -610,7 +610,11 @@ class Box {
 		}
 
 		if ( null !== $field->sanitize_callback ) {
-			$config['sanitize_callback'] = function( $value ) use ( $field ) {
+			$config['sanitize_callback'] = function( $value ) use ( $field, $config ) {
+				// Allow other sanitize callbacks to run like group untranslate of fields.
+				if ( isset( $config['sanitize_callback'] ) ) {
+					$value = \call_user_func( $config['sanitize_callback'], $value );
+				}
 				return \call_user_func( $field->sanitize_callback, $value, $field->get_field_args(), $field->get_cmb2_field() );
 			};
 		}

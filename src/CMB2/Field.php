@@ -1644,6 +1644,17 @@ class Field {
 
 
 	/**
+	 * Get the short name of a field for use in the REST API.
+	 *
+	 * @return string
+	 */
+	public function get_rest_short_name(): string {
+		$name = \explode( '/', $this->get_id() );
+		return \end( $name );
+	}
+
+
+	/**
 	 * Override to allow static scans when using tools like PHPStan.
 	 *
 	 * @internal

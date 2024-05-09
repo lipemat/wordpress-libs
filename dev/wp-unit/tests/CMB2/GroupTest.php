@@ -303,6 +303,15 @@ class GroupTest extends \WP_Test_REST_TestCase {
 		$this->assertNotErrorResponse( $result );
 		$this->assertSame( '_changed_', $post['first/things/last'] );
 		$this->assertSame( '_also-changed_', $post['second/things/after'] );
+
+		$post['group/prefixed/g3'] = [
+			[
+				'last'        => '_not_during_rest_',
+				'customField' => '_not_during_rest_',
+			],
+		];
+		$this->assertNull( $post['first/things/last'] );
+		$this->assertNull( $post['second/things/after'] );
 	}
 
 
