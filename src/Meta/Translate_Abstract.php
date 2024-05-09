@@ -147,7 +147,8 @@ abstract class Translate_Abstract {
 		if ( null !== $field && null !== $field->group ) {
 			$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
 			$group[ $this->group_row ][ $key ] = null;
-			$this->update_meta_value( $object_id, $key, $group, $meta_type );
+			$this->update_meta_value( $object_id, $field->group, $group, $meta_type );
+			return;
 		}
 
 		if ( Repo::META_OPTION === $meta_type ) {
@@ -317,9 +318,10 @@ abstract class Translate_Abstract {
 	 * @param string               $meta_type - The meta type.
 	 */
 	protected function update_group_field_values( $object_id, string $group_id, array $values, string $meta_type ): void {
+		$fields = $this->get_group_fields( $group_id );
 		foreach ( $values as $_row => $_values ) {
 			$this->group_row = $_row;
-			foreach ( $this->get_group_fields( $group_id ) as $field ) {
+			foreach ( $fields as $field ) {
 				if ( \array_key_exists( $field, $_values ) ) {
 					Repo::in()->update_value( $object_id, $field, $_values[ $field ], $meta_type );
 				} else {
