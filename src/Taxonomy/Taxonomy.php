@@ -784,6 +784,32 @@ class Taxonomy {
 
 
 	/**
+	 * Include a link in the "+ New" menu in the admin bar to
+	 * quickly add a new term.
+	 *
+	 * Similar to how post types automatically have a link to add a new post.
+	 *
+	 * @since 4.10.0
+	 *
+	 * @return void
+	 */
+	public function show_in_admin_bar(): void {
+		$cap = $this->capabilities['edit_terms'] ?? 'manage_categories';
+		if ( ! current_user_can( $cap ) ) {
+			return;
+		}
+		add_action( 'admin_bar_menu', function( \WP_Admin_Bar $wp_admin_bar ) {
+			$wp_admin_bar->add_menu( [
+				'id'     => 'new-' . $this->taxonomy,
+				'title'  => $this->get_label(),
+				'parent' => 'new-content',
+				'href'   => admin_url( 'edit-tags.php?taxonomy=' . $this->taxonomy ),
+			] );
+		}, 100 );
+	}
+
+
+	/**
 	 * Inserts any specified terms for a new taxonomy.
 	 * Will run only once when term is first registered.
 	 * Will only run on fresh taxonomies with no existing terms.
