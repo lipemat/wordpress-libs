@@ -85,7 +85,7 @@ class Group extends Field {
 	/**
 	 * Group constructor.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
+	 * @link                     https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 * @internal
 	 *
 	 * @param string      $id                      - Field ID.
@@ -209,11 +209,12 @@ class Group extends Field {
 		if ( (bool) $this->show_in_rest && $this->is_public_rest_data( $this ) ) {
 			$properties = [];
 			foreach ( $this->get_fields() as $field ) {
-				$properties[ $field->get_id() ] = [
+				$field_id = $this->translate_sub_field_rest_key( $field );
+				$properties[ $field_id ] = [
 					'type' => 'string',
 				];
 				if ( $field->is_using_array_data() ) {
-					$properties[ $field->get_id() ] = [
+					$properties[ $field_id ] = [
 						'type'  => 'array',
 						'items' => [
 							'type' => 'string',
@@ -221,7 +222,7 @@ class Group extends Field {
 					];
 				}
 				if ( $field->is_using_object_data() ) {
-					$properties[ $field->get_id() ] = [
+					$properties[ $field_id ] = [
 						'type'                 => 'object',
 						'additionalProperties' => [
 							'type' => 'string',
@@ -230,13 +231,14 @@ class Group extends Field {
 				}
 
 				if ( Repo::TYPE_FILE === $field->data_type ) {
-					$properties[ $field->get_id() . '_id' ] = [
+					$properties[ $field_id . '_id' ] = [
 						'type' => 'number',
 					];
 				}
 			}
 			$config['show_in_rest'] = [
-				'schema' => [
+				'prepare_callback' => [ $this, 'translate_sub_field_rest_keys' ],
+				'schema'           => [
 					'items' => [
 						'type'       => 'object',
 						'properties' => $properties,
@@ -284,5 +286,60 @@ class Group extends Field {
 	 */
 	public function group(): void {
 		throw new \LogicException( esc_html__( 'You cannot add a group to another group.', 'lipe' ) );
+	}
+
+
+	/**
+	 * Use the shortened version of the field id in the REST API.
+	 *
+	 * Same thing we do for top level fields, but is opt-in for individual
+	 * group fields for backwards compatibility.
+	 *
+	 * @example 'meta/food-data/calories' becomes 'calories'
+	 *
+	 * @interal
+	 *
+	 * @param array $group_values - Group values before being sent to the REST API.
+	 *
+	 * @return array
+	 */
+	public function translate_sub_field_rest_keys( array $group_values ): array {
+		$fields = $this->get_fields();
+		return \array_map( function( $group ) use ( $fields ) {
+			foreach ( $group as $key => $value ) {
+				if ( ! isset( $fields[ $key ] ) ) {
+					continue;
+				}
+				$field = $fields[ $key ];
+				unset( $group[ $key ] );
+				$group[ $this->translate_sub_field_rest_key( $field ) ] = $value;
+			}
+			return $group;
+		}, $group_values );
+	}
+
+
+	/**
+	 * Translate the group field key for the REST API.
+	 *
+	 * If the field has a `rest_group_short` property, either shorten
+	 * the key like we do with top level fields, or use the value of
+	 * `rest_group_short` if it is a string.
+	 *
+	 * @param Field $field - Field to translate.
+	 *
+	 * @return string
+	 */
+	protected function translate_sub_field_rest_key( Field $field ): string {
+		if ( null === $field->rest_group_short || false === $field->rest_group_short ) {
+			return $field->get_id();
+		}
+		if ( \is_string( $field->rest_group_short ) ) {
+			return $field->rest_group_short;
+		}
+		if ( $this->box instanceof Box ) {
+			return $this->box->get_short_name( $field );
+		}
+		return $field->get_id();
 	}
 }

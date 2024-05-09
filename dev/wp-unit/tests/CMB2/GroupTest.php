@@ -12,7 +12,7 @@ use mocks\Post_Mock;
  *
  * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
  */
-class GroupTest extends \WP_UnitTestCase {
+class GroupTest extends \WP_Test_REST_TestCase {
 	/**
 	 * @var \WP_Post
 	 */
@@ -203,4 +203,124 @@ class GroupTest extends \WP_UnitTestCase {
 			],
 		], $object->get_meta( 'R' ) );
 	}
+
+
+	public function test_rest_short_fields(): void {
+		$box = new Box( 'rested', [ 'post' ], 'Rested Group' );
+		$box->field( 'meta/prefixed/t2', 'Test 2' )
+		    ->text();
+
+		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
+		$group->show_in_rest();
+		$group
+			->field( 'first/things/last', '' )
+			->text();
+		$group
+			->field( 'second/things/after', '' )
+			->text();
+		do_action( 'cmb2_init' );
+
+		$post = Post_Mock::factory( self::factory()->post->create_and_get() );
+		$post['group/prefixed/g3'] = [
+			[
+				'first/things/last'   => '__last',
+				'second/things/after' => '__after',
+			],
+		];
+		$post['meta/prefixed/t2'] = '__t2';
+		$result = $this->get_response( '/wp/v2/posts/' . $post->get_id(), [], 'GET' );
+		$this->assertSame( [
+			'footnotes' => '',
+			'g3'        => [
+				[
+					'first/things/last'   => '__last',
+					'second/things/after' => '__after',
+				],
+			],
+		], $result->data['meta'] );
+
+		$box->field( 'meta/prefixed/t2', 'Test 2' )
+		    ->text()
+		    ->show_in_rest();
+		do_action( 'cmb2_init' );
+		$result = $this->get_response( '/wp/v2/posts/' . $post->get_id(), [], 'GET' );
+		$this->assertSame( [
+			'footnotes' => '',
+			'g3'        => [
+				[
+					'first/things/last'   => '__last',
+					'second/things/after' => '__after',
+				],
+			],
+			't2'        => '__t2',
+		], $result->data['meta'] );
+
+		$group->field( 'first/things/last', '' )
+		      ->text()
+		      ->rest_group_short();
+		do_action( 'cmb2_init' );
+		$result = $this->get_response( '/wp/v2/posts/' . $post->get_id(), [], 'GET' );
+		$this->assertSame( [
+			'footnotes' => '',
+			'g3'        => [
+				[
+					'last'                => '__last',
+					'second/things/after' => '__after',
+				],
+			],
+			't2'        => '__t2',
+		], $result->data['meta'] );
+
+		$group->field( 'second/things/after', '' )
+		      ->text()
+		      ->rest_group_short( 'customField' );
+		do_action( 'cmb2_init' );
+		$result = $this->get_response( '/wp/v2/posts/' . $post->get_id(), [], 'GET' );
+		$this->assertSame( [
+			'footnotes' => '',
+			'g3'        => [
+				[
+					'last'        => '__last',
+					'customField' => '__after',
+				],
+			],
+			't2'        => '__t2',
+		], $result->data['meta'] );
+
+		wp_set_current_user( self::factory()->user->create( [
+			'role' => 'administrator',
+		] ) );
+		$result = $this->get_response( '/wp/v2/posts/' . $post->get_id(), [
+			'meta' => [
+				'g3' => [
+					[
+						'last'        => '_changed_',
+						'customField' => '_also-changed_',
+					],
+				],
+			],
+		] );
+		$this->assertNotErrorResponse( $result );
+		$this->assertSame( '_changed_', $post['first/things/last'] );
+		$this->assertSame( '_also-changed_', $post['second/things/after'] );
+	}
+
+
+	public function test_doing_short_group_wrong(): void {
+		$box = new Box( 'rested', [ 'post' ], 'Rested Group' );
+		$box->field( 'meta/prefixed/t2', 'Test 2' )
+		    ->text()
+		    ->rest_group_short();
+
+		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
+		$group->show_in_rest();
+		$group->field( 'first/things/last', '' )
+		      ->text()
+		      ->show_in_rest()
+		      ->rest_group_short();
+
+		$this->expectDoingItWrong( Field::class . '::rest_group_short', "Group short fields only apply to a group's child field. `meta/prefixed/t2` is not applicable. (This message was added in version 4.10.0.)" );
+		$this->expectDoingItWrong( Field::class . '::show_in_rest', "Show in rest may only be added to whole group. Not a group's field. `first/things/last` is not applicable. (This message was added in version 2.19.0.)" );
+	}
+
 }
