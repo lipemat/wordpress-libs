@@ -346,7 +346,7 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#options
 	 *
-	 * @var  array
+	 * @var  array<string, string|bool|null>
 	 */
 	public array $options;
 

@@ -91,7 +91,7 @@ trait Box_Trait {
 	 *
 	 * @return Group
 	 */
-	public function group( string $id, ?string $title = null, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, bool $sortable = true, bool $closed = false, ?string $remove_confirm = null ): Group {
+	public function group( string $id, ?string $title = null, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, ?bool $sortable = null, bool $closed = false, ?string $remove_confirm = null ): Group {
 		$this->hook();
 		$group = new Group( $id, $title, $this, $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
 		$this->fields[ $id ] = $group;

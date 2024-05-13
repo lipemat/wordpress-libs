@@ -843,7 +843,7 @@ class Field_Type {
 	 * @param string|null $title                 - include a {#} to have replaced with number.
 	 * @param string|null $add_button_text       - defaults to 'Add Group'.
 	 * @param string|null $remove_button_text    - defaults to 'Remove Group'.
-	 * @param bool        $sortable              - Is this group sortable.
+	 * @param bool        $sortable              - Is this group sortable. (Defaults to value or repeatable property).
 	 * @param bool        $closed                - Is this group closed by default.
 	 * @param string|null $remove_confirm        - A message to display when a user attempts
 	 *                                           to delete a group.
@@ -851,14 +851,17 @@ class Field_Type {
 	 *
 	 * @return Field
 	 */
-	public function group( ?string $title = null, ?string $add_button_text = null, ?string $remove_button_text = null, bool $sortable = true, bool $closed = false, ?string $remove_confirm = null ): Field {
+	public function group( ?string $title = null, ?string $add_button_text = null, ?string $remove_button_text = null, ?bool $sortable = null, bool $closed = false, ?string $remove_confirm = null ): Field {
 		$_args = [
 			'type'    => 'group',
 			'options' => [
-				'sortable' => $sortable,
-				'closed'   => $closed,
+				'closed' => $closed,
 			],
 		];
+
+		if ( \is_bool( $sortable ) ) {
+			$_args['options']['sortable'] = $sortable;
+		}
 
 		if ( null !== $title ) {
 			$_args['options']['group_title'] = $title;

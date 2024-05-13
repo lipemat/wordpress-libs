@@ -103,7 +103,7 @@ class Group extends Field {
 	 *
 	 * @phpstan-ignore-next-line -- Too many default arguments to account for.
 	 */
-	public function __construct( string $id, ?string $title, Box $box, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, bool $sortable = true, bool $closed = false, ?string $remove_confirm = null ) {
+	public function __construct( string $id, ?string $title, Box $box, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, ?bool $sortable = null, bool $closed = false, ?string $remove_confirm = null ) {
 		$this->type()->group( $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
 
 		parent::__construct( $id, $title, $box );
@@ -139,6 +139,43 @@ class Group extends Field {
 
 
 	/**
+	 * Set the group to be repeatable.
+	 *
+	 * Will enable sortable if not already specified as false when `\Lipe\Lib\CMB2\Field_Type::group` is called.
+	 *
+	 * @param bool    $repeatable   - Enable/disable repeatable support for this group.
+	 * @param ?string $add_row_text - Unused in group context. @deprecated.
+	 *
+	 * @return Field
+	 */
+	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ): Field {
+		$this->repeatable = $repeatable;
+
+		if ( ! isset( $this->options['sortable'] ) ) {
+			$this->options = \array_merge( $this->options, [ 'sortable' => $repeatable ] );
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Retrieve this field's arguments to be registered
+	 * with CMB2.
+	 *
+	 * @see Box::add_field_to_box()
+	 *
+	 * @return array
+	 */
+	public function get_field_args(): array {
+		$args = parent::get_field_args();
+		unset( $args['box'], $args['fields'] );
+
+		return $args;
+	}
+
+
+	/**
 	 * Assign a field to a group, then register it.
 	 *
 	 * @param Field $field - Field object.
@@ -160,22 +197,6 @@ class Group extends Field {
 		}
 
 		Repo::in()->register_field( $field );
-	}
-
-
-	/**
-	 * Retrieve this field's arguments to be registered
-	 * with CMB2.
-	 *
-	 * @see Box::add_field_to_box()
-	 *
-	 * @return array
-	 */
-	public function get_field_args(): array {
-		$args = parent::get_field_args();
-		unset( $args['box'], $args['fields'] );
-
-		return $args;
 	}
 
 
