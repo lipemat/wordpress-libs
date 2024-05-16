@@ -1,8 +1,10 @@
-# @version 2.1.0
+# @version 2.2.0
 
 includes:
     # Include the lipemat phpstan rules.
     - %rootDir%/../../../rules.neon
+    # Baseline errors to be resolved.
+    - dev/phpstan-baseline.php
 
 parameters:
     level: 8
@@ -17,10 +19,7 @@ parameters:
     strictRules:
         allRules: true
         # Construct empty() is not allowed.
-        disallowedConstructs: false
         noVariableVariables: false
-    # Array value type is required.
-    checkMissingIterableValueType: false
     paths:
         - src
     scanFiles:
