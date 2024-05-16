@@ -1,8 +1,10 @@
 <?php
-
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy;
+
+use Lipe\Lib\Libs\Scripts;
+use Lipe\Lib\Taxonomy\Meta_Box\Gutenberg_Box;
 
 /**
  * Custom output for various meta box styles.
@@ -19,29 +21,30 @@ class Meta_Box {
 	 *
 	 * @var string
 	 */
-	protected string $taxonomy;
+	public readonly string $taxonomy;
 
 	/**
 	 * The type meta box.
 	 *
-	 * @phpstan-var 'radio'|'dropdown'|'simple'|'checklist'
+	 * @phpstan-var Gutenberg_Box::TYPE_*
 	 *
 	 * @var string
 	 */
-	protected string $type;
+	public readonly string $type;
 
 	/**
 	 * Move checked items to top.
 	 *
 	 * @var bool
 	 */
-	protected bool $checked_ontop;
+	public readonly bool $checked_ontop;
 
 
 	/**
-	 * Meta_Box constructor.
+	 * Constructs a custom meta box for a taxonomy to replace
+	 * the default meta box with a new UI.
 	 *
-	 * @phpstan-param 'radio'|'dropdown'|'simple' $type
+	 * @phpstan-param Gutenberg_Box::TYPE_* $type
 	 *
 	 * @param string                              $taxonomy      - The taxonomy slug.
 	 * @param string                              $type          - The type of meta box.
@@ -95,7 +98,13 @@ class Meta_Box {
 		);
 
 		$label = 'simple' === $this->type ? $object->labels->name : $object->labels->singular_name;
-		add_meta_box( "{$this->taxonomy}div", $label, [ $this, 'do_meta_box' ], $post_type, 'side' );
+
+		$tax = get_taxonomy( $this->taxonomy );
+		if ( false !== $tax && $tax->show_in_rest && Scripts::in()->is_block_editor() ) {
+			Gutenberg_Box::factory( $this );
+		} else {
+			add_meta_box( "{$this->taxonomy}div", $label, [ $this, 'do_meta_box' ], $post_type, 'side' );
+		}
 	}
 
 

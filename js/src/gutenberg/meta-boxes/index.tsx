@@ -1,10 +1,10 @@
 import type {PluginSettings} from '@wordpress/plugins';
-import RadioTerms from './RadioTerms';
+import Taxonomy from './Taxonomy';
 
 export const name = 'lipe-libs-meta-boxes';
 
 export const settings: PluginSettings = {
 	render: () => (
-		<RadioTerms taxonomy={'custom-ui'} />
+		<Taxonomy />
 	),
 };

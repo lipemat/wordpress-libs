@@ -1221,7 +1221,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
-	'message' => '#^Method class@anonymous/Taxonomy/Meta_Box\\.php\\:216\\:\\:start_el\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
+	'message' => '#^Method class@anonymous/Taxonomy/Meta_Box\\.php\\:226\\:\\:start_el\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Taxonomy/Meta_Box.php',
 ];

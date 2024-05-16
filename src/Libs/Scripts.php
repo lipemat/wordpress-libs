@@ -69,6 +69,16 @@ class Scripts {
 
 
 	/**
+	 * Is the current screen the block editor?
+	 *
+	 * @return bool
+	 */
+	public function is_block_editor(): bool {
+		return \function_exists( 'get_current_screen' ) && null !== get_current_screen() && get_current_screen()->is_block_editor;
+	}
+
+
+	/**
 	 * Get the version of wordpress-libs.
 	 *
 	 * @return string
@@ -105,8 +115,8 @@ class Scripts {
 	 * }
 	 */
 	protected function js_config(): array {
-		return [
-			'isGutenberg' => \function_exists( 'get_current_screen' ) && null !== get_current_screen() && get_current_screen()->is_block_editor,
-		];
+		return apply_filters( 'lipe/lib/libs/scripts/js-config', [
+			'isGutenberg' => $this->is_block_editor(),
+		] );
 	}
 }
