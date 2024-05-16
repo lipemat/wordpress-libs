@@ -18,7 +18,7 @@
 	<config name="minimum_wp_version" value="5.8" />
 
 	<!-- @see https://github.com/PHPCompatibility/PHPCompatibilityWP#how-to-use -->
-	<config name="testVersion" value="7.4-" />
+    <config name="testVersion" value="8.1-" />
 
 	<rule ref="LipePlugin">
 		<exclude name="Generic.PHP.DisallowShortOpenTag.EchoFound" />

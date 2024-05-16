@@ -9,7 +9,7 @@
     }
   ],
   "require": {
-    "php": ">=7.4.0"
+    "php": ">=8.0.0"
   },
   "require-dev": {
     "lipemat/cmb2": "^2.10.1.10"
