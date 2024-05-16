@@ -1,3 +1,15 @@
+################################
+#
+# @version 6.2.0
+#
+################################
+
+# Project specific
+/vendor
+composer.lock
+js/dist
+
+
 # system/hidden files
 *.bak
 *.sublime-project
@@ -17,10 +29,13 @@
 .sass-cache
 .stylelintcache
 .svn
+.vscode
 Thumbs.db
 ehthumbs.db
 tsconfig.tsbuildinfo
 
+# log files
+*.log
 
 # local configs
 local-config.php
@@ -29,6 +44,7 @@ phpcs.xml
 phpstan.neon
 phpunit.xml
 
-# vendor files
-/vendor
-composer.lock
+# Yarn Berry files
+install-state.gz
+build-state.yml
+node_modules

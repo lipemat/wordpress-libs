@@ -3,7 +3,7 @@
 namespace Lipe\Lib\CMB2\Group;
 
 use Lipe\Lib\CMB2\Group;
-use Lipe\Lib\Libs\Styles;
+use Lipe\Lib\Libs\Scripts;
 use Lipe\Lib\Theme\Class_Names;
 use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
@@ -134,7 +134,7 @@ class Layout {
 
 		echo '</div></div></div>';
 
-		Styles::in()->enqueue( Styles::GROUP_LAYOUT );
+		Scripts::in()->enqueue_style( Scripts::STYLE_GROUP_LAYOUT );
 		$field_group->peform_param_callback( 'after_group' );
 
 		return $field_group;

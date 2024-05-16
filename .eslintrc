@@ -1,0 +1,18 @@
+{
+	"extends": [
+		"@lipemat"
+	],
+	"rules": {
+		"@wordpress/i18n-text-domain": [
+			"error",
+			{
+				// @link https://github.com/WordPress/gutenberg/blob/trunk/packages/eslint-plugin/docs/rules/i18n-text-domain.md
+				"allowedTextDomain": [
+					// If we only provide one option, ESLint will automaticaly fix entries for us.
+					// "default",
+					"lipe"
+				]
+			}
+		]
+	}
+}

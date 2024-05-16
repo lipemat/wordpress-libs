@@ -4,7 +4,7 @@
 #
 # @notice Will also be excluded for Zip downloads of tags.
 #
-# @link https://git-scm.com/docs/gitattributes#_export_subst
+# @link https://git-scm.com/docs/gitattributes#_export_ignore
 #
 ######################################################################
 /.editorconfig export-ignore
@@ -15,3 +15,17 @@
 /phpcs.xml.dist export-ignore
 /phpstan.neon.dist export-ignore
 /phpunit.xml.dist export-ignore
+
+# Ignore src and config files for resources
+*.scss export-ignore
+.eslintrc export-ignore
+.nvmrc export-ignore
+.pnp.cjs export-ignore
+.pnp.loader.mjs export-ignore
+.stylelintrc export-ignore
+.yarn export-ignore
+.yarnrc.yml export-ignore
+/js/src export-ignore
+package.json export-ignore
+tsconfig.json export-ignore
+yarn.lock export-ignore
