@@ -88,6 +88,7 @@ class Meta_Box {
 		wp_add_inline_script(
 			'wp-edit-post',
 			sprintf(
+			// @todo Switch to `core/editor` when minimum WP version is 6.5.
 				'wp.data.dispatch( "core/edit-post" ).removeEditorPanel( "taxonomy-panel-%s" );',
 				$this->taxonomy
 			)
