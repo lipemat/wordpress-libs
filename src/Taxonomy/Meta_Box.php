@@ -90,9 +90,9 @@ class Meta_Box {
 		// Remove default meta box from block editor.
 		wp_add_inline_script(
 			'wp-edit-post',
-			sprintf(
-			// @todo Switch to `core/editor` when minimum WP version is 6.5.
-				'wp.data.dispatch( "core/edit-post" ).removeEditorPanel( "taxonomy-panel-%s" );',
+			\sprintf(
+			// @todo Remove `core/edit-post` fallback when minimum WP version is 6.5.
+				'if( "function" === typeof wp.data.dispatch("core/editor").removeEditorPanel ) {typeof wp.data.dispatch("core/editor").removeEditorPanel( "taxonomy-panel-%1$s" ) } else { wp.data.dispatch( "core/edit-post" ).removeEditorPanel( "taxonomy-panel-%1$s" ) }',
 				$this->taxonomy
 			)
 		);
