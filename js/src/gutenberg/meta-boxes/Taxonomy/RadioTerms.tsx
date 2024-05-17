@@ -3,6 +3,9 @@ import {useEntityRecord, useEntityRecords} from '@wordpress/core-data';
 import {useTerms} from '@lipemat/js-boilerplate-gutenberg';
 import type {Tag} from '@wordpress/core-data/entities';
 import {PanelRow, RadioControl} from '@wordpress/components';
+import {__} from '@wordpress/i18n';
+
+import styles from './radio.pcss';
 
 type Props = {
 	taxonomy: string;
@@ -22,10 +25,12 @@ const RadioTerms = ( {taxonomy, checkedOnTop}: Props ) => {
 	return (
 		<PluginDocumentSettingPanel
 			name="lipe/libs/meta-boxes/radio-terms"
-			title={tax?.name ?? 'Loading...'}
+			title={tax?.name ?? __( 'Loading…', 'lipe' )}
+			icon={tax?.name === undefined ? 'download' : null}
 		>
 			<PanelRow>
 				<RadioControl
+					className={styles.control}
 					selected={assigned[ 0 ] ?? ''}
 					options={terms?.map( term => ( {label: term.name, value: term.id} ) ) ?? []}
 					onChange={state => {

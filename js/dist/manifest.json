@@ -1,8 +1,8 @@
 {
   "meta-boxes.js": {
     "src": "meta-boxes.js",
-    "integrity": "sha384-ez+SIcoJN0Kof19elBB2a7U5o9o652zBlnfi/uvDZ4aL7SNNKgfYrlTYmVHKnoCZ",
-    "hash": "0293235dc053048f3e65"
+    "integrity": "sha384-9liFj3gToiugui+9TZnkyx5OLcSTCvh/+Lj2jXKz3MVZK3s4Fx00t/w4qiMopHwz",
+    "hash": "96b58fc621aeab989a78"
   },
   "meta-boxes.js.LICENSE.txt": {
     "src": "meta-boxes.js.LICENSE.txt",
@@ -11,12 +11,12 @@
   },
   "meta-boxes.js.br": {
     "src": "meta-boxes.js.br",
-    "integrity": "sha384-XVUEn7CFbzI/4Ne6yEVR70mTYZQHsErG/jUXB3e2qgeZqG43VqJs4sRP91Ofxp+J",
-    "hash": "4e30546fe9babbf91a84"
+    "integrity": "sha384-+1vf4r45eRVuRzozJti7pnahpjO7uqR9qWfFbU6W7HXp/Oqj83017hRozakWwOcj",
+    "hash": "f5613fa315a5f9e59262"
   },
   "meta-boxes.js.map": {
     "src": "meta-boxes.js.map",
-    "integrity": "sha384-E+DAUcB+r2HkDkvY3ZyWOIdb7rqV+f1R0xdZBEJS98jETb+Y1QO37unAwFBY8yrh",
-    "hash": "8e1d58c6f15fb4195b63"
+    "integrity": "sha384-/GttRaPA3mYc2mh4u9lth3jIQ+ZFeWIVhhBRM0i+3h27GDZ+GN+ssXU2W+GcIJjg",
+    "hash": "65c43c802c1a9d948950"
   }
 }

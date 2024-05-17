@@ -22,8 +22,9 @@ enum ScriptHandles: string {
 		return match ( $this ) {
 			self::META_BOXES => [
 				'wp-components',
-				'wp-edit-post',
 				'wp-data',
+				'wp-edit-post',
+				'wp-i18n',
 			],
 		};
 	}

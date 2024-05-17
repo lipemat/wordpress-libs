@@ -1,5 +1,6 @@
 import {CONFIG} from '../../config';
-import RadioTerms from './RadioTerms';
+import RadioTerms from './Taxonomy/RadioTerms';
+import DropdownTerms from './Taxonomy/DropdownTerms';
 
 export type TaxonomyMetaBox = {
 	type: 'radio' | 'dropdown' | 'simple';
@@ -8,8 +9,6 @@ export type TaxonomyMetaBox = {
 };
 
 type Props = {};
-
-console.log( CONFIG );
 
 const Taxonomy = ( {}: Props ) => {
 	return ( <>
@@ -21,11 +20,11 @@ const Taxonomy = ( {}: Props ) => {
 						taxonomy={metaBox.taxonomy}
 						checkedOnTop={metaBox.checkedOnTop}
 					/>;
-				//	case 'dropdown':
-				///		return <DropdownTerms
-				//			key={index} taxonomy={metaBox.taxonomy}
-				//			checkedOnTop={metaBox.checkedOnTop}
-				//		/>;
+				case 'dropdown':
+					return <DropdownTerms
+						key={index} taxonomy={metaBox.taxonomy}
+						checkedOnTop={metaBox.checkedOnTop}
+					/>;
 				//	case 'simple':
 				//		return <SimpleTerms
 				//			key={index} taxonomy={metaBox.taxonomy}
