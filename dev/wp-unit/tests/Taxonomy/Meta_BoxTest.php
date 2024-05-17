@@ -4,7 +4,9 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Taxonomy;
 
 use Lipe\Lib\Libs\Scripts;
+use Lipe\Lib\Libs\Scripts\ScriptHandles;
 use Lipe\Lib\Taxonomy\Meta_Box\Gutenberg_Box;
+use Lipe\Lib\Util\Actions;
 
 /**
  * @author Mat Lipe
@@ -54,15 +56,38 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 		global $wp_meta_boxes;
 		$post = $this->setup_check_default_meta_box( $tax, $post_type );
 
+		do_action( 'enqueue_block_assets' );
+		$this->assertFalse( wp_scripts()->query( ScriptHandles::META_BOXES->value ) );
+
 		new Meta_Box( 'test', Gutenberg_Box::TYPE_RADIO, true );
 		register_and_do_post_meta_boxes( $post );
 		$this->assertFalse( $wp_meta_boxes[ $post_type ]['side']['core'][ 'tagsdiv-' . $tax->name ] );
 		$this->assertFalse( $wp_meta_boxes[ $post_type ]['side']['default']["{$tax->name}div"] ?? false );
-		$this->assertSame( '[{"type":"radio","taxonomy":"test","checkedOnTop":true}]', wp_json_encode( call_private_method( Scripts::instance(), 'js_config' )['taxonomyMetaBoxes'] ) );
+		$this->assertSame( '[{"type":"radio","taxonomy":"test","checkedOnTop":true}]', wp_json_encode( get_private_property( Gutenberg_Box::class, 'boxes' ) ) );
+		do_action( 'enqueue_block_assets' );
+		$this->assertInstanceOf( \_WP_Dependency::class, wp_scripts()->query( ScriptHandles::META_BOXES->value ) );
 
 		new Meta_Box( 'test', Gutenberg_Box::TYPE_DROPDOWN, false );
 		register_and_do_post_meta_boxes( $post );
-		$this->assertSame( '[{"type":"dropdown","taxonomy":"test","checkedOnTop":false}]', wp_json_encode( call_private_method( Scripts::instance(), 'js_config' )['taxonomyMetaBoxes'] ) );
+		$this->assertSame( '[{"type":"dropdown","taxonomy":"test","checkedOnTop":false}]', wp_json_encode( get_private_property( Gutenberg_Box::class, 'boxes' ) ) );
+		$this->assertSame( 'var LIPE_LIBS_META_BOXES = [{"type":"radio","taxonomy":"test","checkedOnTop":true}];', wp_scripts()->get_data( ScriptHandles::META_BOXES->value, 'data' ) );
+
+		register_taxonomy( 'again', $post->post_type, [
+			'show_in_rest' => true,
+			'capabilities' => [
+				'assign_terms' => 'exist',
+			],
+		] );
+		new Meta_Box( 'again', 'radio', false );
+		register_and_do_post_meta_boxes( $post );
+		do_action( 'enqueue_block_assets' );
+		$this->assertSame( '[{"type":"dropdown","taxonomy":"test","checkedOnTop":false},{"type":"radio","taxonomy":"again","checkedOnTop":false}]', wp_json_encode( get_private_property( Gutenberg_Box::class, 'boxes' ) ) );
+		$this->assertSame( 'var LIPE_LIBS_META_BOXES = [{"type":"radio","taxonomy":"test","checkedOnTop":true}];', wp_scripts()->get_data( ScriptHandles::META_BOXES->value, 'data' ) );
+
+		wp_scripts()->registered[ ScriptHandles::META_BOXES->value ]->extra['data'] = false;
+		register_and_do_post_meta_boxes( $post );
+		do_action( 'enqueue_block_assets' );
+		$this->assertSame( 'var LIPE_LIBS_META_BOXES = [{"type":"dropdown","taxonomy":"test","checkedOnTop":false},{"type":"radio","taxonomy":"again","checkedOnTop":false}];', wp_scripts()->get_data( ScriptHandles::META_BOXES->value, 'data' ) );
 	}
 
 

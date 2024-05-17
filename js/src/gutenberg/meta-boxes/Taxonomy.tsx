@@ -9,6 +9,8 @@ export type TaxonomyMetaBox = {
 
 type Props = {};
 
+console.log( CONFIG );
+
 const Taxonomy = ( {}: Props ) => {
 	return ( <>
 		{CONFIG.taxonomyMetaBoxes?.map( ( metaBox, index ) => {
@@ -19,16 +21,16 @@ const Taxonomy = ( {}: Props ) => {
 						taxonomy={metaBox.taxonomy}
 						checkedOnTop={metaBox.checkedOnTop}
 					/>;
-				case 'dropdown':
-					return <DropdownTerms
-						key={index} taxonomy={metaBox.taxonomy}
-						checkedOnTop={metaBox.checkedOnTop}
-					/>;
-				case 'simple':
-					return <SimpleTerms
-						key={index} taxonomy={metaBox.taxonomy}
-						checkedOnTop={metaBox.checkedOnTop}
-					/>;
+				//	case 'dropdown':
+				///		return <DropdownTerms
+				//			key={index} taxonomy={metaBox.taxonomy}
+				//			checkedOnTop={metaBox.checkedOnTop}
+				//		/>;
+				//	case 'simple':
+				//		return <SimpleTerms
+				//			key={index} taxonomy={metaBox.taxonomy}
+				//			checkedOnTop={metaBox.checkedOnTop}
+				//		/>;
 			}
 			return null;
 		} )}

@@ -3,6 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy\Meta_Box;
 
+use Lipe\Lib\Libs\Scripts;
+use Lipe\Lib\Libs\Scripts\ScriptHandles;
 use Lipe\Lib\Taxonomy\Meta_Box;
 use Lipe\Lib\Util\Arrays;
 
@@ -16,6 +18,11 @@ class Gutenberg_Box implements \JsonSerializable {
 	public const TYPE_RADIO    = 'radio';
 	public const TYPE_DROPDOWN = 'dropdown';
 	public const TYPE_SIMPLE   = 'simple';
+
+	/**
+	 * @var array<Gutenberg_Box>
+	 */
+	protected static array $boxes = [];
 
 
 	/**
@@ -36,6 +43,8 @@ class Gutenberg_Box implements \JsonSerializable {
 		protected bool $checked_ontop
 	) {
 		$this->add_to_js_config();
+
+		add_action( 'enqueue_block_assets', [ $this, 'load_script' ], 11 );
 	}
 
 
@@ -45,20 +54,32 @@ class Gutenberg_Box implements \JsonSerializable {
 	 * @return void
 	 */
 	protected function add_to_js_config(): void {
-		add_filter( 'lipe/lib/libs/scripts/js-config', function( array $config ): array {
-			if ( isset( $config['taxonomyMetaBoxes'] ) ) {
-				$i = Arrays::in()->find_index( $config['taxonomyMetaBoxes'], fn( Gutenberg_Box $box ) => $box->taxonomy === $this->taxonomy );
-				if ( null !== $i ) {
-					$config['taxonomyMetaBoxes'][ $i ] = $this;
-				} else {
-					$config['taxonomyMetaBoxes'][] = $this;
-				}
-			} else {
-				$config['taxonomyMetaBoxes'] = [ $this ];
-			}
+		$i = Arrays::in()->find_index( static::$boxes, fn( Gutenberg_Box $box ) => $box->taxonomy === $this->taxonomy );
+		if ( null !== $i ) {
+			static::$boxes[ $i ] = $this;
+		} else {
+			static::$boxes[] = $this;
+		}
+	}
 
-			return $config;
-		} );
+
+	/**
+	 * Load the script for the meta boxes and localize it one time.
+	 *
+	 * We only localize this once because multiple calls will append the
+	 * config multiple times.
+	 *
+	 * @note `enqueue_block_assets` gets called 2x per each page, once for the
+	 * editor iframe and one for the admin so this must be allowed to run multiple times.
+	 *
+	 * @return void
+	 */
+	public function load_script(): void {
+		Scripts::in()->enqueue_script( ScriptHandles::META_BOXES );
+
+		if ( false === wp_scripts()->get_data( ScriptHandles::META_BOXES->value, 'data' ) ) {
+			wp_localize_script( ScriptHandles::META_BOXES->value, 'LIPE_LIBS_META_BOXES', static::$boxes );
+		}
 	}
 
 

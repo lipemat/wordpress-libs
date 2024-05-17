@@ -1,13 +1,14 @@
 import type {TaxonomyMetaBox} from './gutenberg/meta-boxes/Taxonomy';
 
 type JSConfig = {
-	isGutenberg: '' | '1';
-	taxonomyMetaBoxes?: TaxonomyMetaBox[];
+	taxonomyMetaBoxes: TaxonomyMetaBox[];
 }
 
 declare global {
 	interface Window {
-		LIPE_LIBS_CONFIG: JSConfig;
+		LIPE_LIBS_META_BOXES?: TaxonomyMetaBox[];
 	}
 }
-export const CONFIG: JSConfig = window.LIPE_LIBS_CONFIG;
+export const CONFIG: JSConfig = {
+	taxonomyMetaBoxes: window.LIPE_LIBS_META_BOXES ?? [],
+};

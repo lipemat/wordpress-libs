@@ -26,6 +26,7 @@
 .yarn export-ignore
 .yarnrc.yml export-ignore
 /js/src export-ignore
+config export-ignore
 package.json export-ignore
 tsconfig.json export-ignore
 yarn.lock export-ignore

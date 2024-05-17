@@ -6,9 +6,8 @@ import {autoloadPlugins} from '@lipemat/js-boilerplate-gutenberg';
  *
  * Will load from specified directory recursively.
  */
-export default () => {
-	// Load all meta boxes.
-	if ( typeof window.wp?.editPost !== 'undefined' ) {
-		autoloadPlugins( () => require.context( './meta-boxes', true, /index\.tsx$/ ), module );
-	}
+
+// Load all meta boxes.
+if ( typeof window.wp?.editPost !== 'undefined' ) {
+	autoloadPlugins( () => require.context( './gutenberg/meta-boxes', true, /index\.tsx$/ ), module );
 }
