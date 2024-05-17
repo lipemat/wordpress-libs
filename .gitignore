@@ -1,13 +1,12 @@
 ################################
 #
-# @version 6.2.0
+# @version 6.2.1
 #
 ################################
 
 # Project specific
 /vendor
 composer.lock
-js/dist
 
 
 # system/hidden files
@@ -26,6 +25,7 @@ js/dist
 .phpunit.result.cache
 .project
 .ready
+.running
 .sass-cache
 .stylelintcache
 .svn

@@ -14,7 +14,7 @@
     "dist": "lipemat-js-boilerplate dist",
     "lint": "lipemat-js-boilerplate lint",
     "postinstall": "lipemat-js-boilerplate fix-pnp",
-    "start": "lipemat-js-boilerplate start",
+    "start": "node -e \"console.error('lipemat-js-boilerplate may be called, but be sure to `dist` before committing.')\"",
     "test": "lipemat-js-boilerplate test"
   },
   "certificates": {

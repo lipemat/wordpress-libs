@@ -1,0 +1,22 @@
+{
+  "meta-boxes.js": {
+    "src": "meta-boxes.js",
+    "integrity": "sha384-ez+SIcoJN0Kof19elBB2a7U5o9o652zBlnfi/uvDZ4aL7SNNKgfYrlTYmVHKnoCZ",
+    "hash": "0293235dc053048f3e65"
+  },
+  "meta-boxes.js.LICENSE.txt": {
+    "src": "meta-boxes.js.LICENSE.txt",
+    "integrity": "sha384-BZVRCu2LkUxpwrXPADJ/nbstUaV7F3zuwumyZqeOWnJ72x1eUOSK1QVsuhCOZo90",
+    "hash": "345b5b38c25d19b94cda"
+  },
+  "meta-boxes.js.br": {
+    "src": "meta-boxes.js.br",
+    "integrity": "sha384-XVUEn7CFbzI/4Ne6yEVR70mTYZQHsErG/jUXB3e2qgeZqG43VqJs4sRP91Ofxp+J",
+    "hash": "4e30546fe9babbf91a84"
+  },
+  "meta-boxes.js.map": {
+    "src": "meta-boxes.js.map",
+    "integrity": "sha384-E+DAUcB+r2HkDkvY3ZyWOIdb7rqV+f1R0xdZBEJS98jETb+Y1QO37unAwFBY8yrh",
+    "hash": "8e1d58c6f15fb4195b63"
+  }
+}

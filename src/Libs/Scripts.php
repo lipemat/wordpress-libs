@@ -46,7 +46,7 @@ class Scripts {
 	public function enqueue_script( ScriptHandles $script ): void {
 		$dir = plugin_dir_url( \dirname( __DIR__ ) ) . 'js/dist/';
 		if ( SCRIPT_DEBUG && $this->is_webpack_running() ) {
-			$dir = set_url_scheme( 'https://' . sanitize_text_field( \wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) . ':3000/js/dist/' );
+			$dir = set_url_scheme( 'https://starting-point.loc:3000/js/dist/' );
 		}
 		wp_enqueue_script( $script->value, "{$dir}{$script->file()}.js", [], $this->get_version(), [
 			'in_footer' => true,

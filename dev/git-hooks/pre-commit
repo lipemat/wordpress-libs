@@ -140,21 +140,6 @@ function js_lint() {
 }
 js_lint &
 
-function css_lint() {
-    if [[ "$RESOURCE_FILES" ]]; then
-        echo "${YELLOW}[pre-commit]${BLUE} Running CSS Lint... ${WHITE}"
-        OUTPUT=$(yarn stylelint js/src/**/*.pcss --cache 2>&1)
-        if [[ $? != 0 ]]; then
-            echo
-            echo "${BLUE}CSS Lint failed. Fix the error before commit!"
-            echo "${RED}$OUTPUT"
-            exit_reset_colors
-        fi
-        echo "${YELLOW}[pre-commit]${GREEN} CSS Lint Passed!${RESET_COLOR}"
-    fi
-}
-css_lint &
-
 # Go through each background task
 # If it sent exit code 1, it failed and the result from `wait` will be false.
 FAIL=0
