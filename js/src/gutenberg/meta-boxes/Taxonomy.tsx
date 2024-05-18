@@ -1,6 +1,10 @@
 import {CONFIG} from '../../config';
 import RadioTerms from './Taxonomy/RadioTerms';
 import DropdownTerms from './Taxonomy/DropdownTerms';
+import {type ComponentType} from 'react';
+import WithTaxonomyPanel, {type FromPanel} from '../higher-order/WithTaxonomyPanel';
+import SimpleTerms from './Taxonomy/SimpleTerms';
+
 
 export type TaxonomyMetaBox = {
 	type: 'radio' | 'dropdown' | 'simple';
@@ -10,28 +14,27 @@ export type TaxonomyMetaBox = {
 
 type Props = {};
 
+
 const Taxonomy = ( {}: Props ) => {
 	return ( <>
-		{CONFIG.taxonomyMetaBoxes?.map( ( metaBox, index ) => {
+		{CONFIG.taxonomyMetaBoxes?.map( ( metaBox: TaxonomyMetaBox ) => {
+			let component: ComponentType<FromPanel> | null = null;
 			switch ( metaBox.type ) {
 				case 'radio':
-					return <RadioTerms
-						key={index}
-						taxonomy={metaBox.taxonomy}
-						checkedOnTop={metaBox.checkedOnTop}
-					/>;
+					component = RadioTerms;
+					break;
 				case 'dropdown':
-					return <DropdownTerms
-						key={index} taxonomy={metaBox.taxonomy}
-						checkedOnTop={metaBox.checkedOnTop}
-					/>;
-				//	case 'simple':
-				//		return <SimpleTerms
-				//			key={index} taxonomy={metaBox.taxonomy}
-				//			checkedOnTop={metaBox.checkedOnTop}
-				//		/>;
+					component = DropdownTerms;
+					break;
+				case 'simple':
+					component = SimpleTerms;
+					break;
 			}
-			return null;
+
+			return WithTaxonomyPanel( component, {
+				taxonomy: metaBox.taxonomy,
+				checkedOnTop: metaBox.checkedOnTop,
+			} );
 		} )}
 	</> );
 };

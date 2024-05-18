@@ -21,10 +21,13 @@ enum ScriptHandles: string {
 	public function dependencies(): array {
 		return match ( $this ) {
 			self::META_BOXES => [
+				'react',
 				'wp-components',
+				'wp-core-data',
 				'wp-data',
 				'wp-edit-post',
 				'wp-i18n',
+				'wp-plugins',
 			],
 		};
 	}

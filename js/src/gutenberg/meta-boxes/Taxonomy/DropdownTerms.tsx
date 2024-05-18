@@ -1,11 +1,8 @@
+import type {FromPanel} from '../../higher-order/WithTaxonomyPanel';
+
 import styles from './dropdown-terms.pcss';
 
-type Props = {
-	taxonomy: string;
-	checkedOnTop: boolean;
-};
-
-const DropdownTerms = ( {}: Props ) => {
+const DropdownTerms = ( {}: FromPanel ) => {
 	return (
 		<div className={styles.wrap}>
 			#### START HERE ######
