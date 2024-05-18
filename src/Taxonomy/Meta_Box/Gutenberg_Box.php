@@ -44,7 +44,7 @@ class Gutenberg_Box implements \JsonSerializable {
 	) {
 		$this->add_to_js_config();
 
-		add_action( 'enqueue_block_assets', [ $this, 'load_script' ], 11 );
+		add_action( 'enqueue_block_assets', [ $this, 'load_script' ], 25 );
 	}
 
 
@@ -71,6 +71,8 @@ class Gutenberg_Box implements \JsonSerializable {
 	 *
 	 * @note `enqueue_block_assets` gets called 2x per each page, once for the
 	 * editor iframe and one for the admin so this must be allowed to run multiple times.
+	 *
+	 * @action enqueue_block_assets 25 0
 	 *
 	 * @return void
 	 */

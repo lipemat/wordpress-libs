@@ -87,16 +87,6 @@ class Meta_Box {
 			remove_meta_box( "tagsdiv-{$this->taxonomy}", $post_type, 'side' );
 		}
 
-		// Remove default meta box from block editor.
-		wp_add_inline_script(
-			'wp-edit-post',
-			\sprintf(
-			// @todo Remove `core/edit-post` fallback when minimum WP version is 6.5.
-				'if( "function" === typeof wp.data.dispatch("core/editor").removeEditorPanel ) {typeof wp.data.dispatch("core/editor").removeEditorPanel( "taxonomy-panel-%1$s" ) } else { wp.data.dispatch( "core/edit-post" ).removeEditorPanel( "taxonomy-panel-%1$s" ) }',
-				$this->taxonomy
-			)
-		);
-
 		$label = 'simple' === $this->type ? $object->labels->name : $object->labels->singular_name;
 
 		$tax = get_taxonomy( $this->taxonomy );
@@ -104,6 +94,16 @@ class Meta_Box {
 			Gutenberg_Box::factory( $this );
 		} else {
 			add_meta_box( "{$this->taxonomy}div", $label, [ $this, 'do_meta_box' ], $post_type, 'side' );
+
+			// Remove default meta box from block editor. @see `removeDefaultMetaBox` for how we do this when using a gutenberg box.
+			wp_add_inline_script(
+				'wp-edit-post',
+				\sprintf(
+				// @todo Remove `core/edit-post` fallback when minimum WP version is 6.5.
+					'if( "function" === typeof wp.data.dispatch("core/editor").removeEditorPanel ) {typeof wp.data.dispatch("core/editor").removeEditorPanel( "taxonomy-panel-%1$s" ) } else { wp.data.dispatch( "core/edit-post" ).removeEditorPanel( "taxonomy-panel-%1$s" ) }',
+					$this->taxonomy
+				)
+			);
 		}
 	}
 
