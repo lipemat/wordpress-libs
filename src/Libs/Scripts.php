@@ -47,10 +47,20 @@ class Scripts {
 		$dir = plugin_dir_url( \dirname( __DIR__ ) ) . 'js/dist/';
 		if ( SCRIPT_DEBUG && $this->is_webpack_running() ) {
 			$dir = set_url_scheme( 'https://starting-point.loc:3000/js/dist/' );
+			wp_enqueue_script( 'lipe/lib/scripts/runtime', $dir . 'runtime.js', [], $this->get_version(), true );
 		}
+
 		wp_enqueue_script( $script->value, "{$dir}{$script->file()}.js", [], $this->get_version(), [
 			'in_footer' => true,
 		] );
+
+		// Only localize the script if it has not already been localized, so the variables do not double up.
+		if ( false === wp_scripts()->get_data( $script->value, 'data' ) ) {
+			$localized = $script->js_config();
+			foreach ( $localized as $name => $data ) {
+				wp_localize_script( $script->value, $name, $data );
+			}
+		}
 	}
 
 	/**
