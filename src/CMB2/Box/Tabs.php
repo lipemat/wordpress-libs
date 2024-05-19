@@ -3,6 +3,8 @@
 namespace Lipe\Lib\CMB2\Box;
 
 use Lipe\Lib\CMB2\Field;
+use Lipe\Lib\Libs\Scripts;
+use Lipe\Lib\Libs\Scripts\ScriptHandles;
 use Lipe\Lib\Theme\Class_Names;
 use Lipe\Lib\Traits\Singleton;
 use Lipe\Lib\Util\Url;
@@ -18,7 +20,7 @@ use Lipe\Lib\Util\Url;
 class Tabs {
 	use Singleton;
 
-	protected const TAB_FIELD = 'lipe/lib/cmb2/box/tabs/active-tab';
+	public const TAB_FIELD = 'lipe/lib/cmb2/box/tabs/active-tab';
 
 	/**
 	 * Current CMB2 instance
@@ -114,7 +116,7 @@ class Tabs {
 
 
 	/**
-	 * Render the tabs navigation.
+	 * Render the tabs' navigation.
 	 *
 	 * @param string $cmb_id   - The cmb2 box id.
 	 * @param int    $object_id - The object id.
@@ -127,10 +129,10 @@ class Tabs {
 		$tabs = $cmb->prop( 'tabs' );
 
 		if ( (bool) $tabs ) {
-			echo '<ul class="cmb-tab-nav">';
+			echo '<ul class="cmb-tab-nav" data-js="lipe/lib/cmb2/box/tabs">';
 
 			if ( empty( $_REQUEST[ self::TAB_FIELD ] ) ) { //phpcs:ignore
-				$active_nav = key( $tabs );
+				$active_nav = \key( $tabs );
 			} else {
 				//phpcs:ignore
 				$active_nav = esc_attr( sanitize_text_field( wp_unslash( $_REQUEST[ self::TAB_FIELD ] ) ) );
@@ -262,32 +264,10 @@ class Tabs {
 			return;
 		}
 		$displayed = true;
+
+		Scripts::in()->enqueue_script(ScriptHandles::ADMIN );
+
 		?>
-		<script>
-			jQuery( function( $ ){
-				'use strict';
-				$( '.cmb-tab-nav' ).on( 'click', 'a', function( e ){
-					e.preventDefault();
-					var $li = $( this ).parent(),
-						panel = $li.data( 'panel' ),
-						$wrapper = $li.parents( '.cmb-tabs' ).find( '.cmb2-wrap-tabs' ),
-						$panel = $wrapper.find( '[class*="cmb-tab-panel-' + panel + '"]' );
-
-					try {
-						var $redirect = $('[name="_wp_http_referer"]'),
-						url = new URL( $redirect.val() );
-						url.searchParams.set( '<?= esc_js( static::TAB_FIELD ) ?>', panel );
-						$redirect.val( url.toString() );
-					} catch( e ) {
-						console.error( e );
-					}
-
-					$li.addClass( 'cmb-tab-active' ).siblings().removeClass( 'cmb-tab-active' );
-					$wrapper.find( '.cmb-tab-panel' ).removeClass( 'show' );
-					$panel.addClass( 'show' );
-				} );
-			} );
-		</script>
 		<style>
 			/* <?= __FILE__ ?> */
 			.clearfix:after {
