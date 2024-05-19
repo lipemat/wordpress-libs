@@ -7,14 +7,13 @@
  * @see getEntries
  */
 
-export type EntriesConfig = {
+type EntriesConfig = {
 	[ file: string ]: string[];
 };
 
-const entries: EntriesConfig = {
-	'meta-boxes': [
-		'meta-boxes.ts',
-	],
+module.exports = function( config: EntriesConfig ): EntriesConfig {
+	config[ 'block-editor' ] = [
+		'block-editor.ts',
+	];
+	return config;
 };
-
-module.exports = entries;

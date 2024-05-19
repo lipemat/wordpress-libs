@@ -57,7 +57,7 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 		$post = $this->setup_check_default_meta_box( $tax, $post_type );
 
 		do_action( 'enqueue_block_assets' );
-		$this->assertFalse( wp_scripts()->query( ScriptHandles::META_BOXES->value ) );
+		$this->assertFalse( wp_scripts()->query( ScriptHandles::BLOCK_EDITOR->value ) );
 
 		new Meta_Box( 'test', Gutenberg_Box::TYPE_RADIO, true );
 		register_and_do_post_meta_boxes( $post );
@@ -65,12 +65,12 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 		$this->assertFalse( $wp_meta_boxes[ $post_type ]['side']['default']["{$tax->name}div"] ?? false );
 		$this->assertSame( '[{"type":"radio","taxonomy":"test","checkedOnTop":true}]', wp_json_encode( get_private_property( Gutenberg_Box::class, 'boxes' ) ) );
 		do_action( 'enqueue_block_assets' );
-		$this->assertInstanceOf( \_WP_Dependency::class, wp_scripts()->query( ScriptHandles::META_BOXES->value ) );
+		$this->assertInstanceOf( \_WP_Dependency::class, wp_scripts()->query( ScriptHandles::BLOCK_EDITOR->value ) );
 
 		new Meta_Box( 'test', Gutenberg_Box::TYPE_DROPDOWN, false );
 		register_and_do_post_meta_boxes( $post );
 		$this->assertSame( '[{"type":"dropdown","taxonomy":"test","checkedOnTop":false}]', wp_json_encode( get_private_property( Gutenberg_Box::class, 'boxes' ) ) );
-		$this->assertSame( 'var LIPE_LIBS_META_BOXES = [{"type":"radio","taxonomy":"test","checkedOnTop":true}];', wp_scripts()->get_data( ScriptHandles::META_BOXES->value, 'data' ) );
+		$this->assertSame( 'var LIPE_LIBS_BLOCK_EDITOR_CONFIG = {"taxonomyMetaBoxes":[{"type":"radio","taxonomy":"test","checkedOnTop":true}]};', wp_scripts()->get_data( ScriptHandles::BLOCK_EDITOR->value, 'data' ) );
 
 		register_taxonomy( 'again', $post->post_type, [
 			'show_in_rest' => true,
@@ -82,12 +82,12 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 		register_and_do_post_meta_boxes( $post );
 		do_action( 'enqueue_block_assets' );
 		$this->assertSame( '[{"type":"dropdown","taxonomy":"test","checkedOnTop":false},{"type":"radio","taxonomy":"again","checkedOnTop":false}]', wp_json_encode( get_private_property( Gutenberg_Box::class, 'boxes' ) ) );
-		$this->assertSame( 'var LIPE_LIBS_META_BOXES = [{"type":"radio","taxonomy":"test","checkedOnTop":true}];', wp_scripts()->get_data( ScriptHandles::META_BOXES->value, 'data' ) );
+		$this->assertSame( 'var LIPE_LIBS_BLOCK_EDITOR_CONFIG = {"taxonomyMetaBoxes":[{"type":"radio","taxonomy":"test","checkedOnTop":true}]};', wp_scripts()->get_data( ScriptHandles::BLOCK_EDITOR->value, 'data' ) );
 
-		wp_scripts()->registered[ ScriptHandles::META_BOXES->value ]->extra['data'] = false;
+		wp_scripts()->registered[ ScriptHandles::BLOCK_EDITOR->value ]->extra['data'] = false;
 		register_and_do_post_meta_boxes( $post );
 		do_action( 'enqueue_block_assets' );
-		$this->assertSame( 'var LIPE_LIBS_META_BOXES = [{"type":"dropdown","taxonomy":"test","checkedOnTop":false},{"type":"radio","taxonomy":"again","checkedOnTop":false}];', wp_scripts()->get_data( ScriptHandles::META_BOXES->value, 'data' ) );
+		$this->assertSame( 'var LIPE_LIBS_BLOCK_EDITOR_CONFIG = {"taxonomyMetaBoxes":[{"type":"dropdown","taxonomy":"test","checkedOnTop":false},{"type":"radio","taxonomy":"again","checkedOnTop":false}]};', wp_scripts()->get_data( ScriptHandles::BLOCK_EDITOR->value, 'data' ) );
 	}
 
 

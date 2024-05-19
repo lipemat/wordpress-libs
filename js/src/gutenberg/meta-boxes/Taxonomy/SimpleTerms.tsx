@@ -1,4 +1,4 @@
-import type {FromPanel} from '../../higher-order/WithTaxonomyPanel';
+import type {FromPanel} from './WithTaxonomyPanel';
 
 import styles from './simple-terms.pcss';
 

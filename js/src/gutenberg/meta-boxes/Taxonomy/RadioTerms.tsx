@@ -1,5 +1,5 @@
 import {RadioControl} from '@wordpress/components';
-import type {FromPanel} from '../../higher-order/WithTaxonomyPanel';
+import type {FromPanel} from './WithTaxonomyPanel';
 
 import styles from './radio.pcss';
 

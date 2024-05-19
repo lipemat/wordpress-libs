@@ -64,10 +64,7 @@ class Gutenberg_Box implements \JsonSerializable {
 
 
 	/**
-	 * Load the script for the meta boxes and localize it one time.
-	 *
-	 * We only localize this once because multiple calls will append the
-	 * config multiple times.
+	 * Load the script for the block editor meta boxes.
 	 *
 	 * @note `enqueue_block_assets` gets called 2x per each page, once for the
 	 * editor iframe and one for the admin so this must be allowed to run multiple times.
@@ -77,11 +74,7 @@ class Gutenberg_Box implements \JsonSerializable {
 	 * @return void
 	 */
 	public function load_script(): void {
-		Scripts::in()->enqueue_script( ScriptHandles::META_BOXES );
-
-		if ( false === wp_scripts()->get_data( ScriptHandles::META_BOXES->value, 'data' ) ) {
-			wp_localize_script( ScriptHandles::META_BOXES->value, 'LIPE_LIBS_META_BOXES', static::$boxes );
-		}
+		Scripts::in()->enqueue_script( ScriptHandles::BLOCK_EDITOR );
 	}
 
 
@@ -100,6 +93,15 @@ class Gutenberg_Box implements \JsonSerializable {
 		];
 	}
 
+
+	/**
+	 * Public access to the boxes.
+	 *
+	 * @return Gutenberg_Box[]
+	 */
+	public static function get_boxes(): array {
+		return static::$boxes;
+	}
 
 	/**
 	 * Public access to constructing a new instance.

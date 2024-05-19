@@ -57,6 +57,7 @@ export default function WithTaxonomyPanel(
 
 	return (
 		<PluginDocumentSettingPanel
+			key={taxonomy}
 			name={sprintf( 'lipe/libs/meta-boxes/taxonomy/%1$s', taxonomy )}
 			title={tax?.name ?? __( 'Loading…', 'lipe' )}
 			icon={tax?.name === undefined ? 'download' : null}
