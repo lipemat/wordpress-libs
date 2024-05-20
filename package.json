@@ -12,7 +12,7 @@
     "analyze": "lipemat-js-boilerplate analyze",
     "browserslist": "lipemat-js-boilerplate browserslist",
     "dist": "lipemat-js-boilerplate dist",
-    "lint": "lipemat-js-boilerplate lint",
+    "lint": "lipemat-js-boilerplate lint && stylelint js/src/**/*.pcss --fix --cache",
     "postinstall": "lipemat-js-boilerplate fix-pnp",
     "start": "node -e \"console.error('lipemat-js-boilerplate may be called, but be sure to `dist` before committing.')\"",
     "test": "lipemat-js-boilerplate test"
@@ -25,11 +25,13 @@
     "@lipemat/eslint-config": "^3.2.1",
     "@lipemat/js-boilerplate": "^10.9.0",
     "@lipemat/js-boilerplate-gutenberg": "^3.3.3",
+    "@lipemat/stylelint-config": "^2.2.1",
     "@types/lipemat__js-boilerplate": "lipemat/types-js-boilerplate#semver:^2.11.1",
     "@types/node": "^18",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18",
     "eslint": "^8",
+    "stylelint": "^14",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.3"
   },
