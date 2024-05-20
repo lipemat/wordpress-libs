@@ -46,9 +46,9 @@ class Meta_Box {
 	 *
 	 * @phpstan-param Gutenberg_Box::TYPE_* $type
 	 *
-	 * @param string                              $taxonomy      - The taxonomy slug.
-	 * @param string                              $type          - The type of meta box.
-	 * @param bool                                $checked_ontop - Move checked items to top.
+	 * @param string                        $taxonomy      - The taxonomy slug.
+	 * @param string                        $type          - The type of meta box.
+	 * @param bool                          $checked_ontop - Move checked items to top.
 	 */
 	public function __construct( string $taxonomy, string $type, bool $checked_ontop ) {
 		$this->taxonomy = $taxonomy;
@@ -111,7 +111,7 @@ class Meta_Box {
 	/**
 	 * Displays the custom meta box on the post editing screen.
 	 *
-	 * @param \WP_Post            $post     The post object.
+	 * @param \WP_Post $post The post object.
 	 */
 	public function do_meta_box( \WP_Post $post ): void {
 		$object = get_taxonomy( $this->taxonomy );
@@ -139,75 +139,74 @@ class Meta_Box {
 					esc_html( $object->labels->singular_name )
 				);
 
-				$dropdown_args = [
-					'option_none_value' => ( is_taxonomy_hierarchical( $this->taxonomy ) ? '-1' : '' ),
-					'show_option_none'  => $object->labels->no_item,
-					'hide_empty'        => false,
-					'hierarchical'      => true,
-					'show_count'        => false,
-					'orderby'           => 'name',
-					'selected'          => \count( $selected ) < 1 ? 0 : \reset( $selected ),
-					'id'                => "{$this->taxonomy}dropdown",
-					'name'              => is_taxonomy_hierarchical( $this->taxonomy ) ? "tax_input[{$this->taxonomy}][]" : "tax_input[{$this->taxonomy}]",
-					'taxonomy'          => $this->taxonomy,
-				];
+				$args = new WP_Dropdown_Categories();
+				$args->option_none_value = ( is_taxonomy_hierarchical( $this->taxonomy ) ? '-1' : '' );
+				$args->show_option_none = $object->labels->no_item;
+				$args->hide_empty = false;
+				$args->hierarchical = true;
+				$args->orderby = 'name';
+				$args->selected = \count( $selected ) < 1 ? 0 : \reset( $selected );
+				$args->id = "{$this->taxonomy}dropdown";
+				$args->name = is_taxonomy_hierarchical( $this->taxonomy ) ? "tax_input[{$this->taxonomy}][]" : "tax_input[{$this->taxonomy}]";
+				$args->taxonomy = $this->taxonomy;
 
-				wp_dropdown_categories( $dropdown_args );
+				wp_dropdown_categories( $args->get_args() );
 			} else {
 				?>
-					<style>
-						/* Style for the 'none' item: */
-						#<?= esc_attr( $this->taxonomy ) ?>-0 {
-							color: #888;
-							border-top: 1px solid #eee;
-							margin-top: 5px;
-							padding-top: 5px;
-						}
+				<style>
+					/* Style for the 'none' item: */
+					#<?= esc_attr( $this->taxonomy ) ?>-0 {
+						color: #888;
+						border-top: 1px solid #eee;
+						margin-top: 5px;
+						padding-top: 5px;
+					}
 
-						/* Remove Genesis "Select / Deselect All" button. */
-						.lipe-libs-terms-box #genesis-category-checklist-toggle {
-							display: none;
-						}
-					</style>
+					/* Remove Genesis "Select / Deselect All" button. */
+					.lipe-libs-terms-box #genesis-category-checklist-toggle {
+						display: none;
+					}
+				</style>
 
-					<input type="hidden" name="tax_input[<?php echo esc_attr( $this->taxonomy ); ?>][]" value="0" />
+				<input type="hidden" name="tax_input[<?php echo esc_attr( $this->taxonomy ); ?>][]" value="0" />
 
-					<ul
-						id="<?= esc_attr( $this->taxonomy ) ?>checklist"
-						class="list:<?= esc_attr( $this->taxonomy ) ?> categorychecklist form-no-clear">
-						<?php
-
-						// Output the terms.
-						wp_terms_checklist(
-							$post->ID,
-							[
-								'taxonomy'      => $this->taxonomy,
-								'walker'        => $walker,
-								'selected_cats' => $selected,
-								'checked_ontop' => $this->checked_ontop,
-							]
-						);
-
-						// Output the 'none' item.
-						$output = '';
-						$o = (object) [
-							'term_id' => 0,
-							'name'    => $object->labels->no_item,
-							'slug'    => 'none',
-						];
-						$args = [
-							'taxonomy'      => $this->taxonomy,
-							'selected_cats' => \count( $selected ) < 1 ? [ 0 ] : $selected,
-							'disabled'      => false,
-						];
-						$walker->start_el( $output, $o, 1, $args );
-						$walker->end_el( $output, $o, 1, $args );
-
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						echo $output;
-						?>
-					</ul>
+				<ul
+					id="<?= esc_attr( $this->taxonomy ) ?>checklist"
+					class="list:<?= esc_attr( $this->taxonomy ) ?> categorychecklist form-no-clear"
+				>
 					<?php
+
+					// Output the terms.
+					wp_terms_checklist(
+						$post->ID,
+						[
+							'taxonomy'      => $this->taxonomy,
+							'walker'        => $walker,
+							'selected_cats' => $selected,
+							'checked_ontop' => $this->checked_ontop,
+						]
+					);
+
+					// Output the 'none' item.
+					$output = '';
+					$o = (object) [
+						'term_id' => 0,
+						'name'    => $object->labels->no_item,
+						'slug'    => 'none',
+					];
+					$args = [
+						'taxonomy'      => $this->taxonomy,
+						'selected_cats' => \count( $selected ) < 1 ? [ 0 ] : $selected,
+						'disabled'      => false,
+					];
+					$walker->start_el( $output, $o, 1, $args );
+					$walker->end_el( $output, $o, 1, $args );
+
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo $output;
+					?>
+				</ul>
+				<?php
 			}
 			?>
 		</div>
@@ -227,11 +226,11 @@ class Meta_Box {
 				/**
 				 * Starts the element output.
 				 *
-				 * @param string $output            Passed by reference. Used to append additional content.
-				 * @param \WP_Term $data_object     The current item's term data object.
-				 * @param int    $depth             Depth of the current item.
-				 * @param array  $args              An array of arguments.
-				 * @param int    $current_object_id ID of the current item.
+				 * @param string   $output            Passed by reference. Used to append additional content.
+				 * @param \WP_Term $data_object       The current item's term data object.
+				 * @param int      $depth             Depth of the current item.
+				 * @param array    $args              An array of arguments.
+				 * @param int      $current_object_id ID of the current item.
 				 *
 				 * @return void
 				 */
@@ -247,16 +246,25 @@ class Meta_Box {
 					}
 					$checked = \in_array( $data_object->term_id, $args['selected_cats'], true );
 
-					// @todo Next time working on this, clean it up with `ob_start()`.
-					$output .= "\n<li id='{$args['taxonomy']}-{$data_object->term_id}'>" .
-								'<label class="selectit">' .
-								'<input value="' . esc_attr( (string) $value ) . '" type="radio" name="tax_input[' . esc_attr( $args['taxonomy'] ) . '][]" ' .
-								'id="in-' . esc_attr( $args['taxonomy'] ) . '-' . esc_attr( (string) $data_object->term_id ) . '"' .
-								checked( $checked, true, false ) .
-								' /> ' .
-					           //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-								esc_html( apply_filters( 'the_category', $data_object->name ) ) .
-								'</label>';
+					ob_start();
+					?>
+					<li id="<?= esc_attr( $args['taxonomy'] ) . '-' . esc_attr( (string) $data_object->term_id ) ?>">
+						<label>
+							<input
+								value="<?= esc_attr( (string) $value ) ?>"
+								type="radio"
+								name="tax_input[<?= esc_attr( $args['taxonomy'] ) ?>][]"
+								id="in-<?= esc_attr( $args['taxonomy'] ) . '-' . esc_attr( (string) $data_object->term_id ) ?>"
+								<?= checked( $checked, true, false ) ?>
+							/>
+							<?php
+							// phpcs:ignore WordPress.NamingConventions -- Using WP core filter.
+							echo esc_html( apply_filters( 'the_category', $data_object->name ) );
+							?>
+						</label>
+					</li>
+					<?php
+					$output .= ob_get_clean();
 				}
 			};
 		}

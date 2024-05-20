@@ -11,10 +11,11 @@ parameters:
     lipemat:
         noExtends: true
         allowedToBeExtended:
-            - Lipe\Lib\Query\Args
-            - Lipe\Lib\Meta\Translate_Abstract
             - Lipe\Lib\CMB2\Box
             - Lipe\Lib\CMB2\Field
+            - Lipe\Lib\Meta\Translate_Abstract
+            - Lipe\Lib\Query\Args
+            - Lipe\Lib\Taxonomy\Get_Terms
         nonDistributed: false
     strictRules:
         allRules: true
