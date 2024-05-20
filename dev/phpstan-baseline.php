@@ -1221,7 +1221,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
-	'message' => '#^Method class@anonymous/Taxonomy/Meta_Box\\.php\\:225\\:\\:start_el\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
+	'message' => '#^Method class@anonymous/Taxonomy/Meta_Box\\.php\\:242\\:\\:start_el\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Taxonomy/Meta_Box.php',
 ];
@@ -1272,6 +1272,12 @@ $ignoreErrors[] = [
 	'message' => '#^Property Lipe\\\\Lib\\\\Taxonomy\\\\Taxonomy\\:\\:\\$show_in_menu type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Taxonomy/Taxonomy.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.iterableValue
+	'message' => '#^Method Lipe\\\\Lib\\\\Taxonomy\\\\Wp_Terms_Checklist\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Taxonomy/Wp_Terms_Checklist.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue

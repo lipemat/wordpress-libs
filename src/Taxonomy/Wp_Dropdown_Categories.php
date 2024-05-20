@@ -11,7 +11,7 @@ namespace Lipe\Lib\Taxonomy;
  * @author Mat Lipe
  * @since  4.10.0
  */
-class WP_Dropdown_Categories extends Get_Terms {
+class Wp_Dropdown_Categories extends Get_Terms {
 	public const FIELD_TERM_ID     = 'term_id';
 	public const FIELD_NAME        = 'name';
 	public const FIELD_SLUG        = 'slug';
