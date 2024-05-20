@@ -109,6 +109,24 @@ class Meta_Box {
 
 
 	/**
+	 * The meta box `tax_input` fields are seen as string which will create
+	 * new terms using the id as the name for non-hierarchical taxonomies.
+	 *
+	 * Translating the string term ids to int will save the terms correctly.
+	 *
+	 * @see Taxonomy::meta_box
+	 *
+	 * @param string   $taxonomy - Same taxonomy which was used to create the meta box.
+	 * @param string[] $terms    - The term ids as strings.
+	 *
+	 * @return int[]
+	 */
+	public function translate_string_term_ids_to_int( string $taxonomy, array $terms ): array {
+		return \array_map( '\intval', $terms );
+	}
+
+
+	/**
 	 * Displays the custom meta box on the post editing screen.
 	 *
 	 * @param \WP_Post $post The post object.
@@ -124,7 +142,6 @@ class Meta_Box {
 		if ( is_wp_error( $selected ) ) {
 			return;
 		}
-		$walker = $this->get_walker();
 		if ( ! isset( $object->labels->no_item ) || '' === $object->labels->no_item ) {
 			$object->labels->no_item = esc_html__( 'Not specified', 'lipe' );
 		}
@@ -139,7 +156,7 @@ class Meta_Box {
 					esc_html( $object->labels->singular_name )
 				);
 
-				$args = new WP_Dropdown_Categories();
+				$args = new Wp_Dropdown_Categories();
 				$args->option_none_value = ( is_taxonomy_hierarchical( $this->taxonomy ) ? '-1' : '' );
 				$args->show_option_none = $object->labels->no_item;
 				$args->hide_empty = false;
@@ -168,24 +185,24 @@ class Meta_Box {
 					}
 				</style>
 
-				<input type="hidden" name="tax_input[<?php echo esc_attr( $this->taxonomy ); ?>][]" value="0" />
+				<input type="hidden" name="tax_input[<?= esc_attr( $this->taxonomy ) ?>][]" value="0" />
 
 				<ul
 					id="<?= esc_attr( $this->taxonomy ) ?>checklist"
 					class="list:<?= esc_attr( $this->taxonomy ) ?> categorychecklist form-no-clear"
+					data-js="lipe/lib/taxonomy/terms-checklist"
 				>
 					<?php
+					$walker = $this->get_walker();
+
+					$args = new Wp_Terms_Checklist();
+					$args->taxonomy = $this->taxonomy;
+					$args->selected_cats = $selected;
+					$args->checked_ontop = $this->checked_ontop;
+					$args->walker = $walker;
 
 					// Output the terms.
-					wp_terms_checklist(
-						$post->ID,
-						[
-							'taxonomy'      => $this->taxonomy,
-							'walker'        => $walker,
-							'selected_cats' => $selected,
-							'checked_ontop' => $this->checked_ontop,
-						]
-					);
+					wp_terms_checklist( $post->ID, $args->get_args() );
 
 					// Output the 'none' item.
 					$output = '';
