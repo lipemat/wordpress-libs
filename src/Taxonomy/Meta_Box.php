@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Taxonomy;
 
 use Lipe\Lib\Libs\Scripts;
+use Lipe\Lib\Libs\Scripts\ScriptHandles;
 use Lipe\Lib\Taxonomy\Meta_Box\Gutenberg_Box;
 
 /**
@@ -169,6 +170,7 @@ class Meta_Box {
 
 				wp_dropdown_categories( $args->get_args() );
 			} else {
+				Scripts::in()->enqueue_script( ScriptHandles::ADMIN );
 				?>
 				<style>
 					/* Style for the 'none' item: */

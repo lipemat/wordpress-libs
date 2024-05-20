@@ -1,14 +1,19 @@
+import {SelectControl} from '@wordpress/components';
 import type {FromPanel} from './WithTaxonomyPanel';
 
-import styles from './dropdown-terms.pcss';
+const DropdownTerms = ( {assigned, setAssigned, terms, tax}: FromPanel ) => {
+	const options = terms.map( term => ( {label: term.name, value: term.id.toString()} ) );
+	options.unshift( {label: `- ${tax?.labels.no_terms ?? 'None'} -`, value: '0'} );
 
-const DropdownTerms = ( {}: FromPanel ) => {
 	return (
-		<div className={styles.wrap}>
-			#### START HERE ######
+		<SelectControl
+			value={( assigned[ 0 ] ?? 0 ).toString()}
+			options={options}
+			onChange={state => {
+				setAssigned( '0' === state ? [] : [ parseInt( state ) ] );
+			}}
+		/>
 
-			Populate the Dropdown and Simple Terms components.
-		</div>
 	);
 };
 

@@ -1,13 +1,13 @@
 import {PluginDocumentSettingPanel} from '@wordpress/edit-post';
-import {PanelRow} from '@wordpress/components';
 import {__, sprintf} from '@wordpress/i18n';
 import {useEntityRecord, useEntityRecords} from '@wordpress/core-data';
-import {useEffect, type ComponentType, type PropsWithChildren} from 'react';
-import type {Tag} from '@wordpress/core-data/entities';
+import {type ComponentType, type PropsWithChildren, useEffect} from 'react';
+import type {Tag, Taxonomy} from '@wordpress/core-data/entities';
 import {useTerms} from '@lipemat/js-boilerplate-gutenberg';
 import {dispatch} from '@wordpress/data';
 
 export type FromPanel = {
+	tax: Taxonomy<'edit'> | null;
 	terms: Tag<'edit'>[]
 	assigned: number[]
 	setAssigned: ( ids: number[] ) => void;
@@ -43,7 +43,9 @@ export default function WithTaxonomyPanel(
 	const {taxonomy, checkedOnTop} = props;
 
 	const {record: tax} = useEntityRecord( 'root', 'taxonomy', taxonomy );
-	const {records: terms} = useEntityRecords( 'taxonomy', taxonomy as 'post_tag', {} );
+	const {records: terms} = useEntityRecords( 'taxonomy', taxonomy as 'post_tag', {
+		per_page: 100,
+	} );
 	const [ assigned, setAssigned ] = useTerms( taxonomy );
 
 	useEffect( () => {
@@ -62,13 +64,12 @@ export default function WithTaxonomyPanel(
 			title={tax?.name ?? __( 'Loading…', 'lipe' )}
 			icon={tax?.name === undefined ? 'download' : null}
 		>
-			<PanelRow>
-				<WrappedComponent
-					terms={terms ?? []}
-					assigned={assigned}
-					setAssigned={setAssigned}
-				/>
-			</PanelRow>
+			<WrappedComponent
+				tax={tax}
+				terms={terms ?? []}
+				assigned={assigned}
+				setAssigned={setAssigned}
+			/>
 		</PluginDocumentSettingPanel>
 	);
 }
