@@ -54,7 +54,13 @@ export default function WithTaxonomyPanel(
 
 
 	if ( checkedOnTop && Array.isArray( terms ) ) {
-		terms.sort( ( a: Tag<'edit'> ) => assigned.includes( a.id ) ? -1 : 1 );
+		terms.sort( ( a: Tag<'edit'>, b: Tag<'edit'> ) => {
+			const aIsAssigned = assigned.includes( a.id );
+			if ( aIsAssigned !== assigned.includes( b.id ) ) {
+				return aIsAssigned ? -1 : 1;
+			}
+			return a.name.localeCompare( b.name );
+		} );
 	}
 
 	return (
