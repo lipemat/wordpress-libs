@@ -346,7 +346,7 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#options
 	 *
-	 * @var  array
+	 * @var  array<string, string|bool|null>
 	 */
 	public array $options;
 
@@ -674,6 +674,13 @@ class Field {
 	 * @var ?string[]
 	 */
 	public ?array $protocols = null;
+
+	/**
+	 * Shorten a group's child field keys when displayed in REST API.
+	 *
+	 * @var string|bool
+	 */
+	public $rest_group_short;
 
 	/**
 	 * The data key. If using for posts, will be the post-meta key.
@@ -1235,9 +1242,29 @@ class Field {
 	 */
 	public function show_in_rest( $methods = \WP_REST_Server::ALLMETHODS ): Field {
 		if ( null !== $this->box && $this->box->is_group() ) {
-			_doing_it_wrong( __METHOD__, "Show in rest may only be added to whole group. Not a group's field .", '2.19.0' );
+			_doing_it_wrong( __METHOD__, wp_kses_post( "Show in rest may only be added to whole group. Not a group's field. `{$this->get_id()}` is not applicable." ), '2.19.0' );
 		}
 		$this->show_in_rest = $methods;
+		return $this;
+	}
+
+
+	/**
+	 * Historically, the full field keys were used for group child fields.
+	 *
+	 * Opt-in to shorten the field keys like we do for top level fields.
+	 *
+	 * @since 4.10.0
+	 *
+	 * @param bool|string $short - `true` to use shortened keys. A string to specify a custom key.
+	 *
+	 * @return Field
+	 */
+	public function rest_group_short( $short = true ): Field {
+		if ( null !== $this->box && ! $this->box->is_group() ) {
+			_doing_it_wrong( __METHOD__, wp_kses_post( "Group short fields only apply to a group's child field. `{$this->get_id()}` is not applicable." ), '4.10.0' );
+		}
+		$this->rest_group_short = $short;
 		return $this;
 	}
 
@@ -1613,6 +1640,17 @@ class Field {
 		}
 
 		return $args;
+	}
+
+
+	/**
+	 * Get the short name of a field for use in the REST API.
+	 *
+	 * @return string
+	 */
+	public function get_rest_short_name(): string {
+		$name = \explode( '/', $this->get_id() );
+		return \end( $name );
 	}
 
 

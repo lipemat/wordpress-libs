@@ -4,6 +4,7 @@ namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Group\Layout;
 use Lipe\Lib\Meta\Repo;
+use Lipe\Lib\Util\Arrays;
 
 /**
  * Group field type, which implement much of the
@@ -85,7 +86,7 @@ class Group extends Field {
 	/**
 	 * Group constructor.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
+	 * @link                     https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 * @internal
 	 *
 	 * @param string      $id                      - Field ID.
@@ -102,7 +103,7 @@ class Group extends Field {
 	 *
 	 * @phpstan-ignore-next-line -- Too many default arguments to account for.
 	 */
-	public function __construct( string $id, ?string $title, Box $box, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, bool $sortable = true, bool $closed = false, ?string $remove_confirm = null ) {
+	public function __construct( string $id, ?string $title, Box $box, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, ?bool $sortable = null, bool $closed = false, ?string $remove_confirm = null ) {
 		$this->type()->group( $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
 
 		parent::__construct( $id, $title, $box );
@@ -138,6 +139,43 @@ class Group extends Field {
 
 
 	/**
+	 * Set the group to be repeatable.
+	 *
+	 * Will enable sortable if not already specified as false when `\Lipe\Lib\CMB2\Field_Type::group` is called.
+	 *
+	 * @param bool    $repeatable   - Enable/disable repeatable support for this group.
+	 * @param ?string $add_row_text - Unused in group context. @deprecated.
+	 *
+	 * @return Field
+	 */
+	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ): Field {
+		$this->repeatable = $repeatable;
+
+		if ( ! isset( $this->options['sortable'] ) ) {
+			$this->options = \array_merge( $this->options, [ 'sortable' => $repeatable ] );
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Retrieve this field's arguments to be registered
+	 * with CMB2.
+	 *
+	 * @see Box::add_field_to_box()
+	 *
+	 * @return array
+	 */
+	public function get_field_args(): array {
+		$args = parent::get_field_args();
+		unset( $args['box'], $args['fields'] );
+
+		return $args;
+	}
+
+
+	/**
 	 * Assign a field to a group, then register it.
 	 *
 	 * @param Field $field - Field object.
@@ -159,22 +197,6 @@ class Group extends Field {
 		}
 
 		Repo::in()->register_field( $field );
-	}
-
-
-	/**
-	 * Retrieve this field's arguments to be registered
-	 * with CMB2.
-	 *
-	 * @see Box::add_field_to_box()
-	 *
-	 * @return array
-	 */
-	public function get_field_args(): array {
-		$args = parent::get_field_args();
-		unset( $args['box'], $args['fields'] );
-
-		return $args;
 	}
 
 
@@ -209,11 +231,12 @@ class Group extends Field {
 		if ( (bool) $this->show_in_rest && $this->is_public_rest_data( $this ) ) {
 			$properties = [];
 			foreach ( $this->get_fields() as $field ) {
-				$properties[ $field->get_id() ] = [
+				$field_id = $this->translate_sub_field_rest_key( $field );
+				$properties[ $field_id ] = [
 					'type' => 'string',
 				];
 				if ( $field->is_using_array_data() ) {
-					$properties[ $field->get_id() ] = [
+					$properties[ $field_id ] = [
 						'type'  => 'array',
 						'items' => [
 							'type' => 'string',
@@ -221,7 +244,7 @@ class Group extends Field {
 					];
 				}
 				if ( $field->is_using_object_data() ) {
-					$properties[ $field->get_id() ] = [
+					$properties[ $field_id ] = [
 						'type'                 => 'object',
 						'additionalProperties' => [
 							'type' => 'string',
@@ -230,19 +253,21 @@ class Group extends Field {
 				}
 
 				if ( Repo::TYPE_FILE === $field->data_type ) {
-					$properties[ $field->get_id() . '_id' ] = [
+					$properties[ $field_id . '_id' ] = [
 						'type' => 'number',
 					];
 				}
 			}
 			$config['show_in_rest'] = [
-				'schema' => [
+				'prepare_callback' => [ $this, 'translate_sub_field_rest_keys' ],
+				'schema'           => [
 					'items' => [
 						'type'       => 'object',
 						'properties' => $properties,
 					],
 				],
 			];
+			$config['sanitize_callback'] = [ $this, 'untranslate_sub_field_rest_keys' ];
 		}
 
 		if ( $this->box instanceof Box ) {
@@ -284,5 +309,92 @@ class Group extends Field {
 	 */
 	public function group(): void {
 		throw new \LogicException( esc_html__( 'You cannot add a group to another group.', 'lipe' ) );
+	}
+
+
+	/**
+	 * Use the shortened version of the field id in the REST API.
+	 *
+	 * Same thing we do for top level fields, but is opt-in for individual
+	 * group fields for backwards compatibility.
+	 *
+	 * @example 'meta/food-data/calories' becomes 'calories'
+	 *
+	 * @interal
+	 *
+	 * @param array $group_values - Group values before being sent to the REST API.
+	 *
+	 * @return array
+	 */
+	public function translate_sub_field_rest_keys( array $group_values ): array {
+		$fields = $this->get_fields();
+		return \array_map( function( $group ) use ( $fields ) {
+			foreach ( $group as $key => $value ) {
+				if ( ! isset( $fields[ $key ] ) ) {
+					continue;
+				}
+				$field = $fields[ $key ];
+				unset( $group[ $key ] );
+				$group[ $this->translate_sub_field_rest_key( $field ) ] = $value;
+			}
+			return $group;
+		}, $group_values );
+	}
+
+
+	/**
+	 * Map this groups fields back to their original keys when updating
+	 * the metadata via the REST API.
+	 *
+	 * @param array $group_values - Group values sent to the REST API.
+	 *
+	 * @return array
+	 */
+	public function untranslate_sub_field_rest_keys( array $group_values ): array {
+		if ( \function_exists( 'wp_is_rest_endpoint' ) ) {
+			if ( ! wp_is_rest_endpoint() ) {
+				return $group_values;
+			}
+		} elseif ( ! \defined( 'REST_REQUEST' ) || ! REST_REQUEST ) {
+			return $group_values;
+		}
+
+		$map = Arrays::in()->flatten_assoc( function( Field $field ) {
+			return [ $this->translate_sub_field_rest_key( $field ) => $field ];
+		}, $this->get_fields() );
+
+		return \array_map( function( $group ) use ( $map ) {
+			foreach ( $group as $key => $value ) {
+				if ( ! isset( $map[ $key ] ) ) {
+					continue;
+				}
+				unset( $group[ $key ] );
+				$group[ $map[ $key ]->get_id() ] = $value;
+			}
+			return $group;
+		}, $group_values );
+	}
+
+
+	/**
+	 * Translate the group field key for the REST API.
+	 *
+	 * If the field has a `rest_group_short` property, either shorten
+	 * the key like we do with top level fields, or use the value of
+	 * `rest_group_short` if it is a string.
+	 *
+	 * @param Field $field - Field to translate.
+	 *
+	 * @return string
+	 */
+	protected function translate_sub_field_rest_key( Field $field ): string {
+		if ( null === $field->rest_group_short || false === $field->rest_group_short ) {
+			return $field->get_id();
+		}
+		if ( \is_string( $field->rest_group_short ) ) {
+			return $field->rest_group_short;
+		}
+
+		return $field->get_rest_short_name();
 	}
 }
