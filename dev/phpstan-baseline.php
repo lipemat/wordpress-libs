@@ -279,12 +279,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:\\$options type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Field.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
 	'message' => '#^Property Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:\\$query_args type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/CMB2/Field.php',
