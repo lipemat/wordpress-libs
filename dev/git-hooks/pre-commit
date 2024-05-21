@@ -28,8 +28,13 @@ PROJECT=$(${PHP} -r "echo dirname(realpath('$0'), 3);")
 PROJECT=${PROJECT//\\//}
 
 PHP_FILES=$(git diff-index --cached --name-only --diff-filter=ACMR HEAD | grep \\.php)
+RESOURCE_FILES=$(git diff-index --cached --name-only HEAD | grep "\.js$\|\.jsx$\|\.ts$\|\.tsx$\|\.pcss$")
+
 if [[ ! "$PHP_FILES" ]]; then
     echo "${YELLOW}[pre-commit]${BLUE} No Lintable PHP Files Changed ${RESET_COLOR}"
+fi
+if [[ ! "$RESOURCE_FILES" ]]; then
+    echo "${YELLOW}[pre-commit]${BLUE} No Resource Files Changed ${RESET_COLOR}"
 fi
 
 function exit_reset_colors() {
@@ -74,7 +79,7 @@ function php_lint() {
 
 # Lint multiple versions of PHP if supported via environmental variables.
 if [[ "true" == "$PHP_MULTI_VERSION_SUPPORT" ]]; then
-	php_lint 'php 7.4' &
+	php_lint 'php 8.1' &
 	php_lint 'php 8.3' &
 else
 	php_lint 'php' &
@@ -119,6 +124,37 @@ function php_stan() {
         echo "${YELLOW}[pre-commit]${GREEN} PHP Stan Passed!${RESET_COLOR}"
 }
 php_stan &
+
+function js_lint() {
+    if [[ "$RESOURCE_FILES" ]]; then
+        echo "${YELLOW}[pre-commit]${BLUE} Running JS Lint... ${WHITE}"
+        OUTPUT=$(yarn lipemat-js-boilerplate lint --fix=false 2>&1)
+        if [[ $? != 0 ]]; then
+            echo
+            echo "${BLUE}JS Lint failed. Fix the error before commit!"
+            echo "${RED}$OUTPUT"
+            exit_reset_colors
+        fi
+        echo "${YELLOW}[pre-commit]${GREEN} JS Lint Passed!${RESET_COLOR}"
+    fi
+}
+js_lint &
+
+function css_lint() {
+    if [[ "$RESOURCE_FILES" ]]; then
+        echo "${YELLOW}[pre-commit]${BLUE} Running CSS Lint... ${WHITE}"
+        cd "${PROJECT}/${THEME_PATH}" || exit
+        OUTPUT=$(yarn stylelint js/src/**/*.pcss --cache 2>&1)
+        if [[ $? != 0 ]]; then
+            echo
+            echo "${BLUE}CSS Lint failed. Fix the error before commit!"
+            echo "${RED}$OUTPUT"
+            exit_reset_colors
+        fi
+        echo "${YELLOW}[pre-commit]${GREEN} CSS Lint Passed!${RESET_COLOR}"
+    fi
+}
+css_lint &
 
 # Go through each background task
 # If it sent exit code 1, it failed and the result from `wait` will be false.

@@ -453,7 +453,8 @@ class Taxonomy {
 	 * @return void
 	 */
 	public function meta_box( string $type, bool $checked_ontop = false ): void {
-		new Meta_Box( $this->taxonomy, $type, $checked_ontop );
+		$box = new Meta_Box( $this->taxonomy, $type, $checked_ontop );
+		$this->meta_box_sanitize_cb = [ $box, 'translate_string_term_ids_to_int' ];
 	}
 
 

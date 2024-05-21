@@ -1,23 +1,23 @@
 <?php
+/** @noinspection PhpExpressionResultUnusedInspection, PhpUnhandledExceptionInspection */
+declare( strict_types=1 );
 
 /**
- * Version 2.0.3
+ * Version 2.6.3
  */
 
 /**
  * Call protected/private method of a class.
  *
- * @param object $object     Instantiated object that we will run method on.
- * @param string $methodName Method name to call
- * @param array  $parameters Array of parameters to pass into method.
- *
- * @throws
+ * @param class-string|object $object      An instantiated object or class name that we will run method on.
+ * @param string              $method_name Method name to call.
+ * @param array               $parameters  Array of parameters to pass into method.
  *
  * @return mixed Method return.
  */
-function call_private_method( object $object, string $methodName, array $parameters = [] ) {
-	$reflection = new \ReflectionClass( get_class( $object ) );
-	$method = $reflection->getMethod( $methodName );
+function call_private_method( string|object $object, string $method_name, array $parameters = [] ): mixed {
+	$reflection = new \ReflectionClass( is_string( $object ) ? $object : get_class( $object ) );
+	$method = $reflection->getMethod( $method_name );
 	$method->setAccessible( true );
 
 	return $method->invokeArgs( $object, $parameters );
@@ -26,19 +26,23 @@ function call_private_method( object $object, string $methodName, array $paramet
 /**
  * Get the value of a private constant or property from an object.
  *
- * @param object $object
- * @param string $property
+ * @param class-string|object $object   An instantiated object or class name that we will run method on.
+ * @param string              $property Property name or constant name to get.
  *
- * @throws
- *
- * @return mixed|ReflectionProperty
+ * @return mixed
  */
-function get_private_property( object $object, string $property ) {
-	$reflection = new \ReflectionClass( get_class( $object ) );
+function get_private_property( string|object $object, string $property ): mixed {
+	$reflection = new \ReflectionClass( is_string( $object ) ? $object : get_class( $object ) );
 	if ( $reflection->hasProperty( $property ) ) {
-		$reflectionProperty = $reflection->getProperty( $property );
-		$reflectionProperty->setAccessible( true );
-		return $reflectionProperty->getValue( $object );
+		$reflection_property = $reflection->getProperty( $property );
+		$reflection_property->setAccessible( true );
+		if ( $reflection_property->isStatic() ) {
+			return $reflection_property->getValue();
+		}
+		if ( is_string( $object ) ) {
+			throw new LogicException( 'Getging a non-static value from a non instantiated object is useless.' );
+		}
+		return $reflection_property->getValue( $object );
 	}
 	return $reflection->getConstant( $property );
 }
@@ -46,18 +50,22 @@ function get_private_property( object $object, string $property ) {
 /**
  * Set the value of a private property on an object.
  *
- * @param object $object
- * @param string $property
- *
- * @param mixed  $value
- *
- * @throws
+ * @param class-string|object $object   An instantiated object to set property on.
+ * @param string              $property Property name to set.
+ * @param mixed               $value    Value to set.
  *
  * @return void
  */
-function set_private_property( object $object, string $property, $value ) : void {
-	$reflection = new \ReflectionClass( get_class( $object ) );
-	$reflectionProperty = $reflection->getProperty( $property );
-	$reflectionProperty->setAccessible( true );
-	$reflectionProperty->setValue( $object, $value );
+function set_private_property( string|object $object, string $property, mixed $value ): void {
+	$reflection = new \ReflectionClass( is_string( $object ) ? $object : get_class( $object ) );
+	$reflection_property = $reflection->getProperty( $property );
+	$reflection_property->setAccessible( true );
+	if ( $reflection_property->isStatic() ) {
+		$reflection_property->setValue( null, $value );
+	} else {
+		if ( is_string( $object ) ) {
+			throw new LogicException( 'Setting a non-static value on a non instantiated object is useless.' );
+		}
+		$reflection_property->setValue( $object, $value );
+	}
 }

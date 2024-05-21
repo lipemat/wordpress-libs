@@ -1,8 +1,11 @@
 <?php
-
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy;
+
+use Lipe\Lib\Libs\Scripts;
+use Lipe\Lib\Libs\Scripts\ScriptHandles;
+use Lipe\Lib\Taxonomy\Meta_Box\Gutenberg_Box;
 
 /**
  * Custom output for various meta box styles.
@@ -19,33 +22,34 @@ class Meta_Box {
 	 *
 	 * @var string
 	 */
-	protected string $taxonomy;
+	public readonly string $taxonomy;
 
 	/**
 	 * The type meta box.
 	 *
-	 * @phpstan-var 'radio'|'dropdown'|'simple'|'checklist'
+	 * @phpstan-var Gutenberg_Box::TYPE_*
 	 *
 	 * @var string
 	 */
-	protected string $type;
+	public readonly string $type;
 
 	/**
 	 * Move checked items to top.
 	 *
 	 * @var bool
 	 */
-	protected bool $checked_ontop;
+	public readonly bool $checked_ontop;
 
 
 	/**
-	 * Meta_Box constructor.
+	 * Constructs a custom meta box for a taxonomy to replace
+	 * the default meta box with a new UI.
 	 *
-	 * @phpstan-param 'radio'|'dropdown'|'simple' $type
+	 * @phpstan-param Gutenberg_Box::TYPE_* $type
 	 *
-	 * @param string                              $taxonomy      - The taxonomy slug.
-	 * @param string                              $type          - The type of meta box.
-	 * @param bool                                $checked_ontop - Move checked items to top.
+	 * @param string                        $taxonomy      - The taxonomy slug.
+	 * @param string                        $type          - The type of meta box.
+	 * @param bool                          $checked_ontop - Move checked items to top.
 	 */
 	public function __construct( string $taxonomy, string $type, bool $checked_ontop ) {
 		$this->taxonomy = $taxonomy;
@@ -84,24 +88,49 @@ class Meta_Box {
 			remove_meta_box( "tagsdiv-{$this->taxonomy}", $post_type, 'side' );
 		}
 
-		// Remove default meta box from block editor.
-		wp_add_inline_script(
-			'wp-edit-post',
-			sprintf(
-				'wp.data.dispatch( "core/edit-post" ).removeEditorPanel( "taxonomy-panel-%s" );',
-				$this->taxonomy
-			)
-		);
-
 		$label = 'simple' === $this->type ? $object->labels->name : $object->labels->singular_name;
-		add_meta_box( "{$this->taxonomy}div", $label, [ $this, 'do_meta_box' ], $post_type, 'side' );
+
+		$tax = get_taxonomy( $this->taxonomy );
+		if ( false !== $tax && $tax->show_in_rest && Scripts::in()->is_block_editor() ) {
+			Gutenberg_Box::factory( $this );
+		} else {
+			add_meta_box( "{$this->taxonomy}div", $label, [ $this, 'do_meta_box' ], $post_type, 'side' );
+
+			// Remove default meta box from block editor. @see `removeDefaultMetaBox` for how we do this when using a gutenberg box.
+			wp_add_inline_script(
+				'wp-edit-post',
+				\sprintf(
+				// @todo Remove `core/edit-post` fallback when minimum WP version is 6.5.
+					'if( "function" === typeof wp.data.dispatch("core/editor").removeEditorPanel ) {typeof wp.data.dispatch("core/editor").removeEditorPanel( "taxonomy-panel-%1$s" ) } else { wp.data.dispatch( "core/edit-post" ).removeEditorPanel( "taxonomy-panel-%1$s" ) }',
+					$this->taxonomy
+				)
+			);
+		}
+	}
+
+
+	/**
+	 * The meta box `tax_input` fields are seen as string which will create
+	 * new terms using the id as the name for non-hierarchical taxonomies.
+	 *
+	 * Translating the string term ids to int will save the terms correctly.
+	 *
+	 * @see Taxonomy::meta_box
+	 *
+	 * @param string   $taxonomy - Same taxonomy which was used to create the meta box.
+	 * @param string[] $terms    - The term ids as strings.
+	 *
+	 * @return int[]
+	 */
+	public function translate_string_term_ids_to_int( string $taxonomy, array $terms ): array {
+		return \array_map( '\intval', $terms );
 	}
 
 
 	/**
 	 * Displays the custom meta box on the post editing screen.
 	 *
-	 * @param \WP_Post            $post     The post object.
+	 * @param \WP_Post $post The post object.
 	 */
 	public function do_meta_box( \WP_Post $post ): void {
 		$object = get_taxonomy( $this->taxonomy );
@@ -114,7 +143,6 @@ class Meta_Box {
 		if ( is_wp_error( $selected ) ) {
 			return;
 		}
-		$walker = $this->get_walker();
 		if ( ! isset( $object->labels->no_item ) || '' === $object->labels->no_item ) {
 			$object->labels->no_item = esc_html__( 'Not specified', 'lipe' );
 		}
@@ -129,75 +157,75 @@ class Meta_Box {
 					esc_html( $object->labels->singular_name )
 				);
 
-				$dropdown_args = [
-					'option_none_value' => ( is_taxonomy_hierarchical( $this->taxonomy ) ? '-1' : '' ),
-					'show_option_none'  => $object->labels->no_item,
-					'hide_empty'        => false,
-					'hierarchical'      => true,
-					'show_count'        => false,
-					'orderby'           => 'name',
-					'selected'          => \count( $selected ) < 1 ? 0 : \reset( $selected ),
-					'id'                => "{$this->taxonomy}dropdown",
-					'name'              => is_taxonomy_hierarchical( $this->taxonomy ) ? "tax_input[{$this->taxonomy}][]" : "tax_input[{$this->taxonomy}]",
-					'taxonomy'          => $this->taxonomy,
-				];
+				$args = new Wp_Dropdown_Categories();
+				$args->option_none_value = ( is_taxonomy_hierarchical( $this->taxonomy ) ? '-1' : '' );
+				$args->show_option_none = $object->labels->no_item;
+				$args->hide_empty = false;
+				$args->hierarchical = true;
+				$args->orderby = 'name';
+				$args->selected = \count( $selected ) < 1 ? 0 : \reset( $selected );
+				$args->id = "{$this->taxonomy}dropdown";
+				$args->name = is_taxonomy_hierarchical( $this->taxonomy ) ? "tax_input[{$this->taxonomy}][]" : "tax_input[{$this->taxonomy}]";
+				$args->taxonomy = $this->taxonomy;
 
-				wp_dropdown_categories( $dropdown_args );
+				wp_dropdown_categories( $args->get_args() );
 			} else {
+				Scripts::in()->enqueue_script( ScriptHandles::ADMIN );
 				?>
-					<style>
-						/* Style for the 'none' item: */
-						#<?= esc_attr( $this->taxonomy ) ?>-0 {
-							color: #888;
-							border-top: 1px solid #eee;
-							margin-top: 5px;
-							padding-top: 5px;
-						}
+				<style>
+					/* Style for the 'none' item: */
+					#<?= esc_attr( $this->taxonomy ) ?>-0 {
+						color: #888;
+						border-top: 1px solid #eee;
+						margin-top: 5px;
+						padding-top: 5px;
+					}
 
-						/* Remove Genesis "Select / Deselect All" button. */
-						.lipe-libs-terms-box #genesis-category-checklist-toggle {
-							display: none;
-						}
-					</style>
+					/* Remove Genesis "Select / Deselect All" button. */
+					.lipe-libs-terms-box #genesis-category-checklist-toggle {
+						display: none;
+					}
+				</style>
 
-					<input type="hidden" name="tax_input[<?php echo esc_attr( $this->taxonomy ); ?>][]" value="0" />
+				<input type="hidden" name="tax_input[<?= esc_attr( $this->taxonomy ) ?>][]" value="0" />
 
-					<ul
-						id="<?= esc_attr( $this->taxonomy ) ?>checklist"
-						class="list:<?= esc_attr( $this->taxonomy ) ?> categorychecklist form-no-clear">
-						<?php
-
-						// Output the terms.
-						wp_terms_checklist(
-							$post->ID,
-							[
-								'taxonomy'      => $this->taxonomy,
-								'walker'        => $walker,
-								'selected_cats' => $selected,
-								'checked_ontop' => $this->checked_ontop,
-							]
-						);
-
-						// Output the 'none' item.
-						$output = '';
-						$o = (object) [
-							'term_id' => 0,
-							'name'    => $object->labels->no_item,
-							'slug'    => 'none',
-						];
-						$args = [
-							'taxonomy'      => $this->taxonomy,
-							'selected_cats' => \count( $selected ) < 1 ? [ 0 ] : $selected,
-							'disabled'      => false,
-						];
-						$walker->start_el( $output, $o, 1, $args );
-						$walker->end_el( $output, $o, 1, $args );
-
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						echo $output;
-						?>
-					</ul>
+				<ul
+					id="<?= esc_attr( $this->taxonomy ) ?>checklist"
+					class="list:<?= esc_attr( $this->taxonomy ) ?> categorychecklist form-no-clear"
+					data-js="lipe/lib/taxonomy/terms-checklist"
+				>
 					<?php
+					$walker = $this->get_walker();
+
+					$args = new Wp_Terms_Checklist();
+					$args->taxonomy = $this->taxonomy;
+					$args->selected_cats = $selected;
+					$args->checked_ontop = $this->checked_ontop;
+					$args->walker = $walker;
+
+					// Output the terms.
+					wp_terms_checklist( $post->ID, $args->get_args() );
+
+					// Output the 'none' item.
+					$output = '';
+					$o = (object) [
+						'term_id' => 0,
+						'name'    => $object->labels->no_item,
+						'slug'    => 'none',
+					];
+					$args = [
+						'taxonomy'      => $this->taxonomy,
+						'selected_cats' => \count( $selected ) < 1 ? [ 0 ] : $selected,
+						'disabled'      => false,
+					];
+					$walker->start_el( $output, $o, 1, $args );
+					$walker->end_el( $output, $o, 1, $args );
+
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo $output;
+					?>
+				</ul>
+				<?php
 			}
 			?>
 		</div>
@@ -217,11 +245,11 @@ class Meta_Box {
 				/**
 				 * Starts the element output.
 				 *
-				 * @param string $output            Passed by reference. Used to append additional content.
-				 * @param \WP_Term $data_object     The current item's term data object.
-				 * @param int    $depth             Depth of the current item.
-				 * @param array  $args              An array of arguments.
-				 * @param int    $current_object_id ID of the current item.
+				 * @param string   $output            Passed by reference. Used to append additional content.
+				 * @param \WP_Term $data_object       The current item's term data object.
+				 * @param int      $depth             Depth of the current item.
+				 * @param array    $args              An array of arguments.
+				 * @param int      $current_object_id ID of the current item.
 				 *
 				 * @return void
 				 */
@@ -237,16 +265,25 @@ class Meta_Box {
 					}
 					$checked = \in_array( $data_object->term_id, $args['selected_cats'], true );
 
-					// @todo Next time working on this, clean it up with `ob_start()`.
-					$output .= "\n<li id='{$args['taxonomy']}-{$data_object->term_id}'>" .
-								'<label class="selectit">' .
-								'<input value="' . esc_attr( (string) $value ) . '" type="radio" name="tax_input[' . esc_attr( $args['taxonomy'] ) . '][]" ' .
-								'id="in-' . esc_attr( $args['taxonomy'] ) . '-' . esc_attr( (string) $data_object->term_id ) . '"' .
-								checked( $checked, true, false ) .
-								' /> ' .
-					           //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-								esc_html( apply_filters( 'the_category', $data_object->name ) ) .
-								'</label>';
+					ob_start();
+					?>
+					<li id="<?= esc_attr( $args['taxonomy'] ) . '-' . esc_attr( (string) $data_object->term_id ) ?>">
+						<label>
+							<input
+								value="<?= esc_attr( (string) $value ) ?>"
+								type="radio"
+								name="tax_input[<?= esc_attr( $args['taxonomy'] ) ?>][]"
+								id="in-<?= esc_attr( $args['taxonomy'] ) . '-' . esc_attr( (string) $data_object->term_id ) ?>"
+								<?= checked( $checked, true, false ) ?>
+							/>
+							<?php
+							// phpcs:ignore WordPress.NamingConventions -- Using WP core filter.
+							echo esc_html( apply_filters( 'the_category', $data_object->name ) );
+							?>
+						</label>
+					</li>
+					<?php
+					$output .= ob_get_clean();
 				}
 			};
 		}

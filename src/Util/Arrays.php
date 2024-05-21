@@ -240,8 +240,8 @@ class Arrays {
 	public function list_pluck( array $array, array $keys ): array {
 		return \array_map( function( $item ) use ( $keys ) {
 			return $this->map_assoc( function( $i, $key ) use ( $item ) {
-				if ( \is_object( $item ) && \property_exists( $item, $key ) ) {
-					return $item->{$key};
+				if ( \is_object( $item ) ) {
+					return $item->{$key} ?? '';
 				}
 
 				return $item[ $key ] ?? '';

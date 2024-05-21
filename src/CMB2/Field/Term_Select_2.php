@@ -38,8 +38,7 @@ class Term_Select_2 {
 		add_filter( 'cmb2_sanitize_' . static::NAME, [ $this, 'assign_terms_during_save' ], 10, 4 );
 		add_filter( 'cmb2_types_esc_' . static::NAME, [ $this, 'esc_repeater_values' ], 10, 3 );
 
-		add_action( 'admin_enqueue_scripts', [ $this, 'js' ] );
-		// remove subtle conflict with acf.
+		// Remove subtle conflict with acf.
 		add_filter( 'acf/settings/select2_version', function() {
 			return 4;
 		} );
@@ -81,8 +80,8 @@ class Term_Select_2 {
 	 * @return void
 	 */
 	public function js(): void {
-		wp_enqueue_style( 'select2-css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css', [], null ); //phpcs:ignore
-		wp_enqueue_script( 'select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js', [], null ); //phpcs:ignore
+		wp_enqueue_style( 'select2-css', 'https://unpkg.com/select2@4.0.5/dist/css/select2.min.css', [], null ); //phpcs:ignore
+		wp_enqueue_script( 'select2', 'https://unpkg.com/select2@4.0.5/dist/js/select2.min.js', [], null ); //phpcs:ignore
 	}
 
 
@@ -101,6 +100,8 @@ class Term_Select_2 {
 		if ( empty( $value ) ) {
 			$value = null;
 		}
+
+		$this->js();
 
 		$field_type_object->type = new \CMB2_Type_Select( $field_type_object );
 

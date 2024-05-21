@@ -37,14 +37,14 @@ class Get_Terms implements Meta_Query_Interface, Args_Interface {
 	 *
 	 * @var string|array<int,string>
 	 */
-	public $taxonomy;
+	public string|array $taxonomy;
 
 	/**
 	 * Object ID, or array of object IDs. Results will be limited to terms associated with these objects.
 	 *
 	 * @var int|array<int,int>
 	 */
-	public $object_ids;
+	public int|array $object_ids;
 
 	/**
 	 * Field(s) to order terms by.
