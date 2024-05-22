@@ -28,6 +28,10 @@ class Args implements Meta_Query_Interface, Date_Query_Interface, Args_Interface
 	use Meta_Query_Trait;
 	use Tax_Query_Trait;
 
+	public const FIELDS_IDS       = 'ids';
+	public const FIELDS_ID_PARENT = 'id=>parent';
+	public const FIELDS_COMPLETE  = '';
+
 	public const ORDERBY_NONE          = 'none';
 	public const ORDERBY_NAME          = 'name';
 	public const ORDERBY_AUTHOR        = 'author';
@@ -163,7 +167,7 @@ class Args implements Meta_Query_Interface, Date_Query_Interface, Args_Interface
 	 *
 	 * Default ''.
 	 *
-	 * @phpstan-var ''|'ids'|'id=>parent'
+	 * @phpstan-var static::FIELDS_*
 	 *
 	 * @var string
 	 */
