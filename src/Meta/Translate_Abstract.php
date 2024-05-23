@@ -86,7 +86,7 @@ abstract class Translate_Abstract {
 		}
 
 		if ( null !== $field && null !== $field->escape_cb ) {
-			$field = $field->get_cmb2_field();
+			$field = $field->get_cmb2_field( $object_id );
 			if ( null !== $field ) {
 				return $field->escaped_value( 'esc_attr', $value );
 			}
@@ -111,12 +111,9 @@ abstract class Translate_Abstract {
 	protected function update_meta_value( $object_id, string $key, $value, string $meta_type ) {
 		$field = $this->get_field( $key );
 		if ( null !== $field ) {
-			$cmb2_field = $field->get_cmb2_field();
-			if ( null !== $cmb2_field ) {
-				$cmb2_field->object_id( $object_id ); // @phpstan-ignore-line -- Could be string or int.
-				if ( null !== $field->sanitization_cb ) {
-					$value = $cmb2_field->sanitization_cb( $value );
-				}
+			$cmb2_field = $field->get_cmb2_field( $object_id );
+			if ( null !== $cmb2_field && null !== $field->sanitization_cb ) {
+				$value = $cmb2_field->sanitization_cb( $value );
 			}
 			if ( null !== $field->group ) {
 				return $this->update_group_sub_field_value( $object_id, $key, $value, $meta_type );
@@ -485,7 +482,7 @@ abstract class Translate_Abstract {
 			return;
 		}
 		if ( null !== $field->sanitization_cb ) {
-			$cmb2_field = $field->get_cmb2_field();
+			$cmb2_field = $field->get_cmb2_field( $object_id );
 			if ( null !== $cmb2_field ) {
 				$terms = $cmb2_field->sanitization_cb( $terms );
 			}
