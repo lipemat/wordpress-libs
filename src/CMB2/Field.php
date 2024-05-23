@@ -13,7 +13,7 @@ use Lipe\Lib\Util\Arrays;
  *
  * @phpstan-type DELETE_CB callable( int $object_id, string $key, mixed $previous, Box::TYPE_* $type ): void
  * @phpstan-type CHANGE_CB callable( int $object_id, mixed $value, string $key, mixed $previous, Box::TYPE_* $type): void
- * @phpstan-type ESC_CB callable( mixed, array<string, mixed>=, \CMB2_Field= ): mixed
+ * @phpstan-type ESC_CB callable( mixed $value, array<string, mixed>, \CMB2_Field ): mixed
  */
 class Field {
 	/**
