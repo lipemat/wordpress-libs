@@ -302,6 +302,7 @@ abstract class Translate_Abstract {
 				$values[ $_row ][ $field ] = Repo::in()->get_value( $object_id, $field, $meta_type );
 			}
 		}
+		$this->group_row = 0;
 
 		return $values;
 	}
@@ -335,6 +336,7 @@ abstract class Translate_Abstract {
 		foreach ( \array_diff_key( $existing, $values ) as $_row => $_values ) {
 			$this->delete_group_row( $object_id, $group_id, $_row, $meta_type );
 		}
+		$this->group_row = 0;
 	}
 
 
