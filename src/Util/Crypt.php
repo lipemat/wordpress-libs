@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
@@ -53,7 +54,7 @@ class Crypt {
 	 *
 	 * @param string $message - The encrypted string that is base64 encoded.
 	 *
-	 * @return string
+	 * @return ?string
 	 */
 	public function decrypt( string $message ): ?string {
 		try {
@@ -84,13 +85,13 @@ class Crypt {
 	 *
 	 * @param string $plaintext - The string to encrypt.
 	 *
-	 * @return string
+	 * @return ?string
 	 */
 	public function encrypt( string $plaintext ): ?string {
 		try {
 			$iv = random_bytes( max( 1, (int) openssl_cipher_iv_length( static::METHOD ) ) );
 			$salt = random_bytes( 256 );
-		} catch ( \Exception $e ) {
+		} catch ( \Exception ) {
 			return null;
 		}
 
@@ -123,13 +124,39 @@ class Crypt {
 
 
 	/**
+	 * Check if a string has been previously encrypted.
+	 *
+	 * Does not validate the encryption key, use `decrypt` for that.
+	 *
+	 * @param string $data - A possibly encrypted string.
+	 *
+	 * @return bool
+	 */
+	public static function is_encrypted( string $data ): bool {
+		$decoded = \base64_decode( $data, true );
+		if ( false === $decoded || $decoded === $data ) {
+			return false;
+		}
+		try {
+			$array = json_decode( $decoded, true, 512, JSON_THROW_ON_ERROR );
+		} catch ( \JsonException ) {
+			return false;
+		}
+		if ( ! isset( $array['ciphertext'], $array['iv'], $array['salt'], $array['iterations'] ) ) {
+			return false;
+		}
+		return true;
+	}
+
+
+	/**
 	 * Crypt Factory.
 	 *
 	 * @param string $key - The encryption key.
 	 *
 	 * @return static
 	 */
-	public static function factory( string $key ) {
+	public static function factory( string $key ): static {
 		return new static( $key );
 	}
 }
