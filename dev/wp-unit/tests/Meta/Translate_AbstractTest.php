@@ -13,6 +13,12 @@ use mocks\Post_Mock;
  *
  */
 class Translate_AbstractTest extends \WP_UnitTestCase {
+	protected function tearDown(): void {
+		Repo::in()->clear_memoize_cache();
+		parent::tearDown();
+	}
+
+
 	public function test_get_term_id_from_slug(): void {
 		$category = self::factory()->category->create_and_get();
 
@@ -72,5 +78,55 @@ class Translate_AbstractTest extends \WP_UnitTestCase {
 		$this->assertSame( 'value3', $post->get_meta( 'meta/prefixed/dmv' ) );
 		unset( $post['meta/prefixed/dmv'] );
 		$this->assertSame( '', $post->get_meta( 'meta/prefixed/dmv' ) );
+	}
+
+
+	public function test_multiple_group_fields(): void {
+		$box = new Box( __METHOD__, [ 'post' ], 'Meal Data' );
+		$items = $box->group( 'multiple/group/items', 'Items', 'Item {#}', 'Add Item', 'Remove Item' );
+		$items->repeatable();
+		$items->field( __METHOD__ . 'servings', 'Servings' )
+		      ->text_number();
+		$manual = $box->group( 'multiple/group/manual', 'Manual Entry' );
+		$manual->field( __METHOD__ . 'calories', 'Calories' )
+		       ->text_number();
+		do_action( 'cmb2_init' );
+		$post = Post_Mock::factory( self::factory()->post->create_and_get() );
+
+		$post['multiple/group/items'] = [
+			[
+				__METHOD__ . 'servings' => '1',
+			],
+			[
+				__METHOD__ . 'servings' => '2',
+			],
+		];
+		$post['multiple/group/manual'] = [
+			[
+				__METHOD__ . 'calories' => '100',
+			],
+		];
+
+		$this->assertSame( [
+			[
+				__METHOD__ . 'servings' => '1',
+			],
+			[
+				__METHOD__ . 'servings' => '2',
+			],
+		], $post->get_meta( 'multiple/group/items' ) );
+
+		$this->assertSame( [
+			[
+				__METHOD__ . 'calories' => '100',
+			],
+		], $post->get_meta( 'multiple/group/manual' ) );
+
+		foreach ( $post['multiple/group/items'] as $i => $item ) {
+			$this->assertSame( (string) ( $i + 1 ), $item[ __METHOD__ . 'servings' ] );
+		}
+
+		$this->assertSame( '1', $post->get_meta( __METHOD__ . 'servings' ) );
+		$this->assertSame( '100', $post->get_meta( __METHOD__ . 'calories' ) );
 	}
 }
