@@ -12,7 +12,8 @@ use Lipe\Lib\Util\Arrays;
  * A fluent interface for a CMB2 field.
  *
  * @phpstan-type DELETE_CB callable( int $object_id, string $key, mixed $previous, Box::TYPE_* $type ): void
- * @phpstan-type CHANGE_CB callable( int $object_id, mixed $value, string $key, mixed $previous, Box::TYPE_* $type):void
+ * @phpstan-type CHANGE_CB callable( int $object_id, mixed $value, string $key, mixed $previous, Box::TYPE_* $type): void
+ * @phpstan-type ESC_CB callable( mixed, array<string, mixed>=, \CMB2_Field= ): mixed
  */
 class Field {
 	/**
@@ -307,7 +308,8 @@ class Field {
 	 *
 	 * @internal
 	 *
-	 * @var callable|false
+	 * @phpstan-var ESC_CB
+	 * @var callable
 	 */
 	public $escape_cb;
 
@@ -438,7 +440,8 @@ class Field {
 	 *
 	 * @internal
 	 *
-	 * @var callable|false
+	 * @phpstan-var ESC_CB
+	 * @var callable
 	 */
 	public $sanitization_cb;
 
@@ -453,8 +456,8 @@ class Field {
 	 * @see Field::$sanitization_cb
 	 *
 	 * @internal
-	 *
-	 * @var callable|null
+	 * @phpstan-var ESC_CB
+	 * @var callable
 	 */
 	public $sanitize_callback;
 
@@ -676,6 +679,7 @@ class Field {
 	public ?array $protocols = null;
 
 	/**
+	 * <<<<<<< Updated upstream
 	 * Shorten a group's child field keys when displayed in REST API.
 	 *
 	 * @var string|bool
@@ -1070,7 +1074,9 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#escape_cb
 	 *
-	 * @param callable $callback - The callback to use for escaping.
+	 * @phpstan-param ESC_CB $callback
+	 *
+	 * @param callable       $callback - The callback to use for escaping.
 	 *
 	 * @return Field
 	 */
@@ -1519,7 +1525,9 @@ class Field {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
 	 * @link https://developer.wordpress.org/reference/functions/register_meta/
 	 *
-	 * @param callable $callback - The callback to be used for sanitization.
+	 * @phpstan-param ESC_CB $callback
+	 *
+	 * @param callable       $callback - The callback to be used for sanitization.
 	 *
 	 * @return Field
 	 */
@@ -1562,9 +1570,8 @@ class Field {
 
 		// Will create an infinite loop if filter is intact.
 		remove_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11 );
-		$cmb2_field = $this->get_cmb2_field();
+		$cmb2_field = $this->get_cmb2_field( $object_id );
 		if ( null !== $cmb2_field ) {
-			$cmb2_field->object_id( $object_id ); // @phpstan-ignore-line -- The object id must accept a string for options.
 			add_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11, 3 );
 			return \call_user_func( $this->default_cb, $cmb2_field->properties, $cmb2_field );
 		}
@@ -1605,15 +1612,17 @@ class Field {
 	/**
 	 * Retrieve the CMB2 version of this field.
 	 *
-	 * Since 2.22.1
+	 * @since 2.22.1
+	 *
+	 * @param int|string $object_id - The object id to pass on to CMB2.
 	 *
 	 * @return ?\CMB2_Field
 	 */
-	public function get_cmb2_field(): ?\CMB2_Field {
+	public function get_cmb2_field( int|string $object_id = 0 ): ?\CMB2_Field {
 		if ( null === $this->box ) {
 			return null;
 		}
-		return cmb2_get_field( $this->box->get_id(), $this->get_id() );
+		return cmb2_get_field( $this->box->get_id(), $this->get_id(), $object_id );
 	}
 
 
