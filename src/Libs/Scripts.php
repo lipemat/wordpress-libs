@@ -50,7 +50,7 @@ class Scripts {
 			wp_enqueue_script( 'lipe/lib/scripts/runtime', $dir . 'runtime.js', [], $this->get_version(), true );
 		}
 
-		wp_enqueue_script( $script->value, "{$dir}{$script->file()}.js", [], $this->get_version(), [
+		wp_enqueue_script( $script->value, "{$dir}{$script->file()}.js", $script->dependencies(), $this->get_version(), [
 			'in_footer' => true,
 		] );
 
@@ -63,6 +63,7 @@ class Scripts {
 		}
 	}
 
+
 	/**
 	 * Is the current screen the block editor?
 	 *
@@ -71,6 +72,7 @@ class Scripts {
 	public function is_block_editor(): bool {
 		return \function_exists( 'get_current_screen' ) && null !== get_current_screen() && get_current_screen()->is_block_editor;
 	}
+
 
 	/**
 	 * Get the version of wordpress-libs.
