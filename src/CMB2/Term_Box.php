@@ -44,6 +44,6 @@ class Term_Box extends Box {
 	 */
 	public function __construct( $id, array $taxonomies, $title ) {
 		$this->taxonomies = $taxonomies;
-		parent::__construct( $id, [ 'term' ], $title );
+		parent::__construct( $id, [ Box::TYPE_TERM ], $title );
 	}
 }

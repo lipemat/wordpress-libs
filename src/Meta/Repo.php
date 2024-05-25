@@ -12,6 +12,7 @@ use Lipe\Lib\Traits\Singleton;
  */
 class Repo extends Translate_Abstract {
 	use Singleton;
+	use Validation;
 
 	public const TYPE_CHECKBOX          = 'checkbox';
 	public const TYPE_DEFAULT           = 'default';
@@ -41,13 +42,44 @@ class Repo extends Translate_Abstract {
 
 
 	/**
+	 * Handle any special field validation after all fields are
+	 * registered.
+	 *
+	 * @since 4.10.0
+	 *
+	 * @interal
+	 *
+	 * @return void
+	 */
+	public function validate_fields(): void {
+		$this->warn_for_conflicting_taxonomies();
+	}
+
+
+	/**
+	 * Handle any special field validation for a single field.
+	 *
+	 * @since 4.10.0
+	 *
+	 * @interal
+	 *
+	 * @param string $key - ID of the field.
+	 *
+	 * @return void
+	 */
+	public function pre_update_field( string $key ): void {
+		$this->warn_for_repeatable_group_sub_fields( $key );
+	}
+
+
+	/**
 	 * Get a registered field by an id.
 	 *
-	 * @param string $field_id - The field id to return.
+	 * @param ?string $field_id - The field id to return.
 	 *
 	 * @return null|Field
 	 */
-	protected function get_field( string $field_id ): ?Field {
+	protected function get_field( ?string $field_id ): ?Field {
 		return $this->fields[ $field_id ] ?? null;
 	}
 

@@ -120,13 +120,15 @@ trait Mutator_Trait {
 	 * Get a value of this object's meta field
 	 * using the meta repo to map the appropriate data type.
 	 *
-	 * @param string $key           - Meta key to retrieve.
-	 * @param mixed  $default_value - Default value to return if meta is empty.
+	 * @param string     $key           - Meta key to retrieve.
+	 * @param mixed|null $default_value - Default value to return if meta is empty.
 	 *
 	 * @return mixed
 	 */
-	public function get_meta( string $key, $default_value = null ) {
-		$value = Repo::instance()->get_value( $this->get_id(), $key, $this->get_meta_type() );
+	public function get_meta( string $key, mixed $default_value = null ): mixed {
+		Repo::in()->pre_update_field( $key );
+
+		$value = Repo::in()->get_value( $this->get_id(), $key, $this->get_meta_type() );
 		if ( null !== $default_value && empty( $value ) ) {
 			return $default_value;
 		}
@@ -143,11 +145,13 @@ trait Mutator_Trait {
 	 * @param mixed|callable ...$value - If a callable is passed it will be called with the
 	 *                                 previous value as the only argument.
 	 *                                 If a callable is passed with an additional argument,
-	 *                                 it be used as the default value for `$this->get_meta()`.
+	 *                                 it will be used as the default value for `$this->get_meta()`.
 	 *
 	 * @return void
 	 */
 	public function update_meta( string $key, ...$value ): void {
+		Repo::in()->pre_update_field( $key );
+
 		if ( \is_callable( $value[0] ) ) {
 			$value[0] = $value[0]( $this->get_meta( $key, $value[1] ?? null ) );
 		}
@@ -164,6 +168,8 @@ trait Mutator_Trait {
 	 * @return void
 	 */
 	public function delete_meta( string $key ): void {
+		Repo::in()->pre_update_field( $key );
+
 		Repo::instance()->delete_value( $this->get_id(), $key, $this->get_meta_type() );
 	}
 
@@ -175,8 +181,7 @@ trait Mutator_Trait {
 	 *
 	 * @return mixed
 	 */
-	#[\ReturnTypeWillChange]
-	public function offsetGet( $field_id ) {
+	public function offsetGet( $field_id ): mixed {
 		return $this->get_meta( $field_id );
 	}
 

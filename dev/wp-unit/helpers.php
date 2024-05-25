@@ -6,6 +6,8 @@ declare( strict_types=1 );
  * Version 2.6.3
  */
 
+use Lipe\Lib\Meta\Repo;
+
 /**
  * Call protected/private method of a class.
  *
@@ -68,4 +70,9 @@ function set_private_property( string|object $object, string $property, mixed $v
 		}
 		$reflection_property->setValue( $object, $value );
 	}
+}
+
+function tests_reset_container(): void {
+	set_private_property( Repo::in(), 'fields', [] );
+	Repo::in()->clear_memoize_cache();
 }

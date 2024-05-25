@@ -28,7 +28,7 @@ class Translate_AbstractTest extends \WP_UnitTestCase {
 			}
 
 
-			protected function get_field( string $field_id ): ?Field {
+			protected function get_field( ?string $field_id ): ?Field {
 				if ( '_' !== $field_id ) {
 					return null;
 				}
@@ -126,8 +126,39 @@ class Translate_AbstractTest extends \WP_UnitTestCase {
 			$this->assertSame( (string) ( $i + 1 ), $item[ __METHOD__ . 'servings' ] );
 		}
 
+		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_repeatable_group_sub_fields', 'Accessing sub-fields on repeatable groups will only update the first item. Use the group key instead. Lipe\Lib\Meta\Translate_AbstractTest::test_multiple_group_fieldsservings (This message was added in version 4.10.0.)' );
+
 		$this->assertSame( '1', $post->get_meta( __METHOD__ . 'servings' ) );
 		$this->assertSame( '100', $post->get_meta( __METHOD__ . 'calories' ) );
+	}
+
+
+	public function test_supports_taxonomy_relationship(): void {
+		$get_field = fn( string $field ) => call_private_method( Repo::in(), 'get_field', [ $field ] );
+		$box = new Box( __METHOD__, [ 'post' ], 'Test Taxonomy Field' );
+		$box->field( 'taxonomy/sr/1', 'SR 1' )
+		    ->taxonomy_select( 'category' );
+		do_action( 'cmb2_init' );
+
+		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( 'post', $get_field( 'taxonomy/sr/1' ) ) );
+		$this->assertFalse( Repo::in()->supports_taxonomy_relationships( 'comment', $get_field( 'taxonomy/sr/1' ) ) );
+
+		// Add a second taxonomy field.
+		$srg = $box->group( 'taxonomy/sr/group', 'SR Group' );
+		$srg->field( 'taxonomy/sr/group/1', 'SR Group 1' )
+		    ->taxonomy_select( 'category' );
+		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_conflicting_taxonomies', 'Fields: &quot;taxonomy/sr/1, taxonomy/sr/group/1&quot; are conflicting on the taxonomy: category for object type: post. You may only have taxonomy field per an object. (This message was added in version 4.10.0.)' );
+		do_action( 'cmb2_init' );
+
+		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( 'post', $get_field( 'taxonomy/sr/1' ) ) );
+		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( 'post', $get_field( 'taxonomy/sr/group/1' ) ) );
+
+		// Change one field to text.
+		$box->field( 'taxonomy/sr/1', 'SR 1' )->text();
+		do_action( 'cmb2_init' );
+		$this->assertFalse( Repo::in()->supports_taxonomy_relationships( 'post', $get_field( 'taxonomy/sr/1' ) ) );
+		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( 'post', $get_field( 'taxonomy/sr/group/1' ) ) );
+		$this->assertFalse( Repo::in()->supports_taxonomy_relationships( 'options-page', $get_field( 'taxonomy/sr/group/1' ) ) );
 	}
 
 
@@ -153,7 +184,7 @@ class Translate_AbstractTest extends \WP_UnitTestCase {
 			'one_str'  => [ '1', true ],
 			'zero'     => [ 0, false ],
 			'blank'    => [ '', false ],
-			'negative' => [ -1, false ],
+			'negative' => [ - 1, false ],
 			'true'     => [ true, true ],
 			'false'    => [ false, false ],
 		];

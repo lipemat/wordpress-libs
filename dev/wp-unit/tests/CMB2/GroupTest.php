@@ -392,4 +392,67 @@ class GroupTest extends \WP_Test_REST_TestCase {
 		$this->assertStringContainsString( 'non-sortable', $rendered );
 		$this->assertStringNotContainsString( ' sortable ', $rendered );
 	}
+
+
+	public function test_repeatable_group_access(): void {
+		$box = new Box( 'repeatable', [ 'post' ], 'Repeatable Group' );
+		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
+		$group->repeatable( true );
+		$group->field( 'first/things/last', '' )->text();
+		$group->field( 'second/things/after', '' )->text();
+		do_action( 'cmb2_init' );
+
+		$post = Post_Mock::factory( self::factory()->post->create_and_get() );
+		$post['group/prefixed/g3'] = [
+			[
+				'first/things/last'   => '__last',
+				'second/things/after' => '__after',
+			],
+			[
+				'first/things/last'   => '__last2',
+				'second/things/after' => '__after2',
+			],
+		];
+
+		$this->assertSame( '__last', $post['group/prefixed/g3'][0]['first/things/last'] );
+		$this->assertSame( '__after', $post['group/prefixed/g3'][0]['second/things/after'] );
+		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_repeatable_group_sub_fields', 'Accessing sub-fields on repeatable groups will only update the first item. Use the group key instead. second/things/after (This message was added in version 4.10.0.)' );
+		$this->assertSame( '__after', $post['second/things/after'] );
+	}
+
+
+	public function test_repeatable_with_unsupported_field(): void {
+		$box = new Box( 'repeatable', [ 'page' ], 'Repeatable Group' );
+		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
+		$group->repeatable( true );
+		$group->field( 'ruf/first', '' )->taxonomy_select( 'category' );
+
+		$catch = false;
+		try {
+			do_action( 'cmb2_init' );
+		} catch ( \LogicException $e ) {
+			$catch = true;
+			$this->assertSame( 'Taxonomy fields are not supported by repeating groups. ruf/first', $e->getMessage() );
+		} finally {
+			$this->assertTrue( $catch );
+		}
+
+		$group->repeatable( false );
+		do_action( 'cmb2_init' );
+
+		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_conflicting_taxonomies', 'Fields: &quot;ruf/first, ruf/last&quot; are conflicting on the taxonomy: category for object type: page. You may only have taxonomy field per an object. (This message was added in version 4.10.0.)' );
+		$group->field( 'ruf/last', '' )->taxonomy_select_2( 'category' );
+		do_action( 'cmb2_init' );
+
+		$group->repeatable( true );
+		$catch = false;
+		try {
+			do_action( 'cmb2_init' );
+		} catch ( \LogicException $e ) {
+			$catch = true;
+			$this->assertSame( 'Taxonomy fields are not supported by repeating groups. ruf/first', $e->getMessage() );
+		} finally {
+			$this->assertTrue( $catch );
+		}
+	}
 }

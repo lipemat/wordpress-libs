@@ -189,6 +189,11 @@ class Group extends Field {
 			throw new \LogicException( esc_html__( 'You must add the group to the box before you add fields to the group.', 'lipe' ) );
 		}
 
+		if ( $this->is_repeatable() && Repo::in()->supports_taxonomy_relationships( $this->box->get_object_type(), $field ) ) {
+			/* translators: {field type} */
+			throw new \LogicException( \sprintf( esc_html__( 'Taxonomy fields are not supported by repeating groups. %s', 'lipe' ), esc_html( $field->get_id() ) ) );
+		}
+
 		$field->group = $this->get_id();
 		$field->box_id = $this->box_id;
 		$box = $this->box->get_box();
@@ -213,7 +218,7 @@ class Group extends Field {
 	 */
 	public function register_fields(): void {
 		$this->register_meta();
-		array_map( function( Field $field ) {
+		\array_map( function( Field $field ) {
 			$this->add_field_to_group( $field );
 		}, $this->get_fields() );
 	}
@@ -388,7 +393,7 @@ class Group extends Field {
 	 * @return string
 	 */
 	protected function translate_sub_field_rest_key( Field $field ): string {
-		if ( null === $field->rest_group_short || false === $field->rest_group_short ) {
+		if ( ! isset( $field->rest_group_short ) || false === $field->rest_group_short ) {
 			return $field->get_id();
 		}
 		if ( \is_string( $field->rest_group_short ) ) {

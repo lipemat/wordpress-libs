@@ -679,12 +679,11 @@ class Field {
 	public ?array $protocols = null;
 
 	/**
-	 * <<<<<<< Updated upstream
 	 * Shorten a group's child field keys when displayed in REST API.
 	 *
 	 * @var string|bool
 	 */
-	public $rest_group_short;
+	public string|bool $rest_group_short;
 
 	/**
 	 * The data key. If using for posts, will be the post-meta key.
@@ -731,7 +730,7 @@ class Field {
 	 *
 	 * @var bool|string
 	 */
-	protected $char_counter;
+	protected string|bool $char_counter;
 
 	/**
 	 * Specify a callback to retrieve default value for the field.
@@ -776,7 +775,7 @@ class Field {
 	protected bool $repeatable = false;
 
 	/**
-	 * Filter the value which is returned in the rest api responses
+	 * Filter the value returned in the REST API responses
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#rest_value_cb
 	 * @link    https://github.com/CMB2/CMB2/wiki/REST-API#overriding-a-returned-value-for-a-individual-field
@@ -884,10 +883,26 @@ class Field {
 	/**
 	 * Get the box this field is assigned to.
 	 *
-	 * @return Box|Group|null
+	 * @return ?Box
 	 */
-	public function get_box() {
+	public function get_box(): ?Box {
+		if ( $this->box instanceof Group ) {
+			return $this->box->get_box();
+		}
 		return $this->box;
+	}
+
+
+	/**
+	 * Get the group this field is assigned to.
+	 *
+	 * @return ?Group
+	 */
+	public function get_group(): ?Group {
+		if ( $this->box instanceof Group ) {
+			return $this->box;
+		}
+		return null;
 	}
 
 
@@ -1099,7 +1114,7 @@ class Field {
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ): Field {
 		if ( method_exists( \CMB2_Utils::class, 'does_not_support_repeating' ) && \CMB2_Utils::does_not_support_repeating( $this->get_type() ) ) {
 			/* translators: {field type} */
-			throw new \LogicException( sprintf( esc_html__( 'Fields of `%s` type do not support repeating.', 'lipe' ), esc_html( $this->get_type() ) ) );
+			throw new \LogicException( \sprintf( esc_html__( 'Fields of `%s` type do not support repeating.', 'lipe' ), esc_html( $this->get_type() ) ) );
 		}
 		$this->repeatable = $repeatable;
 		$this->text['add_row_text'] = $add_row_text;
@@ -1427,6 +1442,18 @@ class Field {
 		$this->render_row_cb = $callback;
 
 		return $this;
+	}
+
+
+	/**
+	 * Is this field repeatable?
+	 *
+	 * @interal
+	 *
+	 * @return bool
+	 */
+	public function is_repeatable(): bool {
+		return $this->repeatable;
 	}
 
 

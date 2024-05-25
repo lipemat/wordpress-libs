@@ -37,25 +37,31 @@ abstract class Translate_Abstract {
 	/**
 	 * Get a field, which was registered with CMB2 by an id.
 	 *
-	 * @param string $field_id - The field id.
+	 * @param ?string $field_id - The field id.
 	 *
 	 * @return null|Field
 	 */
-	abstract protected function get_field( string $field_id ): ?Field;
+	abstract protected function get_field( ?string $field_id ): ?Field;
 
 
 	/**
-	 * Does this meta type support using object term taxonomy relationships?
+	 * Does this meta type and field support using object term taxonomy relationships?
 	 *
-	 * Really, only `post` is currently supported.
+	 * - Only `post` meta type is currently supported.
+	 * - Only taxonomy type fields are supported.
 	 *
 	 * @phpstan-param Repo::META_*|string $meta_type
 	 *
 	 * @param string                      $meta_type - The meta type.
+	 * @param Field                       $field     - The field to check for duplicate taxonomy fields.
 	 *
 	 * @return bool
 	 */
-	public function supports_taxonomy_relationships( string $meta_type ): bool {
+	public function supports_taxonomy_relationships( string $meta_type, Field $field ): bool {
+		if ( Repo::TYPE_TAXONOMY !== $field->data_type && Repo::TYPE_TAXONOMY_SINGULAR !== $field->data_type ) {
+			return false;
+		}
+
 		return 'post' === $meta_type;
 	}
 
@@ -185,7 +191,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @param int|string           $object_id - The object id.
 	 * @param string               $key       - The meta key.
-	 * @param bool|int|string            $checked   - Is the checkbox checked?.
+	 * @param bool|int|string      $checked   - Is the checkbox checked?.
 	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return void
@@ -320,11 +326,11 @@ abstract class Translate_Abstract {
 		$fields = $this->get_group_fields( $group_id );
 		foreach ( $values as $_row => $_values ) {
 			$this->group_row = $_row;
-			foreach ( $fields as $field ) {
-				if ( \array_key_exists( $field, $_values ) ) {
-					Repo::in()->update_value( $object_id, $field, $_values[ $field ], $meta_type );
+			foreach ( $fields as $field_id ) {
+				if ( \array_key_exists( $field_id, $_values ) ) {
+					Repo::in()->update_value( $object_id, $field_id, $_values[ $field_id ], $meta_type );
 				} else {
-					Repo::in()->delete_value( $object_id, $field, $meta_type );
+					Repo::in()->delete_value( $object_id, $field_id, $meta_type );
 				}
 			}
 		}
@@ -357,6 +363,7 @@ abstract class Translate_Abstract {
 		if ( null === $field || null === $field->group ) {
 			return false;
 		}
+
 		$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
 		if ( ! \is_array( $group ) ) {
 			$group = [];
@@ -442,7 +449,7 @@ abstract class Translate_Abstract {
 			return [];
 		}
 		$taxonomy = $field->taxonomy;
-		if ( ! $this->supports_taxonomy_relationships( $meta_type ) ) {
+		if ( ! $this->supports_taxonomy_relationships( $meta_type, $field ) ) {
 			return $this->maybe_use_main_blog( $field_id, function() use ( $object_id, $field_id, $meta_type ) {
 				$meta_value = (array) $this->get_meta_value( $object_id, $field_id, $meta_type );
 
@@ -494,7 +501,7 @@ abstract class Translate_Abstract {
 		}
 
 		// Stored as term relationship.
-		if ( $this->supports_taxonomy_relationships( $meta_type ) ) {
+		if ( $this->supports_taxonomy_relationships( $meta_type, $field ) ) {
 			$terms = \array_map( function( $term ) {
 				// Term ids are perceived as term slug when strings.
 				return is_numeric( $term ) ? (int) $term : $term;
@@ -536,11 +543,8 @@ abstract class Translate_Abstract {
 	 * @return void
 	 */
 	protected function delete_taxonomy_field_value( int|string $object_id, string $field_id, string $meta_type ): void {
-		if ( $this->supports_taxonomy_relationships( $meta_type ) ) {
-			$field = $this->get_field( $field_id );
-			if ( null === $field ) {
-				return;
-			}
+		$field = $this->get_field( $field_id );
+		if ( $field instanceof Field && $this->supports_taxonomy_relationships( $meta_type, $field ) ) {
 			$taxonomy = $field->taxonomy;
 			wp_delete_object_term_relationships( (int) $object_id, $taxonomy );
 		} else {

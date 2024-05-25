@@ -49,6 +49,7 @@ trait Box_Trait {
 			} else {
 				add_action( 'cmb2_init', [ $this, 'register_fields' ], 11 );
 			}
+			add_action( 'cmb2_init', [ Repo::in(), 'validate_fields' ], 20 );
 		}, __METHOD__ );
 	}
 
@@ -284,18 +285,17 @@ trait Box_Trait {
 	 *        will all map to `post`.
 	 *
 	 * @phpstan-return Box::TYPE_*
-	 *
 	 * @return string
 	 */
 	public function get_object_type(): string {
 		if ( $this instanceof Group && $this->get_box() instanceof Box ) {
 			return $this->get_box()->get_object_type();
 		}
-		if ( isset( $this->object_types[0] ) && \in_array( $this->object_types[0], [ 'comment', 'options-page', 'user', 'term' ], true ) ) {
+		if ( isset( $this->object_types[0] ) && \in_array( $this->object_types[0], [ Box::TYPE_COMMENT, Box::TYPE_OPTIONS, Box::TYPE_USER, Box::TYPE_TERM ], true ) ) {
 			return $this->object_types[0];
 		}
 
-		return 'post';
+		return Box::TYPE_POST;
 	}
 
 

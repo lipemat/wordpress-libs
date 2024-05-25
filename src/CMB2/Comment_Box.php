@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
@@ -30,8 +31,8 @@ class Comment_Box extends Box {
 	 * @param string $id    Metabox ID.
 	 * @param string $title Metabox title.
 	 */
-	public function __construct( $id, $title ) {
-		parent::__construct( $id, [ 'comment' ], $title );
+	public function __construct( string $id, $title ) {
+		parent::__construct( $id, [ Box::TYPE_COMMENT ], $title );
 		$this->context( static::CONTEXT_NORMAL );
 	}
 }

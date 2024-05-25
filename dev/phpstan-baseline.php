@@ -117,12 +117,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Box\\:\\:__construct\\(\\) has parameter \\$object_types with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Box.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Box\\:\\:clear_single_item\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/CMB2/Box.php',

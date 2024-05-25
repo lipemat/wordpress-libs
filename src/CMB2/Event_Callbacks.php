@@ -114,7 +114,7 @@ class Event_Callbacks {
 	 */
 	protected function register_hooks( string $cb_type ): void {
 		// Taxonomy fields added to a `post` object.
-		if ( \in_array( $this->field->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) && Repo::in()->supports_taxonomy_relationships( $this->box_type ) ) {
+		if ( Repo::in()->supports_taxonomy_relationships( $this->box_type, $this->field ) ) {
 			$this->track_previous_taxonomy_value();
 			if ( static::TYPE_CHANGE === $cb_type ) {
 				$this->taxonomy_change_hooks();

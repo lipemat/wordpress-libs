@@ -183,7 +183,7 @@ class Options_Page extends Box {
 
 		add_action( "cmb2_init_hookup_{$id}", [ $this, 'run_options_hookup_on_front_end' ] );
 
-		parent::__construct( $id, [ 'options-page' ], $title );
+		parent::__construct( $id, [ Box::TYPE_OPTIONS ], $title );
 	}
 
 
@@ -214,7 +214,7 @@ class Options_Page extends Box {
 	public function save_button( ?string $text ): void {
 		$this->save_button = $text ?? '';
 		if ( null === $text ) {
-			add_action( "cmb2_before_options-page_form_{$this->id}", function () {
+			add_action( "cmb2_before_options-page_form_{$this->id}", function() {
 				// Hide, so we never see it with FOUC. Remove, so we can't submit the form via enter.
 				?>
 				<style>
@@ -277,7 +277,7 @@ class Options_Page extends Box {
 
 		if ( \is_string( $field->show_in_rest ) || true === $field->show_in_rest ) {
 			$config = $this->translate_rest_keys( $field, $config );
-			add_filter( 'rest_pre_get_setting', function ( $pre, $option ) use ( $field, $config ) {
+			add_filter( 'rest_pre_get_setting', function( $pre, $option ) use ( $field, $config ) {
 				if ( isset( $config['show_in_rest'] ) && $option === $config['show_in_rest']['name'] ) {
 					cmb2_options( $this->id )->get( $field->get_id(), $field->default );
 				}

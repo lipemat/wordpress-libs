@@ -14,6 +14,8 @@ use Lipe\Lib\Meta\Repo;
  *
  */
 class Box {
+	use Box_Trait;
+
 	public const CONTEXT_NORMAL   = 'normal';
 	public const CONTEXT_SIDE     = 'side';
 	public const CONTEXT_ADVANCED = 'advanced';
@@ -28,8 +30,6 @@ class Box {
 	public const TYPE_USER    = 'user';
 	public const TYPE_TERM    = 'term';
 	public const TYPE_POST    = 'post';
-
-	use Box_Trait;
 
 	/**
 	 * Used as a flag to allow REST fields to be added
@@ -246,7 +246,7 @@ class Box {
 	 * @example WP_REST_Server::EDITABLE
 	 *
 	 * @notice  Boxes must be registered on `cmb2_init` instead of `cmb2_admin_init`
-	 *         to use this property. Change in `Meta_Provider` if applicable
+	 *         to use this property. Change in `Meta_Provider` if applicable.
 	 *
 	 * @default false
 	 *
@@ -345,7 +345,7 @@ class Box {
 	 *
 	 * @var ?string
 	 */
-	protected $title = '';
+	protected ?string $title = '';
 
 	/**
 	 * Tabs to display either vertical or horizontal
@@ -360,9 +360,11 @@ class Box {
 	/**
 	 * Register a new meta box.
 	 *
-	 * @param string      $id           - ID of this box.
-	 * @param array       $object_types - [post type slugs], or 'user', 'term', 'comment', or 'options-page'.
-	 * @param string|null $title        - Title of this box (false to omit displaying).
+	 * @phpstan-param array<Box::TYPE_*|string> $object_types
+	 *
+	 * @param string                            $id           - ID of this box.
+	 * @param array                             $object_types - [post type slugs], or 'user', 'term', 'comment', or 'options-page'.
+	 * @param string|null                       $title        - Title of this box (false to omit displaying).
 	 *
 	 */
 	public function __construct( string $id, array $object_types, ?string $title ) {
