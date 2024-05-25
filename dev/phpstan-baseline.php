@@ -706,7 +706,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
-	'count' => 3,
+	'count' => 1,
 	'path' => __DIR__ . '/../src/Meta/Translate_Abstract.php',
 ];
 $ignoreErrors[] = [

@@ -129,4 +129,33 @@ class Translate_AbstractTest extends \WP_UnitTestCase {
 		$this->assertSame( '1', $post->get_meta( __METHOD__ . 'servings' ) );
 		$this->assertSame( '100', $post->get_meta( __METHOD__ . 'calories' ) );
 	}
+
+
+	/**
+	 * @dataProvider provideCheckboxValues
+	 */
+	public function test_checkbox_field( mixed $value, bool $expected ): void {
+		$box = new Box( __METHOD__, [ 'post' ], 'Test Checkbox Field' );
+		$box->field( 'meta/prefixed/cf', 'Test 2' )->checkbox();
+		do_action( 'cmb2_init' );
+		$post = Post_Mock::factory( self::factory()->post->create_and_get() );
+
+		$post['meta/prefixed/cf'] = $value;
+		$this->assertSame( $expected, $post->get_meta( 'meta/prefixed/cf' ) );
+	}
+
+
+	public static function provideCheckboxValues(): array {
+		return [
+			'on'       => [ 'on', true ],
+			'off'      => [ 'off', false ],
+			'one'      => [ 1, true ],
+			'one_str'  => [ '1', true ],
+			'zero'     => [ 0, false ],
+			'blank'    => [ '', false ],
+			'negative' => [ -1, false ],
+			'true'     => [ true, true ],
+			'false'    => [ false, false ],
+		];
+	}
 }

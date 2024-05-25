@@ -368,9 +368,9 @@ class Mutator_Test extends \WP_UnitTestCase {
 		$this->assertEquals( [ $id, $id ], $this->changed );
 		$o['file'] = $this->attachment_id;
 		$this->assertEquals( [ $id, $id, $id ], $this->changed );
-		$o['checkbox'] = 'x';
+		$o['checkbox'] = 'on';
 		$this->assertEquals( [ $id, $id, $id, $id ], $this->changed );
-		$o['checkbox'] = 'x';
+		$o['checkbox'] = 1;
 		$this->assertEquals( [ $id, $id, $id, $id ], $this->changed );
 		$o['checkbox'] = false;
 		$this->assertEquals( [ $id, $id, $id, $id, $id ], $this->changed );

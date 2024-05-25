@@ -84,22 +84,15 @@ class Repo extends Translate_Abstract {
 	 *
 	 * @return mixed
 	 */
-	public function get_value( $object_id, string $field_id, string $meta_type = 'post' ) {
-		// @phpstan-ignore-next-line -- Switch to `match` when PHP 8 is required.
-		switch ( $this->get_field_data_type( $field_id ) ) {
-			case static::TYPE_CHECKBOX:
-				return $this->get_checkbox_field_value( $object_id, $field_id, $meta_type );
-			case static::TYPE_FILE:
-				return $this->get_file_field_value( $object_id, $field_id, $meta_type );
-			case static::TYPE_GROUP:
-				return $this->get_group_field_value( $object_id, $field_id, $meta_type );
-			case static::TYPE_TAXONOMY:
-				return $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type );
-			case static::TYPE_TAXONOMY_SINGULAR:
-				return $this->get_taxonomy_singular_field_value( $object_id, $field_id, $meta_type );
-		}
-
-		return $this->get_meta_value( $object_id, $field_id, $meta_type );
+	public function get_value( int|string $object_id, string $field_id, string $meta_type = 'post' ): mixed {
+		return match ( $this->get_field_data_type( $field_id ) ) {
+			static::TYPE_CHECKBOX          => $this->get_checkbox_field_value( $object_id, $field_id, $meta_type ),
+			static::TYPE_FILE              => $this->get_file_field_value( $object_id, $field_id, $meta_type ),
+			static::TYPE_GROUP             => $this->get_group_field_value( $object_id, $field_id, $meta_type ),
+			static::TYPE_TAXONOMY          => $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type ),
+			static::TYPE_TAXONOMY_SINGULAR => $this->get_taxonomy_singular_field_value( $object_id, $field_id, $meta_type ),
+			default                        => $this->get_meta_value( $object_id, $field_id, $meta_type ),
+		};
 	}
 
 
@@ -118,27 +111,15 @@ class Repo extends Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	public function update_value( $object_id, string $field_id, $value, string $meta_type = 'post' ): void {
-		// @phpstan-ignore-next-line -- Switch to `match` when PHP 8 is required.
-		switch ( $this->get_field_data_type( $field_id ) ) {
-			case static::TYPE_CHECKBOX:
-				$this->update_checkbox_field_value( $object_id, $field_id, $value, $meta_type );
-				break;
-			case static::TYPE_FILE:
-				$this->update_file_field_value( $object_id, $field_id, (int) $value, $meta_type );
-				break;
-			case static::TYPE_GROUP:
-				$this->update_group_field_values( $object_id, $field_id, (array) $value, $meta_type );
-				break;
-			case static::TYPE_TAXONOMY:
-				$this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type );
-				break;
-			case static::TYPE_TAXONOMY_SINGULAR:
-				$this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type, true );
-				break;
-			default:
-				$this->update_meta_value( $object_id, $field_id, $value, $meta_type );
-		}
+	public function update_value( int|string $object_id, string $field_id, mixed $value, string $meta_type = 'post' ): void {
+		match ( $this->get_field_data_type( $field_id ) ) {
+			static::TYPE_CHECKBOX          => $this->update_checkbox_field_value( $object_id, $field_id, $value, $meta_type ),
+			static::TYPE_FILE              => $this->update_file_field_value( $object_id, $field_id, (int) $value, $meta_type ),
+			static::TYPE_GROUP             => $this->update_group_field_values( $object_id, $field_id, (array) $value, $meta_type ),
+			static::TYPE_TAXONOMY          => $this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type ),
+			static::TYPE_TAXONOMY_SINGULAR => $this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type, true ),
+			default                        => $this->update_meta_value( $object_id, $field_id, $value, $meta_type ),
+		};
 	}
 
 
@@ -156,20 +137,12 @@ class Repo extends Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	public function delete_value( $object_id, string $field_id, string $meta_type ): void {
-		// @phpstan-ignore-next-line -- Switch to `match` when PHP 8 is required.
-		switch ( $this->get_field_data_type( $field_id ) ) {
-			case static::TYPE_FILE:
-				$this->delete_file_field_value( $object_id, $field_id, $meta_type );
-				break;
-			case static::TYPE_TAXONOMY:
-			case static::TYPE_TAXONOMY_SINGULAR:
-				$this->delete_taxonomy_field_value( $object_id, $field_id, $meta_type );
-				break;
-			case static::TYPE_CHECKBOX:
-			case static::TYPE_GROUP:
-			default:
-				$this->delete_meta_value( $object_id, $field_id, $meta_type );
-		}
+	public function delete_value( int|string $object_id, string $field_id, string $meta_type ): void {
+		match ( $this->get_field_data_type( $field_id ) ) {
+			static::TYPE_FILE              => $this->delete_file_field_value( $object_id, $field_id, $meta_type ),
+			static::TYPE_TAXONOMY,
+			static::TYPE_TAXONOMY_SINGULAR => $this->delete_taxonomy_field_value( $object_id, $field_id, $meta_type ),
+			default                        => $this->delete_meta_value( $object_id, $field_id, $meta_type ),
+		};
 	}
 }

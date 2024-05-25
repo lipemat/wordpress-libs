@@ -65,13 +65,13 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id - The object id.
+	 * @param int|string           $object_id - The object id.
 	 * @param string               $key       - The meta key.
 	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return mixed
 	 */
-	protected function get_meta_value( $object_id, string $key, string $meta_type ) {
+	protected function get_meta_value( int|string $object_id, string $key, string $meta_type ): mixed {
 		$field = $this->get_field( $key );
 		if ( null !== $field && null !== $field->group ) {
 			$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
@@ -101,14 +101,14 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id - The object id.
+	 * @param int|string           $object_id - The object id.
 	 * @param string               $key       - The meta key.
 	 * @param mixed                $value     - The meta value.
 	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return bool|int
 	 */
-	protected function update_meta_value( $object_id, string $key, $value, string $meta_type ) {
+	protected function update_meta_value( int|string $object_id, string $key, mixed $value, string $meta_type ): bool|int {
 		$field = $this->get_field( $key );
 		if ( null !== $field ) {
 			$cmb2_field = $field->get_cmb2_field( $object_id );
@@ -121,7 +121,8 @@ abstract class Translate_Abstract {
 		}
 
 		if ( Repo::META_OPTION === $meta_type ) {
-			return cmb2_options( (string) $object_id )->update( $key, $value, true );
+			// @phpstan-ignore-next-line -- CMB2 returned null prior to v2.10.1.15
+			return (bool) cmb2_options( (string) $object_id )->update( $key, $value, true );
 		}
 
 		return update_metadata( $meta_type, (int) $object_id, $key, $value );
@@ -133,13 +134,13 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id - The object id.
+	 * @param int|string           $object_id - The object id.
 	 * @param string               $key       - The meta key.
 	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return void
 	 */
-	protected function delete_meta_value( $object_id, string $key, string $meta_type ): void {
+	protected function delete_meta_value( int|string $object_id, string $key, string $meta_type ): void {
 		$field = $this->get_field( $key );
 		if ( null !== $field && null !== $field->group ) {
 			$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
@@ -161,13 +162,13 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id - The object id.
+	 * @param int|string           $object_id - The object id.
 	 * @param string               $key       - The meta key.
 	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return bool
 	 */
-	protected function get_checkbox_field_value( $object_id, string $key, string $meta_type ): bool {
+	protected function get_checkbox_field_value( int|string $object_id, string $key, string $meta_type ): bool {
 		$value = $this->get_meta_value( $object_id, $key, $meta_type );
 
 		return ( 'on' === $value );
@@ -184,16 +185,16 @@ abstract class Translate_Abstract {
 	 *
 	 * @param int|string           $object_id - The object id.
 	 * @param string               $key       - The meta key.
-	 * @param bool|int             $checked   - Is the checkbox checked?.
+	 * @param bool|int|string            $checked   - Is the checkbox checked?.
 	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return void
 	 */
-	protected function update_checkbox_field_value( $object_id, string $key, $checked, string $meta_type ): void {
-		if ( empty( $checked ) ) {
-			$this->delete_meta_value( $object_id, $key, $meta_type );
-		} else {
+	protected function update_checkbox_field_value( int|string $object_id, string $key, bool|int|string $checked, string $meta_type ): void {
+		if ( true === $checked || 'on' === $checked || '1' === $checked || 1 === $checked ) {
 			$this->update_meta_value( $object_id, $key, 'on', $meta_type );
+		} else {
+			$this->delete_meta_value( $object_id, $key, $meta_type );
 		}
 	}
 
@@ -204,13 +205,13 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id - The object id.
+	 * @param int|string           $object_id - The object id.
 	 * @param string               $key       - The meta key.
 	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return ?array
 	 */
-	protected function get_file_field_value( $object_id, string $key, string $meta_type ): ?array {
+	protected function get_file_field_value( int|string $object_id, string $key, string $meta_type ): ?array {
 		$url = $this->get_meta_value( $object_id, $key, $meta_type );
 		if ( ! empty( $url ) ) {
 			// Add the extra field so groups meta will be translated properly.
@@ -241,7 +242,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function update_file_field_value( $object_id, string $key, int $attachment_id, string $meta_type ): void {
+	protected function update_file_field_value( int|string $object_id, string $key, int $attachment_id, string $meta_type ): void {
 		// Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->fields[ $key ]->group ) {
 			$this->fields[ $key . '_id' ] = $this->fields[ $key ];
@@ -257,13 +258,13 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id - The object id.
+	 * @param int|string           $object_id - The object id.
 	 * @param string               $key       - The meta key.
 	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return void
 	 */
-	protected function delete_file_field_value( $object_id, string $key, string $meta_type ): void {
+	protected function delete_file_field_value( int|string $object_id, string $key, string $meta_type ): void {
 		// Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->fields[ $key ]->group ) {
 			$this->fields[ $key . '_id' ] = $this->fields[ $key ];
@@ -286,7 +287,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return array
 	 */
-	protected function get_group_field_value( $object_id, string $group_id, string $meta_type ): array {
+	protected function get_group_field_value( int|string $object_id, string $group_id, string $meta_type ): array {
 		$values = [];
 
 		$existing = $this->get_meta_value( $object_id, $group_id, $meta_type );
@@ -315,7 +316,7 @@ abstract class Translate_Abstract {
 	 * @param array                $values    - The values.
 	 * @param string               $meta_type - The meta type.
 	 */
-	protected function update_group_field_values( $object_id, string $group_id, array $values, string $meta_type ): void {
+	protected function update_group_field_values( int|string $object_id, string $group_id, array $values, string $meta_type ): void {
 		$fields = $this->get_group_fields( $group_id );
 		foreach ( $values as $_row => $_values ) {
 			$this->group_row = $_row;
@@ -344,21 +345,25 @@ abstract class Translate_Abstract {
 	 *
 	 * @internal
 	 *
-	 * @param string|int           $object_id - The object id.
+	 * @param int|string           $object_id - The object id.
 	 * @param string               $key       - The meta key.
 	 * @param mixed                $value     - The value.
 	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return bool|int
 	 */
-	protected function update_group_sub_field_value( $object_id, string $key, $value, string $meta_type ) {
-		$group = $this->get_meta_value( $object_id, (string) $this->fields[ $key ]->group, $meta_type );
+	protected function update_group_sub_field_value( int|string $object_id, string $key, mixed $value, string $meta_type ): bool|int {
+		$field = $this->get_field( $key );
+		if ( null === $field || null === $field->group ) {
+			return false;
+		}
+		$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
 		if ( ! \is_array( $group ) ) {
 			$group = [];
 		}
 		$group[ $this->group_row ][ $key ] = $value;
 
-		return $this->update_meta_value( $object_id, (string) $this->fields[ $key ]->group, $group, $meta_type );
+		return $this->update_meta_value( $object_id, $field->group, $group, $meta_type );
 	}
 
 
@@ -372,14 +377,14 @@ abstract class Translate_Abstract {
 	 *
 	 * @internal
 	 *
-	 * @param string|int           $object_id - The object id.
+	 * @param int|string           $object_id - The object id.
 	 * @param string               $group_id  - The meta key.
 	 * @param int                  $row       - The row index in the group.
 	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return bool|int
 	 */
-	protected function delete_group_row( $object_id, string $group_id, int $row, string $meta_type ) {
+	protected function delete_group_row( int|string $object_id, string $group_id, int $row, string $meta_type ): bool|int {
 		$this->group_row = $row;
 		foreach ( $this->get_group_fields( $group_id ) as $field ) {
 			Repo::in()->delete_value( $object_id, $field, $meta_type );
@@ -423,7 +428,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id - The object id.
+	 * @param int|string           $object_id - The object id.
 	 * @param string               $field_id  - The field id.
 	 * @param string               $meta_type - The meta type.
 	 *
@@ -431,7 +436,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return \WP_Term[]
 	 */
-	protected function get_taxonomy_field_value( $object_id, string $field_id, string $meta_type ): array {
+	protected function get_taxonomy_field_value( int|string $object_id, string $field_id, string $meta_type ): array {
 		$field = $this->get_field( $field_id );
 		if ( null === $field ) {
 			return [];
@@ -468,7 +473,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id - The object id.
+	 * @param int|string           $object_id - The object id.
 	 * @param string               $key       - The meta key.
 	 * @param int[]                $terms     - Term ids.
 	 * @param string               $meta_type - The meta type.
@@ -476,7 +481,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return void
 	 */
-	protected function update_taxonomy_field_value( $object_id, string $key, array $terms, string $meta_type, bool $singular = false ): void {
+	protected function update_taxonomy_field_value( int|string $object_id, string $key, array $terms, string $meta_type, bool $singular = false ): void {
 		$field = $this->get_field( $key );
 		if ( null === $field ) {
 			return;
@@ -524,13 +529,13 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id - The object id.
+	 * @param int|string           $object_id - The object id.
 	 * @param string               $field_id  - The field id.
 	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return void
 	 */
-	protected function delete_taxonomy_field_value( $object_id, string $field_id, string $meta_type ): void {
+	protected function delete_taxonomy_field_value( int|string $object_id, string $field_id, string $meta_type ): void {
 		if ( $this->supports_taxonomy_relationships( $meta_type ) ) {
 			$field = $this->get_field( $field_id );
 			if ( null === $field ) {
@@ -550,16 +555,20 @@ abstract class Translate_Abstract {
 	 *
 	 * @phpstan-param Repo::META_* $meta_type
 	 *
-	 * @param string|int           $object_id - The object id.
+	 * @param int|string           $object_id - The object id.
 	 * @param string               $field_id  - The field id.
 	 * @param string               $meta_type - The meta type.
 	 *
 	 * @return \WP_Term|false
 	 */
-	protected function get_taxonomy_singular_field_value( $object_id, string $field_id, string $meta_type ) {
-		$terms = $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type );
+	protected function get_taxonomy_singular_field_value( int|string $object_id, string $field_id, string $meta_type ): \WP_Term|bool {
+		try {
+			$terms = $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type );
+		} catch ( \RuntimeException ) {
+			return false;
+		}
 
-		return empty( $terms ) ? false : array_shift( $terms );
+		return [] === $terms ? false : \reset( $terms );
 	}
 
 
@@ -570,11 +579,11 @@ abstract class Translate_Abstract {
 	 * If a number is passed, the int value of the number is returned.
 	 *
 	 * @param string     $key   - The field key.
-	 * @param string|int $value - The term value.
+	 * @param int|string $value - The term value.
 	 *
 	 * @return int|null
 	 */
-	protected function get_term_id_from_slug( string $key, $value ): ?int {
+	protected function get_term_id_from_slug( string $key, int|string $value ): ?int {
 		if ( ! is_numeric( $value ) ) {
 			$field = $this->get_field( $key );
 			if ( null === $field ) {
@@ -608,7 +617,7 @@ abstract class Translate_Abstract {
 	 *
 	 * @return mixed;
 	 */
-	protected function maybe_use_main_blog( string $field_id, callable $callback ) {
+	protected function maybe_use_main_blog( string $field_id, callable $callback ): mixed {
 		$field = $this->get_field( $field_id );
 		if ( null === $field ) {
 			throw new \RuntimeException( esc_html( "Field with id `{$field_id}` does not exist." ) );
