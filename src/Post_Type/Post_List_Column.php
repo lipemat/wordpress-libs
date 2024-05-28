@@ -20,6 +20,8 @@ use Lipe\Lib\Post_Type\Post_List_Column\ListColumn;
  *
  */
 class Post_List_Column {
+	protected const NONCE = 'lipe/lib/post-type/post-list-column/nonce';
+
 	/**
 	 * The column slug auto generated from the column label.
 	 *
@@ -28,6 +30,11 @@ class Post_List_Column {
 	protected string $column_slug;
 
 
+	/**
+	 * Create an instance of the column and hook it into the WordPress admin.
+	 *
+	 * @param ListColumn $column - Column to register.
+	 */
 	final protected function __construct(
 		protected ListColumn $column,
 	) {
@@ -36,6 +43,14 @@ class Post_List_Column {
 	}
 
 
+	/**
+	 * Hook the column into the WordPress admin.
+	 *
+	 * - Does nothing if not within the admin.
+	 * - Will not filter anything if not in `load-edit.php` context.
+	 *
+	 * @return void
+	 */
 	protected function hook(): void {
 		if ( ! is_admin() ) {
 			return;
@@ -105,7 +120,8 @@ class Post_List_Column {
 		if ( ! $this->column instanceof Filter || ! \in_array( $post_type, $this->column->get_post_types(), true ) ) {
 			return;
 		}
-		$selected = $this->get_selected_filter();
+		wp_nonce_field( static::NONCE, static::NONCE );
+
 		?>
 		<select
 			name="<?= esc_attr( $this->column_slug ) ?>"
@@ -117,6 +133,7 @@ class Post_List_Column {
 				<?= esc_html( $this->column->get_show_all_label() ) ?>
 			</option>
 			<?php
+			$selected = $this->get_selected_filter();
 			foreach ( $this->column->get_options() as $value => $label ) {
 				?>
 				<option class="level-0" value="<?= esc_attr( $value ) ?>" <?php selected( $selected, $value ); ?>>
@@ -146,9 +163,10 @@ class Post_List_Column {
 		if ( ! $this->column instanceof Filter || ! isset( $query->query_vars['post_type'] ) ) {
 			return;
 		}
+
 		$filter = $this->get_selected_filter();
 		if ( '' !== $filter && \in_array( $query->query_vars['post_type'], $this->column->get_post_types(), true ) ) {
-			$this->column->filter_query( sanitize_text_field( wp_unslash( $_REQUEST[ $this->column_slug ] ) ), $query );
+			$this->column->filter_query( $filter, $query );
 		}
 	}
 
@@ -159,6 +177,9 @@ class Post_List_Column {
 	 * @return string
 	 */
 	protected function get_selected_filter(): string {
+		if ( ! isset( $_REQUEST[ static::NONCE ] ) || false === wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ static::NONCE ] ) ), static::NONCE ) ) {
+			return '';
+		}
 		if ( isset( $_REQUEST[ $this->column_slug ] ) && '' !== $_REQUEST[ $this->column_slug ] ) {
 			return sanitize_text_field( wp_unslash( $_REQUEST[ $this->column_slug ] ) );
 		}
@@ -166,6 +187,16 @@ class Post_List_Column {
 	}
 
 
+	/**
+	 * Register a custom post list column for a list of post types.
+	 *
+	 * - A basic column requires the `ListColumn` interface.
+	 * - A filterable column also requires the `Filter` interface.
+	 *
+	 * @param ListColumn $column - Column to register.
+	 *
+	 * @return Post_List_Column
+	 */
 	public static function factory( ListColumn $column ): Post_List_Column {
 		return new static( $column );
 	}

@@ -86,14 +86,18 @@ class Post_List_ColumnTest extends \WP_UnitTestCase {
 		do_action( 'parse_query', $query );
 		$this->assertArrayNotHasKey( 'slug', $query->query_vars );
 
-		// Filter selected
-		$_REQUEST['test-filter-column-label'] = 'one';
-
 		// No post type provided to query.
+		$_REQUEST['test-filter-column-label'] = 'one';
 		do_action( 'parse_query', $query );
 		$this->assertArrayNotHasKey( 'slug', $query->query_vars );
 
+		// No nonce provided
 		$query->query_vars['post_type'] = $type;
+		do_action( 'parse_query', $query );
+		$this->assertArrayNotHasKey( 'slug', $query->query_vars );
+
+		$nonce = get_private_property( Post_List_Column::class, 'NONCE' );
+		$_REQUEST[ $nonce ] = wp_create_nonce( $nonce );
 		do_action( 'parse_query', $query );
 		if ( $included ) {
 			$this->assertSame( 'one', $query->query_vars['slug'] );
