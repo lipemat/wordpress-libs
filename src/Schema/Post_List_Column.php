@@ -6,6 +6,8 @@ namespace Lipe\Lib\Schema;
 
 /**
  * Add a custom column to the posts list table.
+ *
+ * @deprecated 4.10.0 - Use `Lipe\Lib\Post_Type\Post_List_Column` instead.
  */
 abstract class Post_List_Column {
 	/**
@@ -45,9 +47,9 @@ abstract class Post_List_Column {
 
 
 	/**
-	 * Post_List_Column constructor.
+	 * Post List Column constructor.
 	 *
-	 * @todo Remove default value for $post_types in version 5.
+	 * @todo                     Remove default value for $post_types in version 5.
 	 *
 	 * @param string $column_label - The column label.
 	 * @param array  $post_types   - The post types to add the column to.
@@ -55,6 +57,8 @@ abstract class Post_List_Column {
 	 * @phpstan-ignore-next-line -- Keeping default value intact until version 5.
 	 */
 	public function __construct( string $column_label, array $post_types = [ - 1 ] ) {
+		_deprecated_class( __CLASS__, '4.10.0', \Lipe\Lib\Post_Type\Post_List_Column::class );
+
 		if ( [ - 1 ] === $post_types ) {
 			_doing_it_wrong( __METHOD__, 'You must pass post types to `Post_List_Column::__construct()`', '4.5.0' );
 			$post_types = [ 'post' ];
@@ -129,7 +133,7 @@ abstract class Post_List_Column {
 	 *
 	 * @internal
 	 *
-	 * @param array $columns - Colmuns to add to the post list.
+	 * @param array $columns - Columns to add to the post list.
 	 *
 	 * @return array
 	 */
