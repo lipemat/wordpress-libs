@@ -129,7 +129,7 @@ abstract class Db {
 
 		$sql = $this->get_select_query( $columns, $id_or_wheres, $count, $order_by );
 
-		if ( false !== \strpos( $columns, '*' ) || false !== \strpos( $columns, ',' ) ) {
+		if ( \str_contains( $columns, '*' ) || \str_contains( $columns, ',' ) ) {
 			if ( 1 === $count ) {
 				return $wpdb->get_row( $sql );
 			}
@@ -327,7 +327,7 @@ abstract class Db {
 					continue;
 				}
 
-				if ( false !== \strpos( (string) $value, '%' ) ) {
+				if ( \str_contains( (string) $value, '%' ) ) {
 					$wheres[ $column ] = "`$column` LIKE " . \array_shift( $where_formats );
 				} else {
 					$wheres[ $column ] = "`$column` = " . \array_shift( $where_formats );
