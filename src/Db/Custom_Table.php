@@ -164,7 +164,7 @@ class Custom_Table {
 		unset( $columns[ $this->config->get_id_field() ] );
 		$columns = $this->sort_columns( $columns );
 
-		if ( false !== $wpdb->insert( $this->get_table(), $columns, $this->config->get_columns() ) ) {
+		if ( false !== $wpdb->insert( $this->get_table(), $columns, $this->config->get_column_formats() ) ) {
 			return $wpdb->insert_id;
 		}
 		return null;
@@ -346,7 +346,7 @@ class Custom_Table {
 	 */
 	protected function format_values( array $values ): array {
 		$formatted = [];
-		$columns = $this->config->get_columns();
+		$columns = $this->config->get_column_formats();
 		foreach ( $values as $key => $value ) {
 			if ( isset( $columns[ $key ] ) && \is_string( $value ) ) {
 				$formatted[ $key ] = match ( $columns[ $key ] ) {
@@ -372,7 +372,7 @@ class Custom_Table {
 	 */
 	protected function sort_columns( array $columns ): array {
 		$clean = [];
-		foreach ( $this->config->get_columns() as $column => $type ) {
+		foreach ( $this->config->get_column_formats() as $column => $type ) {
 			if ( \array_key_exists( $column, $columns ) ) {
 				$clean[ $column ] = $columns[ $column ];
 				// Because we usually let MySQL handle default dates.
@@ -401,7 +401,7 @@ class Custom_Table {
 	 */
 	protected function get_formats( array $columns ): array {
 		$id_field = $this->config->get_id_field();
-		$all_columns = $this->config->get_columns();
+		$all_columns = $this->config->get_column_formats();
 		$formats = [];
 		foreach ( $columns as $column => $value ) {
 			if ( $id_field === $column ) {

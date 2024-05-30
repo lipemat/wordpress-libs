@@ -13,9 +13,11 @@ namespace Lipe\Lib\Db;
  */
 interface Table {
 	/**
+	 * Get the column names and formats for the table.
+	 *
 	 * @phpstan-return FORMATS
 	 */
-	public function get_columns(): array;
+	public function get_column_formats(): array;
 
 
 	/**
