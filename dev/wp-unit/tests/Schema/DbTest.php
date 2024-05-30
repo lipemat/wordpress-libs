@@ -66,6 +66,8 @@ class DbTest extends \WP_UnitTestCase {
 		$raw_count = (int) $wpdb->get_var( "SELECT count(*) FROM {$wpdb->options} WHERE `option_name` LIKE '%c%'" );
 		$this->assertEquals( $raw_count, $results['total'] );
 		$this->assertEquals( ceil( $raw_count / 10 ), $results['total_pages'] );
+
+		$this->expectDeprecated( Db::class );
 	}
 
 

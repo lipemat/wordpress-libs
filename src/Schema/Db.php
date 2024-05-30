@@ -2,6 +2,7 @@
 
 namespace Lipe\Lib\Schema;
 
+use Lipe\Lib\Db\Custom_Table;
 use Lipe\Lib\Traits\Version;
 
 //phpcs:disable WordPress.DB -- This whole class is custom DB handler.
@@ -9,13 +10,15 @@ use Lipe\Lib\Traits\Version;
 /**
  * Interact with custom Database Tables
  *
- * @notice You must set the necessary class constants in the child class.
- * @const  NAME - Name of table without the prefix.
- * @const  ID_FIELD - Primary key field.
- * @const  COLUMNS - Table columns.
+ * @notice     You must set the necessary class constants in the child class.
+ * @const      NAME - Name of table without the prefix.
+ * @const      ID_FIELD - Primary key field.
+ * @const      COLUMNS - Table columns.
  *
- * @note   We have a PHPStan service dedicated to this class. It could be used to refine the `get` method.
- * @link   https://github.com/lipemat/phpstan-wordpress/blob/develop/src/Services/DbGetDynamicFunctionReturnTypeExtension.php
+ * @note       We have a PHPStan service dedicated to this class. It could be used to refine the `get` method.
+ * @link       https://github.com/lipemat/phpstan-wordpress/blob/develop/src/Services/DbGetDynamicFunctionReturnTypeExtension.php
+ *
+ * @deprecated 4.10.0 Use Custom_Table instead. Will be removed in version 5.0.0.
  *
  * @phpstan-type WHERE array<string,float|string|null>|int
  */
@@ -81,6 +84,8 @@ abstract class Db {
 		$this->table = $wpdb->prefix . static::NAME;
 
 		$this->run_for_version( [ $this, 'run_updates' ], (string) static::DB_VERSION );
+
+		_deprecated_class( self::class, '4.10.0', Custom_Table::class ); //phpcs:ignore
 	}
 
 

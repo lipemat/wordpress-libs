@@ -11,10 +11,10 @@ use Lipe\Lib\Traits\Singleton;
  *
  * Pretty much automatic - use standard WP add_image_size() and this will pick it up.
  *
- * @example  Image_Resize::init();
- * @example  may be tapped in using the public methods as well - however probably not necessary
+ * @example    Image_Resize::init();
+ * @example    may be tapped in using the public methods as well - however probably not necessary
  *
- * @notice   The image sizes cannot be relied on in wp.media when using this.
+ * @notice     The image sizes cannot be relied on in wp.media when using this.
  *         If you need a custom resized image using normal JS wp conventions you will have
  *         to do an ajax call, which uses php to retrieve.
  *
@@ -46,7 +46,7 @@ class Image_Resize {
 			return;
 		}
 
-		_deprecated_file( __CLASS__, '4.5.0', 'a local copy' );
+		_deprecated_class( __CLASS__, '4.5.0', 'a local copy' );
 
 		add_action( 'init', [ $this, 'add_other_image_sizes' ] );
 		add_filter( 'image_downsize', [ $this, 'convert_image_downsize' ], 10, 3 );
