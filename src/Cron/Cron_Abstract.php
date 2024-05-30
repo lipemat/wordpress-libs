@@ -45,6 +45,8 @@ abstract class Cron_Abstract {
 
 		$this->schedule_task();
 		$this->hook();
+
+		_deprecated_class( Cron::NAME, '4.10.0', Runner::class );
 	}
 
 
