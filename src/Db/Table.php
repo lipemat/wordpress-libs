@@ -9,7 +9,7 @@ namespace Lipe\Lib\Db;
  * @author Mat Lipe
  * @since  4.10.0
  *
- * @template FORMATS of array<string, "%d"|"%f"|"%s">
+ * @template FORMATS of array<string, "%d"|"%i"|"%f"|"%s">
  */
 interface Table {
 	/**

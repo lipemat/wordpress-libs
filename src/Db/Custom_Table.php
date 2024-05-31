@@ -11,19 +11,29 @@ namespace Lipe\Lib\Db;
  * @since  4.10.0
  *
  * @template COLUMNS of array<string, string|float|int|null>
- * @template FORMATS of array<string, '%d'|'%f'|'%s'>
+ * @template FORMATS of array<string, "%d"|"%i"|"%f"|"%s">
  * // Partials must be passed in because \Partial<array> does not support templates.
  * @template PARTIALS of array<key-of<COLUMNS>, float|string|int|null>
  *
  * @phpstan-type MYSQL array<key-of<COLUMNS>, string>
  */
 class Custom_Table {
+	public const ORDER_ASC  = 'ASC';
+	public const ORDER_DESC = 'DESC';
+
 	/**
 	 * Holds the database name with the prefix included.
 	 *
 	 * @var string
 	 */
 	protected readonly string $table;
+
+	/**
+	 * The last WHERE clause used in a query.
+	 *
+	 * @var string
+	 */
+	protected string $last_where = '';
 
 
 	/**
@@ -37,7 +47,11 @@ class Custom_Table {
 		protected readonly Table $config
 	) {
 		global $wpdb;
-		$this->table = $wpdb->prefix . $this->config->get_table();
+		if ( \str_starts_with( $this->config->get_table(), $wpdb->prefix ) ) {
+			$this->table = $this->config->get_table();
+		} else {
+			$this->table = $wpdb->prefix . $this->config->get_table();
+		}
 	}
 
 
@@ -54,19 +68,21 @@ class Custom_Table {
 	/**
 	 * Get items from the database table.
 	 *
-	 * @phpstan-param PARTIALS             $wheres
+	 * @phpstan-param PARTIALS             $where
 	 * @phpstan-param key-of<COLUMNS>|null $order_by
+	 * @phpstan-param self::ORDER_*        $order
 	 *
-	 * @param array                        $wheres   - Array of where column => value.
+	 * @param array                        $where    - Array of where column => value.
 	 * @param ?int                         $count    - Number of rows to return.
-	 * @param ?string                      $order_by - An ORDERBY column and direction.
+	 * @param ?string                      $order_by - An ORDERBY column.
+	 * @param string                       $order    - ORDERBY direction (ASC or DESC).
 	 *
 	 * @phpstan-return array<int, COLUMNS>
 	 * @return array
 	 */
-	public function get( array $wheres = [], ?int $count = null, ?string $order_by = null ): array {
+	public function get( array $where = [], ?int $count = null, ?string $order_by = null, string $order = 'ASC' ): array {
 		global $wpdb;
-		$query = $this->get_select_query( [], $wheres, $count, $order_by );
+		$query = $this->get_select_query( [], $where, $count, $order_by, $order );
 		$data = $wpdb->get_results( $query, 'ARRAY_A' );
 		return \array_map( [ $this, 'format_values' ], $data );
 	}
@@ -75,18 +91,20 @@ class Custom_Table {
 	/**
 	 * Get a single item from the database table.
 	 *
-	 * @phpstan-param PARTIALS             $wheres
+	 * @phpstan-param PARTIALS             $where
 	 * @phpstan-param key-of<COLUMNS>|null $order_by
+	 * @phpstan-param self::ORDER_*        $order
 	 *
-	 * @param array                        $wheres   - Array of where column => value.
-	 * @param ?string                      $order_by - An ORDERBY column and direction.
+	 * @param array                        $where    - Array of where column => value.
+	 * @param ?string                      $order_by - An ORDERBY column.
+	 * @param string                       $order    - ORDERBY direction (ASC or DESC).
 	 *
 	 * @phpstan-return COLUMNS|null
 	 * @return ?array
 	 */
-	public function get_one( array $wheres = [], ?string $order_by = null ): ?array {
+	public function get_one( array $where = [], ?string $order_by = null, string $order = 'ASC' ): ?array {
 		global $wpdb;
-		$query = $this->get_select_query( [], $wheres, 1, $order_by );
+		$query = $this->get_select_query( [], $where, 1, $order_by, $order );
 		$data = $wpdb->get_row( $query, 'ARRAY_A' );
 		if ( null !== $data ) {
 			return $this->format_values( $data );
@@ -98,30 +116,32 @@ class Custom_Table {
 	/**
 	 * Get a paginated list of items.
 	 *
-	 * @phpstan-param PARTIALS             $wheres
+	 * @phpstan-param PARTIALS             $where
 	 * @phpstan-param key-of<COLUMNS>|null $order_by
+	 * @phpstan-param self::ORDER_*        $order
 	 *
 	 * @param int                          $page     - The page number to retrieve.
 	 * @param int                          $per_page - The number of items per a page.
-	 * @param array                        $wheres   - Array of where column => value.
-	 * @param ?string                      $order_by - An ORDERBY column and direction.
+	 * @param array                        $where    - Array of where column => value.
+	 * @param ?string                      $order_by - An ORDERBY column.
+	 * @param string                       $order    - ORDERBY direction (ASC or DESC).
 	 *
 	 * @phpstan-return array{
-	 *     items: array<COLUMNS>,
+	 *     items: list<COLUMNS>,
 	 *     total: int,
 	 *     total_pages: int
 	 * }
 	 * @return array
 	 */
-	public function get_paginated( int $page, int $per_page, array $wheres = [], ?string $order_by = null ): array {
+	public function get_paginated( int $page, int $per_page, array $where = [], ?string $order_by = null, string $order = 'ASC' ): array {
 		global $wpdb;
 		$offset = null;
 		if ( $page > 1 ) {
 			$offset = ( $page - 1 ) * $per_page;
 		}
-		$query = $this->get_select_query( [], $wheres, $per_page, $order_by, $offset );
+		$query = $this->get_select_query( [], $where, $per_page, $order_by, $order, $offset );
 		$items = $wpdb->get_results( $query, 'ARRAY_A' );
-		$total = $wpdb->get_var( "SELECT COUNT(*) FROM `{$this->get_table()}`" );
+		$total = $wpdb->get_var( "SELECT COUNT(*) FROM `{$this->get_table()}` {$this->last_where}" );
 
 		return [
 			'items'       => \array_map( [ $this, 'format_values' ], $items ),
@@ -186,17 +206,16 @@ class Custom_Table {
 	/**
 	 * Delete items from the database based on the provided criteria.
 	 *
-	 * @phpstan-param PARTIALS $wheres
+	 * @phpstan-param PARTIALS $where
 	 *
-	 * @param array            $wheres - Array of where column => value.
+	 * @param array            $where - Array of where column => value.
 	 *
-	 * @return bool - True if rows were deleted.
+	 * @return false|int - Number of rows deleted or false on failure.
 	 */
-	public function delete_where( array $wheres ): bool {
+	public function delete_where( array $where ): bool|int {
 		global $wpdb;
-		$formats = $this->get_formats( $wheres );
-		$deleted = $wpdb->delete( $this->get_table(), $wheres, $formats );
-		return \is_int( $deleted ) && $deleted > 0;
+		$formats = $this->get_formats( $where );
+		return $wpdb->delete( $this->get_table(), $where, $formats );
 	}
 
 
@@ -220,19 +239,18 @@ class Custom_Table {
 	/**
 	 * Update items in the database based on the provided criteria.
 	 *
-	 * @phpstan-param PARTIALS $wheres
+	 * @phpstan-param PARTIALS $where
 	 * @phpstan-param PARTIALS $columns
 	 *
-	 * @param array            $wheres  - Array of where column => value.
+	 * @param array            $where   - Array of where column => value.
 	 * @param array            $columns - column => value pairs to update.
 	 *
-	 * @return bool - True if rows were updated.
+	 * @return false|int - Number of rows updated or false on failure.
 	 */
-	public function update_where( array $wheres, array $columns ): bool {
+	public function update_where( array $where, array $columns ): bool|int {
 		global $wpdb;
 		$formats = $this->get_formats( $columns );
-		$updated = $wpdb->update( $this->get_table(), $columns, $wheres, $formats, $this->get_formats( $wheres ) );
-		return \is_int( $updated ) && $updated > 0;
+		return $wpdb->update( $this->get_table(), $columns, $where, $formats, $this->get_formats( $where ) );
 	}
 
 
@@ -248,14 +266,13 @@ class Custom_Table {
 	 * @param int             $id      - ID of the item to replace.
 	 * @param array           $columns - column => value pairs to replace.
 	 *
-	 * @return bool
+	 * @return int|bool - The number of rows affected or false on failure.
 	 */
-	public function replace( int $id, array $columns ): bool {
+	public function replace( int $id, array $columns ): int|bool {
 		global $wpdb;
 		$columns = $this->sort_columns( $columns );
 		$columns[ $this->config->get_id_field() ] = $id;
-		$replaced = $wpdb->replace( $this->get_table(), $columns, $this->get_formats( $columns ) );
-		return 1 === $replaced;
+		return $wpdb->replace( $this->get_table(), $columns, $this->get_formats( $columns ) );
 	}
 
 
@@ -263,37 +280,40 @@ class Custom_Table {
 	 * Retrieve a `SELECT` query based on the provided criteria.
 	 *
 	 * @phpstan-param array<key-of<COLUMNS>> $columns
-	 * @phpstan-param PARTIALS               $wheres
+	 * @phpstan-param PARTIALS               $where
 	 * @phpstan-param key-of<COLUMNS>|null   $order_by
+	 * @phpstan-param self::ORDER_*          $order
 	 *
-	 * @param array<string>                  $columns  Array of columns we want to return.
-	 *                                                 Any empty array will return all columns.
-	 * @param array                          $wheres   Array of where column => value.
-	 *                                                 Adding a % within the value will turn the
-	 *                                                 query into a `LIKE` query.
-	 * @param ?int                           $count    Number of rows to return.
-	 *                                                 Null will return all.
-	 * @param ?string                        $order_by An ORDERBY column and direction.
-	 *                                                 Optionally pass `ASC` or `DESC`.
-	 * @param ?int                           $offset   Number of rows to skip.
+	 * @param array<string>                  $columns   Array of columns we want to return.
+	 *                                                  Any empty array will return all columns.
+	 * @param array                          $where     Array of where column => value.
+	 *                                                  Adding a % within the value will turn the
+	 *                                                  query into a `LIKE` query.
+	 * @param ?int                           $count     Number of rows to return.
+	 *                                                  Null will return all.
+	 * @param ?string                        $order_by  An ORDERBY column.
+	 * @param string                         $order     - ORDERBY direction (ASC or DESC).
+	 * @param ?int                           $offset    Number of rows to skip.
 	 *
 	 * @return string
 	 */
-	public function get_select_query( array $columns, array $wheres, ?int $count = null, ?string $order_by = null, ?int $offset = null ): string {
+	public function get_select_query( array $columns, array $where, ?int $count = null, ?string $order_by = null, string $order = 'ASC', ?int $offset = null ): string {
 		global $wpdb;
-		$db_columns = \implode( ',', $columns );
 		if ( 0 === \count( $columns ) ) {
 			$db_columns = '*';
+		} else {
+			$db_columns = \implode( ', ', \array_map( fn( string $column ) => "`{$column}`", $columns ) );
 		}
 
 		$sql = "SELECT $db_columns FROM `{$this->get_table()}`";
+		$this->last_where = '';
 
-		if ( \count( $wheres ) > 0 ) {
+		if ( \count( $where ) > 0 ) {
 			$db_wheres = [];
 			$values = [];
-			$where_formats = $this->get_formats( $wheres );
+			$where_formats = $this->get_formats( $where );
 
-			foreach ( $wheres as $column => $value ) {
+			foreach ( $where as $column => $value ) {
 				if ( null === $value ) {
 					$db_wheres[ $column ] = "`$column` IS NULL";
 					continue;
@@ -309,17 +329,23 @@ class Custom_Table {
 			// Allow filtering or adding of custom WHERE clauses.
 			[ $db_wheres, $values ] = apply_filters_ref_array( 'lipe/lib/schema/db/get/wheres', [
 				[ $db_wheres, $values ],
-				$wheres,
+				$where,
 				$columns,
 				$this,
 			] );
 			if ( \count( $db_wheres ) > 0 ) {
-				$where = ' WHERE ' . \implode( ' AND ', $db_wheres );
-				$sql .= $wpdb->prepare( $where, $values );
+				$where_clause = ' WHERE ' . \implode( ' AND ', $db_wheres );
+				$this->last_where = $wpdb->prepare( $where_clause, $values );
+				$sql .= $this->last_where;
 			}
 		}
 		if ( null !== $order_by ) {
-			$sql .= " ORDER BY $order_by";
+			$sql .= " ORDER BY `$order_by`";
+			if ( 'ASC' !== $order ) {
+				$sql .= " $order";
+			}
+		} elseif ( 'ASC' !== $order ) {
+			$sql .= " ORDER BY `{$this->config->get_id_field()}` $order";
 		}
 		if ( null !== $count ) {
 			$sql .= " LIMIT $count";
@@ -350,6 +376,7 @@ class Custom_Table {
 		foreach ( $values as $key => $value ) {
 			if ( isset( $columns[ $key ] ) && \is_string( $value ) ) {
 				$formatted[ $key ] = match ( $columns[ $key ] ) {
+					'%i',
 					'%d'    => (int) $value,
 					'%f'    => (float) $value,
 					default => $value,
@@ -396,7 +423,7 @@ class Custom_Table {
 	 *
 	 * @param array     $columns - Columns to retrieve formats for.
 	 *
-	 * @phpstan-return array<T, "%d"|"%f"|"%s">
+	 * @phpstan-return array<T, "%d"|"%i"|"%f"|"%s">
 	 * @return array
 	 */
 	protected function get_formats( array $columns ): array {
@@ -408,8 +435,6 @@ class Custom_Table {
 				$formats[ $column ] = '%d';
 			} elseif ( isset( $all_columns[ $column ] ) ) {
 				$formats[ $column ] = $all_columns[ $column ];
-			} else {
-				$formats[ $column ] = '%s';
 			}
 		}
 		return $formats;
