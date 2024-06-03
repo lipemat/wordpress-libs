@@ -13,7 +13,9 @@ namespace Lipe\Lib\Schema;
  * worry about validating if the correct post type has been
  * submitted, nonces, and all that. They're already taken care of.
  *
- * @example self::register( [%post_type%], %args% );
+ * @example    self::register( [%post_type%], %args% );
+ *
+ * @deprecated Will be removed in version 5. Use `Meta\Meta_Box` instead.
  */
 abstract class Meta_Box {
 
@@ -64,8 +66,8 @@ abstract class Meta_Box {
 	 * We have our own Gutenberg/block-editor properties in this class so use those instead
 	 * of this property if you are working with Gutenberg.
 	 *
-	 * @see Box::$display_when_gutenberg_active
-	 * @see Box::$gutenberg_compatible
+	 * @see Meta_Box::$display_when_gutenberg_active
+	 * @see Meta_Box::$gutenberg_compatible
 	 *
 	 * More: https://wordpress.org/gutenberg/handbook/designers-developers/developers/backwards-compatibility/meta-box/
 	 *
@@ -81,12 +83,12 @@ abstract class Meta_Box {
 	 * If set to false, WP will automatically fall back to the classic editor when
 	 * this box is loaded.
 	 *
-	 * @uses sets the `__block_editor_compatible_meta_box` meta box flag
-	 *
-	 * @see  Box::get_args()
-	 * @see  Box::$display_when_gutenberg_active
+	 * @see  Meta_Box::get_args()
+	 * @see  Meta_Box::$display_when_gutenberg_active
 	 *
 	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
+	 *
+	 * @uses sets the `__block_editor_compatible_meta_box` meta box flag
 	 *
 	 * @var bool
 	 */
@@ -99,12 +101,12 @@ abstract class Meta_Box {
 	 * When the classic editor is loaded this meta box will load no matter what
 	 * this is set to.
 	 *
-	 * @uses sets the `__back_compat_meta_box` meta box flag
-	 *
-	 * @see  Box::get_args()
-	 * @see  Box::$gutenberg_compatible
+	 * @see  Meta_Box::get_args()
+	 * @see  Meta_Box::$gutenberg_compatible
 	 *
 	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
+	 *
+	 * @uses sets the `__back_compat_meta_box` meta box flag
 	 *
 	 * @var bool
 	 */
@@ -121,7 +123,7 @@ abstract class Meta_Box {
 	/**
 	 * Constructs the meta box.
 	 *
-	 * @see https://codex.wordpress.org/Function_Reference/add_meta_box for more info
+	 * @see                      https://codex.wordpress.org/Function_Reference/add_meta_box for more info
 	 *
 	 * @todo                     Remove default arguments in version 5.
 	 *
@@ -145,6 +147,8 @@ abstract class Meta_Box {
 	 * @phpstan-ignore-next-line -- Keeping default value intact until version 5.
 	 */
 	final protected function __construct( string $post_type, array $args = [ - 1 ] ) {
+		_deprecated_class( __CLASS__, '4.10.0', \Lipe\Lib\Meta\Meta_Box::class );
+
 		if ( [ - 1 ] === $args ) {
 			$args = [];
 			_doing_it_wrong( __METHOD__, 'You must pass the `$args` to `Meta_Box::__construct()`. An empty array is acceptable.', '4.5.0' );
@@ -338,7 +342,7 @@ abstract class Meta_Box {
 		$id = $post_type . '-' . $class_name;
 		$appended = $id . ( $append ? '-' . $append : '' );
 		if ( isset( static::$registry[ $post_type ][ $appended ] ) ) {
-			++$append;
+			++ $append;
 		}
 		$id .= ( $append ? '-' . $append : '' );
 
