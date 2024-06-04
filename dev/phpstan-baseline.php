@@ -8,6 +8,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Api/Api.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Api/Api.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\Api\\\\Api\\:\\:get_url\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#',
 	'count' => 1,
@@ -23,6 +29,12 @@ $ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 2,
+	'path' => __DIR__ . '/../src/Api/Route.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
 	'path' => __DIR__ . '/../src/Api/Route.php',
 ];
 $ignoreErrors[] = [
@@ -65,6 +77,12 @@ $ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 3,
+	'path' => __DIR__ . '/../src/Api/Zip.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
 	'path' => __DIR__ . '/../src/Api/Zip.php',
 ];
 $ignoreErrors[] = [
@@ -161,6 +179,12 @@ $ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 3,
+	'path' => __DIR__ . '/../src/CMB2/Box/Tabs.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
 	'path' => __DIR__ . '/../src/CMB2/Box/Tabs.php',
 ];
 $ignoreErrors[] = [
@@ -266,6 +290,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/CMB2/Field.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/CMB2/Field/Checkbox.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Field\\\\Checkbox\\:\\:clear_single_item\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
 	'count' => 1,
@@ -293,6 +323,12 @@ $ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 7,
+	'path' => __DIR__ . '/../src/CMB2/Field/Term_Select_2.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
 	'path' => __DIR__ . '/../src/CMB2/Field/Term_Select_2.php',
 ];
 $ignoreErrors[] = [
@@ -383,6 +419,12 @@ $ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 3,
+	'path' => __DIR__ . '/../src/CMB2/Field/True_False.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
 	'path' => __DIR__ . '/../src/CMB2/Field/True_False.php',
 ];
 $ignoreErrors[] = [
@@ -530,6 +572,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/CMB2/Group.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/CMB2/Group.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Group\\:\\:clear_single_item\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
 	'count' => 1,
@@ -602,6 +650,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/CMB2/Group/Layout.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/CMB2/Group/Layout.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Group\\\\Layout\\:\\:clear_single_item\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
 	'count' => 1,
@@ -632,6 +686,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/CMB2/Group/Layout.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/CMB2/Options_Page.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Options_Page\\:\\:register_meta_on_all_types\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#',
 	'count' => 1,
@@ -642,6 +702,18 @@ $ignoreErrors[] = [
 	'message' => '#^Property Lipe\\\\Lib\\\\CMB2\\\\Options_Page\\:\\:\\$default_values type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/CMB2/Options_Page.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/CMB2/Term_Box.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Comment/Comment_Trait.php',
 ];
 $ignoreErrors[] = [
 	// identifier: empty.notAllowed
@@ -666,6 +738,24 @@ $ignoreErrors[] = [
 	'message' => '#^Property Lipe\\\\Lib\\\\Comment\\\\Get_Comments\\:\\:\\$meta_query type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Comment/Get_Comments.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Cron/Cron_Abstract.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Menu/Menu_Item_Trait.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Meta/Mutator_Trait.php',
 ];
 $ignoreErrors[] = [
 	// identifier: empty.notAllowed
@@ -714,6 +804,18 @@ $ignoreErrors[] = [
 	'message' => '#^Property Lipe\\\\Lib\\\\Meta\\\\Translate_Abstract\\:\\:\\$memoize_cache type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Meta/Translate_Abstract.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Network/Network_Trait.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Post_Type/Capabilities.php',
 ];
 $ignoreErrors[] = [
 	// identifier: empty.notAllowed
@@ -800,9 +902,21 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Post_Type/Post_Object_Trait.php',
+];
+$ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 3,
+	'path' => __DIR__ . '/../src/Query/Args.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
 	'path' => __DIR__ . '/../src/Query/Args.php',
 ];
 $ignoreErrors[] = [
@@ -872,6 +986,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Query/Clause/Date_Query.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Query/Clause/Date_Query_Interface.php',
+];
+$ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 2,
@@ -888,6 +1008,12 @@ $ignoreErrors[] = [
 	'message' => '#^Property Lipe\\\\Lib\\\\Query\\\\Clause\\\\Meta_Query\\:\\:\\$clauses type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Query/Clause/Meta_Query.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Query/Clause/Meta_Query_Interface.php',
 ];
 $ignoreErrors[] = [
 	// identifier: empty.notAllowed
@@ -918,6 +1044,12 @@ $ignoreErrors[] = [
 	'message' => '#^Method Lipe\\\\Lib\\\\Query\\\\Utils\\:\\:get_light_query_args\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Query/Utils.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Rest_Api/Initial_Data.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
@@ -992,6 +1124,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Schema/Db.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Schema/Db.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\Schema\\\\Db\\:\\:add\\(\\) has parameter \\$columns with no value type specified in iterable type array\\.$#',
 	'count' => 1,
@@ -1046,6 +1184,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Schema/Meta_Box.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Schema/Meta_Box.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\Schema\\\\Meta_Box\\:\\:get_callback_args\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
@@ -1088,6 +1232,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Schema/Post_List_Column.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Schema/Post_List_Column.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\Schema\\\\Post_List_Column\\:\\:add_column\\(\\) has parameter \\$columns with no value type specified in iterable type array\\.$#',
 	'count' => 1,
@@ -1118,6 +1268,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Schema/Settings.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Schema/Settings.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Property Lipe\\\\Lib\\\\Schema\\\\Settings\\:\\:\\$defaults type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
@@ -1128,6 +1284,24 @@ $ignoreErrors[] = [
 	'message' => '#^Property Lipe\\\\Lib\\\\Schema\\\\Settings\\:\\:\\$settings type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Schema/Settings.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Settings/Settings_Trait.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Site/Site_Trait.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Taxonomy/Capabilities.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
@@ -1202,6 +1376,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Taxonomy/Taxonomy.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Taxonomy/Taxonomy_Trait.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\Theme\\\\CSS_Modules\\:\\:clear_single_item\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
 	'count' => 1,
@@ -1232,6 +1412,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Theme/CSS_Modules.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Theme/Class_Names.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\Theme\\\\Class_Names\\:\\:offsetSet\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#',
 	'count' => 1,
@@ -1241,6 +1427,12 @@ $ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 4,
+	'path' => __DIR__ . '/../src/Theme/Resources.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
 	'path' => __DIR__ . '/../src/Theme/Resources.php',
 ];
 $ignoreErrors[] = [
@@ -1262,10 +1454,40 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Theme/Resources.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Traits/Memoize.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Traits/Singleton.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Traits/Version.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Property Lipe\\\\Lib\\\\User\\\\Get_Users\\:\\:\\$meta_query type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/User/Get_Users.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/User/User_Trait.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Util/Actions.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
@@ -1400,9 +1622,21 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Util/Arrays.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Util/Autoloader.php',
+];
+$ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 2,
+	'path' => __DIR__ . '/../src/Util/Cache.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
 	'path' => __DIR__ . '/../src/Util/Cache.php',
 ];
 $ignoreErrors[] = [
@@ -1436,9 +1670,21 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Util/Colors.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Util/Colors.php',
+];
+$ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 27,
+	'path' => __DIR__ . '/../src/Util/Image_Resize.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
 	'path' => __DIR__ . '/../src/Util/Image_Resize.php',
 ];
 $ignoreErrors[] = [
@@ -1466,10 +1712,22 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Util/Image_Resize.php',
 ];
 $ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Util/Url.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\Util\\\\Url\\:\\:get_query_arg\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Util/Url.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Util/Versions.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
