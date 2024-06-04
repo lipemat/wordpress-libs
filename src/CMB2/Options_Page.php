@@ -56,7 +56,7 @@ class Options_Page extends Box {
 	public $display_cb;
 
 	/**
-	 * This parameter is for options-page metaboxes only,
+	 * This parameter is for options-page meta boxes only,
 	 * and is sent along to add_menu_page() to define the menu icon.
 	 * Only applicable if parent_slug is left empty.
 	 *

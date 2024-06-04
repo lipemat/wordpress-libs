@@ -2,11 +2,15 @@
 
 namespace Lipe\Lib\Schema;
 
+use Lipe\Lib\Settings\Settings_Page;
+
 /**
  * Abstract starting point for a settings page.
  * Retrieve option from proper location by using $this->get_option()
  *
- * @link https://make.wordpress.org/core/2016/10/26/registering-your-settings-in-wordpress-4-7/
+ * @link       https://make.wordpress.org/core/2016/10/26/registering-your-settings-in-wordpress-4-7/
+ *
+ * @deprecated 4.10.0 - Will be removed in version 5. Use the `\Lipe\Lib\Settings\Settings_Page` classes.
  *
  * Extend this with another class, which does not have a __construct method or call parent::__construct()
  * Implement the abstract methods and set appropriate class vars. This will do the rest.
@@ -155,6 +159,8 @@ abstract class Settings {
 	 * Settings constructor.
 	 */
 	public function __construct() {
+		_deprecated_class( __CLASS__, '4.10.0', Settings_Page::class );
+
 		$this->add_settings();
 		$this->set_vars();
 		$this->fill_class_vars();
@@ -296,7 +302,7 @@ abstract class Settings {
 			}
 		}
 
-		if ( false !== strpos( $this->parent_menu_slug, '.php' ) ) {
+		if ( \str_contains( $this->parent_menu_slug, '.php' ) ) {
 			$parent_url = network_admin_url( $this->parent_menu_slug );
 		} else {
 			$parent_url = network_admin_url( 'admin.php' );
@@ -583,7 +589,7 @@ abstract class Settings {
 			?>
 		</form>
 		<script type="text/javascript">
-			jQuery( 'a.nav-tab' ).on( 'click', function( e ) {
+			jQuery( 'a.nav-tab' ).on( 'click', function ( e ) {
 				e.preventDefault();
 				var id = e.target.id.substr( 4 );
 				jQuery( 'div.tab-content' ).hide();

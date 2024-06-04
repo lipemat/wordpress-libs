@@ -25,7 +25,7 @@ class Meta_Box {
 	 *
 	 * @param Box $box - The box to register.
 	 */
-	final protected function __construct(
+	public function __construct(
 		protected Box $box,
 	) {
 		$this->hook();
@@ -38,6 +38,9 @@ class Meta_Box {
 	 * @return void
 	 */
 	protected function hook(): void {
+		if ( ! is_admin() ) {
+			return;
+		}
 		foreach ( $this->box->get_post_types() as $post_type ) {
 			add_action( 'add_meta_boxes_' . $post_type, [ $this, 'register' ] );
 			add_action( 'save_post_' . $post_type, [ $this, 'save' ], 10, 2 );
@@ -126,17 +129,5 @@ class Meta_Box {
 			'__block_editor_compatible_meta_box' => true,
 			'__back_compat_meta_box'             => $this->box->is_classic_editor_fallback(),
 		];
-	}
-
-
-	/**
-	 * Create an instance of the class.
-	 *
-	 * @param Box $box - The box to register.
-	 *
-	 * @return static
-	 */
-	public static function factory( Box $box ): static {
-		return new static( $box );
 	}
 }

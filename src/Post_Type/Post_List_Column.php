@@ -31,11 +31,14 @@ class Post_List_Column {
 
 
 	/**
-	 * Create an instance of the column and hook it into the WordPress admin.
+	 * Register a custom post list column for a list of post types.
+	 *
+	 * - A basic column requires the `ListColumn` interface.
+	 * - A filterable column also requires the `Filter` interface.
 	 *
 	 * @param ListColumn $column - Column to register.
 	 */
-	final protected function __construct(
+	public function __construct(
 		protected ListColumn $column,
 	) {
 		$this->column_slug = sanitize_title_with_dashes( $column->get_column_label() );
@@ -184,20 +187,5 @@ class Post_List_Column {
 			return sanitize_text_field( wp_unslash( $_REQUEST[ $this->column_slug ] ) );
 		}
 		return '';
-	}
-
-
-	/**
-	 * Register a custom post list column for a list of post types.
-	 *
-	 * - A basic column requires the `ListColumn` interface.
-	 * - A filterable column also requires the `Filter` interface.
-	 *
-	 * @param ListColumn $column - Column to register.
-	 *
-	 * @return Post_List_Column
-	 */
-	public static function factory( ListColumn $column ): Post_List_Column {
-		return new static( $column );
 	}
 }

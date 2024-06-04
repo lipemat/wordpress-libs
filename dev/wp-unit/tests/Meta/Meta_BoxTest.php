@@ -12,9 +12,15 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 	public const BOX = 'lipe/lib/meta/meta-box/test';
 
 
+	protected function setUp(): void {
+		parent::setUp();
+		\WP_Screen::get( 'post' )->set_current_screen();
+	}
+
+
 	public function test__construct(): void {
 		$mock = $this->mock_box();
-		$box = Meta_Box::factory( $mock );
+		$box = new Meta_Box( $mock );
 		$this->assertSame( $mock, get_private_property( $box, 'box' ) );
 
 		$this->assertSame( 10, has_action( 'add_meta_boxes_post', [ $box, 'register' ] ) );
@@ -28,7 +34,7 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 	public function test_register(): void {
 		global $wp_meta_boxes;
 		$mock = $this->mock_box();
-		Meta_Box::factory( $mock );
+		new Meta_Box( $mock );
 		$post = self::factory()->post->create_and_get();
 		$page = self::factory()->post->create_and_get( [
 			'post_type' => 'page',
@@ -54,7 +60,7 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 	 */
 	public function test_save( \WP_Post $post, bool $valid, \WP_Post $saving ): void {
 		$box = $this->mock_box();
-		Meta_Box::factory( $box );
+		new Meta_Box( $box );
 		do_action( 'save_post_' . $saving->post_type, $post->ID, $post );
 
 		// No nonce provided.
@@ -90,7 +96,7 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 		$css = self::factory()->post->create_and_get( [
 			'post_type' => 'custom_css',
 		] );
-		Meta_Box::factory( $this->mock_box() );
+		new Meta_Box( $this->mock_box() );
 
 		$this->assertEmpty( get_echo( function() use ( $css ) {
 			do_action( 'post_submitbox_misc_actions', $css );
@@ -109,7 +115,7 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 
 	public function test_get_callback_args(): void {
 		$mock = $this->mock_box();
-		$box = Meta_Box::factory( $mock );
+		$box = new Meta_Box( $mock );
 		$post = self::factory()->post->create_and_get();
 		$callback_args = call_private_method( $box, 'get_callback_args', [ $post ] );
 
@@ -121,7 +127,7 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 		$mocked = $this->createMock( Box::class );
 		$mocked->method( 'is_classic_editor_fallback' )->willReturn( true );
 
-		$box = Meta_Box::factory( $mocked );
+		$box = new Meta_Box( $mocked );
 		$callback_args = call_private_method( $box, 'get_callback_args', [ $post ] );
 
 		$this->assertSame( [

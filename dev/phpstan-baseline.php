@@ -57,12 +57,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Api\\\\Wp_Remote\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Api/Wp_Remote.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
 	'message' => '#^Property Lipe\\\\Lib\\\\Api\\\\Wp_Remote\\:\\:\\$body type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Api/Wp_Remote.php',
@@ -96,18 +90,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Lipe\\\\Lib\\\\Api\\\\Zip\\:\\:set_paths\\(\\) has parameter \\$files with no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Api/Zip.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Blocks\\\\Args\\\\Supports\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Blocks/Args/Supports.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Blocks\\\\Register_Block\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Blocks/Register_Block.php',
 ];
 $ignoreErrors[] = [
 	// identifier: empty.notAllowed
@@ -669,12 +651,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Comment\\\\Get_Comments\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Comment/Get_Comments.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\Comment\\\\Get_Comments\\:\\:get_light_args\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Comment/Get_Comments.php',
@@ -690,12 +666,6 @@ $ignoreErrors[] = [
 	'message' => '#^Property Lipe\\\\Lib\\\\Comment\\\\Get_Comments\\:\\:\\$meta_query type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Comment/Get_Comments.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Comment\\\\Update_Comment\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Comment/Update_Comment.php',
 ];
 $ignoreErrors[] = [
 	// identifier: empty.notAllowed
@@ -830,21 +800,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
 ];
 $ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Post_Type\\\\Register_Post_Status\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Register_Post_Status.php',
-];
-$ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 3,
-	'path' => __DIR__ . '/../src/Query/Args.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Query\\\\Args\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
 	'path' => __DIR__ . '/../src/Query/Args.php',
 ];
 $ignoreErrors[] = [
@@ -870,12 +828,6 @@ $ignoreErrors[] = [
 	'message' => '#^Property Lipe\\\\Lib\\\\Query\\\\Args\\:\\:\\$tax_query type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Query/Args.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Query\\\\Args_Abstract\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Query/Args_Abstract.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
@@ -954,12 +906,6 @@ $ignoreErrors[] = [
 	'message' => '#^Property Lipe\\\\Lib\\\\Query\\\\Clause\\\\Tax_Query\\:\\:\\$clauses type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Query/Clause/Tax_Query.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Query\\\\Update_Post\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Query/Update_Post.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
@@ -1185,12 +1131,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Taxonomy\\\\Get_Terms\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Taxonomy/Get_Terms.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\Taxonomy\\\\Get_Terms\\:\\:get_light_args\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Taxonomy/Get_Terms.php',
@@ -1263,12 +1203,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Taxonomy\\\\Wp_Terms_Checklist\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Taxonomy/Wp_Terms_Checklist.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\Theme\\\\CSS_Modules\\:\\:clear_single_item\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Theme/CSS_Modules.php',
@@ -1329,33 +1263,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Theme\\\\Wp_Enqueue_Script\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Theme/Wp_Enqueue_Script.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\User\\\\Get_Users\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/User/Get_Users.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
 	'message' => '#^Property Lipe\\\\Lib\\\\User\\\\Get_Users\\:\\:\\$meta_query type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/User/Get_Users.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\User\\\\Update_User\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/User/Update_User.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\User\\\\Wp_Login_Form\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/User/Wp_Login_Form.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue

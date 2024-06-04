@@ -33,11 +33,11 @@ class Post_List_ColumnTest extends \WP_UnitTestCase {
 		$screen->set_current_screen();
 
 		// Not a filter mock.
-		Post_List_Column::factory( $mock );
+		new Post_List_Column( $mock );
 		do_action( 'load-edit.php' );
 		$this->assertStringNotContainsString( 'Showing All', $echo() );
 
-		Post_List_Column::factory( $this->getFilterMock() );
+		new Post_List_Column( $this->getFilterMock() );
 		// Not on the edit screen.
 		$this->assertStringNotContainsString( 'Showing All', $echo() );
 
@@ -66,20 +66,20 @@ class Post_List_ColumnTest extends \WP_UnitTestCase {
 		$screen->set_current_screen();
 
 		// Not a filter mock.
-		Post_List_Column::factory( $mock );
+		new Post_List_Column( $mock );
 		$query = new \WP_Query();
 		do_action( 'load-edit.php' );
 		do_action( 'parse_query', $query );
 		$this->assertArrayNotHasKey( 'slug', $query->query_vars );
 
 		// Not on the edit screen.
-		Post_List_Column::factory( $this->getFilterMock() );
+		new Post_List_Column( $this->getFilterMock() );
 		$query = new \WP_Query();
 		do_action( 'parse_query', $query );
 		$this->assertArrayNotHasKey( 'slug', $query->query_vars );
 
 		// On the edit screen.
-		Post_List_Column::factory( $this->getFilterMock() );
+		new Post_List_Column( $this->getFilterMock() );
 		do_action( 'load-edit.php' );
 		$query = new \WP_Query();
 		// No filter selected
@@ -120,7 +120,7 @@ class Post_List_ColumnTest extends \WP_UnitTestCase {
 
 		// In the admin.
 		$screen->set_current_screen();
-		Post_List_Column::factory( $mock );
+		new Post_List_Column( $mock );
 		if ( $included ) {
 			$this->assertSame( $table->get_columns()['test-column-label'], 'Test Column Label' );
 		} else {
@@ -142,7 +142,7 @@ class Post_List_ColumnTest extends \WP_UnitTestCase {
 
 		// In the admin from this point forward.
 		$screen->set_current_screen();
-		Post_List_Column::factory( $mock );
+		new Post_List_Column( $mock );
 
 		$output = get_echo( function() use ( $type ) {
 			do_action( 'manage_' . $type . '_posts_custom_column', 'test-column-label', 1 );
@@ -162,12 +162,12 @@ class Post_List_ColumnTest extends \WP_UnitTestCase {
 
 	public function test_factory(): void {
 		[ $mock, $screen ] = $this->getMock();
-		$column = Post_List_Column::factory( $mock );
+		$column = new Post_List_Column( $mock );
 		$this->assertSame( 'test-column-label', get_private_property( $column, 'column_slug' ) );
 		$this->assertFalse( has_filter( 'manage_post_posts_columns', [ $column, 'add_column' ] ) );
 
 		$screen->set_current_screen();
-		$column = Post_List_Column::factory( $mock );
+		$column = new Post_List_Column( $mock );
 		$this->assertSame( 10, has_filter( 'manage_post_posts_columns', [ $column, 'add_column' ] ) );
 	}
 
@@ -193,7 +193,7 @@ class Post_List_ColumnTest extends \WP_UnitTestCase {
 				echo 'Post_List_ColumnTest::render';
 			}
 		};
-		Post_List_Column::factory( $mock );
+		new Post_List_Column( $mock );
 		$screen = \WP_Screen::get( 'post' );
 		return [ $mock, $screen ];
 	}
@@ -238,7 +238,7 @@ class Post_List_ColumnTest extends \WP_UnitTestCase {
 				$query->set( 'slug', $value );
 			}
 		};
-		Post_List_Column::factory( $mock );
+		new Post_List_Column( $mock );
 		return $mock;
 	}
 

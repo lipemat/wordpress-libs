@@ -51,9 +51,21 @@ trait Args_Trait {
 
 
 	/**
+	 * Merge the arguments from another Args_Interface object into this one.
+	 *
+	 * @param Args_Interface $overrides - Args to override the current ones.
+	 *
+	 * @return void
+	 */
+	public function merge( Args_Interface $overrides ): void {
+		$this->__construct( $overrides->get_args() );
+	}
+
+
+	/**
 	 * Get the finished arguments as an array.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function get_args(): array {
 		foreach ( $this->clauses as $clause ) {
