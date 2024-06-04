@@ -19,6 +19,15 @@ class Supports implements Args_Interface {
 	use Args_Trait;
 
 	/**
+	 * Anchors let you link directly to a specific block on a page.
+	 * This property adds a field to define an id for the block, and a button
+	 * to copy the direct link.
+	 *
+	 * @var bool
+	 */
+	public bool $anchor;
+
+	/**
 	 * This property adds block controls which allow to change block’s alignment.
 	 *
 	 * @var bool|array<int, 'left' | 'right' | 'full' | 'wide'>
@@ -51,10 +60,13 @@ class Supports implements Args_Interface {
 	 * Support color selections.
 	 *
 	 * @var array{
-	 *      background?: boolean,
-	 *      gradients?: boolean,
-	 *      text?: boolean,
-	 *      link?: boolean,
+	 *     background?: bool,
+	 *     button?: bool,
+	 *     enableContrastChecker?: bool,
+	 *     gradients?: bool,
+	 *     link?: bool,
+	 *     text?: bool,
+	 *     heading?: bool,
 	 * }
 	 */
 	public array $color;
@@ -107,7 +119,7 @@ class Supports implements Args_Interface {
 	 *     interactive?: boolean,
 	 * }
 	 */
-	public $interactivity;
+	public array|bool $interactivity;
 
 	/**
 	 * Applies to blocks that are containers for inner blocks.
@@ -127,7 +139,7 @@ class Supports implements Args_Interface {
 	 *      allowCustomContentAndWideSize?: bool,
 	 *  }
 	 */
-	public $layout;
+	public array|bool $layout;
 
 	/**
 	 * False allows the block just once per post.
@@ -135,6 +147,13 @@ class Supports implements Args_Interface {
 	 * @var bool
 	 */
 	public bool $multiple;
+
+	/**
+	 * False removes the support for Options dropdown block renaming.
+	 *
+	 * @var bool
+	 */
+	public bool $renaming;
 
 	/**
 	 * False removes the support for the reusable block.
@@ -160,6 +179,14 @@ class Supports implements Args_Interface {
 	public array $position;
 
 	/**
+	 * Adds block controls which allow the user to set a box shadow for a block.
+	 * Shadows are disabled by default.
+	 *
+	 * @var bool
+	 */
+	public bool $shadow;
+
+	/**
 	 * Support the spacing UI controls.
 	 *
 	 * @var array{
@@ -171,11 +198,19 @@ class Supports implements Args_Interface {
 	public array $spacing;
 
 	/**
+	 * Whether the block can split when the Enter key is pressed or when blocks are pasted.
+	 *
+	 * @var bool
+	 */
+	public bool $splitting;
+
+	/**
 	 * Support the typography UI controls.
 	 *
 	 * @var array{
 	 *     fontSize?: bool,
 	 *     lineHeight?: bool,
+	 *     textAlign?: bool|array<'left'|'right'|'center'>,
 	 * }
 	 */
 	public array $typography;
