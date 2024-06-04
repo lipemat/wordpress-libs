@@ -150,6 +150,9 @@ class Arrays {
 	 * Mimics the Javascript `.find` array prototype to allow a user
 	 * defined predicate and return the array item of the first `true` response.
 	 *
+	 * @link https://wiki.php.net/rfc/array_find
+	 * @todo Once minimum PHP version is 8.4, update to use native `array_find`.
+	 *
 	 * @template TKey of array-key
 	 * @template T
 	 *
@@ -173,6 +176,9 @@ class Arrays {
 	/**
 	 * Mimics the Javascript `.findIndex` array prototype to allow a user
 	 * defined predicate and return the array key of the first `true` response.
+	 *
+	 * @link https://wiki.php.net/rfc/array_find
+	 * @todo Once minimum PHP version is 8.4, update to use native `array_find_key`.
 	 *
 	 * @template TKey of array-key
 	 * @template T
