@@ -8,36 +8,20 @@ use Lipe\Lib\Settings\Register_Setting;
 use Lipe\Lib\Settings\Settings_Page;
 
 /**
+ * Arguments for a field in a settings page.
+ *
  * @author Mat Lipe
  * @since  4.10.0
  *
  * @link   https://developer.wordpress.org/reference/functions/add_settings_field/#parameters
- *
- * @phpstan-type FIELD_ARGS array{label_for?: string, class?: string}
- */
+ **/
 class Field {
 	/**
-	 * Help information to display below the field with `description` format.
+	 * Additional arguments supported by `add_settings_field`.
 	 *
-	 * @var string
+	 * @var Field_Args
 	 */
-	public string $help;
-
-	/**
-	 * Render callback to render the field's input.
-	 *
-	 * @phpstan-var null|callable( Field $field, Settings_Page $settings, FIELD_ARGS $args ): void
-	 * @var ?callable( Field $field, Settings_Page $settings, array $args ): void
-	 */
-	public $render_callback;
-
-	/**
-	 * Additional arguments supported by `add_settings_field`
-	 *
-	 * @phpstan-var FIELD_ARGS
-	 * @var array
-	 */
-	public array $field_args;
+	public readonly Field_Args $args;
 
 	/**
 	 * Additional arguments supported by `register_setting`.
@@ -48,6 +32,21 @@ class Field {
 	 * @var Register_Setting
 	 */
 	public readonly Register_Setting $settings_args;
+
+	/**
+	 * Render callback to render the field's input.
+	 *
+	 * @phpstan-var null|callable( Field $field, Settings_Page $settings ): void
+	 * @var ?callable( Field $field, Settings_Page $settings, array $args ): void
+	 */
+	protected $render_callback;
+
+	/**
+	 * Help information to display below the field with `description` format.
+	 *
+	 * @var string
+	 */
+	protected string $help;
 
 
 	/**
@@ -63,20 +62,35 @@ class Field {
 		public readonly string $title,
 	) {
 		$this->settings_args = new Register_Setting();
+		$this->args = new Field_Args();
 	}
 
 
 	/**
-	 * Additional arguments supported by `add_settings_field`
+	 * When supplied, the setting title will be wrapped
+	 * in a `<label>` element, its `for` attribute populated
+	 * with this value.
 	 *
-	 * @phpstan-param FIELD_ARGS $field_args
-	 *
-	 * @param array              $field_args - Arguments to pass to `add_settings_field`.
+	 * @param string $label_for - ID of the input element.
 	 *
 	 * @return Field
 	 */
-	public function field_args( array $field_args ): Field {
-		$this->field_args = $field_args;
+	public function label_for( string $label_for ): Field {
+		$this->args->label_for = $label_for;
+		return $this;
+	}
+
+
+	/**
+	 * CSS Class to be added to the `<tr>` element when the
+	 * field is output.
+	 *
+	 * @param string $css_class - CSS class to add.
+	 *
+	 * @return Field
+	 */
+	public function class( string $css_class ): Field {
+		$this->args->class = $css_class;
 		return $this;
 	}
 
@@ -97,9 +111,9 @@ class Field {
 	/**
 	 * Render callback to render the field's input.
 	 *
-	 * @phpstan-param callable( Field $field, Settings_Page $settings, FIELD_ARGS $args ): void $callback
+	 * @phpstan-param callable( Field $field, Settings_Page $settings ): void $callback
 	 *
-	 * @param callable                                                                          $callback - Callback to render the field.
+	 * @param callable                                                        $callback - Callback to render the field.
 	 *
 	 * @return Field
 	 */
@@ -125,6 +139,21 @@ class Field {
 
 
 	/**
+	 * Additional arguments supported by `add_settings_field`.
+	 *
+	 * @note Local methods exist for common arguments.
+	 *
+	 * @param Field_Args $args - Arguments to pass to `add_settings_field`.
+	 *
+	 * @return Field
+	 */
+	public function args( Field_Args $args ): Field {
+		$this->args->merge( $args );
+		return $this;
+	}
+
+
+	/**
 	 * Additional arguments supported by `register_setting`
 	 *
 	 * @param Register_Setting $settings_args - Arguments to pass to `register_setting`.
@@ -134,6 +163,31 @@ class Field {
 	public function settings_args( Register_Setting $settings_args ): Field {
 		$this->settings_args->merge( $settings_args );
 		return $this;
+	}
+
+
+	/**
+	 * Render this field using the `render_callback`, or the default input.
+	 *
+	 * @param Settings_Page $settings - The settings page object.
+	 *
+	 * @return void
+	 */
+	public function render( Settings_Page $settings ): void {
+		if ( \is_callable( $this->render_callback ) ) {
+			\call_user_func( $this->render_callback, $this, $settings );
+		} else {
+			$value = $settings->get_option( $this->id, '' );
+			printf( '<input type="text" name="%1$s" value="%2$s" class="regular-text" />', esc_attr( $this->id ), esc_attr( $value ) );
+		}
+
+		if ( isset( $this->help ) ) {
+			?>
+			<p class="description help">
+				<?= wp_kses_post( $this->help ) ?>
+			</p>
+			<?php
+		}
 	}
 
 

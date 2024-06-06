@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Settings;
 
 use Lipe\Lib\Settings\Settings_Page\Field;
+use Lipe\Lib\Settings\Settings_Page\Field_Args;
 use Lipe\Lib\Settings\Settings_Page\Settings;
 
 /**
@@ -13,8 +14,6 @@ use Lipe\Lib\Settings\Settings_Page\Settings;
  *
  * @author Mat Lipe
  * @since  4.10.0
- *
- * @phpstan-import-type FIELD_ARGS from Field
  *
  */
 class Settings_Page {
@@ -105,11 +104,11 @@ class Settings_Page {
 				$section->title,
 				[ $section, 'render_description' ],
 				$this->settings->get_id(),
-				$section->args ?? []
+				$section->args->get_args()
 			);
 			foreach ( $section->get_fields() as $field ) {
-				$callback = function( array $args ) use ( $field ) {
-					$this->render_field( $field, $args );
+				$callback = function() use ( $field ) {
+					$field->render( $this );
 				};
 
 				add_settings_field(
@@ -118,7 +117,7 @@ class Settings_Page {
 					$callback,
 					$this->settings->get_id(),
 					$section->id,
-					$field->field_args ?? []
+					$field->args->get_args()
 				);
 
 				register_setting( $this->settings->get_id(), $field->id, $field->settings_args->get_args() );
@@ -207,34 +206,6 @@ class Settings_Page {
 			</form>
 		</div>
 		<?php
-	}
-
-
-	/**
-	 * Render an individual field if `render_callback` is not set on the field.
-	 *
-	 * @phpstan-param FIELD_ARGS $args
-	 *
-	 * @param Field              $field - The field object.
-	 * @param array              $args  - Arguments passed to the field.
-	 *
-	 * @return void
-	 */
-	protected function render_field( Field $field, array $args ): void {
-		if ( \is_callable( $field->render_callback ) ) {
-			\call_user_func( $field->render_callback, $field, $this, $args );
-		} else {
-			$value = $this->get_option( $field->id, '' );
-			printf( '<input type="text" name="%1$s" value="%2$s" class="regular-text" />', esc_attr( $field->id ), esc_attr( $value ) );
-		}
-
-		if ( isset( $field->help ) ) {
-			?>
-			<p class="description help">
-				<?= wp_kses_post( $field->help ) ?>
-			</p>
-			<?php
-		}
 	}
 
 

@@ -10,21 +10,14 @@ namespace Lipe\Lib\Settings\Settings_Page;
  *
  * @author Mat Lipe
  * @since  4.10.0
- *
- * @phpstan-type SECTION_ARGS array{
- *     before_section: string,
- *     after_section: string,
- *     section_class: string,
- * }
  */
 class Section {
 	/**
 	 * Additional arguments supported by `add_settings_section`
 	 *
-	 * @phpstan-var \Partial<SECTION_ARGS>
-	 * @var array
+	 * @var Section_Args
 	 */
-	public array $args;
+	public readonly Section_Args $args;
 
 	/**
 	 * Description for the section.
@@ -47,12 +40,13 @@ class Section {
 	 * @see Settings::get_sections()
 	 *
 	 * @param string $id    - Unique ID for this section.
-	 * @param string $title - Title of the section.
+	 * @param string $title - Title of the section. Use '' to hide the title.
 	 */
 	final protected function __construct(
 		public readonly string $id,
 		public readonly string $title,
 	) {
+		$this->args = new Section_Args();
 	}
 
 
@@ -94,19 +88,57 @@ class Section {
 
 
 	/**
-	 * Additional arguments supported by `add_settings_section`
+	 * HTML content to prepend to the section’s HTML output.
+	 * Receives the section’s class name as %s.
 	 *
-	 * Passing a `section_class` will add a class to the section
-	 * if the `before_section` includes a `sprintf` placeholder `%s`.
-	 *
-	 * @phpstan-param \Partial<SECTION_ARGS> $args
-	 *
-	 * @param array                          $args - Additional arguments.
+	 * @param string $before_section - HTML content to prepend.
 	 *
 	 * @return Section
 	 */
-	public function args( array $args ): Section {
-		$this->args = $args;
+	public function before_section( string $before_section ): Section {
+		$this->args->before_section = $before_section;
+		return $this;
+	}
+
+
+	/**
+	 * HTML content to append to the section’s HTML output.
+	 *
+	 * @param string $after_section - HTML content to append.
+	 *
+	 * @return Section
+	 */
+	public function after_section( string $after_section ): Section {
+		$this->args->after_section = $after_section;
+		return $this;
+	}
+
+
+	/**
+	 * The class name to use for the section’s HTML container
+	 * provided by `before_section`.
+	 *
+	 * @param string $section_class - Class name.
+	 *
+	 * @return Section
+	 */
+	public function section_class( string $section_class ): Section {
+		$this->args->section_class = $section_class;
+		return $this;
+	}
+
+
+	/**
+	 * Additional arguments supported by `add_settings_section`
+	 *
+	 * @note Local methods exist for common arguments.
+	 *
+	 * @param Section_Args $args - Additional arguments.
+	 *
+	 * @return Section
+	 */
+	public function args( Section_Args $args ): Section {
+		$this->args->merge( $args );
 		return $this;
 	}
 
@@ -156,7 +188,7 @@ class Section {
 	 * @see Settings::get_sections()
 	 *
 	 * @param string $id    - Unique ID for this section.
-	 * @param string $title - Title of the section.
+	 * @param string $title - Title of the section. Use '' to hide the title.
 	 */
 	public static function factory( string $id, string $title ): Section {
 		return new Section( $id, $title );

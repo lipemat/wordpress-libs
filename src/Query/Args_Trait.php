@@ -102,7 +102,7 @@ trait Args_Trait {
 	 * @phpstan-return no-return
 	 * @return void
 	 */
-	public function __set( string $name, $value ) { //phpcs:ignore -- $value is required in the magic method.
+	public function __set( string $name, mixed $value ) { //phpcs:ignore -- $value is required in the magic method.
 		/* translators: {property name} {class name} */
 		throw new \LogicException( \sprintf( esc_html__( 'Attempting to use the non-existent `%1$s` argument on %2$s.', 'lipe' ), esc_html( $name ), __CLASS__ ) );
 	}

@@ -5,6 +5,8 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Settings;
 
 use Lipe\Lib\Settings\Settings_Page\Field;
+use Lipe\Lib\Settings\Settings_Page\Field_Args;
+use Lipe\Lib\Settings\Settings_Page\Section_Args;
 use Lipe\Lib\Settings\Settings_Page\Settings;
 use mocks\Settings_Page_Mock;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -293,28 +295,30 @@ class Settings_PageTest extends \WP_UnitTestCase {
 		$this->assertStringContainsString( '<input type="text" name="second/section/second" value="" class="regular-text" />', $full );
 
 		$field = $standard->settings->get_sections()[0]->get_fields()[1];
-		$html = get_echo( fn() => call_private_method( $standard, 'render_field', [ $field, [] ] ) );
+		$html = get_echo( fn() => $field->render( $standard ) );
 		$this->assertSame( '<input type="text" name="first/section/second" value="" class="regular-text" />', $html );
 
 		$field->help( 'This is a help message' );
-		$html = get_echo( fn() => call_private_method( $standard, 'render_field', [ $field, [] ] ) );
+		$html = get_echo( fn() => $field->render( $standard ) );
 		$this->assertStringContainsString( '<input type="text" name="first/section/second" value="" class="regular-text" />', $html );
 		$this->assertStringContainsString( '<p class="description help">This is a help message</p>', strip_ws_all( $html ) );
 
-		$field->render_callback( function( Field $field, Settings_Page $settings, array $args ): void {
+		$field->render_callback( function( Field $field, Settings_Page $settings ): void {
 			?>
 			<input
 				type="url"
-				class="<?= $args['class'] ?>"
+				class="<?= $field->args->class ?>"
 				name="<?= $field->id ?>"
-				value="<?= wp_json_encode( $args ) ?>"
+				value="<?= wp_json_encode( $field->args ) ?>"
 				settings="<?= $settings->settings->get_id() ?>"
 			/>
 			<?php
 		} );
-		$html = get_echo( fn() => call_private_method( $standard, 'render_field', [ $field, [ 'class' => 'more-text', 'label_for' => 'no label' ] ] ) );
-		$this->assertSame( '<input type="url" class="more-text" name="first/section/second" value="{"class":"more-text","label_for":"no label"}" settings="testing/anon/mock-settings" /><p class="description help">This is a help message</p>', strip_ws_all( $html ) );
-		$this->assertSame( 'This is a help message', $field->help );
+		$field->class( 'more-text' );
+		$field->label_for( 'no-label' );
+		$html = get_echo( fn() => $field->render( $standard ) );
+		$this->assertSame( '<input type="url" class="more-text" name="first/section/second" value="{"label_for":"no-label","class":"more-text"}" settings="testing/anon/mock-settings" /><p class="description help">This is a help message</p>', strip_ws_all( $html ) );
+		$this->assertSame( 'This is a help message', get_private_property( $field, 'help' ) );
 	}
 
 
@@ -455,22 +459,22 @@ class Settings_PageTest extends \WP_UnitTestCase {
 
 	public function test_section_extras(): void {
 		$mock = Settings_Page::factory( new Settings_Page_Mock( false ) );
-		$mock->settings->get_sections()[0]->args( [
+		$mock->settings->get_sections()[0]->args( new Section_Args( [
 			'before_section' => '<div>before',
 			'after_section'  => 'after</div>',
 			'section_class'  => 'section-class',
-		] );
+		] ) );
 		$mock->register();
 		$html = get_echo( [ $mock, 'render' ] );
 		$this->assertStringContainsString( '<div>before<h2>First Section</h2>', $html );
 		$this->assertStringContainsString( 'after</div><h2>Second Section</h2>', $html );
 		$this->assertStringNotContainsString( 'section-class', $html );
 
-		$mock->settings->get_sections()[0]->args( [
+		$mock->settings->get_sections()[0]->args( new Section_Args( [
 			'before_section' => '<div class="%s">before',
 			'after_section'  => 'after</div>',
 			'section_class'  => 'section-class',
-		] );
+		] ) );
 		$mock->register();
 		$html = get_echo( [ $mock, 'render' ] );
 		$this->assertStringContainsString( '<div class="section-class">before<h2>First Section</h2>', $html );
@@ -485,11 +489,11 @@ class Settings_PageTest extends \WP_UnitTestCase {
 	 * @dataProvider provideFieldExtras
 	 */
 	public function test_field_extras( array $args, string $expected ): void {
-		// Make sure our provider is valid.
-		\array_map( fn( $key ) => ! \in_array( $key, [ 'label_for', 'class' ] ) ? $this->fail( "Invalid field arg {$key}" ) : null, \array_keys( $args ) );
-
 		$mock = Settings_Page::factory( new Settings_Page_Mock( false ) );
-		$mock->settings->get_sections()[0]->get_fields()[0]->field_args( $args );
+		$field = $mock->settings->get_sections()[0]->get_fields()[0];
+		foreach ( $args as $key => $value ) {
+			$field->$key( $value );
+		}
 		$mock->register();
 		$html = get_echo( [ $mock, 'render' ] );
 		$this->assertStringContainsString( $expected, strip_ws_all( $html ) );
