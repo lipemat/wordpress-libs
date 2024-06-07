@@ -15,9 +15,9 @@ class Section {
 	/**
 	 * Additional arguments supported by `add_settings_section`
 	 *
-	 * @var Section_Args
+	 * @var SectionArgs
 	 */
-	public readonly Section_Args $args;
+	public readonly SectionArgs $args;
 
 	/**
 	 * Description for the section.
@@ -46,7 +46,7 @@ class Section {
 		public readonly string $id,
 		public readonly string $title,
 	) {
-		$this->args = new Section_Args();
+		$this->args = new SectionArgs();
 	}
 
 
@@ -124,21 +124,6 @@ class Section {
 	 */
 	public function section_class( string $section_class ): Section {
 		$this->args->section_class = $section_class;
-		return $this;
-	}
-
-
-	/**
-	 * Additional arguments supported by `add_settings_section`
-	 *
-	 * @note Local methods exist for common arguments.
-	 *
-	 * @param Section_Args $args - Additional arguments.
-	 *
-	 * @return Section
-	 */
-	public function args( Section_Args $args ): Section {
-		$this->args->merge( $args );
 		return $this;
 	}
 

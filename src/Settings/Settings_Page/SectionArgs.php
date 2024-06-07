@@ -15,7 +15,7 @@ use Lipe\Lib\Query\Args_Trait;
  * @link   https://developer.wordpress.org/reference/functions/add_settings_section/
  *
  */
-class Section_Args implements Args_Interface {
+class SectionArgs implements Args_Interface {
 	use Args_Trait;
 
 	/**

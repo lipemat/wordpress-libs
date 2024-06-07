@@ -5,8 +5,8 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Settings;
 
 use Lipe\Lib\Settings\Settings_Page\Field;
-use Lipe\Lib\Settings\Settings_Page\Field_Args;
-use Lipe\Lib\Settings\Settings_Page\Section_Args;
+use Lipe\Lib\Settings\Settings_Page\FieldArgs;
+use Lipe\Lib\Settings\Settings_Page\SectionArgs;
 use Lipe\Lib\Settings\Settings_Page\Settings;
 use mocks\Settings_Page_Mock;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -459,7 +459,7 @@ class Settings_PageTest extends \WP_UnitTestCase {
 
 	public function test_section_extras(): void {
 		$mock = Settings_Page::factory( new Settings_Page_Mock( false ) );
-		$mock->settings->get_sections()[0]->args( new Section_Args( [
+		$mock->settings->get_sections()[0]->args->merge( new SectionArgs( [
 			'before_section' => '<div>before',
 			'after_section'  => 'after</div>',
 			'section_class'  => 'section-class',
@@ -470,7 +470,7 @@ class Settings_PageTest extends \WP_UnitTestCase {
 		$this->assertStringContainsString( 'after</div><h2>Second Section</h2>', $html );
 		$this->assertStringNotContainsString( 'section-class', $html );
 
-		$mock->settings->get_sections()[0]->args( new Section_Args( [
+		$mock->settings->get_sections()[0]->args->merge( new SectionArgs( [
 			'before_section' => '<div class="%s">before',
 			'after_section'  => 'after</div>',
 			'section_class'  => 'section-class',

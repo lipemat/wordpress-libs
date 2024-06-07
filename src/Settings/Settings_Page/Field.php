@@ -19,9 +19,9 @@ class Field {
 	/**
 	 * Additional arguments supported by `add_settings_field`.
 	 *
-	 * @var Field_Args
+	 * @var FieldArgs
 	 */
-	public readonly Field_Args $args;
+	public readonly FieldArgs $args;
 
 	/**
 	 * Additional arguments supported by `register_setting`.
@@ -62,7 +62,7 @@ class Field {
 		public readonly string $title,
 	) {
 		$this->settings_args = new Register_Setting();
-		$this->args = new Field_Args();
+		$this->args = new FieldArgs();
 	}
 
 
@@ -134,21 +134,6 @@ class Field {
 	 */
 	public function sanitize_callback( callable $callback ): Field {
 		$this->settings_args->sanitize_callback = fn( mixed $value ) => $callback( $value, $this );
-		return $this;
-	}
-
-
-	/**
-	 * Additional arguments supported by `add_settings_field`.
-	 *
-	 * @note Local methods exist for common arguments.
-	 *
-	 * @param Field_Args $args - Arguments to pass to `add_settings_field`.
-	 *
-	 * @return Field
-	 */
-	public function args( Field_Args $args ): Field {
-		$this->args->merge( $args );
 		return $this;
 	}
 

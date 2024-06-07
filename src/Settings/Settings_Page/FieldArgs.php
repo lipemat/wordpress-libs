@@ -15,7 +15,7 @@ use Lipe\Lib\Query\Args_Trait;
  * @link   https://developer.wordpress.org/reference/functions/add_settings_field/#parameters
  *
  */
-class Field_Args implements Args_Interface {
+class FieldArgs implements Args_Interface {
 	use Args_Trait;
 
 	/**
