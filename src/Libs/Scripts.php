@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Libs;
 
 use Lipe\Lib\Libs\Scripts\ScriptHandles;
+use Lipe\Lib\Libs\Scripts\StyleHandles;
 use Lipe\Lib\Traits\Singleton;
 
 /**
@@ -17,22 +18,16 @@ use Lipe\Lib\Traits\Singleton;
 class Scripts {
 	use Singleton;
 
-	public const STYLE_CHECKBOX     = 'checkbox';
-	public const STYLE_GROUP_LAYOUT = 'group-layout';
-
-
 	/**
 	 * Enqueue an internal CSS file.
 	 *
-	 * @phpstan-param self::STYLE_* $file
-	 *
-	 * @param string                $file - Name of the file to enqueue.
+	 * @param StyleHandles $style - Name of the file to enqueue.
 	 *
 	 * @return void
 	 */
-	public function enqueue_style( string $file ): void {
+	public function enqueue_style( StyleHandles $style ): void {
 		$dir = trailingslashit( plugin_dir_url( \dirname( __DIR__ ) ) ) . 'css/';
-		\wp_enqueue_style( 'lipe/lib/libs/styles/' . $file, $dir . $file . '.css', [], $this->get_version() );
+		\wp_enqueue_style( $style->value, $dir . $style->file() . '.css', [], $this->get_version() );
 	}
 
 
