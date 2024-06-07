@@ -33,5 +33,5 @@ interface Table {
 	 *
 	 * @return string
 	 */
-	public function get_table(): string;
+	public function get_table_base(): string;
 }

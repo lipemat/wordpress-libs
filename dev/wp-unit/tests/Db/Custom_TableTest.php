@@ -24,7 +24,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 
 	public function test_get_table(): void {
 		global $wpdb;
-		$this->assertSame( $wpdb->prefix . 'options', $this->db()->get_table() );
+		$this->assertSame( $wpdb->prefix . 'options', $this->db()->table() );
 
 		$table = new class() implements Table {
 			public function get_column_formats(): array {
@@ -37,14 +37,14 @@ class Custom_TableTest extends \WP_UnitTestCase {
 			}
 
 
-			public function get_table(): string {
+			public function get_table_base(): string {
 				global $wpdb;
 				return $wpdb->prefix . 'custom_table';
 			}
 		};
 
 		$db = Custom_Table::factory( $table );
-		$this->assertSame( $wpdb->prefix . 'custom_table', $db->get_table() );
+		$this->assertSame( $wpdb->prefix . 'custom_table', $db->table() );
 	}
 
 
@@ -332,7 +332,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 			}
 
 
-			public function get_table(): string {
+			public function get_table_base(): string {
 				return 'custom_table';
 			}
 		};
@@ -422,7 +422,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 		$table = new class() implements Table {
 			public function get_column_formats(): array {
 				return [
-					'int_field'    => '%i',
+					'int_field'    => '%d',
 					'string_field' => '%s',
 					'float_field'  => '%f',
 				];
@@ -434,7 +434,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 			}
 
 
-			public function get_table(): string {
+			public function get_table_base(): string {
 				return 'custom_table';
 			}
 		};
@@ -474,7 +474,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 			}
 
 
-			public function get_table(): string {
+			public function get_table_base(): string {
 				return 'options';
 			}
 		};

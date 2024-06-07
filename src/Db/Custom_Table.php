@@ -11,15 +11,17 @@ namespace Lipe\Lib\Db;
  * @since  4.10.0
  *
  * @template COLUMNS of array<string, string|float|int|null>
- * @template FORMATS of array<string, "%d"|"%i"|"%f"|"%s">
+ * @template FORMATS of array<string, "%d"|"%f"|"%s">
  * // Partials must be passed in because \Partial<array> does not support templates.
  * @template PARTIALS of array<key-of<COLUMNS>, float|string|int|null>
- *
- * @phpstan-type MYSQL array<key-of<COLUMNS>, string>
  */
 class Custom_Table {
 	public const ORDER_ASC  = 'ASC';
 	public const ORDER_DESC = 'DESC';
+
+	public const FORMAT_INT    = '%d';
+	public const FORMAT_FLOAT  = '%f';
+	public const FORMAT_STRING = '%s';
 
 	/**
 	 * Holds the database name with the prefix included.
@@ -47,10 +49,10 @@ class Custom_Table {
 		protected readonly Table $config
 	) {
 		global $wpdb;
-		if ( \str_starts_with( $this->config->get_table(), $wpdb->prefix ) ) {
-			$this->table = $this->config->get_table();
+		if ( \str_starts_with( $this->config->get_table_base(), $wpdb->prefix ) ) {
+			$this->table = $this->config->get_table_base();
 		} else {
-			$this->table = $wpdb->prefix . $this->config->get_table();
+			$this->table = $wpdb->prefix . $this->config->get_table_base();
 		}
 	}
 
@@ -60,7 +62,7 @@ class Custom_Table {
 	 *
 	 * @return string
 	 */
-	public function get_table(): string {
+	public function table(): string {
 		return $this->table;
 	}
 
@@ -83,7 +85,7 @@ class Custom_Table {
 	public function get( array $where = [], ?int $count = null, ?string $order_by = null, string $order = 'ASC' ): array {
 		global $wpdb;
 		$query = $this->get_select_query( [], $where, $count, $order_by, $order );
-		$data = $wpdb->get_results( $query, 'ARRAY_A' );
+		$data = $wpdb->get_results( $query, ARRAY_A );
 		return \array_map( [ $this, 'format_values' ], $data );
 	}
 
@@ -105,7 +107,7 @@ class Custom_Table {
 	public function get_one( array $where = [], ?string $order_by = null, string $order = 'ASC' ): ?array {
 		global $wpdb;
 		$query = $this->get_select_query( [], $where, 1, $order_by, $order );
-		$data = $wpdb->get_row( $query, 'ARRAY_A' );
+		$data = $wpdb->get_row( $query, ARRAY_A );
 		if ( null !== $data ) {
 			return $this->format_values( $data );
 		}
@@ -140,8 +142,8 @@ class Custom_Table {
 			$offset = ( $page - 1 ) * $per_page;
 		}
 		$query = $this->get_select_query( [], $where, $per_page, $order_by, $order, $offset );
-		$items = $wpdb->get_results( $query, 'ARRAY_A' );
-		$total = $wpdb->get_var( "SELECT COUNT(*) FROM `{$this->get_table()}` {$this->last_where}" );
+		$items = $wpdb->get_results( $query, ARRAY_A );
+		$total = $wpdb->get_var( "SELECT COUNT(*) FROM `{$this->table()}` {$this->last_where}" );
 
 		return [
 			'items'       => \array_map( [ $this, 'format_values' ], $items ),
@@ -162,7 +164,7 @@ class Custom_Table {
 	public function get_by_id( int $id ): ?array {
 		global $wpdb;
 		$query = $this->get_select_query( [], [ $this->config->get_id_field() => $id ] );
-		$data = $wpdb->get_row( $query, 'ARRAY_A' );
+		$data = $wpdb->get_row( $query, ARRAY_A );
 		if ( null !== $data ) {
 			return $this->format_values( $data );
 		}
@@ -184,7 +186,7 @@ class Custom_Table {
 		unset( $columns[ $this->config->get_id_field() ] );
 		$columns = $this->sort_columns( $columns );
 
-		if ( false !== $wpdb->insert( $this->get_table(), $columns, $this->config->get_column_formats() ) ) {
+		if ( false !== $wpdb->insert( $this->table(), $columns, $this->config->get_column_formats() ) ) {
 			return $wpdb->insert_id;
 		}
 		return null;
@@ -198,7 +200,7 @@ class Custom_Table {
 	 */
 	public function delete( int $id ): bool {
 		global $wpdb;
-		$deleted = $wpdb->delete( $this->get_table(), [ $this->config->get_id_field() => $id ], [ '%d' ] );
+		$deleted = $wpdb->delete( $this->table(), [ $this->config->get_id_field() => $id ], [ '%d' ] );
 		return 1 === $deleted;
 	}
 
@@ -215,7 +217,7 @@ class Custom_Table {
 	public function delete_where( array $where ): bool|int {
 		global $wpdb;
 		$formats = $this->get_formats( $where );
-		return $wpdb->delete( $this->get_table(), $where, $formats );
+		return $wpdb->delete( $this->table(), $where, $formats );
 	}
 
 
@@ -231,7 +233,7 @@ class Custom_Table {
 	 */
 	public function update( int $id, array $columns ): bool {
 		global $wpdb;
-		$updated = $wpdb->update( $this->get_table(), $columns, [ $this->config->get_id_field() => $id ], $this->get_formats( $columns ), [ '%d' ] );
+		$updated = $wpdb->update( $this->table(), $columns, [ $this->config->get_id_field() => $id ], $this->get_formats( $columns ), [ '%d' ] );
 		return 1 === $updated;
 	}
 
@@ -250,7 +252,7 @@ class Custom_Table {
 	public function update_where( array $where, array $columns ): bool|int {
 		global $wpdb;
 		$formats = $this->get_formats( $columns );
-		return $wpdb->update( $this->get_table(), $columns, $where, $formats, $this->get_formats( $where ) );
+		return $wpdb->update( $this->table(), $columns, $where, $formats, $this->get_formats( $where ) );
 	}
 
 
@@ -272,7 +274,7 @@ class Custom_Table {
 		global $wpdb;
 		$columns = $this->sort_columns( $columns );
 		$columns[ $this->config->get_id_field() ] = $id;
-		return $wpdb->replace( $this->get_table(), $columns, $this->get_formats( $columns ) );
+		return $wpdb->replace( $this->table(), $columns, $this->get_formats( $columns ) );
 	}
 
 
@@ -305,7 +307,7 @@ class Custom_Table {
 			$db_columns = \implode( ', ', \array_map( fn( string $column ) => "`{$column}`", $columns ) );
 		}
 
-		$sql = "SELECT $db_columns FROM `{$this->get_table()}`";
+		$sql = $wpdb->prepare( "SELECT $db_columns FROM %i", $this->table() );
 		$this->last_where = '';
 
 		if ( \count( $where ) > 0 ) {
@@ -345,7 +347,7 @@ class Custom_Table {
 				$sql .= " $order";
 			}
 		} elseif ( 'ASC' !== $order ) {
-			$sql .= " ORDER BY `{$this->config->get_id_field()}` $order";
+			$sql .= $wpdb->prepare( " ORDER BY %i $order", $this->config->get_id_field() );
 		}
 		if ( null !== $count ) {
 			$sql .= " LIMIT $count";
@@ -376,10 +378,9 @@ class Custom_Table {
 		foreach ( $values as $key => $value ) {
 			if ( isset( $columns[ $key ] ) && \is_string( $value ) ) {
 				$formatted[ $key ] = match ( $columns[ $key ] ) {
-					'%i',
-					'%d'    => (int) $value,
-					'%f'    => (float) $value,
-					default => $value,
+					static::FORMAT_INT   => (int) $value,
+					static::FORMAT_FLOAT => (float) $value,
+					default              => $value,
 				};
 			}
 		}
@@ -423,7 +424,7 @@ class Custom_Table {
 	 *
 	 * @param array     $columns - Columns to retrieve formats for.
 	 *
-	 * @phpstan-return array<T, "%d"|"%i"|"%f"|"%s">
+	 * @phpstan-return array<T, self::FORMAT_*>
 	 * @return array
 	 */
 	protected function get_formats( array $columns ): array {
