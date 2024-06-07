@@ -15,10 +15,6 @@ use Lipe\Lib\Util\Arrays;
  * @since  4.10.0
  */
 class Gutenberg_Box implements \JsonSerializable {
-	public const TYPE_RADIO    = 'radio';
-	public const TYPE_DROPDOWN = 'dropdown';
-	public const TYPE_SIMPLE   = 'simple';
-
 	/**
 	 * @var array<Gutenberg_Box>
 	 */
@@ -28,14 +24,14 @@ class Gutenberg_Box implements \JsonSerializable {
 	/**
 	 * Construct and pass the configuration to the JS.
 	 *
-	 * @phpstan-param self::TYPE_* $type
+	 * @phpstan-param Meta_Box::TYPE_* $type
 	 *
-	 * @param string               $type          The type of meta box to display.
-	 *                                            - radio: A radio button list.
-	 *                                            - dropdown: A dropdown select.
-	 *                                            - simple: A simple list of checkboxes.
-	 * @param string               $taxonomy      The taxonomy to attach the meta box to.
-	 * @param bool                 $checked_ontop Should the checked items be on top.
+	 * @param string                   $type          The type of meta box to display.
+	 *                                                - radio: A radio button list.
+	 *                                                - dropdown: A dropdown select.
+	 *                                                - simple: A simple list of checkboxes.
+	 * @param string                   $taxonomy      The taxonomy to attach the meta box to.
+	 * @param bool                     $checked_ontop Should the checked items be on top.
 	 */
 	final protected function __construct(
 		protected string $type,
@@ -66,7 +62,7 @@ class Gutenberg_Box implements \JsonSerializable {
 	/**
 	 * Load the script for the block editor meta boxes.
 	 *
-	 * @note `enqueue_block_assets` gets called 2x per each page, once for the
+	 * @note   `enqueue_block_assets` gets called 2x per each page, once for the
 	 * editor iframe and one for the admin so this must be allowed to run multiple times.
 	 *
 	 * @action enqueue_block_assets 25 0
@@ -80,7 +76,7 @@ class Gutenberg_Box implements \JsonSerializable {
 
 	/**
 	 * @return array{
-	 *     type: self::TYPE_*,
+	 *     type: Meta_Box::TYPE_*,
 	 *     taxonomy: string,
 	 *     checkedOnTop: bool
 	 * }
@@ -102,6 +98,7 @@ class Gutenberg_Box implements \JsonSerializable {
 	public static function get_boxes(): array {
 		return static::$boxes;
 	}
+
 
 	/**
 	 * Public access to constructing a new instance.

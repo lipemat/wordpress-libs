@@ -4,6 +4,7 @@ namespace Lipe\Lib\CMB2\Field;
 
 use Lipe\Lib\CMB2\Field_Type;
 use Lipe\Lib\Libs\Scripts;
+use Lipe\Lib\Libs\Scripts\StyleHandles;
 use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
 
@@ -39,7 +40,7 @@ class Checkbox {
 			return $field->render_field_callback();
 		}
 
-		Scripts::in()->enqueue_style( Scripts::STYLE_CHECKBOX );
+		Scripts::in()->enqueue_style( StyleHandles::CHECKBOX );
 
 		$field->peform_param_callback( 'before_row' );
 

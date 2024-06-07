@@ -4,6 +4,7 @@ namespace Lipe\Lib\CMB2\Group;
 
 use Lipe\Lib\CMB2\Group;
 use Lipe\Lib\Libs\Scripts;
+use Lipe\Lib\Libs\Scripts\StyleHandles;
 use Lipe\Lib\Theme\Class_Names;
 use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
@@ -134,7 +135,7 @@ class Layout {
 
 		echo '</div></div></div>';
 
-		Scripts::in()->enqueue_style( Scripts::STYLE_GROUP_LAYOUT );
+		Scripts::in()->enqueue_style( StyleHandles::GROUP_LAYOUT );
 		$field_group->peform_param_callback( 'after_group' );
 
 		return $field_group;
@@ -146,7 +147,7 @@ class Layout {
 	 *
 	 * @param \CMB2_Field $field_group CMB2_Field group field object.
 	 */
-	public function render_group_table_header( $field_group ): void {
+	public function render_group_table_header( \CMB2_Field $field_group ): void {
 		?>
 		<tr class="cmb-row">
 			<?php

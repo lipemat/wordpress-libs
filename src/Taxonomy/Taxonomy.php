@@ -539,7 +539,7 @@ class Taxonomy {
 			?>
 			<a
 				style="margin: 0 4px 0 1px;"
-				href="<?php echo esc_url( admin_url( 'edit.php?post_type=' . esc_attr( $post_type ) ) ); ?>"
+				href="<?= esc_url( admin_url( 'edit.php?post_type=' . esc_attr( $post_type ) ) ) ?>"
 				class="button"
 			>
 				<?php esc_html_e( 'Clear Filters', 'lipe' ); ?>

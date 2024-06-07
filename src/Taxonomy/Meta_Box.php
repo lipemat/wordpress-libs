@@ -5,7 +5,9 @@ namespace Lipe\Lib\Taxonomy;
 
 use Lipe\Lib\Libs\Scripts;
 use Lipe\Lib\Libs\Scripts\ScriptHandles;
+use Lipe\Lib\Libs\Scripts\StyleHandles;
 use Lipe\Lib\Taxonomy\Meta_Box\Gutenberg_Box;
+use Lipe\Lib\Taxonomy\Meta_Box\Radio_Walker;
 
 /**
  * Custom output for various meta box styles.
@@ -17,6 +19,10 @@ use Lipe\Lib\Taxonomy\Meta_Box\Gutenberg_Box;
  * @since  4.0.0
  */
 class Meta_Box {
+	public const TYPE_RADIO    = 'radio';
+	public const TYPE_DROPDOWN = 'dropdown';
+	public const TYPE_SIMPLE   = 'simple';
+
 	/**
 	 * The taxonomy slug.
 	 *
@@ -27,7 +33,7 @@ class Meta_Box {
 	/**
 	 * The type meta box.
 	 *
-	 * @phpstan-var Gutenberg_Box::TYPE_*
+	 * @phpstan-var self::TYPE_*
 	 *
 	 * @var string
 	 */
@@ -45,11 +51,11 @@ class Meta_Box {
 	 * Constructs a custom meta box for a taxonomy to replace
 	 * the default meta box with a new UI.
 	 *
-	 * @phpstan-param Gutenberg_Box::TYPE_* $type
+	 * @phpstan-param self::TYPE_* $type
 	 *
-	 * @param string                        $taxonomy      - The taxonomy slug.
-	 * @param string                        $type          - The type of meta box.
-	 * @param bool                          $checked_ontop - Move checked items to top.
+	 * @param string               $taxonomy      - The taxonomy slug.
+	 * @param string               $type          - The type of meta box.
+	 * @param bool                 $checked_ontop - Move checked items to top.
 	 */
 	public function __construct( string $taxonomy, string $type, bool $checked_ontop ) {
 		$this->taxonomy = $taxonomy;
@@ -117,13 +123,13 @@ class Meta_Box {
 	 *
 	 * @see Taxonomy::meta_box
 	 *
-	 * @param string   $taxonomy - Same taxonomy which was used to create the meta box.
-	 * @param string[] $terms    - The term ids as strings.
+	 * @param string          $taxonomy - Same taxonomy which was used to create the meta box.
+	 * @param string[]|string $terms    - The term ids as strings.
 	 *
 	 * @return int[]
 	 */
-	public function translate_string_term_ids_to_int( string $taxonomy, array $terms ): array {
-		return \array_map( '\intval', $terms );
+	public function translate_string_term_ids_to_int( string $taxonomy, array|string $terms ): array {
+		return \array_map( '\intval', (array) $terms );
 	}
 
 
@@ -171,22 +177,8 @@ class Meta_Box {
 				wp_dropdown_categories( $args->get_args() );
 			} else {
 				Scripts::in()->enqueue_script( ScriptHandles::ADMIN );
+				Scripts::in()->enqueue_style( StyleHandles::META_BOXES );
 				?>
-				<style>
-					/* Style for the 'none' item: */
-					#<?= esc_attr( $this->taxonomy ) ?>-0 {
-						color: #888;
-						border-top: 1px solid #eee;
-						margin-top: 5px;
-						padding-top: 5px;
-					}
-
-					/* Remove Genesis "Select / Deselect All" button. */
-					.lipe-libs-terms-box #genesis-category-checklist-toggle {
-						display: none;
-					}
-				</style>
-
 				<input type="hidden" name="tax_input[<?= esc_attr( $this->taxonomy ) ?>][]" value="0" />
 
 				<ul
@@ -208,11 +200,11 @@ class Meta_Box {
 
 					// Output the 'none' item.
 					$output = '';
-					$o = (object) [
+					$o = new \WP_Term( (object) [
 						'term_id' => 0,
 						'name'    => $object->labels->no_item,
 						'slug'    => 'none',
-					];
+					] );
 					$args = [
 						'taxonomy'      => $this->taxonomy,
 						'selected_cats' => \count( $selected ) < 1 ? [ 0 ] : $selected,
@@ -236,56 +228,11 @@ class Meta_Box {
 	/**
 	 * Get the appropriate walker based on the field type.
 	 *
-	 * @return \Walker
+	 * @return \Walker_Category_Checklist|Radio_Walker
 	 */
-	protected function get_walker(): \Walker {
+	protected function get_walker(): \Walker_Category_Checklist|Radio_Walker {
 		if ( 'radio' === $this->type ) {
-			// @phpstan-ignore-next-line
-			return new class() extends \Walker_Category_Checklist {
-				/**
-				 * Starts the element output.
-				 *
-				 * @param string   $output            Passed by reference. Used to append additional content.
-				 * @param \WP_Term $data_object       The current item's term data object.
-				 * @param int      $depth             Depth of the current item.
-				 * @param array    $args              An array of arguments.
-				 * @param int      $current_object_id ID of the current item.
-				 *
-				 * @return void
-				 */
-				public function start_el( &$output, $data_object, $depth = 0, $args = [], $current_object_id = 0 ): void { //phpcs:ignore -- Signature must match parent.
-					$tax = get_taxonomy( $args['taxonomy'] );
-					if ( false === $tax ) {
-						return;
-					}
-
-					$value = $tax->hierarchical ? $data_object->term_id : $data_object->name;
-					if ( empty( $data_object->term_id ) && ! $tax->hierarchical ) {
-						$value = '';
-					}
-					$checked = \in_array( $data_object->term_id, $args['selected_cats'], true );
-
-					ob_start();
-					?>
-					<li id="<?= esc_attr( $args['taxonomy'] ) . '-' . esc_attr( (string) $data_object->term_id ) ?>">
-						<label>
-							<input
-								value="<?= esc_attr( (string) $value ) ?>"
-								type="radio"
-								name="tax_input[<?= esc_attr( $args['taxonomy'] ) ?>][]"
-								id="in-<?= esc_attr( $args['taxonomy'] ) . '-' . esc_attr( (string) $data_object->term_id ) ?>"
-								<?= checked( $checked, true, false ) ?>
-							/>
-							<?php
-							// phpcs:ignore WordPress.NamingConventions -- Using WP core filter.
-							echo esc_html( apply_filters( 'the_category', $data_object->name ) );
-							?>
-						</label>
-					</li>
-					<?php
-					$output .= ob_get_clean();
-				}
-			};
+			return new Radio_Walker();
 		}
 
 		return new \Walker_Category_Checklist();

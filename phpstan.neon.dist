@@ -22,6 +22,7 @@ parameters:
             - Lipe\Lib\Meta\Translate_Abstract
             - Lipe\Lib\Query\Args
             - Lipe\Lib\Taxonomy\Get_Terms
+            - Walker_Category_Checklist
         nonDistributed: false
     strictRules:
         allRules: true
