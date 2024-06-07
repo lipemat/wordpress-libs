@@ -6,11 +6,9 @@ includes:
     # Baseline errors to be resolved.
     - dev/phpstan-baseline.php
 
-services:
+rules:
     # Enable the script types rule even though the library is distributed.
-    - class: Lipe\Lib\Phpstan\Rules\Files\DeclareStrictTypesRule
-      tags:
-        - phpstan.rules.rule
+    - Lipe\Lib\Phpstan\Rules\Files\DeclareStrictTypesRule
 
 parameters:
     level: 8
