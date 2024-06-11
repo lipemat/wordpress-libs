@@ -1619,42 +1619,6 @@ $ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 2,
-	'path' => __DIR__ . '/../src/Util/Cache.php',
-];
-$ignoreErrors[] = [
-	// identifier: lipemat.declareStrictTypes
-	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Util/Cache.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Util\\\\Cache\\:\\:delete\\(\\) has parameter \\$key with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Util/Cache.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Util\\\\Cache\\:\\:filter_key\\(\\) has parameter \\$key with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Util/Cache.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Util\\\\Cache\\:\\:get\\(\\) has parameter \\$key with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Util/Cache.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Util\\\\Cache\\:\\:set\\(\\) has parameter \\$key with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Util/Cache.php',
-];
-$ignoreErrors[] = [
-	// identifier: empty.notAllowed
-	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
-	'count' => 2,
 	'path' => __DIR__ . '/../src/Util/Colors.php',
 ];
 $ignoreErrors[] = [
