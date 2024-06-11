@@ -25,7 +25,7 @@ trait Memoize {
 	/**
 	 * The local cache to store the results of memoized calls.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected array $memoize_cache = [];
 
@@ -47,7 +47,7 @@ trait Memoize {
 	 *
 	 * @return mixed
 	 */
-	public function persistent( callable $callback, string $identifier, $expire = 0, ...$args ) {
+	public function persistent( callable $callback, string $identifier, $expire = 0, ...$args ): mixed {
 		$cache_key = $this->get_cache_key( $identifier, $args );
 		$data = Cache::in()->get( $cache_key, __CLASS__ );
 		if ( false === $data ) {
@@ -74,7 +74,7 @@ trait Memoize {
 	 *
 	 * @return mixed
 	 */
-	public function once( callable $callback, string $identifier, ...$args ) {
+	public function once( callable $callback, string $identifier, ...$args ): mixed {
 		$key = "{$identifier}::once";
 		if ( ! \array_key_exists( $key, $this->memoize_cache ) ) {
 			$this->memoize_cache[ $key ] = $callback( ...$args );
@@ -100,8 +100,8 @@ trait Memoize {
 	 *
 	 * @return mixed
 	 */
-	public function memoize( callable $callback, string $identifier, ...$args ) {
-		// Closure use their object id to differenciate.
+	public function memoize( callable $callback, string $identifier, ...$args ): mixed {
+		// Closure use their object id to differentiate.
 		$cache_args = Arrays::in()->map_recursive( fn( $arg ) => $arg instanceof \Closure ? 'clousure-' . \spl_object_id( $arg ) : $arg, $args );
 
 		$key = $this->get_cache_key( $identifier, $cache_args );
@@ -119,8 +119,8 @@ trait Memoize {
 	 *
 	 * @see Memoize::clear_memoize_cache()
 	 *
-	 * @param string $identifier - Identifier used with original method to store value.
-	 * @param array  ...$args    - Arguments passed to original method when storing value.
+	 * @param string       $identifier - Identifier used with original method to store value.
+	 * @param array<mixed> ...$args    - Arguments passed to original method when storing value.
 	 *
 	 * @return bool - Result of deleting the cache from external object cache.
 	 */
@@ -155,8 +155,8 @@ trait Memoize {
 	 *
 	 * @since 4.2.0
 	 *
-	 * @param string $identifier - Unique key to hold the cache.
-	 * @param array  $args       - Arguments passed to the original method.
+	 * @param string       $identifier - Unique key to hold the cache.
+	 * @param array<mixed> $args       - Arguments passed to the original method.
 	 *
 	 * @return string
 	 */

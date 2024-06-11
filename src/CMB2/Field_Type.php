@@ -654,8 +654,6 @@ class Field_Type {
 	/**
 	 * A select field pre-populated with taxonomy terms and displayed hierarchical.
 	 *
-	 * @todo Add link once docs become available.
-	 *
 	 * @param string $taxonomy       - slug.
 	 * @param null   $no_terms_text  - text to display if no terms are found.
 	 * @param null   $remove_default - remove default WP terms metabox.

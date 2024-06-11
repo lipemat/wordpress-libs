@@ -133,8 +133,6 @@ class Box {
 	 *
 	 * @link  https://gist.github.com/jtsternberg/a70e845aca44356b8fbf05aafff4d0c8
 	 *
-	 * @todo  Add link to docs once they exist.
-	 *
 	 * @var callable
 	 */
 	public $register_rest_field_cb;

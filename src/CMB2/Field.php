@@ -292,8 +292,6 @@ class Field {
 	/**
 	 * Entirely replace the class to used to display the field (in admin columns, etc)
 	 *
-	 * @todo Add link to docs once they exist.
-	 *
 	 * @var \CMB2_Field_Display
 	 */
 	public \CMB2_Field_Display $display_class;
