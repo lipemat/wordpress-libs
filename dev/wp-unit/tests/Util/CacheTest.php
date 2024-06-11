@@ -56,7 +56,7 @@ class CacheTest extends \WP_UnitTestCase {
 		$this->assertFalse( Cache::in()->get( $key, self::GROUP_1 ), 'cache not flushing' );
 
 		$class = new class() implements \JsonSerializable {
-			public function jsonSerialize() {
+			public function jsonSerialize(): array {
 				return [ 'from-json-something' => 'value' ];
 			}
 		};
