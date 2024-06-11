@@ -1418,12 +1418,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Theme/Resources.php',
 ];
 $ignoreErrors[] = [
-	// identifier: lipemat.declareStrictTypes
-	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Theme/Resources.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\Theme\\\\Resources\\:\\:clear_single_item\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
 	'count' => 1,
