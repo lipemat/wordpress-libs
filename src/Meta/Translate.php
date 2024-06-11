@@ -9,7 +9,7 @@ use Lipe\Lib\Traits\Memoize;
 /**
  * Translate the fields into the correct data types.
  */
-abstract class Translate_Abstract {
+trait Translate {
 	use Memoize;
 
 	/**
@@ -18,13 +18,6 @@ abstract class Translate_Abstract {
 	 * @var Field[]
 	 */
 	protected array $fields = [];
-
-	/**
-	 * Holds a list of fields
-	 *
-	 * @var array
-	 */
-	protected array $groups = [];
 
 	/**
 	 * Used internally to track, which group row are on.
@@ -215,7 +208,7 @@ abstract class Translate_Abstract {
 	 * @param string               $key       - The meta key.
 	 * @param string               $meta_type - The meta type.
 	 *
-	 * @return ?array
+	 * @return ?array{id: string, url: string}
 	 */
 	protected function get_file_field_value( int|string $object_id, string $key, string $meta_type ): ?array {
 		$url = $this->get_meta_value( $object_id, $key, $meta_type );
@@ -291,7 +284,7 @@ abstract class Translate_Abstract {
 	 * @param string               $group_id  - The group id.
 	 * @param string               $meta_type - The meta type.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	protected function get_group_field_value( int|string $object_id, string $group_id, string $meta_type ): array {
 		$values = [];
@@ -315,12 +308,12 @@ abstract class Translate_Abstract {
 	/**
 	 * Update all the field values within a group.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
+	 * @phpstan-param Repo::META_*             $meta_type
 	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $group_id  - The group id.
-	 * @param array                $values    - The values.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string                       $object_id - The object id.
+	 * @param string                           $group_id  - The group id.
+	 * @param array<int, array<string, mixed>> $values    - The values.
+	 * @param string                           $meta_type - The meta type.
 	 */
 	protected function update_group_field_values( int|string $object_id, string $group_id, array $values, string $meta_type ): void {
 		$fields = $this->get_group_fields( $group_id );

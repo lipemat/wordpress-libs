@@ -17,7 +17,6 @@ parameters:
         allowedToBeExtended:
             - Lipe\Lib\CMB2\Box
             - Lipe\Lib\CMB2\Field
-            - Lipe\Lib\Meta\Translate_Abstract
             - Lipe\Lib\Query\Args
             - Lipe\Lib\Taxonomy\Get_Terms
             - Walker_Category_Checklist

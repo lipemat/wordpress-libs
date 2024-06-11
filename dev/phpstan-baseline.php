@@ -743,12 +743,6 @@ $ignoreErrors[] = [
 	// identifier: lipemat.declareStrictTypes
 	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/../src/Cron/Cron_Abstract.php',
-];
-$ignoreErrors[] = [
-	// identifier: lipemat.declareStrictTypes
-	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
-	'count' => 1,
 	'path' => __DIR__ . '/../src/Menu/Menu_Item_Trait.php',
 ];
 $ignoreErrors[] = [
@@ -761,49 +755,25 @@ $ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/../src/Meta/Translate_Abstract.php',
+	'path' => __DIR__ . '/../src/Meta/Repo.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Meta\\\\Translate_Abstract\\:\\:clear_single_item\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
+	'message' => '#^Method Lipe\\\\Lib\\\\Meta\\\\Repo\\:\\:clear_single_item\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/../src/Meta/Translate_Abstract.php',
+	'path' => __DIR__ . '/../src/Meta/Repo.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Meta\\\\Translate_Abstract\\:\\:get_cache_key\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
+	'message' => '#^Method Lipe\\\\Lib\\\\Meta\\\\Repo\\:\\:get_cache_key\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/../src/Meta/Translate_Abstract.php',
+	'path' => __DIR__ . '/../src/Meta/Repo.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Meta\\\\Translate_Abstract\\:\\:get_file_field_value\\(\\) return type has no value type specified in iterable type array\\.$#',
+	'message' => '#^Property Lipe\\\\Lib\\\\Meta\\\\Repo\\:\\:\\$memoize_cache type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/../src/Meta/Translate_Abstract.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Meta\\\\Translate_Abstract\\:\\:get_group_field_value\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Meta/Translate_Abstract.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Meta\\\\Translate_Abstract\\:\\:update_group_field_values\\(\\) has parameter \\$values with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Meta/Translate_Abstract.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\Meta\\\\Translate_Abstract\\:\\:\\$groups type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Meta/Translate_Abstract.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\Meta\\\\Translate_Abstract\\:\\:\\$memoize_cache type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Meta/Translate_Abstract.php',
+	'path' => __DIR__ . '/../src/Meta/Repo.php',
 ];
 $ignoreErrors[] = [
 	// identifier: lipemat.declareStrictTypes
@@ -948,24 +918,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Lipe\\\\Lib\\\\Query\\\\Args_Interface\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Query/Args_Interface.php',
-];
-$ignoreErrors[] = [
-	// identifier: empty.notAllowed
-	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/../src/Query/Clause/Clause_Abstract.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Query\\\\Clause\\\\Clause_Abstract\\:\\:extract_nested\\(\\) has parameter \\$clauses with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Query/Clause/Clause_Abstract.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\Query\\\\Clause\\\\Clause_Abstract\\:\\:\\$clauses type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Query/Clause/Clause_Abstract.php',
 ];
 $ignoreErrors[] = [
 	// identifier: empty.notAllowed
@@ -1260,12 +1212,6 @@ $ignoreErrors[] = [
 	'message' => '#^Property Lipe\\\\Lib\\\\Theme\\\\Resources\\:\\:\\$memoize_cache type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Theme/Resources.php',
-];
-$ignoreErrors[] = [
-	// identifier: lipemat.declareStrictTypes
-	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Traits/Memoize.php',
 ];
 $ignoreErrors[] = [
 	// identifier: lipemat.declareStrictTypes
