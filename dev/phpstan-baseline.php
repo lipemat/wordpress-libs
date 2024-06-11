@@ -1178,18 +1178,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Theme/CSS_Modules.php',
 ];
 $ignoreErrors[] = [
-	// identifier: lipemat.declareStrictTypes
-	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Theme/Class_Names.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Theme\\\\Class_Names\\:\\:offsetSet\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Theme/Class_Names.php',
-];
-$ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 4,
