@@ -245,6 +245,13 @@ class Resources {
 	/**
 	 * Defer an enqueued script by its handle.
 	 *
+	 * @link       https://make.wordpress.org/core/2023/07/14/registering-scripts-with-async-and-defer-attributes-in-wordpress-6-3/
+	 *
+	 * @todo       Once WordPress 6.3 is available, look at using the `wp_script_add_data` `strategy` approach.
+	 *       `wp_script_add_data( $handle, 'strategy', 'defer' );`
+	 *
+	 * @deprecated Will be removed in version 5. Use `wp_script_add_data($handle, 'strategy', 'defer');` instead.
+	 *
 	 * May be called before or after `wp_enqueue_script` but must be called
 	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
 	 * on if enqueued for the footer or header.
@@ -255,11 +262,6 @@ class Resources {
 	 * 4. Defer scripts are also guaranteed to execute in the order they appear
 	 * in the document but after any non `defer` script.
 	 * 5. The DOM is guaranteed to be available for the script.
-	 *
-	 * @link https://make.wordpress.org/core/2023/07/14/registering-scripts-with-async-and-defer-attributes-in-wordpress-6-3/
-	 *
-	 * @todo Once WordPress 6.3 is available, look at using the `wp_script_add_data` `strategy` approach.
-	 *       `wp_script_add_data( $handle, 'strategy', 'defer' );`
 	 *
 	 * @param string $handle - The handle used to enqueued this script.
 	 *
@@ -281,6 +283,13 @@ class Resources {
 	/**
 	 * Async an enqueued script by its handle.
 	 *
+	 * @link       https://make.wordpress.org/core/2023/07/14/registering-scripts-with-async-and-defer-attributes-in-wordpress-6-3/
+	 *
+	 * @todo       Once WordPress 6.3 is available, look at using the `wp_script_add_data` `strategy` approach.
+	 *       `wp_script_add_data( $handle, 'strategy', 'defer' );`
+	 *
+	 * @deprecated Will be removed in version 5. Use `wp_script_add_data($handle, 'strategy', 'async');` instead.
+	 *
 	 * May be called before or after `wp_enqueue_script` but must be called
 	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
 	 * on if enqueued for the footer or header.
@@ -289,11 +298,6 @@ class Resources {
 	 * 2. Will not block the browser during download.
 	 * 3. Executes at an unpredictable time so must be self-contained.
 	 * 4. Good for scripts such as Google Analytics.
-	 *
-	 * @link https://make.wordpress.org/core/2023/07/14/registering-scripts-with-async-and-defer-attributes-in-wordpress-6-3/
-	 *
-	 * @todo Once WordPress 6.3 is available, look at using the `wp_script_add_data` `strategy` approach.
-	 *       `wp_script_add_data( $handle, 'strategy', 'defer' );`
 	 *
 	 * @param string $handle - The handle used to enqueued this script.
 	 *
@@ -411,29 +415,29 @@ class Resources {
 
 		$cdn = [
 			'jquery-core'    => [
-				'dev' => 'https://unpkg.com/jquery@' . $jquery . '/dist/jquery.js',
-				'min' => 'https://unpkg.com/jquery@' . $jquery . '/dist/jquery.min.js',
+				'dev'    => 'https://unpkg.com/jquery@' . $jquery . '/dist/jquery.js',
+				'min'    => 'https://unpkg.com/jquery@' . $jquery . '/dist/jquery.min.js',
 				'footer' => false,
 			],
 			'jquery-migrate' => [
-				'dev' => 'https://unpkg.com/jquery-migrate@' . $jquery_migrate . '/dist/jquery-migrate.js',
-				'min' => 'https://unpkg.com/jquery-migrate@' . $jquery_migrate . '/dist/jquery-migrate.min.js',
+				'dev'    => 'https://unpkg.com/jquery-migrate@' . $jquery_migrate . '/dist/jquery-migrate.js',
+				'min'    => 'https://unpkg.com/jquery-migrate@' . $jquery_migrate . '/dist/jquery-migrate.min.js',
 				'footer' => false,
 			],
 			'lodash'         => [
-				'dev' => 'https://unpkg.com/lodash@' . $lodash . '/lodash.js',
-				'min' => 'https://unpkg.com/lodash@' . $lodash . '/lodash.min.js',
+				'dev'    => 'https://unpkg.com/lodash@' . $lodash . '/lodash.js',
+				'min'    => 'https://unpkg.com/lodash@' . $lodash . '/lodash.min.js',
 				'footer' => true,
 				'inline' => 'window.lodash = _.noConflict();',
 			],
 			'react'          => [
-				'dev' => 'https://unpkg.com/react@' . $react . '/umd/react.development.js',
-				'min' => 'https://unpkg.com/react@' . $react . '/umd/react.production.min.js',
+				'dev'    => 'https://unpkg.com/react@' . $react . '/umd/react.development.js',
+				'min'    => 'https://unpkg.com/react@' . $react . '/umd/react.production.min.js',
 				'footer' => true,
 			],
 			'react-dom'      => [
-				'dev' => 'https://unpkg.com/react-dom@' . $react_dom . '/umd/react-dom.development.js',
-				'min' => 'https://unpkg.com/react-dom@' . $react_dom . '/umd/react-dom.production.min.js',
+				'dev'    => 'https://unpkg.com/react-dom@' . $react_dom . '/umd/react-dom.development.js',
+				'min'    => 'https://unpkg.com/react-dom@' . $react_dom . '/umd/react-dom.production.min.js',
 				'footer' => true,
 			],
 		];
