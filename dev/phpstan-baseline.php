@@ -1448,42 +1448,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Util/Colors.php',
 ];
 $ignoreErrors[] = [
-	// identifier: empty.notAllowed
-	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
-	'count' => 27,
-	'path' => __DIR__ . '/../src/Util/Image_Resize.php',
-];
-$ignoreErrors[] = [
-	// identifier: lipemat.declareStrictTypes
-	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Util/Image_Resize.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Util\\\\Image_Resize\\:\\:convert_image_downsize\\(\\) has parameter \\$out with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Util/Image_Resize.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Util\\\\Image_Resize\\:\\:convert_image_downsize\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Util/Image_Resize.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Util\\\\Image_Resize\\:\\:image\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Util/Image_Resize.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Util\\\\Image_Resize\\:\\:image\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Util/Image_Resize.php',
-];
-$ignoreErrors[] = [
 	// identifier: lipemat.declareStrictTypes
 	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
 	'count' => 1,
