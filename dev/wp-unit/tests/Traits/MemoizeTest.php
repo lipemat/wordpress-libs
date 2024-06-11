@@ -170,7 +170,7 @@ class MemoizeTest extends \WP_UnitTestCase {
 		$this->assertEquals( 'www', $this->trait->get_key( 'www', [] ) );
 		$this->assertEquals( 'www', $this->trait->get_key( 'www', [ [] ] ) );
 
-		$HASH = fn( $identifier, $args ) => \hash( 'fnv1a64', wp_json_encode( [ $args, $identifier ] ) );
+		$HASH = fn( $identifier, $args ) => \hash( 'murmur3f', wp_json_encode( [ $args, $identifier ] ) );
 
 		$this->assertEquals( $HASH( 'www', [ [], [] ] ), $this->trait->get_key( 'www', [ [], [] ] ) );
 		$this->assertEquals( $HASH( 'www', [ [], 'random' ] ), $this->trait->get_key( 'www', [ [], 'random' ] ) );

@@ -155,9 +155,6 @@ trait Memoize {
 	 *
 	 * @since 4.2.0
 	 *
-	 * @todo  Switch to `murmur3f` algorihtum when PHP 8.1 becomes the
-	 *        minium supported version.
-	 *
 	 * @param string $identifier - Unique key to hold the cache.
 	 * @param array  $args       - Arguments passed to the original method.
 	 *
@@ -173,6 +170,6 @@ trait Memoize {
 			return $identifier;
 		}
 
-		return \hash( 'fnv1a64', (string) wp_json_encode( [ $args, $identifier ] ) );
+		return \hash( 'murmur3f', (string) wp_json_encode( [ $args, $identifier ] ) );
 	}
 }
