@@ -99,14 +99,12 @@ class Cache {
 	/**
 	 * Flush a group by changing the "last_changed" key.
 	 *
-	 * @todo Switch to conditional `wp_cache_set_last_changed` when WP 6.3 is available.
-	 *
 	 * @param string $group - The group to flush.
 	 *
 	 * @return void
 	 */
 	public function flush_group( string $group = self::DEFAULT_GROUP ): void {
-		wp_cache_set( 'last_changed', microtime(), $group );
+		wp_cache_set_last_changed( $group );
 	}
 
 
