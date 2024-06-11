@@ -1526,7 +1526,7 @@ const RAW_RUNTIME_STATE =
     ],\
     [\
       "braces",\
-      "npm:3.0.2"\
+      "npm:3.0.3"\
     ],\
     [\
       "browserslist",\
@@ -2262,7 +2262,7 @@ const RAW_RUNTIME_STATE =
     ],\
     [\
       "fill-range",\
-      "npm:7.0.1"\
+      "npm:7.1.1"\
     ],\
     [\
       "finalhandler",\
@@ -11482,11 +11482,11 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["braces", [\
-      ["npm:3.0.2", {\
-        "packageLocation": "./.yarn/cache/braces-npm-3.0.2-782240b28a-321b4d6757.zip/node_modules/braces/",\
+      ["npm:3.0.3", {\
+        "packageLocation": "./.yarn/cache/braces-npm-3.0.3-582c14023c-7c6dfd30c3.zip/node_modules/braces/",\
         "packageDependencies": [\
-          ["braces", "npm:3.0.2"],\
-          ["fill-range", "npm:7.0.1"]\
+          ["braces", "npm:3.0.3"],\
+          ["fill-range", "npm:7.1.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -11734,7 +11734,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["chokidar", "npm:3.6.0"],\
           ["anymatch", "npm:3.1.3"],\
-          ["braces", "npm:3.0.2"],\
+          ["braces", "npm:3.0.3"],\
           ["fsevents", "patch:fsevents@npm%3A2.3.3#optional!builtin<compat/fsevents>::version=2.3.3&hash=df0bf1"],\
           ["glob-parent", "npm:5.1.2"],\
           ["is-binary-path", "npm:2.1.0"],\
@@ -14104,10 +14104,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["fill-range", [\
-      ["npm:7.0.1", {\
-        "packageLocation": "./.yarn/cache/fill-range-npm-7.0.1-b8b1817caa-7cdad7d426.zip/node_modules/fill-range/",\
+      ["npm:7.1.1", {\
+        "packageLocation": "./.yarn/cache/fill-range-npm-7.1.1-bf491486db-b75b691bbe.zip/node_modules/fill-range/",\
         "packageDependencies": [\
-          ["fill-range", "npm:7.0.1"],\
+          ["fill-range", "npm:7.1.1"],\
           ["to-regex-range", "npm:5.0.1"]\
         ],\
         "linkType": "HARD"\
@@ -17191,7 +17191,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/micromatch-npm-4.0.5-cfab5d7669-3d6505b20f.zip/node_modules/micromatch/",\
         "packageDependencies": [\
           ["micromatch", "npm:4.0.5"],\
-          ["braces", "npm:3.0.2"],\
+          ["braces", "npm:3.0.3"],\
           ["picomatch", "npm:2.3.1"]\
         ],\
         "linkType": "HARD"\
@@ -29588,10 +29588,7 @@ Required by: ${issuerForDisplay}
             if (runtimeState.enableTopLevelFallback) {
               if (dependencyReference == null && fallbackReference === null) {
                 const reference = runtimeState.fallbackPool.get(dependencyName);
-                // # Warnings suppressed via @lipemat/js-boilerplate/fix-pnp script. 
-if (! alwaysWarnOnFallback && reference != null) { 
-dependencyReference = reference; 
-} else if (alwaysWarnOnFallback && reference != null) {
+                if (reference != null) {
                   fallbackReference = reference;
                 }
               }
