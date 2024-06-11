@@ -219,6 +219,7 @@ class Resources {
 			if ( $admin_also ) {
 				add_action( 'admin_enqueue_scripts', $enqueue );
 			}
+			// @phpstan-ignore-next-line
 			$this->async_javascript( 'livereload' );
 		}
 	}
@@ -268,6 +269,7 @@ class Resources {
 	 * @return void
 	 */
 	public function defer_javascript( string $handle ): void {
+		_deprecated_function( __METHOD__, '4.10.0', 'wp_script_add_data($handle, \'strategy\', \'defer\');' );
 		static::$deffer[] = $handle;
 		$this->once( function() {
 			add_filter( 'script_loader_tag', function( $tag, $handle ) {
@@ -304,6 +306,7 @@ class Resources {
 	 * @return void
 	 */
 	public function async_javascript( string $handle ): void {
+		_deprecated_function( __METHOD__, '4.10.0', 'wp_script_add_data($handle, \'strategy\', \'async\');' );
 		static::$async[] = $handle;
 		$this->once( function() {
 			add_filter( 'script_loader_tag', function( $tag, $handle ) {

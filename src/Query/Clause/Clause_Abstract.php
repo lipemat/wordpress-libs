@@ -17,4 +17,11 @@ abstract class Clause_Abstract implements Clause_Interface {
 	 * @use Clause_Trait<Clause_Abstract>
 	 */
 	use Clause_Trait;
+
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		_deprecated_class( __CLASS__, '4.10.0', Clause_Trait::class );
+	}
 }

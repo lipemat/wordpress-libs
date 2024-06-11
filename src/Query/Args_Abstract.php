@@ -10,4 +10,15 @@ namespace Lipe\Lib\Query;
  */
 abstract class Args_Abstract implements Args_Interface {
 	use Args_Trait;
+
+	/**
+	 * Optionally pass existing arguments to preload this class.
+	 *
+	 * @param array $existing - Existing arguments to preload.
+	 *
+	 * @phpstan-ignore-next-line -- Using default `$existing` value for backwards compatibility.
+	 */
+	public function __construct( array $existing = [] ) {
+		_deprecated_class( __CLASS__, '4.10.0', Args_Trait::class );
+	}
 }
