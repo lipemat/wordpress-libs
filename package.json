@@ -15,6 +15,7 @@
     "lint": "lipemat-js-boilerplate lint && stylelint js/src/**/*.pcss --fix --cache",
     "postinstall": "lipemat-js-boilerplate fix-pnp",
     "start": "node -e \"console.error('lipemat-js-boilerplate may be called, but be sure to `dist` before committing.')\"",
+    "start-sass": "sass --watch ./css/ --style compressed",
     "test": "lipemat-js-boilerplate test"
   },
   "certificates": {
