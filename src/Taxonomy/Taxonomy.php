@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Taxonomy;
 
 use Lipe\Lib\Taxonomy\Taxonomy\Register_Taxonomy;
+use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Util\Actions;
 
 /**
@@ -14,19 +15,14 @@ use Lipe\Lib\Util\Actions;
  *
  * @link   https://developer.wordpress.org/reference/functions/register_taxonomy/
  *
- * @notice Must be constructed before the init hook runs
- *
- * @example
- * $tax = new Taxonomy(%slug%, array(self::NAME));
- * $tax->hierarchical = FALSE;
- * $tax->meta_box_cb = false;
- * $tax->set_label(%singular%, %plural%);
- * $tax->slug = %slug;
+ * @notice Must be constructed before the `init` hook runs
  *
  * @phpstan-import-type REWRITE from Register_Taxonomy
  * @phpstan-import-type DEFAULT from Register_Taxonomy
  */
 class Taxonomy {
+	use Memoize;
+
 	protected const REGISTRY_OPTION = 'lipe/lib/schema/taxonomy_registry';
 
 	/**
@@ -90,25 +86,6 @@ class Taxonomy {
 	public string $slug;
 
 	/**
-	 * Whether to allow automatic creation of taxonomy columns
-	 * on associated post-types lists.
-	 *
-	 * @default false
-	 *
-	 * @var bool
-	 */
-	public bool $show_admin_column = false;
-
-	/**
-	 * Show this taxonomy in the admin menu.
-	 * If set to true, it will show up under all object_types the
-	 * taxonomy is assigned to.
-	 *
-	 * @var bool
-	 */
-	public bool $show_in_menu = true;
-
-	/**
 	 * Menu configurations for the taxonomy.
 	 *
 	 * @since 5.0.0
@@ -128,35 +105,6 @@ class Taxonomy {
 	 * @var bool
 	 */
 	public bool $show_in_nav_menus;
-
-	/**
-	 * Whether to include the taxonomy in the REST API
-	 *
-	 * @notice  Must be set to true to show in the Gutenberg editor.
-	 *
-	 * @default false
-	 *
-	 * @var bool
-	 */
-	public bool $show_in_rest = false;
-
-	/**
-	 * To change the base url of REST API route
-	 *
-	 * @default $this->taxonomy
-	 *
-	 * @var string
-	 */
-	public string $rest_base;
-
-	/**
-	 * To change the namespace URL of REST API route.
-	 *
-	 * Default is wp/v2.
-	 *
-	 * @var string
-	 */
-	public string $rest_namespace;
 
 	/**
 	 * REST API Controller class name.
@@ -186,36 +134,8 @@ class Taxonomy {
 	 */
 	public bool $show_in_quick_edit;
 
-	/**
-	 * Provide a callback function for the meta box display.
-	 *
-	 * @notice Only used for the classic editor meta boxes.
-	 *
-	 * - If not set, `post_categories_meta_box()` is used for
-	 *  hierarchical taxonomies, and `post_tags_meta_box()` is used for non-hierarchical.
-	 * - If false, no meta box is shown.
-	 *
-	 * @phpstan-var false|callable(\WP_Post,array{args: array{taxonomy: string}, id: string, title: string}): void
-	 *
-	 * @var false|callable
-	 */
-	public $meta_box_cb;
-
-	/**
-	 * Callback function for sanitizing taxonomy data saved from a meta box.
-	 *
-	 * If no callback is defined, an appropriate one is determined based on the value of `$meta_box_cb`.
-	 *
-	 * @phpstan-var callable(string,mixed): (int|string)[]
-	 *
-	 * @var callable
-	 */
-	public $meta_box_sanitize_cb;
-
 	/***
 	 * Include a description of the taxonomy.
-	 *
-	 * @default ''
 	 *
 	 * @var string
 	 */
@@ -224,8 +144,6 @@ class Taxonomy {
 	/**
 	 * Is this taxonomy hierarchical (have descendants) like categories
 	 * or not hierarchical like tags.
-	 *
-	 * @default false
 	 *
 	 * @var bool
 	 */
@@ -309,13 +227,13 @@ class Taxonomy {
 	public readonly string $taxonomy;
 
 	/**
-	 * The default term added to new posts.
+	 * The arguments to pass to `register_taxonomy()`.
 	 *
-	 * @phpstan-var string|DEFAULT
+	 * @see Taxonomy::taxonomy_args()
 	 *
-	 * @var string|array<string,string>
+	 * @var Register_Taxonomy
 	 */
-	protected string|array $default_term;
+	public readonly Register_Taxonomy $register_args;
 
 	/**
 	 * Terms to be automatically added to a taxonomy when
@@ -345,6 +263,7 @@ class Taxonomy {
 		$this->slug = \strtolower( \str_replace( ' ', '-', $this->taxonomy ) );
 		$this->labels = new Labels( $this );
 		$this->capabilities = new Capabilities( $this );
+		$this->register_args = new Register_Taxonomy();
 
 		$this->set_label();
 		$this->hook();
@@ -370,7 +289,9 @@ class Taxonomy {
 		} );
 		if ( is_admin() ) {
 			// If some taxonomies are not registered on the front end.
-			Actions::in()->add_single_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 1000 );
+			add_action( 'wp_loaded', function() {
+				$this->static_once( fn() => $this->check_rewrite_rules(), 'check_rewrite_rules' );
+			}, 1_000 );
 		}
 	}
 
@@ -406,7 +327,30 @@ class Taxonomy {
 	 */
 	public function meta_box( string $type, bool $checked_ontop = false ): void {
 		$box = new Meta_Box( $this->taxonomy, $type, $checked_ontop );
-		$this->meta_box_sanitize_cb = [ $box, 'translate_string_term_ids_to_int' ];
+		$this->register_args->meta_box_sanitize_cb = [ $box, 'translate_string_term_ids_to_int' ];
+	}
+
+
+	/**
+	 * Provide a callback function for the meta box display.
+	 *
+	 * @see      Taxonomy::meta_box()
+	 *
+	 * @since    5.0.0
+	 *
+	 * @formatter:off
+	 * @phpstan-param false|callable(\WP_Post,array{args: array{taxonomy: string}, id: string, title: string}): void $callback
+	 * @phpstan-param callable(string,mixed): (int|string)[]                                                         $sanitize
+	 *
+	 * @param callable|false $callback - Callback function for the meta box display.
+	 * @param callable       $sanitize - Callback function for sanitizing taxonomy data saved from a meta box.
+	 * @formatter:on
+	 *
+	 * @return void
+	 */
+	public function custom_meta_box( callable|false $callback, callable $sanitize ): void {
+		$this->register_args->meta_box_cb = $callback;
+		$this->register_args->meta_box_sanitize_cb = $sanitize;
 	}
 
 
@@ -436,7 +380,9 @@ class Taxonomy {
 
 		if ( isset( $wp_query->query[ $this->taxonomy ] ) && '' !== $wp_query->query[ $this->taxonomy ] ) {
 			$args->selected = (string) $wp_query->query[ $this->taxonomy ];
-			Actions::in()->add_single_action( 'manage_posts_extra_tablenav', [ __CLASS__, 'clear_filters_button' ], 1_000 );
+			add_action( 'manage_posts_extra_tablenav', function() {
+				$this->static_once( fn() => $this->clear_filters_button(), 'clear_filters_button' );
+			}, 1_000 );
 		}
 
 		wp_dropdown_categories( $args->get_args() );
@@ -490,8 +436,10 @@ class Taxonomy {
 	protected function add_as_submenu(): void {
 		global $submenu;
 		$edit_tags_file = 'edit-tags.php?taxonomy=%s';
-
-		if ( false === $this->show_in_menu || ! isset( $this->menu_configuration['parent'] ) ) {
+		if ( isset( $this->register_args->show_in_menu ) && false === $this->register_args->show_in_menu ) {
+			return;
+		}
+		if ( ! isset( $this->menu_configuration['parent'] ) ) {
 			return;
 		}
 
@@ -526,7 +474,7 @@ class Taxonomy {
 	 * @param string $label - Optional label to use for the column.
 	 */
 	public function show_admin_column( string $label = '' ): void {
-		$this->show_admin_column = true;
+		$this->register_args->show_admin_column = true;
 		if ( '' === $label ) {
 			return;
 		}
@@ -566,7 +514,7 @@ class Taxonomy {
 	 * @return void
 	 */
 	public function set_default_term( string $slug, string $name, string $description = '' ): void {
-		$this->default_term = [
+		$this->register_args->default_term = [
 			'description' => $description,
 			'name'        => $name,
 			'slug'        => $slug,
@@ -585,12 +533,41 @@ class Taxonomy {
 	 * @return void
 	 */
 	public function show_in_menu( string $slug = '', int $priority = - 1 ): void {
-		$this->show_in_menu = true;
+		$this->register_args->show_in_menu = true;
 		if ( '' !== $slug ) {
 			$this->menu_configuration['parent'] = $slug;
 		}
 		if ( - 1 !== $priority ) {
 			$this->menu_configuration['order'] = $priority;
+		}
+	}
+
+
+	/**
+	 * Show or hide this post type in the REST API.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @see   Custom_Post_Type::rest_controllers()
+	 *
+	 * @param bool    $show  - Whether to show in REST.
+	 * @param ?string $base  - The base to use. Defaults to the taxonomy.
+	 * @param string  $space - The namespace to use.
+	 *
+	 * @return void
+	 */
+	public function show_in_rest( bool $show = true, ?string $base = null, string $space = 'wp/v2' ): void {
+		$this->register_args->show_in_rest = $show;
+
+		if ( $show ) {
+			if ( ! isset( $this->register_args->rest_base ) ) {
+				$this->register_args->rest_base = $base ?? $this->taxonomy;
+			}
+			if ( ! isset( $this->register_args->rest_namespace ) ) {
+				$this->register_args->rest_namespace = $space;
+			}
+		} else {
+			unset( $this->register_args->rest_base, $this->register_args->rest_namespace, $this->register_args->rest_controller_class );
 		}
 	}
 
@@ -748,18 +725,15 @@ class Taxonomy {
 	 * @return array<string, mixed>
 	 */
 	protected function taxonomy_args(): array {
-		$args = new Register_Taxonomy();
+		$args = $this->register_args;
 		$args->labels = $this->taxonomy_labels();
 		$args->public = $this->public;
 		$args->publicly_queryable = $this->publicly_queryable ?? $this->public;
 		$args->show_ui = $this->show_ui ?? $this->public;
-		$args->show_in_menu = $this->show_in_menu;
 		$args->show_in_nav_menus = $this->show_in_nav_menus ?? $this->public;
-		$args->show_in_rest = $this->show_in_rest;
 		$args->rewrite = $this->rewrites();
 		$args->capabilities = $this->capabilities->get_capabilities();
 		$args->sort = $this->sort;
-		$args->show_admin_column = $this->show_admin_column;
 		$args->description = $this->description;
 		$args->hierarchical = $this->hierarchical;
 
@@ -780,12 +754,6 @@ class Taxonomy {
 		}
 		if ( isset( $this->show_in_quick_edit ) ) {
 			$args->show_in_quick_edit = $this->show_in_quick_edit;
-		}
-		if ( null !== $this->meta_box_cb ) {
-			$args->meta_box_cb = $this->meta_box_cb;
-		}
-		if ( null !== $this->meta_box_sanitize_cb ) {
-			$args->meta_box_sanitize_cb = $this->meta_box_sanitize_cb;
 		}
 		if ( null !== $this->update_count_callback ) {
 			$args->update_count_callback = $this->update_count_callback;
@@ -868,12 +836,10 @@ class Taxonomy {
 	 * If the taxonomies registered through this API have changed,
 	 * rewrite rules need to be flushed.
 	 *
-	 * @internal
-	 *
-	 * @static
+	 * @action wp_loaded 1_000 0
 	 */
-	public static function check_rewrite_rules(): void {
-		$slugs = wp_list_pluck( static::$registry, 'slug' );
+	protected function check_rewrite_rules(): void {
+		$slugs = \array_keys( static::$registry );
 		if ( get_option( static::REGISTRY_OPTION ) !== $slugs ) {
 			flush_rewrite_rules();
 			update_option( static::REGISTRY_OPTION, $slugs );
@@ -884,13 +850,9 @@ class Taxonomy {
 	/**
 	 * Render a button to clear the filters on the post list page.
 	 *
-	 * @interal
-	 *
 	 * @action manage_posts_extra_tablenav 1000
-	 *
-	 * @return void
 	 */
-	public static function clear_filters_button(): void {
+	protected function clear_filters_button(): void {
 		// phpcs:ignore WordPress.Security.NonceVerification -- Nonce not required.
 		$post_type = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : '';
 		if ( '' !== $post_type ) {
@@ -914,7 +876,7 @@ class Taxonomy {
 	 *
 	 * @param string $taxonomy - Taxonomy slug.
 	 *
-	 * @return Taxonomy|null
+	 * @return ?Taxonomy
 	 */
 	public static function get_taxonomy( string $taxonomy ): ?Taxonomy {
 		return static::$registry[ $taxonomy ] ?? null;

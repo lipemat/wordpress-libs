@@ -692,24 +692,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Network/Network_Trait.php',
 ];
 $ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:adjust_post_updated_messages\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:gutenberg_template\\(\\) has parameter \\$template with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:\\$registry type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
-];
-$ignoreErrors[] = [
 	// identifier: lipemat.declareStrictTypes
 	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
 	'count' => 1,

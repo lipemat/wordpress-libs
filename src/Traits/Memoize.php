@@ -140,7 +140,7 @@ trait Memoize {
 	 *
 	 * @return mixed
 	 */
-	public function static( callable $callback, string $identifier, ...$args ): mixed {
+	public function static_once( callable $callback, string $identifier, ...$args ): mixed {
 		$key = \get_class( $this ) . '::' . $identifier;
 		if ( ! \array_key_exists( $key, static::$static_cache ) ) {
 			static::$static_cache[ $key ] = $callback( ...$args );

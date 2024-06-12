@@ -5,22 +5,45 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Post_Type;
 
 use Lipe\Lib\Post_Type\Custom_Post_Type\Register_Post_Type;
-use Lipe\Lib\Util\Actions;
+use Lipe\Lib\Theme\Dashicons;
+use Lipe\Lib\Traits\Memoize;
 
 /**
  * Register a custom post type.
+ *
+ * @link   https://developer.wordpress.org/reference/functions/register_post_type/
+ *
+ * @notice Must be constructed before the `init` hook runs
  *
  * @phpstan-type BULK 'updated'|'locked'|'deleted'|'trashed'|'untrashed'
  * @phpstan-import-type REWRITE from Register_Post_Type
  */
 class Custom_Post_Type {
+	use Memoize;
+
+	/**
+	 * Core feature(s) the post type supports.
+	 *
+	 * @see Custom_Post_Type::add_support()
+	 * @see Custom_Post_Type::remove_support()
+	 *
+	 * @phpstan-var array<Register_Post_Type::SUPPORTS_*>
+	 */
+	public const DEFAULT_SUPPORTS = [
+		Register_Post_Type::SUPPORTS_TITLE,
+		Register_Post_Type::SUPPORTS_EDITOR,
+		Register_Post_Type::SUPPORTS_AUTHOR,
+		Register_Post_Type::SUPPORTS_THUMBNAIL,
+		Register_Post_Type::SUPPORTS_EXCERPT,
+	];
+
 	protected const REGISTRY_OPTION    = 'lipe/lib/post-type/custom-post-type/registry';
 	protected const CUSTOM_CAPS_OPTION = 'lipe/lib/post-type/custom-post-type/caps';
 
 	/**
 	 * Track the register post types for later use.
 	 *
-	 * @var array
+	 * @var array<string, Custom_Post_Type>
 	 */
 	protected static array $registry = [];
 
@@ -74,37 +97,6 @@ class Custom_Post_Type {
 	public readonly Capabilities $capabilities;
 
 	/**
-	 * Core feature(s) the post type supports.
-	 *
-	 * Serves as an alias for calling `add_post_type_support()` directly.
-	 *
-	 * Core features include:
-	 *
-	 *   - 'title'
-	 *   - 'editor'
-	 *   - 'comments'
-	 *   - 'revisions'
-	 *   - 'trackbacks'
-	 *   - 'author'
-	 *   - 'excerpt'
-	 *   - 'page-attributes'
-	 *   - 'thumbnail'
-	 *   - 'custom-fields'
-	 *   - 'post-formats'
-	 *
-	 * The 'revisions' feature dictates whether the post type will store revisions.
-	 * The 'comments' feature dictates whether the comments count will show on the edit screen.
-	 *
-	 * A feature can also be specified as an array of arguments to provide additional
-	 * information about supporting the feature.
-	 * Example:
-	 *     array('my_feature', array('field' => 'value'))
-	 *
-	 * @var array<int, (string|array<string, mixed>)>
-	 */
-	public array $supports = [ 'title', 'editor', 'author', 'thumbnail', 'excerpt' ];
-
-	/**
 	 * Whether to delete posts of this type when deleting a user.
 	 *   - If true, posts of this type belonging to the user will be moved to Trash
 	 *     when the user is deleted.
@@ -130,45 +122,11 @@ class Custom_Post_Type {
 	public $register_meta_box_cb;
 
 	/**
-	 * Enable the gutenberg block editor for this post type.
-	 *
-	 * If set to true, this will also enable
-	 * 1. Editor support.
-	 * 2. Rest API support.
-	 *
-	 * @var bool
-	 */
-	public bool $gutenberg_compatible;
-
-	/**
 	 * Whether to use the internal default meta capability handling.
 	 *
 	 * @var bool
 	 */
 	public bool $map_meta_cap;
-
-	/**
-	 * The URL to the icon to be used for this menu.
-	 *
-	 *   - Pass a base64-encoded SVG using a data URI, which will be colored to match the color scheme -- this should
-	 * begin with `data:image/svg+xml;base64,`.
-	 *   - Pass the name of a Dashicons helper class to use a font icon, e.g. `dashicons-chart-pie`.
-	 *   - Pass `'none'` to leave `div.wp-menu-image` empty so an icon can be added via CSS.
-	 *
-	 * Defaults to use the posts icon.
-	 *
-	 * @var string
-	 */
-	public string $menu_icon;
-
-	/**
-	 * The position in the menu order the post type should appear.
-	 *
-	 * To work, `$show_in_menu` must be true.
-	 *
-	 * @var int
-	 */
-	public int $menu_position = 5;
 
 	/**
 	 * Whether a post type is intended for use publicly either via the admin interface or by front-end users.
@@ -245,20 +203,6 @@ class Custom_Post_Type {
 	public bool $show_ui;
 
 	/**
-	 * Where to show the post type in the admin menu. To work, `$show_ui` must be true.
-	 *
-	 *   - If true the post type is shown in its own top level menu.
-	 *   - If false, no menu is shown.
-	 *   - If a string of an existing top level menu (eg. 'tools.php' or 'edit.php?post_type=page'), the post type will
-	 * be placed as a sub-menu of that.
-	 *
-	 * Default is value of `$show_ui`.
-	 *
-	 * @var bool|string
-	 */
-	public string|bool $show_in_menu;
-
-	/**
 	 * Makes this post type available for selection in navigation menus.
 	 *
 	 * Default is value of `$public`.
@@ -275,77 +219,6 @@ class Custom_Post_Type {
 	 * @var bool
 	 */
 	public bool $show_in_admin_bar;
-
-	/**
-	 * Whether to include the post type in the REST API.
-	 *
-	 * @notice Must be set to true to support Gutenberg
-	 *
-	 * @link   https://make.wordpress.org/core/2018/10/30/block-editor-filters/
-	 *
-	 * @var bool
-	 */
-	public bool $show_in_rest = false;
-
-	/**
-	 * The base slug that this post type will use when accessed using the REST API.
-	 *
-	 * @default $this->post_type
-	 *
-	 * @var string
-	 */
-	public string $rest_base;
-
-	/**
-	 * To change the namespace URL of REST API route.
-	 *
-	 * Default is wp/v2.
-	 *
-	 * @var string
-	 */
-	public string $rest_namespace;
-
-	/**
-	 * REST API controller class name.
-	 *
-	 * Default is 'WP_REST_Posts_Controller'.
-	 *
-	 * @phpstan-var class-string<\WP_REST_Controller>
-	 *
-	 * @var string
-	 */
-	public string $rest_controller_class;
-
-	/**
-	 * REST API autosave controller class name.
-	 *
-	 * Default is 'WP_REST_Autosaves_Controller'.
-	 *
-	 * @phpstan-var class-string<\WP_REST_Controller>
-	 *
-	 * @var string
-	 */
-	public string $autosave_rest_controller_class;
-
-	/**
-	 * REST API revisions controller class name.
-	 *
-	 * Default is 'WP_REST_Revisions_Controller'.
-	 *
-	 * @phpstan-var class-string<\WP_REST_Controller>
-	 *
-	 * @var string
-	 */
-	public string $revisions_rest_controller_class;
-
-	/**
-	 * A flag to register the post type REST API controller after its associated
-	 * autosave / revisions controllers, instead of before. Registration order
-	 * affects route matching priority.
-	 *
-	 * @var bool
-	 */
-	public bool $late_route_registration;
 
 	/**
 	 * Triggers the handling of rewrites for this post type.
@@ -399,26 +272,14 @@ class Custom_Post_Type {
 	public readonly string $post_type;
 
 	/**
-	 * Gutenberg Template for this post type.
+	 * Arguments passed to `register_post_type()` after all
+	 * properties are set.
 	 *
-	 * @link https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#custom-post-types
+	 * @see Custom_Post_Type::post_type_args()
 	 *
-	 * @var array<int, array<int, string|array<string, mixed>>>
+	 * @var Register_Post_Type
 	 */
-	protected array $template;
-
-	/**
-	 * Locking of the Gutenberg template.
-	 *   - If set to 'all', the user cannot insert new blocks,
-	 *     move existing blocks and delete blocks.
-	 *   - If set to 'insert', the user can move existing blocks
-	 *     but cannot insert new blocks and delete blocks
-	 *
-	 * @phpstan-var Register_Post_Type::TEMPLATE_LOCK_*|false
-	 *
-	 * @var string|false
-	 */
-	protected string|false $template_lock;
+	public readonly Register_Post_Type $register_args;
 
 
 	/**
@@ -431,6 +292,8 @@ class Custom_Post_Type {
 		$this->slug = \strtolower( \str_replace( ' ', '-', $this->post_type ) );
 		$this->labels = new Labels( $this );
 		$this->capabilities = new Capabilities( $this );
+		$this->register_args = new Register_Post_Type();
+		$this->register_args->supports = static::DEFAULT_SUPPORTS;
 
 		$this->hook();
 		$this->set_post_type_label();
@@ -442,19 +305,20 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	public function hook(): void {
+	protected function hook(): void {
 		// Allow methods added to the init hook to customize the post type.
 		add_action( 'wp_loaded', function() {
 			$this->register();
 		}, 8, 0 );
 
 		add_filter( 'adjust_post_updated_messages', fn( array $messages ) => $this->adjust_post_updated_messages( $messages ) );
-		add_filter( 'post_type_archive_title', fn( string $title ) => $this->get_post_type_archive_label( $title ) );
 		add_filter( 'bulk_post_updated_messages', fn( array $message, array $count ) => $this->adjust_bulk_edit_messages( $message, $count ), 10, 2 );
 
 		if ( is_admin() ) {
 			// For post types not registered on the front-end.
-			Actions::in()->add_single_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 1_000 );
+			add_action( 'wp_loaded', function() {
+				$this->static_once( fn() => $this->check_rewrite_rules(), 'check_rewrite_rules' );
+			}, 1_000 );
 		}
 	}
 
@@ -467,9 +331,8 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	protected function register(): void {
-		$this->handle_block_editor_support();
-		register_post_type( $this->post_type, $this->post_type_args() );
 		static::$registry[ $this->post_type ] = $this;
+		register_post_type( $this->post_type, $this->post_type_args() );
 		$this->add_administrator_capabilities( get_post_type_object( $this->post_type ) );
 	}
 
@@ -537,42 +400,26 @@ class Custom_Post_Type {
 	 *
 	 * @link    https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#custom-post-types
 	 *
-	 * @example array(
-	 *        array( 'core/image', array(
-	 *            'align' => 'left',
-	 *       ) ),
-	 *        array( 'core/heading', array(
-	 *            'placeholder' => 'Add Author...',
-	 *        ) ),
-	 *        array( 'core/paragraph', array(
-	 *            'placeholder' => 'Add Description...',
-	 *        ) ),
-	 *    )
+	 * @example [
+	 *        array('core/image', array('align' => 'left')),
+	 *        array('core/heading', array('placeholder' => 'Add Author…')),
+	 *        array('core/paragraph', array('placeholder' => 'Add Description…'))
+	 *    ]
 	 *
-	 * @phpstan-param 'all'|'contentOnly'|'insert'|false $template_lock
+	 * @phpstan-param Register_Post_Type::TEMPLATE_LOCK*          $template_lock
 	 *
-	 * @param array                                      $template      - The template to use.
-	 * @param bool|string                                $template_lock - The template lock to use.
+	 * @param array<int, array<int, string|array<string, mixed>>> $template      - The template to use.
+	 * @param bool|string                                         $template_lock - The template lock to use.
 	 *
 	 * @return Custom_Post_Type
 	 */
 	public function gutenberg_template( array $template, bool|string $template_lock = false ): Custom_Post_Type {
-		$this->template = $template;
-		$this->template_lock = $template_lock;
+		$this->gutenberg_compatible( true );
+
+		$this->register_args->template = $template;
+		$this->register_args->template_lock = $template_lock;
 
 		return $this;
-	}
-
-
-	/**
-	 * Get a registered post type object.
-	 *
-	 * @param string $post_type - The post type slug.
-	 *
-	 * @return ?Custom_Post_Type
-	 */
-	public function get_post_type( string $post_type ): ?Custom_Post_Type {
-		return static::$registry[ $post_type ] ?? null;
 	}
 
 
@@ -630,7 +477,7 @@ class Custom_Post_Type {
 	 *
 	 * @param array<string, array<int, string>> $messages - The messages.
 	 *
-	 * @return array
+	 * @return array<string, array<int, ?string>>
 	 */
 	protected function adjust_post_updated_messages( array $messages = [] ): array {
 		global $post, $post_ID;
@@ -654,7 +501,7 @@ class Custom_Post_Type {
 			3  => __( 'Custom field deleted.' ),
 			4  => \sprintf( __( '%s updated.' ), $single ),
 			//phpcs:ignore WordPress.Security.NonceVerification -- No nonce needed.
-			5  => isset( $_GET['revision'] ) ? \sprintf( __( '%1$s restored to revision from %2$s' ), $single, wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			5  => isset( $_GET['revision'] ) ? \sprintf( __( '%1$s restored to revision from %2$s' ), $single, wp_post_revision_title( (int) $_GET['revision'], false ) ) : null,
 			6  => \sprintf( __( '%1$s published. %2$s' ), $single, $view_link ),
 			7  => \sprintf( __( '%s saved.' ), $single ),
 			8  => \sprintf( __( '%1$s submitted. %2$s' ), $single, $preview_link ),
@@ -685,6 +532,7 @@ class Custom_Post_Type {
 	 */
 	public function archive_label( string $label ): void {
 		$this->labels()->archive_label( $label );
+		add_filter( 'post_type_archive_title', fn( string $title ) => $this->get_post_type_archive_label( $title ) );
 	}
 
 
@@ -712,52 +560,41 @@ class Custom_Post_Type {
 
 	/**
 	 * Adds post type support.
-	 * Send a single feature or array of features.
+	 *
+	 * Serves as an alias for calling `add_post_type_support()` directly.
 	 *
 	 * Must be called before the post type is registered
 	 *
-	 * Core features include:
+	 * @phpstan-param Register_Post_Type::SUPPORTS_* $feature
 	 *
-	 *   - 'title'
-	 *   - 'editor'
-	 *   - 'comments'
-	 *   - 'revisions'
-	 *   - 'trackbacks'
-	 *   - 'author'
-	 *   - 'excerpt'
-	 *   - 'page-attributes'
-	 *   - 'thumbnail'
-	 *   - 'custom-fields'
-	 *   - 'post-formats'
-	 *
-	 * A feature can also be specified as an array of arguments to provide additional
-	 * information about supporting the feature.
-	 * Example:
-	 *     array( 'my_feature', array( 'field' => 'value' ) )
-	 *
-	 * @param string[]|string $features - The feature being added, or an array of arguments for the feature.
+	 * @param string                                 $feature - The feature being added.
 	 *
 	 * @return void
 	 */
-	public function add_support( array|string $features ): void {
-		$features = (array) $features;
-		$this->supports = \array_unique( \array_merge( $this->supports, $features ) );
+	public function add_support( string $feature ): void {
+		$supports = $this->register_args->supports;
+		$supports[] = $feature;
+		$this->register_args->supports = \array_unique( $supports );
 	}
 
 
 	/**
 	 * Removes post type support.
-	 * Send a single feature or array of features.
+	 * Serves as an alias for calling `remove_post_type_support()` directly.
 	 *
 	 * Must be called before the post type is registered
 	 *
-	 * @param string[]|string $features - The feature(s) to removed.
+	 * @phpstan-param Register_Post_Type::SUPPORTS_* $feature
+	 *
+	 * @param string                                 $feature - The feature(s) to removed.
 	 *
 	 * @return void
 	 */
-	public function remove_support( array|string $features ): void {
-		$features = (array) $features;
-		$this->supports = \array_diff( $this->supports, $features );
+	public function remove_support( string $feature ): void {
+		$existing = \array_search( $feature, $this->register_args->supports, true );
+		if ( false !== $existing ) {
+			unset( $this->register_args->supports[ $existing ] );
+		}
 	}
 
 
@@ -836,27 +673,112 @@ class Custom_Post_Type {
 	 * Turn on and off Gutenberg block editor support based on
 	 * WP core requirements and $this->gutenberg_compatible
 	 *
+	 * `false`
 	 * 1. Uses existing filter to disable block editor support.
-	 * 2. To enable block editor, we need to have show_in_rest set to true.
-	 * 3. To enable block editor, we need to have editor support.
+	 *
+	 * `true`
+	 * 1. To enable block editor, we need to have show_in_rest set to true.
+	 * 2. To enable block editor, we need to have editor support.
+	 *
+	 * @param bool $compatible - Whether to enable the block editor.
 	 *
 	 * @return void
 	 */
-	protected function handle_block_editor_support(): void {
-		if ( ! isset( $this->gutenberg_compatible ) ) {
-			return;
-		}
-		if ( false !== $this->gutenberg_compatible ) {
-			$this->show_in_rest = true;
-			$this->supports[] = 'editor';
+	public function gutenberg_compatible( bool $compatible ): void {
+		if ( $compatible ) {
+			$this->show_in_rest();
+			$this->add_support( Register_Post_Type::SUPPORTS_EDITOR );
 		} else {
 			add_filter( 'use_block_editor_for_post_type', function( $enabled, $post_type ) {
 				if ( $post_type === $this->post_type ) {
 					return false;
 				}
-
 				return $enabled;
 			}, 10, 2 );
+		}
+	}
+
+
+	/**
+	 * Change the REST API controllers for this post type.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @see   Custom_Post_Type::show_in_rest()
+	 *
+	 * @phpstan-param class-string<\WP_REST_Controller> $base
+	 * @phpstan-param class-string<\WP_REST_Controller> $autosave
+	 * @phpstan-param class-string<\WP_REST_Controller> $revisions
+	 *
+	 * @param string                                    $base              - Base controller for the post type.
+	 * @param string                                    $autosave          - Autosave controller for the post type.
+	 * @param string                                    $revisions         - Revisions controller for the post type.
+	 * @param bool                                      $late_registration - Whether to register the post type after the autosave and
+	 *                                                                     revisions controllers.
+	 *
+	 * @return void
+	 */
+	public function rest_controllers( string $base = \WP_REST_Posts_Controller::class, string $autosave = \WP_REST_Autosaves_Controller::class, string $revisions = \WP_REST_Revisions_Controller::class, bool $late_registration = false ): void {
+		$this->register_args->autosave_rest_controller_class = $autosave;
+		$this->register_args->rest_controller_class = $base;
+		$this->register_args->revisions_rest_controller_class = $revisions;
+		$this->register_args->late_route_registration = $late_registration;
+	}
+
+
+	/**
+	 * Show or hide this post type in the REST API.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @see   Custom_Post_Type::rest_controllers()
+	 *
+	 * @param bool    $show  - Whether to show in REST.
+	 * @param ?string $base  - The base to use. Defaults to the post type.
+	 * @param string  $space - The namespace to use.
+	 *
+	 * @return void
+	 */
+	public function show_in_rest( bool $show = true, ?string $base = null, string $space = 'wp/v2' ): void {
+		$this->register_args->show_in_rest = $show;
+
+		if ( $show ) {
+			if ( ! isset( $this->register_args->rest_base ) ) {
+				$this->register_args->rest_base = $base ?? $this->post_type;
+			}
+			if ( ! isset( $this->register_args->rest_namespace ) ) {
+				$this->register_args->rest_namespace = $space;
+			}
+		} else {
+			unset( $this->register_args->rest_base, $this->register_args->rest_namespace, $this->register_args->rest_controller_class );
+		}
+	}
+
+
+	/**
+	 * Show or hide this post type in the menu.
+	 *
+	 * @see Dashicons
+	 *
+	 * @param bool    $show     - Whether to show in the menu.
+	 * @param ?string $in_menu  - Parent menu item. Use existing top level menu like 'tools.php' or 'edit.php?post_type=page'.
+	 * @param int     $position - Position in the menu.
+	 * @param ?string $icon     - SVG, URL, or Dashicon class.
+	 *
+	 * @return void
+	 */
+	public function show_in_menu( bool $show = true, ?string $in_menu = null, int $position = 5, ?string $icon = null ): void {
+		$this->register_args->show_in_menu = $show;
+		if ( $show ) {
+			if ( null !== $in_menu ) {
+				$this->register_args->show_in_menu = $in_menu;
+			}
+			$this->register_args->menu_position = $position;
+			if ( null !== $icon ) {
+				$this->register_args->menu_icon = $icon;
+			}
+		} else {
+			unset( $this->register_args->menu_position, $this->register_args->menu_icon );
 		}
 	}
 
@@ -867,26 +789,23 @@ class Custom_Post_Type {
 	 * @return array<string, mixed>
 	 */
 	protected function post_type_args(): array {
-		$args = new Register_Post_Type();
+		$args = $this->register_args;
 		$args->labels = $this->post_type_labels();
 		$args->description = $this->description ?? '';
 		$args->public = $this->public;
 		$args->publicly_queryable = $this->publicly_queryable ?? $this->public;
 		$args->show_ui = $this->show_ui ?? $this->public;
 		$args->show_in_nav_menus = $this->show_in_nav_menus ?? $this->public;
-		$args->show_in_menu = $this->show_in_menu ?? $args->show_ui;
+		$args->show_in_menu = $args->show_in_menu ?? $args->show_ui;
 		$args->show_in_admin_bar = $this->show_in_admin_bar ?? (bool) $args->show_in_menu;
-		$args->menu_position = $this->menu_position;
 		$args->capability_type = $this->capability_type;
 		$args->capabilities = $this->capabilities->get_capabilities();
 		$args->hierarchical = $this->hierarchical;
-		$args->supports = $this->supports;
 		$args->taxonomies = $this->taxonomies;
 		$args->has_archive = $this->has_archive;
 		$args->rewrite = $this->rewrites();
 		$args->query_var = $this->query_var;
 		$args->can_export = $this->can_export;
-		$args->show_in_rest = $this->show_in_rest;
 
 		if ( isset( $this->exclude_from_search ) ) {
 			$args->exclude_from_search = $this->exclude_from_search;
@@ -902,15 +821,6 @@ class Custom_Post_Type {
 		}
 		if ( isset( $this->delete_with_user ) ) {
 			$args->delete_with_user = $this->delete_with_user;
-		}
-		if ( isset( $this->rest_base ) ) {
-			$args->rest_base = $this->rest_base;
-		}
-		if ( isset( $this->rest_namespace ) ) {
-			$args->rest_namespace = $this->rest_namespace;
-		}
-		if ( isset( $this->rest_controller_class ) ) {
-			$args->rest_controller_class = $this->rest_controller_class;
 		}
 		if ( isset( $this->template ) ) {
 			$args->template = $this->template;
@@ -1037,12 +947,12 @@ class Custom_Post_Type {
 	 * If the post types registered through this API have changed,
 	 * rewrite rules need to be flushed.
 	 *
-	 * @interal
+	 * @action wp_loaded 1_000 0
 	 *
 	 * @return void
 	 */
-	public static function check_rewrite_rules(): void {
-		$slugs = wp_list_pluck( static::$registry, 'slug' );
+	protected function check_rewrite_rules(): void {
+		$slugs = \array_keys( static::$registry );
 		if ( get_option( static::REGISTRY_OPTION ) !== $slugs ) {
 			\flush_rewrite_rules();
 			update_option( static::REGISTRY_OPTION, $slugs );
@@ -1051,13 +961,13 @@ class Custom_Post_Type {
 
 
 	/**
-	 * Factory for registering a new custom post type.
+	 * Get a registered post type object.
 	 *
-	 * @param string $post_type - Post type slug.
+	 * @param string $post_type - The post type slug.
 	 *
-	 * @return Custom_Post_Type
+	 * @return ?Custom_Post_Type
 	 */
-	public static function factory( string $post_type ): Custom_Post_Type {
-		return new static( $post_type );
+	public static function get_post_type( string $post_type ): ?Custom_Post_Type {
+		return static::$registry[ $post_type ] ?? null;
 	}
 }

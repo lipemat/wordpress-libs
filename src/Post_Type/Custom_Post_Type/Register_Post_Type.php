@@ -27,10 +27,22 @@ use Lipe\Lib\Query\Args_Trait;
 class Register_Post_Type implements Args_Interface {
 	use Args_Trait;
 
-	public const TEMPLATE_LOCK_ALL          = 'all';
-	public const TEMPLATE_LOCK_CONTENT_ONLY = 'contentOnly';
-	public const TEMPLATE_LOCK_INSERT       = 'insert';
-	public const TEMPLATE_LOCK_FALSE        = false;
+	public const TEMPLATE_LOCK_ALL     = 'all';
+	public const TEMPLATE_LOCK_CONTENT = 'contentOnly';
+	public const TEMPLATE_LOCK_INSERT  = 'insert';
+	public const TEMPLATE_LOCK_FALSE   = false;
+
+	public const SUPPORTS_AUTHOR          = 'author';
+	public const SUPPORTS_COMMENTS        = 'comments';
+	public const SUPPORTS_CUSTOM_FIELDS   = 'custom-fields';
+	public const SUPPORTS_EDITOR          = 'editor';
+	public const SUPPORTS_EXCERPT         = 'excerpt';
+	public const SUPPORTS_PAGE_ATTRIBUTES = 'page-attributes';
+	public const SUPPORTS_POST_FORMATS    = 'post-formats';
+	public const SUPPORTS_REVISIONS       = 'revisions';
+	public const SUPPORTS_THUMBNAIL       = 'thumbnail';
+	public const SUPPORTS_TITLE           = 'title';
+	public const SUPPORTS_TRACKBACKS      = 'trackbacks';
 
 	/**
 	 * Name of the post type shown in the menu. Usually plural.

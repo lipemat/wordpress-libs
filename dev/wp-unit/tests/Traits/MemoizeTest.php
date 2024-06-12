@@ -32,7 +32,7 @@ class MemoizeTestTrait {
 
 
 	public function heavy_static( ...$args ) {
-		return $this->static( function( ...$passed ) {
+		return $this->static_once( function( ...$passed ) {
 			return [ $passed[0], microtime( true ), $passed[1] ?? null ];
 		}, __METHOD__, ...$args );
 	}
