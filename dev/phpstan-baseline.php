@@ -692,48 +692,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Network/Network_Trait.php',
 ];
 $ignoreErrors[] = [
-	// identifier: lipemat.declareStrictTypes
-	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Capabilities.php',
-];
-$ignoreErrors[] = [
-	// identifier: empty.notAllowed
-	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:add_support\\(\\) has parameter \\$features with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:adjust_bulk_edit_messages\\(\\) has parameter \\$bulk_counts with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:adjust_bulk_edit_messages\\(\\) has parameter \\$bulk_messages with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:adjust_bulk_edit_messages\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:adjust_post_updated_messages\\(\\) has parameter \\$messages with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:adjust_post_updated_messages\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
@@ -742,36 +700,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:gutenberg_template\\(\\) has parameter \\$template with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:post_type_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:post_type_labels\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:remove_support\\(\\) has parameter \\$features with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:rewrites\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\Post_Type\\\\Custom_Post_Type\\:\\:\\$labels type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Post_Type/Custom_Post_Type.php',
 ];

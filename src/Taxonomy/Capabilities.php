@@ -10,15 +10,18 @@ namespace Lipe\Lib\Taxonomy;
  *
  * @since 3.15.0
  *
- * @internal
- *
- * @phpstan-type CAPABILITY 'manage_terms'|'edit_terms'|'delete_terms'|'assign_terms'
+ * @see   Taxonomy::capabilities()
  */
 class Capabilities {
+	public const ASSIGN_TERMS = 'assign_terms';
+	public const DELETE_TERMS = 'delete_terms';
+	public const EDIT_TERMS   = 'edit_terms';
+	public const MANAGE_TERMS = 'manage_terms';
+
 	/**
 	 * Any capabilities that have been set.
 	 *
-	 * @var array<CAPABILITY, string>
+	 * @var array<self::*, string>
 	 */
 	protected array $capabilities = [];
 
@@ -39,7 +42,7 @@ class Capabilities {
 	 *
 	 * @param string $capability - The capability to set.
 	 *
-	 * @return $this
+	 * @return Capabilities
 	 */
 	public function manage_terms( string $capability = 'manage_categories' ): Capabilities {
 		return $this->set( 'manage_terms', $capability );
@@ -51,7 +54,7 @@ class Capabilities {
 	 *
 	 * @param string $capability - The capability to set.
 	 *
-	 * @return $this
+	 * @return Capabilities
 	 */
 	public function edit_terms( string $capability = 'manage_categories' ): Capabilities {
 		return $this->set( 'edit_terms', $capability );
@@ -63,7 +66,7 @@ class Capabilities {
 	 *
 	 * @param string $capability - The capability to set.
 	 *
-	 * @return $this
+	 * @return Capabilities
 	 */
 	public function delete_terms( string $capability = 'manage_categories' ): Capabilities {
 		return $this->set( 'delete_terms', $capability );
@@ -75,7 +78,7 @@ class Capabilities {
 	 *
 	 * @param string $capability - The capability to set.
 	 *
-	 * @return $this
+	 * @return Capabilities
 	 */
 	public function assign_terms( string $capability = 'edit_posts' ): Capabilities {
 		return $this->set( 'assign_terms', $capability );
@@ -85,14 +88,14 @@ class Capabilities {
 	/**
 	 * Set a capability.
 	 *
-	 * @phpstan-param CAPABILITY $key
+	 * @phpstan-param self::* $key
 	 *
-	 * @param string             $key   - Key for the capability.
-	 * @param string             $value - The capability to set.
+	 * @param string          $key   - Key for the capability.
+	 * @param string          $value - The capability to set.
 	 *
-	 * @return $this
+	 * @return Capabilities
 	 */
-	protected function set( string $key, string $value ): static {
+	protected function set( string $key, string $value ): Capabilities {
 		$this->capabilities[ $key ] = $value;
 		return $this;
 	}
@@ -101,9 +104,9 @@ class Capabilities {
 	/**
 	 * Get the capability for a specific capability.
 	 *
-	 * @phpstan-param CAPABILITY $capability
+	 * @phpstan-param self::* $capability
 	 *
-	 * @param string             $capability - The capability to get.
+	 * @param string          $capability - The capability to get.
 	 *
 	 * @return ?string
 	 */
@@ -115,7 +118,7 @@ class Capabilities {
 	/**
 	 * Get the capabilities that have been set.
 	 *
-	 * @return array<CAPABILITY, string>
+	 * @return array<self::*, string>
 	 */
 	public function get_capabilities(): array {
 		return $this->capabilities;

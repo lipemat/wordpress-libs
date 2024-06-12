@@ -22,8 +22,6 @@ use Lipe\Lib\Util\Actions;
  * $tax->set_label( %singular%, %plural%  );
  * $tax->slug = %slug;
  *
- * @phpstan-import-type LABEL from Labels
- *
  * @phpstan-type REWRITE array{
  *     slug?: string,
  *     with_front?: bool,
@@ -351,6 +349,7 @@ class Taxonomy {
 	public function __construct( string $taxonomy, array $post_types ) {
 		$this->post_types = $post_types;
 		$this->taxonomy = \strtolower( \str_replace( ' ', '_', $taxonomy ) );
+		$this->slug = \strtolower( \str_replace( ' ', '-', $this->taxonomy ) );
 		$this->labels = new Labels( $this );
 		$this->capabilities = new Capabilities( $this );
 
@@ -478,20 +477,6 @@ class Taxonomy {
 			unset( $columns[ $column ] );
 			return $columns;
 		} );
-	}
-
-
-	/**
-	 * Return the slug of this taxonomy, formatted appropriately.
-	 *
-	 * @return string
-	 */
-	public function get_slug(): string {
-		if ( ! isset( $this->slug ) ) {
-			$this->slug = \strtolower( \str_replace( ' ', '-', $this->taxonomy ) );
-		}
-
-		return $this->slug;
 	}
 
 
@@ -712,7 +697,7 @@ class Taxonomy {
 	protected function insert_initial_terms(): void {
 		$already_defaulted = get_option( 'lipe/lib/taxonomy/defaults-registry', [] );
 
-		if ( ! isset( $already_defaulted[ $this->get_slug() ] ) ) {
+		if ( ! isset( $already_defaulted[ $this->slug ] ) ) {
 			// Don't do anything if the taxonomy already has terms.
 			$existing = get_terms( [
 				'taxonomy' => $this->taxonomy,
@@ -727,7 +712,7 @@ class Taxonomy {
 					wp_insert_term( $term, $this->taxonomy, $args );
 				}
 			}
-			$already_defaulted[ $this->get_slug() ] = 1;
+			$already_defaulted[ $this->slug ] = 1;
 			update_option( 'lipe/lib/taxonomy/defaults-registry', $already_defaulted, true );
 		}
 	}
@@ -788,7 +773,7 @@ class Taxonomy {
 	 * @param string|null $single - The singular label to use.
 	 * @param string|null $plural - The plural label to use.
 	 *
-	 * @return array<LABEL, string>
+	 * @return array<Labels::*, string>
 	 */
 	protected function taxonomy_labels( ?string $single = null, ?string $plural = null ): array {
 		$single = $single ?? $this->labels->get_label( 'singular_name' );
@@ -837,7 +822,7 @@ class Taxonomy {
 	 */
 	protected function rewrites(): array|bool {
 		return $this->rewrite ?? [
-			'slug'         => $this->get_slug(),
+			'slug'         => $this->slug,
 			'with_front'   => false,
 			'hierarchical' => $this->hierarchical,
 		];

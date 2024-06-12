@@ -23,7 +23,7 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 		$tax->add_initial_terms( [ 'one', 'two' ] );
 		do_action( 'wp_loaded' );
 
-		$post = $this->setup_check_default_meta_box( get_taxonomy( $tax->get_slug() ), $post_type->name );
+		$post = $this->setup_check_default_meta_box( get_taxonomy( $tax->slug ), $post_type->name );
 
 		new Meta_Box( 'test', Meta_Box::TYPE_RADIO, true );
 		register_and_do_post_meta_boxes( $post );
