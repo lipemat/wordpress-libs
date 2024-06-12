@@ -1,4 +1,6 @@
 <?php
+//phpcs:disable WordPress.Security.NonceVerification -- No nonce for zip service.
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Api;
 
@@ -63,7 +65,7 @@ class Zip {
 	 * @return void
 	 */
 	protected function hook(): void {
-		add_action( Api::in()->get_action( static::ACTION ), [ $this, 'handle_request' ] );
+		add_action( Api::in()->get_action( self::ACTION ), [ $this, 'handle_request' ] );
 	}
 
 
@@ -76,30 +78,28 @@ class Zip {
 	public function handle_request(): void {
 		$this->validate_request();
 
-		//phpcs:disable WordPress.Security.NonceVerification.Missing
-		if ( empty( $_POST[ static::NAME ] ) ) {
-			$name = null;
+		if ( isset( $_POST[ self::NAME ] ) ) {
+			$name = sanitize_text_field( wp_unslash( $_POST[ self::NAME ] ) );
 		} else {
-			$name = sanitize_text_field( wp_unslash( $_POST[ static::NAME ] ) );
+			$name = null;
 		}
 
-		if ( isset( $_POST[ static::URLS ] ) ) {
-			$this->build_zip( array_map( 'esc_url_raw', (array) wp_unslash( $_POST[ static::URLS ] ) ), $name );
+		if ( isset( $_POST[ self::URLS ] ) ) {
+			$this->build_zip( \array_map( 'esc_url_raw', (array) wp_unslash( $_POST[ self::URLS ] ) ), $name );
 		}
-		//phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
 
 	/**
 	 * Set all the paths we are going to work with.
 	 *
-	 * @param array       $files    - urls of files to add.
-	 * @param string|null $zip_name - optional name for the zip folder.
+	 * @param array<string> $files    - urls of files to add.
+	 * @param string|null   $zip_name - optional name for the zip folder.
 	 *
 	 * @return void
 	 */
 	protected function set_paths( array $files, ?string $zip_name = null ): void {
-		$this->file_name = \md5( implode( '|', $files ) );
+		$this->file_name = \md5( \implode( '|', $files ) );
 		$this->file_path = sys_get_temp_dir() . '/' . $this->file_name;
 		$this->zip_path = $this->file_path . '/' . $this->file_name;
 
@@ -114,8 +114,8 @@ class Zip {
 	 * it will only serve files accessible via http request, which
 	 * technically would already be available publicly.
 	 *
-	 * @param array       $files    - urls of files to add.
-	 * @param string|null $zip_name - optional name for the zip folder.
+	 * @param array<string> $files    - urls of files to add.
+	 * @param string|null   $zip_name - optional name for the zip folder.
 	 *
 	 * @return void
 	 */
@@ -123,9 +123,11 @@ class Zip {
 		$this->set_paths( $files, $zip_name );
 		$this->serve_existing_file();
 
-		//phpcs:ignore -- @todo Convert to `WP_Filesystem` calls.
-		if ( ! is_dir( $this->file_path ) && ! mkdir( $this->file_path ) && ! is_dir( $this->file_path ) ) {
-			die( 'Unable to create zip file' );
+		if ( ! is_dir( $this->file_path ) ) {
+			$this->get_wp_filesystem()->mkdir( $this->file_path );
+			if ( ! is_dir( $this->file_path ) ) {
+				die( 'Unable to create zip file' );
+			}
 		}
 
 		$success = [];
@@ -147,10 +149,10 @@ class Zip {
 				echo esc_html( "Failed to copy $file...\n" );
 				continue;
 			}
-			$parts = pathinfo( $parts['path'] );
+			$parts = \pathinfo( $parts['path'] );
 			$temp = $this->file_path . '/' . $parts['basename'];
 
-			if ( copy( $file, $temp ) ) {
+			if ( \copy( $file, $temp ) ) {
 				if ( $zip->addFile( $temp, $parts['basename'] ) ) {
 					$success[] = $temp;
 				}
@@ -180,67 +182,82 @@ class Zip {
 	 * @return void
 	 */
 	protected function validate_request(): void {
-		//phpcs:disable WordPress.Security.NonceVerification.Missing
-		if ( empty( $_POST[ static::KEY ] ) || ( static::get_key() !== $_POST[ static::KEY ] ) ) {
+		if ( ! isset( $_POST[ self::KEY ] ) || ( static::get_key() !== $_POST[ self::KEY ] ) ) {
 			die( 'Incorrect key sent.' );
 		}
 
-		if ( empty( $_POST[ static::URLS ] ) ) {
+		if ( ! isset( $_POST[ self::URLS ] ) || ! \is_array( $_POST[ self::URLS ] ) ) {
 			die( 'No URL specified.' );
 		}
-		//phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
 
 	/**
 	 * If the file exists, serve it, and kill the script.
 	 *
-	 * @todo Convert to `WP_Filesystem` calls.
-	 *
 	 * @return void
 	 */
 	protected function serve_existing_file(): void {
 		if ( \is_readable( $this->zip_path ) ) {
-			header( 'Pragma: public' );
-			header( 'Expires: 0' );
-			header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
-			header( 'Cache-Control: private', false );
-			header( 'Content-Type: application/zip' );
-			header( 'Content-disposition: attachment; filename="' . $this->zip_name . '.zip";' );
-			header( 'Content-Length: ' . filesize( $this->zip_path ) );
-			readfile( $this->zip_path ); //phpcs:ignore
-
+			\header( 'Pragma: public' );
+			\header( 'Expires: 0' );
+			\header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+			\header( 'Cache-Control: private', false );
+			\header( 'Content-Type: application/zip' );
+			\header( 'Content-disposition: attachment; filename="' . $this->zip_name . '.zip";' );
+			\header( 'Content-Length: ' . \filesize( $this->zip_path ) );
+			$zip_contents = $this->get_wp_filesystem()->get_contents( $this->zip_path );
+			if ( false !== $zip_contents ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput
+				echo $zip_contents;
+			}
 			die();
 		}
 	}
 
 
 	/**
-	 * Get the key to check the request against.
+	 * Get the WP Filesystem object.
 	 *
-	 * @static
+	 * @return \WP_Filesystem_Base
+	 */
+	protected function get_wp_filesystem(): \WP_Filesystem_Base {
+		global $wp_filesystem;
+		if ( ! $wp_filesystem ) {
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+		return $wp_filesystem;
+	}
+
+
+	/**
+	 * Get the key to check the request against.
 	 *
 	 * @return string
 	 */
 	public static function get_key(): string {
-		return crypt( \AUTH_KEY, \AUTH_SALT );
+		return \crypt( AUTH_KEY, AUTH_SALT );
 	}
 
 
 	/**
 	 * Get an array of data to send to this zip service to render a zip file
 	 *
-	 * @param array       $urls - array of urls to be added to the zip file.
-	 * @param string|null $name - name of the zip when downloaded.
+	 * @param array<string> $urls - array of urls to be added to the zip file.
+	 * @param string|null   $name - name of the zip when downloaded.
 	 *
-	 * @return array
-	 * @static
+	 * @return array{
+	 *     "lipe/lib/util/zip/key": string,
+	 *     "lipe/lib/util/zip/name": string|null,
+	 *     "lipe/lib/util/zip/urls": array<string>
+	 * }
 	 */
 	public static function get_post_data_to_send( array $urls, ?string $name = null ): array {
 		return [
-			static::KEY  => static::get_key(),
-			static::NAME => $name,
-			static::URLS => $urls,
+			self::KEY  => static::get_key(),
+			self::NAME => $name,
+			self::URLS => $urls,
 		];
 	}
 
@@ -248,19 +265,15 @@ class Zip {
 	/**
 	 * Retrieve the url to send the $_POST requests to
 	 *
-	 * @static
-	 *
 	 * @return string
 	 */
 	public static function get_url_for_endpoint(): string {
-		return Api::in()->get_url( static::ACTION );
+		return Api::in()->get_url( self::ACTION );
 	}
 
 
 	/**
 	 * We need to load the api if we are loading this class
-	 *
-	 * @static
 	 *
 	 * @return void
 	 */
