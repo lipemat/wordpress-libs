@@ -3,6 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy;
 
+use Lipe\Lib\Taxonomy\Taxonomy\Register_Taxonomy;
 use Lipe\Lib\Util\Actions;
 
 /**
@@ -16,18 +17,14 @@ use Lipe\Lib\Util\Actions;
  * @notice Must be constructed before the init hook runs
  *
  * @example
- * $tax = new Taxonomy( %slug%, array( self::NAME ) );
+ * $tax = new Taxonomy(%slug%, array(self::NAME));
  * $tax->hierarchical = FALSE;
  * $tax->meta_box_cb = false;
- * $tax->set_label( %singular%, %plural%  );
+ * $tax->set_label(%singular%, %plural%);
  * $tax->slug = %slug;
  *
- * @phpstan-type REWRITE array{
- *     slug?: string,
- *     with_front?: bool,
- *     hierarchical?: bool,
- *     ep_mask?: int,
- * }
+ * @phpstan-import-type REWRITE from Register_Taxonomy
+ * @phpstan-import-type DEFAULT from Register_Taxonomy
  */
 class Taxonomy {
 	protected const REGISTRY_OPTION = 'lipe/lib/schema/taxonomy_registry';
@@ -107,23 +104,21 @@ class Taxonomy {
 	 * If set to true, it will show up under all object_types the
 	 * taxonomy is assigned to.
 	 *
-	 * If a menu slug is provided, the taxonomy will show under the
-	 * menu provided.
-	 *
-	 * If an array is provided, the taxonomy will show under the menu
-	 * provided by the array key, and the order provided by the array value.
-	 *
-	 * @example 'tools.php'
-	 * @example [ 'tools.php' => 6 ]
-	 *
-	 * @notice $this->show_ui must be set to true.
-	 * @notice  this is extended to specify a menu slug
-	 *
-	 * @default $this->show_ui
-	 *
-	 * @var bool|string|array<string, int>
+	 * @var bool
 	 */
-	public string|array|bool $show_in_menu = true;
+	public bool $show_in_menu = true;
+
+	/**
+	 * Menu configurations for the taxonomy.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @var array{
+	 *     parent?: string,
+	 *     priority?: int,
+	 * }
+	 */
+	protected array $menu_configuration = [];
 
 	/**
 	 * True makes this taxonomy available for selection in navigation menus.
@@ -168,6 +163,7 @@ class Taxonomy {
 	 *
 	 * @default 'WP_REST_Terms_Controller'
 	 *
+	 * @phpstan-var class-string<\WP_REST_Controller>
 	 * @var string
 	 */
 	public string $rest_controller_class;
@@ -251,14 +247,15 @@ class Taxonomy {
 
 	/**
 	 * False to disable the query_var, set as string to use
-	 * custom query_var instead of default
+	 * custom query_var instead of default.
+	 *
 	 * True is not seen as a valid entry and will result in 404 issues.
 	 *
 	 * @default $this->taxonomy
 	 *
-	 * @var false|string|null
+	 * @var false|string
 	 */
-	public string|null|false $query_var;
+	public string|false $query_var;
 
 	/**
 	 * Triggers the handling of rewrites for this taxonomy.
@@ -314,15 +311,11 @@ class Taxonomy {
 	/**
 	 * The default term added to new posts.
 	 *
-	 * @phpstan-var string|array{
-	 *     name: string,
-	 *     slug?: string,
-	 *     description?: string,
-	 * }
+	 * @phpstan-var string|DEFAULT
 	 *
-	 * @var null|string|array<string,string>
+	 * @var string|array<string,string>
 	 */
-	protected null|string|array $default_term = null;
+	protected string|array $default_term;
 
 	/**
 	 * Terms to be automatically added to a taxonomy when
@@ -498,24 +491,24 @@ class Taxonomy {
 		global $submenu;
 		$edit_tags_file = 'edit-tags.php?taxonomy=%s';
 
-		if ( ! \is_bool( $this->show_in_menu ) && '' !== $this->show_in_menu ) {
-			$tax = get_taxonomy( $this->taxonomy );
-			$parent = $this->show_in_menu;
-			$order = 100;
-			if ( false !== $tax ) {
-				if ( \is_array( $parent ) && \is_array( $this->show_in_menu ) ) {
-					$parent = \key( $this->show_in_menu );
-					$order = \reset( $this->show_in_menu );
-				}
-				// phpcs:ignore WordPress.WP.GlobalVariablesOverride -- Intentional override.
-				$submenu[ $parent ][ $order ] = [
-					esc_attr( $tax->labels->menu_name ),
-					$tax->cap->manage_terms,
-					\sprintf( $edit_tags_file, $tax->name ),
-				];
-				\ksort( $submenu[ $parent ] );
-			}
+		if ( false === $this->show_in_menu || ! isset( $this->menu_configuration['parent'] ) ) {
+			return;
 		}
+
+		$tax = get_taxonomy( $this->taxonomy );
+		$parent = $this->menu_configuration['parent'];
+		$order = $this->menu_configuration['priority'] ?? 100;
+
+		if ( false !== $tax ) {
+			// phpcs:ignore WordPress.WP.GlobalVariablesOverride -- Intentional override.
+			$submenu[ $parent ][ $order ] = [
+				esc_attr( $tax->labels->menu_name ),
+				$tax->cap->manage_terms,
+				\sprintf( $edit_tags_file, $tax->name ),
+			];
+			\ksort( $submenu[ $parent ] );
+		}
+
 		// Set the current parent menu for the custom location.
 		add_filter( 'parent_file', function( string $menu ) {
 			return $this->set_current_menu( $menu );
@@ -582,14 +575,34 @@ class Taxonomy {
 
 
 	/**
+	 * Show the taxonomy in the admin menu under a specific menu and priority.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param string $slug     - The slug of the menu to show the taxonomy under.
+	 * @param int    $priority - The priority of the taxonomy in the menu.
+	 *
+	 * @return void
+	 */
+	public function show_in_menu( string $slug = '', int $priority = - 1 ): void {
+		$this->show_in_menu = true;
+		if ( '' !== $slug ) {
+			$this->menu_configuration['parent'] = $slug;
+		}
+		if ( - 1 !== $priority ) {
+			$this->menu_configuration['order'] = $priority;
+		}
+	}
+
+
+	/**
 	 * Set the current admin menu, so the correct one is highlighted.
-	 * Only used when $this->show_menu is set to a slug of a menu.
+	 * Only used when $this->menu_configuration['parent'] is set to a slug of a menu.
 	 *
 	 * @filter parent_file 10 1
 	 *
+	 * @see    Taxonomy::show_in_menu()
 	 * @see    Taxonomy::add_as_submenu();
-	 *
-	 * @interanl
 	 *
 	 * @param string $parent_file - Parent file slug to set as current.
 	 *
@@ -597,11 +610,11 @@ class Taxonomy {
 	 */
 	protected function set_current_menu( string $parent_file ): string {
 		$screen = \get_current_screen();
-		if ( null === $screen || true === $this->show_in_menu ) {
+		if ( null === $screen || ! isset( $this->menu_configuration['parent'] ) ) {
 			return $parent_file;
 		}
 		if ( "edit-{$this->taxonomy}" === $screen->id && $this->taxonomy === $screen->taxonomy ) {
-			return \is_array( $this->show_in_menu ) ? (string) \key( $this->show_in_menu ) : (string) $this->show_in_menu;
+			return $this->menu_configuration['parent'];
 		}
 
 		return $parent_file;
@@ -735,34 +748,56 @@ class Taxonomy {
 	 * @return array<string, mixed>
 	 */
 	protected function taxonomy_args(): array {
-		$args = [
-			'labels'                => $this->taxonomy_labels(),
-			'args'                  => isset( $this->args ) ? $this->args->get_args() : null,
-			'public'                => $this->public,
-			'publicly_queryable'    => $this->publicly_queryable ?? $this->public,
-			'show_ui'               => $this->show_ui ?? $this->public,
-			'show_in_menu'          => $this->show_in_menu,
-			'show_in_nav_menus'     => $this->show_in_nav_menus ?? $this->public,
-			'show_in_rest'          => $this->show_in_rest,
-			'rest_base'             => $this->rest_base ?? null,
-			'rest_namespace'        => $this->rest_namespace ?? null,
-			'rest_controller_class' => $this->rest_controller_class ?? null,
-			'show_tagcloud'         => $this->show_tagcloud ?? null,
-			'show_in_quick_edit'    => $this->show_in_quick_edit ?? null,
-			'meta_box_cb'           => $this->meta_box_cb,
-			'meta_box_sanitize_cb'  => $this->meta_box_sanitize_cb,
-			'show_admin_column'     => $this->show_admin_column,
-			'description'           => $this->description ?? null,
-			'hierarchical'          => $this->hierarchical ?? null,
-			'update_count_callback' => $this->update_count_callback,
-			'query_var'             => $this->query_var ?? $this->taxonomy,
-			'rewrite'               => $this->rewrites(),
-			'capabilities'          => $this->capabilities->get_capabilities(),
-			'sort'                  => $this->sort,
-			'default_term'          => $this->default_term,
-		];
+		$args = new Register_Taxonomy();
+		$args->labels = $this->taxonomy_labels();
+		$args->public = $this->public;
+		$args->publicly_queryable = $this->publicly_queryable ?? $this->public;
+		$args->show_ui = $this->show_ui ?? $this->public;
+		$args->show_in_menu = $this->show_in_menu;
+		$args->show_in_nav_menus = $this->show_in_nav_menus ?? $this->public;
+		$args->show_in_rest = $this->show_in_rest;
+		$args->rewrite = $this->rewrites();
+		$args->capabilities = $this->capabilities->get_capabilities();
+		$args->sort = $this->sort;
+		$args->show_admin_column = $this->show_admin_column;
+		$args->description = $this->description;
+		$args->hierarchical = $this->hierarchical;
 
-		$args = apply_filters( 'lipe/lib/taxonomy/args', $args, $this->taxonomy );
+		if ( isset( $this->rest_base ) ) {
+			$args->rest_base = $this->rest_base;
+		}
+		if ( isset( $this->rest_namespace ) ) {
+			$args->rest_namespace = $this->rest_namespace;
+		}
+		if ( isset( $this->rest_controller_class ) ) {
+			$args->rest_controller_class = $this->rest_controller_class;
+		}
+		if ( isset( $this->show_tagcloud ) ) {
+			$args->show_tagcloud = $this->show_tagcloud;
+		}
+		if ( isset( $this->args ) ) {
+			$args->args = $this->args->get_args();
+		}
+		if ( isset( $this->show_in_quick_edit ) ) {
+			$args->show_in_quick_edit = $this->show_in_quick_edit;
+		}
+		if ( null !== $this->meta_box_cb ) {
+			$args->meta_box_cb = $this->meta_box_cb;
+		}
+		if ( null !== $this->meta_box_sanitize_cb ) {
+			$args->meta_box_sanitize_cb = $this->meta_box_sanitize_cb;
+		}
+		if ( null !== $this->update_count_callback ) {
+			$args->update_count_callback = $this->update_count_callback;
+		}
+		if ( isset( $this->query_var ) ) {
+			$args->query_var = $this->query_var;
+		}
+		if ( isset( $this->default_term ) ) {
+			$args->default_term = $this->default_term;
+		}
+
+		$args = apply_filters( 'lipe/lib/taxonomy/args', $args->get_args(), $this->taxonomy );
 		return apply_filters( "lipe/lib/taxonomy/args_{$this->taxonomy}", $args );
 	}
 

@@ -4,19 +4,14 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Post_Type;
 
+use Lipe\Lib\Post_Type\Custom_Post_Type\Register_Post_Type;
 use Lipe\Lib\Util\Actions;
 
 /**
  * Register a custom post type.
  *
  * @phpstan-type BULK 'updated'|'locked'|'deleted'|'trashed'|'untrashed'
- * @phpstan-type REWRITE array{
- *      slug?: string,
- *      with_front?: bool,
- *      feeds?: bool,
- *      pages?: bool,
- *      ep_mask?: int,
- *  }
+ * @phpstan-import-type REWRITE from Register_Post_Type
  */
 class Custom_Post_Type {
 	protected const REGISTRY_OPTION    = 'lipe/lib/post-type/custom-post-type/registry';
@@ -60,7 +55,10 @@ class Custom_Post_Type {
 	 * as a base to build the capabilities.
 	 * - e.g., array('story', 'stories').
 	 *
-	 * @var array<int,string>|string
+	 * @var string|array{
+	 *      0: string,
+	 *      1: string,
+	 *  }
 	 */
 	public string|array $capability_type = 'post';
 
@@ -100,7 +98,7 @@ class Custom_Post_Type {
 	 * A feature can also be specified as an array of arguments to provide additional
 	 * information about supporting the feature.
 	 * Example:
-	 *     array( 'my_feature', array( 'field' => 'value' ) )
+	 *     array('my_feature', array('field' => 'value'))
 	 *
 	 * @var array<int, (string|array<string, mixed>)>
 	 */
@@ -127,9 +125,6 @@ class Custom_Post_Type {
 	 * which contains the WP_Post object for the currently edited post
 	 *
 	 * @phpstan-var callable( \WP_Post ) : void
-	 *
-	 * @default none
-	 *
 	 * @var callable
 	 */
 	public $register_meta_box_cb;
@@ -148,9 +143,9 @@ class Custom_Post_Type {
 	/**
 	 * Whether to use the internal default meta capability handling.
 	 *
-	 * @var ?bool
+	 * @var bool
 	 */
-	public ?bool $map_meta_cap = null;
+	public bool $map_meta_cap;
 
 	/**
 	 * The URL to the icon to be used for this menu.
@@ -219,7 +214,7 @@ class Custom_Post_Type {
 	 *
 	 * @var bool|string
 	 */
-	public $has_archive = true;
+	public string|bool $has_archive = true;
 
 	/**
 	 * Post type slug.
@@ -238,7 +233,7 @@ class Custom_Post_Type {
 	 *
 	 * @var string|bool
 	 */
-	public $query_var = true;
+	public string|bool $query_var = true;
 
 	/**
 	 * Whether to generate and allow a UI for managing this post type in the admin.
@@ -261,7 +256,7 @@ class Custom_Post_Type {
 	 *
 	 * @var bool|string
 	 */
-	public $show_in_menu;
+	public string|bool $show_in_menu;
 
 	/**
 	 * Makes this post type available for selection in navigation menus.
@@ -419,9 +414,7 @@ class Custom_Post_Type {
 	 *   - If set to 'insert', the user can move existing blocks
 	 *     but cannot insert new blocks and delete blocks
 	 *
-	 * @link https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-templates/#locking
-	 *
-	 * @phpstan-var 'all'|'contentOnly'|'insert'|false
+	 * @phpstan-var Register_Post_Type::TEMPLATE_LOCK_*|false
 	 *
 	 * @var string|false
 	 */
@@ -874,39 +867,59 @@ class Custom_Post_Type {
 	 * @return array<string, mixed>
 	 */
 	protected function post_type_args(): array {
-		$args = [
-			'labels'                => $this->post_type_labels(),
-			'description'           => $this->description ?? '',
-			'public'                => $this->public,
-			'exclude_from_search'   => $this->exclude_from_search ?? null,
-			'publicly_queryable'    => $this->publicly_queryable ?? null,
-			'show_ui'               => $this->show_ui ?? null,
-			'show_in_nav_menus'     => $this->show_in_nav_menus ?? null,
-			'show_in_menu'          => $this->show_in_menu,
-			'show_in_admin_bar'     => $this->show_in_admin_bar ?? null,
-			'menu_position'         => $this->menu_position,
-			'menu_icon'             => $this->menu_icon ?? null,
-			'capability_type'       => $this->capability_type,
-			'capabilities'          => $this->capabilities->get_capabilities(),
-			'map_meta_cap'          => $this->map_meta_cap,
-			'hierarchical'          => $this->hierarchical,
-			'supports'              => $this->supports,
-			'register_meta_box_cb'  => $this->register_meta_box_cb,
-			'taxonomies'            => $this->taxonomies,
-			'has_archive'           => $this->has_archive,
-			'rewrite'               => $this->rewrites(),
-			'query_var'             => $this->query_var,
-			'can_export'            => $this->can_export,
-			'delete_with_user'      => $this->delete_with_user ?? null,
-			'show_in_rest'          => $this->show_in_rest,
-			'rest_base'             => $this->rest_base ?? null,
-			'rest_namespace'        => $this->rest_namespace ?? null,
-			'rest_controller_class' => $this->rest_controller_class ?? null,
-			'template'              => $this->template ?? null,
-			'template_lock'         => $this->template_lock ?? null,
-		];
+		$args = new Register_Post_Type();
+		$args->labels = $this->post_type_labels();
+		$args->description = $this->description ?? '';
+		$args->public = $this->public;
+		$args->publicly_queryable = $this->publicly_queryable ?? $this->public;
+		$args->show_ui = $this->show_ui ?? $this->public;
+		$args->show_in_nav_menus = $this->show_in_nav_menus ?? $this->public;
+		$args->show_in_menu = $this->show_in_menu ?? $args->show_ui;
+		$args->show_in_admin_bar = $this->show_in_admin_bar ?? (bool) $args->show_in_menu;
+		$args->menu_position = $this->menu_position;
+		$args->capability_type = $this->capability_type;
+		$args->capabilities = $this->capabilities->get_capabilities();
+		$args->hierarchical = $this->hierarchical;
+		$args->supports = $this->supports;
+		$args->taxonomies = $this->taxonomies;
+		$args->has_archive = $this->has_archive;
+		$args->rewrite = $this->rewrites();
+		$args->query_var = $this->query_var;
+		$args->can_export = $this->can_export;
+		$args->show_in_rest = $this->show_in_rest;
 
-		$args = apply_filters( 'lipe/lib/schema/post_type_args', $args, $this->post_type );
+		if ( isset( $this->exclude_from_search ) ) {
+			$args->exclude_from_search = $this->exclude_from_search;
+		}
+		if ( isset( $this->menu_icon ) ) {
+			$args->menu_icon = $this->menu_icon;
+		}
+		if ( isset( $this->map_meta_cap ) ) {
+			$args->map_meta_cap = $this->map_meta_cap;
+		}
+		if ( null !== $this->register_meta_box_cb ) {
+			$args->register_meta_box_cb = $this->register_meta_box_cb;
+		}
+		if ( isset( $this->delete_with_user ) ) {
+			$args->delete_with_user = $this->delete_with_user;
+		}
+		if ( isset( $this->rest_base ) ) {
+			$args->rest_base = $this->rest_base;
+		}
+		if ( isset( $this->rest_namespace ) ) {
+			$args->rest_namespace = $this->rest_namespace;
+		}
+		if ( isset( $this->rest_controller_class ) ) {
+			$args->rest_controller_class = $this->rest_controller_class;
+		}
+		if ( isset( $this->template ) ) {
+			$args->template = $this->template;
+		}
+		if ( isset( $this->template_lock ) ) {
+			$args->template_lock = $this->template_lock;
+		}
+
+		$args = apply_filters( 'lipe/lib/schema/post_type_args', $args->get_args(), $this->post_type );
 		return apply_filters( "lipe/lib/schema/post_type_args_{$this->post_type}", $args );
 	}
 
