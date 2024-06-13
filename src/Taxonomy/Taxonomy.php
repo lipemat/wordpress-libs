@@ -1,11 +1,14 @@
 <?php
+// phpcs:disable WordPress.WP.I18n -- Using global translations.
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy;
 
+use Lipe\Lib\Taxonomy\Taxonomy\Menu;
 use Lipe\Lib\Taxonomy\Taxonomy\Register_Taxonomy;
 use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Util\Actions;
+use Lipe\Lib\Util\Strings;
 
 /**
  * Register taxonomy with WordPress.
@@ -86,18 +89,6 @@ class Taxonomy {
 	public string $slug;
 
 	/**
-	 * Menu configurations for the taxonomy.
-	 *
-	 * @since 5.0.0
-	 *
-	 * @var array{
-	 *     parent?: string,
-	 *     priority?: int,
-	 * }
-	 */
-	protected array $menu_configuration = [];
-
-	/**
 	 * True makes this taxonomy available for selection in navigation menus.
 	 *
 	 * @default $this->public
@@ -105,16 +96,6 @@ class Taxonomy {
 	 * @var bool
 	 */
 	public bool $show_in_nav_menus;
-
-	/**
-	 * REST API Controller class name.
-	 *
-	 * @default 'WP_REST_Terms_Controller'
-	 *
-	 * @phpstan-var class-string<\WP_REST_Controller>
-	 * @var string
-	 */
-	public string $rest_controller_class;
 
 	/**
 	 * Whether to allow the Tag Cloud widget to use this taxonomy.
@@ -224,7 +205,7 @@ class Taxonomy {
 	 *
 	 * @var string
 	 */
-	public readonly string $taxonomy;
+	public readonly string $name;
 
 	/**
 	 * The arguments to pass to `register_taxonomy()`.
@@ -254,18 +235,17 @@ class Taxonomy {
 	/**
 	 * Add hooks to register taxonomy.
 	 *
-	 * @param string   $taxonomy   - Taxonomy Slug (will convert a title to a slug as well).
+	 * @param string   $taxonomy   - Taxonomy Slug.
 	 * @param string[] $post_types - Post types to attach this taxonomy to.
 	 */
 	public function __construct( string $taxonomy, array $post_types ) {
 		$this->post_types = $post_types;
-		$this->taxonomy = \strtolower( \str_replace( ' ', '_', $taxonomy ) );
-		$this->slug = \strtolower( \str_replace( ' ', '-', $this->taxonomy ) );
+		$this->name = $taxonomy;
 		$this->labels = new Labels( $this );
 		$this->capabilities = new Capabilities( $this );
 		$this->register_args = new Register_Taxonomy();
 
-		$this->set_label();
+		$this->set_labels();
 		$this->hook();
 	}
 
@@ -280,10 +260,6 @@ class Taxonomy {
 		add_action( 'wp_loaded', function() {
 			$this->register();
 		}, 8, 0 );
-		add_action( 'admin_menu', function() {
-			$this->add_as_submenu();
-		} );
-
 		add_action( 'restrict_manage_posts', function() {
 			$this->post_list_filters();
 		} );
@@ -326,7 +302,7 @@ class Taxonomy {
 	 * @return void
 	 */
 	public function meta_box( string $type, bool $checked_ontop = false ): void {
-		$box = new Meta_Box( $this->taxonomy, $type, $checked_ontop );
+		$box = new Meta_Box( $this->name, $type, $checked_ontop );
 		$this->register_args->meta_box_sanitize_cb = [ $box, 'translate_string_term_ids_to_int' ];
 	}
 
@@ -374,12 +350,12 @@ class Taxonomy {
 		$args->show_count = true;
 		$args->hide_empty = true;
 		/* translators: Plural label of taxonomy. */
-		$args->show_option_all = \sprintf( __( 'All %s' ), $this->labels->get_label( 'name' ) ?? $this->labels->get_label( 'singular_name' ) ?? '' ); //phpcs:ignore WordPress.WP.I18n -- Using global translation namespace.
-		$args->taxonomy = $this->taxonomy;
-		$args->name = $this->taxonomy;
+		$args->show_option_all = \sprintf( __( 'All %s' ), $this->labels->get_label( 'name' ) ?? $this->labels->get_label( 'singular_name' ) ?? '' );
+		$args->taxonomy = $this->name;
+		$args->name = $this->name;
 
-		if ( isset( $wp_query->query[ $this->taxonomy ] ) && '' !== $wp_query->query[ $this->taxonomy ] ) {
-			$args->selected = (string) $wp_query->query[ $this->taxonomy ];
+		if ( isset( $wp_query->query[ $this->name ] ) && '' !== $wp_query->query[ $this->name ] ) {
+			$args->selected = (string) $wp_query->query[ $this->name ];
 			add_action( 'manage_posts_extra_tablenav', function() {
 				$this->static_once( fn() => $this->clear_filters_button(), 'clear_filters_button' );
 			}, 1_000 );
@@ -412,54 +388,9 @@ class Taxonomy {
 	 * @param string $column - Column slug.
 	 */
 	public function remove_column( string $column ): void {
-		add_filter( "manage_edit-{$this->taxonomy}_columns", function( $columns ) use ( $column ) {
+		add_filter( "manage_edit-{$this->name}_columns", function( $columns ) use ( $column ) {
 			unset( $columns[ $column ] );
 			return $columns;
-		} );
-	}
-
-
-	/**
-	 * If $this->show_in_menu was set to a slug instead
-	 * of a boolean, we add the taxonomy as a submenu of
-	 * the provided slug.
-	 *
-	 * The taxonomy will be added at the end of the menu unless
-	 * an order is provided by setting $this->show_in_menu to an array.
-	 *
-	 * @see    Taxonomy::$show_in_menu
-	 *
-	 * @action admin_menu 10 0
-	 *
-	 * @return void
-	 */
-	protected function add_as_submenu(): void {
-		global $submenu;
-		$edit_tags_file = 'edit-tags.php?taxonomy=%s';
-		if ( isset( $this->register_args->show_in_menu ) && false === $this->register_args->show_in_menu ) {
-			return;
-		}
-		if ( ! isset( $this->menu_configuration['parent'] ) ) {
-			return;
-		}
-
-		$tax = get_taxonomy( $this->taxonomy );
-		$parent = $this->menu_configuration['parent'];
-		$order = $this->menu_configuration['priority'] ?? 100;
-
-		if ( false !== $tax ) {
-			// phpcs:ignore WordPress.WP.GlobalVariablesOverride -- Intentional override.
-			$submenu[ $parent ][ $order ] = [
-				esc_attr( $tax->labels->menu_name ),
-				$tax->cap->manage_terms,
-				\sprintf( $edit_tags_file, $tax->name ),
-			];
-			\ksort( $submenu[ $parent ] );
-		}
-
-		// Set the current parent menu for the custom location.
-		add_filter( 'parent_file', function( string $menu ) {
-			return $this->set_current_menu( $menu );
 		} );
 	}
 
@@ -481,7 +412,7 @@ class Taxonomy {
 		Actions::in()->add_filter_all( array_map( function( $post_type ) {
 			return "manage_{$post_type}_posts_columns";
 		}, $this->post_types ), function( array $columns ) use ( $label ) {
-			$columns[ 'taxonomy-' . $this->taxonomy ] = $label;
+			$columns[ 'taxonomy-' . $this->name ] = $label;
 			return $columns;
 		} );
 	}
@@ -525,76 +456,48 @@ class Taxonomy {
 	/**
 	 * Show the taxonomy in the admin menu under a specific menu and priority.
 	 *
+	 * - By default will simply enable the taxonomy to show in the menu.
+	 * - Use the `parent_menu` method to add a top-level menu item.
+	 * - Use the `sub_menu` method to add a sub-menu item.
+	 *
 	 * @since 5.0.0
 	 *
-	 * @param string $slug     - The slug of the menu to show the taxonomy under.
-	 * @param int    $priority - The priority of the taxonomy in the menu.
-	 *
-	 * @return void
+	 * @return Menu
 	 */
-	public function show_in_menu( string $slug = '', int $priority = - 1 ): void {
+	public function show_in_menu(): Menu {
 		$this->register_args->show_in_menu = true;
-		if ( '' !== $slug ) {
-			$this->menu_configuration['parent'] = $slug;
-		}
-		if ( - 1 !== $priority ) {
-			$this->menu_configuration['order'] = $priority;
-		}
+		return new Menu( $this );
 	}
 
 
 	/**
 	 * Show or hide this post type in the REST API.
 	 *
-	 * @since 5.0.0
+	 * @since    5.0.0
 	 *
-	 * @see   Custom_Post_Type::rest_controllers()
+	 * @see      Custom_Post_Type::rest_controllers()
 	 *
-	 * @param bool    $show  - Whether to show in REST.
-	 * @param ?string $base  - The base to use. Defaults to the taxonomy.
-	 * @param string  $space - The namespace to use.
+	 * @formatter:off
+	 * @phpstan-param class-string<\WP_REST_Controller> $controller
+	 *
+	 * @param bool    $show       - Whether to show in REST.
+	 * @param ?string $base       - The base to use. Defaults to the taxonomy.
+	 * @param string  $space      - The namespace to use.
+	 * @param string  $controller - The controller class to use.
+	 * @formatter:on
 	 *
 	 * @return void
 	 */
-	public function show_in_rest( bool $show = true, ?string $base = null, string $space = 'wp/v2' ): void {
+	public function show_in_rest( bool $show = true, ?string $base = null, string $space = 'wp/v2', string $controller = \WP_REST_Terms_Controller::class ): void {
 		$this->register_args->show_in_rest = $show;
 
 		if ( $show ) {
-			if ( ! isset( $this->register_args->rest_base ) ) {
-				$this->register_args->rest_base = $base ?? $this->taxonomy;
-			}
-			if ( ! isset( $this->register_args->rest_namespace ) ) {
-				$this->register_args->rest_namespace = $space;
-			}
+			$this->register_args->rest_base = $base ?? $this->name;
+			$this->register_args->rest_namespace = $space;
+			$this->register_args->rest_controller_class = $controller;
 		} else {
 			unset( $this->register_args->rest_base, $this->register_args->rest_namespace, $this->register_args->rest_controller_class );
 		}
-	}
-
-
-	/**
-	 * Set the current admin menu, so the correct one is highlighted.
-	 * Only used when $this->menu_configuration['parent'] is set to a slug of a menu.
-	 *
-	 * @filter parent_file 10 1
-	 *
-	 * @see    Taxonomy::show_in_menu()
-	 * @see    Taxonomy::add_as_submenu();
-	 *
-	 * @param string $parent_file - Parent file slug to set as current.
-	 *
-	 * @return string
-	 */
-	protected function set_current_menu( string $parent_file ): string {
-		$screen = \get_current_screen();
-		if ( null === $screen || ! isset( $this->menu_configuration['parent'] ) ) {
-			return $parent_file;
-		}
-		if ( "edit-{$this->taxonomy}" === $screen->id && $this->taxonomy === $screen->taxonomy ) {
-			return $this->menu_configuration['parent'];
-		}
-
-		return $parent_file;
 	}
 
 
@@ -607,7 +510,7 @@ class Taxonomy {
 	 */
 	protected function register(): void {
 		$this->register_taxonomy();
-		static::$registry[ $this->taxonomy ] = $this;
+		static::$registry[ $this->name ] = $this;
 		if ( \count( $this->initial_terms ) > 0 ) {
 			$this->insert_initial_terms();
 		}
@@ -622,16 +525,12 @@ class Taxonomy {
 	 *
 	 * @return void
 	 */
-	public function set_label( string $singular = '', string $plural = '' ): void {
+	public function set_labels( string $singular = '', string $plural = '' ): void {
 		if ( '' === $singular ) {
-			$singular = \ucwords( \str_replace( '_', ' ', $this->taxonomy ) );
+			$singular = \ucwords( \str_replace( [ '-', '_' ], ' ', $this->name ) );
 		}
 		if ( '' === $plural ) {
-			if ( \str_ends_with( $singular, 'y' ) ) {
-				$plural = \substr( $singular, 0, - 1 ) . 'ies';
-			} else {
-				$plural = $singular . 's';
-			}
+			$plural = Strings::in()->pluralize( $singular );
 		}
 
 		$this->labels->singular_name( $singular );
@@ -656,10 +555,10 @@ class Taxonomy {
 		}
 		add_action( 'admin_bar_menu', function( \WP_Admin_Bar $wp_admin_bar ) {
 			$wp_admin_bar->add_menu( [
-				'id'     => 'new-' . $this->taxonomy,
+				'id'     => 'new-' . $this->name,
 				'title'  => $this->labels->get_label( 'singular_name' ) ?? '',
 				'parent' => 'new-content',
-				'href'   => admin_url( 'edit-tags.php?taxonomy=' . $this->taxonomy ),
+				'href'   => admin_url( 'edit-tags.php?taxonomy=' . $this->name ),
 			] );
 		}, 100 );
 	}
@@ -687,10 +586,10 @@ class Taxonomy {
 	protected function insert_initial_terms(): void {
 		$already_defaulted = get_option( 'lipe/lib/taxonomy/defaults-registry', [] );
 
-		if ( ! isset( $already_defaulted[ $this->slug ] ) ) {
+		if ( ! isset( $already_defaulted[ $this->name ] ) ) {
 			// Don't do anything if the taxonomy already has terms.
 			$existing = get_terms( [
-				'taxonomy' => $this->taxonomy,
+				'taxonomy' => $this->name,
 				'fields'   => 'count',
 			] );
 			if ( \is_numeric( $existing ) && 0 === (int) $existing ) {
@@ -699,10 +598,10 @@ class Taxonomy {
 					if ( ! \is_numeric( $slug ) ) {
 						$args['slug'] = $slug;
 					}
-					wp_insert_term( $term, $this->taxonomy, $args );
+					wp_insert_term( $term, $this->name, $args );
 				}
 			}
-			$already_defaulted[ $this->slug ] = 1;
+			$already_defaulted[ $this->name ] = 1;
 			update_option( 'lipe/lib/taxonomy/defaults-registry', $already_defaulted, true );
 		}
 	}
@@ -715,7 +614,7 @@ class Taxonomy {
 	 * child classes.
 	 */
 	protected function register_taxonomy(): void {
-		register_taxonomy( $this->taxonomy, $this->post_types, $this->taxonomy_args() );
+		register_taxonomy( $this->name, $this->post_types, $this->taxonomy_args() );
 	}
 
 
@@ -737,15 +636,6 @@ class Taxonomy {
 		$args->description = $this->description;
 		$args->hierarchical = $this->hierarchical;
 
-		if ( isset( $this->rest_base ) ) {
-			$args->rest_base = $this->rest_base;
-		}
-		if ( isset( $this->rest_namespace ) ) {
-			$args->rest_namespace = $this->rest_namespace;
-		}
-		if ( isset( $this->rest_controller_class ) ) {
-			$args->rest_controller_class = $this->rest_controller_class;
-		}
 		if ( isset( $this->show_tagcloud ) ) {
 			$args->show_tagcloud = $this->show_tagcloud;
 		}
@@ -761,12 +651,9 @@ class Taxonomy {
 		if ( isset( $this->query_var ) ) {
 			$args->query_var = $this->query_var;
 		}
-		if ( isset( $this->default_term ) ) {
-			$args->default_term = $this->default_term;
-		}
 
-		$args = apply_filters( 'lipe/lib/taxonomy/args', $args->get_args(), $this->taxonomy );
-		return apply_filters( "lipe/lib/taxonomy/args_{$this->taxonomy}", $args );
+		$args = apply_filters( 'lipe/lib/taxonomy/args', $args->get_args(), $this->name );
+		return apply_filters( "lipe/lib/taxonomy/args_{$this->name}", $args );
 	}
 
 
@@ -783,37 +670,35 @@ class Taxonomy {
 		$plural = (string) ( $plural ?? $this->labels->get_label( 'name' ) );
 		$menu = $this->labels->get_label( 'menu_name' ) ?? $this->labels->get_label( 'name' );
 
-		// phpcs:disable WordPress.WP.I18n -- Allow core translations to work.
 		$labels = [
 			'name'                       => $plural,
 			'singular_name'              => $single,
-			'search_items'               => sprintf( __( 'Search %s' ), $plural ),
-			'popular_items'              => sprintf( __( 'Popular %s' ), $plural ),
-			'all_items'                  => sprintf( __( 'All %s' ), $plural ),
-			'parent_item'                => sprintf( __( 'Parent %s' ), $single ),
-			'parent_item_colon'          => sprintf( __( 'Parent %s:' ), $single ),
-			'edit_item'                  => sprintf( __( 'Edit %s' ), $single ),
-			'view_item'                  => sprintf( __( 'View %s' ), $single ),
-			'update_item'                => sprintf( __( 'Update %s' ), $single ),
-			'add_new_item'               => sprintf( __( 'Add New %s' ), $single ),
-			'new_item_name'              => sprintf( __( 'New %s Name' ), $single ),
-			'separate_items_with_commas' => sprintf( __( 'Separate %s with commas' ), $plural ),
-			'add_or_remove_items'        => sprintf( __( 'Add or remove %s' ), $plural ),
-			'choose_from_most_used'      => sprintf( __( 'Choose from the most used %s' ), $plural ),
-			'not_found'                  => sprintf( __( 'No %s found' ), $plural ),
-			'no_terms'                   => sprintf( __( 'No %s' ), $plural ),
-			'no_item'                    => sprintf( __( 'No %s' ), \strtolower( $plural ) ), // For extended taxos.
-			'items_list_navigation'      => sprintf( __( '%s list navigation' ), $plural ),
-			'items_list'                 => sprintf( __( '%s list' ), $plural ),
+			'search_items'               => \sprintf( __( 'Search %s' ), $plural ),
+			'popular_items'              => \sprintf( __( 'Popular %s' ), $plural ),
+			'all_items'                  => \sprintf( __( 'All %s' ), $plural ),
+			'parent_item'                => \sprintf( __( 'Parent %s' ), $single ),
+			'parent_item_colon'          => \sprintf( __( 'Parent %s:' ), $single ),
+			'edit_item'                  => \sprintf( __( 'Edit %s' ), $single ),
+			'view_item'                  => \sprintf( __( 'View %s' ), $single ),
+			'update_item'                => \sprintf( __( 'Update %s' ), $single ),
+			'add_new_item'               => \sprintf( __( 'Add New %s' ), $single ),
+			'new_item_name'              => \sprintf( __( 'New %s Name' ), $single ),
+			'separate_items_with_commas' => \sprintf( __( 'Separate %s with commas' ), $plural ),
+			'add_or_remove_items'        => \sprintf( __( 'Add or remove %s' ), $plural ),
+			'choose_from_most_used'      => \sprintf( __( 'Choose from the most used %s' ), $plural ),
+			'not_found'                  => \sprintf( __( 'No %s found' ), $plural ),
+			'no_terms'                   => \sprintf( __( 'No %s' ), $plural ),
+			'no_item'                    => \sprintf( __( 'No %s' ), \strtolower( $plural ) ), // For extended taxos.
+			'items_list_navigation'      => \sprintf( __( '%s list navigation' ), $plural ),
+			'items_list'                 => \sprintf( __( '%s list' ), $plural ),
 			'most_used'                  => __( 'Most Used' ),
-			'back_to_items'              => sprintf( __( '&larr; Back to %s' ), $plural ),
+			'back_to_items'              => \sprintf( __( '&larr; Back to %s' ), $plural ),
 			'menu_name'                  => $menu,
 		];
-		// phpcs:enable WordPress.WP.I18n
 		$labels = wp_parse_args( $this->labels->get_labels(), $labels );
 
-		$labels = apply_filters( 'lipe/lib/taxonomy/labels', $labels, $this->taxonomy );
-		return apply_filters( "lipe/lib/taxonomy/labels_{$this->taxonomy}", $labels );
+		$labels = apply_filters( 'lipe/lib/taxonomy/labels', $labels, $this->name );
+		return apply_filters( "lipe/lib/taxonomy/labels_{$this->name}", $labels );
 	}
 
 
@@ -825,7 +710,7 @@ class Taxonomy {
 	 */
 	protected function rewrites(): array|bool {
 		return $this->rewrite ?? [
-			'slug'         => $this->slug,
+			'slug'         => sanitize_title_with_dashes( $this->name ),
 			'with_front'   => false,
 			'hierarchical' => $this->hierarchical,
 		];
@@ -840,9 +725,9 @@ class Taxonomy {
 	 */
 	protected function check_rewrite_rules(): void {
 		$slugs = \array_keys( static::$registry );
-		if ( get_option( static::REGISTRY_OPTION ) !== $slugs ) {
+		if ( get_option( self::REGISTRY_OPTION ) !== $slugs ) {
 			flush_rewrite_rules();
-			update_option( static::REGISTRY_OPTION, $slugs );
+			update_option( self::REGISTRY_OPTION, $slugs );
 		}
 	}
 

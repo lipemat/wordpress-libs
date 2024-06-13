@@ -18,12 +18,12 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 			'show_in_rest' => false,
 		] );
 		$tax = new Taxonomy( 'test', [ $post_type->name ] );
-		$tax->set_label( 'Tag', 'Tags' );
+		$tax->set_labels( 'Tag', 'Tags' );
 		$tax->capabilities()->assign_terms( 'exist' );
 		$tax->add_initial_terms( [ 'one', 'two' ] );
 		do_action( 'wp_loaded' );
 
-		$post = $this->setup_check_default_meta_box( get_taxonomy( $tax->slug ), $post_type->name );
+		$post = $this->setup_check_default_meta_box( get_taxonomy( $tax->name ), $post_type->name );
 
 		new Meta_Box( 'test', Meta_Box::TYPE_RADIO, true );
 		register_and_do_post_meta_boxes( $post );
