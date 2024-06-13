@@ -33,6 +33,7 @@ class Register_Post_Type implements Args_Interface {
 	public const TEMPLATE_LOCK_FALSE   = false;
 
 	public const SUPPORTS_AUTHOR          = 'author';
+	public const SUPPORTS_AUTOSAVE        = 'autosave';
 	public const SUPPORTS_COMMENTS        = 'comments';
 	public const SUPPORTS_CUSTOM_FIELDS   = 'custom-fields';
 	public const SUPPORTS_EDITOR          = 'editor';
