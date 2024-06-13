@@ -170,72 +170,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/CMB2/Event_Callbacks.php',
 ];
 $ignoreErrors[] = [
-	// identifier: empty.notAllowed
-	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/../src/CMB2/Field.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:attributes\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Field.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:char_counter\\(\\) has parameter \\$labels with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Field.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:get_field_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Field.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:query_args\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Field.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:\\$attributes type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Field.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:\\$column type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Field.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:\\$date_picker_options type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Field.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:\\$default type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Field.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:\\$query_args type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Field.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:\\$text type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Field.php',
-];
-$ignoreErrors[] = [
 	// identifier: lipemat.declareStrictTypes
 	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
 	'count' => 1,
@@ -370,7 +304,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
-	'count' => 6,
+	'count' => 3,
 	'path' => __DIR__ . '/../src/CMB2/Field_Type.php',
 ];
 $ignoreErrors[] = [
@@ -380,14 +314,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/CMB2/Field_Type.php',
 ];
 $ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Field_Type\\:\\:field_type_date\\(\\) has parameter \\$date_picker_options with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Field_Type.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Field_Type\\:\\:field_type_date\\(\\) return type has no value type specified in iterable type array\\.$#',
+	// identifier: return.type
+	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Field_Type\\:\\:field_type_date\\(\\) should return array\\<string, string\\> but returns array\\<string, array\\<string, bool\\|string\\>\\|string\\>\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/CMB2/Field_Type.php',
 ];
@@ -465,13 +393,31 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
+	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Field_Type\\:\\:text_date_timestamp\\(\\) has parameter \\$time_picker_options with no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/CMB2/Field_Type.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Field_Type\\:\\:text_datetime_timestamp\\(\\) has parameter \\$date_picker_options with no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/CMB2/Field_Type.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
+	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Field_Type\\:\\:text_datetime_timestamp\\(\\) has parameter \\$time_picker_options with no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/CMB2/Field_Type.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Field_Type\\:\\:text_datetime_timestamp_timezone\\(\\) has parameter \\$date_picker_options with no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/CMB2/Field_Type.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.iterableValue
+	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Field_Type\\:\\:text_datetime_timestamp_timezone\\(\\) has parameter \\$time_picker_options with no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/CMB2/Field_Type.php',
 ];
@@ -494,26 +440,26 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/CMB2/Field_Type.php',
 ];
 $ignoreErrors[] = [
+	// identifier: argument.type
+	'message' => '#^Parameter \\#1 \\$attributes of method Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:attributes\\(\\) expects array\\<string, string\\>, array\\<string, float\\|string\\> given\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/CMB2/Field_Type.php',
+];
+$ignoreErrors[] = [
+	// identifier: argument.type
+	'message' => '#^Parameter \\#1 \\$attributes of method Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:attributes\\(\\) expects array\\<string, string\\>, array\\<string, int\\> given\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/CMB2/Field_Type.php',
+];
+$ignoreErrors[] = [
+	// identifier: argument.type
+	'message' => '#^Parameter \\#1 \\$attributes of method Lipe\\\\Lib\\\\CMB2\\\\Field\\:\\:attributes\\(\\) expects array\\<string, string\\>, array\\<string, string\\|false\\> given\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/../src/CMB2/Field_Type.php',
+];
+$ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/../src/CMB2/Group.php',
-];
-$ignoreErrors[] = [
-	// identifier: lipemat.declareStrictTypes
-	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Group.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Group\\:\\:get_field_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Group.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Group\\:\\:get_object_types\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/CMB2/Group.php',
 ];
@@ -528,54 +474,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Group\\:\\:translate_rest_keys\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/CMB2/Group.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Group\\:\\:translate_sub_field_rest_keys\\(\\) has parameter \\$group_values with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Group.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Group\\:\\:translate_sub_field_rest_keys\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Group.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Group\\:\\:untranslate_sub_field_rest_keys\\(\\) has parameter \\$group_values with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Group.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Group\\:\\:untranslate_sub_field_rest_keys\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Group.php',
-];
-$ignoreErrors[] = [
-	// identifier: empty.notAllowed
-	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/../src/CMB2/Group/Layout.php',
-];
-$ignoreErrors[] = [
-	// identifier: lipemat.declareStrictTypes
-	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Group/Layout.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Group\\\\Layout\\:\\:render_field\\(\\) has parameter \\$field_args with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Group/Layout.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\CMB2\\\\Group\\\\Layout\\:\\:render_group_callback\\(\\) has parameter \\$field_args with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/CMB2/Group/Layout.php',
 ];
 $ignoreErrors[] = [
 	// identifier: lipemat.declareStrictTypes

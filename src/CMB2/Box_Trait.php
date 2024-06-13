@@ -79,23 +79,17 @@ trait Box_Trait {
 	 *
 	 * @example $group = $box->group( $id, $name );
 	 *
-	 * @param string      $id                 - Group ID.
-	 * @param string|null $title              - Group title.
-	 * @param string|null $group_title        - include a {#} to have replaced with number.
-	 * @param string|null $add_button_text    - Text for the "Add" button.
-	 * @param string|null $remove_button_text - Text for the "Remove" button.
-	 * @param bool        $sortable           - Whether the group is sortable.
-	 * @param bool        $closed             - Whether the group is closed by default.
-	 * @param string|null $remove_confirm     - A message to display when a user attempts
-	 *                                        to delete a group.
-	 *                                        (Defaults to null/false for no confirmation).
+	 * @param string  $id          - Group ID.
+	 * @param string  $title       - Group title.
+	 * @param ?string $group_title - include a {#} to have replaced with number.
 	 *
 	 * @return Group
 	 */
-	public function group( string $id, ?string $title = null, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, ?bool $sortable = null, bool $closed = false, ?string $remove_confirm = null ): Group {
-		$this->hook();
-		$group = new Group( $id, $title, $this, $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
+	public function group( string $id, string $title, ?string $group_title = null ): Group {
+		$group = new Group( $id, $title, $this, $group_title );
 		$this->fields[ $id ] = $group;
+
+		$this->hook();
 		return $group;
 	}
 

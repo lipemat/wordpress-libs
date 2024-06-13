@@ -1,11 +1,13 @@
 <?php
-
+/** @noinspection ClassMethodNameMatchesFieldNameInspection */
 declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
 use Lipe\Lib\Meta\Repo;
+use Lipe\Lib\Query\Get_Posts;
+use Lipe\Lib\Taxonomy\Get_Terms;
 use Lipe\Lib\Util\Arrays;
 
 /**
@@ -63,7 +65,7 @@ class Field {
 	 *
 	 * @internal
 	 *
-	 * @var     array
+	 * @var     array<string, string>
 	 */
 	public array $attributes = [];
 
@@ -188,7 +190,7 @@ class Field {
 	public $after_display_wrap;
 
 	/**
-	 * Used in conjunction with `char_counter` to count character/words remaining.
+	 * Used with `char_counter` to count character/words remaining.
 	 *
 	 * @var int
 	 */
@@ -210,24 +212,20 @@ class Field {
 	 * @example 'additional-class'
 	 * @example array( 'additional-class', 'another-class' ),
 	 *
-	 * @var mixed
+	 * @var array<string>|string
 	 */
-	public $classes;
+	public array|string $classes;
 
 	/**
-	 * Set to true to display a object list column.
-	 * Use this classes method for more refined control.
-	 * Columns work for post (all post-types), comment, user, and term object types.
+	 * Columns work for post (all post-types), comment, user and term object types.
 	 *
 	 * @see  Field::column
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#column
 	 *
-	 * @internal
-	 *
-	 * @var array|bool
+	 * @var array{disable_sortable: bool, name: string, position: int|bool}|bool
 	 */
-	public $column;
+	protected array|bool $column;
 
 	/**
 	 * Like the classes property, allows adding classes to the CMB2 wrapper,
@@ -256,24 +254,15 @@ class Field {
 	public string $date_format;
 
 	/**
-	 * Options to pass to the a datepicker field.
-	 *
-	 * @see Field_Type::field_type_date()
-	 *
-	 * @var array
-	 */
-	public array $date_picker_options;
-
-	/**
 	 * Specify a default value for the field.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#default
 	 *
 	 * @internal
 	 *
-	 * @var string|array
+	 * @var string|array<mixed>
 	 */
-	public $default;
+	public string|array $default;
 
 	/**
 	 * To be used with $this->column or $this->column().
@@ -338,7 +327,7 @@ class Field {
 	 * For fields that take an options array.
 	 *
 	 * These include select, radio, multicheck, wysiwyg and group.
-	 * Should be a an array where the keys are the option value,
+	 * Should be an array where the keys are the option value,
 	 * and the values are the option text.
 	 *
 	 * If you are doing any kind of database querying or logic/conditional checking,
@@ -346,9 +335,9 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#options
 	 *
-	 * @var  array<string, string|bool|null>
+	 * @var  array<string, string|bool>
 	 */
-	public array $options;
+	public array $options = [];
 
 	/**
 	 * A callback to provide field options.
@@ -356,7 +345,7 @@ class Field {
 	 * The callback function gets passed the $field object.
 	 * It is recommended to use this parameter over the options parameter
 	 * if you are doing anything complex to generate your options array,
-	 * as the '*_cb' parameters are run at the moment the field is generated,
+	 * as the '*_cb' parameters are run when the field is generated,
 	 * instead of on every page load (admin or otherwise).
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#options_cb
@@ -476,8 +465,8 @@ class Field {
 	 * Whether to show labels for the fields
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_names
-	 * @default true
-	 * @example false
+	 *
+	 * Default  true
 	 *
 	 * @var bool
 	 */
@@ -528,17 +517,15 @@ class Field {
 	public $show_option_none;
 
 	/**
-	 * Id of boxes tab, which this field should display in.
+	 * ID of boxes tab, which this field should display in.
 	 * The tab must be first registered with the box.
 	 *
-	 * @see Field::tab;
+	 * @see Field::tab
 	 * @see Box::add_tab
-	 *
-	 * @interal
 	 *
 	 * @var string
 	 */
-	public string $tab;
+	protected string $tab;
 
 	/**
 	 * Used for date/timestamp fields.
@@ -581,7 +568,7 @@ class Field {
 	public string $taxonomy;
 
 	/**
-	 * Used to configure some strings for thinks like taxonomy and repeater fields
+	 * Used to configure some strings for thinks like taxonomy and repeater fields.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#repeatable
@@ -591,7 +578,9 @@ class Field {
 	 *          'no_terms_text' => 'Sorry, no terms could be found.'
 	 * )
 	 *
-	 * @var  array
+	 * @interal
+	 *
+	 * @var  array<string, string>
 	 */
 	public array $text = [];
 
@@ -603,9 +592,9 @@ class Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
 	 *
-	 * @internal
+	 * @interal
 	 *
-	 * @var  array
+	 * @var  array<string, mixed>
 	 */
 	public array $query_args;
 
@@ -684,27 +673,6 @@ class Field {
 	public string|bool $rest_group_short;
 
 	/**
-	 * The data key. If using for posts, will be the post-meta key.
-	 * If using for an option's page, will be the array key.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#id
-	 *
-	 * @example 'namespace_first_name',
-	 *
-	 * @var string
-	 */
-	protected string $id = '';
-
-	/**
-	 * The field label
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#name
-	 *
-	 * @var ?string
-	 */
-	protected ?string $name = null;
-
-	/**
 	 * The type of field
 	 * Calling Field::type() will return the Field_Type object, which
 	 * will auto complete any type.
@@ -722,8 +690,6 @@ class Field {
 	/**
 	 * Enable a character/word counter for a 'textarea', 'wysiwyg', or 'text' type field.
 	 *
-	 * @internal
-	 *
 	 * @phpstan-var true|'words'
 	 *
 	 * @var bool|string
@@ -734,8 +700,6 @@ class Field {
 	 * Specify a callback to retrieve default value for the field.
 	 *
 	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#default_cb
-	 *
-	 * @internal
 	 *
 	 * @notice Not currently support for retrieval of group sub-fields but
 	 *         works to populate defaults in the admin.
@@ -748,8 +712,6 @@ class Field {
 	 * Field description. Usually under or adjacent to the field input.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#desc
-	 *
-	 * @internal
 	 *
 	 * @var string
 	 */
@@ -782,8 +744,6 @@ class Field {
 	 *
 	 * @example 'intval'
 	 *
-	 * @internal
-	 *
 	 * @var callable
 	 */
 	protected $rest_value_cb;
@@ -813,18 +773,7 @@ class Field {
 	protected $tab_content_cb;
 
 	/**
-	 * Parent class calling this Field.
-	 * For any conditional logic where we need to know
-	 * which class is currently using this.
-	 *
-	 * @var Box|Group|null
-	 */
-	protected $box;
-
-	/**
 	 * Callback Event handlers registered with this field.
-	 *
-	 * @internal
 	 *
 	 * @var Event_Callbacks[]
 	 */
@@ -838,14 +787,15 @@ class Field {
 	 *
 	 * @see Field_Type
 	 *
-	 * @param string         $id   - ID of the field.
-	 * @param string|null    $name - Name of the field.
-	 * @param Box|Group|null $box  - Parent class using this Field.
+	 * @param string    $id   - ID of the field.
+	 * @param string    $name - Field label.
+	 * @param Box|Group $box  - Parent class using this Field.
 	 */
-	public function __construct( string $id, ?string $name, $box ) {
-		$this->id = $id;
-		$this->name = $name;
-		$this->box = $box;
+	public function __construct(
+		protected readonly string $id,
+		protected readonly string $name,
+		protected readonly Box|Group $box
+	) {
 	}
 
 
@@ -874,7 +824,7 @@ class Field {
 	 * @return string
 	 */
 	public function get_name(): string {
-		return (string) $this->name;
+		return $this->name;
 	}
 
 
@@ -907,20 +857,27 @@ class Field {
 	/**
 	 * Enable a character/word counter for a 'textarea', 'wysiwyg', or 'text' type field.
 	 *
-	 * @param bool     $count_words - Count words instead of characters.
-	 * @param int|null $max         - Show remaining character/words based on provided limit.
-	 * @param bool     $enforce     - Enforce max length using `maxlength` attribute when
-	 *                              characters are counted.
-	 * @param array    $labels      - Override the default text strings associated with these
-	 *                              parameters {
-	 *                              'words_left_text' - Default: "Words left"
-	 *                              'words_text' - Default: "Words"
-	 *                              'characters_left_text' - Default: "Characters left"
-	 *                              'characters_text' - Default: "Characters"
-	 *                              'characters_truncated_text' - Default: "Your text may be truncated."
-	 *                              }.
-	 *
 	 * @notice Does not work with repeatable wysiwyg.
+	 *
+	 * @phpstan-param array{
+	 *     words_left_text?: string,
+	 *     words_text?: string,
+	 *     characters_left_text?: string,
+	 *     characters_text?: string,
+	 *     characters_truncated_text?: string
+	 * }            $labels
+	 *
+	 *
+	 * @param bool  $count_words   - Count words instead of characters.
+	 * @param ?int  $max           - Show remaining character/words based on provided limit.
+	 * @param bool  $enforce       - Enforce max length using `maxlength` attribute when
+	 *                             characters are counted.
+	 * @param array $labels        - Override the default text strings associated with these.
+	 *                             'words_left_text' - Default: "Words left"
+	 *                             'words_text' - Default: "Words"
+	 *                             'characters_left_text' - Default: "Characters left"
+	 *                             'characters_text' - Default: "Characters"
+	 *                             'characters_truncated_text' - Default: "Your text may be truncated.".
 	 *
 	 * @return Field
 	 */
@@ -937,7 +894,7 @@ class Field {
 			}
 		}
 
-		if ( ! empty( $labels ) ) {
+		if ( [] !== $labels ) {
 			$this->text = \array_merge( $this->text, \array_intersect_key( $labels, \array_flip( [
 				'words_left_text',
 				'words_text',
@@ -955,21 +912,21 @@ class Field {
 	 * Add this field as a post list column on the attached
 	 * posts, comments, users, terms.
 	 *
-	 * @param int|null|false $position        - The column position.
-	 * @param string|null    $name            - defaults to field name.
-	 * @param callable|null  $display_cb      - optional display callback.
-	 * @param bool|null      $disable_sorting - Set to true to prevent this column from being
+	 * @param bool|int      $position         - The column position.
+	 * @param string        $name             - defaults to field name.
+	 * @param callable|null $display_cb       - optional display callback.
+	 * @param bool          $disable_sorting  - Set to true to prevent this column from being
 	 *                                        sortable in post list.
 	 *
 	 * @return Field
 	 */
-	public function column( $position = null, ?string $name = null, ?callable $display_cb = null, ?bool $disable_sorting = null ): Field {
+	public function column( bool|int $position = false, string $name = '', ?callable $display_cb = null, bool $disable_sorting = false ): Field {
 		$this->column = [
-			'disable_sortable' => $disable_sorting ?? false,
-			'name'             => $name ?? $this->name,
-			'position'         => $position ?? false,
+			'disable_sortable' => $disable_sorting,
+			'name'             => '' === $name ? $this->name : $name,
+			'position'         => $position,
 		];
-		if ( null === $position && null === $name && null === $disable_sorting ) {
+		if ( false === $position && '' === $name && false === $disable_sorting ) {
 			$this->column = true;
 		}
 		if ( null !== $display_cb ) {
@@ -981,8 +938,8 @@ class Field {
 
 
 	/**
-	 * Will modify default attributes (class, input type, rows, etc),
-	 * or add your own (placeholder, data attributes)
+	 * Will modify default attributes (class, input type, rows, etc.),
+	 * or add your own (placeholder, data attributes).
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#attributes
 	 *
@@ -994,7 +951,7 @@ class Field {
 	 * 'min'  => '101',
 	 *          ]
 	 *
-	 * @param array $attributes - An array of attributes to add or modify.
+	 * @param array<string, string> $attributes - An array of attributes to add or modify.
 	 *
 	 * @return Field
 	 */
@@ -1020,14 +977,11 @@ class Field {
 	 * @notice  A callback is not currently supported for retrieval of a group
 	 *          sub-field, but works in the admin to populate fields.
 	 *
-	 * @param string|callable $default_value - A default value, or a function which will return a value.
+	 * @param callable|string|array<mixed> $default_value - A default value, or a function which will return a value.
 	 *
 	 * @return Field
 	 */
-	public function default( $default_value ): Field {
-		if ( null === $this->box ) {
-			return $this;
-		}
+	public function default( callable|string|array $default_value ): Field {
 		if ( \is_callable( $default_value ) ) {
 			$this->default_cb = $default_value;
 			if ( 'options-page' === $this->box->get_object_type() ) {
@@ -1102,8 +1056,8 @@ class Field {
 	/**
 	 * Supported by most field types, and will make the individual field a repeatable one.
 	 *
-	 * @param bool        $repeatable   - Whether the field should be repeatable.
-	 * @param string|null $add_row_text - Optional text to display on the 'Add' button.
+	 * @param bool    $repeatable   - Whether the field should be repeatable.
+	 * @param ?string $add_row_text - Optional text to display on the 'Add' button.
 	 *
 	 * @throws \LogicException - If trying to repeat an unsupported field type.
 	 *
@@ -1114,9 +1068,11 @@ class Field {
 			/* translators: {field type} */
 			throw new \LogicException( \sprintf( esc_html__( 'Fields of `%s` type do not support repeating.', 'lipe' ), esc_html( $this->get_type() ) ) );
 		}
-		$this->repeatable = $repeatable;
-		$this->text['add_row_text'] = $add_row_text;
 
+		$this->repeatable = $repeatable;
+		if ( null !== $add_row_text ) {
+			$this->text['add_row_text'] = $add_row_text;
+		}
 		return $this;
 	}
 
@@ -1260,7 +1216,7 @@ class Field {
 	 * @return Field
 	 */
 	public function show_in_rest( $methods = \WP_REST_Server::ALLMETHODS ): Field {
-		if ( null !== $this->box && $this->box->is_group() ) {
+		if ( $this->box->is_group() ) {
 			_doing_it_wrong( __METHOD__, wp_kses_post( "Show in rest may only be added to whole group. Not a group's field. `{$this->get_id()}` is not applicable." ), '2.19.0' );
 		}
 		$this->show_in_rest = $methods;
@@ -1279,8 +1235,8 @@ class Field {
 	 *
 	 * @return Field
 	 */
-	public function rest_group_short( $short = true ): Field {
-		if ( null !== $this->box && ! $this->box->is_group() ) {
+	public function rest_group_short( bool|string $short = true ): Field {
+		if ( ! $this->box->is_group() ) {
 			_doing_it_wrong( __METHOD__, wp_kses_post( "Group short fields only apply to a group's child field. `{$this->get_id()}` is not applicable." ), '4.10.0' );
 		}
 		$this->rest_group_short = $short;
@@ -1333,20 +1289,41 @@ class Field {
 
 
 	/**
-	 * Field parameter, which can be used by the 'taxonomy_*', and the 'file_*' field types.
-	 * For the 'taxonomy_*' types, provides ability
-	 * to override the arguments passed to get_terms(), and for the 'file_*' field types,
+	 * Field parameter, which can be used by the  'file_*' field types.
 	 * allows overriding the media library query arguments.
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
 	 *
-	 * @param array $args - The arguments to pass to get_terms() or the media library query.
+	 * @param Get_Posts $args - The arguments to pass to get_posts().
 	 *
-	 * @return $this
+	 * @return Field
 	 */
-	public function query_args( array $args ): Field {
-		$this->query_args = $args;
+	public function file_query_args( Get_Posts $args ): Field {
+		if ( Repo::TYPE_FILE !== $this->data_type ) {
+			_doing_it_wrong( __METHOD__, 'File query args are only supported for file fields.', '5.0.0' );
+		}
 
+		$this->query_args = $args->get_args();
+		return $this;
+	}
+
+
+	/**
+	 * Field parameter, which can be used by the  'taxonomy_*' field types.
+	 * allows overriding the media library query arguments.
+	 *
+	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
+	 *
+	 * @param Get_Terms $args - The arguments to pass to get_terms().
+	 *
+	 * @return Field
+	 */
+	public function term_query_args( Get_Terms $args ): Field {
+		if ( ! \in_array( $this->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) ) {
+			_doing_it_wrong( __METHOD__, 'Term query args are only supported for taxonomy fields.', '5.0.0' );
+		}
+
+		$this->query_args = $args->get_args();
 		return $this;
 	}
 
@@ -1557,9 +1534,6 @@ class Field {
 	 * @return Field
 	 */
 	public function sanitization_cb( callable $callback ): Field {
-		if ( null === $this->box ) {
-			return $this;
-		}
 		if ( [ 'options-page' ] !== $this->box->get_object_types() && $this->box->is_allowed_to_register_meta( $this ) ) {
 			$this->sanitize_callback = $callback;
 		} else {
@@ -1583,13 +1557,13 @@ class Field {
 	 * @internal
 	 *
 	 * @param mixed      $value     - Empty, or a value set by another filter.
-	 * @param string|int $object_id - Current post/term/user id.
+	 * @param int|string $object_id - Current post/term/user id.
 	 * @param string     $meta_key  - Meta key being filtered.
 	 *
 	 * @return mixed
 	 */
-	public function default_meta_callback( $value, $object_id, string $meta_key ) {
-		if ( null === $this->box || $this->get_id() !== $meta_key ) {
+	public function default_meta_callback( mixed $value, int|string $object_id, string $meta_key ): mixed {
+		if ( $this->get_id() !== $meta_key ) {
 			return $value;
 		}
 
@@ -1644,9 +1618,6 @@ class Field {
 	 * @return ?\CMB2_Field
 	 */
 	public function get_cmb2_field( int|string $object_id = 0 ): ?\CMB2_Field {
-		if ( null === $this->box ) {
-			return null;
-		}
 		return cmb2_get_field( $this->box->get_id(), $this->get_id(), $object_id );
 	}
 
@@ -1659,10 +1630,10 @@ class Field {
 	 *
 	 * @throws \LogicException - If a field has not been specified.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function get_field_args(): array {
-		if ( empty( $this->type ) ) {
+		if ( ! isset( $this->type ) ) {
 			throw new \LogicException( esc_html__( 'You must specify a field type (use $field->type() ).', 'lipe' ) );
 		}
 		$args = [];

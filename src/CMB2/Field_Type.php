@@ -403,7 +403,7 @@ class Field_Type {
 	 *
 	 * @return Field
 	 */
-	public function text_date( $date_format = 'm/d/Y', $timezone_meta_key = '', $date_picker_options = [] ): Field {
+	public function text_date( string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [] ): Field {
 		return $this->set( $this->field_type_date( 'text_date', $date_format, $timezone_meta_key, $date_picker_options ), Repo::TYPE_DEFAULT );
 	}
 
@@ -417,11 +417,12 @@ class Field_Type {
 	 * @param string $timezone_meta_key   - To use the value of another timezone_select field
 	 *                                    as the timezone.
 	 * @param array  $date_picker_options - Overrides for jQuery UI Datepicker (see text_date example).
+	 * @param array  $time_picker_options - Overrides for jQuery UI Timepicker.
 	 *
 	 * @return Field
 	 */
-	public function text_date_timestamp( $date_format = 'm/d/Y', $timezone_meta_key = '', array $date_picker_options = [] ): Field {
-		return $this->set( $this->field_type_date( 'text_date_timestamp', $date_format, $timezone_meta_key, $date_picker_options ), Repo::TYPE_DEFAULT );
+	public function text_date_timestamp( string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [], array $time_picker_options = [] ): Field {
+		return $this->set( $this->field_type_date( 'text_date_timestamp', $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), Repo::TYPE_DEFAULT );
 	}
 
 
@@ -434,11 +435,12 @@ class Field_Type {
 	 * @param string $timezone_meta_key   - To use the value of another timezone_select field
 	 *                                    as the timezone.
 	 * @param array  $date_picker_options - Overrides for jQuery UI Datepicker (see text_date example).
+	 * @param array  $time_picker_options - Overrides for jQuery UI Timepicker.
 	 *
 	 * @return Field
 	 */
-	public function text_datetime_timestamp( $date_format = 'm/d/Y', $timezone_meta_key = '', array $date_picker_options = [] ): Field {
-		return $this->set( $this->field_type_date( 'text_datetime_timestamp', $date_format, $timezone_meta_key, $date_picker_options ), Repo::TYPE_DEFAULT );
+	public function text_datetime_timestamp( string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [], $time_picker_options = [] ): Field {
+		return $this->set( $this->field_type_date( 'text_datetime_timestamp', $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), Repo::TYPE_DEFAULT );
 	}
 
 
@@ -451,11 +453,12 @@ class Field_Type {
 	 * @param string $timezone_meta_key   - To use the value of another timezone_select field
 	 *                                    as the timezone.
 	 * @param array  $date_picker_options - Overrides for jQuery UI Datepicker (see text_date example).
+	 * @param array  $time_picker_options - Overrides for jQuery UI Timepicker.
 	 *
 	 * @return Field
 	 */
-	public function text_datetime_timestamp_timezone( $date_format = 'm/d/Y', $timezone_meta_key = '', $date_picker_options = [] ): Field {
-		return $this->set( $this->field_type_date( 'text_datetime_timestamp_timezone', $date_format, $timezone_meta_key, $date_picker_options ), Repo::TYPE_DEFAULT );
+	public function text_datetime_timestamp_timezone( string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [], $time_picker_options = [] ): Field {
+		return $this->set( $this->field_type_date( 'text_datetime_timestamp_timezone', $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), Repo::TYPE_DEFAULT );
 	}
 
 
@@ -465,7 +468,7 @@ class Field_Type {
 	 * The CMB2 color picker uses the built-in WordPress color picker,
 	 * Iris [automattic.github.io/Iris/] (http://automattic.github.io/Iris/)
 	 *
-	 * All of the default options in Iris are configurable within the CMB2 color picker field.
+	 * All the default options in Iris are configurable within the CMB2 color picker field.
 	 *
 	 *
 	 * [Default Iris Options] (http://automattic.github.io/Iris/#options):
@@ -497,12 +500,12 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
 	 *
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
+	 * @param callable|array $options_or_callback - [ $key => $label ] || function().
 	 * @param bool           $select_all          - display select all button or not.
 	 *
 	 * @return Field
 	 */
-	public function multicheck( $options_or_callback, $select_all = true ): Field {
+	public function multicheck( callable|array $options_or_callback, bool $select_all = true ): Field {
 		$_args = $this->field_type_options( 'multicheck', $options_or_callback );
 		$_args['select_all_button'] = $select_all;
 
@@ -515,12 +518,12 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
 	 *
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
+	 * @param callable|array $options_or_callback - [ $key => $label ] || function().
 	 * @param bool           $select_all          - display select all button or not.
 	 *
 	 * @return Field
 	 */
-	public function multicheck_inline( $options_or_callback, $select_all = true ): Field {
+	public function multicheck_inline( callable|array $options_or_callback, bool $select_all = true ): Field {
 		$_args = $this->field_type_options( 'multicheck_inline', $options_or_callback );
 		$_args['select_all_button'] = $select_all;
 
@@ -838,40 +841,19 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 *
-	 * @param string|null $title                 - include a {#} to have replaced with number.
-	 * @param string|null $add_button_text       - defaults to 'Add Group'.
-	 * @param string|null $remove_button_text    - defaults to 'Remove Group'.
-	 * @param bool        $sortable              - Is this group sortable. (Defaults to value or repeatable property).
-	 * @param bool        $closed                - Is this group closed by default.
-	 * @param string|null $remove_confirm        - A message to display when a user attempts
-	 *                                           to delete a group.
-	 *                                           (Defaults to null/false for no confirmation).
+	 * @interal
+	 *
+	 * @param ?string $title - Include a {#} to have replaced with number.
 	 *
 	 * @return Field
 	 */
-	public function group( ?string $title = null, ?string $add_button_text = null, ?string $remove_button_text = null, ?bool $sortable = null, bool $closed = false, ?string $remove_confirm = null ): Field {
+	public function group( ?string $title = null ): Field {
 		$_args = [
-			'type'    => 'group',
-			'options' => [
-				'closed' => $closed,
-			],
+			'type' => 'group',
 		];
-
-		if ( \is_bool( $sortable ) ) {
-			$_args['options']['sortable'] = $sortable;
-		}
 
 		if ( null !== $title ) {
 			$_args['options']['group_title'] = $title;
-		}
-		if ( null !== $add_button_text ) {
-			$_args['options']['add_button'] = $add_button_text;
-		}
-		if ( null !== $remove_button_text ) {
-			$_args['options']['remove_button'] = $remove_button_text;
-		}
-		if ( ! empty( $remove_confirm ) ) {
-			$_args['options']['remove_confirm'] = $remove_confirm;
 		}
 
 		return $this->set( $_args, Repo::TYPE_GROUP );
@@ -939,7 +921,7 @@ class Field_Type {
 	/**
 	 * A field for selecting a taxonomy.
 	 *
-	 * @param string $type           - Type of field.
+	 * @param string $type           - The type of field.
 	 * @param string $taxonomy       - slug.
 	 * @param string $no_terms_text  - text to display when no terms are found.
 	 * @param bool   $remove_default - remove default WP terms metabox.
@@ -965,13 +947,13 @@ class Field_Type {
 	/**
 	 * A field for selecting for provided options.
 	 *
-	 * @param string         $type                - Type of field.
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
-	 * @param bool|string    $show_option_none    - Label of no option selected option. Defaults to not shown.
+	 * @param string           $type                - The type of field.
+	 * @param callable|array   $options_or_callback - [ $key => $label ] || function().
+	 * @param bool|string|null $show_option_none    - Label of no option selected option. Defaults to not shown.
 	 *
 	 * @return array
 	 */
-	protected function field_type_options( string $type, $options_or_callback, $show_option_none = null ): array {
+	protected function field_type_options( string $type, callable|array $options_or_callback, bool|string|null $show_option_none = null ): array {
 		if ( \is_callable( $options_or_callback ) ) {
 			$_args = [
 				'type'       => $type,
@@ -994,24 +976,34 @@ class Field_Type {
 	/**
 	 * A field for selecting a date.
 	 *
-	 * @param string $type                - Type of field.
-	 * @param string $date_format         - PHP date format.
-	 * @param string $timezone_meta_key   - Meta key to retrieve timezone from.
-	 * @param array  $date_picker_options - Options to pass to datepicker.
+	 * @example https://github.com/CMB2/CMB2/wiki/Field-Types#additional-field-options
 	 *
-	 * @return array
+	 * @param string               $type                - The type of field.
+	 * @param string               $date_format         - PHP date format.
+	 * @param string               $timezone_meta_key   - Meta key to retrieve timezone from.
+	 * @param array<string, mixed> $date_picker_options - Options to pass to datepicker.
+	 * @param array<string, mixed> $time_picker_options - Options to pass to timepicker.
+	 *
+	 * @return array<string, string>
 	 */
-	protected function field_type_date( $type, $date_format = 'm/d/Y', $timezone_meta_key = '', $date_picker_options = [] ): array {
+	protected function field_type_date( string $type, string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [], array $time_picker_options = [] ): array {
 		$_args = [
 			'type'        => $type,
 			'date_format' => $date_format,
 		];
-		if ( ! empty( $timezone_meta_key ) ) {
+		if ( '' !== $timezone_meta_key ) {
 			$_args['timezone_meta_key'] = $timezone_meta_key;
 		}
 
-		if ( ! empty( $date_picker_options ) ) {
-			$_args['date_picker_options']['data-datepicker'] = wp_json_encode( $date_picker_options );
+		if ( [] !== $date_picker_options ) {
+			$_args['attributes'] = [
+				'data-datepicker' => wp_json_encode( $date_picker_options ),
+			];
+		}
+		if ( [] !== $time_picker_options ) {
+			$_args['attributes'] = [
+				'data-timepicker' => wp_json_encode( $time_picker_options ),
+			];
 		}
 
 		return $_args;

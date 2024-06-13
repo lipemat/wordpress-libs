@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
@@ -80,7 +81,7 @@ class Group extends Field {
 	 *
 	 * @var string
 	 */
-	protected $layout = 'block';
+	protected string $layout = 'block';
 
 
 	/**
@@ -89,22 +90,14 @@ class Group extends Field {
 	 * @link                     https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 * @internal
 	 *
-	 * @param string      $id                      - Field ID.
-	 * @param string|null $title                   - Group title.
-	 * @param Box         $box                     - Box object.
-	 * @param string|null $group_title             - include a {#} to have replaced with number.
-	 * @param string|null $add_button_text         - Defaults to 'Add Another'.
-	 * @param string|null $remove_button_text      - Defaults to 'Remove'.
-	 * @param bool        $sortable                - Whether the group is sortable.
-	 * @param bool        $closed                  - Whether the group is closed by default.
-	 * @param string|null $remove_confirm          - A message to display when a user attempts
-	 *                                             to delete a group.
-	 *                                             (Defaults to null/false for no confirmation).
+	 * @param string  $id        - Field ID.
+	 * @param string  $title     - Group title.
+	 * @param Box     $box       - Box object.
+	 * @param ?string $row_title - Include a {#} to have replaced with number.
 	 *
-	 * @phpstan-ignore-next-line -- Too many default arguments to account for.
 	 */
-	public function __construct( string $id, ?string $title, Box $box, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, ?bool $sortable = null, bool $closed = false, ?string $remove_confirm = null ) {
-		$this->type()->group( $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
+	public function __construct( string $id, string $title, Box $box, ?string $row_title ) {
+		$this->type()->group( $row_title );
 
 		parent::__construct( $id, $title, $box );
 	}
@@ -115,18 +108,18 @@ class Group extends Field {
 	 *
 	 * Options: block (default), row, table
 	 *
-	 * @phpstan-param 'block'|'row'|'table' $layout
+	 * @phpstan-param Layout::* $layout
 	 *
-	 * @param string                        $layout - Layout type.
+	 * @param string            $layout - Layout type.
 	 *
 	 * @return Group
 	 */
 	public function layout( string $layout ): Group {
-		if ( 'block' === $layout ) {
+		if ( Layout::BLOCK === $layout ) {
 			return $this;
 		}
 		Layout::init_once();
-		if ( ! empty( $this->tab ) ) {
+		if ( isset( $this->tab ) ) {
 			$this->tab_content_cb = [ Layout::in(), 'render_group_callback' ];
 		} else {
 			$this->render_row_cb( [ Layout::in(), 'render_group_callback' ] );
@@ -141,19 +134,58 @@ class Group extends Field {
 	/**
 	 * Set the group to be repeatable.
 	 *
-	 * Will enable sortable if not already specified as false when `\Lipe\Lib\CMB2\Field_Type::group` is called.
+	 * @param bool    $repeatable      - Enable/disable repeatable support for this group.
+	 * @param ?string $add_row_text    - Text used for the add group button.
+	 * @param ?string $remove_row_text - Text used for the remove group button.
+	 * @param ?string $remove_confirm  - Text used for the remove group confirmation.
 	 *
-	 * @param bool    $repeatable   - Enable/disable repeatable support for this group.
-	 * @param ?string $add_row_text - Unused in group context. @deprecated.
-	 *
-	 * @return Field
+	 * @return Group
 	 */
-	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ): Field {
+	public function repeatable( bool $repeatable = true, ?string $add_row_text = null, ?string $remove_row_text = null, ?string $remove_confirm = null ): Group {
 		$this->repeatable = $repeatable;
 
-		if ( ! isset( $this->options['sortable'] ) ) {
-			$this->options = \array_merge( $this->options, [ 'sortable' => $repeatable ] );
+		$options = [];
+		if ( null !== $add_row_text ) {
+			$options['add_button'] = $add_row_text;
 		}
+		if ( null !== $remove_row_text ) {
+			$options['remove_button'] = $remove_row_text;
+		}
+		if ( null !== $remove_confirm ) {
+			$options['remove_confirm'] = $remove_confirm;
+		}
+		if ( ! isset( $this->options['sortable'] ) ) {
+			$options['sortable'] = $repeatable;
+		}
+		$this->options = \array_merge( $this->options, $options );
+
+		return $this;
+	}
+
+
+	/**
+	 * Set the group to be sortable.
+	 *
+	 * @param bool $sortable - Enable/disable sortable support for this group.
+	 *
+	 * @return Group
+	 */
+	public function sortable( bool $sortable = true ): Group {
+		$this->options = \array_merge( $this->options, [ 'sortable' => $sortable ] );
+
+		return $this;
+	}
+
+
+	/**
+	 * Set the group to be closed by default.
+	 *
+	 * @param bool $closed - Enable/disable closed by default for this group.
+	 *
+	 * @return Group
+	 */
+	public function closed( bool $closed = true ): Group {
+		$this->options = \array_merge( $this->options, [ 'closed' => $closed ] );
 
 		return $this;
 	}
@@ -165,7 +197,7 @@ class Group extends Field {
 	 *
 	 * @see Box::add_field_to_box()
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function get_field_args(): array {
 		$args = parent::get_field_args();
@@ -185,7 +217,7 @@ class Group extends Field {
 	 * @return void
 	 */
 	protected function add_field_to_group( Field $field ): void {
-		if ( null === $this->box || ! property_exists( $this->box, 'cmb' ) || null === $this->box->cmb ) {
+		if ( ! property_exists( $this->box, 'cmb' ) || null === $this->box->cmb ) {
 			throw new \LogicException( esc_html__( 'You must add the group to the box before you add fields to the group.', 'lipe' ) );
 		}
 
@@ -285,6 +317,7 @@ class Group extends Field {
 	 * Get the full list of object types this box
 	 * is registered to.
 	 *
+	 * @phpstan-return array<Box::TYPE_*|string>
 	 * @return array
 	 */
 	public function get_object_types(): array {
@@ -327,9 +360,9 @@ class Group extends Field {
 	 *
 	 * @interal
 	 *
-	 * @param array $group_values - Group values before being sent to the REST API.
+	 * @param array<string, mixed> $group_values - Group values before being sent to the REST API.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function translate_sub_field_rest_keys( array $group_values ): array {
 		$fields = $this->get_fields();
@@ -351,9 +384,9 @@ class Group extends Field {
 	 * Map this groups fields back to their original keys when updating
 	 * the metadata via the REST API.
 	 *
-	 * @param array $group_values - Group values sent to the REST API.
+	 * @param array<string, mixed> $group_values - Group values sent to the REST API.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function untranslate_sub_field_rest_keys( array $group_values ): array {
 		if ( \function_exists( 'wp_is_rest_endpoint' ) ) {

@@ -34,7 +34,8 @@ class Translate_Test extends \WP_UnitTestCase {
 				if ( '_' !== $field_id ) {
 					return null;
 				}
-				$field = new Field( $field_id, $field_id, null );
+				$box = new Box( 'test-translate', [ 'post' ], 'Translate test' );
+				$field = new Field( $field_id, $field_id, $box );
 				$field->taxonomy = 'category';
 				return $field;
 			}
@@ -85,7 +86,7 @@ class Translate_Test extends \WP_UnitTestCase {
 
 	public function test_multiple_group_fields(): void {
 		$box = new Box( __METHOD__, [ 'post' ], 'Meal Data' );
-		$items = $box->group( 'multiple/group/items', 'Items', 'Item {#}', 'Add Item', 'Remove Item' );
+		$items = $box->group( 'multiple/group/items', 'Items', 'Item {#}' );
 		$items->repeatable();
 		$items->field( __METHOD__ . 'servings', 'Servings' )
 		      ->text_number();

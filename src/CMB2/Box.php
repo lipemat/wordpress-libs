@@ -5,6 +5,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
+use Lipe\Lib\Meta\Meta_Box;
 use Lipe\Lib\Meta\Repo;
 
 /**
@@ -43,7 +44,7 @@ class Box {
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#priority
 	 *
-	 * @phpstan-var  'high' | 'core' | 'default' | 'low'
+	 * @phpstan-var  Meta_Box::PRIORITY_*
 	 *
 	 * @var string
 	 */
@@ -58,9 +59,9 @@ class Box {
 	 * @example 'additional-class'
 	 * @example array( 'additional-class', 'another-class' ),
 	 *
-	 * @var mixed
+	 * @var string|array<string>
 	 */
-	public $classes;
+	public string|array $classes;
 
 	/**
 	 * Like the classes property, allows adding classes to the CMB2 wrapper,
@@ -442,7 +443,7 @@ class Box {
 
 	/**
 	 * Add a tab to this box which can later be assigned to fields via
-	 * Field::tab( $id );
+	 * Field::tab($id);
 	 *
 	 * @see     Field::tab;
 	 *

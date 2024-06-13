@@ -74,7 +74,7 @@ trait Translate {
 		$field = $this->get_field( $key );
 		if ( null !== $field && null !== $field->group ) {
 			$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
-			if ( '' === $group && null !== $field->default ) {
+			if ( '' === $group && isset( $field->default ) ) {
 				return $field->default;
 			}
 			$value = $group[ $this->group_row ][ $key ] ?? null;

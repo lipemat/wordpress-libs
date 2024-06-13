@@ -30,7 +30,8 @@ class FieldTest extends \WP_Test_REST_TestCase {
 
 
 	public function test_field_type_array(): void {
-		$field = new Field( 't', 'test', null );
+		$box = new Box( 'test-term-select', [ 'post' ], 'Term Select Test' );
+		$field = new Field( 't', 'test', $box );
 		$field->type()->text_date( 'M', 'time_key', [ 'passive' => 1 ] );
 		$field->attributes = [ 'directly' => 1 ];
 
@@ -112,7 +113,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		$box->field( 'd1', 'Default 1' )
 		    ->text()
 		    ->default( 'secret' );
-		$group = $box->group( 'd1-alot', null )
+		$group = $box->group( 'd1-alot', '' )
 		             ->default( [ [ 'first' => 'omg', 'second' => 'foo' ] ] );
 		$group
 			->field( 'first', '' )
