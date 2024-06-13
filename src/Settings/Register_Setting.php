@@ -48,6 +48,16 @@ class Register_Setting implements Args_Interface {
 	public string $description;
 
 	/**
+	 * The label will be displayed to users when editing core or custom settings
+	 * via block editors.
+	 *
+	 * @since WP 6.6.
+	 *
+	 * @var string
+	 */
+	public string $label;
+
+	/**
 	 * A callback function that sanitizes the option’s value.
 	 *
 	 * @var callable( mixed $value ): mixed
