@@ -4,78 +4,6 @@ $ignoreErrors = [];
 $ignoreErrors[] = [
 	// identifier: empty.notAllowed
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/../src/Api/Api.php',
-];
-$ignoreErrors[] = [
-	// identifier: lipemat.declareStrictTypes
-	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Api/Api.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Api\\\\Api\\:\\:get_url\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Api/Api.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Api\\\\Api\\:\\:get_versions\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Api/Api.php',
-];
-$ignoreErrors[] = [
-	// identifier: empty.notAllowed
-	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/../src/Api/Route.php',
-];
-$ignoreErrors[] = [
-	// identifier: lipemat.declareStrictTypes
-	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Api/Route.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Api\\\\Route\\:\\:add_query_var\\(\\) has parameter \\$vars with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Api/Route.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Api\\\\Route\\:\\:add_query_var\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Api/Route.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Api\\\\Route\\:\\:adjust_body_class\\(\\) has parameter \\$classes with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Api/Route.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Api\\\\Route\\:\\:adjust_body_class\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Api/Route.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\Api\\\\Route\\:\\:\\$routes type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Api/Route.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\Api\\\\Wp_Remote\\:\\:\\$body type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Api/Wp_Remote.php',
-];
-$ignoreErrors[] = [
-	// identifier: empty.notAllowed
-	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 5,
 	'path' => __DIR__ . '/../src/CMB2/Box.php',
 ];
@@ -780,12 +708,6 @@ $ignoreErrors[] = [
 	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Traits/Singleton.php',
-];
-$ignoreErrors[] = [
-	// identifier: lipemat.declareStrictTypes
-	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Traits/Version.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue

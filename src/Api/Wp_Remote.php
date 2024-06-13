@@ -131,9 +131,9 @@ class Wp_Remote implements Args_Interface {
 	 *
 	 * Default null.
 	 *
-	 * @var string|array
+	 * @var string|array<string, mixed>
 	 */
-	public $body;
+	public string|array $body;
 
 	/**
 	 * Whether to compress the $body when sending the request.

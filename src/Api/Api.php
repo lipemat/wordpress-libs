@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Api;
 
@@ -51,13 +52,13 @@ class Api {
 			$this->handle_request( $wp );
 		} );
 		add_action( 'wp_loaded', function() {
-			$this->run_for_version( 'flush_rewrite_rules', static::VERSION );
+			$this->run_for_version( 'flush_rewrite_rules', self::VERSION );
 		}, PHP_INT_MAX );
 	}
 
 
 	/**
-	 * Check if we are currently running a api request.
+	 * Check if we are currently running an API request.
 	 *
 	 * @return bool
 	 */
@@ -86,22 +87,21 @@ class Api {
 	 *
 	 * @example get_api_url( 'load_more', [ 'page', 2 ] );
 	 *
-	 * @param string|null $endpoint - Same action provided to the `get_action` method
-	 *                              of this class when calling `add_action()`.
-	 *                              Should be a url friendly slug which is unique to
-	 *                              this API system.
+	 * @param ?string                   $endpoint - Same action provided to the `get_action` method
+	 *                                            of this class when calling `add_action()`.
+	 *                                            Should be a url friendly slug unique to
+	 *                                            this API system.
 	 *
-	 * @param array       $data     - Data passed via the url separated by '/'.
-	 *                              Numeric arrays will have values spread in order.
-	 *                              Associative arrays will resolve to an
-	 *                              array of key values, just as provided.
+	 * @param array<int|string, string> $data     - Data passed via the url separated by '/'.
+	 *                                            Numeric arrays will have values spread in order.
+	 *                                            Associative arrays will resolve to an
+	 *                                            array of key values, just as provided.
 	 *
 	 * @return string
 	 */
 	public function get_url( ?string $endpoint = null, array $data = [] ): string {
 		$url = trailingslashit( $this->get_root_url() . $endpoint );
-
-		if ( empty( $data ) ) {
+		if ( [] === $data ) {
 			return $url;
 		}
 
@@ -111,7 +111,7 @@ class Api {
 			\array_walk_recursive( $data, function( $value, $param ) use ( &$url ) {
 				$url .= "{$param}/{$value}/";
 			} );
-			$url = add_query_arg( [ static::FORMAT => static::FORMAT_ASSOC ], $url );
+			$url = add_query_arg( [ self::FORMAT => self::FORMAT_ASSOC ], $url );
 		}
 
 		return $url;
@@ -127,7 +127,7 @@ class Api {
 	 * @return string
 	 */
 	public function get_root_url(): string {
-		return trailingslashit( trailingslashit( get_home_url() ) . static::ENDPOINT );
+		return trailingslashit( trailingslashit( get_home_url() ) . self::ENDPOINT );
 	}
 
 
@@ -139,7 +139,7 @@ class Api {
 	 * @return void
 	 */
 	protected function add_endpoint(): void {
-		add_rewrite_endpoint( 'api', EP_ROOT, static::NAME );
+		add_rewrite_endpoint( 'api', EP_ROOT, self::NAME );
 	}
 
 
@@ -154,24 +154,23 @@ class Api {
 	 * @return void
 	 */
 	protected function handle_request( \WP $wp ): void {
-		if ( empty( $wp->query_vars[ static::NAME ] ) ) {
+		if ( ! isset( $wp->query_vars[ self::NAME ] ) || '' === $wp->query_vars[ self::NAME ] ) {
 			return;
 		}
 
 		$this->doing_api = true;
-
-		$args = \array_filter( \explode( '/', $wp->query_vars[ static::NAME ] ) );
+		$args = \array_filter( \explode( '/', $wp->query_vars[ self::NAME ] ) );
 		$endpoint = \array_shift( $args );
 		if ( null === $endpoint ) {
 			return;
 		}
 
-		//phpcs:ignore WordPress.Security.NonceVerification -- Intended to be URL paramaters
-		if ( ! empty( $_REQUEST[ static::FORMAT ] ) && static::FORMAT_ASSOC === $_REQUEST[ static::FORMAT ] ) {
+		//phpcs:ignore WordPress.Security.NonceVerification -- URL intended to be public.
+		if ( isset( $_REQUEST[ self::FORMAT ] ) && self::FORMAT_ASSOC === $_REQUEST[ self::FORMAT ] ) {
 			$args = Arrays::in()->chunk_to_associative( $args );
 		}
 
-		//phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+		//phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- Dynamic action.
 		do_action( $this->get_action( $endpoint ), $args );
 	}
 }
