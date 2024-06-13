@@ -509,7 +509,7 @@ class Taxonomy {
 	 * @return void
 	 */
 	protected function register(): void {
-		$this->register_taxonomy();
+		register_taxonomy( $this->name, $this->post_types, $this->taxonomy_args() );
 		static::$registry[ $this->name ] = $this;
 		if ( \count( $this->initial_terms ) > 0 ) {
 			$this->insert_initial_terms();
@@ -604,17 +604,6 @@ class Taxonomy {
 			$already_defaulted[ $this->name ] = 1;
 			update_option( 'lipe/lib/taxonomy/defaults-registry', $already_defaulted, true );
 		}
-	}
-
-
-	/**
-	 * Register this taxonomy with WordPress
-	 *
-	 * Allow using a different process for registering taxonomies via
-	 * child classes.
-	 */
-	protected function register_taxonomy(): void {
-		register_taxonomy( $this->name, $this->post_types, $this->taxonomy_args() );
 	}
 
 

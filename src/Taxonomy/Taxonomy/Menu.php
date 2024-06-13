@@ -66,7 +66,7 @@ class Menu {
 	 * Add the taxonomy to the admin menu as a parent menu.
 	 *
 	 * @param string|Dashicons $icon     - The icon to use for the menu.
-	 *                                   URL, SVG or Dashicons class.
+	 *                                   URL, SVG, 'none' or Dashicons class.
 	 * @param int|null         $position - The position in the menu to place this taxonomy.
 	 */
 	public function parent_menu( string|Dashicons $icon = 'dashicons-category', ?int $position = null ): void {

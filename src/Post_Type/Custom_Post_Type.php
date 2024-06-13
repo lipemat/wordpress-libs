@@ -7,6 +7,7 @@ namespace Lipe\Lib\Post_Type;
 use Lipe\Lib\Post_Type\Custom_Post_Type\Register_Post_Type;
 use Lipe\Lib\Theme\Dashicons;
 use Lipe\Lib\Traits\Memoize;
+use Lipe\Lib\Util\Strings;
 
 /**
  * Register a custom post type.
@@ -49,7 +50,8 @@ class Custom_Post_Type {
 
 	/**
 	 * Tf true, will auto add custom capability type caps to administrator
-	 * Defaults to true
+	 *
+	 * Default true.
 	 *
 	 * @var bool
 	 */
@@ -175,13 +177,6 @@ class Custom_Post_Type {
 	public string|bool $has_archive = true;
 
 	/**
-	 * Post type slug.
-	 *
-	 * @var string
-	 */
-	public string $slug;
-
-	/**
 	 * Sets the query_var key for this post type.
 	 *
 	 * Defaults to `$post_type` key.
@@ -269,7 +264,7 @@ class Custom_Post_Type {
 	 *
 	 * @var string
 	 */
-	public readonly string $post_type;
+	public readonly string $name;
 
 	/**
 	 * Arguments passed to `register_post_type()` after all
@@ -288,15 +283,14 @@ class Custom_Post_Type {
 	 * @param string $post_type The post type slug.
 	 */
 	final public function __construct( string $post_type ) {
-		$this->post_type = $post_type;
-		$this->slug = \strtolower( \str_replace( ' ', '-', $this->post_type ) );
+		$this->name = $post_type;
 		$this->labels = new Labels( $this );
 		$this->capabilities = new Capabilities( $this );
 		$this->register_args = new Register_Post_Type();
 		$this->register_args->supports = static::DEFAULT_SUPPORTS;
 
 		$this->hook();
-		$this->set_post_type_label();
+		$this->set_labels();
 	}
 
 
@@ -331,9 +325,9 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	protected function register(): void {
-		static::$registry[ $this->post_type ] = $this;
-		register_post_type( $this->post_type, $this->post_type_args() );
-		$this->add_administrator_capabilities( get_post_type_object( $this->post_type ) );
+		static::$registry[ $this->name ] = $this;
+		register_post_type( $this->name, $this->post_type_args() );
+		$this->add_administrator_capabilities( get_post_type_object( $this->name ) );
 	}
 
 
@@ -360,21 +354,14 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	public function set_post_type_label( string $singular = '', string $plural = '' ): void {
+	public function set_labels( string $singular = '', string $plural = '' ): void {
 		if ( '' === $singular ) {
-			$singular = \str_replace( '_', ' ', $this->post_type );
+			$singular = \str_replace( '_', ' ', $this->name );
 			$singular = \ucwords( $singular );
 		}
 
 		if ( '' === $plural ) {
-			$end = \substr( $singular, - 1 );
-			if ( 's' === $end ) {
-				$plural = \ucwords( $singular . 'es' );
-			} elseif ( 'y' === $end ) {
-				$plural = \ucwords( rtrim( $singular, 'y' ) . 'ies' );
-			} else {
-				$plural = \ucwords( $singular . 's' );
-			}
+			$plural = Strings::in()->pluralize( $singular );
 		}
 		$this->labels()->singular_name( $singular );
 		$this->labels()->name( $plural );
@@ -437,7 +424,7 @@ class Custom_Post_Type {
 		$single = $this->labels()->get_label( Labels::SINGULAR_NAME );
 		$plural = $this->labels()->get_label( Labels::NAME );
 
-		$bulk_messages[ $this->post_type ] = [
+		$bulk_messages[ $this->name ] = [
 			'updated'   => _n(
 				'%s ' . $single . ' updated.',
 				'%s ' . $plural . ' updated.',
@@ -494,7 +481,7 @@ class Custom_Post_Type {
 			$preview_link = '<a target="_blank" href="' . $preview_url . '">' . \sprintf( 'Preview %s', $lower_label ) . '</a>';
 		}
 
-		$messages[ $this->post_type ] = [
+		$messages[ $this->name ] = [
 			0  => null,
 			1  => \sprintf( __( '%1$s updated. %2$s' ), $single, $view_link ),
 			2  => __( 'Custom field updated.' ),
@@ -547,7 +534,7 @@ class Custom_Post_Type {
 	 * @return string
 	 */
 	protected function get_post_type_archive_label( string $title ): string {
-		if ( is_post_type_archive( $this->post_type ) ) {
+		if ( is_post_type_archive( $this->name ) ) {
 			$label = $this->labels->get_label( Labels::ARCHIVE_LABEL );
 			if ( null !== $label ) {
 				return $label;
@@ -608,7 +595,7 @@ class Custom_Post_Type {
 	 * @param string $column - The column to remove.
 	 */
 	public function remove_column( string $column ): void {
-		add_filter( "manage_edit-{$this->post_type}_columns", function( $columns ) use ( $column ) {
+		add_filter( "manage_edit-{$this->name}_columns", function( $columns ) use ( $column ) {
 			unset( $columns[ $column ] );
 			return $columns;
 		} );
@@ -626,7 +613,7 @@ class Custom_Post_Type {
 	 */
 	public function exclude_from_sitemaps(): void {
 		add_filter( 'wp_sitemaps_post_types', function( $types ) {
-			unset( $types[ $this->post_type ] );
+			unset( $types[ $this->name ] );
 			return $types;
 		} );
 	}
@@ -645,14 +632,14 @@ class Custom_Post_Type {
 		$this->show_in_nav_menus = false;
 
 		add_filter( 'genesis_link_post_title', function( $is_link ) {
-			if ( get_post_type() === $this->post_type ) {
+			if ( get_post_type() === $this->name ) {
 				return false;
 			}
 			return $is_link;
 		} );
 
 		add_filter( 'is_post_type_viewable', function( $is_viewable, $post_type ) {
-			if ( $this->post_type === $post_type->name ) {
+			if ( $this->name === $post_type->name ) {
 				return false;
 			}
 			return $is_viewable;
@@ -663,7 +650,8 @@ class Custom_Post_Type {
 			if ( \is_array( $rewrites ) && isset( $rewrites['slug'] ) && '' !== $rewrites['slug'] ) {
 				remove_rewrite_tag( "%{$rewrites['slug']}%" );
 			} else {
-				remove_rewrite_tag( "%{$this->slug}%" );
+				$slug = sanitize_title_with_dashes( $this->name );
+				remove_rewrite_tag( "%{$slug}%" );
 			}
 		} );
 	}
@@ -690,7 +678,7 @@ class Custom_Post_Type {
 			$this->add_support( Register_Post_Type::SUPPORTS_EDITOR );
 		} else {
 			add_filter( 'use_block_editor_for_post_type', function( $enabled, $post_type ) {
-				if ( $post_type === $this->post_type ) {
+				if ( $post_type === $this->name ) {
 					return false;
 				}
 				return $enabled;
@@ -744,7 +732,7 @@ class Custom_Post_Type {
 
 		if ( $show ) {
 			if ( ! isset( $this->register_args->rest_base ) ) {
-				$this->register_args->rest_base = $base ?? $this->post_type;
+				$this->register_args->rest_base = $base ?? $this->name;
 			}
 			if ( ! isset( $this->register_args->rest_namespace ) ) {
 				$this->register_args->rest_namespace = $space;
@@ -758,27 +746,22 @@ class Custom_Post_Type {
 	/**
 	 * Show or hide this post type in the menu.
 	 *
-	 * @see Dashicons
-	 *
-	 * @param bool    $show     - Whether to show in the menu.
-	 * @param ?string $in_menu  - Parent menu item. Use existing top level menu like 'tools.php' or 'edit.php?post_type=page'.
-	 * @param int     $position - Position in the menu.
-	 * @param ?string $icon     - SVG, URL, or Dashicon class.
+	 * @param Dashicons|string $icon             - SVG, URL, 'none' or Dashicon class.
+	 * @param ?string          $parent_menu      - Parent menu item. Use existing top level menu like 'tools.php' or
+	 *                                           'edit.php?post_type=page'.
+	 * @param int              $position         - Position in the menu.
 	 *
 	 * @return void
 	 */
-	public function show_in_menu( bool $show = true, ?string $in_menu = null, int $position = 5, ?string $icon = null ): void {
-		$this->register_args->show_in_menu = $show;
-		if ( $show ) {
-			if ( null !== $in_menu ) {
-				$this->register_args->show_in_menu = $in_menu;
-			}
-			$this->register_args->menu_position = $position;
-			if ( null !== $icon ) {
-				$this->register_args->menu_icon = $icon;
-			}
-		} else {
-			unset( $this->register_args->menu_position, $this->register_args->menu_icon );
+	public function show_in_menu( Dashicons|string $icon = '', ?string $parent_menu = null, int $position = 5, ): void {
+		$this->register_args->show_in_menu = true;
+		$this->register_args->menu_position = $position;
+
+		if ( null !== $parent_menu ) {
+			$this->register_args->show_in_menu = $parent_menu;
+		}
+		if ( '' !== $icon ) {
+			$this->register_args->menu_icon = $icon instanceof Dashicons ? $icon->value : $icon;
 		}
 	}
 
@@ -810,9 +793,6 @@ class Custom_Post_Type {
 		if ( isset( $this->exclude_from_search ) ) {
 			$args->exclude_from_search = $this->exclude_from_search;
 		}
-		if ( isset( $this->menu_icon ) ) {
-			$args->menu_icon = $this->menu_icon;
-		}
 		if ( isset( $this->map_meta_cap ) ) {
 			$args->map_meta_cap = $this->map_meta_cap;
 		}
@@ -822,15 +802,9 @@ class Custom_Post_Type {
 		if ( isset( $this->delete_with_user ) ) {
 			$args->delete_with_user = $this->delete_with_user;
 		}
-		if ( isset( $this->template ) ) {
-			$args->template = $this->template;
-		}
-		if ( isset( $this->template_lock ) ) {
-			$args->template_lock = $this->template_lock;
-		}
 
-		$args = apply_filters( 'lipe/lib/schema/post_type_args', $args->get_args(), $this->post_type );
-		return apply_filters( "lipe/lib/schema/post_type_args_{$this->post_type}", $args );
+		$args = apply_filters( 'lipe/lib/schema/post_type_args', $args->get_args(), $this->name );
+		return apply_filters( "lipe/lib/schema/post_type_args_{$this->name}", $args );
 	}
 
 
@@ -881,8 +855,8 @@ class Custom_Post_Type {
 
 		$labels = wp_parse_args( $this->labels()->get_labels(), $labels );
 
-		$labels = apply_filters( 'lipe/lib/post-type/labels', $labels, $this->post_type );
-		return apply_filters( "lipe/lib/post-type/labels_{$this->post_type}", $labels );
+		$labels = apply_filters( 'lipe/lib/post-type/labels', $labels, $this->name );
+		return apply_filters( "lipe/lib/post-type/labels_{$this->name}", $labels );
 	}
 
 
@@ -902,7 +876,7 @@ class Custom_Post_Type {
 	 */
 	protected function rewrites(): array|bool {
 		return $this->rewrite ?? [
-			'slug'       => $this->slug,
+			'slug'       => sanitize_title_with_dashes( $this->name ),
 			'with_front' => false,
 		];
 	}
