@@ -15,6 +15,7 @@ parameters:
     lipemat:
         noExtends: true
         allowedToBeExtended:
+            - CMB2_Type_Checkbox
             - Lipe\Lib\CMB2\Box
             - Lipe\Lib\CMB2\Field
             - Lipe\Lib\Query\Args
