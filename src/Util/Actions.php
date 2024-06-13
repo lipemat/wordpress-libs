@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
@@ -11,7 +12,6 @@ use Lipe\Lib\Traits\Singleton;
 class Actions {
 	use Singleton;
 	use Memoize;
-
 
 	/**
 	 * Add a filter but always return the original value.
@@ -37,14 +37,14 @@ class Actions {
 	/**
 	 * Add a callable to multiple actions at once
 	 *
-	 * @param array    $actions  - Actions to register.
+	 * @param string[] $actions  - Actions to register.
 	 * @param callable $callback - Callback.
 	 * @param int      $priority - Priority of the filter we are adding.
 	 *
 	 * @return void
 	 */
 	public function add_action_all( array $actions, callable $callback, int $priority = 10 ): void {
-		array_walk( $actions, function( $action ) use ( $callback, $priority ) {
+		\array_walk( $actions, function( $action ) use ( $callback, $priority ) {
 			add_action( $action, $callback, $priority, 10 );
 		} );
 	}
@@ -53,14 +53,14 @@ class Actions {
 	/**
 	 * Add a callable to multiple filters at once
 	 *
-	 * @param array    $filters  - Filters to register.
+	 * @param string[] $filters  - Filters to register.
 	 * @param callable $callback - Callback.
 	 * @param int      $priority - Priority of the filter we are adding.
 	 *
 	 * @return void
 	 */
 	public function add_filter_all( array $filters, callable $callback, int $priority = 10 ): void {
-		array_walk( $filters, function( $action ) use ( $callback, $priority ) {
+		\array_walk( $filters, function( $action ) use ( $callback, $priority ) {
 			add_filter( $action, $callback, $priority, 10 );
 		} );
 	}
@@ -68,7 +68,7 @@ class Actions {
 
 	/**
 	 * Add a filter which will only fire one time no matter how many times
-	 * apply_filters( <filter> ) is called.
+	 * apply_filters(<filter>) is called.
 	 *
 	 * If you call this method multiple times with the same $action, $callback, $priority
 	 * the filter will also fire only once.
@@ -200,10 +200,10 @@ class Actions {
 
 
 	/**
-	 * Add an filter which removes itself right before the callback
+	 * Adds a filter which removes itself right before the callback
 	 * runs then adds itself back in after the callback has finished.
 	 *
-	 * Add an filter which would otherwise cause infinite loops.
+	 * For filters which would otherwise cause infinite loops.
 	 *
 	 * @param string   $filter   - Filter we are adding.
 	 * @param callable $callback - Callback.

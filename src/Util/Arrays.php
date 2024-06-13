@@ -1,11 +1,10 @@
 <?php
+//phpcs:disable Universal.NamingConventions.NoReservedKeywordParameterNames.arrayFound
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
 use Lipe\Lib\Traits\Singleton;
-
-//phpcs:disable Universal.NamingConventions.NoReservedKeywordParameterNames.arrayFound
 
 /**
  * Array helpers.
@@ -19,9 +18,9 @@ class Arrays {
 	 *
 	 * @example ['page', 3, 'category', 6 ] becomes ['page' => 3, 'category' => 6]
 	 *
-	 * @param array $array - Array to convert.
+	 * @param array<int, mixed> $array - Array to convert.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function chunk_to_associative( array $array ): array {
 		$assoc = [];
@@ -46,10 +45,10 @@ class Arrays {
 	 *
 	 * Keys are preserved.
 	 *
-	 * @param array $array         - Array to clean, numeric or associative.
-	 * @param bool  $preserve_keys (optional) - Preserve the original array keys.
+	 * @param array<mixed> $array         - Array to clean, numeric or associative.
+	 * @param bool         $preserve_keys (optional) - Preserve the original array keys.
 	 *
-	 * @return array
+	 * @return array<mixed>
 	 */
 	public function clean( array $array, bool $preserve_keys = true ): array {
 		$clean = \array_unique( \array_filter( \array_map( function( $value ) {
@@ -72,10 +71,10 @@ class Arrays {
 	 * a new array instead of requiring you pass the array element by reference
 	 * and alter it directly.
 	 *
-	 * @param callable $callback - Callback to apply to each element.
-	 * @param array    $array    - Array to apply the callback to.
+	 * @param callable( mixed ): mixed  $callback - Callback to apply to each element.
+	 * @param array<array<mixed>|mixed> $array    - Array to apply the callback to.
 	 *
-	 * @return array
+	 * @return array<array<mixed>>
 	 */
 	public function map_recursive( callable $callback, array $array ): array {
 		$output = [];
@@ -96,10 +95,10 @@ class Arrays {
 	 * duplicate array keys into arrays, this will favor the $args over
 	 * the $defaults and clobber identical $default keys.
 	 *
-	 * @param array $args     - Array to merge into the defaults.
-	 * @param array $defaults - Array to merge into.
+	 * @param array<string, mixed> $args     - Array to merge into the defaults.
+	 * @param array<string, mixed> $defaults - Array to merge into.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function merge_recursive( array $args, array $defaults ): array {
 		foreach ( $args as $key => $val ) {
@@ -118,10 +117,10 @@ class Arrays {
 	 * Works the same as `array_map` except the array key is passed as the
 	 * second argument to the callback and original keys are preserved.
 	 *
-	 * @param callable $callback - Callback to apply to each element.
-	 * @param array    $array    - Array to apply the callback to.
+	 * @param callable( mixed, string ): mixed $callback - Callback to apply to each element.
+	 * @param array<string, mixed>             $array    - Array to apply the callback to.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function map_assoc( callable $callback, array $array ): array {
 		return \array_combine( \array_keys( $array ), \array_map( $callback, $array, \array_keys( $array ) ) );
@@ -131,10 +130,10 @@ class Arrays {
 	/**
 	 * Removes a key from an array recursively.
 	 *
-	 * @param string $key   - Key to remove.
-	 * @param array  $array - Array to recursively remove keys from.
+	 * @param string               $key   - Key to remove.
+	 * @param array<string, mixed> $array - Array to recursively remove keys from.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function recursive_unset( string $key, array $array ): array {
 		unset( $array[ $key ] );
@@ -216,16 +215,16 @@ class Arrays {
 	 *          // [ 1 => 'Hello World', 2 => 'Sample Page' ]
 	 *          `
 	 *
-	 * @param callable $callback - Callback to apply to each element.
-	 * @param array    $array    - Array to apply the callback to.
+	 * @param callable( mixed ): array<int|string, mixed> $callback - Callback to apply to each element.
+	 * @param array<int|string, mixed>                    $array    - Array to apply the callback to.
 	 *
-	 * @return array
+	 * @return array<int|string, mixed>
 	 */
 	public function flatten_assoc( callable $callback, array $array ): array {
 		$pairs = \array_map( $callback, $array );
 		$array = [];
 		foreach ( $pairs as $pair ) {
-			$array[ key( $pair ) ] = \reset( $pair );
+			$array[ \key( $pair ) ] = \reset( $pair );
 		}
 		return $array;
 	}
@@ -239,10 +238,10 @@ class Arrays {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param array<array|object> $array - List of objects or arrays.
-	 * @param array<string|int>   $keys  - List of keys to return.
+	 * @param array<array<string, mixed>|object> $array - List of objects or arrays.
+	 * @param array<string>                      $keys  - List of keys to return.
 	 *
-	 * @return array
+	 * @return array<array<string, mixed>>
 	 */
 	public function list_pluck( array $array, array $keys ): array {
 		return \array_map( function( $item ) use ( $keys ) {
@@ -250,7 +249,6 @@ class Arrays {
 				if ( \is_object( $item ) ) {
 					return $item->{$key} ?? '';
 				}
-
 				return $item[ $key ] ?? '';
 			}, \array_flip( $keys ) );
 		}, $array );
