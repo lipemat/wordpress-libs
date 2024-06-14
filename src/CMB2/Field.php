@@ -1059,14 +1059,12 @@ class Field {
 	 * @param bool    $repeatable   - Whether the field should be repeatable.
 	 * @param ?string $add_row_text - Optional text to display on the 'Add' button.
 	 *
-	 * @throws \LogicException - If trying to repeat an unsupported field type.
-	 *
 	 * @return Field
 	 */
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ): Field {
 		if ( \CMB2_Utils::does_not_support_repeating( $this->get_type() ) ) {
 			/* translators: {field type} */
-			throw new \LogicException( \sprintf( esc_html__( 'Fields of `%s` type do not support repeating.', 'lipe' ), esc_html( $this->get_type() ) ) );
+			_doing_it_wrong( __METHOD__, \sprintf( esc_html__( 'Fields of `%s` type do not support repeating.', 'lipe' ), esc_html( $this->get_type() ) ), '5.0.0' );
 		}
 
 		$this->repeatable = $repeatable;

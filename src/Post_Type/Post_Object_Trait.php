@@ -115,7 +115,7 @@ trait Post_Object_Trait {
 	 *
 	 * @return static
 	 */
-	public static function factory( $post = null ) {
+	public static function factory( int|\WP_Post|null $post = null ): static {
 		return new static( $post );
 	}
 }

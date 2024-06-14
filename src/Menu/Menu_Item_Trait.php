@@ -62,14 +62,9 @@ trait Menu_Item_Trait {
 	 *
 	 * @param int|\WP_Post $post - ID or post object, null is not supported.
 	 *
-	 * @static
-	 *
 	 * @return static
 	 */
-	public static function factory( $post ) {
-		if ( empty( $post ) ) {
-			_doing_it_wrong( __METHOD__, 'Null is not supported for menu items.', '3.7.1' );
-		}
+	public static function factory( int|\WP_Post $post ): static {
 		return new static( $post );
 	}
 }

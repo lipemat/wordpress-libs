@@ -16,7 +16,7 @@ use Lipe\Lib\Util\Arrays;
  *
  * @link    https://github.com/CMB2/CMB2/wiki/Field-Types
  *
- * @phpstan-type OPTIONS_CALLBACK callable( \CMB2_Field ):array<string, string>|array<string, string>
+ * @phpstan-type OPTIONS_CALLBACK (callable( \CMB2_Field ): array<string|int, string>)|array<string|int, string>
  */
 class Field_Type {
 	/**
@@ -1011,8 +1011,8 @@ class Field_Type {
 	 *
 	 * @return array{
 	 *     type: string,
-	 *     options_cb?: callable( \CMB2_Field $field ): array<string, string>,
-	 *     options?: array<string, string>,
+	 *     options_cb?: callable( \CMB2_Field $field ): array<string|int, string>,
+	 *     options?: array<string|int, string>,
 	 *     show_option_none?: string|bool
 	 * }
 	 */

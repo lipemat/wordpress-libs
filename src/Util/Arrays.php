@@ -45,10 +45,14 @@ class Arrays {
 	 *
 	 * Keys are preserved.
 	 *
-	 * @param array<mixed> $array         - Array to clean, numeric or associative.
-	 * @param bool         $preserve_keys (optional) - Preserve the original array keys.
+	 * @phpstan-template T of array<mixed>
+	 * @phpstan-param T $array
 	 *
-	 * @return array<mixed>
+	 * @param array     $array         - Array to clean, numeric or associative.
+	 * @param bool      $preserve_keys (optional) - Preserve the original array keys.
+	 *
+	 * @phpstan-return ($preserve_keys is true ? T : list<value-of<T>>)
+	 * @return array
 	 */
 	public function clean( array $array, bool $preserve_keys = true ): array {
 		$clean = \array_unique( \array_filter( \array_map( function( $value ) {
@@ -71,10 +75,13 @@ class Arrays {
 	 * a new array instead of requiring you pass the array element by reference
 	 * and alter it directly.
 	 *
-	 * @param callable( mixed ): mixed  $callback - Callback to apply to each element.
-	 * @param array<array<mixed>|mixed> $array    - Array to apply the callback to.
+	 * @phpstan-template T
+	 * @phpstan-template R
 	 *
-	 * @return array<array<mixed>>
+	 * @param callable( T ): R  $callback - Callback to apply to each element.
+	 * @param array<array<T>|T> $array    - Array to apply the callback to.
+	 *
+	 * @return array<mixed>
 	 */
 	public function map_recursive( callable $callback, array $array ): array {
 		$output = [];
@@ -117,10 +124,14 @@ class Arrays {
 	 * Works the same as `array_map` except the array key is passed as the
 	 * second argument to the callback and original keys are preserved.
 	 *
-	 * @param callable( mixed, string ): mixed $callback - Callback to apply to each element.
-	 * @param array<string, mixed>             $array    - Array to apply the callback to.
+	 * @phpstan-template TKey of array-key
+	 * @phpstan-template T
+	 * @phpstan-template R
 	 *
-	 * @return array<string, mixed>
+	 * @param callable( T, TKey ): R $callback - Callback to apply to each element.
+	 * @param array<TKey, T>         $array    - Array to apply the callback to.
+	 *
+	 * @return array<TKey, R>
 	 */
 	public function map_assoc( callable $callback, array $array ): array {
 		return \array_combine( \array_keys( $array ), \array_map( $callback, $array, \array_keys( $array ) ) );
@@ -210,21 +221,29 @@ class Arrays {
 	 * Supports both numeric and associate keys.
 	 *
 	 * @example `Arrays::in()->array_create_assoc(
-	 *              fn( $a ) => [ $a->ID => $a->post_name ],
-	 *          [ get_post( 1 ), get_post( 2 ) ] );
-	 *          // [ 1 => 'Hello World', 2 => 'Sample Page' ]
+	 *              fn($a) => [$a->ID => $a->post_name ],
+	 *          [get_post(1), get_post(2)];
+	 *          // [1 => 'Hello World', 2 => 'Sample Page' ]
 	 *          `
+	 * @phpstan-template T of mixed
+	 * @phpstan-template K of array-key
+	 * @phpstan-template R of mixed
 	 *
-	 * @param callable( mixed ): array<int|string, mixed> $callback - Callback to apply to each element.
-	 * @param array<int|string, mixed>                    $array    - Array to apply the callback to.
+	 * @phpstan-param callable( T ): array<K, R> $callback
 	 *
-	 * @return array<int|string, mixed>
+	 * @param callable                           $callback - Callback to apply to each element.
+	 * @param array<int|string, T>               $array    - Array to apply the callback to.
+	 *
+	 * @phpstan-return array<K, R>
+	 * @return array
 	 */
 	public function flatten_assoc( callable $callback, array $array ): array {
 		$pairs = \array_map( $callback, $array );
 		$array = [];
 		foreach ( $pairs as $pair ) {
-			$array[ \key( $pair ) ] = \reset( $pair );
+			foreach ( $pair as $key => $value ) {
+				$array[ $key ] = $value;
+			}
 		}
 		return $array;
 	}
@@ -238,10 +257,14 @@ class Arrays {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param array<array<string, mixed>|object> $array - List of objects or arrays.
-	 * @param array<string>                      $keys  - List of keys to return.
+	 * @template T of array<string, mixed>|object
+	 * @template K of string
 	 *
-	 * @return array<array<string, mixed>>
+	 * @param array<T> $array - List of objects or arrays.
+	 * @param array<K> $keys  - List of keys to return.
+	 *
+	 * @phpstan-return array<array<K, T[K]>>
+	 * @return array
 	 */
 	public function list_pluck( array $array, array $keys ): array {
 		return \array_map( function( $item ) use ( $keys ) {
