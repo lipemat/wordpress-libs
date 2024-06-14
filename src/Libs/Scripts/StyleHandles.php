@@ -14,6 +14,7 @@ enum StyleHandles: string {
 	case CHECKBOX     = 'lipe/lib/libs/styles/checkbox';
 	case GROUP_LAYOUT = 'lipe/lib/libs/styles/group-layout';
 	case META_BOXES   = 'lipe/lib/libs/styles/meta-boxes';
+	case TABS         = 'lipe/lib/libs/styles/tabs';
 	case TRUE_FALSE   = 'lipe/lib/libs/styles/true-false';
 
 
@@ -27,6 +28,7 @@ enum StyleHandles: string {
 			self::CHECKBOX     => 'checkbox',
 			self::GROUP_LAYOUT => 'group-layout',
 			self::META_BOXES   => 'meta-boxes',
+			self::TABS         => 'tabs',
 			self::TRUE_FALSE   => 'true-false',
 		};
 	}
