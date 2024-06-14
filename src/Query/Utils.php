@@ -23,11 +23,11 @@ class Utils {
 	 * by assuring the intended optimizations are included
 	 * by default.
 	 *
-	 * @param array $args - WP_Query arguments.
-	 *
 	 * @see \WP_Query::parse_query()
 	 *
-	 * @return array
+	 * @param array<string, mixed> $args - WP_Query arguments.
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function get_light_query_args( array $args ): array {
 		return \array_merge( [

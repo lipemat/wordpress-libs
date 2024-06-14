@@ -1,5 +1,4 @@
 <?php
-
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Query\Clause;
@@ -17,7 +16,7 @@ trait Date_Query_Trait {
 	 *
 	 * @internal
 	 *
-	 * @var array
+	 * @var array<mixed>
 	 */
 	public array $date_query;
 

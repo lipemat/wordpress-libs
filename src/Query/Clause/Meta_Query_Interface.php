@@ -1,11 +1,12 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Query\Clause;
 
 /**
  * Interface for arguments supporting meta queries.
  *
- * @property array $meta_query
+ * @property array<mixed> $meta_query
  */
 interface Meta_Query_Interface {
 	/**

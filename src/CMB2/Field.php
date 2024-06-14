@@ -492,7 +492,7 @@ class Field {
 	 *
 	 * @var string|bool
 	 */
-	public $show_in_rest;
+	public string|bool $show_in_rest;
 
 	/**
 	 * To show this field or not based on the result of a function.
@@ -510,11 +510,11 @@ class Field {
 
 	/**
 	 * When using a field of a select type this defines whether we should
-	 * show a " no option" option and what the value of said option will be.
+	 * show a "no option" option and what the value of said option will be.
 	 *
 	 * @var bool|string
 	 */
-	public $show_option_none;
+	public string|bool $show_option_none;
 
 	/**
 	 * ID of boxes tab, which this field should display in.
@@ -766,7 +766,7 @@ class Field {
 	/**
 	 * A render row cb to use inside a tab.
 	 * Stored here, so we can set the `render_row_cb` to the tab's
-	 * method an keep outside `render_row_cb` intact.
+	 * method to keep outside `render_row_cb` intact.
 	 *
 	 * @var callable
 	 */
@@ -951,7 +951,7 @@ class Field {
 	 * 'min'  => '101',
 	 *          ]
 	 *
-	 * @param array<string, string> $attributes - An array of attributes to add or modify.
+	 * @param array<string, string|float|int> $attributes - An array of attributes to add or modify.
 	 *
 	 * @return Field
 	 */

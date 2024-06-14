@@ -23,7 +23,7 @@ interface Args_Interface {
 	/**
 	 * Get the finished arguments as an array.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function get_args(): array;
 

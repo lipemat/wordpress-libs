@@ -1,10 +1,12 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2\Field;
 
 use CMB2_Field;
 use CMB2_Types;
 use Lipe\Lib\Traits\Singleton;
+use function PHPStan\dumpType;
 
 /**
  * Select 2 Field for Terms.
@@ -34,16 +36,16 @@ class Term_Select_2 {
 	 * @return void
 	 */
 	protected function hook(): void {
-		add_action( 'cmb2_render_' . static::NAME, [ $this, 'render' ], 10, 5 );
-		add_filter( 'cmb2_sanitize_' . static::NAME, [ $this, 'assign_terms_during_save' ], 10, 4 );
-		add_filter( 'cmb2_types_esc_' . static::NAME, [ $this, 'esc_repeater_values' ], 10, 3 );
+		add_action( 'cmb2_render_' . self::NAME, [ $this, 'render' ], 10, 5 );
+		add_filter( 'cmb2_sanitize_' . self::NAME, [ $this, 'assign_terms_during_save' ], 10, 4 );
+		add_filter( 'cmb2_types_esc_' . self::NAME, [ $this, 'esc_repeater_values' ], 10, 3 );
 
 		// Remove subtle conflict with acf.
 		add_filter( 'acf/settings/select2_version', function() {
 			return 4;
 		} );
 
-		add_action( 'wp_ajax_' . static::GET_TERMS, [ $this, 'ajax_get_terms' ] );
+		add_action( 'wp_ajax_' . self::GET_TERMS, [ $this, 'ajax_get_terms' ] );
 	}
 
 
@@ -88,25 +90,21 @@ class Term_Select_2 {
 	/**
 	 * Render the Field.
 	 *
-	 * @param CMB2_Field        $field             This field object.
-	 * @param string|array|null $value             The value of this field escaped.
-	 * @param string|int        $object_id         The current post ID or user ID being edited.
-	 * @param string            $object_type       The type of object being edited.
-	 * @param CMB2_Types        $field_type_object The field type object.
+	 * @param CMB2_Field                $field             This field object.
+	 * @param array<string>|string|null $value             The value of this field escaped.
+	 * @param int|string                $object_id         The current post ID or user ID being edited.
+	 * @param string                    $object_type       The type of object being edited.
+	 * @param CMB2_Types                $field_type_object The field type object.
 	 *
 	 * @return void
 	 */
-	public function render( CMB2_Field $field, $value, $object_id, string $object_type, CMB2_Types $field_type_object ): void {
-		if ( empty( $value ) ) {
-			$value = null;
-		}
-
+	public function render( CMB2_Field $field, array|string|null $value, int|string $object_id, string $object_type, CMB2_Types $field_type_object ): void {
 		$this->js();
 
 		$field_type_object->type = new \CMB2_Type_Select( $field_type_object );
 
 		$a = [
-			'multiple'         => empty( $field->args( 'multiple' ) ) ? 'multiple' : $field->args( 'multiple' ),
+			'multiple'         => false === $field->args( 'multiple' ) ? 'multiple' : $field->args( 'multiple' ),
 			'data-js'          => $field->id(), // for js.
 			'name'             => $field_type_object->_name() . '[]',
 			'id'               => $field_type_object->_id(),
@@ -127,7 +125,7 @@ class Term_Select_2 {
 	 * I know this sucks. One day I would like to figure this out properly.
 	 * The main issue is repeaters.
 	 *
-	 * @param \CMB2_Field $field             This field object.
+	 * @param \CMB2_Field $field This field object.
 	 *
 	 * @return void
 	 */
@@ -139,9 +137,9 @@ class Term_Select_2 {
 		$rendered[ $field->id() ] = 1;
 
 		$url_args = [
-			'action'               => static::GET_TERMS,
+			'action'               => self::GET_TERMS,
 			'taxonomy'             => $this->get_taxonomy( $field->args ),
-			static::CREATE_NEW_TERMS => $field->args( static::CREATE_NEW_TERMS ),
+			self::CREATE_NEW_TERMS => $field->args( self::CREATE_NEW_TERMS ),
 		];
 		$url = \add_query_arg( $url_args, admin_url( 'admin-ajax.php' ) );
 		$no_results_text = $field->args( 'text' )['no_terms_text'] ?? get_taxonomy( $url_args['taxonomy'] )->labels->not_found ?? '';
@@ -150,7 +148,7 @@ class Term_Select_2 {
 
 		?>
 		<script>
-			( function( $ ) {
+			( function ( $ ) {
 				var el = {};
 
 				function load_selects( $last ) {
@@ -167,10 +165,10 @@ class Term_Select_2 {
 							cache: true,
 							minimumInputLength: 3,
 							delay: 250,
-							processResults: function( data ) {
+							processResults: function ( data ) {
 								var options = [];
 								if ( data ) {
-									$.each( data, function( index, text ) {
+									$.each( data, function ( index, text ) {
 										options.push( {
 											id: index,
 											text: text,
@@ -184,17 +182,17 @@ class Term_Select_2 {
 						},
 						cache: true,
 						'language': {
-							'noResults': function() {
+							'noResults': function () {
 								return "<?= esc_js( $no_results_text ) ?>";
 							},
 						},
 					} );
 				}
 
-				$( function() {
+				$( function () {
 					load_selects( false );
-					$( '.cmb-add-row-button' ).on( 'click', function() {
-						setTimeout( function() {
+					$( '.cmb-add-row-button' ).on( 'click', function () {
+						setTimeout( function () {
 							load_selects( true );
 						}, 0 );
 					} );
@@ -212,26 +210,27 @@ class Term_Select_2 {
 	 * removal of selected options which no longer exist in the options array.
 	 *
 	 * @param CMB2_Types $types_object
-	 * @param array|null $field_escaped_value
+	 * @param string[]   $value
 	 *
 	 * @return string
 	 */
-	protected function get_multi_select_options( CMB2_Types $types_object, ?array $field_escaped_value = [] ) : string {
+	protected function get_multi_select_options( CMB2_Types $types_object, array $value ): string {
 		$options = (array) $types_object->field->options();
 
 		// If we have selected items, we need to preserve their order
-		if ( ! empty( $field_escaped_value ) ) {
-			if ( ! empty( $options ) ) {
-				$options = $this->put_selected_options_first( $options, $field_escaped_value );
-			} else {
-				$options = \get_terms( [
-					'include'    => array_map( '\intval', $field_escaped_value ),
-					'fields'     => 'id=>name',
-					'taxonomy'   => $types_object->field->args['taxonomy'] ?? 'category',
-					'hide_empty' => false,
-				] );
-			}
+		if ( [] === $value ) {
+			return '';
 		}
+		if ( [] !== $options ) {
+			$options = $this->put_selected_options_first( $options, $value );
+		} else {
+			$options = \get_terms( [
+				'fields'     => 'id=>name',
+				'taxonomy'   => $types_object->field->args['taxonomy'] ?? 'category',
+				'hide_empty' => false,
+			] );
+		}
+
 		if ( is_wp_error( $options ) ) {
 			return '';
 		}
@@ -249,7 +248,7 @@ class Term_Select_2 {
 			];
 
 			// Split options into those, which are selected and the rest.
-			if ( empty( $option_value ) || \in_array( $option_value, (array) $field_escaped_value, true ) ) {
+			if ( \in_array( $option_value, $value, true ) ) {
 				$option['checked'] = true;
 				$selected_items .= $select->select_option( $option );
 			} else {
@@ -264,12 +263,12 @@ class Term_Select_2 {
 	/**
 	 * Sort the options array by adding selected items first
 	 *
-	 * @param array $all_options
-	 * @param array $selected_options
+	 * @param array<string, string> $all_options
+	 * @param string[]              $selected_options
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
-	protected function put_selected_options_first( array $all_options, array $selected_options ) : array {
+	protected function put_selected_options_first( array $all_options, array $selected_options ): array {
 		$ordered = [];
 		foreach ( $selected_options as $key ) {
 			if ( \array_key_exists( $key, $all_options ) ) {
@@ -288,21 +287,21 @@ class Term_Select_2 {
 	 *
 	 * Also needed for repeater fields
 	 *
-	 * @param mixed      $check
-	 * @param mixed      $meta_value
-	 * @param int|string $id - Post id on post screens, field key on settings screens.
+	 * @param mixed                $check
+	 * @param mixed                $meta_value
+	 * @param int|string           $id - Post id on post screens, field key on settings screens.
 	 *
-	 * @param array      $field_args
+	 * @param array<string, mixed> $field_args
 	 *
-	 * @return array|null
+	 * @return array<string, string>|null
 	 */
-	public function assign_terms_during_save( $check, $meta_value, $id, array $field_args ): ?array {
-		if ( ! \is_array( $meta_value ) || empty( $meta_value ) ) {
+	public function assign_terms_during_save( mixed $check, mixed $meta_value, int|string $id, array $field_args ): ?array {
+		if ( ! \is_array( $meta_value ) || [] === $meta_value ) {
 			return $check;
 		}
-
-		if ( $field_args['term_select_2_create_terms'] ) {
-			if ( $field_args['repeatable'] ) {
+		$create_terms = (bool) ( $field_args['term_select_2_create_terms'] ?? false );
+		if ( $create_terms ) {
+			if ( isset( $field_args['repeatable'] ) && false !== $field_args['repeatable'] ) {
 				foreach ( $meta_value as $k => $terms ) {
 					$meta_value[ $k ] = $this->create_terms( $terms, $this->get_taxonomy( $field_args ) );
 				}
@@ -311,7 +310,8 @@ class Term_Select_2 {
 			}
 		}
 
-		if ( ! empty( $id ) && $field_args['term_select_2_save_as_terms'] ) {
+		$save_terms = (bool) ( $field_args['term_select_2_save_as_terms'] ?? false );
+		if ( ( '' !== $id && 0 !== $id ) && $save_terms ) {
 			wp_add_object_terms( (int) $id, \array_map( '\intval', $meta_value ), $this->get_taxonomy( $field_args ) );
 		}
 
@@ -319,12 +319,20 @@ class Term_Select_2 {
 	}
 
 
-	private function create_terms( array $terms, string $taxonomy ) : array {
+	/**
+	 * Create terms if they don't exist
+	 *
+	 * @param array<string, string> $terms
+	 * @param string                $taxonomy
+	 *
+	 * @return array<string, string>
+	 */
+	private function create_terms( array $terms, string $taxonomy ): array {
 		foreach ( $terms as $key => $val ) {
 			if ( ! \is_numeric( $val ) ) {
 				$term = wp_create_term( $val, $taxonomy );
 				if ( ! is_wp_error( $term ) ) {
-					$terms [ $key ] = (string) $term['term_id'];
+					$terms[ $key ] = (string) $term['term_id'];
 				}
 			}
 		}
@@ -336,14 +344,14 @@ class Term_Select_2 {
 	/**
 	 * Handle repeatable data escaping
 	 *
-	 * @param ?array   $checked
-	 * @param array|string $values
-	 * @param array        $field_args
+	 * @param ?array<string, string[]>       $checked
+	 * @param array<string, string[]>|string $values
+	 * @param array<string, mixed>           $field_args
 	 *
-	 * @return array|null
+	 * @return ?array<string, string[]>
 	 */
-	public function esc_repeater_values( ?array $checked, $values, array $field_args ) : ?array {
-		if ( ! \is_array( $values ) || ! $field_args['repeatable'] ) {
+	public function esc_repeater_values( ?array $checked, array|string $values, array $field_args ): ?array {
+		if ( ! \is_array( $values ) || ! isset( $field_args['repeatable'] ) || false !== $field_args['repeatable'] ) {
 			return $checked;
 		}
 
@@ -358,11 +366,11 @@ class Term_Select_2 {
 	/**
 	 * Get the set taxonomy or fallback to 'category'
 	 *
-	 * @param array $field_args
+	 * @param array<string, mixed> $field_args
 	 *
 	 * @return string
 	 */
-	private function get_taxonomy( array $field_args ) : string {
+	private function get_taxonomy( array $field_args ): string {
 		return $field_args['taxonomy'] ?? 'category';
 	}
 }

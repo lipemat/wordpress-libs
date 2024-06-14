@@ -1,10 +1,8 @@
-# @version 2.2.0
+# @version 2.3.0
 
 includes:
     # Include the lipemat phpstan rules.
     - %rootDir%/../../../rules.neon
-    # Baseline errors to be resolved.
-    - dev/phpstan-baseline.php
 
 rules:
     # Enable the script types rule even though the library is distributed.
@@ -24,7 +22,6 @@ parameters:
         nonDistributed: false
     strictRules:
         allRules: true
-        # Construct empty() is not allowed.
         noVariableVariables: false
     paths:
         - src

@@ -56,7 +56,7 @@ class Resources {
 	 * @see Resources::get_content_hash()
 	 * @see Resources::get_file_modified_time()
 	 *
-	 * @return null|string
+	 * @return ?string
 	 */
 	public function get_revision(): ?string {
 		return $this->once( function() {
@@ -65,10 +65,11 @@ class Resources {
 				// Not available in root, so we try the wp-content directory.
 				$file = trailingslashit( WP_CONTENT_DIR ) . '.revision';
 			}
+			$version = false;
 			if ( \is_readable( $file ) ) {
-				$version = \file_get_contents( $file ); //phpcs:ignore
+				$version = \file_get_contents( $file );
 			}
-			if ( empty( $version ) ) {
+			if ( false === $version ) {
 				return null;
 			}
 			return \trim( $version );
@@ -365,10 +366,10 @@ class Resources {
 
 			$url = ( \defined( 'SCRIPT_DEBUG' ) && \SCRIPT_DEBUG ) ? $cdn[ $handle ]['dev'] : $cdn[ $handle ]['min'];
 
-			//phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+			//phpcs:ignore WordPress.WP.EnqueuedResourceParameters -- Version handled by CDN URL.
 			wp_register_script( $handle, $url, $deps, null, $cdn[ $handle ]['footer'] );
 
-			if ( ! empty( $cdn[ $handle ]['inline'] ) ) {
+			if ( isset( $cdn[ $handle ]['inline'] ) ) {
 				wp_add_inline_script( $handle, $cdn[ $handle ]['inline'] );
 			}
 
@@ -408,8 +409,8 @@ class Resources {
 
 		// Add `integrity="<hash>"` to `<script>` tag.
 		$integrity = null;
-		if ( \array_key_exists( $url, $cached ) ) {
-			if ( ! empty( $cached[ $url ] ) ) {
+		if ( isset( $cached[ $url ] ) ) {
+			if ( \is_string( $cached[ $url ] ) && '' !== $cached[ $url ] ) {
 				$integrity = $cached[ $url ];
 			}
 		} else {
@@ -419,7 +420,7 @@ class Resources {
 			}
 			try {
 				$meta = json_decode( $response['body'], true, 512, JSON_THROW_ON_ERROR );
-			} catch ( \JsonException $e ) {
+			} catch ( \JsonException ) {
 				return false;
 			}
 			$integrity = $meta['integrity'] ?? null;
@@ -427,7 +428,7 @@ class Resources {
 			update_network_option( 0, static::INTEGRITY, $cached );
 		}
 
-		if ( ! empty( $integrity ) ) {
+		if ( null !== $integrity ) {
 			$this->integrity_javascript( $handle, $integrity );
 			return true;
 		}

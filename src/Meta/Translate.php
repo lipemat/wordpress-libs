@@ -211,7 +211,7 @@ trait Translate {
 	 */
 	protected function get_file_field_value( int|string $object_id, string $key, string $meta_type ): ?array {
 		$url = $this->get_meta_value( $object_id, $key, $meta_type );
-		if ( ! empty( $url ) ) {
+		if ( \is_string( $url ) && '' !== \trim( $url ) ) {
 			// Add the extra field so groups meta will be translated properly.
 			if ( null !== $this->fields[ $key ]->group ) {
 				$this->fields[ $key . '_id' ] = $this->fields[ $key ];

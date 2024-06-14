@@ -1,8 +1,8 @@
 <?php
+//phpcs:disable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Meta;
-
-//phpcs:disable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 
 /**
  * Meta interaction support for Object Traits which use the Meta Repo.

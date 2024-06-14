@@ -1,5 +1,4 @@
 <?php
-
 declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
@@ -107,12 +106,12 @@ trait Box_Trait {
 	 */
 	public function register_fields(): void {
 		$fields = $this->get_fields();
-		$show_in_rest = $this->show_in_rest;
+		$show_in_rest = $this->show_in_rest ?? false;
 
 		// Run through the fields first for adjustments to box config.
 		\array_walk( $fields, function( Field $field ) use ( $show_in_rest ) {
 			$this->register_meta( $field );
-			if ( empty( $show_in_rest ) ) {
+			if ( false === $show_in_rest ) {
 				$this->selectively_show_in_rest( $field );
 			}
 		} );
@@ -148,7 +147,7 @@ trait Box_Trait {
 			$config['type'] = 'object';
 		}
 
-		if ( (bool) $field->show_in_rest && $this->is_public_rest_data( $field ) ) {
+		if ( isset( $field->show_in_rest ) && false !== $field->show_in_rest && $this->is_public_rest_data( $field ) ) {
 			$config['show_in_rest'] = $field->show_in_rest;
 			if ( $field->is_using_array_data() ) {
 				$config['show_in_rest'] = [
@@ -186,7 +185,7 @@ trait Box_Trait {
 	 * @param Field $field - The field to check.
 	 */
 	protected function selectively_show_in_rest( Field $field ): void {
-		if ( ! empty( $field->show_in_rest ) ) {
+		if ( isset( $field->show_in_rest ) && false !== $field->show_in_rest ) {
 			$this->show_in_rest = true;
 		} else {
 			$field->show_in_rest = false;
@@ -199,12 +198,12 @@ trait Box_Trait {
 	 * If you need the long names due to conflicts, they will still
 	 * be available via /cmb2 values.
 	 *
-	 * @param Field $field  - The field to translate.
-	 * @param array $config - The config array to translate.
+	 * @param Field                $field  - The field to translate.
+	 * @param array<string, mixed> $config - The config array to translate.
 	 *
 	 * @notice This can never be changed, or it will break sites!!
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function translate_rest_keys( Field $field, array $config ): array {
 		if ( isset( $config['show_in_rest'] ) ) {

@@ -306,7 +306,6 @@ class Meta_Query implements Clause_Interface {
 		if ( ! is_numeric( $current ) ) {
 			throw new \LogicException( esc_html__( 'You must create a meta clause before you add advanced parameters to it!', 'lipe' ) );
 		}
-		$current = \array_key_last( $this->clauses );
 		$this->clauses[ $current ] = \array_merge(
 			$this->clauses[ $current ],
 			\array_filter( [

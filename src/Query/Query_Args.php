@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Query;
 
@@ -31,6 +32,9 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, Args_Int
 	public const FIELDS_IDS       = 'ids';
 	public const FIELDS_ID_PARENT = 'id=>parent';
 	public const FIELDS_COMPLETE  = '';
+
+	public const ORDER_ASC  = 'ASC';
+	public const ORDER_DESC = 'DESC';
 
 	public const ORDERBY_NONE          = 'none';
 	public const ORDERBY_NAME          = 'name';
@@ -268,7 +272,7 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, Args_Int
 	 *
 	 * Default 'DESC'. Accepts 'ASC', 'DESC'.
 	 *
-	 * @phpstan-var 'ASC'|'DESC'
+	 * @phpstan-var self::ORDER_*
 	 *
 	 * @var string
 	 */
@@ -580,32 +584,31 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, Args_Int
 	 *   - 'post_parent__in'
 	 *
 	 * @phpstan-param self::ORDERBY*|array<int,self::ORDERBY*> $orderby
-	 * @phpstan-param 'ASC'|'DESC'|''                          $order
+	 * @phpstan-param self::ORDER_*|''                         $order
 	 *
-	 * @param string|array                                     $orderby - Post field to order by.
+	 * @param array|string                                     $orderby - Post field to order by.
 	 * @param string                                           $order   - Optional order of the order by.
 	 *
 	 * @throws \LogicException - If field ordering by is not available.
 	 *
 	 * @return void
 	 */
-	public function orderby( $orderby, string $order = '' ): void {
+	public function orderby( array|string $orderby, string $order = '' ): void {
 		if ( \in_array( static::ORDERBY_POST_IN, (array) $orderby, true ) ) {
-			if ( empty( $this->post__in ) ) {
+			if ( ! isset( $this->post__in ) || [] === $this->post__in ) {
 				throw new \LogicException( esc_html__( 'You cannot order by `post__in` unless you specify the post ins.', 'lipe' ) );
 			}
 		} elseif ( \in_array( static::ORDERBY_NAME_IN, (array) $orderby, true ) ) {
-			if ( empty( $this->post__name__in ) ) {
+			if ( ! isset( $this->post__name__in ) || [] === $this->post__name__in ) {
 				throw new \LogicException( esc_html__( 'You cannot order by `post__name__in` unless you specify the post name ins.', 'lipe' ) );
 			}
 		} elseif ( \in_array( static::ORDERBY_PARENT_IN, (array) $orderby, true ) ) {
-			if ( empty( $this->post_parent__in ) ) {
+			if ( ! isset( $this->post_parent__in ) || [] === $this->post_parent__in ) {
 				throw new \LogicException( esc_html__( 'You cannot order by `post_parent__in` unless you specify the post parent ins.', 'lipe' ) );
 			}
 		}
 
 		$this->orderby = $orderby;
-
 		if ( '' !== $order ) {
 			$this->order = $order;
 		}
@@ -639,7 +642,7 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, Args_Int
 	 *
 	 * @see Utils::get_light_query_args()
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function get_light_args(): array {
 		return Utils::in()->get_light_query_args( $this->get_args() );

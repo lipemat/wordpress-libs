@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Site;
 
@@ -26,7 +27,7 @@ use Lipe\Lib\Meta\Repo;
  * @property string $spam
  * @property string $blogname
  * @property string $home
- * @property int $post_count
+ * @property int    $post_count
  * @property string $siteurl
  */
 trait Site_Trait {

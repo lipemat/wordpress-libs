@@ -14,7 +14,7 @@ trait Tax_Query_Trait {
 	 *
 	 * @var int|string
 	 */
-	public $cat;
+	public string|int $cat;
 
 	/**
 	 * An array of category IDs (AND in).
@@ -100,7 +100,7 @@ trait Tax_Query_Trait {
 	 *
 	 * @internal
 	 *
-	 * @var array
+	 * @var array<mixed>
 	 */
 	public array $tax_query;
 
