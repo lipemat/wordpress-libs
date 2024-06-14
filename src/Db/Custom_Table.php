@@ -7,13 +7,15 @@ namespace Lipe\Lib\Db;
 /**
  * Custom database table interaction.
  *
- * @author Mat Lipe
- * @since  4.10.0
+ * @author       Mat Lipe
+ * @since        4.10.0
  *
- * @template COLUMNS of array<string, string|float|int|null>
- * @template FORMATS of array<string, "%d"|"%f"|"%s">
- * // Partials must be passed in because \Partial<array> does not support templates.
- * @template PARTIALS of array<key-of<COLUMNS>, float|string|int|null>
+ *
+ * @noinspection PhpUndefinedClassInspection -- template-type is not recognized by PHPStorm.
+ *
+ * @template TABLE of Table
+ * @phpstan-type COLUMNS template-type<TABLE, Table, 'COLUMNS'>
+ * @phpstan-type PARTIALS template-type<TABLE, Table, 'PARTIALS'>
  */
 class Custom_Table {
 	public const ORDER_ASC  = 'ASC';
@@ -41,9 +43,9 @@ class Custom_Table {
 	/**
 	 * Set up the custom table for query interaction.
 	 *
-	 * @phpstan-param Table<FORMATS> $config
+	 * @phpstan-param TABLE $config
 	 *
-	 * @param Table                  $config - The table configuration.
+	 * @param Table         $config - The table configuration.
 	 */
 	final protected function __construct(
 		protected readonly Table $config
@@ -445,9 +447,9 @@ class Custom_Table {
 	/**
 	 * Register a table for use with the Custom_Table class.
 	 *
-	 * @phpstan-param Table<FORMATS> $config
+	 * @phpstan-param TABLE $config
 	 *
-	 * @param Table                  $config - The table configuration.
+	 * @param Table         $config - The table configuration.
 	 *
 	 * @return static
 	 */
