@@ -18,7 +18,7 @@ parameters:
             - CMB2_Type_Checkbox
             - Lipe\Lib\CMB2\Box
             - Lipe\Lib\CMB2\Field
-            - Lipe\Lib\Query\Args
+            - Lipe\Lib\Query\Query_Args
             - Lipe\Lib\Taxonomy\Get_Terms
             - Walker_Category_Checklist
         nonDistributed: false

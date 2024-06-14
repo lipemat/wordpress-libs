@@ -184,10 +184,10 @@ class Register_Taxonomy implements Args_Interface {
 	/**
 	 * Works much like a hook, in that it will be called when the count is updated.
 	 *
-	 * Default `_update_post_term_count()` for taxonomies attached to post types, which confirms that the objects are published before
+	 * If not set `_update_post_term_count()` for taxonomies attached to post types, which confirms that the objects are published before
 	 * counting them.
 	 *
-	 * Default `_update_generic_term_count()` for taxonomies attached to other object types, such as users.
+	 * And `_update_generic_term_count()` for taxonomies attached to other object types, such as users.
 	 *
 	 * @var callable
 	 * @phpstan-var callable(int[],\WP_Taxonomy): void
@@ -231,7 +231,7 @@ class Register_Taxonomy implements Args_Interface {
 		if ( isset( $this->sub_args['args'] ) && $this->sub_args['args'] instanceof Get_Terms ) {
 			return $this->sub_args['args'];
 		}
-		$this->sub_args['args'] = new Get_Terms();
+		$this->sub_args['args'] = new Get_Terms( [] );
 		return $this->sub_args['args'];
 	}
 }

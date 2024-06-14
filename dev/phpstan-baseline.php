@@ -464,42 +464,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../src/Post_Type/Post_Object_Trait.php',
 ];
 $ignoreErrors[] = [
-	// identifier: empty.notAllowed
-	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/../src/Query/Args.php',
-];
-$ignoreErrors[] = [
-	// identifier: lipemat.declareStrictTypes
-	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Query/Args.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Method Lipe\\\\Lib\\\\Query\\\\Args\\:\\:get_light_args\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Query/Args.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\Query\\\\Args\\:\\:\\$date_query type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Query/Args.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\Query\\\\Args\\:\\:\\$meta_query type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Query/Args.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.iterableValue
-	'message' => '#^Property Lipe\\\\Lib\\\\Query\\\\Args\\:\\:\\$tax_query type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Query/Args.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.iterableValue
 	'message' => '#^Method Lipe\\\\Lib\\\\Query\\\\Args_Interface\\:\\:get_args\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
@@ -570,6 +534,42 @@ $ignoreErrors[] = [
 	'message' => '#^Property Lipe\\\\Lib\\\\Query\\\\Clause\\\\Tax_Query\\:\\:\\$clauses type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../src/Query/Clause/Tax_Query.php',
+];
+$ignoreErrors[] = [
+	// identifier: empty.notAllowed
+	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/../src/Query/Query_Args.php',
+];
+$ignoreErrors[] = [
+	// identifier: lipemat.declareStrictTypes
+	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Query/Query_Args.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.iterableValue
+	'message' => '#^Method Lipe\\\\Lib\\\\Query\\\\Query_Args\\:\\:get_light_args\\(\\) return type has no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Query/Query_Args.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.iterableValue
+	'message' => '#^Property Lipe\\\\Lib\\\\Query\\\\Query_Args\\:\\:\\$date_query type has no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Query/Query_Args.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.iterableValue
+	'message' => '#^Property Lipe\\\\Lib\\\\Query\\\\Query_Args\\:\\:\\$meta_query type has no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Query/Query_Args.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.iterableValue
+	'message' => '#^Property Lipe\\\\Lib\\\\Query\\\\Query_Args\\:\\:\\$tax_query type has no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../src/Query/Query_Args.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue
@@ -678,12 +678,6 @@ $ignoreErrors[] = [
 	'message' => '#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#',
 	'count' => 4,
 	'path' => __DIR__ . '/../src/Theme/Resources.php',
-];
-$ignoreErrors[] = [
-	// identifier: lipemat.declareStrictTypes
-	'message' => '#^File is missing a "declare\\(strict_types\\=1\\)" declaration\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../src/Traits/Singleton.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.iterableValue

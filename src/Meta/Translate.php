@@ -120,8 +120,7 @@ trait Translate {
 		}
 
 		if ( Repo::META_OPTION === $meta_type ) {
-			// @phpstan-ignore-next-line -- CMB2 returned null prior to v2.10.1.15
-			return (bool) cmb2_options( (string) $object_id )->update( $key, $value, true );
+			return cmb2_options( (string) $object_id )->update( $key, $value, true );
 		}
 
 		return update_metadata( $meta_type, (int) $object_id, $key, $value );

@@ -9,7 +9,7 @@ namespace Lipe\Lib\User;
  */
 class Get_UsersTest extends \WP_UnitTestCase {
 
-	public function test_get_args() : void {
+	public function test_get_args(): void {
 		$args = new Get_Users( [
 			'order'  => 'ASC',
 			'offset' => 4,
@@ -44,13 +44,13 @@ class Get_UsersTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_merge_existing() : void {
+	public function test_merge_existing(): void {
 		$query = new \WP_User_Query( [
 			'order' => 'ASC',
 		] );
 		$previous = $query->query_vars;
 
-		$args = new Get_Users();
+		$args = new Get_Users( [] );
 		$args->orderby( 'include' );
 		$args->merge_query( $query );
 

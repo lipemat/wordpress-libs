@@ -249,7 +249,7 @@ class Route {
 			return $this->post_id;
 		}
 
-		$args = new Get_Posts();
+		$args = new Get_Posts( [] );
 		$args->fields = 'ids';
 		$args->post_status = 'publish';
 		$args->post_type = self::POST_TYPE;
@@ -278,7 +278,7 @@ class Route {
 	 * @return int The ID of the new post
 	 */
 	protected function make_post(): int {
-		$args = new Wp_Insert_Post();
+		$args = new Wp_Insert_Post( [] );
 		$args->post_type = self::POST_TYPE;
 		$args->post_status = 'publish';
 		$args->post_title = 'Lipe Libs Placeholder Post';

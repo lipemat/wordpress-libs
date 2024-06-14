@@ -1,7 +1,11 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Traits;
 
+/**
+ * Use a class as a singleton.
+ */
 trait Singleton {
 
 	/**
@@ -16,7 +20,7 @@ trait Singleton {
 	 *
 	 * @var bool
 	 */
-	protected static $inited = false;
+	protected static bool $initialized = false;
 
 
 	/**
@@ -30,7 +34,7 @@ trait Singleton {
 		if ( method_exists( static::$instance, 'hook' ) ) {
 			static::$instance->hook();
 		}
-		static::$inited = true;
+		static::$initialized = true;
 	}
 
 
@@ -38,12 +42,10 @@ trait Singleton {
 	 * Call this method as many times as needed, and the
 	 * class will only init() one time.
 	 *
-	 * @static
-	 *
 	 * @return void
 	 */
 	public static function init_once(): void {
-		if ( ! static::$inited ) {
+		if ( ! static::$initialized ) {
 			static::init();
 		}
 	}
@@ -54,7 +56,7 @@ trait Singleton {
 	 *
 	 * @return static
 	 */
-	public static function in() {
+	public static function in(): static {
 		return static::instance();
 	}
 
@@ -64,11 +66,12 @@ trait Singleton {
 	 *
 	 * @return static
 	 */
-	public static function instance() {
-		if ( ! is_a( static::$instance, __CLASS__ ) ) {
-			static::$instance = new static(); // @phpstan-ignore-line
+	public static function instance(): static {
+		if ( ! \is_a( static::$instance, __CLASS__ ) ) {
+			// @phpstan-ignore-next-line -- No way to enforce an optional constructor in a trait.
+			static::$instance = new static();
 		}
 
-		return static::$instance; // @phpstan-ignore-line
+		return static::$instance;
 	}
 }

@@ -46,7 +46,7 @@ class Section {
 		public readonly string $id,
 		public readonly string $title,
 	) {
-		$this->args = new SectionArgs();
+		$this->args = new SectionArgs( [] );
 	}
 
 

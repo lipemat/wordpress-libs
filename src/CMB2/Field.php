@@ -1064,7 +1064,7 @@ class Field {
 	 * @return Field
 	 */
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ): Field {
-		if ( method_exists( \CMB2_Utils::class, 'does_not_support_repeating' ) && \CMB2_Utils::does_not_support_repeating( $this->get_type() ) ) {
+		if ( \CMB2_Utils::does_not_support_repeating( $this->get_type() ) ) {
 			/* translators: {field type} */
 			throw new \LogicException( \sprintf( esc_html__( 'Fields of `%s` type do not support repeating.', 'lipe' ), esc_html( $this->get_type() ) ) );
 		}
@@ -1597,12 +1597,11 @@ class Field {
 	 *
 	 * @return mixed
 	 */
-	public function default_option_callback() {
+	public function default_option_callback(): mixed {
 		$cmb2_field = $this->get_cmb2_field();
 		if ( null === $cmb2_field ) {
 			return false;
 		}
-		// @phpstan-ignore-next-line -- The object id must accept a string for options.
 		$cmb2_field->object_id( $this->box->get_id() );
 		return \call_user_func( $this->default_cb, $cmb2_field->properties, $cmb2_field );
 	}

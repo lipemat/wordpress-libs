@@ -15,11 +15,9 @@ interface Args_Interface {
 	/**
 	 * Optionally pass existing arguments to preload this class.
 	 *
-	 * @param array $existing - Existing arguments to preload.
-	 *
-	 * @phpstan-ignore-next-line -- Using default `$existing` value for backwards compatibility.
+	 * @param array<string, mixed> $existing - Existing arguments to preload.
 	 */
-	public function __construct( array $existing = [] );
+	public function __construct( array $existing );
 
 
 	/**

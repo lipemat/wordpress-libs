@@ -243,7 +243,7 @@ class Taxonomy {
 		$this->name = $taxonomy;
 		$this->labels = new Labels( $this );
 		$this->capabilities = new Capabilities( $this );
-		$this->register_args = new Register_Taxonomy();
+		$this->register_args = new Register_Taxonomy( [] );
 
 		$this->set_labels();
 		$this->hook();
@@ -343,7 +343,7 @@ class Taxonomy {
 			return;
 		}
 
-		$args = new Wp_Dropdown_Categories();
+		$args = new Wp_Dropdown_Categories( [] );
 		$args->orderby = 'name';
 		$args->value_field = 'slug';
 		$args->hierarchical = true;
