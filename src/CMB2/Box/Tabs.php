@@ -80,7 +80,7 @@ class Tabs {
 	 * @return void
 	 */
 	public function opening_div( string $cmb_id, int|string $object_id, string $object_type, \CMB2 $cmb ): void {
-		if ( false === $cmb->prop( 'tabs' ) ) {
+		if ( false === $cmb->prop( 'tabs' ) || [] === $cmb->prop( 'tabs' ) ) {
 			return;
 		}
 		$this->cmb = $cmb;

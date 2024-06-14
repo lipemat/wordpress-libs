@@ -6,7 +6,6 @@ namespace Lipe\Lib\CMB2\Field;
 use CMB2_Field;
 use CMB2_Types;
 use Lipe\Lib\Traits\Singleton;
-use function PHPStan\dumpType;
 
 /**
  * Select 2 Field for Terms.
@@ -18,8 +17,6 @@ use function PHPStan\dumpType;
  *          $box->add_field( $field );
  *
  * @notice  You must call init() on this class to make it available
- *
- * @package Lipe\Lib\CMB2\Field_Types
  */
 class Term_Select_2 {
 	use Singleton;
@@ -41,9 +38,7 @@ class Term_Select_2 {
 		add_filter( 'cmb2_types_esc_' . self::NAME, [ $this, 'esc_repeater_values' ], 10, 3 );
 
 		// Remove subtle conflict with acf.
-		add_filter( 'acf/settings/select2_version', function() {
-			return 4;
-		} );
+		add_filter( 'acf/settings/select2_version', fn() => 4 );
 
 		add_action( 'wp_ajax_' . self::GET_TERMS, [ $this, 'ajax_get_terms' ] );
 	}
@@ -216,39 +211,30 @@ class Term_Select_2 {
 	 */
 	protected function get_multi_select_options( CMB2_Types $types_object, array $value ): string {
 		$options = (array) $types_object->field->options();
-
-		// If we have selected items, we need to preserve their order
-		if ( [] === $value ) {
-			return '';
-		}
-		if ( [] !== $options ) {
-			$options = $this->put_selected_options_first( $options, $value );
-		} else {
+		if ( [] === $options ) {
 			$options = \get_terms( [
 				'fields'     => 'id=>name',
 				'taxonomy'   => $types_object->field->args['taxonomy'] ?? 'category',
 				'hide_empty' => false,
 			] );
 		}
-
 		if ( is_wp_error( $options ) ) {
 			return '';
 		}
-
+		$options = $this->put_selected_options_first( $options, $value );
 		$selected_items = '';
 		$other_items = '';
 
 		$select = new \CMB2_Type_Select( $types_object );
 
 		foreach ( $options as $option_value => $option_label ) {
-			// Clone args & modify for just this item
 			$option = [
 				'value' => $option_value,
 				'label' => $option_label,
 			];
 
 			// Split options into those, which are selected and the rest.
-			if ( \in_array( $option_value, $value, true ) ) {
+			if ( \in_array( (string) $option_value, $value, true ) ) {
 				$option['checked'] = true;
 				$selected_items .= $select->select_option( $option );
 			} else {
@@ -263,10 +249,10 @@ class Term_Select_2 {
 	/**
 	 * Sort the options array by adding selected items first
 	 *
-	 * @param array<string, string> $all_options
-	 * @param string[]              $selected_options
+	 * @param string[] $all_options
+	 * @param string[] $selected_options
 	 *
-	 * @return array<string, string>
+	 * @return string[]
 	 */
 	protected function put_selected_options_first( array $all_options, array $selected_options ): array {
 		$ordered = [];
@@ -282,10 +268,9 @@ class Term_Select_2 {
 
 
 	/**
-	 * Add new terms to the db, and the object
-	 * If either option is set to do so
-	 *
-	 * Also needed for repeater fields
+	 * Based on the passed options.
+	 * - Add new terms to the db.
+	 * - Assign terms to the object.
 	 *
 	 * @param mixed                $check
 	 * @param mixed                $meta_value
@@ -312,7 +297,9 @@ class Term_Select_2 {
 
 		$save_terms = (bool) ( $field_args['term_select_2_save_as_terms'] ?? false );
 		if ( ( '' !== $id && 0 !== $id ) && $save_terms ) {
-			wp_add_object_terms( (int) $id, \array_map( '\intval', $meta_value ), $this->get_taxonomy( $field_args ) );
+			//	if ( Repo::in()->supports_taxonomy_relationships( $this->box_type, Repo ) ) {
+			\wp_set_object_terms( (int) $id, \array_map( '\intval', $meta_value ), $this->get_taxonomy( $field_args ) );
+			//}
 		}
 
 		return $meta_value;
@@ -344,18 +331,21 @@ class Term_Select_2 {
 	/**
 	 * Handle repeatable data escaping
 	 *
-	 * @param ?array<string, string[]>       $checked
-	 * @param array<string, string[]>|string $values
-	 * @param array<string, mixed>           $field_args
+	 * @param ?array<string, string[]>              $checked
+	 * @param null|array<string, string[]>|string[] $values
+	 * @param array<string, mixed>                  $field_args
 	 *
-	 * @return ?array<string, string[]>
+	 * @return null|array<string, string[]>|string[]
 	 */
-	public function esc_repeater_values( ?array $checked, array|string $values, array $field_args ): ?array {
-		if ( ! \is_array( $values ) || ! isset( $field_args['repeatable'] ) || false !== $field_args['repeatable'] ) {
+	public function esc_repeater_values( ?array $checked, null|array $values, array $field_args ): ?array {
+		if ( ! \is_array( $values ) || ! isset( $field_args['repeatable'] ) || false === $field_args['repeatable'] ) {
 			return $checked;
 		}
 
 		foreach ( $values as $key => $val ) {
+			if ( ! \is_array( $val ) ) {
+				continue;
+			}
 			$values[ $key ] = \array_map( 'esc_attr', $val );
 		}
 
