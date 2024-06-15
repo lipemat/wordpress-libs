@@ -341,8 +341,7 @@ class Field {
 
 	/**
 	 * A callback to provide field options.
-	 * Callback function should return an options array.
-	 * The callback function gets passed the $field object.
+	 *
 	 * It is recommended to use this parameter over the options parameter
 	 * if you are doing anything complex to generate your options array,
 	 * as the '*_cb' parameters are run when the field is generated,
@@ -352,7 +351,7 @@ class Field {
 	 *
 	 * @example my_get_options_function( $field ){ return [ value => label ] }
 	 *
-	 * @var callable
+	 * @var callable( \CMB2_Field ): array<string, string>
 	 */
 	public $options_cb;
 
@@ -634,29 +633,6 @@ class Field {
 	 * @var bool
 	 */
 	public bool $revisions_enabled;
-
-	/**
-	 * Used by the term_select_2 field type to append the terms to the object
-	 * as well as storing them in meta.
-	 *
-	 * @see \Lipe\Lib\CMB2\Field\Term_Select_2::assign_terms_during_save
-	 *
-	 * @interal
-	 *
-	 * @var bool
-	 */
-	public bool $term_select_2_save_as_terms = false;
-
-	/**
-	 * Used by the term_select_2 field type to allow creating new terms.
-	 *
-	 * @see \Lipe\Lib\CMB2\Field\Term_Select_2::assign_terms_during_save
-	 *
-	 * @interal
-	 *
-	 * @var bool
-	 */
-	public bool $term_select_2_create_terms = false;
 
 	/**
 	 * Used by the `text_url` field type to specify the protocols allowed.
@@ -1625,13 +1601,11 @@ class Field {
 	 *
 	 * @see Box::add_field_to_box()
 	 *
-	 * @throws \LogicException - If a field has not been specified.
-	 *
 	 * @return array<string, mixed>
 	 */
 	public function get_field_args(): array {
 		if ( ! isset( $this->type ) ) {
-			throw new \LogicException( esc_html__( 'You must specify a field type (use $field->type() ).', 'lipe' ) );
+			_doing_it_wrong( __METHOD__, esc_html__( 'You must specify a field type (use $field->type() ).', 'lipe' ), '5.0.0' );
 		}
 		$args = [];
 		foreach ( \get_object_vars( $this ) as $_var => $_value ) {

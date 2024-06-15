@@ -5,6 +5,7 @@ namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Field\Checkbox;
 use Lipe\Lib\CMB2\Field\Term_Select_2;
+use Lipe\Lib\CMB2\Field\Term_Select_2\Register;
 use Lipe\Lib\CMB2\Field\True_False;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
@@ -708,22 +709,18 @@ class Field_Type {
 	 *
 	 * @see Term_Select_2
 	 *
-	 * @param string  $taxonomy         - slug.
-	 * @param bool    $create_new_terms - allow creating new terms.
-	 * @param bool    $save_as_terms    - append the terms to the object as well as storing them in meta (default to false).
-	 * @param ?string $no_terms_text    - text to display if no terms are found.
-	 * @param ?bool   $remove_default   - remove default WP terms metabox.
+	 * @param string  $taxonomy       - slug.
+	 * @param bool    $assign_terms   - append the terms to the object as well as storing them in meta (default to false).
+	 * @param ?string $no_terms_text  - text to display if no terms are found.
+	 * @param ?bool   $remove_default - remove default WP terms metabox.
 	 *
 	 * @return Field
 	 */
-	public function taxonomy_select_2( string $taxonomy, bool $create_new_terms = false, bool $save_as_terms = false, ?string $no_terms_text = null, ?bool $remove_default = null ): Field {
-		Term_Select_2::init_once();
-
+	public function taxonomy_select_2( string $taxonomy, bool $assign_terms = false, ?string $no_terms_text = null, ?bool $remove_default = null ): Field {
 		$_args = $this->field_type_taxonomy( Term_Select_2::NAME, $taxonomy, $no_terms_text, $remove_default );
-		$this->field->term_select_2_save_as_terms = $save_as_terms;
-		$this->field->term_select_2_create_terms = $create_new_terms;
-
-		return $this->set( $_args, Repo::TYPE_TAXONOMY );
+		$field = $this->set( $_args, Repo::TYPE_TAXONOMY );
+		Register::factory( $field, $taxonomy, $assign_terms );
+		return $field;
 	}
 
 

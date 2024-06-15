@@ -20,7 +20,7 @@ trait Box_Trait {
 	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#object_types
-	 * @example [ 'page', 'post' ]
+	 * @example ['page', 'post']
 	 *
 	 * @phpstan-var array<Box::TYPE_*|string>
 	 *

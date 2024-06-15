@@ -2237,10 +2237,12 @@ __metadata:
     "@lipemat/js-boilerplate": "npm:^10.9.0"
     "@lipemat/js-boilerplate-gutenberg": "npm:^3.3.3"
     "@lipemat/stylelint-config": "npm:^2.2.1"
+    "@types/jquery": "npm:^3.5.30"
     "@types/lipemat__js-boilerplate": "lipemat/types-js-boilerplate#semver:^2.11.1"
     "@types/node": "npm:^18"
     "@types/react": "npm:^18.3.2"
     "@types/react-dom": "npm:^18"
+    "@types/select2": "npm:^4.0.63"
     eslint: "npm:^8"
     stylelint: "npm:^14"
     ts-node: "npm:^10.9.1"
@@ -2836,7 +2838,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jquery@npm:*, @types/jquery@npm:^3.5.5":
+"@types/jquery@npm:*, @types/jquery@npm:^3.5.30, @types/jquery@npm:^3.5.5":
   version: 3.5.30
   resolution: "@types/jquery@npm:3.5.30"
   dependencies:
@@ -3048,6 +3050,15 @@ __metadata:
   version: 0.12.0
   resolution: "@types/retry@npm:0.12.0"
   checksum: 10c0/7c5c9086369826f569b83a4683661557cab1361bac0897a1cefa1a915ff739acd10ca0d62b01071046fe3f5a3f7f2aec80785fe283b75602dc6726781ea3e328
+  languageName: node
+  linkType: hard
+
+"@types/select2@npm:^4.0.63":
+  version: 4.0.63
+  resolution: "@types/select2@npm:4.0.63"
+  dependencies:
+    "@types/jquery": "npm:*"
+  checksum: 10c0/802ffccaef6ff10e8f6e23dbe1deaca1d5324e427c2a6616bda3d4efeca984856b58177c4a6d4a52d2a7adf5c8ba4fb215af7c162ecfb682c4b80505da23f6a1
   languageName: node
   linkType: hard
 
