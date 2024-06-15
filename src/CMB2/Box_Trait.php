@@ -1,5 +1,4 @@
 <?php
-
 declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
@@ -21,7 +20,7 @@ trait Box_Trait {
 	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#object_types
-	 * @example [ 'page', 'post' ]
+	 * @example ['page', 'post']
 	 *
 	 * @phpstan-var array<Box::TYPE_*|string>
 	 *
@@ -79,23 +78,17 @@ trait Box_Trait {
 	 *
 	 * @example $group = $box->group( $id, $name );
 	 *
-	 * @param string      $id                 - Group ID.
-	 * @param string|null $title              - Group title.
-	 * @param string|null $group_title        - include a {#} to have replaced with number.
-	 * @param string|null $add_button_text    - Text for the "Add" button.
-	 * @param string|null $remove_button_text - Text for the "Remove" button.
-	 * @param bool        $sortable           - Whether the group is sortable.
-	 * @param bool        $closed             - Whether the group is closed by default.
-	 * @param string|null $remove_confirm     - A message to display when a user attempts
-	 *                                        to delete a group.
-	 *                                        (Defaults to null/false for no confirmation).
+	 * @param string  $id          - Group ID.
+	 * @param string  $title       - Group title.
+	 * @param ?string $group_title - include a {#} to have replaced with number.
 	 *
 	 * @return Group
 	 */
-	public function group( string $id, ?string $title = null, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, ?bool $sortable = null, bool $closed = false, ?string $remove_confirm = null ): Group {
-		$this->hook();
-		$group = new Group( $id, $title, $this, $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
+	public function group( string $id, string $title, ?string $group_title = null ): Group {
+		$group = new Group( $id, $title, $this, $group_title );
 		$this->fields[ $id ] = $group;
+
+		$this->hook();
 		return $group;
 	}
 
@@ -113,12 +106,12 @@ trait Box_Trait {
 	 */
 	public function register_fields(): void {
 		$fields = $this->get_fields();
-		$show_in_rest = $this->show_in_rest;
+		$show_in_rest = $this->show_in_rest ?? false;
 
 		// Run through the fields first for adjustments to box config.
 		\array_walk( $fields, function( Field $field ) use ( $show_in_rest ) {
 			$this->register_meta( $field );
-			if ( empty( $show_in_rest ) ) {
+			if ( false === $show_in_rest ) {
 				$this->selectively_show_in_rest( $field );
 			}
 		} );
@@ -154,7 +147,7 @@ trait Box_Trait {
 			$config['type'] = 'object';
 		}
 
-		if ( (bool) $field->show_in_rest && $this->is_public_rest_data( $field ) ) {
+		if ( isset( $field->show_in_rest ) && false !== $field->show_in_rest && $this->is_public_rest_data( $field ) ) {
 			$config['show_in_rest'] = $field->show_in_rest;
 			if ( $field->is_using_array_data() ) {
 				$config['show_in_rest'] = [
@@ -192,7 +185,7 @@ trait Box_Trait {
 	 * @param Field $field - The field to check.
 	 */
 	protected function selectively_show_in_rest( Field $field ): void {
-		if ( ! empty( $field->show_in_rest ) ) {
+		if ( isset( $field->show_in_rest ) && false !== $field->show_in_rest ) {
 			$this->show_in_rest = true;
 		} else {
 			$field->show_in_rest = false;
@@ -205,12 +198,12 @@ trait Box_Trait {
 	 * If you need the long names due to conflicts, they will still
 	 * be available via /cmb2 values.
 	 *
-	 * @param Field $field  - The field to translate.
-	 * @param array $config - The config array to translate.
+	 * @param Field                $field  - The field to translate.
+	 * @param array<string, mixed> $config - The config array to translate.
 	 *
 	 * @notice This can never be changed, or it will break sites!!
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function translate_rest_keys( Field $field, array $config ): array {
 		if ( isset( $config['show_in_rest'] ) ) {

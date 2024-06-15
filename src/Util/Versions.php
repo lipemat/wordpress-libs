@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
@@ -28,7 +29,7 @@ class Versions {
 	 *
 	 * @var string
 	 */
-	protected static $version;
+	protected string $version;
 
 	/**
 	 * Which once items have been run before
@@ -37,33 +38,29 @@ class Versions {
 	 *
 	 * @var array<string, 1>
 	 */
-	protected static array $once_run_before;
+	protected array $once_run_before;
 
 	/**
 	 * Keeps track of the updates to run
 	 *
-	 * @static
-	 *
-	 * @var array<array{version:string, callable:callable, args:array}>>
+	 * @var array<array{version:string, callable:callable, args:mixed}>>
 	 */
-	protected static array $updates = [];
+	protected array $updates = [];
 
 	/**
 	 * Items registered to run only once
 	 *
-	 * @static
-	 *
-	 * @var array<array{callable:callable, args:array}>>
+	 * @var array<array{callable:callable, args:mixed}>>
 	 */
-	protected static array $once = [];
+	protected array $once = [];
 
 
 	/**
 	 * Construct the versions class.
 	 */
 	protected function __construct() {
-		static::$version = (string) get_option( static::OPTION, '0.1' );
-		static::$once_run_before = get_option( static::ONCE, [] );
+		$this->version = (string) get_option( self::OPTION, '0.1' );
+		$this->once_run_before = get_option( self::ONCE, [] );
 
 		$this->hook();
 	}
@@ -75,7 +72,9 @@ class Versions {
 	 * @return void
 	 */
 	protected function hook(): void {
-		add_action( 'init', [ $this, 'run_updates' ], 99999 );
+		add_action( 'init', function() {
+			$this->run_updates();
+		}, PHP_INT_MAX );
 	}
 
 
@@ -85,7 +84,7 @@ class Versions {
 	 * @return string
 	 */
 	public function get_version(): string {
-		return static::$version;
+		return $this->version;
 	}
 
 
@@ -100,9 +99,9 @@ class Versions {
 	 *
 	 * @return void
 	 */
-	public function once( string $key, callable $callback, $args = null ): void {
-		if ( ! isset( static::$once_run_before[ $key ] ) ) {
-			static::$once[ $key ] = [
+	public function once( string $key, callable $callback, mixed $args = null ): void {
+		if ( ! isset( $this->once_run_before[ $key ] ) ) {
+			$this->once[ $key ] = [
 				'callable' => $callback,
 				'args'     => $args,
 			];
@@ -117,17 +116,17 @@ class Versions {
 	 *
 	 * To be used when items have pre-requisites that must be run in a particular order.
 	 *
-	 * @uses self::$updates
+	 * @uses $this->updates
 	 *
-	 * @param string|float $version  - The version to check against.
+	 * @param float|string $version  - The version to check against.
 	 * @param callable     $callback - Method or function to run if the version checks out.
 	 * @param mixed        $args     - Args to pass to the function.
 	 *
 	 * @return void
 	 */
-	public function add_update( $version, callable $callback, $args = null ): void {
-		if ( version_compare( static::$version, (string) $version, '<' ) ) {
-			static::$updates[] = [
+	public function add_update( float|string $version, callable $callback, mixed $args = null ): void {
+		if ( version_compare( $this->version, (string) $version, '<' ) ) {
+			$this->updates[] = [
 				'version'  => (string) $version,
 				'callable' => $callback,
 				'args'     => $args,
@@ -143,33 +142,33 @@ class Versions {
 	 * Any future items needed to run via Versions::in()->run_updates() must have a
 	 * higher version than the previously supplied versions.
 	 *
-	 * @action init
+	 * @action init PHP_INT_MAX 0
 	 *
 	 * @return void
 	 */
-	public function run_updates(): void {
-		if ( \count( static::$once ) > 0 ) {
-			foreach ( static::$once as $_key => $_item ) {
-				if ( ! isset( static::$once_run_before[ $_key ] ) ) {
-					static::$once_run_before[ $_key ] = 1;
+	protected function run_updates(): void {
+		if ( \count( $this->once ) > 0 ) {
+			foreach ( $this->once as $_key => $_item ) {
+				if ( ! isset( $this->once_run_before[ $_key ] ) ) {
+					$this->once_run_before[ $_key ] = 1;
 					\call_user_func( $_item['callable'], $_item['args'] );
-					unset( static::$once[ $_key ] );
+					unset( $this->once[ $_key ] );
 				}
 			}
-			update_option( static::ONCE, static::$once_run_before );
+			update_option( self::ONCE, $this->once_run_before );
 		}
 
-		if ( \count( static::$updates ) > 0 ) {
-			\usort( static::$updates, function( $a, $b ) {
+		if ( \count( $this->updates ) > 0 ) {
+			\usort( $this->updates, function( $a, $b ) {
 				return version_compare( $a['version'], $b['version'] );
 			} );
 
-			foreach ( static::$updates as $i => $func ) {
-				static::$version = $func['version'];
+			foreach ( $this->updates as $i => $func ) {
+				$this->version = $func['version'];
 				\call_user_func( $func['callable'], $func['args'] );
-				unset( static::$updates[ $i ] );
+				unset( $this->updates[ $i ] );
 			}
-			update_option( static::OPTION, static::$version );
+			update_option( self::OPTION, $this->version );
 		}
 	}
 }

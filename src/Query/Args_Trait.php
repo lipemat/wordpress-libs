@@ -34,17 +34,14 @@ trait Args_Trait {
 	/**
 	 * Optionally pass existing arguments to preload this class.
 	 *
-	 * @param array $existing - Existing arguments to preload.
-	 *
-	 * @phpstan-ignore-next-line -- Using default `$existing` value for backwards compatibility.
+	 * @param array<string, mixed> $existing - Existing arguments to preload.
 	 */
-	public function __construct( array $existing = [] ) {
+	public function __construct( array $existing ) {
 		foreach ( $existing as $arg => $value ) {
 			if ( \property_exists( $this, $arg ) ) {
 				$this->{$arg} = $value;
 			} else {
-				// phpcs:ignore -- `trigger_error` is used to prevent IDE inspections for unhandled exceptions.
-				trigger_error( esc_html( "Attempting to use the non-existent `{$arg}` argument during the construct of " . __CLASS__ . '.' ) );
+				_doing_it_wrong( __METHOD__, esc_html( "Attempting to use the non-existent `{$arg}` argument during the construct of " . __CLASS__ . '.' ), '5.0.0' );
 			}
 		}
 	}

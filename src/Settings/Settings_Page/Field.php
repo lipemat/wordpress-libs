@@ -61,8 +61,8 @@ class Field {
 		public readonly string $id,
 		public readonly string $title,
 	) {
-		$this->settings_args = new Register_Setting();
-		$this->args = new FieldArgs();
+		$this->settings_args = new Register_Setting( [] );
+		$this->args = new FieldArgs( [] );
 	}
 
 

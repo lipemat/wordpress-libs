@@ -12,7 +12,7 @@ use mocks\Post_Mock;
  * @since  August 2023
  *
  */
-class Translate_AbstractTest extends \WP_UnitTestCase {
+class Translate_Test extends \WP_UnitTestCase {
 	protected function tearDown(): void {
 		Repo::in()->clear_memoize_cache();
 		parent::tearDown();
@@ -22,7 +22,9 @@ class Translate_AbstractTest extends \WP_UnitTestCase {
 	public function test_get_term_id_from_slug(): void {
 		$category = self::factory()->category->create_and_get();
 
-		$mock = new class() extends Translate_Abstract {
+		$mock = new class() {
+			use Translate;
+
 			public function get_result( $value, $field = '_' ) {
 				return $this->get_term_id_from_slug( $field, $value );
 			}
@@ -32,7 +34,8 @@ class Translate_AbstractTest extends \WP_UnitTestCase {
 				if ( '_' !== $field_id ) {
 					return null;
 				}
-				$field = new Field( $field_id, $field_id, null );
+				$box = new Box( 'test-translate', [ 'post' ], 'Translate test' );
+				$field = new Field( $field_id, $field_id, $box );
 				$field->taxonomy = 'category';
 				return $field;
 			}
@@ -83,7 +86,7 @@ class Translate_AbstractTest extends \WP_UnitTestCase {
 
 	public function test_multiple_group_fields(): void {
 		$box = new Box( __METHOD__, [ 'post' ], 'Meal Data' );
-		$items = $box->group( 'multiple/group/items', 'Items', 'Item {#}', 'Add Item', 'Remove Item' );
+		$items = $box->group( 'multiple/group/items', 'Items', 'Item {#}' );
 		$items->repeatable();
 		$items->field( __METHOD__ . 'servings', 'Servings' )
 		      ->text_number();
@@ -126,7 +129,7 @@ class Translate_AbstractTest extends \WP_UnitTestCase {
 			$this->assertSame( (string) ( $i + 1 ), $item[ __METHOD__ . 'servings' ] );
 		}
 
-		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_repeatable_group_sub_fields', 'Accessing sub-fields on repeatable groups will only update the first item. Use the group key instead. Lipe\Lib\Meta\Translate_AbstractTest::test_multiple_group_fieldsservings (This message was added in version 4.10.0.)' );
+		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_repeatable_group_sub_fields', 'Accessing sub-fields on repeatable groups will only update the first item. Use the group key instead. Lipe\Lib\Meta\Translate_Test::test_multiple_group_fieldsservings (This message was added in version 4.10.0.)' );
 
 		$this->assertSame( '1', $post->get_meta( __METHOD__ . 'servings' ) );
 		$this->assertSame( '100', $post->get_meta( __METHOD__ . 'calories' ) );

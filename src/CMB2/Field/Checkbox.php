@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2\Field;
 
@@ -26,8 +27,8 @@ class Checkbox {
 	 * @see     Field_Type::checkbox()
 	 * @example $box->field()->checkbox('compact')
 	 *
-	 * @param array       $args  Array of field arguments for the group field parent.
-	 * @param \CMB2_Field $field The CMB2_Field group object.
+	 * @param array<string, mixed> $args  Array of field arguments for the group field parent.
+	 * @param \CMB2_Field          $field The CMB2_Field group object.
 	 *
 	 * @return \CMB2_Field|null
 	 */

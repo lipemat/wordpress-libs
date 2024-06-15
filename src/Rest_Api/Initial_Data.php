@@ -1,4 +1,6 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Rest_Api;
 
@@ -44,11 +46,10 @@ class Initial_Data {
 	 * @param bool          $with_links - To include links inside the response.
 	 * @param bool|string[] $embed      - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
-	 * @return array
+	 * @return array<array<mixed>>
 	 */
-	public function get_comments_data( array $comments, bool $with_links = false, $embed = false ): array {
+	public function get_comments_data( array $comments, bool $with_links = false, array|bool $embed = false ): array {
 		$controller = new \WP_REST_Comments_Controller();
-
 		return \array_map( function( $comment ) use ( $controller, $with_links, $embed ) {
 			return $this->get_response( $controller, $comment, $with_links, $embed );
 		}, $comments );
@@ -63,16 +64,15 @@ class Initial_Data {
 	 * @param bool            $with_links - To include links inside the response.
 	 * @param bool|string[]   $embed      - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
-	 * @return array
+	 * @return array<array<mixed>>
 	 */
-	public function get_post_data( ?array $posts = null, bool $with_links = false, $embed = false ): array {
+	public function get_post_data( ?array $posts = null, bool $with_links = false, array|bool $embed = false ): array {
 		if ( null === $posts && ! is_404() ) {
 			$posts = $GLOBALS['wp_query']->posts;
 		}
 
 		return \array_map( function( $post ) use ( $with_links, $embed ) {
 			$controller = new \WP_REST_Posts_Controller( $post->post_type );
-
 			return $this->get_response( $controller, $post, $with_links, $embed );
 		}, $posts );
 	}
@@ -82,18 +82,17 @@ class Initial_Data {
 	 * Turn an array of users into their matching data format
 	 * provided by the JSON API Server.
 	 *
+	 * @since 3.4.0
+	 *
 	 * @param \WP_User[]    $users      - Array of user objects.
 	 * @param bool          $with_links - To include links inside the response.
 	 * @param bool|string[] $embed      - Whether to embed all links, a filtered list of link relations,
 	 *                                  or no links.
 	 *
-	 * @since 3.4.0
-	 *
-	 * @return array
+	 * @return array<array<mixed>>
 	 */
-	public function get_user_data( array $users, bool $with_links = false, $embed = false ): array {
+	public function get_user_data( array $users, bool $with_links = false, array|bool $embed = false ): array {
 		$controller = new \WP_REST_Users_Controller();
-
 		return \array_map( function( $user ) use ( $controller, $with_links, $embed ) {
 			return $this->get_response( $controller, $user, $with_links, $embed );
 		}, $users );
@@ -104,19 +103,18 @@ class Initial_Data {
 	 * Turn an array of terms into their matching data format
 	 * provided by the JSON API Server.
 	 *
+	 * @since 3.4.0
+	 *
 	 * @param \WP_Term[]    $terms                    - Array of term objects.
 	 * @param bool          $with_links               - To include links inside the response.
 	 * @param bool|string[] $embed                    - Whether to embed all links, a filtered list of link relations,
 	 *                                                or no links.
 	 *
-	 * @since 3.4.0
-	 *
-	 * @return array
+	 * @return array<array<mixed>>
 	 */
-	public function get_term_data( array $terms, bool $with_links = false, $embed = false ): array {
+	public function get_term_data( array $terms, bool $with_links = false, array|bool $embed = false ): array {
 		return \array_map( function( $term ) use ( $with_links, $embed ) {
 			$controller = new \WP_REST_Terms_Controller( $term->taxonomy );
-
 			return $this->get_response( $controller, $term, $with_links, $embed );
 		}, $terms );
 	}
@@ -130,11 +128,10 @@ class Initial_Data {
 	 * @param bool          $with_links  - To include links inside the response.
 	 * @param bool|string[] $embed       - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
-	 * @return array
+	 * @return array<array<mixed>>
 	 */
-	public function get_attachments_data( array $attachments, bool $with_links = false, $embed = false ): array {
+	public function get_attachments_data( array $attachments, bool $with_links = false, array|bool $embed = false ): array {
 		$controller = new \WP_REST_Attachments_Controller( 'attachment' );
-
 		return \array_map( function( $attachment ) use ( $controller, $with_links, $embed ) {
 			return $this->get_response( $controller, $attachment, $with_links, $embed );
 		}, $attachments );
@@ -147,17 +144,16 @@ class Initial_Data {
 	 * @link  https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_embed
 	 * @link  https://developer.wordpress.org/rest-api/using-the-rest-api/linking-and-embedding/#embedding
 	 *
-	 * @param \WP_REST_Controller         $controller - REST controller instance.
-	 * @param \WP_Post|\WP_Comment|object $item       - Object to mimic response for.
-	 *
-	 * @param bool                        $with_links - To include links inside the response.
-	 * @param bool|string[]               $embed      - Whether to embed all links, a filtered list of link relations, or no links.
-	 *
 	 * @throws \RuntimeException -- If response was a WP_Error.
 	 *
-	 * @return array
+	 * @param \WP_REST_Controller $controller - REST controller instance.
+	 * @param object              $item       - Object to mimic response for.
+	 * @param bool                $with_links - To include links inside the response.
+	 * @param bool|string[]       $embed      - Whether to embed all links, a filtered list of link relations, or no links.
+	 *
+	 * @return array<mixed>
 	 */
-	protected function get_response( \WP_REST_Controller $controller, $item, bool $with_links = false, $embed = false ): array {
+	protected function get_response( \WP_REST_Controller $controller, object $item, bool $with_links = false, array|bool $embed = false ): array {
 		$this->retrieving = true;
 		// Call before get_fields to allow `rest_api_init` to fire.
 		$server = rest_get_server();
@@ -187,7 +183,7 @@ class Initial_Data {
 	 * Get an instance of the WP_REST_Request setup with
 	 * the 'view' context.
 	 *
-	 * @return \WP_REST_Request<array>
+	 * @return \WP_REST_Request<array<mixed>>
 	 */
 	protected function get_request(): \WP_REST_Request {
 		$request = new \WP_REST_Request();

@@ -140,7 +140,7 @@ class Tax_Query implements Clause_Interface {
 	 * @phpstan-param 'AND'|'IN'|'NOT IN'|'EXISTS'|'NOT EXISTS' $operator
 	 * @phpstan-param static::FIELD_*                           $field
 	 *
-	 * @param string|int|array<int,string|int>                  $terms    - Term(s) to query.
+	 * @param int|string|array<int,string|int>                  $terms    - Term(s) to query.
 	 * @param string                                            $taxonomy - Taxonomy to query.
 	 * @param string                                            $field    - Field to query against.
 	 * @param string                                            $operator - MySQL operator to use.
@@ -148,7 +148,7 @@ class Tax_Query implements Clause_Interface {
 	 *
 	 * @return void
 	 */
-	protected function add_clause( $terms, string $taxonomy, string $field, string $operator, bool $children = true ): void {
+	protected function add_clause( array|int|string $terms, string $taxonomy, string $field, string $operator, bool $children = true ): void {
 		$clause = \array_filter( [
 			'taxonomy' => $taxonomy,
 			'field'    => $field,

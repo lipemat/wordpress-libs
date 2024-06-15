@@ -1,6 +1,9 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
+
+use Lipe\Lib\Theme\Dashicons;
 
 /**
  * CMB2 Option Page fluent interface.
@@ -36,14 +39,12 @@ class Options_Page extends Box {
 	 * On settings pages (not options-general.php sub-pages), allows disabling
 	 * of error displaying
 	 *
-	 * @notice  only exists in example-functions.php and not in docs. May require
-	 *         more testing.
-	 *
-	 * @example = true
+	 * @notice  This only exists in example-functions.php and not in docs.
+	 *          May require more testing.
 	 *
 	 * @var bool
 	 */
-	public $disable_settings_errors;
+	public bool $disable_settings_errors;
 
 	/**
 	 * This parameter is for options-page metaboxes only
@@ -63,10 +64,11 @@ class Options_Page extends Box {
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#icon_url
 	 *
 	 * @example 'dashicons-chart-pie'
+	 * @see     Dashicons
 	 *
 	 * @var string
 	 */
-	public $icon_url;
+	public string $icon_url;
 
 	/**
 	 * This parameter is for options-page metaboxes only,
@@ -78,7 +80,7 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	public $menu_title;
+	public string $menu_title;
 
 	/**
 	 * Allows specifying a custom callback for setting the
@@ -102,7 +104,7 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	public $parent_slug;
+	public string $parent_slug;
 
 	/**
 	 * This parameter is for options-page metaboxes only,
@@ -115,7 +117,7 @@ class Options_Page extends Box {
 	 *
 	 * @var int
 	 */
-	public $position;
+	public int $position;
 
 	/**
 	 * This parameter is for options-page metaboxes only and
@@ -130,7 +132,7 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	public $save_button;
+	public string $save_button;
 
 	/**
 	 * This parameter is for options-page metaboxes only and
@@ -140,7 +142,7 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	public $option_key;
+	public string $option_key;
 
 	/**
 	 * Break the settings page into tabs by specifying more than one
@@ -157,7 +159,7 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	public $tab_group;
+	public string $tab_group;
 
 	/**
 	 * Holds default values specified on individual fields
@@ -165,9 +167,9 @@ class Options_Page extends Box {
 	 * CMB2 saves options as a single blob, so we use the
 	 * filter to inject the default on retrieval.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
-	protected $default_values = [];
+	protected array $default_values = [];
 
 
 	/**
@@ -177,7 +179,7 @@ class Options_Page extends Box {
 	 * @param string|null $title - Options page title.
 	 */
 	public function __construct( string $id, ?string $title ) {
-		if ( null === $this->option_key ) {
+		if ( ! isset( $this->option_key ) ) {
 			$this->option_key = $id;
 		}
 
@@ -269,17 +271,17 @@ class Options_Page extends Box {
 	 *
 	 * Gives a universal place for amending the config.
 	 *
-	 * @param Field $field  - The field object.
-	 * @param array $config - The field config.
+	 * @param Field                $field  - The field object.
+	 * @param array<string, mixed> $config - The field config.
 	 */
 	public function register_meta_on_all_types( Field $field, array $config ): void {
 		unset( $config['single'] );
 
-		if ( \is_string( $field->show_in_rest ) || true === $field->show_in_rest ) {
+		if ( isset( $field->show_in_rest ) && false !== $field->show_in_rest ) {
 			$config = $this->translate_rest_keys( $field, $config );
 			add_filter( 'rest_pre_get_setting', function( $pre, $option ) use ( $field, $config ) {
 				if ( isset( $config['show_in_rest'] ) && $option === $config['show_in_rest']['name'] ) {
-					cmb2_options( $this->id )->get( $field->get_id(), $field->default );
+					return cmb2_options( $this->id )->get( $field->get_id(), $field->default );
 				}
 				return $pre;
 			}, 9, 2 );

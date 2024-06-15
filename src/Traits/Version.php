@@ -1,4 +1,6 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Traits;
 
@@ -37,7 +39,7 @@ trait Version {
 	 *
 	 * @return mixed
 	 */
-	protected function run_for_version( callable $func, string $version, ...$extra ) {
+	protected function run_for_version( callable $func, string $version, ...$extra ): mixed {
 		$this->version = $version;
 		if ( $this->update_required() ) {
 			$this->update_version();
@@ -73,8 +75,9 @@ trait Version {
 	 */
 	protected function update_required(): bool {
 		$versions = $this->get_versions();
+		$id = $this->get_version_identifier();
 
-		return empty( $versions[ $this->get_version_identifier() ] ) || version_compare( $versions[ $this->get_version_identifier() ], $this->version, '<' );
+		return ! isset( $versions[ $id ] ) || version_compare( $versions[ $id ], $this->version, '<' );
 	}
 
 
@@ -83,7 +86,7 @@ trait Version {
 	 *
 	 * @internal
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	protected function get_versions(): array {
 		return get_option( $this->option, [] );

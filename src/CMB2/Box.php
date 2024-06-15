@@ -5,6 +5,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
+use Lipe\Lib\Meta\Meta_Box;
 use Lipe\Lib\Meta\Repo;
 
 /**
@@ -43,7 +44,7 @@ class Box {
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#priority
 	 *
-	 * @phpstan-var  'high' | 'core' | 'default' | 'low'
+	 * @phpstan-var  Meta_Box::PRIORITY_*
 	 *
 	 * @var string
 	 */
@@ -58,9 +59,9 @@ class Box {
 	 * @example 'additional-class'
 	 * @example array( 'additional-class', 'another-class' ),
 	 *
-	 * @var mixed
+	 * @var string|array<string>
 	 */
-	public $classes;
+	public string|array $classes;
 
 	/**
 	 * Like the classes property, allows adding classes to the CMB2 wrapper,
@@ -133,8 +134,6 @@ class Box {
 	 *
 	 * @link  https://gist.github.com/jtsternberg/a70e845aca44356b8fbf05aafff4d0c8
 	 *
-	 * @todo  Add link to docs once they exist.
-	 *
 	 * @var callable
 	 */
 	public $register_rest_field_cb;
@@ -169,14 +168,17 @@ class Box {
 	 * compatibility.
 	 *
 	 * We have our own Gutenberg/block-editor properties in this class so use those instead
-	 * of this property if you are working with Gutenberg
+	 * of this property if you are working with Gutenberg.
 	 *
 	 * @see Box::$display_when_gutenberg_active
 	 * @see Box::$gutenberg_compatible
 	 *
 	 * More: https://wordpress.org/gutenberg/handbook/designers-developers/developers/backwards-compatibility/meta-box/
 	 *
-	 * @var array
+	 * @var array{
+	 *     __back_compat_meta_box?: bool,
+	 *     __block_editor_compatible_meta_box?: bool
+	 * }
 	 */
 	public array $mb_callback_args;
 
@@ -252,7 +254,7 @@ class Box {
 	 *
 	 * @var string|bool
 	 */
-	public $show_in_rest;
+	public string|bool $show_in_rest;
 
 	/**
 	 * Whether to show labels for the fields
@@ -296,9 +298,9 @@ class Box {
 	/**
 	 * Tabs for this box
 	 *
-	 * @see     Box::add_tab
+	 * @see Box::add_tab
 	 *
-	 * @var array
+	 * @var array<string, string>
 	 */
 	public array $tabs = [];
 
@@ -444,7 +446,7 @@ class Box {
 
 	/**
 	 * Add a tab to this box which can later be assigned to fields via
-	 * Field::tab( $id );
+	 * Field::tab($id);
 	 *
 	 * @see     Field::tab;
 	 *
@@ -508,7 +510,7 @@ class Box {
 	 * @return \CMB2
 	 */
 	public function get_box(): \CMB2 {
-		if ( ! empty( $this->cmb ) ) {
+		if ( isset( $this->cmb ) ) {
 			return $this->cmb;
 		}
 
@@ -522,7 +524,7 @@ class Box {
 	/**
 	 * Get the arguments for this box.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function get_args(): array {
 		$args = [];
@@ -550,7 +552,10 @@ class Box {
 	 *
 	 * @link https://wordpress.org/gutenberg/handbook/designers-developers/developers/backwards-compatibility/meta-box/
 	 *
-	 * @return array
+	 * @return array{
+	 *     __back_compat_meta_box?: bool,
+	 *     __block_editor_compatible_meta_box?: bool
+	 * }
 	 */
 	protected function get_meta_box_callback_args(): array {
 		if ( ! isset( $this->mb_callback_args['__block_editor_compatible_meta_box'] ) ) {
@@ -599,11 +604,11 @@ class Box {
 	 *
 	 * @internal
 	 *
-	 * @param Field $field  - The field to register.
-	 * @param array $config - The config to register.
+	 * @param Field                $field  - The field to register.
+	 * @param array<string, mixed> $config - The config to register.
 	 */
 	public function register_meta_on_all_types( Field $field, array $config ): void {
-		if ( ! empty( $field->default ) ) {
+		if ( isset( $field->default ) ) {
 			$config['default'] = $field->default;
 		}
 
@@ -645,7 +650,7 @@ class Box {
 
 			// A secondary field for file ids.
 			if ( Repo::TYPE_FILE === $field->data_type ) {
-				if ( ! empty( $config['show_in_rest']['name'] ) ) {
+				if ( isset( $config['show_in_rest']['name'] ) ) {
 					$config['show_in_rest']['name'] .= '_id';
 					unset( $config['show_in_rest']['prepare_callback'] );
 				}

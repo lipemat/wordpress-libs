@@ -9,27 +9,27 @@ namespace Lipe\Lib\Query\Clause;
  * @author   Mat Lipe
  * @since    4.0.0
  *
- * @template CLAUSE of Clause_Interface
+ * @template QUERY of Clause_Interface
  */
 trait Clause_Trait {
 	/**
-	 * Meta query clauses.
+	 * Query clause classes.
 	 *
-	 * @var array
+	 * @var array<string, mixed>|array<int, array<string, mixed>>
 	 */
 	protected array $clauses = [];
 
 	/**
 	 * Nested clauses.
 	 *
-	 * @var CLAUSE[]
+	 * @var QUERY[]
 	 */
 	protected array $nested = [];
 
 	/**
 	 * Parent clause if within a nested clause.
 	 *
-	 * @var CLAUSE|null
+	 * @var QUERY|null
 	 */
 	protected ?Clause_Interface $parent_clause = null;
 
@@ -46,7 +46,7 @@ trait Clause_Trait {
 	/**
 	 * Set the parent clause when constructing a child clause.
 	 *
-	 * @phpstan-param CLAUSE   $parent_clause
+	 * @phpstan-param QUERY    $parent_clause
 	 *
 	 * @param Clause_Interface $parent_clause - Clause to put the next clause under.
 	 *
@@ -86,11 +86,11 @@ trait Clause_Trait {
 	 *
 	 * @param string             $relation - 'AND' or 'OR'.
 	 *
-	 * @phpstan-return CLAUSE
+	 * @phpstan-return QUERY
 	 * @return static
 	 */
 	public function nested_clause( string $relation = 'AND' ): Clause_Interface {
-		if ( empty( $this->clauses['relation'] ) ) {
+		if ( ! isset( $this->clauses['relation'] ) ) {
 			$this->relation();
 		}
 		$sub = new static();
@@ -107,7 +107,7 @@ trait Clause_Trait {
 	 *
 	 * @throws \LogicException - If we are not in a nested class.
 	 *
-	 * @phpstan-return CLAUSE
+	 * @phpstan-return QUERY
 	 * @return Clause_Interface
 	 */
 	public function parent_clause(): Clause_Interface {
@@ -122,15 +122,15 @@ trait Clause_Trait {
 	 * Loop through the nested clauses and append them to
 	 * the clause array at the correct level.
 	 *
-	 * @phpstan-param CLAUSE   $level
+	 * @phpstan-param QUERY        $level
 	 *
-	 * @param array            $clauses - The clauses array to append to.
-	 * @param Clause_Interface $level   - The clause to determine the level of nesting.
+	 * @param array<string, mixed> $clauses - The clauses array to append to.
+	 * @param Clause_Interface     $level   - The clause to determine the level of nesting.
 	 *
 	 * @return void
 	 */
 	protected function extract_nested( array &$clauses, Clause_Interface $level ): void {
-		if ( ! empty( $level->nested ) ) {
+		if ( [] !== $level->nested ) {
 			foreach ( $level->nested as $nested ) {
 				$clauses[] = $nested->clauses;
 				$this->extract_nested( $clauses[ \array_key_last( $clauses ) ], $nested );

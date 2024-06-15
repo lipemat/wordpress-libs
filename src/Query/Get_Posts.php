@@ -9,11 +9,11 @@ namespace Lipe\Lib\Query;
  * @author Mat Lipe
  * @since  4.0.0
  *
- * @see get_posts()
+ * @see    get_posts()
  *
- * @link https://developer.wordpress.org/reference/functions/get_posts/
+ * @link   https://developer.wordpress.org/reference/functions/get_posts/
  */
-class Get_Posts extends Args {
+class Get_Posts extends Query_Args {
 	/**
 	 * Total number of posts to retrieve. Is an alias of `$posts_per_page` in `WP_Query`.
 	 *

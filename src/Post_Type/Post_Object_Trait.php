@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Post_Type;
 
@@ -28,7 +29,7 @@ use Lipe\Lib\Meta\Repo;
  * @property string $post_modified
  * @property string $post_modified_gmt
  * @property string $post_name
- * @property int $post_parent
+ * @property int    $post_parent
  * @property string $post_password
  * @property string $post_status
  * @property string $post_title
@@ -114,7 +115,7 @@ trait Post_Object_Trait {
 	 *
 	 * @return static
 	 */
-	public static function factory( $post = null ) {
+	public static function factory( int|\WP_Post|null $post = null ): static {
 		return new static( $post );
 	}
 }

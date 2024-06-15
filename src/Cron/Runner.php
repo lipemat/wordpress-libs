@@ -39,7 +39,7 @@ class Runner {
 
 
 	/**
-	 * Store a last run stamp and run abstract method.
+	 * Store a last run stamp and run the `run` method.
 	 *
 	 * @interal
 	 *

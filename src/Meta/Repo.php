@@ -10,8 +10,9 @@ use Lipe\Lib\Traits\Singleton;
  * Repo to hold the different field types for our meta keys
  * and return the appropriate data based on field type.
  */
-class Repo extends Translate_Abstract {
+class Repo {
 	use Singleton;
+	use Translate;
 	use Validation;
 
 	public const TYPE_CHECKBOX          = 'checkbox';

@@ -9,7 +9,7 @@ use Lipe\Lib\Traits\Memoize;
 /**
  * Translate the fields into the correct data types.
  */
-abstract class Translate_Abstract {
+trait Translate {
 	use Memoize;
 
 	/**
@@ -18,13 +18,6 @@ abstract class Translate_Abstract {
 	 * @var Field[]
 	 */
 	protected array $fields = [];
-
-	/**
-	 * Holds a list of fields
-	 *
-	 * @var array
-	 */
-	protected array $groups = [];
 
 	/**
 	 * Used internally to track, which group row are on.
@@ -81,7 +74,7 @@ abstract class Translate_Abstract {
 		$field = $this->get_field( $key );
 		if ( null !== $field && null !== $field->group ) {
 			$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
-			if ( '' === $group && null !== $field->default ) {
+			if ( '' === $group && isset( $field->default ) ) {
 				return $field->default;
 			}
 			$value = $group[ $this->group_row ][ $key ] ?? null;
@@ -127,8 +120,7 @@ abstract class Translate_Abstract {
 		}
 
 		if ( Repo::META_OPTION === $meta_type ) {
-			// @phpstan-ignore-next-line -- CMB2 returned null prior to v2.10.1.15
-			return (bool) cmb2_options( (string) $object_id )->update( $key, $value, true );
+			return cmb2_options( (string) $object_id )->update( $key, $value, true );
 		}
 
 		return update_metadata( $meta_type, (int) $object_id, $key, $value );
@@ -215,11 +207,11 @@ abstract class Translate_Abstract {
 	 * @param string               $key       - The meta key.
 	 * @param string               $meta_type - The meta type.
 	 *
-	 * @return ?array
+	 * @return ?array{id: string, url: string}
 	 */
 	protected function get_file_field_value( int|string $object_id, string $key, string $meta_type ): ?array {
 		$url = $this->get_meta_value( $object_id, $key, $meta_type );
-		if ( ! empty( $url ) ) {
+		if ( \is_string( $url ) && '' !== \trim( $url ) ) {
 			// Add the extra field so groups meta will be translated properly.
 			if ( null !== $this->fields[ $key ]->group ) {
 				$this->fields[ $key . '_id' ] = $this->fields[ $key ];
@@ -291,7 +283,7 @@ abstract class Translate_Abstract {
 	 * @param string               $group_id  - The group id.
 	 * @param string               $meta_type - The meta type.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	protected function get_group_field_value( int|string $object_id, string $group_id, string $meta_type ): array {
 		$values = [];
@@ -315,12 +307,12 @@ abstract class Translate_Abstract {
 	/**
 	 * Update all the field values within a group.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
+	 * @phpstan-param Repo::META_*             $meta_type
 	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $group_id  - The group id.
-	 * @param array                $values    - The values.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string                       $object_id - The object id.
+	 * @param string                           $group_id  - The group id.
+	 * @param array<int, array<string, mixed>> $values    - The values.
+	 * @param string                           $meta_type - The meta type.
 	 */
 	protected function update_group_field_values( int|string $object_id, string $group_id, array $values, string $meta_type ): void {
 		$fields = $this->get_group_fields( $group_id );

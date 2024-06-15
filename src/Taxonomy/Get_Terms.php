@@ -309,7 +309,7 @@ class Get_Terms implements Meta_Query_Interface, Args_Interface {
 	/**
 	 * Get the lightest possible version of the get_terms args.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function get_light_args(): array {
 		return \array_merge( [

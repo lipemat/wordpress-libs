@@ -35,7 +35,7 @@ class Wp_Enqueue_ScriptsTest extends \WP_UnitTestCase {
 			'in_footer' => true,
 		], $args->get_args() );
 
-		$args = new Wp_Enqueue_Script();
+		$args = new Wp_Enqueue_Script( [] );
 		$args->in_footer = true;
 		$this->assertSame( [
 			'in_footer' => true,

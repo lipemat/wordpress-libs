@@ -1,8 +1,10 @@
 <?php
-
 declare( strict_types=1 );
 
-namespace Lipe\Lib\Query;
+namespace Lipe\Lib\Post_Type;
+
+use Lipe\Lib\Query\Args_Interface;
+use Lipe\Lib\Query\Args_Trait;
 
 /**
  * A fluent interface for calling `wp_insert_post' or `wp_update_post'.
@@ -15,7 +17,7 @@ namespace Lipe\Lib\Query;
  *
  * @link   https://developer.wordpress.org/reference/functions/wp_insert_post/
  */
-class Update_Post implements Args_Interface {
+class Wp_Insert_Post implements Args_Interface {
 	use Args_Trait;
 
 	/**

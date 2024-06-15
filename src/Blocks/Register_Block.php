@@ -306,7 +306,7 @@ class Register_Block implements Args_Interface {
 		if ( isset( $this->sub_args['supports'] ) && $this->sub_args['supports'] instanceof Supports ) {
 			return $this->sub_args['supports'];
 		}
-		$this->sub_args['supports'] = new Supports();
+		$this->sub_args['supports'] = new Supports( [] );
 		return $this->sub_args['supports'];
 	}
 }

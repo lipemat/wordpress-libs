@@ -11,17 +11,49 @@ namespace Lipe\Lib\Post_Type;
  * @author Mat Lipe
  * @since  4.0.0
  *
- * @interal
- *
  * @see    Custom_Post_Type::labels()
+ * @see    Custom_Post_Type::post_type_labels()
  */
 class Labels {
+	public const NAME                     = 'name';
+	public const SINGULAR_NAME            = 'singular_name';
+	public const ADD_NEW                  = 'add_new';
+	public const ADD_NEW_ITEM             = 'add_new_item';
+	public const ARCHIVE_LABEL            = 'archive_label';
+	public const EDIT_ITEM                = 'edit_item';
+	public const NEW_ITEM                 = 'new_item';
+	public const VIEW_ITEM                = 'view_item';
+	public const VIEW_ITEMS               = 'view_items';
+	public const SEARCH_ITEMS             = 'search_items';
+	public const NOT_FOUND                = 'not_found';
+	public const NOT_FOUND_IN_TRASH       = 'not_found_in_trash';
+	public const PARENT_ITEM_COLON        = 'parent_item_colon';
+	public const ALL_ITEMS                = 'all_items';
+	public const ARCHIVES                 = 'archives';
+	public const ATTRIBUTES               = 'attributes';
+	public const INSERT_INTO_ITEM         = 'insert_into_item';
+	public const UPLOADED_TO_THIS_ITEM    = 'uploaded_to_this_item';
+	public const FEATURED_IMAGE           = 'featured_image';
+	public const SET_FEATURED_IMAGE       = 'set_featured_image';
+	public const REMOVE_FEATURED_IMAGE    = 'remove_featured_image';
+	public const USE_FEATURED_IMAGE       = 'use_featured_image';
+	public const MENU_NAME                = 'menu_name';
+	public const FILTER_ITEMS_LIST        = 'filter_items_list';
+	public const ITEMS_LIST_NAVIGATION    = 'items_list_navigation';
+	public const ITEMS_LIST               = 'items_list';
+	public const ITEM_PUBLISHED           = 'item_published';
+	public const ITEM_PUBLISHED_PRIVATELY = 'item_published_privately';
+	public const ITEM_REVERTED_TO_DRAFT   = 'item_reverted_to_draft';
+	public const ITEM_SCHEDULED           = 'item_scheduled';
+	public const ITEM_UPDATED             = 'item_updated';
+	public const ITEM_LINK                = 'item_link';
+	public const ITEM_LINK_DESCRIPTION    = 'item_link_description';
+	public const FILTER_BY_DATE           = 'filter_by_date';
+
 	/**
-	 * Custom <post type singular> Type class currently registering.
-	 *
-	 * @var Custom_Post_Type
+	 * @var array<self::*, string> $labels
 	 */
-	protected Custom_Post_Type $cpt;
+	protected array $labels = [];
 
 
 	/**
@@ -29,8 +61,9 @@ class Labels {
 	 *
 	 * @param Custom_Post_Type $cpt - The Custom_Post_Type instance currently registering.
 	 */
-	public function __construct( Custom_Post_Type $cpt ) {
-		$this->cpt = $cpt;
+	public function __construct(
+		protected Custom_Post_Type $cpt
+	) {
 	}
 
 
@@ -41,11 +74,10 @@ class Labels {
 	 *
 	 * @param string $label - General name for the post type, usually plural.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function name( string $label ): Labels {
-		$this->cpt->labels['name'] = $label;
-		return $this;
+		return $this->set( 'name', $label );
 	}
 
 
@@ -56,11 +88,10 @@ class Labels {
 	 *
 	 * @param string $label - Name for one object of this post type.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function singular_name( string $label ): Labels {
-		$this->cpt->labels['singular_name'] = $label;
-		return $this;
+		return $this->set( 'singular_name', $label );
 	}
 
 
@@ -69,11 +100,10 @@ class Labels {
 	 *
 	 * @param string $label - Add new post label.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function add_new( string $label ): Labels {
-		$this->cpt->labels['add_new'] = $label;
-		return $this;
+		return $this->set( 'add_new', $label );
 	}
 
 
@@ -84,11 +114,22 @@ class Labels {
 	 *
 	 * @param string $label - Label for adding a new singular item.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function add_new_item( string $label ): Labels {
-		$this->cpt->labels['add_new_item'] = $label;
-		return $this;
+		return $this->set( 'add_new_item', $label );
+	}
+
+
+	/**
+	 * Used when retrieving the post type archive title
+	 *
+	 * @param string $label - Label for the archive page.
+	 *
+	 * @return Labels
+	 */
+	public function archive_label( string $label ): Labels {
+		return $this->set( 'archive_label', $label );
 	}
 
 
@@ -99,11 +140,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for editing a singular item.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function edit_item( string $label ): Labels {
-		$this->cpt->labels['edit_item'] = $label;
-		return $this;
+		return $this->set( 'edit_item', $label );
 	}
 
 
@@ -114,11 +154,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for the new item page title.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function new_item( string $label ): Labels {
-		$this->cpt->labels['new_item'] = $label;
-		return $this;
+		return $this->set( 'new_item', $label );
 	}
 
 
@@ -129,11 +168,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for viewing a singular item.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function view_item( string $label ): Labels {
-		$this->cpt->labels['view_item'] = $label;
-		return $this;
+		return $this->set( 'view_item', $label );
 	}
 
 
@@ -144,11 +182,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for viewing <post type singular> type archives.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function view_items( string $label ): Labels {
-		$this->cpt->labels['view_items'] = $label;
-		return $this;
+		return $this->set( 'view_items', $label );
 	}
 
 
@@ -159,11 +196,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for searching plural items.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function search_items( string $label ): Labels {
-		$this->cpt->labels['search_items'] = $label;
-		return $this;
+		return $this->set( 'search_items', $label );
 	}
 
 
@@ -174,11 +210,10 @@ class Labels {
 	 *
 	 * @param string $label - Label used when no items are found.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function not_found( string $label ): Labels {
-		$this->cpt->labels['not_found'] = $label;
-		return $this;
+		return $this->set( 'not_found', $label );
 	}
 
 
@@ -189,11 +224,10 @@ class Labels {
 	 *
 	 * @param string $label - Label used when no items are in the Trash.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function not_found_in_trash( string $label ): Labels {
-		$this->cpt->labels['not_found_in_trash'] = $label;
-		return $this;
+		return $this->set( 'not_found_in_trash', $label );
 	}
 
 
@@ -205,11 +239,10 @@ class Labels {
 	 *
 	 * @param string $label - Label used to prefix parents of hierarchical items.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function parent_item_colon( string $label ): Labels {
-		$this->cpt->labels['parent_item_colon'] = $label;
-		return $this;
+		return $this->set( 'parent_item_colon', $label );
 	}
 
 
@@ -220,11 +253,10 @@ class Labels {
 	 *
 	 * @param string $label - Label to signify all items in a submenu link.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function all_items( string $label ): Labels {
-		$this->cpt->labels['all_items'] = $label;
-		return $this;
+		return $this->set( 'all_items', $label );
 	}
 
 
@@ -235,11 +267,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for archives in nav menus.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function archives( string $label ): Labels {
-		$this->cpt->labels['archives'] = $label;
-		return $this;
+		return $this->set( 'archives', $label );
 	}
 
 
@@ -250,11 +281,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for the attributes meta box.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function attributes( string $label ): Labels {
-		$this->cpt->labels['attributes'] = $label;
-		return $this;
+		return $this->set( 'attributes', $label );
 	}
 
 
@@ -265,11 +295,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for the media frame button.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function insert_into_item( string $label ): Labels {
-		$this->cpt->labels['insert_into_item'] = $label;
-		return $this;
+		return $this->set( 'insert_into_item', $label );
 	}
 
 
@@ -280,11 +309,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for the media frame filter.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function uploaded_to_this_item( string $label ): Labels {
-		$this->cpt->labels['uploaded_to_this_item'] = $label;
-		return $this;
+		return $this->set( 'uploaded_to_this_item', $label );
 	}
 
 
@@ -297,11 +325,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for the featured image meta box title.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function featured_image( string $label ): Labels {
-		$this->cpt->labels['featured_image'] = $label;
-		return $this;
+		return $this->set( 'featured_image', $label );
 	}
 
 
@@ -314,11 +341,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for setting the featured image.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function set_featured_image( string $label ): Labels {
-		$this->cpt->labels['set_featured_image'] = $label;
-		return $this;
+		return $this->set( 'set_featured_image', $label );
 	}
 
 
@@ -331,11 +357,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for removing the featured image.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function remove_featured_image( string $label ): Labels {
-		$this->cpt->labels['remove_featured_image'] = $label;
-		return $this;
+		return $this->set( 'remove_featured_image', $label );
 	}
 
 
@@ -348,11 +373,10 @@ class Labels {
 	 *
 	 * @param string $label - Label in the media frame for using a featured image.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function use_featured_image( string $label ): Labels {
-		$this->cpt->labels['use_featured_image'] = $label;
-		return $this;
+		return $this->set( 'use_featured_image', $label );
 	}
 
 
@@ -363,11 +387,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for the menu name.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function menu_name( string $label ): Labels {
-		$this->cpt->labels['menu_name'] = $label;
-		return $this;
+		return $this->set( 'menu_name', $label );
 	}
 
 
@@ -378,11 +401,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for the table views hidden heading.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function filter_items_list( string $label ): Labels {
-		$this->cpt->labels['filter_items_list'] = $label;
-		return $this;
+		return $this->set( 'filter_items_list', $label );
 	}
 
 
@@ -393,11 +415,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for the date filter in list tables.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function filter_by_date( string $label ): Labels {
-		$this->cpt->labels['filter_by_date'] = $label;
-		return $this;
+		return $this->set( 'filter_by_date', $label );
 	}
 
 
@@ -408,11 +429,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for the table pagination hidden heading.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function items_list_navigation( string $label ): Labels {
-		$this->cpt->labels['items_list_navigation'] = $label;
-		return $this;
+		return $this->set( 'items_list_navigation', $label );
 	}
 
 
@@ -423,11 +443,10 @@ class Labels {
 	 *
 	 * @param string $label - Label for the table hidden heading.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function items_list( string $label ): Labels {
-		$this->cpt->labels['items_list'] = $label;
-		return $this;
+		return $this->set( 'items_list', $label );
 	}
 
 
@@ -438,11 +457,10 @@ class Labels {
 	 *
 	 * @param string $label - Label used when an item is published.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function item_published( string $label ): Labels {
-		$this->cpt->labels['item_published'] = $label;
-		return $this;
+		return $this->set( 'item_published', $label );
 	}
 
 
@@ -453,11 +471,10 @@ class Labels {
 	 *
 	 * @param string $label - Label used when an item is published with private visibility.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function item_published_privately( string $label ): Labels {
-		$this->cpt->labels['item_published_privately'] = $label;
-		return $this;
+		return $this->set( 'item_published_privately', $label );
 	}
 
 
@@ -468,11 +485,10 @@ class Labels {
 	 *
 	 * @param string $label - Label used when an item is switched to a draft.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function item_reverted_to_draft( string $label ): Labels {
-		$this->cpt->labels['item_reverted_to_draft'] = $label;
-		return $this;
+		return $this->set( 'item_reverted_to_draft', $label );
 	}
 
 
@@ -483,11 +499,10 @@ class Labels {
 	 *
 	 * @param string $label - Label used when an item is scheduled for publishing.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function item_scheduled( string $label ): Labels {
-		$this->cpt->labels['item_scheduled'] = $label;
-		return $this;
+		return $this->set( 'item_scheduled', $label );
 	}
 
 
@@ -498,11 +513,10 @@ class Labels {
 	 *
 	 * @param string $label - Label used when an item is updated.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function item_updated( string $label ): Labels {
-		$this->cpt->labels['item_updated'] = $label;
-		return $this;
+		return $this->set( 'item_updated', $label );
 	}
 
 
@@ -513,11 +527,10 @@ class Labels {
 	 *
 	 * @param string $label - Title for a navigation link block variation.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function item_link( string $label ): Labels {
-		$this->cpt->labels['item_link'] = $label;
-		return $this;
+		return $this->set( 'item_link', $label );
 	}
 
 
@@ -528,10 +541,49 @@ class Labels {
 	 *
 	 * @param string $label - Description for a navigation link block variation.
 	 *
-	 * @return $this
+	 * @return Labels
 	 */
 	public function item_link_description( string $label ): Labels {
-		$this->cpt->labels['item_link_description'] = $label;
+		return $this->set( 'item_link_description', $label );
+	}
+
+
+	/**
+	 * Get a label for the post type.
+	 *
+	 * @phpstan-param self::* $label_key
+	 *
+	 * @param string          $label_key - The label to get.
+	 *
+	 * @return ?string
+	 */
+	public function get_label( string $label_key ): ?string {
+		return $this->labels[ $label_key ] ?? null;
+	}
+
+
+	/**
+	 * Get all labels for the post type.
+	 *
+	 * @return array<self::*, string>
+	 */
+	public function get_labels(): array {
+		return $this->labels;
+	}
+
+
+	/**
+	 * Set a label for the post type.
+	 *
+	 * @phpstan-param self::* $label_key
+	 *
+	 * @param string          $label_key - The label to set.
+	 * @param string          $label     - The value to set.
+	 *
+	 * @return Labels
+	 */
+	protected function set( string $label_key, string $label ): Labels {
+		$this->labels[ $label_key ] = $label;
 		return $this;
 	}
 }

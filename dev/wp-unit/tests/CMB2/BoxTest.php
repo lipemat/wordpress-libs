@@ -74,7 +74,7 @@ class BoxTest extends \WP_UnitTestCase {
 		    ->position( 14 );
 		/** @var Field $field */
 		$field = call_private_method( $box, 'get_fields' )['t1'];
-		$this->assertEquals( 3, $field->column['position'] ?? false );
+		$this->assertEquals( 3, get_private_property( $field, 'column' )['position'] ?? false );
 		$this->assertEquals( 14, $field->position );
 		$this->assertEquals( [ 'o' => 'one', 't' => 'two' ], $field->options );
 
@@ -90,7 +90,7 @@ class BoxTest extends \WP_UnitTestCase {
 		/** @var Field $field */
 		$field = call_private_method( $group, 'get_fields' )['t2'];
 
-		$this->assertEquals( 4, $field->column['position'] );
+		$this->assertEquals( 4, get_private_property( $field, 'column' )['position'] );
 		$this->assertEquals( 9, $field->position );
 		$this->assertEquals( 'checkbox', $field->get_type() );
 		$this->assertEquals( 'on', $field->default );

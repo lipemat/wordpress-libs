@@ -2,7 +2,7 @@
 
 namespace Lipe\Lib\Query\Clause;
 
-use Lipe\Lib\Query\Args;
+use Lipe\Lib\Query\Query_Args;
 
 /**
  * @author Mat Lipe
@@ -11,8 +11,8 @@ use Lipe\Lib\Query\Args;
  */
 class Tax_QueryTest extends \WP_UnitTestCase {
 
-	public function test_in() : void {
-		$args = new Args();
+	public function test_in(): void {
+		$args = new Query_Args( [] );
 		$tax = $args->tax_query()
 		            ->relation( 'OR' )
 		            ->in( [ 'one', 'two' ], 'post_tag', true, 'slug' );
@@ -65,8 +65,8 @@ class Tax_QueryTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_exists() : void {
-		$args = new Args();
+	public function test_exists(): void {
+		$args = new Query_Args( [] );
 		$args->tax_query()
 		     ->exists( 'post_tag' )
 		     ->nested_clause()
@@ -99,8 +99,8 @@ class Tax_QueryTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_and() : void {
-		$args = new Args();
+	public function test_and(): void {
+		$args = new Query_Args( [] );
 		$args->tax_query()
 		     ->and( [ 4, 5 ], 'category', false )
 		     ->nested_clause()
@@ -138,8 +138,8 @@ class Tax_QueryTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_nested_clauses() : void {
-		$args = new Args();
+	public function test_nested_clauses(): void {
+		$args = new Query_Args( [] );
 		$args->tax_query()
 		     ->and( [ 4, 5 ], 'category', false )
 		     ->nested_clause( 'OR' )
@@ -201,8 +201,8 @@ class Tax_QueryTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_existing_merge() : void {
-		$args = new Args( [
+	public function test_existing_merge(): void {
+		$args = new Query_Args( [
 			'tax_query' => [
 				'relation' => 'OR',
 				[
@@ -246,7 +246,7 @@ class Tax_QueryTest extends \WP_UnitTestCase {
 				],
 			],
 		] );
-		$args = new Args();
+		$args = new Query_Args( [] );
 		$args->tax_query()
 		     ->relation( 'AND' )
 		     ->in( [ 'one', 'two' ], 'post_tag', true, 'slug' );

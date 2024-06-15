@@ -341,26 +341,30 @@ class GroupTest extends \WP_Test_REST_TestCase {
 
 		$this->assertArrayNotHasKey( 'sortable', $group->options );
 
-		$group = $box->group( 'group/prefixed/g3', 'Group 3', null, null, null, true );
+		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
+		$group->sortable();
 		$this->assertTrue( $group->options['sortable'] );
 
-		$group = $box->group( 'group/prefixed/g3', 'Group 3', null, null, null, false );
+		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
+		$group->sortable( false );
 		$this->assertFalse( $group->options['sortable'] );
 
 		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
 		$this->assertArrayNotHasKey( 'sortable', $group->options );
-		$group->repeatable( true );
+		$group->repeatable();
 		$this->assertTrue( $group->options['sortable'] );
 
 		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
 		$group->repeatable( false );
 		$this->assertFalse( $group->options['sortable'] );
 
-		$group = $box->group( 'group/prefixed/g3', 'Group 3', null, null, null, false );
-		$group->repeatable( true );
+		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
+		$group->sortable( false );
+		$group->repeatable();
 		$this->assertFalse( $group->options['sortable'] );
 
-		$group = $box->group( 'group/prefixed/g3', 'Group 3', null, null, null, true );
+		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
+		$group->sortable();
 		$group->repeatable( false );
 		$this->assertTrue( $group->options['sortable'] );
 	}
@@ -369,7 +373,8 @@ class GroupTest extends \WP_Test_REST_TestCase {
 	public function test_sortable_rendered(): void {
 		$box = new Box( 'sortable', [ 'post' ], 'Sortable Group' );
 
-		$group = $box->group( 'group/prefixed/g5', 'Group 3', null, null, null, true );
+		$group = $box->group( 'group/prefixed/g5', 'Group 3' );
+		$group->sortable();
 		$group->repeatable( false );
 		$this->assertTrue( $group->options['sortable'] );
 		$group->field( 'group/prefixed/g5/first', '' )->text();

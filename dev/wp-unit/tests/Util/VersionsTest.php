@@ -10,45 +10,45 @@ class VersionsTest extends \WP_UnitTestCase {
 
 
 	public function testOnce() {
-		Versions::in()->once( self::KEY, function () {
+		Versions::in()->once( self::KEY, function() {
 			$this->run ++;
 		} );
-		Versions::in()->run_updates();
+		call_private_method( Versions::in(), 'run_updates' );
 
 		$this->assertEquals( 1, $this->run );
 
-		Versions::in()->once( self::KEY, function () {
+		Versions::in()->once( self::KEY, function() {
 			$this->run ++;
 		} );
-		Versions::in()->run_updates();
+		call_private_method( Versions::in(), 'run_updates' );
 
 		$this->assertEquals( 1, $this->run );
 	}
 
 
-	public function testRun_updates() : void {
+	public function testRun_updates(): void {
 		$version = (float) Versions::in()->get_version();
-		Versions::in()->add_update( $version + 1, function () {
+		Versions::in()->add_update( $version + 1, function() {
 			$this->run ++;
 		} );
-		Versions::in()->run_updates();
+		call_private_method( Versions::in(), 'run_updates' );
 		$this->assertEquals( 1, $this->run );
 
-		Versions::in()->add_update( $version + 1, function () {
+		Versions::in()->add_update( $version + 1, function() {
 			$this->run ++;
 		} );
-		Versions::in()->run_updates();
+		call_private_method( Versions::in(), 'run_updates' );
 		$this->assertEquals( 1, $this->run );
 
-		Versions::in()->add_update( $version - 1, function () {
+		Versions::in()->add_update( $version - 1, function() {
 			$this->run ++;
 		} );
-		Versions::in()->run_updates();
+		call_private_method( Versions::in(), 'run_updates' );
 		$this->assertEquals( 1, $this->run );
 	}
 
 
-	public function test_order() : void {
+	public function test_order(): void {
 		$version = (float) Versions::in()->get_version();
 		$this->run = 10;
 
@@ -61,7 +61,7 @@ class VersionsTest extends \WP_UnitTestCase {
 		Versions::in()->add_update( "{$version}.1", function() {
 			return $this->run += 2;
 		} );
-		Versions::in()->run_updates();
+		call_private_method( Versions::in(), 'run_updates' );
 
 		$this->assertEquals( 18, $this->run );
 	}

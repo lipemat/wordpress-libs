@@ -1061,6 +1061,10 @@ const RAW_RUNTIME_STATE =
       "npm:0.12.0"\
     ],\
     [\
+      "@types/select2",\
+      "npm:4.0.63"\
+    ],\
+    [\
       "@types/semver",\
       "npm:7.5.8"\
     ],\
@@ -4715,10 +4719,12 @@ const RAW_RUNTIME_STATE =
           ["@lipemat/js-boilerplate", "npm:10.9.0"],\
           ["@lipemat/js-boilerplate-gutenberg", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.3.3"],\
           ["@lipemat/stylelint-config", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:2.2.1"],\
+          ["@types/jquery", "npm:3.5.30"],\
           ["@types/lipemat__js-boilerplate", "https://github.com/lipemat/types-js-boilerplate.git#commit=6c548a011e89e2912a29c86aa2f7df3dd6fbde03"],\
           ["@types/node", "npm:18.19.33"],\
           ["@types/react", "npm:18.3.2"],\
           ["@types/react-dom", "npm:18.3.0"],\
+          ["@types/select2", "npm:4.0.63"],\
           ["eslint", "npm:8.57.0"],\
           ["stylelint", "npm:14.16.1"],\
           ["ts-node", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:10.9.2"],\
@@ -8604,10 +8610,12 @@ const RAW_RUNTIME_STATE =
           ["@lipemat/js-boilerplate", "npm:10.9.0"],\
           ["@lipemat/js-boilerplate-gutenberg", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.3.3"],\
           ["@lipemat/stylelint-config", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:2.2.1"],\
+          ["@types/jquery", "npm:3.5.30"],\
           ["@types/lipemat__js-boilerplate", "https://github.com/lipemat/types-js-boilerplate.git#commit=6c548a011e89e2912a29c86aa2f7df3dd6fbde03"],\
           ["@types/node", "npm:18.19.33"],\
           ["@types/react", "npm:18.3.2"],\
           ["@types/react-dom", "npm:18.3.0"],\
+          ["@types/select2", "npm:4.0.63"],\
           ["eslint", "npm:8.57.0"],\
           ["stylelint", "npm:14.16.1"],\
           ["ts-node", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:10.9.2"],\
@@ -9566,6 +9574,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-retry-npm-0.12.0-e4e6294a2c-7c5c908636.zip/node_modules/@types/retry/",\
         "packageDependencies": [\
           ["@types/retry", "npm:0.12.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/select2", [\
+      ["npm:4.0.63", {\
+        "packageLocation": "./.yarn/cache/@types-select2-npm-4.0.63-af3956f7ba-802ffccaef.zip/node_modules/@types/select2/",\
+        "packageDependencies": [\
+          ["@types/select2", "npm:4.0.63"],\
+          ["@types/jquery", "npm:3.5.30"]\
         ],\
         "linkType": "HARD"\
       }]\

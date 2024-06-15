@@ -31,6 +31,13 @@ class MemoizeTestTrait {
 	}
 
 
+	public function heavy_static( ...$args ) {
+		return $this->static_once( function( ...$passed ) {
+			return [ $passed[0], microtime( true ), $passed[1] ?? null ];
+		}, __METHOD__, ...$args );
+	}
+
+
 	public function get_key( string $identifier, array $args ): string {
 		return $this->get_cache_key( $identifier, $args );
 	}
@@ -40,7 +47,7 @@ class MemoizeTest extends \WP_UnitTestCase {
 	/**
 	 * @var MemoizeTestTrait
 	 */
-	private $trait;
+	private MemoizeTestTrait $trait;
 
 
 	public function setUp(): void {
@@ -64,7 +71,7 @@ class MemoizeTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_memoize_with_clousures(): void {
+	public function test_memoize_with_closures(): void {
 		$closure_false = fn() => false;
 		$closure_true = fn() => true;
 		$closure_1 = $this->trait->heavy_memo( [ 'close', $closure_false ] )[1];
@@ -137,6 +144,45 @@ class MemoizeTest extends \WP_UnitTestCase {
 	}
 
 
+	public function test_static(): void {
+		// First class.
+		$first = $this->trait->heavy_static( [ 'purse' ] );
+		$this->assertEquals( [ 'purse' ], $this->trait->heavy_static( [ 'purse' ] )[0] );
+		$this->assertEquals( $first, $this->trait->heavy_static( 'purse', 'chair' ) );
+		$this->assertEquals( $first, $this->trait->heavy_static( [ 'purse' ] ) );
+
+		// Another instance of same class
+		$local = new MemoizeTestTrait();
+		$this->assertEquals( $first, $local->heavy_static( [ 'purse' ] ) );
+		$this->assertEquals( $first, $local->heavy_static( 'purse', 'chair' ) );
+
+		// First anonymous class. Should not share cache.
+		$other_class = new class () extends MemoizeTestTrait {
+		};
+		$other = $other_class->heavy_static( [ 'purse' ] );
+		$this->assertNotEquals( $first, $other_class->heavy_static( [ 'purse' ] ) );
+		$this->assertEquals( $other, $other_class->heavy_static( [ 'purse' ] ) );
+		$this->assertEquals( $first, $this->trait->heavy_static( 'purse', 'chair' ) );
+		$this->assertEquals( $other, $other_class->heavy_static( 'more', 'arguments', 'mean', 'nothing' ) );
+
+		// Second anonymous class.
+		$more_anon = new class () extends MemoizeTestTrait {
+		};
+		$more = $more_anon->heavy_static( [ 'purse' ] );
+		$this->assertNotEquals( $first, $more_anon->heavy_static( [ 'purse' ] ) );
+		$this->assertEquals( $more, $more_anon->heavy_static( [ 'purse' ] ) );
+		$this->assertEquals( $first, $this->trait->heavy_static( 'purse', 'chair' ) );
+		$this->assertNotEquals( $other, $more_anon->heavy_static( [ 'purse' ] ) );
+
+		// Clear everything.
+		$this->trait->clear_memoize_cache();
+		$this->assertNotEquals( $first, $this->trait->heavy_static( [ 'next' ] ) );
+		$this->assertNotEquals( $other, $other_class->heavy_static( [ 'next' ] ) );
+		$this->assertNotEquals( $more, $more_anon->heavy_static( [ 'next' ] ) );
+		$this->assertEquals( [ 'next' ], $this->trait->heavy_static( [ 'purse' ] )[0] );
+	}
+
+
 	public function test_clear_single_item(): void {
 		$once = $this->trait->heavy_once( 'purse', 'chair' );
 		$mem = $this->trait->heavy_memo( [ 'first' ] );
@@ -170,7 +216,7 @@ class MemoizeTest extends \WP_UnitTestCase {
 		$this->assertEquals( 'www', $this->trait->get_key( 'www', [] ) );
 		$this->assertEquals( 'www', $this->trait->get_key( 'www', [ [] ] ) );
 
-		$HASH = fn( $identifier, $args ) => \hash( 'fnv1a64', wp_json_encode( [ $args, $identifier ] ) );
+		$HASH = fn( $identifier, $args ) => \hash( 'murmur3f', wp_json_encode( [ $args, $identifier ] ) );
 
 		$this->assertEquals( $HASH( 'www', [ [], [] ] ), $this->trait->get_key( 'www', [ [], [] ] ) );
 		$this->assertEquals( $HASH( 'www', [ [], 'random' ] ), $this->trait->get_key( 'www', [ [], 'random' ] ) );

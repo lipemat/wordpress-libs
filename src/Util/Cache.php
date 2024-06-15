@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
@@ -11,7 +12,7 @@ use Lipe\Lib\Traits\Singleton;
  * @example Cache::init(); To optionally generate the clear cache button.
  * @example Cache::set($key, $value);
  *
- * @phpstan-type CACHE_KEY array|string|object|int
+ * @phpstan-type CACHE_KEY object|array<mixed>|int|string
  */
 class Cache {
 	use Singleton;
@@ -39,16 +40,16 @@ class Cache {
 	/**
 	 * Set a value in the cache.
 	 *
-	 * @phpstan-param CACHE_KEY $key
+	 * @phpstan-param CACHE_KEY       $key
 	 *
-	 * @param mixed             $key               - Cache key. Array, string, or object.
-	 * @param mixed             $value             - Value to store in the cache.
-	 * @param string            $group             - The group to store the cache in.
-	 * @param int               $expire_in_seconds - How long to store the cache for.
+	 * @param object|array|int|string $key               - Cache key. Array, string or object.
+	 * @param mixed                   $value             - Value to store in the cache.
+	 * @param string                  $group             - The group to store the cache in.
+	 * @param int                     $expire_in_seconds - How long to store the cache for.
 	 *
 	 * @return bool
 	 */
-	public function set( $key, $value, string $group = self::DEFAULT_GROUP, int $expire_in_seconds = 0 ): bool {
+	public function set( object|array|int|string $key, mixed $value, string $group = self::DEFAULT_GROUP, int $expire_in_seconds = 0 ): bool {
 		$group = $this->get_group_key( $group );
 
 		if ( null === $value ) {
@@ -63,14 +64,14 @@ class Cache {
 	/**
 	 * Get an item from the cache.
 	 *
-	 * @phpstan-param CACHE_KEY $key
+	 * @phpstan-param CACHE_KEY       $key
 	 *
-	 * @param mixed             $key   - Cache key. Array, string, or object.
-	 * @param string            $group - The group to store the cache in.
+	 * @param object|array|int|string $key   - Cache key. Array, string or object.
+	 * @param string                  $group - The group to store the cache in.
 	 *
 	 * @return false|mixed - false on failure to retrieve contents, or the cache contents on success.
 	 */
-	public function get( $key, string $group = self::DEFAULT_GROUP ) {
+	public function get( object|array|int|string $key, string $group = self::DEFAULT_GROUP ): mixed {
 		$group = $this->get_group_key( $group );
 
 		return wp_cache_get( $this->filter_key( $key ), $group );
@@ -82,14 +83,14 @@ class Cache {
 	 *
 	 * Returns true if the item was deleted, false otherwise.
 	 *
-	 * @phpstan-param CACHE_KEY $key
+	 * @phpstan-param CACHE_KEY       $key
 	 *
-	 * @param mixed             $key   - Cache key. Array, string, or object.
-	 * @param string            $group - The group to store the cache in.
+	 * @param object|array|int|string $key   - Cache key. Array, string or object.
+	 * @param string                  $group - The group to store the cache in.
 	 *
 	 * @return bool
 	 */
-	public function delete( $key, string $group = self::DEFAULT_GROUP ): bool {
+	public function delete( object|array|int|string $key, string $group = self::DEFAULT_GROUP ): bool {
 		$group = $this->get_group_key( $group );
 
 		return wp_cache_delete( $this->filter_key( $key ), $group );
@@ -99,14 +100,12 @@ class Cache {
 	/**
 	 * Flush a group by changing the "last_changed" key.
 	 *
-	 * @todo Switch to conditional `wp_cache_set_last_changed` when WP 6.3 is available.
-	 *
 	 * @param string $group - The group to flush.
 	 *
 	 * @return void
 	 */
 	public function flush_group( string $group = self::DEFAULT_GROUP ): void {
-		wp_cache_set( 'last_changed', microtime(), $group );
+		wp_cache_set_last_changed( $group );
 	}
 
 
@@ -116,7 +115,7 @@ class Cache {
 	 * @return void
 	 */
 	public function maybe_clear_cache(): void {
-		if ( empty( $_REQUEST[ static::QUERY_ARG ] ) || empty( $_REQUEST['_wpnonce'] ) || false === wp_verify_nonce( sanitize_text_field( \wp_unslash( $_REQUEST['_wpnonce'] ) ), static::QUERY_ARG ) ) {
+		if ( ! isset( $_REQUEST[ static::QUERY_ARG ], $_REQUEST['_wpnonce'] ) || false === wp_verify_nonce( sanitize_text_field( \wp_unslash( $_REQUEST['_wpnonce'] ) ), static::QUERY_ARG ) ) {
 			return;
 		}
 		wp_cache_flush();
@@ -162,15 +161,15 @@ class Cache {
 	 * Process the cache key so that any unique data may serve as a key,
 	 * even if it's an object or array.
 	 *
-	 * @phpstan-param CACHE_KEY $key
+	 * @phpstan-param CACHE_KEY       $key
 	 *
-	 * @param mixed             $key - Data to convert to a string cache key.
+	 * @param object|array|int|string $key - Data to convert to a string cache key.
 	 *
 	 * @return int|string
 	 */
-	protected function filter_key( $key ) {
-		if ( \is_array( $key ) || \is_object( $key ) ) {
-			return \hash( 'fnv1a64', (string) wp_json_encode( $key ) );
+	protected function filter_key( object|array|int|string $key ): int|string {
+		if ( ! \is_scalar( $key ) ) {
+			return \hash( 'murmur3f', (string) wp_json_encode( $key ) );
 		}
 
 		return $key;

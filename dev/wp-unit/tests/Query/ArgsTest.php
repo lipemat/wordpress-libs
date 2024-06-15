@@ -9,8 +9,8 @@ namespace Lipe\Lib\Query;
  */
 class ArgsTest extends \WP_UnitTestCase {
 
-	public function test_get_args() : void {
-		$args = new Args( [] );
+	public function test_get_args(): void {
+		$args = new Query_Args( [] );
 		$args->lazy_load_term_meta = false;
 		$args->update_post_meta_cache = false;
 
@@ -21,8 +21,8 @@ class ArgsTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_get_preload() : void {
-		$args = new Args( [
+	public function test_get_preload(): void {
+		$args = new Query_Args( [
 			'lazy_load_term_meta'    => false,
 			'update_post_meta_cache' => false,
 		] );
@@ -33,14 +33,14 @@ class ArgsTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_merge_query() : void {
+	public function test_merge_query(): void {
 		$query = new \WP_Query( [
 			'orderby' => 'post_title',
 		] );
 
 		$previous = $query->query_vars;
 
-		$args = new Args( [] );
+		$args = new Query_Args( [] );
 		$args->orderby( 'date' );
 		$args->merge_query( $query );
 		$previous['orderby'] = 'date';

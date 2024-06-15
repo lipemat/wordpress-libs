@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2\Group;
 
@@ -16,6 +17,11 @@ class Layout {
 	use Singleton;
 	use Memoize;
 
+	public const BLOCK = 'block';
+	public const TABLE = 'table';
+	public const ROW   = 'row';
+
+
 	/**
 	 * Is this a table layout?
 	 *
@@ -24,7 +30,7 @@ class Layout {
 	 * @return bool
 	 */
 	protected function is_table( \CMB2_Field $field_group ): bool {
-		return ( 'table' === $field_group->args( 'layout' ) );
+		return ( self::TABLE === $field_group->args( 'layout' ) );
 	}
 
 
@@ -46,12 +52,12 @@ class Layout {
 	 * @see Group::layout()
 	 * @see \CMB2::render_group_callback()
 	 *
-	 * @param array       $field_args  Array of field arguments for the group field parent.
-	 * @param \CMB2_Field $field_group The CMB2_Field group object.
+	 * @param array{type: string} $field_args  Array of field arguments for the group field parent.
+	 * @param \CMB2_Field         $field_group The CMB2_Field group object.
 	 *
 	 * @return \CMB2_Field|null Group field object.
 	 */
-	public function render_group_callback( $field_args, \CMB2_Field $field_group ): ?\CMB2_Field {
+	public function render_group_callback( array $field_args, \CMB2_Field $field_group ): ?\CMB2_Field {
 		$cmb = \CMB2_Boxes::get( $field_group->cmb_id );
 		// If field is requesting to be conditionally shown.
 		if ( \is_bool( $cmb ) || ! $field_group->should_show() ) {
@@ -74,14 +80,17 @@ class Layout {
 			'cmb2-group-context-' . $field_group->args( 'context' ),
 		], );
 
-		echo '<div class="' . $classnames . '" data-fieldtype="group"><div class="cmb-td"><div data-groupid="' . esc_attr( $field_group->id() ) . '" id="' . esc_attr( $field_group->id() ) . '_repeat" ' . $cmb->group_wrap_attributes( $field_group ) . '>'; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<div class="' . esc_attr( (string) $classnames ) . '" data-fieldtype="group"><div class="cmb-td">';
+
+		// phpcs:ignore WordPress.Security.EscapeOutput --- Group wrap attributes are escaped in the method.
+		echo '<div data-groupid="' . esc_attr( $field_group->id() ) . '" id="' . esc_attr( $field_group->id() ) . '_repeat" ' . $cmb->group_wrap_attributes( $field_group ) . '>';
 
 		if ( \is_string( $desc ) || \is_string( $label ) ) {
 			$classnames = new Class_Names( [
 				'cmb-group-description' => $desc,
 				'cmb-row'               => ! $this->is_table( $field_group ),
 			] );
-			echo '<div class="' . esc_attr( $classnames ) . '">';
+			echo '<div class="' . esc_attr( (string) $classnames ) . '">';
 
 			if ( \is_string( $label ) && '' !== $label ) {
 				echo '<h2 class="cmb-group-name cmb-layout-header">' . esc_html( $label ) . '</h2>';
@@ -92,27 +101,30 @@ class Layout {
 			echo '</div>';
 		}
 
-		$classnames = new Class_Names( [
-			'cmb-table'                 => true,
+		$classnames = new Class_Names( 'cmb-table', [
 			'cmb-layout-non-repeatable' => ! $this->is_table( $field_group ) && ! $this->is_repeatable( $field_group ),
 		] );
 
-		echo '<table class="' . esc_attr( $classnames ) . '" cellpadding="0" cellspacing="0">';
+		?>
+		<table class="<?= esc_attr( (string) $classnames ) ?>" cellpadding="0" cellspacing="0">
+			<?php
 
-		if ( $this->is_table( $field_group ) && (bool) $field_group->args( 'show_names' ) ) {
-			$this->render_group_table_header( $field_group );
-		}
-
-		if ( ! empty( $group_val ) ) {
-			foreach ( $group_val as $group_key => $field_id ) {
-				$this->render_group_table_row( $field_group );
-				++ $field_group->index;
+			if ( $this->is_table( $field_group ) && (bool) $field_group->args( 'show_names' ) ) {
+				$this->render_group_table_header( $field_group );
 			}
-		} else {
-			$this->render_group_table_row( $field_group );
-		}
 
-		echo '</table>';
+			if ( [] !== $group_val ) {
+				$count = \count( $group_val );
+				for ( $i = 0; $i < $count; $i ++ ) {
+					$this->render_group_table_row( $field_group );
+					++ $field_group->index;
+				}
+			} else {
+				$this->render_group_table_row( $field_group );
+			}
+			?>
+		</table>
+		<?php
 
 		if ( $this->is_repeatable( $field_group ) ) {
 			?>
@@ -179,16 +191,19 @@ class Layout {
 	 *
 	 * @return \CMB2|bool
 	 */
-	public function render_group_table_row( \CMB2_Field $field_group ) {
+	public function render_group_table_row( \CMB2_Field $field_group ): \CMB2|bool {
 		$field_group->peform_param_callback( 'before_group_row' );
-		$closed_class = (bool) $field_group->options( 'closed' ) ? ' closed' : '';
-		$confirm_deletion = $field_group->options( 'remove_confirm' );
-		$confirm_deletion = ! empty( $confirm_deletion ) ? $confirm_deletion : '';
+		$remove_confirm = $field_group->options( 'remove_confirm' );
+		$classes = new Class_Names( [
+			'cmb-row',
+			'cmb-repeatable-grouping',
+			'closed' => (bool) $field_group->options( 'closed' ),
+		] );
 
 		?>
 		<tr
 			id="cmb-group-<?= esc_attr( $field_group->id() ) ?>-<?= esc_attr( $field_group->index ) ?>"
-			class="cmb-row cmb-repeatable-grouping<?= esc_attr( $closed_class ) ?>"
+			class="<?= esc_attr( (string) $classes ) ?>"
 			data-iterator="<?= esc_attr( $field_group->index ) ?>"
 		>
 			<?php
@@ -219,7 +234,7 @@ class Layout {
 							?>
 							<tr>
 								<th>
-									<?= esc_html( $field_args['name'] ); ?>
+									<?= esc_html( $field_args['name'] ) ?>
 								</th>
 								<td>
 									<?php $this->render_field( $field_args, $field_group ); ?>
@@ -242,7 +257,7 @@ class Layout {
 							type="button"
 							data-selector="<?= esc_attr( $field_group->id() ) ?>_repeat"
 							class="cmb-remove-group-row cmb-remove-group-row-button button-secondary cmb-shift-rows"
-							data-confirm="<?= esc_attr( $confirm_deletion ) ?>"
+							data-confirm="<?= esc_attr( \is_string( $remove_confirm ) ? $remove_confirm : '' ) ?>"
 							title="<?= esc_attr( $field_group->options( 'remove_button' ) ) ?>"
 						>
 							<span class="dashicons dashicons-no-alt" />
@@ -264,8 +279,8 @@ class Layout {
 	/**
 	 * Render a single field.
 	 *
-	 * @param array       $field_args  Array of field arguments.
-	 * @param \CMB2_Field $field_group CMB2_Field group field object.
+	 * @param array{type: string} $field_args  Array of field arguments.
+	 * @param \CMB2_Field         $field_group CMB2_Field group field object.
 	 */
 	protected function render_field( array $field_args, \CMB2_Field $field_group ): void {
 		$cmb = \CMB2_Boxes::get( $field_group->cmb_id );

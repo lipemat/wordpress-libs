@@ -13,3 +13,17 @@
 		}
 	}
 }
+
+/**
+ * Fix for Select2 fields in Meta Boxes.
+ */
+.cmb-type-lipelibcmb2field-typesterm-select-2 {
+	.select2-container {
+		input {
+			line-height: 1 !important;
+			min-height: 20px;
+			margin: 2px 0 0 !important;
+			padding: 0 !important;
+		}
+	}
+}

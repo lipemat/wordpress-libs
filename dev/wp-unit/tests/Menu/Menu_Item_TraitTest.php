@@ -15,7 +15,7 @@ class Menu_Item {
  */
 class Menu_Item_TraitTest extends \WP_UnitTestCase {
 
-	public function test_get_object() : void {
+	public function test_get_object(): void {
 		$post_id = self::factory()->post->create( [ 'post_title' => 'Hello World' ] );
 
 		$menu_id = wp_create_nav_menu( 'Menu' );
@@ -38,8 +38,14 @@ class Menu_Item_TraitTest extends \WP_UnitTestCase {
 			$this->assertTrue( property_exists( $object->get_object(), 'db_id' ) );
 		}
 
-		$this->setExpectedIncorrectUsage( 'Lipe\Lib\Menu\Menu_Item_Trait::factory' );
-		Menu_Item::factory( null );
+		try {
+			Menu_Item::factory( null );
+		} catch ( \TypeError $e ) {
+			$this->assertStringContainsString( 'Lipe\Project\Menu\Menu_Item::factory(): Argument #1 ($post) must be of type WP_Post|int, null given', $e->getMessage() );
+			$caught = true;
+		} finally {
+			$this->assertTrue( $caught );
+		}
 
 		$this->assertNotNull( Menu_Item::factory( $item_id )->get_object() );
 		wp_delete_post( $post_id );

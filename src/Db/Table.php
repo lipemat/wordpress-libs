@@ -9,7 +9,9 @@ namespace Lipe\Lib\Db;
  * @author Mat Lipe
  * @since  4.10.0
  *
- * @template FORMATS of array<string, "%d"|"%i"|"%f"|"%s">
+ * @template FORMATS of array<string, "%d"|"%f"|"%s">
+ * @template COLUMNS of array<string, string|float|int|null>
+ * @template PARTIALS of array<key-of<COLUMNS>, float|string|int|null>
  */
 interface Table {
 	/**

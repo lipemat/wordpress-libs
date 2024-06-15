@@ -277,7 +277,7 @@ class Event_Callbacks {
 		add_action( $action, function( ...$args ) {
 			[ $old_value, $value ] = $args;
 			$this->previous_value = $old_value[ $this->key ] ?? null;
-			if ( empty( $value[ $this->key ] ) && ! empty( $old_value[ $this->key ] ) ) {
+			if ( ! isset( $value[ $this->key ] ) && isset( $old_value[ $this->key ] ) ) {
 				$this->fire_delete_callback( $this->box->get_id() );
 			}
 		}, 10, 2 );

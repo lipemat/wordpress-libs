@@ -3,8 +3,6 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Settings;
 
-use Lipe\Lib\Settings\Settings_Page\Field;
-use Lipe\Lib\Settings\Settings_Page\FieldArgs;
 use Lipe\Lib\Settings\Settings_Page\Settings;
 
 /**

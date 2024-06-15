@@ -1,11 +1,11 @@
 <?php
-
 declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Field\Checkbox;
 use Lipe\Lib\CMB2\Field\Term_Select_2;
+use Lipe\Lib\CMB2\Field\Term_Select_2\Register;
 use Lipe\Lib\CMB2\Field\True_False;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
@@ -16,6 +16,8 @@ use Lipe\Lib\Util\Arrays;
  * A fluent interface complete with callbacks for each possible field type.
  *
  * @link    https://github.com/CMB2/CMB2/wiki/Field-Types
+ *
+ * @phpstan-type OPTIONS_CALLBACK (callable( \CMB2_Field ): array<string|int, string>)|array<string|int, string>
  */
 class Field_Type {
 	/**
@@ -43,7 +45,7 @@ class Field_Type {
 	 *
 	 * @phpstan-param REPO::TYPE_* $data_type
 	 *
-	 * @param array                $args      - [$key => $value].
+	 * @param array<string, mixed> $args      - [$key => $value].
 	 * @param string               $data_type - a type of data to return [Repo::DEFAULT, Repo::CHECKBOX, Repo::FILE, Repo::TAXONOMY ].
 	 *
 	 * @return Field
@@ -149,10 +151,14 @@ class Field_Type {
 	/**
 	 * Standard text field, which enforces a url.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_url
+	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Types#text_url
 	 *
-	 * @param array|null $protocols - Specify the supported URL protocols.
-	 *                              Defaults to return value of wp_allowed_protocols().
+	 * @formatter:off
+	 * @phpstan-param array<'http'|'https'|'ftp'|'ftps'|'mailto'|'news'|'irc'|'gopher'|'nntp'|'feed'|'telnet'> $protocols
+	 *
+	 * @param ?string[] $protocols  - Specify the supported URL protocols.
+	 *                              Defaults to return value of `wp_allowed_protocols`.
+	 * @formatter:on
 	 *
 	 * @return Field
 	 */
@@ -250,19 +256,20 @@ class Field_Type {
 	 * available for specialize fine-tuning
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#textarea_code
-	 * @link    https://www.ibenic.com/wordpress-code-editor#file-code-editor-js
-	 *
-	 * @param bool    $disable_codemirror    - disable code mirror handling in favor or a basic textbox.
-	 * @param ?string $language              - Language mode to use (example: php).
-	 *
-	 * @param array   $code_editor_arguments - The arguments are then passed to `wp.codeEditor.initialize` method.
-	 *
-	 * @return Field
 	 * @link    https://codemirror.net/doc/manual.html#option_mode
 	 * @link    https://codemirror.net/mode/
 	 *
-	 * @example textarea_code( false, 'javascript', [ 'codemirror' => [ 'lineNumbers' => false, 'theme' => 'cobalt' ] ]
-	 *          );
+	 * @example textarea_code( false, 'javascript', [ 'codemirror' => [ 'lineNumbers' => false, 'theme' => 'cobalt' ] ]);
+	 *
+	 * @phpstan-param array{
+	 *     codemirror?: array<string, mixed>,
+	 * }              $code_editor_arguments
+	 *
+	 * @param bool    $disable_codemirror    - disable code mirror handling in favor or a basic textbox.
+	 * @param ?string $language              - Language mode to use (example: php).
+	 * @param array   $code_editor_arguments - The arguments are then passed to `wp.codeEditor.initialize` method.
+	 *
+	 * @return Field
 	 */
 	public function textarea_code( bool $disable_codemirror = false, ?string $language = null, array $code_editor_arguments = [] ): Field {
 		$set = [
@@ -280,9 +287,9 @@ class Field_Type {
 				],
 			] );
 		}
-		if ( ! empty( $code_editor_arguments ) ) {
+		if ( [] !== $code_editor_arguments ) {
 			$this->field->attributes( [
-				'data-codeeditor' => wp_json_encode( $code_editor_arguments ),
+				'data-codeeditor' => (string) wp_json_encode( $code_editor_arguments ),
 			] );
 		}
 
@@ -396,14 +403,14 @@ class Field_Type {
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_date
 	 *
-	 * @param string $date_format         - PHP date format string.
-	 * @param string $timezone_meta_key   - To use the value of another timezone_select field
-	 *                                    as the timezone.
-	 * @param array  $date_picker_options - Overrides for jQuery UI Datepicker (see example).
+	 * @param string               $date_format         - PHP date format string.
+	 * @param string               $timezone_meta_key   - To use the value of another timezone_select field
+	 *                                                  as the timezone.
+	 * @param array<string, mixed> $date_picker_options - Overrides for jQuery UI Datepicker (see example).
 	 *
 	 * @return Field
 	 */
-	public function text_date( $date_format = 'm/d/Y', $timezone_meta_key = '', $date_picker_options = [] ): Field {
+	public function text_date( string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [] ): Field {
 		return $this->set( $this->field_type_date( 'text_date', $date_format, $timezone_meta_key, $date_picker_options ), Repo::TYPE_DEFAULT );
 	}
 
@@ -413,15 +420,16 @@ class Field_Type {
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_date_timestamp
 	 *
-	 * @param string $date_format         - PHP date format string.
-	 * @param string $timezone_meta_key   - To use the value of another timezone_select field
-	 *                                    as the timezone.
-	 * @param array  $date_picker_options - Overrides for jQuery UI Datepicker (see text_date example).
+	 * @param string               $date_format         - PHP date format string.
+	 * @param string               $timezone_meta_key   - To use the value of another timezone_select field
+	 *                                                  as the timezone.
+	 * @param array<string, mixed> $date_picker_options - Overrides for jQuery UI Datepicker (see text_date example).
+	 * @param array<string, mixed> $time_picker_options - Overrides for jQuery UI Timepicker.
 	 *
 	 * @return Field
 	 */
-	public function text_date_timestamp( $date_format = 'm/d/Y', $timezone_meta_key = '', array $date_picker_options = [] ): Field {
-		return $this->set( $this->field_type_date( 'text_date_timestamp', $date_format, $timezone_meta_key, $date_picker_options ), Repo::TYPE_DEFAULT );
+	public function text_date_timestamp( string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [], array $time_picker_options = [] ): Field {
+		return $this->set( $this->field_type_date( 'text_date_timestamp', $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), Repo::TYPE_DEFAULT );
 	}
 
 
@@ -430,15 +438,16 @@ class Field_Type {
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp
 	 *
-	 * @param string $date_format         - PHP date format string.
-	 * @param string $timezone_meta_key   - To use the value of another timezone_select field
-	 *                                    as the timezone.
-	 * @param array  $date_picker_options - Overrides for jQuery UI Datepicker (see text_date example).
+	 * @param string               $date_format         - PHP date format string.
+	 * @param string               $timezone_meta_key   - To use the value of another timezone_select field
+	 *                                                  as the timezone.
+	 * @param array<string, mixed> $date_picker_options - Overrides for jQuery UI Datepicker (see text_date example).
+	 * @param array<string, mixed> $time_picker_options - Overrides for jQuery UI Timepicker.
 	 *
 	 * @return Field
 	 */
-	public function text_datetime_timestamp( $date_format = 'm/d/Y', $timezone_meta_key = '', array $date_picker_options = [] ): Field {
-		return $this->set( $this->field_type_date( 'text_datetime_timestamp', $date_format, $timezone_meta_key, $date_picker_options ), Repo::TYPE_DEFAULT );
+	public function text_datetime_timestamp( string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [], array $time_picker_options = [] ): Field {
+		return $this->set( $this->field_type_date( 'text_datetime_timestamp', $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), Repo::TYPE_DEFAULT );
 	}
 
 
@@ -447,15 +456,16 @@ class Field_Type {
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp_timezone
 	 *
-	 * @param string $date_format         - PHP date format string.
-	 * @param string $timezone_meta_key   - To use the value of another timezone_select field
-	 *                                    as the timezone.
-	 * @param array  $date_picker_options - Overrides for jQuery UI Datepicker (see text_date example).
+	 * @param string               $date_format         - PHP date format string.
+	 * @param string               $timezone_meta_key   - To use the value of another timezone_select field
+	 *                                                  as the timezone.
+	 * @param array<string, mixed> $date_picker_options - Overrides for jQuery UI Datepicker (see text_date example).
+	 * @param array<string, mixed> $time_picker_options - Overrides for jQuery UI Timepicker.
 	 *
 	 * @return Field
 	 */
-	public function text_datetime_timestamp_timezone( $date_format = 'm/d/Y', $timezone_meta_key = '', $date_picker_options = [] ): Field {
-		return $this->set( $this->field_type_date( 'text_datetime_timestamp_timezone', $date_format, $timezone_meta_key, $date_picker_options ), Repo::TYPE_DEFAULT );
+	public function text_datetime_timestamp_timezone( string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [], array $time_picker_options = [] ): Field {
+		return $this->set( $this->field_type_date( 'text_datetime_timestamp_timezone', $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), Repo::TYPE_DEFAULT );
 	}
 
 
@@ -465,12 +475,27 @@ class Field_Type {
 	 * The CMB2 color picker uses the built-in WordPress color picker,
 	 * Iris [automattic.github.io/Iris/] (http://automattic.github.io/Iris/)
 	 *
-	 * All of the default options in Iris are configurable within the CMB2 color picker field.
+	 * All the default options in Iris are configurable within the CMB2 color picker field.
 	 *
 	 *
 	 * [Default Iris Options] (http://automattic.github.io/Iris/#options):
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#colorpicker
+	 *
+	 * @phpstan-param array{
+	 *     color?: bool,
+	 *     mode?: string,
+	 *     controls?: array{
+	 *         horiz?: string,
+	 *         vert?: string,
+	 *         strip?: string,
+	 *     },
+	 *     hide?: bool,
+	 *     border?: bool,
+	 *     target?: bool,
+	 *     width?: int,
+	 *     palettes?: bool,
+	 * }            $iris_options
 	 *
 	 * @param array $iris_options - Array of options to pass to Iris.
 	 * @param bool  $transparency - to enable transparency.
@@ -479,8 +504,8 @@ class Field_Type {
 	 */
 	public function colorpicker( array $iris_options = [], bool $transparency = false ): Field {
 		$_args = [ 'type' => 'colorpicker' ];
-		if ( ! empty( $iris_options ) ) {
-			$this->field->attributes( [ 'data-colorpicker' => wp_json_encode( $iris_options ) ] );
+		if ( [] !== $iris_options ) {
+			$this->field->attributes( [ 'data-colorpicker' => (string) wp_json_encode( $iris_options ) ] );
 		}
 		if ( $transparency ) {
 			$_args['options'] = [
@@ -497,12 +522,14 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
 	 *
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
-	 * @param bool           $select_all          - display select all button or not.
+	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
+	 *
+	 * @param array|callable           $options_or_callback - [ $key => $label ] || function().
+	 * @param bool                     $select_all          - display select all button or not.
 	 *
 	 * @return Field
 	 */
-	public function multicheck( $options_or_callback, $select_all = true ): Field {
+	public function multicheck( callable|array $options_or_callback, bool $select_all = true ): Field {
 		$_args = $this->field_type_options( 'multicheck', $options_or_callback );
 		$_args['select_all_button'] = $select_all;
 
@@ -515,12 +542,14 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
 	 *
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
-	 * @param bool           $select_all          - display select all button or not.
+	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
+	 *
+	 * @param array|callable           $options_or_callback - [ $key => $label ] || function().
+	 * @param bool                     $select_all          - display select all button or not.
 	 *
 	 * @return Field
 	 */
-	public function multicheck_inline( $options_or_callback, $select_all = true ): Field {
+	public function multicheck_inline( callable|array $options_or_callback, bool $select_all = true ): Field {
 		$_args = $this->field_type_options( 'multicheck_inline', $options_or_callback );
 		$_args['select_all_button'] = $select_all;
 
@@ -533,12 +562,14 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio
 	 *
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
-	 * @param bool|string    $show_option_none    - disable or set the text of the option.
+	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
+	 *
+	 * @param array|callable           $options_or_callback - [ $key => $label ] || function().
+	 * @param bool|string              $show_option_none    - disable or set the text of the option.
 	 *
 	 * @return Field
 	 */
-	public function radio( $options_or_callback, $show_option_none = true ): Field {
+	public function radio( callable|array $options_or_callback, bool|string $show_option_none = true ): Field {
 		$_args = $this->field_type_options( 'radio', $options_or_callback, $show_option_none );
 
 		return $this->set( $_args, Repo::TYPE_DEFAULT );
@@ -550,8 +581,10 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio_inline
 	 *
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
-	 * @param bool|string    $show_option_none    - disable or set the text of the option.
+	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
+	 *
+	 * @param array|callable           $options_or_callback - [ $key => $label ] || function().
+	 * @param bool|string              $show_option_none    - disable or set the text of the option.
 	 *
 	 * @return Field
 	 */
@@ -567,12 +600,14 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#select
 	 *
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
-	 * @param bool|string    $show_option_none    - disable or set the text of the option.
+	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
+	 *
+	 * @param array|callable           $options_or_callback - [ $key => $label ] || function().
+	 * @param bool|string              $show_option_none    - disable or set the text of the option.
 	 *
 	 * @return Field
 	 */
-	public function select( $options_or_callback, $show_option_none = true ): Field {
+	public function select( array|callable $options_or_callback, bool|string $show_option_none = true ): Field {
 		$_args = $this->field_type_options( 'select', $options_or_callback, $show_option_none );
 
 		return $this->set( $_args, Repo::TYPE_DEFAULT );
@@ -654,8 +689,6 @@ class Field_Type {
 	/**
 	 * A select field pre-populated with taxonomy terms and displayed hierarchical.
 	 *
-	 * @todo Add link once docs become available.
-	 *
 	 * @param string $taxonomy       - slug.
 	 * @param null   $no_terms_text  - text to display if no terms are found.
 	 * @param null   $remove_default - remove default WP terms metabox.
@@ -676,22 +709,18 @@ class Field_Type {
 	 *
 	 * @see Term_Select_2
 	 *
-	 * @param string $taxonomy         - slug.
-	 * @param bool   $create_new_terms - allow creating new terms.
-	 * @param bool   $save_as_terms    - append the terms to the object as well as storing them in meta (default to false ).
-	 * @param string $no_terms_text    - text to display if no terms are found.
-	 * @param bool   $remove_default   - remove default WP terms metabox.
+	 * @param string  $taxonomy       - slug.
+	 * @param bool    $assign_terms   - append the terms to the object as well as storing them in meta (default to false).
+	 * @param ?string $no_terms_text  - text to display if no terms are found.
+	 * @param ?bool   $remove_default - remove default WP terms metabox.
 	 *
 	 * @return Field
 	 */
-	public function taxonomy_select_2( $taxonomy, $create_new_terms = false, $save_as_terms = false, $no_terms_text = null, $remove_default = null ): Field {
-		Term_Select_2::init_once();
-
+	public function taxonomy_select_2( string $taxonomy, bool $assign_terms = false, ?string $no_terms_text = null, ?bool $remove_default = null ): Field {
 		$_args = $this->field_type_taxonomy( Term_Select_2::NAME, $taxonomy, $no_terms_text, $remove_default );
-		$this->field->term_select_2_save_as_terms = $save_as_terms;
-		$this->field->term_select_2_create_terms = $create_new_terms;
-
-		return $this->set( $_args, Repo::TYPE_TAXONOMY );
+		$field = $this->set( $_args, Repo::TYPE_TAXONOMY );
+		Register::factory( $field, $taxonomy, $assign_terms );
+		return $field;
 	}
 
 
@@ -762,7 +791,21 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#wysiwyg
 	 *
-	 * @param array $mce_options - standard WP mce options.
+	 * @phpstan-param array{
+	 *     wpautop?: bool,
+	 *     media_buttons?: bool,
+	 *     textarea_name?: string,
+	 *     textarea_rows?: int,
+	 *     tabindex?: int,
+	 *     editor_css?: string,
+	 *     editor_class?: string,
+	 *     teeny?: bool,
+	 *     dfw?: bool,
+	 *     tinymce?: bool,
+	 *     quicktags?: bool,
+	 * }            $mce_options
+	 *
+	 * @param array $mce_options - Standard WP mce options.
 	 *
 	 * @return Field
 	 */
@@ -770,7 +813,7 @@ class Field_Type {
 		$_args = [
 			'type' => 'wysiwyg',
 		];
-		if ( ! empty( $mce_options ) ) {
+		if ( [] !== $mce_options ) {
 			$_args['options'] = $mce_options;
 		}
 
@@ -840,40 +883,19 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
 	 *
-	 * @param string|null $title                 - include a {#} to have replaced with number.
-	 * @param string|null $add_button_text       - defaults to 'Add Group'.
-	 * @param string|null $remove_button_text    - defaults to 'Remove Group'.
-	 * @param bool        $sortable              - Is this group sortable. (Defaults to value or repeatable property).
-	 * @param bool        $closed                - Is this group closed by default.
-	 * @param string|null $remove_confirm        - A message to display when a user attempts
-	 *                                           to delete a group.
-	 *                                           (Defaults to null/false for no confirmation).
+	 * @interal
+	 *
+	 * @param ?string $title - Include a {#} to have replaced with number.
 	 *
 	 * @return Field
 	 */
-	public function group( ?string $title = null, ?string $add_button_text = null, ?string $remove_button_text = null, ?bool $sortable = null, bool $closed = false, ?string $remove_confirm = null ): Field {
+	public function group( ?string $title = null ): Field {
 		$_args = [
-			'type'    => 'group',
-			'options' => [
-				'closed' => $closed,
-			],
+			'type' => 'group',
 		];
-
-		if ( \is_bool( $sortable ) ) {
-			$_args['options']['sortable'] = $sortable;
-		}
 
 		if ( null !== $title ) {
 			$_args['options']['group_title'] = $title;
-		}
-		if ( null !== $add_button_text ) {
-			$_args['options']['add_button'] = $add_button_text;
-		}
-		if ( null !== $remove_button_text ) {
-			$_args['options']['remove_button'] = $remove_button_text;
-		}
-		if ( ! empty( $remove_confirm ) ) {
-			$_args['options']['remove_confirm'] = $remove_confirm;
 		}
 
 		return $this->set( $_args, Repo::TYPE_GROUP );
@@ -888,18 +910,28 @@ class Field_Type {
 	 * @phpstan-param 'file'|'file_list' $type
 	 *
 	 * @param string                     $type             - (default 'file').
-	 * @param string                     $button_text      - (default 'Add File').
-	 * @param string                     $file_mime_type   - (default all).
-	 * @param bool                       $show_text_input  - (default true) May not be turned off for required fields.
-	 * @param string                     $preview_size     - (default full).
-	 * @param string                     $remove_item_text - (default 'Remove').
-	 * @param string                     $file_text        - (default 'File').
-	 * @param string                     $download_text    - (default 'Download').
-	 * @param string                     $select_text      - Media manager button label (default: Use this file).
+	 * @param string|null                $button_text      - (default 'Add File').
+	 * @param string|null                $file_mime_type   - (default all).
+	 * @param ?bool                      $show_text_input  - (default true) May not be turned off for required fields.
+	 * @param ?string                    $preview_size     - (default full).
+	 * @param ?string                    $remove_item_text - (default 'Remove').
+	 * @param ?string                    $file_text        - (default 'File').
+	 * @param ?string                    $download_text    - (default 'Download').
+	 * @param ?string                    $select_text      - Media manager button label (default: Use this file).
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
-	protected function field_type_file( $type, $button_text = null, $file_mime_type = null, $show_text_input = null, $preview_size = null, $remove_item_text = null, $file_text = null, $download_text = null, $select_text = null ): array {
+	protected function field_type_file(
+		string $type,
+		?string $button_text = null,
+		?string $file_mime_type = null,
+		?bool $show_text_input = null,
+		?string $preview_size = null,
+		?string $remove_item_text = null,
+		?string $file_text = null,
+		?string $download_text = null,
+		?string $select_text = null
+	): array {
 		$_args = [
 			'type' => $type,
 		];
@@ -941,14 +973,14 @@ class Field_Type {
 	/**
 	 * A field for selecting a taxonomy.
 	 *
-	 * @param string $type           - Type of field.
-	 * @param string $taxonomy       - slug.
-	 * @param string $no_terms_text  - text to display when no terms are found.
-	 * @param bool   $remove_default - remove default WP terms metabox.
+	 * @param string  $type           - The type of field.
+	 * @param string  $taxonomy       - slug.
+	 * @param ?string $no_terms_text  - text to display when no terms are found.
+	 * @param ?bool   $remove_default - remove default WP terms metabox.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
-	protected function field_type_taxonomy( string $type, string $taxonomy, $no_terms_text = null, $remove_default = null ): array {
+	protected function field_type_taxonomy( string $type, string $taxonomy, ?string $no_terms_text = null, ?bool $remove_default = null ): array {
 		$_args = [
 			'type'     => $type,
 			'taxonomy' => $taxonomy,
@@ -967,13 +999,21 @@ class Field_Type {
 	/**
 	 * A field for selecting for provided options.
 	 *
-	 * @param string         $type                - Type of field.
-	 * @param array|callable $options_or_callback - [ $key => $label ] || function().
-	 * @param bool|string    $show_option_none    - Label of no option selected option. Defaults to not shown.
+	 * @param string                   $type                - The type of field.
 	 *
-	 * @return array
+	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
+	 *
+	 * @param array|callable           $options_or_callback - [ $key => $label ] || function().
+	 * @param bool|string|null         $show_option_none    - Label of no option selected option. Defaults to not shown.
+	 *
+	 * @return array{
+	 *     type: string,
+	 *     options_cb?: callable( \CMB2_Field $field ): array<string|int, string>,
+	 *     options?: array<string|int, string>,
+	 *     show_option_none?: string|bool
+	 * }
 	 */
-	protected function field_type_options( string $type, $options_or_callback, $show_option_none = null ): array {
+	protected function field_type_options( string $type, callable|array $options_or_callback, bool|string|null $show_option_none = null ): array {
 		if ( \is_callable( $options_or_callback ) ) {
 			$_args = [
 				'type'       => $type,
@@ -996,24 +1036,34 @@ class Field_Type {
 	/**
 	 * A field for selecting a date.
 	 *
-	 * @param string $type                - Type of field.
-	 * @param string $date_format         - PHP date format.
-	 * @param string $timezone_meta_key   - Meta key to retrieve timezone from.
-	 * @param array  $date_picker_options - Options to pass to datepicker.
+	 * @example https://github.com/CMB2/CMB2/wiki/Field-Types#additional-field-options
 	 *
-	 * @return array
+	 * @param string               $type                - The type of field.
+	 * @param string               $date_format         - PHP date format.
+	 * @param string               $timezone_meta_key   - Meta key to retrieve timezone from.
+	 * @param array<string, mixed> $date_picker_options - Options to pass to datepicker.
+	 * @param array<string, mixed> $time_picker_options - Options to pass to timepicker.
+	 *
+	 * @return array<string, string|array<string, string>>
 	 */
-	protected function field_type_date( $type, $date_format = 'm/d/Y', $timezone_meta_key = '', $date_picker_options = [] ): array {
+	protected function field_type_date( string $type, string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [], array $time_picker_options = [] ): array {
 		$_args = [
 			'type'        => $type,
 			'date_format' => $date_format,
 		];
-		if ( ! empty( $timezone_meta_key ) ) {
+		if ( '' !== $timezone_meta_key ) {
 			$_args['timezone_meta_key'] = $timezone_meta_key;
 		}
 
-		if ( ! empty( $date_picker_options ) ) {
-			$_args['date_picker_options']['data-datepicker'] = wp_json_encode( $date_picker_options );
+		if ( [] !== $date_picker_options ) {
+			$_args['attributes'] = [
+				'data-datepicker' => (string) wp_json_encode( $date_picker_options ),
+			];
+		}
+		if ( [] !== $time_picker_options ) {
+			$_args['attributes'] = [
+				'data-timepicker' => (string) wp_json_encode( $time_picker_options ),
+			];
 		}
 
 		return $_args;
