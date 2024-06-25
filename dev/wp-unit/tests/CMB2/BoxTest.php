@@ -4,6 +4,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\CMB2\Field\Type;
 use Lipe\Lib\Settings\Settings_Trait;
 use mocks\Comment_Mock;
 use mocks\Post_Mock;
@@ -92,7 +93,7 @@ class BoxTest extends \WP_UnitTestCase {
 
 		$this->assertEquals( 4, get_private_property( $field, 'column' )['position'] );
 		$this->assertEquals( 9, $field->position );
-		$this->assertEquals( 'checkbox', $field->get_type() );
+		$this->assertEquals( Type::CHECKBOX, $field->get_type() );
 		$this->assertEquals( 'on', $field->default );
 
 		do_action( 'cmb2_init' );

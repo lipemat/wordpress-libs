@@ -22,13 +22,15 @@ class Term_Select_2Test extends \WP_Ajax_UnitTestCase {
 	public function test_init_once(): void {
 		global $wp_filter;
 		$this->assertFalse( get_private_property( Term_Select_2::in(), 'initialized' ) );
-		$this->assertFalse( has_action( 'cmb2_render_' . Term_Select_2::NAME ) );
+		$this->assertFalse( has_action( 'cmb2_render_' . Type::TERM_SELECT_2->value ) );
 		$this->get_box();
 		$this->assertTrue( get_private_property( Term_Select_2::in(), 'initialized' ) );
-		$this->assertTrue( has_action( 'cmb2_render_' . Term_Select_2::NAME ) );
+		$this->assertTrue( has_action( 'cmb2_render_' . Type::TERM_SELECT_2->value ) );
 
 		$this->get_box();
-		$this->assertCount( 1, $wp_filter[ 'cmb2_render_' . Term_Select_2::NAME ]->callbacks[10] );
+		$this->assertCount( 1, $wp_filter[ 'cmb2_render_' . Type::TERM_SELECT_2->value ]->callbacks[10] );
+
+		$this->assertSame( 'lipe/lib/cmb2/field-types/term-select-2', Type::TERM_SELECT_2->value );
 	}
 
 
@@ -37,46 +39,46 @@ class Term_Select_2Test extends \WP_Ajax_UnitTestCase {
 		$box = $this->get_box();
 
 		// Field does not support assigning terms.
-		apply_filters( 'cmb2_sanitize_' . Term_Select_2::NAME, null, [ $cat_1, $cat_2 ], 1, [ 'id' => 'ts' ] );
+		apply_filters( 'cmb2_sanitize_' . Type::TERM_SELECT_2->value, null, [ $cat_1, $cat_2 ], 1, [ 'id' => 'ts' ] );
 		$this->assertEmpty( wp_get_object_terms( 1, 'category' ) );
 
 		$box->field( 'ts', 'TS' )
 		    ->taxonomy_select_2( 'category', true );
-		apply_filters( 'cmb2_sanitize_' . Term_Select_2::NAME, null, [ $cat_1, $cat_2 ], 1, [ 'id' => 'ts' ] );
+		apply_filters( 'cmb2_sanitize_' . Type::TERM_SELECT_2->value, null, [ $cat_1, $cat_2 ], 1, [ 'id' => 'ts' ] );
 		$this->assertSame( [ $cat_1, $cat_2 ], wp_get_object_terms( 1, 'category', [ 'fields' => 'ids' ] ) );
 
 		// Empty terms.
-		apply_filters( 'cmb2_sanitize_' . Term_Select_2::NAME, null, [], 1, [ 'id' => 'ts' ] );
+		apply_filters( 'cmb2_sanitize_' . Type::TERM_SELECT_2->value, null, [], 1, [ 'id' => 'ts' ] );
 		$this->assertEmpty( wp_get_object_terms( 1, 'category' ) );
 
 		// Incorrect data structure. How would this happen?
-		apply_filters( 'cmb2_sanitize_' . Term_Select_2::NAME, null, [ $cat_3, $cat_4, [ $cat_5 ] ], 1, [ 'id' => 'ts' ] );
+		apply_filters( 'cmb2_sanitize_' . Type::TERM_SELECT_2->value, null, [ $cat_3, $cat_4, [ $cat_5 ] ], 1, [ 'id' => 'ts' ] );
 		$this->assertSame( [ $cat_3, $cat_4, 1 ], wp_get_object_terms( 1, 'category', [ 'fields' => 'ids' ] ) );
 
 		$box->field( 'ts', 'TS' )
 		    ->taxonomy_select_2( 'category', true )
 		    ->repeatable();
-		apply_filters( 'cmb2_sanitize_' . Term_Select_2::NAME, null, [ [ $cat_1 ], [ $cat_2 ] ], 1, [ 'id' => 'ts' ] );
+		apply_filters( 'cmb2_sanitize_' . Type::TERM_SELECT_2->value, null, [ [ $cat_1 ], [ $cat_2 ] ], 1, [ 'id' => 'ts' ] );
 		$this->assertSame( [ $cat_1, $cat_2 ], wp_get_object_terms( 1, 'category', [ 'fields' => 'ids' ] ) );
 
-		apply_filters( 'cmb2_sanitize_' . Term_Select_2::NAME, null, [ [ $cat_1 ], [ $cat_2, $cat_5 ] ], 1, [ 'id' => 'ts' ] );
+		apply_filters( 'cmb2_sanitize_' . Type::TERM_SELECT_2->value, null, [ [ $cat_1 ], [ $cat_2, $cat_5 ] ], 1, [ 'id' => 'ts' ] );
 		$this->assertSame( [ $cat_1, $cat_2, $cat_5 ], wp_get_object_terms( 1, 'category', [ 'fields' => 'ids' ] ) );
 
 		// Object type does not support terms.
 		set_private_property( $this->get_box(), 'object_types', [ Box::TYPE_COMMENT ] );
-		apply_filters( 'cmb2_sanitize_' . Term_Select_2::NAME, null, [ [ $cat_1 ], [ $cat_4 ] ], 1, [ 'id' => 'ts' ] );
+		apply_filters( 'cmb2_sanitize_' . Type::TERM_SELECT_2->value, null, [ [ $cat_1 ], [ $cat_4 ] ], 1, [ 'id' => 'ts' ] );
 		$this->assertSame( [ $cat_1, $cat_2, $cat_5 ], wp_get_object_terms( 1, 'category', [ 'fields' => 'ids' ] ) );
 	}
 
 
 	public function test_esc_values(): void {
 		// Field not registered.
-		$this->assertNull( apply_filters( 'cmb2_types_esc_' . Term_Select_2::NAME, null, [ '1', '2' ], [ 'id' => 'ts' ] ) );
+		$this->assertNull( apply_filters( 'cmb2_types_esc_' . Type::TERM_SELECT_2->value, null, [ '1', '2' ], [ 'id' => 'ts' ] ) );
 
 		$this->get_box();
-		$this->assertSame( [ '1', '2' ], apply_filters( 'cmb2_types_esc_' . Term_Select_2::NAME, null, [ '1', '2' ], [ 'id' => 'ts' ] ) );
+		$this->assertSame( [ '1', '2' ], apply_filters( 'cmb2_types_esc_' . Type::TERM_SELECT_2->value, null, [ '1', '2' ], [ 'id' => 'ts' ] ) );
 
-		$this->assertSame( [ '1', [ '2', '5' ] ], apply_filters( 'cmb2_types_esc_' . Term_Select_2::NAME, null, [ '1', [ 2, '5' ] ], [ 'id' => 'ts' ] ) );
+		$this->assertSame( [ '1', [ '2', '5' ] ], apply_filters( 'cmb2_types_esc_' . Type::TERM_SELECT_2->value, null, [ '1', [ 2, '5' ] ], [ 'id' => 'ts' ] ) );
 	}
 
 
@@ -87,7 +89,7 @@ class Term_Select_2Test extends \WP_Ajax_UnitTestCase {
 			return get_echo( function() use ( $value, $box ) {
 				$fields = call_private_method( $box, 'get_fields' );
 				$field = new \CMB2_Field( [ 'field_args' => $fields['ts']->get_field_args() ] );
-				do_action( 'cmb2_render_' . Term_Select_2::NAME, $field, $value, 1, 'post', new \CMB2_Types( $field ) );
+				do_action( 'cmb2_render_' . Type::TERM_SELECT_2->value, $field, $value, 1, 'post', new \CMB2_Types( $field ) );
 			} );
 		};
 

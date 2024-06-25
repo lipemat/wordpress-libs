@@ -5,6 +5,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
+use Lipe\Lib\CMB2\Field\Type;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Query\Get_Posts;
 use Lipe\Lib\Taxonomy\Get_Terms;
@@ -73,7 +74,7 @@ class Field {
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
+	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
 	 *
@@ -85,7 +86,7 @@ class Field {
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
+	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
 	 *
@@ -97,7 +98,7 @@ class Field {
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
+	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
 	 *
@@ -109,7 +110,7 @@ class Field {
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
+	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
 	 *
@@ -121,7 +122,7 @@ class Field {
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
+	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
 	 *
@@ -133,7 +134,7 @@ class Field {
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
+	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
 	 *
@@ -145,7 +146,7 @@ class Field {
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
+	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
 	 *
@@ -157,7 +158,7 @@ class Field {
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
+	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
 	 *
@@ -169,7 +170,7 @@ class Field {
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
+	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
 	 *
@@ -181,7 +182,7 @@ class Field {
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
 	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument
+	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
 	 *
@@ -210,7 +211,7 @@ class Field {
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#classes
 	 *
 	 * @example 'additional-class'
-	 * @example array( 'additional-class', 'another-class' ),
+	 * @example array('additional-class', 'another-class'),
 	 *
 	 * @var array<string>|string
 	 */
@@ -260,9 +261,9 @@ class Field {
 	 *
 	 * @internal
 	 *
-	 * @var string|array<mixed>
+	 * @var string|false|array<mixed>
 	 */
-	public string|array $default;
+	public string|array|false $default;
 
 	/**
 	 * To be used with $this->column or $this->column().
@@ -659,9 +660,9 @@ class Field {
 	 * @see  Field_Type;
 	 * @see  Field::type;
 	 *
-	 * @var string;
+	 * @var Type
 	 */
-	protected string $type;
+	protected Type $type;
 
 	/**
 	 * Enable a character/word counter for a 'textarea', 'wysiwyg', or 'text' type field.
@@ -1038,9 +1039,9 @@ class Field {
 	 * @return Field
 	 */
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ): Field {
-		if ( \CMB2_Utils::does_not_support_repeating( $this->get_type() ) ) {
+		if ( \CMB2_Utils::does_not_support_repeating( $this->get_type()->value ) ) {
 			/* translators: {field type} */
-			_doing_it_wrong( __METHOD__, \sprintf( esc_html__( 'Fields of `%s` type do not support repeating.', 'lipe' ), esc_html( $this->get_type() ) ), '5.0.0' );
+			_doing_it_wrong( __METHOD__, \sprintf( esc_html__( 'Fields of `%s` type do not support repeating.', 'lipe' ), esc_html( $this->get_type()->value ) ), '5.0.0' );
 		}
 
 		$this->repeatable = $repeatable;
@@ -1093,13 +1094,13 @@ class Field {
 	 */
 	public function readonly(): Field {
 		$disable_only = [
-			'select',
-			'select_timezone',
-			'text_date',
-			'text_date_timestamp',
-			'text_datetime_timestamp',
-			'text_datetime_timestamp_timezone',
-			'taxonomy_select',
+			Type::SELECT,
+			Type::SELECT_TIMEZONE,
+			Type::TEXT_DATE,
+			Type::TEXT_DATE_TIMESTAMP,
+			Type::TEXT_DATETIME_TIMESTAMP,
+			Type::TEXT_DATETIME_TIMESTAMP_TZ,
+			Type::TAXONOMY_SELECT,
 		];
 
 		// These HTML inputs do not work as readonly and must be disabled.
@@ -1125,7 +1126,7 @@ class Field {
 	 */
 	public function required(): Field {
 		// The only way a file field may be required is if the text field is showing.
-		if ( 'file' === $this->type ) {
+		if ( Type::FILE === $this->type ) {
 			$this->options['url'] = true;
 		}
 		$this->attributes( [ 'required' => 'required' ] );
@@ -1349,12 +1350,12 @@ class Field {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#type
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
-	 * @see  Field_Type;
-	 * @see  Field::type;
+	 * @see  Field_Type
+	 * @see  Field::type
 	 *
-	 * @return string
+	 * @return Type
 	 */
-	public function get_type(): string {
+	public function get_type(): Type {
 		return $this->type;
 	}
 
@@ -1362,19 +1363,18 @@ class Field {
 	/**
 	 * Set a Fields Type and register the type with Meta\Repo
 	 *
-	 * @phpstan-param REPO::TYPE_* $type
 	 * @phpstan-param REPO::TYPE_* $data_type
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
 	 * @internal
 	 *
-	 * @param string               $type      - CMB2 field type.
+	 * @param Type                 $type      - CMB2 field type.
 	 * @param string               $data_type - Field data structure type.
 	 *
 	 * @return void
 	 */
-	public function set_type( string $type, string $data_type ): void {
+	public function set_type( Type $type, string $data_type ): void {
 		$this->type = $type;
 		$this->data_type = $data_type;
 	}
@@ -1414,7 +1414,7 @@ class Field {
 	 * @return bool
 	 */
 	public function is_using_array_data(): bool {
-		return $this->repeatable || 'multicheck' === $this->get_type() || 'multicheck_inline' === $this->get_type();
+		return $this->repeatable || Type::MULTI_CHECK === $this->get_type() || Type::MULTI_CHECK_INLINE === $this->get_type();
 	}
 
 
@@ -1426,7 +1426,7 @@ class Field {
 	 * @return bool
 	 */
 	public function is_using_object_data(): bool {
-		return ! $this->repeatable && 'file_list' === $this->get_type();
+		return ! $this->repeatable && Type::FILE_LIST === $this->get_type();
 	}
 
 
@@ -1614,7 +1614,7 @@ class Field {
 			}
 			$args[ $_var ] = $this->{$_var};
 		}
-
+		$args['type'] = $this->type->value;
 		return $args;
 	}
 

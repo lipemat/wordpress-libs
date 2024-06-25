@@ -19,8 +19,6 @@ class Term_Select_2 {
 	use Memoize;
 	use Singleton;
 
-	public const NAME = 'lipe/lib/cmb2/field-types/term-select-2';
-
 	public const GET_TERMS        = 'lipe/lib/cmb2/field-types/term-select-2/ajax';
 	public const CREATE_NEW_TERMS = 'create_terms';
 
@@ -38,11 +36,11 @@ class Term_Select_2 {
 	 * @return void
 	 */
 	protected function hook(): void {
-		add_action( 'cmb2_render_' . self::NAME, function( \CMB2_Field $field, array|string $value, int|string $object_id, string $object_type, \CMB2_Types $field_type ) {
+		add_action( 'cmb2_render_' . Type::TERM_SELECT_2->value, function( \CMB2_Field $field, array|string $value, int|string $object_id, string $object_type, \CMB2_Types $field_type ) {
 			$this->render( $field, $value, $field_type );
 		}, 10, 5 );
-		add_filter( 'cmb2_sanitize_' . self::NAME, [ $this, 'set_object_terms' ], 10, 4 );
-		add_filter( 'cmb2_types_esc_' . self::NAME, [ $this, 'esc_values' ], 10, 3 );
+		add_filter( 'cmb2_sanitize_' . Type::TERM_SELECT_2->value, [ $this, 'set_object_terms' ], 10, 4 );
+		add_filter( 'cmb2_types_esc_' . Type::TERM_SELECT_2->value, [ $this, 'esc_values' ], 10, 3 );
 		add_action( 'wp_ajax_' . self::GET_TERMS, [ $this, 'ajax_get_terms' ] );
 
 		// Remove subtle conflict with acf.
