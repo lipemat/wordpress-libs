@@ -1,5 +1,4 @@
 <?php
-/** @noinspection SpellCheckingInspection, EmptyClassInspection */
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Theme;
@@ -13,6 +12,9 @@ namespace Lipe\Lib\Theme;
  * @since  5.0.0
  */
 enum Dashicons: string {
+	public const FONT   = 'dashicons';
+	public const BEFORE = 'dashicons-before';
+
 	case ADMIN_APPEARANCE          = 'dashicons-admin-appearance';
 	case ADMIN_COLLAPSE            = 'dashicons-admin-collapse';
 	case ADMIN_CUSTOMIZER          = 'dashicons-admin-customizer';
@@ -356,4 +358,14 @@ enum Dashicons: string {
 	case YES_ALT                   = 'dashicons-yes-alt';
 	case YES                       = 'dashicons-yes';
 	case YOUTUBE                   = 'dashicons-youtube';
+
+
+	/**
+	 * Generate an HTML icon tag for the dashicon.
+	 *
+	 * @return string
+	 */
+	public function icon(): string {
+		return '<i class="dashicons ' . $this->value . '"></i>';
+	}
 }
