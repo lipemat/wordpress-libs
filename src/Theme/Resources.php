@@ -219,8 +219,12 @@ class Resources {
 			if ( $admin_also ) {
 				add_action( 'admin_enqueue_scripts', $enqueue );
 			}
-			// @phpstan-ignore-next-line
-			$this->async_javascript( 'livereload' );
+			if ( version_compare( $GLOBALS['wp_version'], '6.3.0', '>=' ) ) {
+				wp_script_add_data( 'livereload', 'strategy', 'async' );
+			} else {
+				// @phpstan-ignore-next-line
+				$this->async_javascript( 'livereload' );
+			}
 		}
 	}
 
