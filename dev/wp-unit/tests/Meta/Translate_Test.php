@@ -150,7 +150,7 @@ class Translate_Test extends \WP_UnitTestCase {
 		$srg = $box->group( 'taxonomy/sr/group', 'SR Group' );
 		$srg->field( 'taxonomy/sr/group/1', 'SR Group 1' )
 		    ->taxonomy_select( 'category' );
-		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_conflicting_taxonomies', 'Fields: &quot;taxonomy/sr/1, taxonomy/sr/group/1&quot; are conflicting on the taxonomy: category for object type: post. You may only have taxonomy field per an object. (This message was added in version 4.10.0.)' );
+		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_conflicting_taxonomies', 'Fields: "taxonomy/sr/1, taxonomy/sr/group/1" are conflicting on the taxonomy: category for object type: post. You may only have taxonomy field per an object. (This message was added in version 4.10.0.)' );
 		do_action( 'cmb2_init' );
 
 		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( 'post', $get_field( 'taxonomy/sr/1' ) ) );

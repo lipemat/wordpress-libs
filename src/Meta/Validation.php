@@ -5,6 +5,9 @@ namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\CMB2\Box;
 use Lipe\Lib\CMB2\Field;
+use Lipe\Lib\CMB2\Field\Term_Select_2;
+use Lipe\Lib\CMB2\Field\Term_Select_2\Register;
+use Lipe\Lib\CMB2\Field\Type;
 use Lipe\Lib\Traits\Singleton;
 
 /**
@@ -29,7 +32,7 @@ trait Validation {
 	protected function warn_for_repeatable_group_sub_fields( string $field_id ): void {
 		if ( true === $this->get_field( $field_id )?->get_group()?->is_repeatable() ) {
 			/* translators: {field id} */
-			_doing_it_wrong( __METHOD__, esc_html( \sprintf( __( 'Accessing sub-fields on repeatable groups will only update the first item. Use the group key instead. %s', 'lipe' ), $field_id ) ), '4.10.0' );
+			_doing_it_wrong( __METHOD__, wp_kses_post( \sprintf( __( 'Accessing sub-fields on repeatable groups will only update the first item. Use the group key instead. %s', 'lipe' ), $field_id ) ), '4.10.0' );
 		}
 	}
 
@@ -55,13 +58,21 @@ trait Validation {
 				if ( ! isset( $map[ $object_type ] ) ) {
 					$map[ $object_type ][ $field->taxonomy ] = [];
 				}
-				$map[ $object_type ][ $field->taxonomy ][] = $field;
+				// Term select 2 can turn off assigning terms which won't conflict.
+				if ( Type::TERM_SELECT_2 === $field->get_type() ) {
+					$registered = Term_Select_2::in()->get_registered( $field->get_id() );
+					if ( $registered instanceof Register && $registered->assign_terms ) {
+						$map[ $object_type ][ $field->taxonomy ][] = $field;
+					}
+				} else {
+					$map[ $object_type ][ $field->taxonomy ][] = $field;
+				}
 			}
 		}
 		foreach ( $map as $object_type => $taxonomies ) {
 			foreach ( $taxonomies as $taxonomy => $tax_fields ) {
 				if ( \count( $tax_fields ) > 1 ) {
-					_doing_it_wrong( __METHOD__, esc_html( \sprintf(
+					_doing_it_wrong( __METHOD__, wp_kses_post( \sprintf(
 					/* translators: {field ids} {taxonomy} {post type} */
 						__( 'Fields: "%1$s" are conflicting on the taxonomy: %2$s for object type: %3$s. You may only have taxonomy field per an object.', 'lipe' ),
 						\implode( ', ', \array_map( fn( Field $field ) => $field->get_id(), $tax_fields ) ),
