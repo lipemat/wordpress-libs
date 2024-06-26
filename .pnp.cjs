@@ -722,7 +722,7 @@ const RAW_RUNTIME_STATE =
     ],\
     [\
       "@lipemat/eslint-config",\
-      "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.2.1"\
+      "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.3.1"\
     ],\
     [\
       "@lipemat/js-boilerplate",\
@@ -986,7 +986,7 @@ const RAW_RUNTIME_STATE =
     ],\
     [\
       "@types/lipemat__js-boilerplate",\
-      "https://github.com/lipemat/types-js-boilerplate.git#commit=6c548a011e89e2912a29c86aa2f7df3dd6fbde03"\
+      "https://github.com/lipemat/types-js-boilerplate.git#commit=e0b9c48b254e4d174d0db66e0c934ae3d911e65d"\
     ],\
     [\
       "@types/md5",\
@@ -2146,7 +2146,7 @@ const RAW_RUNTIME_STATE =
     ],\
     [\
       "eslint-plugin-jsx-a11y",\
-      "virtual:d125769ca7f0a85fd84613b181d2cec0649551700fa8abe3312265b1c1377652a0a176087c5c66d48290b0bbb14a76fb22064c0925603453aebaf43a52f39213#npm:6.8.0"\
+      "virtual:38aea86d28e37eab0d17e061d64955fecc4300c17779cb18b12adfcd978b83a010c5b6b160709a0fc4ee9d400fbe63e8913fc79205842eae21f64bb36fdcf602#npm:6.7.1"\
     ],\
     [\
       "eslint-plugin-prettier",\
@@ -4715,12 +4715,12 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
-          ["@lipemat/eslint-config", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.2.1"],\
+          ["@lipemat/eslint-config", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.3.1"],\
           ["@lipemat/js-boilerplate", "npm:10.9.0"],\
           ["@lipemat/js-boilerplate-gutenberg", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.3.3"],\
           ["@lipemat/stylelint-config", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:2.2.1"],\
           ["@types/jquery", "npm:3.5.30"],\
-          ["@types/lipemat__js-boilerplate", "https://github.com/lipemat/types-js-boilerplate.git#commit=6c548a011e89e2912a29c86aa2f7df3dd6fbde03"],\
+          ["@types/lipemat__js-boilerplate", "https://github.com/lipemat/types-js-boilerplate.git#commit=e0b9c48b254e4d174d0db66e0c934ae3d911e65d"],\
           ["@types/node", "npm:18.19.33"],\
           ["@types/react", "npm:18.3.2"],\
           ["@types/react-dom", "npm:18.3.0"],\
@@ -8452,12 +8452,19 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.2.1", {\
-        "packageLocation": "./.yarn/__virtual__/@lipemat-eslint-config-virtual-aa3ef8560e/0/cache/@lipemat-eslint-config-npm-3.2.1-d31e3febf5-16269d912b.zip/node_modules/@lipemat/eslint-config/",\
+      ["npm:3.3.1", {\
+        "packageLocation": "./.yarn/cache/@lipemat-eslint-config-npm-3.3.1-fcaeb14a60-dde3929941.zip/node_modules/@lipemat/eslint-config/",\
         "packageDependencies": [\
-          ["@lipemat/eslint-config", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.2.1"],\
+          ["@lipemat/eslint-config", "npm:3.3.1"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.3.1", {\
+        "packageLocation": "./.yarn/__virtual__/@lipemat-eslint-config-virtual-ddc0f90f40/0/cache/@lipemat-eslint-config-npm-3.3.1-fcaeb14a60-dde3929941.zip/node_modules/@lipemat/eslint-config/",\
+        "packageDependencies": [\
+          ["@lipemat/eslint-config", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.3.1"],\
           ["@lipemat/js-boilerplate", "npm:10.9.0"],\
-          ["@types/lipemat__js-boilerplate", "https://github.com/lipemat/types-js-boilerplate.git#commit=6c548a011e89e2912a29c86aa2f7df3dd6fbde03"],\
+          ["@types/lipemat__js-boilerplate", "https://github.com/lipemat/types-js-boilerplate.git#commit=e0b9c48b254e4d174d0db66e0c934ae3d911e65d"],\
           ["@wordpress/eslint-plugin", "virtual:38aea86d28e37eab0d17e061d64955fecc4300c17779cb18b12adfcd978b83a010c5b6b160709a0fc4ee9d400fbe63e8913fc79205842eae21f64bb36fdcf602#npm:12.9.0"],\
           ["eslint", "npm:8.57.0"],\
           ["eslint-plugin-deprecation", "virtual:38aea86d28e37eab0d17e061d64955fecc4300c17779cb18b12adfcd978b83a010c5b6b160709a0fc4ee9d400fbe63e8913fc79205842eae21f64bb36fdcf602#npm:2.0.0"],\
@@ -8567,7 +8574,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@lipemat/js-boilerplate-gutenberg", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.3.3"],\
           ["@lipemat/js-boilerplate", "npm:10.9.0"],\
-          ["@types/lipemat__js-boilerplate", "https://github.com/lipemat/types-js-boilerplate.git#commit=6c548a011e89e2912a29c86aa2f7df3dd6fbde03"]\
+          ["@types/lipemat__js-boilerplate", "https://github.com/lipemat/types-js-boilerplate.git#commit=e0b9c48b254e4d174d0db66e0c934ae3d911e65d"]\
         ],\
         "packagePeers": [\
           "@lipemat/js-boilerplate",\
@@ -8606,12 +8613,12 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@lipemat/wordpress-libs", "workspace:."],\
-          ["@lipemat/eslint-config", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.2.1"],\
+          ["@lipemat/eslint-config", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.3.1"],\
           ["@lipemat/js-boilerplate", "npm:10.9.0"],\
           ["@lipemat/js-boilerplate-gutenberg", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:3.3.3"],\
           ["@lipemat/stylelint-config", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:2.2.1"],\
           ["@types/jquery", "npm:3.5.30"],\
-          ["@types/lipemat__js-boilerplate", "https://github.com/lipemat/types-js-boilerplate.git#commit=6c548a011e89e2912a29c86aa2f7df3dd6fbde03"],\
+          ["@types/lipemat__js-boilerplate", "https://github.com/lipemat/types-js-boilerplate.git#commit=e0b9c48b254e4d174d0db66e0c934ae3d911e65d"],\
           ["@types/node", "npm:18.19.33"],\
           ["@types/react", "npm:18.3.2"],\
           ["@types/react-dom", "npm:18.3.0"],\
@@ -9378,10 +9385,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@types/lipemat__js-boilerplate", [\
-      ["https://github.com/lipemat/types-js-boilerplate.git#commit=6c548a011e89e2912a29c86aa2f7df3dd6fbde03", {\
-        "packageLocation": "./.yarn/cache/@types-lipemat__js-boilerplate-https-cce1981db9-a5ecb3aaa0.zip/node_modules/@types/lipemat__js-boilerplate/",\
+      ["https://github.com/lipemat/types-js-boilerplate.git#commit=e0b9c48b254e4d174d0db66e0c934ae3d911e65d", {\
+        "packageLocation": "./.yarn/cache/@types-lipemat__js-boilerplate-https-eca28aa296-7c49a32b9c.zip/node_modules/@types/lipemat__js-boilerplate/",\
         "packageDependencies": [\
-          ["@types/lipemat__js-boilerplate", "https://github.com/lipemat/types-js-boilerplate.git#commit=6c548a011e89e2912a29c86aa2f7df3dd6fbde03"],\
+          ["@types/lipemat__js-boilerplate", "https://github.com/lipemat/types-js-boilerplate.git#commit=e0b9c48b254e4d174d0db66e0c934ae3d911e65d"],\
           ["@types/codemirror", "npm:5.60.15"],\
           ["@types/jquery", "npm:3.5.30"],\
           ["@types/react", "npm:18.3.2"],\
