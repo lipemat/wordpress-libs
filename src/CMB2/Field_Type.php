@@ -646,13 +646,13 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio_inline
 	 *
-	 * @param string $taxonomy       - slug.
-	 * @param string $no_terms_text  - text to display if no terms are found.
-	 * @param bool   $remove_default - remove default WP terms metabox.
+	 * @param string      $taxonomy       - slug.
+	 * @param string|null $no_terms_text  - text to display if no terms are found.
+	 * @param bool|null   $remove_default - remove default WP terms metabox.
 	 *
 	 * @return Field
 	 */
-	public function taxonomy_radio_inline( $taxonomy, $no_terms_text = null, $remove_default = null ): Field {
+	public function taxonomy_radio_inline( string $taxonomy, ?string $no_terms_text = null, ?bool $remove_default = null ): Field {
 		$_args = $this->field_type_taxonomy( $taxonomy, $no_terms_text, $remove_default );
 
 		return $this->set( Type::TAXONOMY_RADIO_INLINE, $_args, Repo::TYPE_TAXONOMY_SINGULAR );
@@ -664,13 +664,13 @@ class Field_Type {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_select
 	 *
-	 * @param string $taxonomy       - slug.
-	 * @param string $no_terms_text  - text to display if no terms are found.
-	 * @param bool   $remove_default - remove default WP terms metabox.
+	 * @param string      $taxonomy       - slug.
+	 * @param string|null $no_terms_text  - text to display if no terms are found.
+	 * @param bool|null   $remove_default - remove default WP terms metabox.
 	 *
 	 * @return Field
 	 */
-	public function taxonomy_select( $taxonomy, $no_terms_text = null, $remove_default = null ): Field {
+	public function taxonomy_select( string $taxonomy, ?string $no_terms_text = null, ?bool $remove_default = null ): Field {
 		$_args = $this->field_type_taxonomy( $taxonomy, $no_terms_text, $remove_default );
 
 		return $this->set( Type::TAXONOMY_SELECT, $_args, Repo::TYPE_TAXONOMY_SINGULAR );
@@ -680,13 +680,13 @@ class Field_Type {
 	/**
 	 * A select field pre-populated with taxonomy terms and displayed hierarchical.
 	 *
-	 * @param string $taxonomy       - slug.
-	 * @param null   $no_terms_text  - text to display if no terms are found.
-	 * @param null   $remove_default - remove default WP terms metabox.
+	 * @param string      $taxonomy       - slug.
+	 * @param string|null $no_terms_text  - text to display if no terms are found.
+	 * @param bool|null   $remove_default - remove default WP terms metabox.
 	 *
 	 * @return Field
 	 */
-	public function taxonomy_select_hierarchical( string $taxonomy, $no_terms_text = null, $remove_default = null ): Field {
+	public function taxonomy_select_hierarchical( string $taxonomy, ?string $no_terms_text = null, ?bool $remove_default = null ): Field {
 		$_args = $this->field_type_taxonomy( $taxonomy, $no_terms_text, $remove_default );
 
 		return $this->set( Type::TAXONOMY_SELECT_HIERARCHICAL, $_args, Repo::TYPE_TAXONOMY_SINGULAR );

@@ -1,1 +1,0 @@
-<select multiple="multiple" data-js='ts' name="ts[]" id="ts" class="regular-text"></select>

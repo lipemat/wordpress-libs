@@ -9,15 +9,15 @@ type AdminConfig = {
 	cmb2BoxTabs: {
 		field: string
 	};
-	cmb2TermSelect2: {
-		ajaxUrl: string;
-		fields: SelectField[];
-	}
 }
 
 declare global {
 	interface Window {
 		LIPE_LIBS_ADMIN_CONFIG: AdminConfig;
+		LIPE_LIBS_CMB2_TERM_SELECT2?: {
+			ajaxUrl: string;
+			fields: SelectField[];
+		};
 		LIPE_LIBS_BLOCK_EDITOR_CONFIG: BlockEditorConfig;
 	}
 }

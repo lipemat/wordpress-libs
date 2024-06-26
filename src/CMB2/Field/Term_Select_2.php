@@ -21,6 +21,7 @@ class Term_Select_2 {
 
 	public const GET_TERMS        = 'lipe/lib/cmb2/field-types/term-select-2/ajax';
 	public const CREATE_NEW_TERMS = 'create_terms';
+	public const NONCE            = 'lipe/lib/cmb2/field/term-select-2/nonce';
 
 	/**
 	 * Fields that have been registered.
@@ -57,8 +58,9 @@ class Term_Select_2 {
 	 * @return void
 	 */
 	public function ajax_get_terms(): void {
-		check_ajax_referer( self::GET_TERMS );
-		$field = $this->get_registered( sanitize_text_field( wp_unslash( $_POST['id'] ?? '' ) ) );
+		$id = sanitize_text_field( wp_unslash( $_POST['id'] ?? '' ) );
+		check_ajax_referer( self::NONCE . $id );
+		$field = $this->get_registered( $id );
 		if ( null === $field ) {
 			wp_send_json_error( 'Field not found.' );
 		}
@@ -111,12 +113,21 @@ class Term_Select_2 {
 			'class'            => 'regular-text',
 			'data-placeholder' => $field->args( 'attributes', 'placeholder' ) ?? $field->args( 'description' ),
 		] );
+		if ( '' === $value ) {
+			$value = [];
+		} elseif ( ! \is_array( $value ) ) {
+			$value = [ $value ];
+		}
 
+		wp_nonce_field( self::NONCE . $field->id(), $field->id() . '_nonce', false );
+
+		//phpcs:disable WordPress.Security.EscapeOutput
 		\printf( '<select%s>%s</select>%s',
-			$attrs, //phpcs:ignore WordPress.Security.EscapeOutput
-			$this->get_multi_select_options( $field_type_object, (array) $value ), //phpcs:ignore WordPress.Security.EscapeOutput
-			$field_type_object->_desc( true ) //phpcs:ignore WordPress.Security.EscapeOutput
+			$attrs,
+			$this->get_multi_select_options( $field_type_object, $value ),
+			wp_kses_post( $field_type_object->_desc( true ) )
 		);
+		//phpcs:enable WordPress.Security.EscapeOutput
 
 		$this->load_scripts();
 	}
@@ -164,7 +175,7 @@ class Term_Select_2 {
 
 
 	/**
-	 * Based on the passed optionsAssign terms to the object.
+	 * Based on the passed options assign terms to the object.
 	 *
 	 * @param mixed                $filtered   - The filtered value. (probably null).
 	 * @param mixed                $meta_value - The value of the field.
@@ -195,9 +206,9 @@ class Term_Select_2 {
 		if ( '' !== $id && 0 !== $id && Repo::in()->supports_taxonomy_relationships( $meta_type, $field->field ) ) {
 			if ( $field->is_repeatable() ) {
 				$ids = \array_merge( ...$meta_value );
-				\wp_set_object_terms( (int) $id, \array_map( '\intval', $ids ), $field->taxonomy );
+				wp_set_object_terms( (int) $id, \array_map( '\intval', $ids ), $field->taxonomy );
 			} else {
-				\wp_set_object_terms( (int) $id, \array_map( '\intval', $meta_value ), $field->taxonomy );
+				wp_set_object_terms( (int) $id, \array_map( '\intval', $meta_value ), $field->taxonomy );
 			}
 		}
 
@@ -245,6 +256,8 @@ class Term_Select_2 {
 
 		Scripts::in()->enqueue_script( ScriptHandles::ADMIN );
 		Scripts::in()->enqueue_style( StyleHandles::META_BOXES );
+
+		wp_localize_script( ScriptHandles::ADMIN->value, 'LIPE_LIBS_CMB2_TERM_SELECT2', $this->js_config() );
 	}
 
 
@@ -253,7 +266,7 @@ class Term_Select_2 {
 	 *
 	 * @param string $field_id - The field id.
 	 */
-	protected function get_registered( string $field_id ): ?Register {
+	public function get_registered( string $field_id ): ?Register {
 		return static::$registered[ $field_id ] ?? null;
 	}
 
@@ -261,14 +274,13 @@ class Term_Select_2 {
 	/**
 	 * JS configurations for multiple select2 fields.
 	 *
-	 * @return array{ajaxUrl: string, action: string, fields: list<Register>}
+	 * @return array{ajaxUrl: string, fields: list<Register>}
 	 */
 	public function js_config(): array {
-		$url = html_entity_decode( wp_nonce_url( admin_url( 'admin-ajax.php' ), self::GET_TERMS ) );
+		$url = html_entity_decode( admin_url( 'admin-ajax.php' ) );
 
 		return [
 			'ajaxUrl' => add_query_arg( [ 'action' => self::GET_TERMS ], $url ),
-			'action'  => self::GET_TERMS,
 			'fields'  => \array_values( static::$registered ),
 		];
 	}

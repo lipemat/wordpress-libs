@@ -1,5 +1,4 @@
-import type {AjaxOptions, Options, QueryOptions, DataFormat} from 'select2';
-import {ADMIN} from '../../config';
+import type {AjaxOptions, DataFormat, Options, QueryOptions} from 'select2';
 
 export type SelectField = {
 	id: string;
@@ -14,7 +13,10 @@ type Response = {
 	data: string;
 }
 
-const CONFIG = ADMIN.cmb2TermSelect2;
+const CONFIG = window.LIPE_LIBS_CMB2_TERM_SELECT2;
+if ( ! CONFIG ) {
+	throw new Error( 'LIPE_LIBS_CMB2_TERM_SELECT2 is not defined' );
+}
 
 const AJAX: AjaxOptions<DataFormat> = {
 	url: CONFIG.ajaxUrl,
@@ -50,6 +52,7 @@ function loadSelects( field: SelectField, lastOnly: boolean ) {
 			term: options.term,
 			id: field.id,
 			selected: thisInput.val(),
+			_wpnonce: thisInput.parent().find( `input[name="${field.id}_nonce"]` ).val(),
 		} );
 		const config: Options = {
 			ajax: AJAX,

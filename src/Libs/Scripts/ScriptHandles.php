@@ -4,7 +4,6 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Libs\Scripts;
 
 use Lipe\Lib\CMB2\Box\Tabs;
-use Lipe\Lib\CMB2\Field\Term_Select_2;
 use Lipe\Lib\Taxonomy\Meta_Box\Gutenberg_Box;
 
 /**
@@ -52,10 +51,9 @@ enum ScriptHandles: string {
 		return match ( $this ) {
 			self::ADMIN        => [
 				'LIPE_LIBS_ADMIN_CONFIG' => [
-					'cmb2BoxTabs'     => [
+					'cmb2BoxTabs' => [
 						'field' => Tabs::TAB_FIELD,
 					],
-					'cmb2TermSelect2' => Term_Select_2::in()->js_config(),
 				],
 			],
 			self::BLOCK_EDITOR => [

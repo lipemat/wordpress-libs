@@ -85,7 +85,7 @@ class Term_Select_2Test extends \WP_Ajax_UnitTestCase {
 	public function test_render(): void {
 		[ $cat_1, $cat_2, $cat_3 ] = self::factory()->category->create_many( 10 );
 		$box = $this->get_box();
-		$echo = function( array $value ) use ( $box ) {
+		$echo = function( array|string $value ) use ( $box ) {
 			return get_echo( function() use ( $value, $box ) {
 				$fields = call_private_method( $box, 'get_fields' );
 				$field = new \CMB2_Field( [ 'field_args' => $fields['ts']->get_field_args() ] );
@@ -93,25 +93,23 @@ class Term_Select_2Test extends \WP_Ajax_UnitTestCase {
 			} );
 		};
 
-		$this->assertMatchesSnapshot( $echo( [] ), '', 'default' );
-
-		$this->assertMatchesRegularExpression( "/<select multiple=\"multiple\" data-js='ts' name=\"ts\[\]\" id=\"ts\" class=\"regular-text\">	<option value=\"\d+\"\s*selected='selected'>Term \d+<\/option>\s*<\/select>/", $echo( [ $cat_1 ] ) );
+		$this->assertMatchesRegularExpression( "/<input type=\"hidden\" id=\"ts_nonce\" name=\"ts_nonce\" value=\"[0-9a-z]+\" \/><select multiple=\"multiple\" data-js='ts' name=\"ts\[\]\" id=\"ts\" class=\"regular-text\">	<option value=\"\d+\"\s*selected='selected'>Term \d+<\/option>\s*<\/select>/", $echo( [ $cat_1 ] ) );
 		$this->assertMatchesRegularExpression( "/<select multiple=\"multiple\" data-js='ts' name=\"ts\[\]\" id=\"ts\" class=\"regular-text\">\s*<option value=\"\d+\"\s*selected='selected'>Term \d+<\/option>\s*<option value=\"\d+\"\s*selected='selected'>Term \d+<\/option>\s*<option value=\"\d+\"\s*selected='selected'>Term \d+<\/option>\s*<\/select>/", $echo( [ $cat_1, $cat_2, $cat_3 ] ) );
+
+		$this->assertMatchesRegularExpression( "/<input type=\"hidden\" id=\"ts_nonce\" name=\"ts_nonce\" value=\"[0-9a-z]+\" \/>/", $echo( '' ) );
 	}
 
 
 	public function test_js_config(): void {
-		$url = html_entity_decode( wp_nonce_url( admin_url( 'admin-ajax.php' ), Term_Select_2::GET_TERMS ) );
+		$url = html_entity_decode( admin_url( 'admin-ajax.php' ) );
 		$this->assertSame( [
 			'ajaxUrl' => add_query_arg( [ 'action' => Term_Select_2::GET_TERMS ], $url ),
-			'action'  => 'lipe/lib/cmb2/field-types/term-select-2/ajax',
 			'fields'  => [],
 		], json_decode( wp_json_encode( Term_Select_2::in()->js_config() ), true ) );
 
 		$box = $this->get_box();
 		$this->assertSame( [
 			'ajaxUrl' => add_query_arg( [ 'action' => Term_Select_2::GET_TERMS ], $url ),
-			'action'  => 'lipe/lib/cmb2/field-types/term-select-2/ajax',
 			'fields'  => [
 				[
 					'id'            => 'ts',
@@ -124,7 +122,6 @@ class Term_Select_2Test extends \WP_Ajax_UnitTestCase {
 		    ->taxonomy_select_2( 'post_tag' );
 		$this->assertSame( [
 			'ajaxUrl' => add_query_arg( [ 'action' => Term_Select_2::GET_TERMS ], $url ),
-			'action'  => 'lipe/lib/cmb2/field-types/term-select-2/ajax',
 			'fields'  => [
 				[
 					'id'            => 'ts',
@@ -142,7 +139,6 @@ class Term_Select_2Test extends \WP_Ajax_UnitTestCase {
 			->text = [ 'no_terms_text' => 'Nothing found.' ];
 		$this->assertSame( [
 			'ajaxUrl' => add_query_arg( [ 'action' => Term_Select_2::GET_TERMS ], $url ),
-			'action'  => 'lipe/lib/cmb2/field-types/term-select-2/ajax',
 			'fields'  => [
 				[
 					'id'            => 'ts',
@@ -173,11 +169,12 @@ class Term_Select_2Test extends \WP_Ajax_UnitTestCase {
 		$this->assertEmpty( $this->_last_response );
 
 		// No passed field.
-		$_GET['_wpnonce'] = wp_create_nonce( Term_Select_2::GET_TERMS );
+		$_POST['_wpnonce'] = wp_create_nonce( Term_Select_2::NONCE );
 		$this->send_request_ends_in_wp_send();
 		$this->assertSame( '{"success":false,"data":"Field not found."}', $this->_last_response );
 
 		$_POST['id'] = 'ts';
+		$_POST['_wpnonce'] = wp_create_nonce( Term_Select_2::NONCE . 'ts' );
 		$this->send_request_ends_in_wp_send();
 		$this->assertMatchesRegularExpression( '/\{"success":true,"data":\[\{"id":\d+,"text":"Term \d+"\},\{"id":\d+,"text":"Uncategorized"\}\]\}/', $this->_last_response );
 
