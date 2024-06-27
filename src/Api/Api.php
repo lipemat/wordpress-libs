@@ -8,16 +8,16 @@ use Lipe\Lib\Traits\Version;
 use Lipe\Lib\Util\Arrays;
 
 /**
- * Simple api endpoint.
+ * Simple API endpoint.
  *
  * While you could reverse engineer this class for some really creative implementations,
  * in PHP you really only need to use the 2 helper methods.
  * 1. `get_action`
  * 2. `get_url`
  *
- * @example Api::init();
- *          add_action( Api::in()->get_action( 'space' ), 'print_r' )
- *          Api::in()->get_url( 'space', [ 'first' => 'FY', 'second' => 'TY'] );
+ * @example Api::init_once();
+ *          add_action(Api::in()->get_action('space'), 'print_r')
+ *          Api::in()->get_url('space', ['first' => 'FY', 'second' => 'TY']);
  */
 class Api {
 	use Singleton;
@@ -71,7 +71,7 @@ class Api {
 	 * Get the name of the action to register with `add_action()`.
 	 *
 	 * @param string $endpoint - Same action provided to the `get_url` method of this class.
-	 *                         Should be a url friendly slug which is unique to this API system.
+	 *                         Should be an url friendly slug unique to this API system.
 	 *
 	 * @return string
 	 */
@@ -89,7 +89,7 @@ class Api {
 	 *
 	 * @param ?string                   $endpoint - Same action provided to the `get_action` method
 	 *                                            of this class when calling `add_action()`.
-	 *                                            Should be a url friendly slug unique to
+	 *                                            Should be a URL friendly slug unique to
 	 *                                            this API system.
 	 *
 	 * @param array<int|string, string> $data     - Data passed via the url separated by '/'.
