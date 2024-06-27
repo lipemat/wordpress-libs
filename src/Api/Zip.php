@@ -51,10 +51,12 @@ class Zip {
 	 * @return void
 	 */
 	public function handle_request(): void {
-		if ( ! isset( $_POST[ self::URLS ] ) ) {
+		$urls = [];
+		if ( isset( $_POST[ self::URLS ] ) ) {
+			$urls = \array_map( 'esc_url_raw', (array) wp_unslash( $_POST[ self::URLS ] ) );
+		} else {
 			wp_die( 'No URL specified.' );
 		}
-		$urls = \array_map( 'esc_url_raw', (array) wp_unslash( $_POST[ self::URLS ] ) );
 
 		if ( isset( $_POST[ self::NAME ] ) ) {
 			$name = sanitize_text_field( wp_unslash( $_POST[ self::NAME ] ) );
