@@ -339,34 +339,34 @@ class GroupTest extends \WP_Test_REST_TestCase {
 		$group->field( 'first/things/last', '' )->text();
 		do_action( 'cmb2_init' );
 
-		$this->assertArrayNotHasKey( 'sortable', $group->options );
+		$this->assertArrayNotHasKey( 'sortable', get_private_property( $group, 'options' ) );
 
 		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
 		$group->sortable();
-		$this->assertTrue( $group->options['sortable'] );
+		$this->assertTrue( get_private_property( $group, 'options' )['sortable'] );
 
 		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
 		$group->sortable( false );
-		$this->assertFalse( $group->options['sortable'] );
+		$this->assertFalse( get_private_property( $group, 'options' )['sortable'] );
 
 		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
-		$this->assertArrayNotHasKey( 'sortable', $group->options );
+		$this->assertArrayNotHasKey( 'sortable', get_private_property( $group, 'options' ) );
 		$group->repeatable();
-		$this->assertTrue( $group->options['sortable'] );
+		$this->assertTrue( get_private_property( $group, 'options' )['sortable'] );
 
 		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
 		$group->repeatable( false );
-		$this->assertFalse( $group->options['sortable'] );
+		$this->assertFalse( get_private_property( $group, 'options' )['sortable'] );
 
 		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
 		$group->sortable( false );
 		$group->repeatable();
-		$this->assertFalse( $group->options['sortable'] );
+		$this->assertFalse( get_private_property( $group, 'options' )['sortable'] );
 
 		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
 		$group->sortable();
 		$group->repeatable( false );
-		$this->assertTrue( $group->options['sortable'] );
+		$this->assertTrue( get_private_property( $group, 'options' )['sortable'] );
 	}
 
 
@@ -376,7 +376,7 @@ class GroupTest extends \WP_Test_REST_TestCase {
 		$group = $box->group( 'group/prefixed/g5', 'Group 3' );
 		$group->sortable();
 		$group->repeatable( false );
-		$this->assertTrue( $group->options['sortable'] );
+		$this->assertTrue( get_private_property( $group, 'options' )['sortable'] );
 		$group->field( 'group/prefixed/g5/first', '' )->text();
 
 		do_action( 'cmb2_init' );
@@ -389,7 +389,7 @@ class GroupTest extends \WP_Test_REST_TestCase {
 		$group = $box->group( 'group/prefixed/g6', 'Group 3' );
 		$group->field( 'group/prefixed/g6/first', '' )->text();
 		$group->repeatable( false );
-		$this->assertFalse( $group->options['sortable'] );
+		$this->assertFalse( get_private_property( $group, 'options' )['sortable'] );
 		do_action( 'cmb2_init' );
 		$rendered = get_echo( function() {
 			cmb2_get_field( 'sortable', 'group/prefixed/g6' )->render_field();

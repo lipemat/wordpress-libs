@@ -135,8 +135,7 @@ class Term_Select_2Test extends \WP_Ajax_UnitTestCase {
 		], json_decode( wp_json_encode( Term_Select_2::in()->js_config() ), true ) );
 
 		$box->field( 'ts', 'TS' )
-		    ->taxonomy_select_2( 'category' )
-			->text = [ 'no_terms_text' => 'Nothing found.' ];
+		    ->taxonomy_select_2( 'category', false, 'Nothing found.' );
 		$this->assertSame( [
 			'ajaxUrl' => add_query_arg( [ 'action' => Term_Select_2::GET_TERMS ], $url ),
 			'fields'  => [

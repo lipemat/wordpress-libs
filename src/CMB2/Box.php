@@ -417,6 +417,21 @@ class Box {
 	/**
 	 * Add a field to this box.
 	 *
+	 * May be used to add or replace fields.
+	 *
+	 * @param Field $field - The field to add.
+	 *
+	 * @return Field
+	 */
+	public function add_field( Field $field ): Field {
+		$this->fields[ $field->get_id() ] = $field;
+		return $field;
+	}
+
+
+	/**
+	 * Add a field to this box.
+	 *
 	 * @example $box->field( $id, $name )->checkbox();
 	 *
 	 * @param string $id   - Field ID.
@@ -425,9 +440,8 @@ class Box {
 	 * @return Field_Type
 	 */
 	public function field( string $id, string $name ): Field_Type {
-		$this->fields[ $id ] = new Field( $id, $name, $this, null );
-
-		return Field_Type::factory( $this->fields[ $id ] );
+		$field = $this->add_field( new Field( $id, $name, $this, null ) );
+		return Field_Type::factory( $field, $this );
 	}
 
 
@@ -438,15 +452,16 @@ class Box {
 	 *
 	 * @example $group = $box->group( $id, $name );
 	 *
-	 * @param string  $id          - Group ID.
-	 * @param string  $title       - Group title.
-	 * @param ?string $group_title - include a {#} to have replaced with number.
+	 * @param string  $id        - Group ID.
+	 * @param string  $name      - Group title.
+	 * @param ?string $row_title - include a {#} to have replaced with number.
 	 *
 	 * @return Group
 	 */
-	public function group( string $id, string $title, ?string $group_title = null ): Group {
-		$group = new Group( $id, $title, $this, $group_title );
-		$this->fields[ $id ] = $group;
+	public function group( string $id, string $name, ?string $row_title = null ): Group {
+		$group = new Group( $id, $name, $this, null );
+		$this->add_field( $group );
+		Field_Type::factory( $group, $this )->group( $row_title );
 
 		$this->hook();
 		return $group;
@@ -734,13 +749,13 @@ class Box {
 			$config = $this->translate_rest_keys( $field, $config );
 		}
 
-		if ( null !== $field->sanitize_callback ) {
+		if ( null !== $field->meta_sanitize ) {
 			$config['sanitize_callback'] = function( $value ) use ( $field, $config ) {
 				// Allow other sanitize callbacks to run like group untranslate of fields.
 				if ( isset( $config['sanitize_callback'] ) ) {
 					$value = \call_user_func( $config['sanitize_callback'], $value );
 				}
-				return \call_user_func( $field->sanitize_callback, $value, $field->get_field_args(), $field->get_cmb2_field() );
+				return \call_user_func( $field->meta_sanitize, $value, $field->get_field_args(), $field->get_cmb2_field() );
 			};
 		}
 		if ( isset( $field->revisions_enabled ) ) {

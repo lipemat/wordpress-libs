@@ -31,8 +31,8 @@ class FieldTest extends \WP_Test_REST_TestCase {
 
 	public function test_field_type_array(): void {
 		$box = new Box( 'test-term-select', [ 'post' ], 'Term Select Test' );
-		$field = new Field( 't', 'test', $box, null );
-		Field_Type::factory( $field )->text_date( 'M', 'time_key', [ 'passive' => 1 ] );
+		$field = $box->field( 't', 'test' )
+		             ->text_date( 'M', 'time_key', [ 'passive' => 1 ] );
 		$field->attributes( [ 'directly' => 1 ] );
 
 		$args = $field->get_field_args();
@@ -99,7 +99,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		$request->set_query_params( [ 'domain' => 'unit-test.com', 'site_name' => 'Unit Test' ] );
 		$response = rest_get_server()->dispatch( $request )->data;
 		$this->assertEquals( 'returnee', $response['cmb2']['rested']['unit-testing/t1'] );
-		// Important this remains intact or we'll break sites!!
+		// Important this remains intact, or we'll break sites!!
 		$this->assertArrayHasKey( 't1', $response['meta'], 'Keys are not being shortened in rest!' );
 		$this->assertEquals( 'returnee', $response['meta']['t1'] );
 		$this->assertArrayNotHasKey( 't2', $response['meta'] );

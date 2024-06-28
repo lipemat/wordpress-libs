@@ -88,23 +88,29 @@ class Group extends Field {
 	 */
 	protected array $fields = [];
 
+	/**
+	 * Repeatable group options.
+	 *
+	 * @var array<'add_button'|'closed'|'remove_button'|'remove_confirm'|'sortable',bool|string>
+	 */
+	protected array $options = [];
+
 
 	/**
 	 * Group constructor.
 	 *
-	 * @link                     https://github.com/CMB2/CMB2/wiki/Field-Types#group
-	 * @internal
+	 * Same as Field, but with a different hook.
 	 *
-	 * @param string  $id        - Field ID.
-	 * @param string  $title     - Group title.
-	 * @param Box     $box       - Box object.
-	 * @param ?string $row_title - Include a {#} to have replaced with number.
+	 * @interal
 	 *
+	 * @param string $id    - ID of the field.
+	 * @param string $name  - Field label.
+	 * @param Box    $box   - Parent class using this Field.
+	 * @param ?Group $group - Group this field is assigned to.
 	 */
-	public function __construct( string $id, string $title, Box $box, ?string $row_title ) {
-		Field_Type::factory( $this )->group( $row_title );
+	public function __construct( string $id, string $name, Box $box, ?Group $group ) {
 		$this->hook();
-		parent::__construct( $id, $title, $box, null );
+		parent::__construct( $id, $name, $box, $group );
 	}
 
 
@@ -137,9 +143,8 @@ class Group extends Field {
 	 * @return Field_Type
 	 */
 	public function field( string $id, string $name ): Field_Type {
-		$this->fields[ $id ] = new Field( $id, $name, $this->box, $this );
-
-		return Field_Type::factory( $this->fields[ $id ] );
+		$field = $this->add_field( new Field( $id, $name, $this->box, $this ) );
+		return Field_Type::factory( $field, $this->box );
 	}
 
 
@@ -436,5 +441,20 @@ class Group extends Field {
 		}
 
 		return Utils::in()->get_rest_short_name( $field );
+	}
+
+
+	/**
+	 * Add a field to this Group.
+	 *
+	 * May be used to add or replace fields.
+	 *
+	 * @param Field $field - Field object.
+	 *
+	 * @return Field
+	 */
+	public function add_field( Field $field ): Field {
+		$this->fields[ $field->get_id() ] = $field;
+		return $field;
 	}
 }

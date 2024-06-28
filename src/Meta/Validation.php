@@ -8,6 +8,7 @@ use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\CMB2\Field\Term_Select_2;
 use Lipe\Lib\CMB2\Field\Term_Select_2\Register;
 use Lipe\Lib\CMB2\Field\Type;
+use Lipe\Lib\CMB2\Variation\Taxonomy;
 use Lipe\Lib\Traits\Singleton;
 
 /**
@@ -48,7 +49,7 @@ trait Validation {
 		$map = [];
 		foreach ( $this->fields as $field ) {
 			$box = $field->get_box();
-			if ( ! Repo::in()->supports_taxonomy_relationships( $field->get_box()->get_object_type(), $field ) ) {
+			if ( ! $field instanceof Taxonomy || ! Repo::in()->supports_taxonomy_relationships( $field->get_box()->get_object_type(), $field ) ) {
 				continue;
 			}
 			foreach ( $box->get_object_types() as $object_type ) {

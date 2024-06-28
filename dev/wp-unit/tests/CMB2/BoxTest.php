@@ -77,7 +77,7 @@ class BoxTest extends \WP_UnitTestCase {
 		$field = call_private_method( $box, 'get_fields' )['t1'];
 		$this->assertEquals( 3, get_private_property( $field, 'column' )['position'] ?? false );
 		$this->assertEquals( 14, $field->position );
-		$this->assertEquals( [ 'o' => 'one', 't' => 'two' ], $field->options );
+		$this->assertEquals( [ 'o' => 'one', 't' => 'two' ], get_private_property( $field, 'options' ) );
 
 		$group = $box->group( 'g1', 'Group 1' );
 		$group->field( 't2', 'TEST 2' )

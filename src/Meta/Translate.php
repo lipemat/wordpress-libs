@@ -7,6 +7,7 @@ use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\CMB2\Field\Term_Select_2;
 use Lipe\Lib\CMB2\Field\Term_Select_2\Register;
 use Lipe\Lib\CMB2\Field\Type;
+use Lipe\Lib\CMB2\Variation\Taxonomy;
 use Lipe\Lib\Traits\Memoize;
 
 /**
@@ -447,7 +448,7 @@ trait Translate {
 	 */
 	protected function get_taxonomy_field_value( int|string $object_id, string $field_id, string $meta_type ): array {
 		$field = $this->get_field( $field_id );
-		if ( null === $field ) {
+		if ( ! $field instanceof Taxonomy ) {
 			return [];
 		}
 		$taxonomy = $field->taxonomy;
@@ -503,7 +504,7 @@ trait Translate {
 		}
 
 		// Stored as term relationship.
-		if ( $this->supports_taxonomy_relationships( $meta_type, $field ) ) {
+		if ( $field instanceof Taxonomy && $this->supports_taxonomy_relationships( $meta_type, $field ) ) {
 			$terms = \array_map( function( $term ) {
 				// Term ids are perceived as term slug when strings.
 				return is_numeric( $term ) ? (int) $term : $term;
@@ -546,7 +547,7 @@ trait Translate {
 	 */
 	protected function delete_taxonomy_field_value( int|string $object_id, string $field_id, string $meta_type ): void {
 		$field = $this->get_field( $field_id );
-		if ( $field instanceof Field && $this->supports_taxonomy_relationships( $meta_type, $field ) ) {
+		if ( $field instanceof Taxonomy && $this->supports_taxonomy_relationships( $meta_type, $field ) ) {
 			$taxonomy = $field->taxonomy;
 			wp_delete_object_term_relationships( (int) $object_id, $taxonomy );
 		} else {
@@ -592,7 +593,7 @@ trait Translate {
 	protected function get_term_id_from_slug( string $key, int|string $value ): ?int {
 		if ( ! is_numeric( $value ) ) {
 			$field = $this->get_field( $key );
-			if ( null === $field ) {
+			if ( ! $field instanceof Taxonomy ) {
 				return null;
 			}
 			$term = get_term_by( 'slug', $value, $field->taxonomy );

@@ -5,19 +5,21 @@ namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
 use Lipe\Lib\CMB2\Field\Type;
+use Lipe\Lib\CMB2\Variation\Display;
+use Lipe\Lib\CMB2\Variation\FieldInterface;
 use Lipe\Lib\Meta\Repo;
-use Lipe\Lib\Query\Get_Posts;
-use Lipe\Lib\Taxonomy\Get_Terms;
 use Lipe\Lib\Util\Arrays;
 
 /**
  * A fluent interface for a CMB2 field.
  *
- * @phpstan-type DELETE_CB callable( int $object_id, string $key, mixed $previous, Box::TYPE_* $type ): void
- * @phpstan-type CHANGE_CB callable( int $object_id, mixed $value, string $key, mixed $previous, Box::TYPE_* $type): void
+ * @phpstan-import-type DELETE_CB from Event_Callbacks
+ * @phpstan-import-type CHANGE_CB from Event_Callbacks
  * @phpstan-type ESC_CB callable( mixed $value, array<string, mixed>, \CMB2_Field ): mixed
  */
-class Field {
+class Field implements FieldInterface {
+	use Display;
+
 	/**
 	 * ID of meta box this field is assigned to.
 	 *
@@ -39,223 +41,6 @@ class Field {
 	public string $data_type = Repo::TYPE_DEFAULT;
 
 	/**
-	 * Will modify default attributes (class, input type, rows, etc),
-	 * or add your own (placeholder, data attributes)
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#attributes
-	 *
-	 * @see     Field::attributes()
-	 *
-	 * @example [
-	 *          'placeholder' => 'A small amount of text',
-	 *          'rows'        => 3,
-	 *          'required'    => 'required',
-	 *          'type' => 'number',
-	 * 'min'  => '101',
-	 *          ]
-	 *
-	 * @internal
-	 *
-	 * @var     array<string, string>
-	 */
-	protected array $attributes = [];
-
-	/**
-	 * A custom callback to return the label for the field
-	 *
-	 * Part of cmb2 core but undocumented.
-	 *
-	 * @see \CMB2_Base::do_callback
-	 *
-	 * @var callable(string, \CMB2_Field): string
-	 */
-	public $label_cb;
-
-	/**
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
-	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
-	 *
-	 * @var callable|string
-	 */
-	public $before;
-
-	/**
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
-	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
-	 *
-	 * @var callable|string
-	 */
-	public $after;
-
-	/**
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
-	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
-	 *
-	 * @var callable|string
-	 */
-	public $before_row;
-
-	/**
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
-	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
-	 *
-	 * @var callable|string
-	 */
-	public $after_row;
-
-	/**
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
-	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
-	 *
-	 * @var callable|string
-	 */
-	public $before_field;
-
-	/**
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
-	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
-	 *
-	 * @var callable|string
-	 */
-	public $after_field;
-
-	/**
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
-	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
-	 *
-	 * @var callable|string
-	 */
-	public $before_display_wrap;
-
-	/**
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
-	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
-	 *
-	 * @var callable|string
-	 */
-	public $before_display;
-
-	/**
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
-	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
-	 *
-	 * @var callable|string
-	 */
-	public $after_display;
-
-	/**
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
-	 * The callback will receive $field_args as the first argument,
-	 * and the CMB2_Field $field object as the second argument.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
-	 *
-	 * @var callable|string
-	 */
-	public $after_display_wrap;
-
-	/**
-	 * Used with `char_counter` to count character/words remaining.
-	 *
-	 * @var int
-	 */
-	public int $char_max;
-
-	/**
-	 * Used with `char_max` to enforce length when counting characters.
-	 *
-	 * @var bool
-	 */
-	public bool $char_max_enforce;
-
-	/**
-	 * This property allows you to optionally add classes to the CMB2 wrapper.
-	 * This property can take a string, or array.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#classes
-	 *
-	 * @example 'additional-class'
-	 * @example array('additional-class', 'another-class'),
-	 *
-	 * @var array<string>|string
-	 */
-	public array|string $classes;
-
-	/**
-	 * Columns work for post (all post-types), comment, user and term object types.
-	 *
-	 * @see  Field::column
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#column
-	 *
-	 * @var array{disable_sortable: bool, name: string, position: int|bool}|bool
-	 */
-	protected array|bool $column;
-
-	/**
-	 * Like the classes property, allows adding classes to the CMB2 wrapper,
-	 * but takes a callback.
-	 * That callback should return an array of classes.
-	 * The callback gets passed the CMB2 $properties array as the first argument,
-	 * and the CMB2 $cmb object as the second argument.
-	 *
-	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#classes_cb
-	 *
-	 * @example: 'yourprefix_function_to_add_classes',
-	 *
-	 * @var callable
-	 */
-	public $classes_cb;
-
-	/**
-	 * Field parameter used in the date field types which allows specifying
-	 * the php date format for your field.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#date_format
-	 * @link php.net/manual/en/function.date.php.
-	 *
-	 * @var string
-	 */
-	public string $date_format;
-
-	/**
 	 * Specify a default value for the field.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#default
@@ -265,27 +50,6 @@ class Field {
 	 * @var string|false|array<mixed>
 	 */
 	public string|array|false $default;
-
-	/**
-	 * To be used with $this->column or $this->column().
-	 * Callback function to display the output of the column in the
-	 * object-lists.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#display_cb
-	 * @see     link for markup example
-	 *
-	 * @example my_callback_function_to_display_output( $field_args, $field )
-	 *
-	 * @var callable
-	 */
-	public $display_cb;
-
-	/**
-	 * Entirely replace the class to used to display the field (in admin columns, etc)
-	 *
-	 * @var \CMB2_Field_Display
-	 */
-	public \CMB2_Field_Display $display_class;
 
 	/**
 	 * Bypass the CMB escaping (escapes before display) methods with your own callback.
@@ -303,107 +67,6 @@ class Field {
 	public $escape_cb;
 
 	/**
-	 * If you're planning on using your metabox fields on the front-end as well (user-facing),
-	 * then you can specify that certain fields do not get displayed there
-	 * by setting this parameter to false.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#on_front
-	 *
-	 * @default true
-	 *
-	 * @var bool
-	 */
-	public bool $on_front;
-
-	/**
-	 * For fields that take an options array.
-	 *
-	 * These include select, radio, multicheck, wysiwyg and group.
-	 * Should be an array where the keys are the option value,
-	 * and the values are the option text.
-	 *
-	 * If you are doing any kind of database querying or logic/conditional checking,
-	 * you're almost always better off using the options_cb parameter.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#options
-	 *
-	 * @var  array<string, string|bool>
-	 */
-	public array $options = [];
-
-	/**
-	 * A callback to provide field options.
-	 *
-	 * It is recommended to use this parameter over the options parameter
-	 * if you are doing anything complex to generate your options array,
-	 * as the '*_cb' parameters are run when the field is generated,
-	 * instead of on every page load (admin or otherwise).
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#options_cb
-	 *
-	 * @example my_get_options_function( $field ){ return [ value => label ] }
-	 *
-	 * @var callable( \CMB2_Field ): array<string, string>
-	 */
-	public $options_cb;
-
-	/**
-	 * Order the field will display in.
-	 *
-	 * @internal
-	 *
-	 * @var int
-	 */
-	public int $position = 0;
-
-	/**
-	 * For use with the file fields only to control the preview size
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file
-	 *
-	 * @var string
-	 */
-	public string $preview_size;
-
-	/**
-	 * Allows overriding the default CMB2_Type_Base class
-	 * that is used when rendering the field.
-	 * This provides interesting object-oriented ways to override default CMB2 behavior
-	 * by subclassing the default class and overriding methods.
-	 * For best results, your class should extend the class it is overriding.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#render_class
-	 *
-	 * @var string
-	 */
-	public string $render_class;
-
-	/**
-	 * Bypass the CMB row rendering.
-	 * You will be completely responsible for outputting that row's html.
-	 * The callback function gets passed the field $args array, and the $field object.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#render_row_cb
-	 * @link https://github.com/WebDevStudios/CMB2/issues/596#issuecomment-187941343
-	 *
-	 * @var callable|null
-	 */
-	public $render_row_cb;
-
-	/**
-	 * New field parameter for taxonomy fields, 'remove_default'
-	 * which allows disabling the default taxonomy metabox.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#remove_default
-	 *
-	 * @example true
-	 * @default false
-	 *
-	 * @var bool
-	 */
-	public bool $remove_default;
-
-	/**
 	 * Bypass the CMB sanitization (sanitizes before saving) methods with your own callback.
 	 * Set to false if you do not want any sanitization (not recommended).
 	 *
@@ -412,7 +75,7 @@ class Field {
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
 	 *
 	 * @see     Field::sanitization_cb()
-	 * @see     Field::$sanitize_callback
+	 * @see     Field::$meta_sanitize
 	 *
 	 * @example sanitize_function( $value, $field_args, $field ){ return string }
 	 *
@@ -434,34 +97,11 @@ class Field {
 	 * @see Field::$sanitization_cb
 	 *
 	 * @internal
+	 *
 	 * @phpstan-var ESC_CB
 	 * @var callable
 	 */
-	public $sanitize_callback;
-
-	/**
-	 * Whether to show select all button for items
-	 * with multi select like multicheck
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
-	 *
-	 * @default true
-	 * @example false
-	 *
-	 * @var bool
-	 */
-	public bool $select_all_button;
-
-	/**
-	 * Whether to show labels for the fields
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_names
-	 *
-	 * Default  true
-	 *
-	 * @var bool
-	 */
-	public bool $show_names;
+	public $meta_sanitize;
 
 	/**
 	 * To override the box's `show_in_rest` for this field.
@@ -486,79 +126,6 @@ class Field {
 	public string|bool $show_in_rest;
 
 	/**
-	 * To show this field or not based on the result of a function.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_on_cb
-	 * @example should_i_show( $field ){ return bool}
-	 *
-	 * @see     Field::show_on_cb
-	 *
-	 * @interal
-	 *
-	 * @var callable
-	 */
-	public $show_on_cb;
-
-	/**
-	 * When using a field of a select type this defines whether we should
-	 * show a "no option" option and what the value of said option will be.
-	 *
-	 * @var bool|string
-	 */
-	public string|bool $show_option_none;
-
-	/**
-	 * ID of boxes tab, which this field should display in.
-	 * The tab must be first registered with the box.
-	 *
-	 * @see Field::tab
-	 * @see Box::add_tab
-	 *
-	 * @var string
-	 */
-	protected string $tab;
-
-	/**
-	 * Used for date/timestamp fields.
-	 *
-	 * Optional to specify a timezone to use when
-	 * calculating the timestamp offset.
-	 *
-	 * Defaults to timezone stored in WP options.
-	 *
-	 * @var string;
-	 */
-	public string $timezone;
-
-	/**
-	 * Used for date/time fields
-	 *
-	 * Optionally make this field honor the timezone selected
-	 * in the select_timezone field specified above in the form.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#text_date
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#select_timezone
-	 *
-	 * @example 'key_of_select_timezone_field'
-	 *
-	 * @var string
-	 */
-	public string $timezone_meta_key;
-
-	/**
-	 * Used for taxonomy fields
-	 *
-	 * Set to the taxonomy slug
-	 *
-	 * @notice these fields will save terms not meta
-	 *
-	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_select
-	 *
-	 * @var string
-	 */
-	public string $taxonomy;
-
-	/**
 	 * Used to configure some strings for thinks like taxonomy and repeater fields.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
@@ -576,44 +143,6 @@ class Field {
 	public array $text = [];
 
 	/**
-	 * Field parameter, which can be used by the 'taxonomy_*', and the 'file_*' field types.
-	 * For the 'taxonomy_*' types, provides ability
-	 * to override the arguments passed to get_terms(), and for the 'file_*' field types,
-	 * allows overriding the media library query arguments.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
-	 *
-	 * @interal
-	 *
-	 * @var  array<string, mixed>
-	 */
-	public array $query_args;
-
-	/**
-	 * Internal property to hold a callback function when
-	 * a meta key is deleted.
-	 *
-	 * @internal
-	 *
-	 * @phpstan-var DELETE_CB
-	 *
-	 * @var callable
-	 */
-	public $delete_cb;
-
-	/**
-	 * Internal property to hold a callback function when
-	 * a meta key is updated.
-	 *
-	 * @internal
-	 *
-	 * @phpstan-var CHANGE_CB
-	 *
-	 * @var callable
-	 */
-	public $change_cb;
-
-	/**
 	 * Enable revision support for 'post' objects.
 	 *
 	 * @since WP 6.4.
@@ -627,11 +156,62 @@ class Field {
 	public bool $revisions_enabled;
 
 	/**
-	 * Used by the `text_url` field type to specify the protocols allowed.
+	 * Will modify default attributes (class, input type, rows, etc),
+	 * or add your own (placeholder, data attributes)
 	 *
-	 * @var ?string[]
+	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#attributes
+	 *
+	 * @see     Field::attributes()
+	 *
+	 * @example [
+	 *          'placeholder' => 'A small amount of text',
+	 *          'rows'        => 3,
+	 *          'required'    => 'required',
+	 *          'type' => 'number',
+	 * 'min'  => '101',
+	 *          ]
+	 *
+	 * @internal
+	 *
+	 * @var     array<string, string>
 	 */
-	public ?array $protocols = null;
+	protected array $attributes = [];
+
+	/**
+	 * Columns work for post (all post-types), comment, user and term object types.
+	 *
+	 * @see  Field::column
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#column
+	 *
+	 * @var array{disable_sortable: bool, name: string, position: int|bool}|bool
+	 */
+	protected array|bool $column;
+
+	/**
+	 * To be used with $this->column or $this->column().
+	 * Callback function to display the output of the column in the
+	 * object-lists.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#display_cb
+	 * @see     link for markup example
+	 *
+	 * @example my_callback_function_to_display_output( $field_args, $field )
+	 *
+	 * @var callable
+	 */
+	protected $display_cb;
+
+	/**
+	 * ID of boxes tab, which this field should display in.
+	 * The tab must be first registered with the box.
+	 *
+	 * @see Field::tab
+	 * @see Box::add_tab
+	 *
+	 * @var string
+	 */
+	protected string $tab;
 
 	/**
 	 * Shorten a group's child field keys when displayed in REST API.
@@ -653,15 +233,6 @@ class Field {
 	 * @var Type
 	 */
 	protected Type $type;
-
-	/**
-	 * Enable a character/word counter for a 'textarea', 'wysiwyg', or 'text' type field.
-	 *
-	 * @phpstan-var true|'words'
-	 *
-	 * @var bool|string
-	 */
-	protected string|bool $char_counter;
 
 	/**
 	 * Specify a callback to retrieve default value for the field.
@@ -716,24 +287,11 @@ class Field {
 	protected $rest_value_cb;
 
 	/**
-	 * Save terms assigned to users as meta instead of the default
-	 * object terms system.
-	 *
-	 * Prevent conflicts with User ID and Post ID in the same
-	 * `term_relationship` table.
-	 *
-	 * @notice Required lipemat version of CMB2 to support this argument.
-	 *
-	 * @see    \CMB2_Type_Taxonomy_Base::get_object_terms
-	 *
-	 * @var bool
-	 */
-	protected bool $store_user_terms_in_meta = true;
-
-	/**
 	 * A render row cb to use inside a tab.
 	 * Stored here, so we can set the `render_row_cb` to the tab's
 	 * method to keep outside `render_row_cb` intact.
+	 *
+	 * @phpstan-var callable( array<string, mixed>, \CMB2_Field ): void
 	 *
 	 * @var callable
 	 */
@@ -814,60 +372,6 @@ class Field {
 	 */
 	public function get_group(): ?Group {
 		return $this->group;
-	}
-
-
-	/**
-	 * Enable a character/word counter for a 'textarea', 'wysiwyg', or 'text' type field.
-	 *
-	 * @notice Does not work with repeatable wysiwyg.
-	 *
-	 * @phpstan-param array{
-	 *     words_left_text?: string,
-	 *     words_text?: string,
-	 *     characters_left_text?: string,
-	 *     characters_text?: string,
-	 *     characters_truncated_text?: string
-	 * }            $labels
-	 *
-	 *
-	 * @param bool  $count_words   - Count words instead of characters.
-	 * @param ?int  $max           - Show remaining character/words based on provided limit.
-	 * @param bool  $enforce       - Enforce max length using `maxlength` attribute when
-	 *                             characters are counted.
-	 * @param array $labels        - Override the default text strings associated with these.
-	 *                             'words_left_text' - Default: "Words left"
-	 *                             'words_text' - Default: "Words"
-	 *                             'characters_left_text' - Default: "Characters left"
-	 *                             'characters_text' - Default: "Characters"
-	 *                             'characters_truncated_text' - Default: "Your text may be truncated.".
-	 *
-	 * @return Field
-	 */
-	public function char_counter( bool $count_words = false, ?int $max = null, bool $enforce = false, array $labels = [] ): Field {
-		$this->char_counter = $count_words ? 'words' : true;
-
-		if ( null !== $max ) {
-			$this->char_max = $max;
-			if ( $enforce ) {
-				if ( 'words' === $this->char_counter ) {
-					\_doing_it_wrong( 'char_counter', esc_html__( 'You cannot enforce max length when counting words', 'lipe' ), '2.17.0' );
-				}
-				$this->char_max_enforce = true;
-			}
-		}
-
-		if ( [] !== $labels ) {
-			$this->text = \array_merge( $this->text, \array_intersect_key( $labels, \array_flip( [
-				'words_left_text',
-				'words_text',
-				'characters_left_text',
-				'characters_text',
-				'characters_truncated_text',
-			] ) ) );
-		}
-
-		return $this;
 	}
 
 
@@ -1048,22 +552,6 @@ class Field {
 
 
 	/**
-	 * Set the position of the field in the meta box
-	 *
-	 * @param int $position - The position of the field.
-	 *
-	 * @default 1
-	 *
-	 * @return $this
-	 */
-	public function position( int $position = 1 ): Field {
-		$this->position = $position;
-
-		return $this;
-	}
-
-
-	/**
 	 * Mark this field as 'readonly'.
 	 *
 	 * @return Field
@@ -1101,10 +589,6 @@ class Field {
 	 * @return Field
 	 */
 	public function required(): Field {
-		// The only way a file field may be required is if the text field is showing.
-		if ( Type::FILE === $this->type ) {
-			$this->options['url'] = true;
-		}
 		$this->attributes( [ 'required' => 'required' ] );
 		return $this;
 	}
@@ -1192,90 +676,6 @@ class Field {
 
 
 	/**
-	 * To show this field or not based on the result of a function.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_on_cb
-	 * @example should_i_show($field){ return bool}
-	 *
-	 * @param callable $func - The function to use for determining if the field should show.
-	 *
-	 * @return Field
-	 */
-	public function show_on_cb( callable $func ): Field {
-		$this->show_on_cb = $func;
-
-		return $this;
-	}
-
-
-	/**
-	 * Save terms assigned to users as meta instead of the default
-	 * object terms system.
-	 *
-	 * Prevent conflicts with User ID and Post ID in the same
-	 * `term_relationship` table.
-	 *
-	 * @note   The meta repo has never supported using object terms so setting
-	 *         this to false will not change the behavior of the meta repo.
-	 *
-	 * @notice The default value is `true` so this need only be called with `false`.
-	 *
-	 * @param bool $use_meta - Whether to use meta or not.
-	 *
-	 * @return Field
-	 */
-	public function store_user_terms_in_meta( bool $use_meta = true ): Field {
-		$box = $this->get_box();
-		if ( ! \in_array( $this->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) || ! \in_array( 'user', $box->get_object_types(), true ) ) {
-			_doing_it_wrong( __METHOD__, 'Storing user terms in meta only applies to taxonomy fields registered on users.', '3.14.0' );
-		}
-		$this->store_user_terms_in_meta = $use_meta;
-
-		return $this;
-	}
-
-
-	/**
-	 * Field parameter, which can be used by the  'file_*' field types.
-	 * allows overriding the media library query arguments.
-	 *
-	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
-	 *
-	 * @param Get_Posts $args - The arguments to pass to get_posts().
-	 *
-	 * @return Field
-	 */
-	public function file_query_args( Get_Posts $args ): Field {
-		if ( Repo::TYPE_FILE !== $this->data_type ) {
-			_doing_it_wrong( __METHOD__, 'File query args are only supported for file fields.', '5.0.0' );
-		}
-
-		$this->query_args = $args->get_args();
-		return $this;
-	}
-
-
-	/**
-	 * Field parameter, which can be used by the  'taxonomy_*' field types.
-	 * allows overriding the media library query arguments.
-	 *
-	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
-	 *
-	 * @param Get_Terms $args - The arguments to pass to get_terms().
-	 *
-	 * @return Field
-	 */
-	public function term_query_args( Get_Terms $args ): Field {
-		if ( ! \in_array( $this->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) ) {
-			_doing_it_wrong( __METHOD__, 'Term query args are only supported for taxonomy fields.', '5.0.0' );
-		}
-
-		$this->query_args = $args->get_args();
-		return $this;
-	}
-
-
-	/**
 	 * Add this field to a tab.
 	 * The tab must be first registered with the box.
 	 *
@@ -1328,7 +728,7 @@ class Field {
 	 * @param array<key-of<Field>, mixed> $args      - [$key => $value].
 	 * @param string                      $data_type - Field data structure type.
 	 *
-	 * @return Field
+	 * @return static
 	 */
 	public function set_args( Type $type, array $args, string $data_type ): Field {
 		$this->type = $type;
@@ -1337,20 +737,7 @@ class Field {
 		foreach ( $args as $_key => $_value ) {
 			$this->{$_key} = $_value;
 		}
-		return $this;
-	}
-
-
-	/**
-	 * Callback to render the field's row.
-	 *
-	 * @param callable $callback - The callback to render the field's row.
-	 *
-	 * @return Field
-	 */
-	public function render_row_cb( callable $callback ): Field {
-		$this->render_row_cb = $callback;
-
+		$this->box->add_field( $this );
 		return $this;
 	}
 
@@ -1391,8 +778,7 @@ class Field {
 	 * @return Field
 	 */
 	public function delete_cb( callable $callback ): Field {
-		$this->delete_cb = $callback;
-		$this->event_callbacks[] = new Event_Callbacks( $this, Event_Callbacks::TYPE_DELETE );
+		$this->event_callbacks[] = new Event_Callbacks( $this, $callback, Event_Callbacks::TYPE_DELETE );
 		return $this;
 	}
 
@@ -1423,8 +809,7 @@ class Field {
 	 * @return Field
 	 */
 	public function change_cb( callable $callback ): Field {
-		$this->change_cb = $callback;
-		$this->event_callbacks[] = new Event_Callbacks( $this, Event_Callbacks::TYPE_CHANGE );
+		$this->event_callbacks[] = new Event_Callbacks( $this, $callback, Event_Callbacks::TYPE_CHANGE );
 
 		return $this;
 	}
@@ -1446,7 +831,7 @@ class Field {
 	 */
 	public function sanitization_cb( callable $callback ): Field {
 		if ( [ 'options-page' ] !== $this->box->get_object_types() && Utils::in()->is_allowed_to_register_meta( $this ) ) {
-			$this->sanitize_callback = $callback;
+			$this->meta_sanitize = $callback;
 		} else {
 			$this->sanitization_cb = $callback;
 		}
@@ -1490,5 +875,24 @@ class Field {
 		}
 		$args['type'] = $this->type->value;
 		return $args;
+	}
+
+
+	/**
+	 * Translate a field into a more specific field Variation.
+	 *
+	 * @param Field $field - The field to translate.
+	 * @param Box   $box   - The box this field is assigned to.
+	 *
+	 * @return static
+	 */
+	public static function from( Field $field, Box $box ): static {
+		$field = new static( $field->id, $field->name, $field->box, $field->group );
+		if ( $field->group instanceof Group ) {
+			$field->group->add_field( $field );
+		} else {
+			$box->add_field( $field );
+		}
+		return $field;
 	}
 }

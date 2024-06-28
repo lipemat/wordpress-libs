@@ -52,16 +52,16 @@ class Layout {
 	 * @see Group::layout()
 	 * @see \CMB2::render_group_callback()
 	 *
-	 * @param array{type: string} $field_args  Array of field arguments for the group field parent.
-	 * @param \CMB2_Field         $field_group The CMB2_Field group object.
+	 * @param array<string, mixed> $field_args  Array of field arguments for the group field parent.
+	 * @param \CMB2_Field          $field_group The CMB2_Field group object.
 	 *
-	 * @return \CMB2_Field|null Group field object.
+	 * @return void
 	 */
-	public function render_group_callback( array $field_args, \CMB2_Field $field_group ): ?\CMB2_Field {
+	public function render_group_callback( array $field_args, \CMB2_Field $field_group ): void {
 		$cmb = \CMB2_Boxes::get( $field_group->cmb_id );
 		// If field is requesting to be conditionally shown.
 		if ( \is_bool( $cmb ) || ! $field_group->should_show() ) {
-			return null;
+			return;
 		}
 
 		$field_group->index = 0;
@@ -149,8 +149,6 @@ class Layout {
 
 		Scripts::in()->enqueue_style( StyleHandles::GROUP_LAYOUT );
 		$field_group->peform_param_callback( 'after_group' );
-
-		return $field_group;
 	}
 
 
