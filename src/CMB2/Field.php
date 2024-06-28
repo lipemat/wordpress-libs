@@ -1,5 +1,4 @@
 <?php
-/** @noinspection ClassMethodNameMatchesFieldNameInspection */
 declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
@@ -27,15 +26,6 @@ class Field {
 	 * @var string
 	 */
 	public string $box_id;
-
-	/**
-	 * A custom callback to return the label for the field
-	 *
-	 * Part of cmb2 core but undocumented
-	 *
-	 * @var callable
-	 */
-	public $label_cb;
 
 	/**
 	 * Used by the Repo to determine the data type of this field.
@@ -68,7 +58,18 @@ class Field {
 	 *
 	 * @var     array<string, string>
 	 */
-	public array $attributes = [];
+	protected array $attributes = [];
+
+	/**
+	 * A custom callback to return the label for the field
+	 *
+	 * Part of cmb2 core but undocumented.
+	 *
+	 * @see \CMB2_Base::do_callback
+	 *
+	 * @var callable(string, \CMB2_Field): string
+	 */
+	public $label_cb;
 
 	/**
 	 * These allow you to add arbitrary text/markup at different points in the field markup.
@@ -300,16 +301,6 @@ class Field {
 	 * @var callable
 	 */
 	public $escape_cb;
-
-	/**
-	 * If this field is part of a group this may be used to retrieve
-	 * the group id.
-	 *
-	 * @internal
-	 *
-	 * @var string|null
-	 */
-	public ?string $group = null;
 
 	/**
 	 * If you're planning on using your metabox fields on the front-end as well (user-facing),
@@ -647,7 +638,7 @@ class Field {
 	 *
 	 * @var string|bool
 	 */
-	public string|bool $rest_group_short;
+	protected string|bool $rest_group_short;
 
 	/**
 	 * The type of field
@@ -657,8 +648,7 @@ class Field {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#type
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
-	 * @see  Field_Type;
-	 * @see  Field::type;
+	 * @see  Field_Type
 	 *
 	 * @var Type
 	 */
@@ -698,7 +688,7 @@ class Field {
 	 * Supported by most field types, and will make the individual field a repeatable one.
 	 *
 	 * To customize Add Row button label, set
-	 * $this->text[ 'add_row_text' ] = 'Add Row':
+	 * $this->text['add_row_text'] = 'Add Row':
 	 *
 	 * @see     Field::repeatable()
 	 *
@@ -764,14 +754,16 @@ class Field {
 	 *
 	 * @see Field_Type
 	 *
-	 * @param string    $id   - ID of the field.
-	 * @param string    $name - Field label.
-	 * @param Box|Group $box  - Parent class using this Field.
+	 * @param string $id    - ID of the field.
+	 * @param string $name  - Field label.
+	 * @param Box    $box   - Parent class using this Field.
+	 * @param ?Group $group - Group this field is assigned to.
 	 */
 	public function __construct(
 		protected readonly string $id,
 		protected readonly string $name,
-		protected readonly Box|Group $box
+		protected readonly Box $box,
+		public readonly ?Group $group,
 	) {
 	}
 
@@ -808,12 +800,9 @@ class Field {
 	/**
 	 * Get the box this field is assigned to.
 	 *
-	 * @return ?Box
+	 * @return Box
 	 */
-	public function get_box(): ?Box {
-		if ( $this->box instanceof Group ) {
-			return $this->box->get_box();
-		}
+	public function get_box(): Box {
 		return $this->box;
 	}
 
@@ -824,10 +813,7 @@ class Field {
 	 * @return ?Group
 	 */
 	public function get_group(): ?Group {
-		if ( $this->box instanceof Group ) {
-			return $this->box;
-		}
-		return null;
+		return $this->group;
 	}
 
 
@@ -960,18 +946,8 @@ class Field {
 	 */
 	public function default( callable|string|array $default_value ): Field {
 		if ( \is_callable( $default_value ) ) {
+			new Default_Callback( $this, $this->get_box(), $default_value );
 			$this->default_cb = $default_value;
-			if ( 'options-page' === $this->box->get_object_type() ) {
-				add_filter( "cmb2_default_option_{$this->box->get_id()}_{$this->get_id()}", [
-					$this,
-					'default_option_callback',
-				], 11 );
-			} else {
-				add_filter( "default_{$this->box->get_object_type()}_metadata", [
-					$this,
-					'default_meta_callback',
-				], 11, 3 );
-			}
 		} else {
 			$this->default = $default_value;
 			if ( 'options-page' === $this->box->get_object_type() ) {
@@ -1144,11 +1120,7 @@ class Field {
 	 */
 	public function revisions_enabled( bool $enable = true ): Field {
 		$box = $this->get_box();
-		if ( null === $box ) {
-			_doing_it_wrong( __METHOD__, 'The box is not available for enabling revisions.', '4.5.0' );
-			return $this;
-		}
-		if ( $box->is_group() ) {
+		if ( null !== $this->group ) {
 			_doing_it_wrong( __METHOD__, "Revision may only be enabled on a group. Not a group's field .", '4.5.0' );
 			return $this;
 		}
@@ -1177,7 +1149,7 @@ class Field {
 	 * WP does not so, this field will either be included
 	 * or not to default WP `meta` response based on WP_REST_Server::ALLMETHODS.
 	 *
-	 * @see     Box_Trait::selectively_show_in_rest()
+	 * @see     Box::selectively_show_in_rest()
 	 *
 	 * @example WP_REST_Server::READABLE // Same as `true`.
 	 * @example WP_REST_Server::ALLMETHODS // All Methods must be used for the field
@@ -1186,12 +1158,12 @@ class Field {
 	 *
 	 * @phpstan-param \WP_REST_Server::*|bool $methods
 	 *
-	 * @param string|bool                     $methods - The methods to show this field in.
+	 * @param bool|string                     $methods - The methods to show this field in.
 	 *
 	 * @return Field
 	 */
-	public function show_in_rest( $methods = \WP_REST_Server::ALLMETHODS ): Field {
-		if ( $this->box->is_group() ) {
+	public function show_in_rest( bool|string $methods = \WP_REST_Server::ALLMETHODS ): Field {
+		if ( null !== $this->group ) {
 			_doing_it_wrong( __METHOD__, wp_kses_post( "Show in rest may only be added to whole group. Not a group's field. `{$this->get_id()}` is not applicable." ), '2.19.0' );
 		}
 		$this->show_in_rest = $methods;
@@ -1211,7 +1183,7 @@ class Field {
 	 * @return Field
 	 */
 	public function rest_group_short( bool|string $short = true ): Field {
-		if ( ! $this->box->is_group() ) {
+		if ( null === $this->group ) {
 			_doing_it_wrong( __METHOD__, wp_kses_post( "Group short fields only apply to a group's child field. `{$this->get_id()}` is not applicable." ), '4.10.0' );
 		}
 		$this->rest_group_short = $short;
@@ -1223,11 +1195,11 @@ class Field {
 	 * To show this field or not based on the result of a function.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_on_cb
-	 * @example should_i_show( $field ){ return bool}
+	 * @example should_i_show($field){ return bool}
 	 *
 	 * @param callable $func - The function to use for determining if the field should show.
 	 *
-	 * @return $this
+	 * @return Field
 	 */
 	public function show_on_cb( callable $func ): Field {
 		$this->show_on_cb = $func;
@@ -1254,7 +1226,7 @@ class Field {
 	 */
 	public function store_user_terms_in_meta( bool $use_meta = true ): Field {
 		$box = $this->get_box();
-		if ( null !== $box && ( ! \in_array( $this->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) || ! \in_array( 'user', $box->get_object_types(), true ) ) ) {
+		if ( ! \in_array( $this->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) || ! \in_array( 'user', $box->get_object_types(), true ) ) {
 			_doing_it_wrong( __METHOD__, 'Storing user terms in meta only applies to taxonomy fields registered on users.', '3.14.0' );
 		}
 		$this->store_user_terms_in_meta = $use_meta;
@@ -1329,29 +1301,12 @@ class Field {
 
 
 	/**
-	 * Set the type programmatically
-	 * Using the Field_Type class, which
-	 * maps all special keys for every
-	 * available field
-	 *
-	 * This is much preferred over setting $this->type
-	 * directly, which has room for error
-	 *
-	 * @return Field_Type
-	 */
-	public function type(): Field_Type {
-		return new Field_Type( $this );
-	}
-
-
-	/**
 	 * The type of field
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#type
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
 	 * @see  Field_Type
-	 * @see  Field::type
 	 *
 	 * @return Type
 	 */
@@ -1363,20 +1318,26 @@ class Field {
 	/**
 	 * Set a Fields Type and register the type with Meta\Repo
 	 *
-	 * @phpstan-param REPO::TYPE_* $data_type
-	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types
 	 *
 	 * @internal
 	 *
-	 * @param Type                 $type      - CMB2 field type.
-	 * @param string               $data_type - Field data structure type.
+	 * @phpstan-param REPO::TYPE_*        $data_type
 	 *
-	 * @return void
+	 * @param Type                        $type      - CMB2 field type.
+	 * @param array<key-of<Field>, mixed> $args      - [$key => $value].
+	 * @param string                      $data_type - Field data structure type.
+	 *
+	 * @return Field
 	 */
-	public function set_type( Type $type, string $data_type ): void {
+	public function set_args( Type $type, array $args, string $data_type ): Field {
 		$this->type = $type;
 		$this->data_type = $data_type;
+
+		foreach ( $args as $_key => $_value ) {
+			$this->{$_key} = $_value;
+		}
+		return $this;
 	}
 
 
@@ -1403,30 +1364,6 @@ class Field {
 	 */
 	public function is_repeatable(): bool {
 		return $this->repeatable;
-	}
-
-
-	/**
-	 * Does this field return a value of array type?
-	 *
-	 * @internal
-	 *
-	 * @return bool
-	 */
-	public function is_using_array_data(): bool {
-		return $this->repeatable || Type::MULTI_CHECK === $this->get_type() || Type::MULTI_CHECK_INLINE === $this->get_type();
-	}
-
-
-	/**
-	 * Does this field return a value of object type?
-	 *
-	 * @internal
-	 *
-	 * @return bool
-	 */
-	public function is_using_object_data(): bool {
-		return ! $this->repeatable && Type::FILE_LIST === $this->get_type();
 	}
 
 
@@ -1508,76 +1445,12 @@ class Field {
 	 * @return Field
 	 */
 	public function sanitization_cb( callable $callback ): Field {
-		if ( [ 'options-page' ] !== $this->box->get_object_types() && $this->box->is_allowed_to_register_meta( $this ) ) {
+		if ( [ 'options-page' ] !== $this->box->get_object_types() && Utils::in()->is_allowed_to_register_meta( $this ) ) {
 			$this->sanitize_callback = $callback;
 		} else {
 			$this->sanitization_cb = $callback;
 		}
 		return $this;
-	}
-
-
-	/**
-	 * Support default meta using a callback.
-	 *
-	 * Register meta only support static values to be used as default,
-	 * although we may pass a callback when registering the CMB2 field.
-	 * CMB2 only support defaults in the meta box, not when retrieving
-	 * data, so we tap into core WP default a meta filter to support
-	 * the callback.
-	 *
-	 * @filter default_{$meta_type}_metadata 11, 3
-	 *
-	 * @internal
-	 *
-	 * @param mixed      $value     - Empty, or a value set by another filter.
-	 * @param int|string $object_id - Current post/term/user id.
-	 * @param string     $meta_key  - Meta key being filtered.
-	 *
-	 * @return mixed
-	 */
-	public function default_meta_callback( mixed $value, int|string $object_id, string $meta_key ): mixed {
-		if ( $this->get_id() !== $meta_key ) {
-			return $value;
-		}
-
-		// Will create an infinite loop if filter is intact.
-		remove_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11 );
-		$cmb2_field = $this->get_cmb2_field( $object_id );
-		if ( null !== $cmb2_field ) {
-			add_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11, 3 );
-			return \call_user_func( $this->default_cb, $cmb2_field->properties, $cmb2_field );
-		}
-
-		return false;
-	}
-
-
-	/**
-	 * Support default options using a callback.
-	 *
-	 * CMB2 takes care of rendering default values on the
-	 * options pages, this takes care of returning default
-	 * values when retrieving options.
-	 *
-	 * CMB2 stores options data a one big blog, so we
-	 * can't tap into WP core default option filters.
-	 * Instead, we tap into the custom filters added to
-	 * lipemat/cmb2.
-	 *
-	 * @filter cmb2_default_option_{$this->key}_{$field_id} 11 0
-	 *
-	 * @internal
-	 *
-	 * @return mixed
-	 */
-	public function default_option_callback(): mixed {
-		$cmb2_field = $this->get_cmb2_field();
-		if ( null === $cmb2_field ) {
-			return false;
-		}
-		$cmb2_field->object_id( $this->box->get_id() );
-		return \call_user_func( $this->default_cb, $cmb2_field->properties, $cmb2_field );
 	}
 
 
@@ -1591,13 +1464,14 @@ class Field {
 	 * @return ?\CMB2_Field
 	 */
 	public function get_cmb2_field( int|string $object_id = 0 ): ?\CMB2_Field {
-		return cmb2_get_field( $this->box->get_id(), $this->get_id(), $object_id );
+		$parent_id = $this->group?->get_id() ?? $this->box->get_id();
+		return cmb2_get_field( $parent_id, $this->get_id(), $object_id );
 	}
 
 
 	/**
 	 * Retrieve an array of these fields args to be
-	 * submitted to CMB2 by way of
+	 * submitted to CMB2 by way of \CMB2::add_field().
 	 *
 	 * @see Box::add_field_to_box()
 	 *
@@ -1616,31 +1490,5 @@ class Field {
 		}
 		$args['type'] = $this->type->value;
 		return $args;
-	}
-
-
-	/**
-	 * Get the short name of a field for use in the REST API.
-	 *
-	 * @return string
-	 */
-	public function get_rest_short_name(): string {
-		$name = \explode( '/', $this->get_id() );
-		return \end( $name );
-	}
-
-
-	/**
-	 * Override to allow static scans when using tools like PHPStan.
-	 *
-	 * @internal
-	 *
-	 * @param string $id   - The field id.
-	 * @param string $name - The field name.
-	 *
-	 * @throws \LogicException - When trying to add a field to another field.
-	 */
-	public function field( string $id, string $name ): Field_Type { //phpcs:ignore -- Signature must match parent.
-		throw new \LogicException( esc_html__( 'You cannot add a field to another field.', 'lipe' ) );
 	}
 }

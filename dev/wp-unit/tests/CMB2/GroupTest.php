@@ -166,7 +166,7 @@ class GroupTest extends \WP_Test_REST_TestCase {
 	}
 
 
-	public function test_updating_repeable_group(): void {
+	public function test_updating_repeatable_group(): void {
 		$b = new Box( 'Y', [ 'post' ], 'Y' );
 		$g = $b->group( 'R', 'R' );
 		$g->repeatable( true );
@@ -429,7 +429,7 @@ class GroupTest extends \WP_Test_REST_TestCase {
 	public function test_repeatable_with_unsupported_field(): void {
 		$box = new Box( 'repeatable', [ 'page' ], 'Repeatable Group' );
 		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
-		$group->repeatable( true );
+		$group->repeatable();
 		$group->field( 'ruf/first', '' )->taxonomy_select( 'category' );
 
 		$catch = false;

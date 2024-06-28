@@ -4,6 +4,9 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\CMB2\Field;
+use Lipe\Lib\CMB2\Field\Term_Select_2;
+use Lipe\Lib\CMB2\Field\Term_Select_2\Register;
+use Lipe\Lib\CMB2\Field\Type;
 use Lipe\Lib\Traits\Memoize;
 
 /**
@@ -54,6 +57,13 @@ trait Translate {
 		if ( Repo::TYPE_TAXONOMY !== $field->data_type && Repo::TYPE_TAXONOMY_SINGULAR !== $field->data_type ) {
 			return false;
 		}
+		// Select 2 can turn off assigning terms.
+		if ( Type::TERM_SELECT_2 === $field->get_type() ) {
+			$registered = Term_Select_2::in()->get_registered( $field->get_id() );
+			if ( $registered instanceof Register && ! $registered->assign_terms ) {
+				return false;
+			}
+		}
 
 		return 'post' === $meta_type;
 	}
@@ -73,7 +83,7 @@ trait Translate {
 	protected function get_meta_value( int|string $object_id, string $key, string $meta_type ): mixed {
 		$field = $this->get_field( $key );
 		if ( null !== $field && null !== $field->group ) {
-			$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
+			$group = $this->get_meta_value( $object_id, $field->group->get_id(), $meta_type );
 			if ( '' === $group && isset( $field->default ) ) {
 				return $field->default;
 			}
@@ -141,9 +151,9 @@ trait Translate {
 	protected function delete_meta_value( int|string $object_id, string $key, string $meta_type ): void {
 		$field = $this->get_field( $key );
 		if ( null !== $field && null !== $field->group ) {
-			$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
+			$group = $this->get_meta_value( $object_id, $field->group->get_id(), $meta_type );
 			$group[ $this->group_row ][ $key ] = null;
-			$this->update_meta_value( $object_id, $field->group, $group, $meta_type );
+			$this->update_meta_value( $object_id, $field->group->get_id(), $group, $meta_type );
 			return;
 		}
 
@@ -356,13 +366,13 @@ trait Translate {
 			return false;
 		}
 
-		$group = $this->get_meta_value( $object_id, $field->group, $meta_type );
+		$group = $this->get_meta_value( $object_id, $field->group->get_id(), $meta_type );
 		if ( ! \is_array( $group ) ) {
 			$group = [];
 		}
 		$group[ $this->group_row ][ $key ] = $value;
 
-		return $this->update_meta_value( $object_id, $field->group, $group, $meta_type );
+		return $this->update_meta_value( $object_id, $field->group->get_id(), $group, $meta_type );
 	}
 
 
@@ -411,7 +421,7 @@ trait Translate {
 			$groups = [];
 			\array_map( function( Field $field ) use ( &$groups ) {
 				if ( null !== $field->group ) {
-					$groups[ $field->group ][] = $field->get_id();
+					$groups[ $field->group->get_id() ][] = $field->get_id();
 				}
 			}, $this->fields );
 			return $groups;
@@ -619,7 +629,7 @@ trait Translate {
 			throw new \RuntimeException( esc_html( "Field with id `{$field_id}` does not exist." ) );
 		}
 		$box = $field->get_box();
-		$is_network = null !== $box && \method_exists( $box, 'is_network' ) && $box->is_network();
+		$is_network = \method_exists( $box, 'is_network' ) && $box->is_network();
 		if ( $is_network ) {
 			switch_to_blog( get_main_site_id() );
 		}

@@ -1,4 +1,5 @@
 <?php
+//phpcs:disable WordPress.Security.NonceVerification -- URL intended to be public or nonce per use.
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Api;
@@ -165,7 +166,6 @@ class Api {
 			return;
 		}
 
-		//phpcs:ignore WordPress.Security.NonceVerification -- URL intended to be public.
 		if ( isset( $_REQUEST[ self::FORMAT ] ) && self::FORMAT_ASSOC === $_REQUEST[ self::FORMAT ] ) {
 			$args = Arrays::in()->chunk_to_associative( $args );
 		}

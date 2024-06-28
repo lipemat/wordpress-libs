@@ -15,8 +15,6 @@ use Lipe\Lib\Meta\Repo;
  *
  */
 class Box {
-	use Box_Trait;
-
 	public const CONTEXT_NORMAL   = 'normal';
 	public const CONTEXT_SIDE     = 'side';
 	public const CONTEXT_ADVANCED = 'advanced';
@@ -358,6 +356,25 @@ class Box {
 	 */
 	protected string $tab_style = 'vertical';
 
+	/**
+	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#object_types
+	 * @example ['page', 'post']
+	 *
+	 * @phpstan-var array<Box::TYPE_*|string>
+	 *
+	 * @var array
+	 */
+	protected array $object_types = [];
+
+	/**
+	 * All fields registered to this box.
+	 *
+	 * @var Field[]|Group[]
+	 */
+	protected array $fields = [];
+
 
 	/**
 	 * Register a new meta box.
@@ -373,6 +390,66 @@ class Box {
 		$this->id = $id;
 		$this->object_types = $object_types;
 		$this->title = $title;
+
+		$this->hook();
+	}
+
+
+	/**
+	 * Hook into `cmb2_init` to register all the fields.
+	 *
+	 * We use `cmb2_init` instead of `cmb2_admin_init` so this may be used in the admin
+	 * or on the front end.
+	 *
+	 * If the core plugin is registering fields via `cmb2_admin_init` only, this will
+	 * never get called anyway, so we can control if we need front end fields from there.
+	 *
+	 * @return void
+	 */
+	protected function hook(): void {
+		add_action( 'cmb2_init', function() {
+			$this->register_fields();
+		}, 11 );
+		add_action( 'cmb2_init', [ Repo::in(), 'validate_fields' ], 20 );
+	}
+
+
+	/**
+	 * Add a field to this box.
+	 *
+	 * @example $box->field( $id, $name )->checkbox();
+	 *
+	 * @param string $id   - Field ID.
+	 * @param string $name - Field name.
+	 *
+	 * @return Field_Type
+	 */
+	public function field( string $id, string $name ): Field_Type {
+		$this->fields[ $id ] = new Field( $id, $name, $this, null );
+
+		return Field_Type::factory( $this->fields[ $id ] );
+	}
+
+
+	/**
+	 * Add a group to this box.
+	 *
+	 * For shorthand calls where no special setting is necessary.
+	 *
+	 * @example $group = $box->group( $id, $name );
+	 *
+	 * @param string  $id          - Group ID.
+	 * @param string  $title       - Group title.
+	 * @param ?string $group_title - include a {#} to have replaced with number.
+	 *
+	 * @return Group
+	 */
+	public function group( string $id, string $title, ?string $group_title = null ): Group {
+		$group = new Group( $id, $title, $this, $group_title );
+		$this->fields[ $id ] = $group;
+
+		$this->hook();
+		return $group;
 	}
 
 
@@ -423,7 +500,7 @@ class Box {
 	 * be included in default WP response even if the box is set to true
 	 * and all fields are in the /cmb2 response.
 	 *
-	 * @see     Box_Trait::selectively_show_in_rest()
+	 * @see     Box::selectively_show_in_rest()
 	 *
 	 * @example WP_REST_Server::READABLE // Same as `true`
 	 * @example WP_REST_Server::ALLMETHODS
@@ -509,7 +586,7 @@ class Box {
 	 *
 	 * @return \CMB2
 	 */
-	public function get_box(): \CMB2 {
+	public function get_cmb2_box(): \CMB2 {
 		if ( isset( $this->cmb ) ) {
 			return $this->cmb;
 		}
@@ -518,6 +595,47 @@ class Box {
 		$this->cmb = new_cmb2_box( $args );
 
 		return $this->cmb;
+	}
+
+
+	/**
+	 * Get the type of object this box is registered to.
+	 *
+	 * @note `$this->objects_types` may contain [post type slugs] which
+	 *        will all map to `post`.
+	 *
+	 * @phpstan-return Box::TYPE_*
+	 * @return string
+	 */
+	public function get_object_type(): string {
+		if ( isset( $this->object_types[0] ) && \in_array( $this->object_types[0], [ self::TYPE_COMMENT, self::TYPE_OPTIONS, self::TYPE_USER, self::TYPE_TERM ], true ) ) {
+			return $this->object_types[0];
+		}
+
+		return self::TYPE_POST;
+	}
+
+
+	/**
+	 * Get the full list of object types this box
+	 * is registered to.
+	 *
+	 * @phpstan-return array<Box::TYPE_*|string>
+	 *
+	 * @return array
+	 */
+	public function get_object_types(): array {
+		return $this->object_types;
+	}
+
+
+	/**
+	 * Get all fields registered to this box.
+	 *
+	 * @return Field[]|Group[]
+	 */
+	protected function get_fields(): array {
+		return $this->fields;
 	}
 
 
@@ -581,7 +699,7 @@ class Box {
 	 * @return void
 	 */
 	protected function add_field_to_box( Field $field ): void {
-		$box = $this->get_box();
+		$box = $this->get_cmb2_box();
 		$box->add_field( $field->get_field_args(), $field->position );
 		$field->box_id = $this->id;
 
@@ -657,5 +775,132 @@ class Box {
 				register_meta( $type, $field->get_id() . '_id', $config );
 			}
 		}
+	}
+
+
+	/**
+	 * Registers any fields which were adding using $this->field()
+	 * when the `cmb2_init` action fires.
+	 *
+	 * Allows for storing/appending a fields properties beyond
+	 * a basic return pattern.
+	 *
+	 * @return void
+	 */
+	protected function register_fields(): void {
+		$fields = $this->get_fields();
+		$show_in_rest = $this->show_in_rest ?? false;
+
+		// Run through the fields first for adjustments to box config.
+		\array_walk( $fields, function( Field $field ) use ( $show_in_rest ) {
+			$this->register_meta( $field );
+			if ( false === $show_in_rest ) {
+				$this->selectively_show_in_rest( $field );
+			}
+		} );
+
+		\array_walk( $fields, function( Field $field ) {
+			$this->add_field_to_box( $field );
+		} );
+	}
+
+
+	/**
+	 * Register the meta field with WP core for things like
+	 * `show_in_rest` and `default.
+	 *
+	 * Only supports simple data types.
+	 *
+	 * @requires WP 5.5+ for default values.
+	 *
+	 * @param Field $field - The field to register.
+	 */
+	protected function register_meta( Field $field ): void {
+		if ( ! Utils::in()->is_allowed_to_register_meta( $field ) ) {
+			return;
+		}
+		$config = [
+			'single' => true,
+			'type'   => 'string',
+		];
+		if ( Utils::in()->is_using_array_data( $field ) ) {
+			$config['type'] = 'array';
+		} elseif ( Utils::in()->is_using_object_data( $field ) ) {
+			$config['type'] = 'object';
+		}
+
+		if ( isset( $field->show_in_rest ) && false !== $field->show_in_rest && Utils::in()->is_public_rest_data( $field ) ) {
+			$config['show_in_rest'] = $field->show_in_rest;
+			if ( Utils::in()->is_using_array_data( $field ) ) {
+				$config['show_in_rest'] = [
+					'schema' => [
+						'items' => [
+							'type' => 'string',
+						],
+					],
+				];
+			}
+
+			if ( Utils::in()->is_using_object_data( $field ) ) {
+				$config['show_in_rest'] = [
+					'schema' => [
+						'additionalProperties' => [
+							'type' => 'string',
+						],
+					],
+				];
+			}
+		}
+
+		$this->register_meta_on_all_types( $field, $config );
+	}
+
+
+	/**
+	 * If we have marked particular fields `show_in_rest` without marking the box,
+	 * this marks the box "true" which marking any non specified fields to "false".
+	 *
+	 * Makes selectively adding fields to rest much simpler.
+	 *
+	 * @internal
+	 *
+	 * @param Field $field - The field to check.
+	 */
+	protected function selectively_show_in_rest( Field $field ): void {
+		if ( isset( $field->show_in_rest ) && false !== $field->show_in_rest ) {
+			$this->show_in_rest = true;
+		} else {
+			$field->show_in_rest = false;
+		}
+	}
+
+
+	/**
+	 * Translates long /namespaced names to API friendly.
+	 * If you need the long names due to conflicts, they will still
+	 * be available via /cmb2 values.
+	 *
+	 * @param Field                $field  - The field to translate.
+	 * @param array<string, mixed> $config - The config array to translate.
+	 *
+	 * @notice This can never be changed, or it will break sites!!
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function translate_rest_keys( Field $field, array $config ): array {
+		if ( isset( $config['show_in_rest'] ) ) {
+			if ( 'post' === $this->get_object_type() ) {
+				// Post type must support 'custom-fields' to allow REST meta.
+				\array_walk( $this->object_types, function( $type ) {
+					add_post_type_support( $type, 'custom-fields' );
+				} );
+			}
+
+			if ( ! \is_array( $config['show_in_rest'] ) ) {
+				$config['show_in_rest'] = [];
+			}
+			$config['show_in_rest']['name'] = Utils::in()->get_rest_short_name( $field );
+		}
+		return $config;
 	}
 }

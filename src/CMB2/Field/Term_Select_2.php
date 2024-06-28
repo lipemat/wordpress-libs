@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2\Field;
 
 use Lipe\Lib\CMB2\Field\Term_Select_2\Register;
+use Lipe\Lib\CMB2\Utils;
 use Lipe\Lib\Libs\Scripts;
 use Lipe\Lib\Libs\Scripts\ScriptHandles;
 use Lipe\Lib\Libs\Scripts\StyleHandles;
@@ -189,7 +190,7 @@ class Term_Select_2 {
 			return $filtered;
 		}
 
-		$field = $this->get_registered( $field_args['id'] );
+		$registered = $this->get_registered( $field_args['id'] );
 		foreach ( $meta_value as $key => $val ) {
 			if ( ! \is_array( $val ) ) {
 				$meta_value[ $key ] = (int) ( $val );
@@ -198,17 +199,17 @@ class Term_Select_2 {
 			$meta_value[ $key ] = \array_map( '\intval', $val );
 		}
 
-		if ( null === $field || ! $field->assign_terms ) {
+		if ( null === $registered || ! $registered->assign_terms ) {
 			return $meta_value;
 		}
 
-		$meta_type = $field->field->get_box()?->get_object_type() ?? '';
-		if ( '' !== $id && 0 !== $id && Repo::in()->supports_taxonomy_relationships( $meta_type, $field->field ) ) {
-			if ( $field->is_repeatable() ) {
+		$meta_type = $registered->field->get_box()->get_object_type();
+		if ( '' !== $id && 0 !== $id && Repo::in()->supports_taxonomy_relationships( $meta_type, $registered->field ) ) {
+			if ( Utils::in()->is_repeatable( $registered->field ) ) {
 				$ids = \array_merge( ...$meta_value );
-				wp_set_object_terms( (int) $id, \array_map( '\intval', $ids ), $field->taxonomy );
+				wp_set_object_terms( (int) $id, \array_map( '\intval', $ids ), $registered->taxonomy );
 			} else {
-				wp_set_object_terms( (int) $id, \array_map( '\intval', $meta_value ), $field->taxonomy );
+				wp_set_object_terms( (int) $id, \array_map( '\intval', $meta_value ), $registered->taxonomy );
 			}
 		}
 

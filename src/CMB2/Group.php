@@ -14,8 +14,6 @@ use Lipe\Lib\Util\Arrays;
  * A fluent interface for CMB2 group properties.
  */
 class Group extends Field {
-	use Box_Trait;
-
 	/**
 	 * ONLY APPLIES TO GROUPS
 	 *
@@ -83,6 +81,13 @@ class Group extends Field {
 	 */
 	protected string $layout = 'block';
 
+	/**
+	 * All fields registered to this box.
+	 *
+	 * @var Field[]
+	 */
+	protected array $fields = [];
+
 
 	/**
 	 * Group constructor.
@@ -97,9 +102,44 @@ class Group extends Field {
 	 *
 	 */
 	public function __construct( string $id, string $title, Box $box, ?string $row_title ) {
-		$this->type()->group( $row_title );
+		Field_Type::factory( $this )->group( $row_title );
+		$this->hook();
+		parent::__construct( $id, $title, $box, null );
+	}
 
-		parent::__construct( $id, $title, $box );
+
+	/**
+	 * Hook into `cmb2_init` to register all the fields.
+	 *
+	 * We use `cmb2_init` instead of `cmb2_admin_init` so this may be used in the admin
+	 * or on the front end.
+	 *
+	 * If the core plugin is registering fields via `cmb2_admin_init` only, this will
+	 * never get called anyway, so we can control if we need front end fields from there.
+	 *
+	 * @return void
+	 */
+	protected function hook(): void {
+		add_action( 'cmb2_init', function() {
+			$this->register_fields();
+		}, 12 );
+	}
+
+
+	/**
+	 * Add a field to this Group
+	 *
+	 * @example $group->field( $id, $name )->checkbox();
+	 *
+	 * @param string $id   - Field ID.
+	 * @param string $name - Field name.
+	 *
+	 * @return Field_Type
+	 */
+	public function field( string $id, string $name ): Field_Type {
+		$this->fields[ $id ] = new Field( $id, $name, $this->box, $this );
+
+		return Field_Type::factory( $this->fields[ $id ] );
 	}
 
 
@@ -217,21 +257,15 @@ class Group extends Field {
 	 * @return void
 	 */
 	protected function add_field_to_group( Field $field ): void {
-		if ( ! property_exists( $this->box, 'cmb' ) || null === $this->box->cmb ) {
-			throw new \LogicException( esc_html__( 'You must add the group to the box before you add fields to the group.', 'lipe' ) );
-		}
-
-		if ( $this->is_repeatable() && Repo::in()->supports_taxonomy_relationships( $this->box->get_object_type(), $field ) ) {
+		if ( Utils::in()->is_repeatable( $this ) && Repo::in()->supports_taxonomy_relationships( $this->box->get_object_type(), $field ) ) {
 			/* translators: {field type} */
 			throw new \LogicException( \sprintf( esc_html__( 'Taxonomy fields are not supported by repeating groups. %s', 'lipe' ), esc_html( $field->get_id() ) ) );
 		}
 
-		$field->group = $this->get_id();
 		$field->box_id = $this->box_id;
-		$box = $this->box->get_box();
-		if ( $box instanceof \CMB2 ) {
-			$box->add_group_field( $this->id, $field->get_field_args(), $field->position );
-		}
+		$args = $field->get_field_args();
+		$args['group'] = $this->get_id();
+		$this->box->get_cmb2_box()->add_group_field( $this->id, $args, $field->position );
 
 		Repo::in()->register_field( $field );
 	}
@@ -244,11 +278,9 @@ class Group extends Field {
 	 * Allows for storing/appending a fields properties beyond
 	 * a basic return pattern.
 	 *
-	 * @internal
-	 *
 	 * @return void
 	 */
-	public function register_fields(): void {
+	protected function register_fields(): void {
 		$this->register_meta();
 		\array_map( function( Field $field ) {
 			$this->add_field_to_group( $field );
@@ -265,22 +297,21 @@ class Group extends Field {
 			'single' => true,
 			'type'   => 'array',
 		];
-		if ( (bool) $this->show_in_rest && $this->is_public_rest_data( $this ) ) {
+		if ( (bool) $this->show_in_rest && Utils::in()->is_public_rest_data( $this ) ) {
 			$properties = [];
 			foreach ( $this->get_fields() as $field ) {
 				$field_id = $this->translate_sub_field_rest_key( $field );
 				$properties[ $field_id ] = [
 					'type' => 'string',
 				];
-				if ( $field->is_using_array_data() ) {
+				if ( Utils::in()->is_using_array_data( $field ) ) {
 					$properties[ $field_id ] = [
 						'type'  => 'array',
 						'items' => [
 							'type' => 'string',
 						],
 					];
-				}
-				if ( $field->is_using_object_data() ) {
+				} elseif ( Utils::in()->is_using_object_data( $field ) ) {
 					$properties[ $field_id ] = [
 						'type'                 => 'object',
 						'additionalProperties' => [
@@ -307,46 +338,17 @@ class Group extends Field {
 			$config['sanitize_callback'] = [ $this, 'untranslate_sub_field_rest_keys' ];
 		}
 
-		if ( $this->box instanceof Box ) {
-			$this->box->register_meta_on_all_types( $this, $config );
-		}
+		$this->box->register_meta_on_all_types( $this, $config );
 	}
 
 
 	/**
-	 * Get the full list of object types this box
-	 * is registered to.
+	 * Get all fields registered to this box.
 	 *
-	 * @phpstan-return array<Box::TYPE_*|string>
-	 * @return array
+	 * @return Field[]|Group[]
 	 */
-	public function get_object_types(): array {
-		if ( $this->box instanceof Box ) {
-			return $this->box->get_object_types();
-		}
-		return [];
-	}
-
-
-	/**
-	 * Are we currently working with a Group?
-	 *
-	 * @return bool
-	 */
-	public function is_group(): bool {
-		return true;
-	}
-
-
-	/**
-	 * Add a group to a box.
-	 *
-	 * This is a no-op for groups.
-	 *
-	 * @throws \LogicException - If trying to add to another group.
-	 */
-	public function group(): void {
-		throw new \LogicException( esc_html__( 'You cannot add a group to another group.', 'lipe' ) );
+	protected function get_fields(): array {
+		return $this->fields;
 	}
 
 
@@ -433,6 +435,6 @@ class Group extends Field {
 			return $field->rest_group_short;
 		}
 
-		return $field->get_rest_short_name();
+		return Utils::in()->get_rest_short_name( $field );
 	}
 }

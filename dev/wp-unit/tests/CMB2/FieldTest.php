@@ -31,12 +31,12 @@ class FieldTest extends \WP_Test_REST_TestCase {
 
 	public function test_field_type_array(): void {
 		$box = new Box( 'test-term-select', [ 'post' ], 'Term Select Test' );
-		$field = new Field( 't', 'test', $box );
-		$field->type()->text_date( 'M', 'time_key', [ 'passive' => 1 ] );
-		$field->attributes = [ 'directly' => 1 ];
+		$field = new Field( 't', 'test', $box, null );
+		Field_Type::factory( $field )->text_date( 'M', 'time_key', [ 'passive' => 1 ] );
+		$field->attributes( [ 'directly' => 1 ] );
 
 		$args = $field->get_field_args();
-		$this->assertEquals( [ 'directly' => 1 ], $args['attributes'] );
+		$this->assertEquals( [ 'directly' => 1, 'data-datepicker' => '{"passive":1}' ], $args['attributes'] );
 		$this->assertEquals( 'time_key', $args['timezone_meta_key'] );
 		$this->assertEquals( 'text_date', $args['type'] );
 	}
@@ -89,7 +89,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 			->field( 'second', '' )
 			->text();
 		do_action( 'cmb2_init' );
-		( new \CMB2_REST( $box->get_box() ) )->universal_hooks()::register_cmb2_fields();
+		( new \CMB2_REST( $box->get_cmb2_box() ) )->universal_hooks()::register_cmb2_fields();
 
 		$post = Post_Mock::factory( self::factory()->post->create_and_get() );
 		$post['unit-testing/t1'] = 'returnee';
@@ -185,7 +185,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 			->field( 'first-tos', '' )
 			->text();
 		do_action( 'cmb2_init' );
-		( new \CMB2_REST( $box->get_box() ) )->universal_hooks()::register_cmb2_fields();
+		( new \CMB2_REST( $box->get_cmb2_box() ) )->universal_hooks()::register_cmb2_fields();
 
 		$post = Post_Mock::factory( self::factory()->post->create_and_get( [
 			'post_type' => 'page',
@@ -217,20 +217,20 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		$box->field( 'tos', 'TEST 1' )
 		    ->text()
 		    ->revisions_enabled( true );
-		$box->register_fields();
+		call_private_method( $box, 'register_fields' );
 		$this->assertContains( 'tos', wp_post_revision_meta_keys( 'page' ) );
 
 		$box->field( 'tos', 'TEST 1' )
 		    ->text()
 		    ->revisions_enabled( false );
-		$box->register_fields();
+		call_private_method( $box, 'register_fields' );
 		$this->assertNotContains( 'tos', wp_post_revision_meta_keys( 'page' ) );
 
 		$box = new Options_Page( 'options', 'Sanitize Box' );
 		$box->field( 'tos', 'TEST 1' )
 		    ->text()
 		    ->revisions_enabled( false );
-		$box->register_fields();
+		call_private_method( $box, 'register_fields' );
 		// So we can reuse the same method saying "doing it wrong".
 		$this->assertCount( 1, $this->caught_doing_it_wrong );
 		$this->caught_doing_it_wrong = [];
@@ -240,6 +240,6 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		    ->text()
 		    ->revisions_enabled( false );
 		$this->setExpectedIncorrectUsage( 'Lipe\Lib\CMB2\Field::revisions_enabled' );
-		$box->register_fields();
+		call_private_method( $box, 'register_fields' );
 	}
 }

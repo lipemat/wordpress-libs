@@ -30,16 +30,6 @@ class Register implements \JsonSerializable {
 
 
 	/**
-	 * Is this field repeatable?
-	 *
-	 * @return bool
-	 */
-	public function is_repeatable(): bool {
-		return $this->field->get_field_args()['repeatable'] ?? false;
-	}
-
-
-	/**
 	 * Data passed to the JS Config for the field.
 	 *
 	 * @return array{id: string, noResultsText: string}

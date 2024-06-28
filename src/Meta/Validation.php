@@ -47,11 +47,8 @@ trait Validation {
 	protected function warn_for_conflicting_taxonomies(): void {
 		$map = [];
 		foreach ( $this->fields as $field ) {
-			if ( Repo::TYPE_TAXONOMY !== $field->data_type && Repo::TYPE_TAXONOMY_SINGULAR !== $field->data_type ) {
-				continue;
-			}
 			$box = $field->get_box();
-			if ( null === $box || Box::TYPE_POST !== $box->get_object_type() ) {
+			if ( ! Repo::in()->supports_taxonomy_relationships( $field->get_box()->get_object_type(), $field ) ) {
 				continue;
 			}
 			foreach ( $box->get_object_types() as $object_type ) {

@@ -51,7 +51,7 @@ class Event_Callbacks {
 	 * Usually the box type corresponds to the meta type use for
 	 * WP hooks, but it is not an exact match as box types are limited.
 	 *
-	 * @see Box_Trait::get_object_type
+	 * @see Box::get_object_type
 	 *
 	 * @phpstan-var Box::TYPE_*
 	 *
@@ -62,7 +62,7 @@ class Event_Callbacks {
 	/**
 	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
 	 *
-	 * @see Box_Trait::$object_types
+	 * @see Box::$object_types
 	 *
 	 * @phpstan-var array<Box::TYPE_*|string>
 	 *
@@ -85,15 +85,10 @@ class Event_Callbacks {
 	 *
 	 * @param Field                  $field   - Field to register events for.
 	 * @param string                 $cb_type - Callback type, either 'change' or 'delete'.
-	 *
-	 * @throws \InvalidArgumentException -- If the field is not registered on a box.
 	 */
 	public function __construct( Field $field, string $cb_type ) {
 		$this->field = $field;
 		$box = $this->field->get_box();
-		if ( ! $box instanceof Box ) {
-			throw new \InvalidArgumentException( 'Field must be registered on a box.' );
-		}
 		$this->box = $box;
 		$this->box_type = $this->box->get_object_type();
 		$this->key = $field->get_id();

@@ -35,7 +35,7 @@ class Translate_Test extends \WP_UnitTestCase {
 					return null;
 				}
 				$box = new Box( 'test-translate', [ 'post' ], 'Translate test' );
-				$field = new Field( $field_id, $field_id, $box );
+				$field = new Field( $field_id, $field_id, $box, null );
 				$field->taxonomy = 'category';
 				return $field;
 			}

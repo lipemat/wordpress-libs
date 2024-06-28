@@ -32,7 +32,7 @@ class Supports implements Args_Interface {
 	 *
 	 * @var bool|array<int, 'left' | 'right' | 'full' | 'wide'>
 	 */
-	public $align;
+	public array|bool $align;
 
 	/**
 	 * This property allows to enable wide alignment for your theme.
