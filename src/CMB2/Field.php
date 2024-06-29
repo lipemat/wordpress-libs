@@ -319,9 +319,9 @@ class Field {
 	 * @param bool          $disable_sorting  - Set to true to prevent this column from being
 	 *                                        sortable in post list.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function column( bool|int $position = false, string $name = '', ?callable $display_cb = null, bool $disable_sorting = false ): Field {
+	public function column( bool|int $position = false, string $name = '', ?callable $display_cb = null, bool $disable_sorting = false ): static {
 		$this->column = [
 			'disable_sortable' => $disable_sorting,
 			'name'             => '' === $name ? $this->name : $name,
@@ -354,9 +354,9 @@ class Field {
 	 *
 	 * @param array<string, string|float|int> $attributes - An array of attributes to add or modify.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function attributes( array $attributes ): Field {
+	public function attributes( array $attributes ): static {
 		$this->attributes = Arrays::in()->merge_recursive( $attributes, $this->attributes );
 
 		return $this;
@@ -380,9 +380,9 @@ class Field {
 	 *
 	 * @param callable|string|array<mixed> $default_value - A default value, or a function which will return a value.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function default( callable|string|array $default_value ): Field {
+	public function default( callable|string|array $default_value ): static {
 		if ( \is_callable( $default_value ) ) {
 			Default_Callback::factory( $this, $this->box, $default_value );
 			$this->default_cb = $default_value;
@@ -405,9 +405,9 @@ class Field {
 	 *
 	 * @param string $description - The field description.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function description( string $description ): Field {
+	public function description( string $description ): static {
 		$this->desc = $description;
 
 		return $this;
@@ -417,9 +417,9 @@ class Field {
 	/**
 	 * Mark this field as 'disabled'.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function disabled(): Field {
+	public function disabled(): static {
 		$this->attributes( [ 'disabled' => 'disabled' ] );
 
 		return $this;
@@ -436,9 +436,9 @@ class Field {
 	 *
 	 * @param callable       $callback - The callback to use for escaping.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function escape_cb( callable $callback ): Field {
+	public function escape_cb( callable $callback ): static {
 		$this->escape_cb = $callback;
 		return $this;
 	}
@@ -450,9 +450,9 @@ class Field {
 	 * @param bool    $repeatable   - Whether the field should be repeatable.
 	 * @param ?string $add_row_text - Optional text to display on the 'Add' button.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ): Field {
+	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ): static {
 		if ( \CMB2_Utils::does_not_support_repeating( $this->type->value ) ) {
 			/* translators: {field type} */
 			_doing_it_wrong( __METHOD__, \sprintf( esc_html__( 'Fields of `%s` type do not support repeating.', 'lipe' ), esc_html( $this->type->value ) ), '5.0.0' );
@@ -477,9 +477,9 @@ class Field {
 	 *
 	 * @example 'intval'
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function rest_value_cb( callable $callback ): Field {
+	public function rest_value_cb( callable $callback ): static {
 		$this->rest_value_cb = $callback;
 		return $this;
 	}
@@ -488,9 +488,9 @@ class Field {
 	/**
 	 * Mark this field as 'readonly'.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function readonly(): Field {
+	public function readonly(): static {
 		$disable_only = [
 			Type::SELECT,
 			Type::SELECT_TIMEZONE,
@@ -520,9 +520,9 @@ class Field {
 	 *         Gutenberg enabled. Possibly will be changed in a future version
 	 *         of WP?
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function required(): Field {
+	public function required(): static {
 		$this->attributes( [ 'required' => 'required' ] );
 		return $this;
 	}
@@ -534,9 +534,9 @@ class Field {
 	 *
 	 * @param bool $enable - Enable revisions on this field.
 	 *
-	 * @return $this
+	 * @return static
 	 */
-	public function revisions_enabled( bool $enable = true ): Field {
+	public function revisions_enabled( bool $enable = true ): static {
 		if ( null !== $this->group ) {
 			_doing_it_wrong( __METHOD__, "Revision may only be enabled on a group. Not a group's field .", '4.5.0' );
 			return $this;
@@ -577,9 +577,9 @@ class Field {
 	 *
 	 * @param bool|string                     $methods - The methods to show this field in.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function show_in_rest( bool|string $methods = \WP_REST_Server::ALLMETHODS ): Field {
+	public function show_in_rest( bool|string $methods = \WP_REST_Server::ALLMETHODS ): static {
 		if ( null !== $this->group ) {
 			_doing_it_wrong( __METHOD__, wp_kses_post( "Show in rest may only be added to whole group. Not a group's field. `{$this->id}` is not applicable." ), '2.19.0' );
 		}
@@ -598,9 +598,9 @@ class Field {
 	 *
 	 * @param bool|string $short - `true` to use shortened keys. A string to specify a custom key.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function rest_short_name( bool|string $short = true ): Field {
+	public function rest_short_name( bool|string $short = true ): static {
 		$this->rest_short_name = $short;
 		return $this;
 	}
@@ -616,9 +616,9 @@ class Field {
 	 *
 	 * @param string $id - The tab id.
 	 *
-	 * @return $this
+	 * @return static
 	 */
-	public function tab( string $id ): Field {
+	public function tab( string $id ): static {
 		Tabs::init_once();
 
 		$this->tab = $id;
@@ -644,7 +644,7 @@ class Field {
 	 *
 	 * @return static
 	 */
-	public function set_args( Type $type, array $args, DataType $data_type ): Field {
+	public function set_args( Type $type, array $args, DataType $data_type ): static {
 		$this->type = $type;
 		$this->data_type = $data_type;
 
@@ -677,9 +677,9 @@ class Field {
 	 *
 	 * @param callable          $callback - The callback to be fired when a meta item is deleted.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function delete_cb( callable $callback ): Field {
+	public function delete_cb( callable $callback ): static {
 		$this->event_callbacks[] = Event_Callbacks::factory( $this, $callback, Event_Callbacks::TYPE_DELETE );
 		return $this;
 	}
@@ -708,9 +708,9 @@ class Field {
 	 *
 	 * @param callable          $callback - The callback to be fired when an items data is updated.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function change_cb( callable $callback ): Field {
+	public function change_cb( callable $callback ): static {
 		$this->event_callbacks[] = Event_Callbacks::factory( $this, $callback, Event_Callbacks::TYPE_CHANGE );
 
 		return $this;
@@ -729,9 +729,9 @@ class Field {
 	 *
 	 * @param callable       $callback - The callback to be used for sanitization.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function sanitization_cb( callable $callback ): Field {
+	public function sanitization_cb( callable $callback ): static {
 		$registered = Registered::factory( $this );
 		if ( [ Box::TYPE_OPTIONS ] !== $this->box->get_object_types() && $registered->is_allowed_to_register_meta() ) {
 			$this->meta_sanitizer = $callback;

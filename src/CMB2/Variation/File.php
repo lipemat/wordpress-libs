@@ -125,9 +125,9 @@ class File extends Field {
 	 *         Gutenberg enabled. Possibly will be changed in a future version
 	 *         of WP?
 	 *
-	 * @return File
+	 * @return static
 	 */
-	public function required(): File {
+	public function required(): static {
 		// The only way a file field may be required is if the URL field is showing.
 		if ( Type::FILE === $this->type ) {
 			$this->options['url'] = true;

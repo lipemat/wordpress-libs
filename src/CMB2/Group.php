@@ -169,9 +169,9 @@ class Group extends Field {
 	 * @param ?string $remove_row_text - Text used for the remove group button.
 	 * @param ?string $remove_confirm  - Text used for the remove group confirmation.
 	 *
-	 * @return Group
+	 * @return static
 	 */
-	public function repeatable( bool $repeatable = true, ?string $add_row_text = null, ?string $remove_row_text = null, ?string $remove_confirm = null ): Group {
+	public function repeatable( bool $repeatable = true, ?string $add_row_text = null, ?string $remove_row_text = null, ?string $remove_confirm = null ): static {
 		$this->repeatable = $repeatable;
 
 		$options = [];
