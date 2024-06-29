@@ -888,11 +888,7 @@ class Field implements FieldInterface {
 	 */
 	public static function from( Field $field, Box $box ): static {
 		$field = new static( $field->id, $field->name, $field->box, $field->group );
-		if ( $field->group instanceof Group ) {
-			$field->group->add_field( $field );
-		} else {
-			$box->add_field( $field );
-		}
+		$box->add_field( $field );
 		return $field;
 	}
 }

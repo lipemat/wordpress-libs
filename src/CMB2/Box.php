@@ -424,7 +424,12 @@ class Box {
 	 * @return Field
 	 */
 	public function add_field( Field $field ): Field {
-		$this->fields[ $field->get_id() ] = $field;
+		if ( $field->group instanceof Group ) {
+			$field->group->add_field( $field );
+		} else {
+			$this->fields[ $field->get_id() ] = $field;
+		}
+
 		return $field;
 	}
 
