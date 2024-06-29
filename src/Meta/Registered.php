@@ -73,7 +73,7 @@ class Registered {
 	 * @return DataType
 	 */
 	public function get_data_type(): DataType {
-		return DataType::from( $this->get_config()['data_type'] );
+		return $this->get_config()['data_type'];
 	}
 
 

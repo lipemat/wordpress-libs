@@ -15,6 +15,7 @@ use Lipe\Lib\CMB2\Variation\Taxonomy;
 use Lipe\Lib\CMB2\Variation\Text;
 use Lipe\Lib\CMB2\Variation\TextUrl;
 use Lipe\Lib\CMB2\Variation\Wysiwyg;
+use Lipe\Lib\Meta\DataType;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
 
@@ -48,7 +49,7 @@ class Field_Type {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#title
 	 */
 	public function title(): Field {
-		return $this->field->set_args( Type::TITLE, [], Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TITLE, [], DataType::DEFAULT );
 	}
 
 
@@ -62,7 +63,7 @@ class Field_Type {
 	public function true_false(): Field {
 		return $this->field->set_args( Type::CHECKBOX, [
 			'render_class' => True_False::class,
-		], Repo::TYPE_CHECKBOX );
+		], DataType::CHECKBOX );
 	}
 
 
@@ -87,7 +88,7 @@ class Field_Type {
 	 */
 	public function text(): Text {
 		$this->field = Text::from( $this->field, $this->box );
-		return $this->field->set_args( Type::TEXT, [], Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TEXT, [], DataType::DEFAULT );
 	}
 
 
@@ -100,7 +101,7 @@ class Field_Type {
 	 */
 	public function text_small(): Text {
 		$this->field = Text::from( $this->field, $this->box );
-		return $this->field->set_args( Type::TEXT_SMALL, [], Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TEXT_SMALL, [], DataType::DEFAULT );
 	}
 
 
@@ -113,7 +114,7 @@ class Field_Type {
 	 */
 	public function text_medium(): Text {
 		$this->field = Text::from( $this->field, $this->box );
-		return $this->field->set_args( Type::TEXT_MEDIUM, [], Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TEXT_MEDIUM, [], DataType::DEFAULT );
 	}
 
 
@@ -126,7 +127,7 @@ class Field_Type {
 	 */
 	public function text_email(): Text {
 		$this->field = Text::from( $this->field, $this->box );
-		return $this->field->set_args( Type::TEXT_EMAIL, [], Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TEXT_EMAIL, [], DataType::DEFAULT );
 	}
 
 
@@ -153,7 +154,7 @@ class Field_Type {
 
 		return $this->field->set_args( Type::TEXT_URL, [
 			'protocols' => $protocols,
-		], Repo::TYPE_DEFAULT );
+		], DataType::DEFAULT );
 	}
 
 
@@ -167,7 +168,7 @@ class Field_Type {
 	 */
 	public function text_money(): Text {
 		$this->field = Text::from( $this->field, $this->box );
-		return $this->field->set_args( Type::TEXT_MONEY, [], Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TEXT_MONEY, [], DataType::DEFAULT );
 	}
 
 
@@ -197,7 +198,7 @@ class Field_Type {
 		}
 		$this->field->attributes( $attributes );
 
-		return $this->field->set_args( Type::TEXT_SMALL, [], Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TEXT_SMALL, [], DataType::DEFAULT );
 	}
 
 
@@ -216,7 +217,7 @@ class Field_Type {
 			$this->field->attributes( [ 'rows' => $rows ] );
 		}
 
-		return $this->field->set_args( Type::TEXT_AREA, [], Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TEXT_AREA, [], DataType::DEFAULT );
 	}
 
 
@@ -229,7 +230,7 @@ class Field_Type {
 	 */
 	public function textarea_small(): Text {
 		$this->field = Text::from( $this->field, $this->box );
-		return $this->field->set_args( Type::TEXT_AREA_SMALL, [], Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TEXT_AREA_SMALL, [], DataType::DEFAULT );
 	}
 
 
@@ -275,7 +276,7 @@ class Field_Type {
 			] );
 		}
 
-		return $this->field->set_args( Type::TEXT_AREA_CODE, $set, Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TEXT_AREA_CODE, $set, DataType::DEFAULT );
 	}
 
 
@@ -287,7 +288,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function text_time(): Field {
-		return $this->field->set_args( Type::TEXT_TIME, [], Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TEXT_TIME, [], DataType::DEFAULT );
 	}
 
 
@@ -299,7 +300,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function select_timezone(): Field {
-		return $this->field->set_args( Type::SELECT_TIMEZONE, [], Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::SELECT_TIMEZONE, [], DataType::DEFAULT );
 	}
 
 
@@ -311,7 +312,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function hidden(): Field {
-		return $this->field->set_args( Type::HIDDEN, [], Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::HIDDEN, [], DataType::DEFAULT );
 	}
 
 
@@ -340,7 +341,7 @@ class Field_Type {
 		$this->field = File::from( $this->field, $this->box );
 		$_args = $this->field->file_args( $button_text, 'image', $show_text_input, $preview_size, null, null, null, 'Use Image' );
 
-		return $this->field->set_args( Type::FILE, $_args, Repo::TYPE_FILE );
+		return $this->field->set_args( Type::FILE, $_args, DataType::FILE );
 	}
 
 
@@ -361,7 +362,7 @@ class Field_Type {
 			$_args['render_row_cb'] = [ Checkbox::in(), 'render_field_callback' ];
 		}
 
-		return $this->field->set_args( Type::CHECKBOX, $_args, Repo::TYPE_CHECKBOX );
+		return $this->field->set_args( Type::CHECKBOX, $_args, DataType::CHECKBOX );
 	}
 
 
@@ -375,7 +376,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function oembed(): Field {
-		return $this->field->set_args( Type::OEMBED, [], Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::OEMBED, [], DataType::DEFAULT );
 	}
 
 
@@ -393,7 +394,7 @@ class Field_Type {
 	 */
 	public function text_date( string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [] ): Date {
 		$this->field = Date::from( $this->field, $this->box );
-		return $this->field->set_args( Type::TEXT_DATE, $this->field->date_args( $date_format, $timezone_meta_key, $date_picker_options ), Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TEXT_DATE, $this->field->date_args( $date_format, $timezone_meta_key, $date_picker_options ), DataType::DEFAULT );
 	}
 
 
@@ -412,7 +413,7 @@ class Field_Type {
 	 */
 	public function text_date_timestamp( string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [], array $time_picker_options = [] ): Date {
 		$this->field = Date::from( $this->field, $this->box );
-		return $this->field->set_args( Type::TEXT_DATETIME_TIMESTAMP, $this->field->date_args( $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TEXT_DATETIME_TIMESTAMP, $this->field->date_args( $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), DataType::DEFAULT );
 	}
 
 
@@ -431,7 +432,7 @@ class Field_Type {
 	 */
 	public function text_datetime_timestamp( string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [], array $time_picker_options = [] ): Date {
 		$this->field = Date::from( $this->field, $this->box );
-		return $this->field->set_args( Type::TEXT_DATE_TIMESTAMP, $this->field->date_args( $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TEXT_DATE_TIMESTAMP, $this->field->date_args( $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), DataType::DEFAULT );
 	}
 
 
@@ -450,7 +451,7 @@ class Field_Type {
 	 */
 	public function text_datetime_timestamp_timezone( string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [], array $time_picker_options = [] ): Date {
 		$this->field = Date::from( $this->field, $this->box );
-		return $this->field->set_args( Type::TEXT_DATETIME_TIMESTAMP_TZ, $this->field->date_args( $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TEXT_DATETIME_TIMESTAMP_TZ, $this->field->date_args( $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), DataType::DEFAULT );
 	}
 
 
@@ -498,7 +499,7 @@ class Field_Type {
 			];
 		}
 
-		return $this->field->set_args( Type::COLOR_PICKER, $_args, Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::COLOR_PICKER, $_args, DataType::DEFAULT );
 	}
 
 
@@ -519,7 +520,7 @@ class Field_Type {
 		$_args = $this->field->option_args( $options_or_callback );
 		$_args['select_all_button'] = $select_all;
 
-		return $this->field->set_args( Type::MULTI_CHECK, $_args, Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::MULTI_CHECK, $_args, DataType::DEFAULT );
 	}
 
 
@@ -540,7 +541,7 @@ class Field_Type {
 		$_args = $this->field->option_args( $options_or_callback );
 		$_args['select_all_button'] = $select_all;
 
-		return $this->field->set_args( Type::MULTI_CHECK_INLINE, $_args, Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::MULTI_CHECK_INLINE, $_args, DataType::DEFAULT );
 	}
 
 
@@ -560,7 +561,7 @@ class Field_Type {
 		$this->field = Options::from( $this->field, $this->box );
 		$_args = $this->field->option_args( $options_or_callback, $show_option_none );
 
-		return $this->field->set_args( Type::RADIO, $_args, Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::RADIO, $_args, DataType::DEFAULT );
 	}
 
 
@@ -580,7 +581,7 @@ class Field_Type {
 		$this->field = Options::from( $this->field, $this->box );
 		$_args = $this->field->option_args( $options_or_callback, $show_option_none );
 
-		return $this->field->set_args( Type::RADIO_INLINE, $_args, Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::RADIO_INLINE, $_args, DataType::DEFAULT );
 	}
 
 
@@ -600,7 +601,7 @@ class Field_Type {
 		$this->field = Options::from( $this->field, $this->box );
 		$_args = $this->field->option_args( $options_or_callback, $show_option_none );
 
-		return $this->field->set_args( Type::SELECT, $_args, Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::SELECT, $_args, DataType::DEFAULT );
 	}
 
 
@@ -619,7 +620,7 @@ class Field_Type {
 		$this->field = Taxonomy::from( $this->field, $this->box );
 		$_args = $this->field->taxonomy_args( $taxonomy, $no_terms_text, $remove_default );
 
-		return $this->field->set_args( Type::TAXONOMY_RADIO, $_args, Repo::TYPE_TAXONOMY_SINGULAR );
+		return $this->field->set_args( Type::TAXONOMY_RADIO, $_args, DataType::TAXONOMY_SINGULAR );
 	}
 
 
@@ -638,7 +639,7 @@ class Field_Type {
 		$this->field = Taxonomy::from( $this->field, $this->box );
 		$_args = $this->field->taxonomy_args( $taxonomy, $no_terms_text, $remove_default );
 
-		return $this->field->set_args( Type::TAXONOMY_RADIO_HIERARCHICAL, $_args, Repo::TYPE_TAXONOMY_SINGULAR );
+		return $this->field->set_args( Type::TAXONOMY_RADIO_HIERARCHICAL, $_args, DataType::TAXONOMY_SINGULAR );
 	}
 
 
@@ -657,7 +658,7 @@ class Field_Type {
 		$this->field = Taxonomy::from( $this->field, $this->box );
 		$_args = $this->field->taxonomy_args( $taxonomy, $no_terms_text, $remove_default );
 
-		return $this->field->set_args( Type::TAXONOMY_RADIO_INLINE, $_args, Repo::TYPE_TAXONOMY_SINGULAR );
+		return $this->field->set_args( Type::TAXONOMY_RADIO_INLINE, $_args, DataType::TAXONOMY_SINGULAR );
 	}
 
 
@@ -676,7 +677,7 @@ class Field_Type {
 		$this->field = Taxonomy::from( $this->field, $this->box );
 		$_args = $this->field->taxonomy_args( $taxonomy, $no_terms_text, $remove_default );
 
-		return $this->field->set_args( Type::TAXONOMY_SELECT, $_args, Repo::TYPE_TAXONOMY_SINGULAR );
+		return $this->field->set_args( Type::TAXONOMY_SELECT, $_args, DataType::TAXONOMY_SINGULAR );
 	}
 
 
@@ -693,7 +694,7 @@ class Field_Type {
 		$this->field = Taxonomy::from( $this->field, $this->box );
 		$_args = $this->field->taxonomy_args( $taxonomy, $no_terms_text, $remove_default );
 
-		return $this->field->set_args( Type::TAXONOMY_SELECT_HIERARCHICAL, $_args, Repo::TYPE_TAXONOMY_SINGULAR );
+		return $this->field->set_args( Type::TAXONOMY_SELECT_HIERARCHICAL, $_args, DataType::TAXONOMY_SINGULAR );
 	}
 
 
@@ -714,7 +715,7 @@ class Field_Type {
 	public function taxonomy_select_2( string $taxonomy, bool $assign_terms = false, ?string $no_terms_text = null, ?bool $remove_default = null ): Taxonomy {
 		$this->field = Taxonomy::from( $this->field, $this->box );
 		$_args = $this->field->taxonomy_args( $taxonomy, $no_terms_text, $remove_default );
-		$field = $this->field->set_args( Type::TERM_SELECT_2, $_args, Repo::TYPE_TAXONOMY );
+		$field = $this->field->set_args( Type::TERM_SELECT_2, $_args, DataType::TAXONOMY );
 		Select_2_Field::factory( $field, $taxonomy, $assign_terms );
 		return $field;
 	}
@@ -737,7 +738,7 @@ class Field_Type {
 		$_args = $this->field->taxonomy_args( $taxonomy, $no_terms_text, $remove_default );
 		$_args['select_all_button'] = $select_all;
 
-		return $this->field->set_args( Type::TAXONOMY_MULTICHECK, $_args, Repo::TYPE_TAXONOMY );
+		return $this->field->set_args( Type::TAXONOMY_MULTICHECK, $_args, DataType::TAXONOMY );
 	}
 
 
@@ -758,7 +759,7 @@ class Field_Type {
 		$_args = $this->field->taxonomy_args( $taxonomy, $no_terms_text, $remove_default );
 		$_args['select_all_button'] = $select_all;
 
-		return $this->field->set_args( Type::TAXONOMY_MULTICHECK_HIERARCHICAL, $_args, Repo::TYPE_TAXONOMY );
+		return $this->field->set_args( Type::TAXONOMY_MULTICHECK_HIERARCHICAL, $_args, DataType::TAXONOMY );
 	}
 
 
@@ -779,7 +780,7 @@ class Field_Type {
 		$_args = $this->field->taxonomy_args( $taxonomy, $no_terms_text, $remove_default );
 		$_args['select_all_button'] = $select_all;
 
-		return $this->field->set_args( Type::TAXONOMY_MULTICHECK_INLINE, $_args, Repo::TYPE_TAXONOMY );
+		return $this->field->set_args( Type::TAXONOMY_MULTICHECK_INLINE, $_args, DataType::TAXONOMY );
 	}
 
 
@@ -803,7 +804,7 @@ class Field_Type {
 		}
 		$this->field = Wysiwyg::from( $this->field, $this->box );
 
-		return $this->field->set_args( Type::WYSIWYG, $_args, Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::WYSIWYG, $_args, DataType::DEFAULT );
 	}
 
 
@@ -836,7 +837,7 @@ class Field_Type {
 		$this->field = File::from( $this->field, $this->box );
 		$_args = $this->field->file_args( $button_text, $file_mime_type, $show_text_input, $preview_size, null, null, null, $select_text );
 
-		return $this->field->set_args( Type::FILE, $_args, Repo::TYPE_FILE );
+		return $this->field->set_args( Type::FILE, $_args, DataType::FILE );
 	}
 
 
@@ -862,7 +863,7 @@ class Field_Type {
 		$this->field = File::from( $this->field, $this->box );
 		$_args = $this->field->file_args( $button_text, $file_mime_type, null, $preview_size, $remove_item_text, $file_text, $download_text, $select_text );
 
-		return $this->field->set_args( Type::FILE_LIST, $_args, Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::FILE_LIST, $_args, DataType::DEFAULT );
 	}
 
 
@@ -883,7 +884,7 @@ class Field_Type {
 			$_args['options']['group_title'] = $title;
 		}
 
-		return $this->field->set_args( Type::GROUP, $_args, Repo::TYPE_GROUP );
+		return $this->field->set_args( Type::GROUP, $_args, DataType::GROUP );
 	}
 
 

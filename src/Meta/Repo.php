@@ -14,13 +14,6 @@ class Repo {
 	use Singleton;
 	use Translate;
 
-	public const TYPE_CHECKBOX          = 'checkbox';
-	public const TYPE_DEFAULT           = 'default';
-	public const TYPE_FILE              = 'file';
-	public const TYPE_GROUP             = 'group';
-	public const TYPE_TAXONOMY          = 'taxonomy';
-	public const TYPE_TAXONOMY_SINGULAR = 'taxonomy-singular';
-
 	public const META_BLOG    = 'blog';
 	public const META_COMMENT = 'comment';
 	public const META_OPTION  = 'option';
@@ -88,18 +81,16 @@ class Repo {
 	/**
 	 * Get the data type of registered field by an id.
 	 *
-	 * @phpstan-return static::TYPE_*
-	 *
 	 * @param string $field_id - The field id whose type to return.
 	 *
-	 * @return string
+	 * @return DataType
 	 */
-	protected function get_field_data_type( string $field_id ): string {
+	protected function get_field_data_type( string $field_id ): DataType {
 		$field = $this->get_registered( $field_id );
 		if ( null !== $field ) {
-			return $field->get_data_type()->value;
+			return $field->get_data_type();
 		}
-		return static::TYPE_DEFAULT;
+		return DataType::DEFAULT;
 	}
 
 
@@ -119,12 +110,12 @@ class Repo {
 	 */
 	public function get_value( int|string $object_id, string $field_id, string $meta_type = 'post' ): mixed {
 		return match ( $this->get_field_data_type( $field_id ) ) {
-			static::TYPE_CHECKBOX          => $this->get_checkbox_field_value( $object_id, $field_id, $meta_type ),
-			static::TYPE_FILE              => $this->get_file_field_value( $object_id, $field_id, $meta_type ),
-			static::TYPE_GROUP             => $this->get_group_field_value( $object_id, $field_id, $meta_type ),
-			static::TYPE_TAXONOMY          => $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type ),
-			static::TYPE_TAXONOMY_SINGULAR => $this->get_taxonomy_singular_field_value( $object_id, $field_id, $meta_type ),
-			default                        => $this->get_meta_value( $object_id, $field_id, $meta_type ),
+			DataType::CHECKBOX          => $this->get_checkbox_field_value( $object_id, $field_id, $meta_type ),
+			DataType::FILE              => $this->get_file_field_value( $object_id, $field_id, $meta_type ),
+			DataType::GROUP             => $this->get_group_field_value( $object_id, $field_id, $meta_type ),
+			DataType::TAXONOMY          => $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type ),
+			DataType::TAXONOMY_SINGULAR => $this->get_taxonomy_singular_field_value( $object_id, $field_id, $meta_type ),
+			default                     => $this->get_meta_value( $object_id, $field_id, $meta_type ),
 		};
 	}
 
@@ -146,12 +137,12 @@ class Repo {
 	 */
 	public function update_value( int|string $object_id, string $field_id, mixed $value, string $meta_type = 'post' ): void {
 		match ( $this->get_field_data_type( $field_id ) ) {
-			static::TYPE_CHECKBOX          => $this->update_checkbox_field_value( $object_id, $field_id, $value, $meta_type ),
-			static::TYPE_FILE              => $this->update_file_field_value( $object_id, $field_id, (int) $value, $meta_type ),
-			static::TYPE_GROUP             => $this->update_group_field_values( $object_id, $field_id, (array) $value, $meta_type ),
-			static::TYPE_TAXONOMY          => $this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type ),
-			static::TYPE_TAXONOMY_SINGULAR => $this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type, true ),
-			default                        => $this->update_meta_value( $object_id, $field_id, $value, $meta_type ),
+			DataType::CHECKBOX          => $this->update_checkbox_field_value( $object_id, $field_id, $value, $meta_type ),
+			DataType::FILE              => $this->update_file_field_value( $object_id, $field_id, (int) $value, $meta_type ),
+			DataType::GROUP             => $this->update_group_field_values( $object_id, $field_id, (array) $value, $meta_type ),
+			DataType::TAXONOMY          => $this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type ),
+			DataType::TAXONOMY_SINGULAR => $this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type, true ),
+			default                     => $this->update_meta_value( $object_id, $field_id, $value, $meta_type ),
 		};
 	}
 
@@ -172,10 +163,10 @@ class Repo {
 	 */
 	public function delete_value( int|string $object_id, string $field_id, string $meta_type ): void {
 		match ( $this->get_field_data_type( $field_id ) ) {
-			static::TYPE_FILE              => $this->delete_file_field_value( $object_id, $field_id, $meta_type ),
-			static::TYPE_TAXONOMY,
-			static::TYPE_TAXONOMY_SINGULAR => $this->delete_taxonomy_field_value( $object_id, $field_id, $meta_type ),
-			default                        => $this->delete_meta_value( $object_id, $field_id, $meta_type ),
+			DataType::FILE              => $this->delete_file_field_value( $object_id, $field_id, $meta_type ),
+			DataType::TAXONOMY,
+			DataType::TAXONOMY_SINGULAR => $this->delete_taxonomy_field_value( $object_id, $field_id, $meta_type ),
+			default                     => $this->delete_meta_value( $object_id, $field_id, $meta_type ),
 		};
 	}
 }

@@ -6,6 +6,7 @@ namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
 use Lipe\Lib\CMB2\Field\Type;
+use Lipe\Lib\Meta\DataType;
 use Lipe\Lib\Meta\Registered;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
@@ -23,11 +24,9 @@ class Field {
 	/**
 	 * Used by the Repo to determine the data type of this field.
 	 *
-	 * @phpstan-var Repo::TYPE_*
-	 *
-	 * @var string
+	 * @var DataType
 	 */
-	protected string $data_type = Repo::TYPE_DEFAULT;
+	protected DataType $data_type = DataType::DEFAULT;
 
 	/**
 	 * Specify a default value for the field.
@@ -639,15 +638,13 @@ class Field {
 	 *
 	 * @internal
 	 *
-	 * @phpstan-param REPO::TYPE_*        $data_type
-	 *
 	 * @param Type                        $type      - CMB2 field type.
 	 * @param array<key-of<Field>, mixed> $args      - [$key => $value].
-	 * @param string                      $data_type - Field data structure type.
+	 * @param DataType                    $data_type - Field data structure type.
 	 *
 	 * @return static
 	 */
-	public function set_args( Type $type, array $args, string $data_type ): Field {
+	public function set_args( Type $type, array $args, DataType $data_type ): Field {
 		$this->type = $type;
 		$this->data_type = $data_type;
 
