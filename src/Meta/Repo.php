@@ -14,14 +14,6 @@ class Repo {
 	use Singleton;
 	use Translate;
 
-	public const META_BLOG    = 'blog';
-	public const META_COMMENT = 'comment';
-	public const META_OPTION  = 'option';
-	public const META_POST    = 'post';
-	public const META_TERM    = 'term';
-	public const META_USER    = 'user';
-
-
 	/**
 	 * Store a field's id mapped to the field object
 	 *
@@ -100,15 +92,13 @@ class Repo {
 	 * Use the registered fields and registered types to determine the appropriate method to
 	 * return the data.
 	 *
-	 * @phpstan-param static::META_* $meta_type
-	 *
-	 * @param int|string             $object_id - id of post, term, user, <custom>.
-	 * @param string                 $field_id  - field id to return.
-	 * @param string                 $meta_type - user, term, post, <custom> (defaults to 'post').
+	 * @param int|string $object_id - id of post, term, user, <custom>.
+	 * @param string     $field_id  - field id to return.
+	 * @param MetaType   $meta_type - user, term, post, <custom> (defaults to 'post').
 	 *
 	 * @return mixed
 	 */
-	public function get_value( int|string $object_id, string $field_id, string $meta_type = 'post' ): mixed {
+	public function get_value( int|string $object_id, string $field_id, MetaType $meta_type = MetaType::POST ): mixed {
 		return match ( $this->get_field_data_type( $field_id ) ) {
 			DataType::CHECKBOX          => $this->get_checkbox_field_value( $object_id, $field_id, $meta_type ),
 			DataType::FILE              => $this->get_file_field_value( $object_id, $field_id, $meta_type ),
@@ -126,16 +116,14 @@ class Repo {
 	 * Use the registered fields and registered types to determine the appropriate method to
 	 * set the data.
 	 *
-	 * @phpstan-param static::META_* $meta_type
-	 *
-	 * @param int|string             $object_id - id of post, term, user, <custom>.
-	 * @param string                 $field_id  - field id to set.
-	 * @param mixed                  $value     - Value to save.
-	 * @param string                 $meta_type - user, term, post, <custom> (defaults to 'post').
+	 * @param int|string $object_id - id of post, term, user, <custom>.
+	 * @param string     $field_id  - field id to set.
+	 * @param mixed      $value     - Value to save.
+	 * @param MetaType   $meta_type - user, term, post, <custom> (defaults to 'post').
 	 *
 	 * @return void
 	 */
-	public function update_value( int|string $object_id, string $field_id, mixed $value, string $meta_type = 'post' ): void {
+	public function update_value( int|string $object_id, string $field_id, mixed $value, MetaType $meta_type = MetaType::POST ): void {
 		match ( $this->get_field_data_type( $field_id ) ) {
 			DataType::CHECKBOX          => $this->update_checkbox_field_value( $object_id, $field_id, $value, $meta_type ),
 			DataType::FILE              => $this->update_file_field_value( $object_id, $field_id, (int) $value, $meta_type ),
@@ -153,15 +141,13 @@ class Repo {
 	 * Use the registered fields and registered types to determine the appropriate method to
 	 * delete the data.
 	 *
-	 * @phpstan-param static::META_* $meta_type
-	 *
-	 * @param int|string             $object_id - id of post, term, user, <custom>.
-	 * @param string                 $field_id  - field id to set.
-	 * @param string                 $meta_type - user, term, post, <custom> (defaults to 'post').
+	 * @param int|string $object_id - id of post, term, user, <custom>.
+	 * @param string     $field_id  - field id to set.
+	 * @param MetaType   $meta_type - user, term, post, <custom> (defaults to 'post').
 	 *
 	 * @return void
 	 */
-	public function delete_value( int|string $object_id, string $field_id, string $meta_type ): void {
+	public function delete_value( int|string $object_id, string $field_id, MetaType $meta_type ): void {
 		match ( $this->get_field_data_type( $field_id ) ) {
 			DataType::FILE              => $this->delete_file_field_value( $object_id, $field_id, $meta_type ),
 			DataType::TAXONOMY,

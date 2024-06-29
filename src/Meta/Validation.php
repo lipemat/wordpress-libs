@@ -56,7 +56,7 @@ class Validation {
 	public function warn_for_conflicting_taxonomies( array $registered ): void {
 		$map = [];
 		foreach ( $registered as $field ) {
-			if ( ! $field->variation instanceof Taxonomy || ! Repo::in()->supports_taxonomy_relationships( $field->get_box()->get_object_type(), $field ) ) {
+			if ( ! $field->variation instanceof Taxonomy || ! Repo::in()->supports_taxonomy_relationships( MetaType::tryFrom( $field->get_box()->get_object_type() ), $field ) ) {
 				continue;
 			}
 			foreach ( $field->get_box()->get_object_types() as $object_type ) {

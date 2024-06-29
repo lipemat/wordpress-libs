@@ -4,6 +4,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Settings\Settings_Trait;
 use mocks\Post_Mock;
@@ -45,7 +46,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 	public function test_taxonomy_retrieval(): void {
 		$term = self::factory()->category->create_and_get();
 		update_term_meta( $term->term_id, 'tc', [ $term->slug ] );
-		$terms = Repo::in()->get_value( $term->term_id, 'tc', 'term' );
+		$terms = Repo::in()->get_value( $term->term_id, 'tc', MetaType::TERM );
 		$this->assertEquals( $term->term_id, $terms[0]->term_id );
 	}
 

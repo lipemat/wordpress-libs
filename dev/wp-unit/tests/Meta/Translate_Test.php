@@ -141,8 +141,8 @@ class Translate_Test extends \WP_UnitTestCase {
 		    ->taxonomy_select( 'category' );
 		do_action( 'cmb2_init' );
 
-		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( 'post', $get_field( 'taxonomy/sr/1' ) ) );
-		$this->assertFalse( Repo::in()->supports_taxonomy_relationships( 'comment', $get_field( 'taxonomy/sr/1' ) ) );
+		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( MetaType::POST, $get_field( 'taxonomy/sr/1' ) ) );
+		$this->assertFalse( Repo::in()->supports_taxonomy_relationships( MetaType::COMMENT, $get_field( 'taxonomy/sr/1' ) ) );
 
 		// Add a second taxonomy field.
 		$srg = $box->group( 'taxonomy/sr/group', 'SR Group' );
@@ -151,15 +151,15 @@ class Translate_Test extends \WP_UnitTestCase {
 		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_conflicting_taxonomies', 'Fields: "taxonomy/sr/1, taxonomy/sr/group/1" are conflicting on the taxonomy: category for object type: post. You may only have taxonomy field per an object. (This message was added in version 4.10.0.)' );
 		do_action( 'cmb2_init' );
 
-		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( 'post', $get_field( 'taxonomy/sr/1' ) ) );
-		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( 'post', $get_field( 'taxonomy/sr/group/1' ) ) );
+		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( MetaType::POST, $get_field( 'taxonomy/sr/1' ) ) );
+		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( MetaType::POST, $get_field( 'taxonomy/sr/group/1' ) ) );
 
 		// Change one field to text.
 		$box->field( 'taxonomy/sr/1', 'SR 1' )->text();
 		do_action( 'cmb2_init' );
-		$this->assertFalse( Repo::in()->supports_taxonomy_relationships( 'post', $get_field( 'taxonomy/sr/1' ) ) );
-		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( 'post', $get_field( 'taxonomy/sr/group/1' ) ) );
-		$this->assertFalse( Repo::in()->supports_taxonomy_relationships( 'options-page', $get_field( 'taxonomy/sr/group/1' ) ) );
+		$this->assertFalse( Repo::in()->supports_taxonomy_relationships( MetaType::POST, $get_field( 'taxonomy/sr/1' ) ) );
+		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( MetaType::POST, $get_field( 'taxonomy/sr/group/1' ) ) );
+		$this->assertFalse( Repo::in()->supports_taxonomy_relationships( MetaType::tryFrom( 'options-page' ), $get_field( 'taxonomy/sr/group/1' ) ) );
 	}
 
 

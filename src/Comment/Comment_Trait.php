@@ -3,6 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Comment;
 
+use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 use Lipe\Lib\Meta\Repo;
 
@@ -98,10 +99,10 @@ trait Comment_Trait {
 	/**
 	 * Used to determine the type of meta to retrieve or update.
 	 *
-	 * @return string
+	 * @return MetaType
 	 */
-	public function get_meta_type(): string {
-		return Repo::META_COMMENT;
+	public function get_meta_type(): MetaType {
+		return MetaType::COMMENT;
 	}
 
 

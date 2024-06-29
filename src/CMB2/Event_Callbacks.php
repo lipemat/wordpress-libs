@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Variation\Taxonomy;
+use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Registered;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Taxonomy\Get_Terms;
@@ -119,7 +120,7 @@ class Event_Callbacks {
 	 */
 	protected function register_hooks( string $cb_type ): void {
 		// Taxonomy fields added to a `post` object.
-		if ( Repo::in()->supports_taxonomy_relationships( $this->box_type, $this->field ) ) {
+		if ( Repo::in()->supports_taxonomy_relationships( MetaType::tryFrom( $this->box_type ), $this->field ) ) {
 			$this->track_previous_taxonomy_value();
 			if ( static::TYPE_CHANGE === $cb_type ) {
 				$this->taxonomy_change_hooks();

@@ -3,6 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy;
 
+use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 use Lipe\Lib\Meta\Repo;
 
@@ -81,10 +82,10 @@ trait Taxonomy_Trait {
 	/**
 	 *  Used to determine the type of meta to retrieve or update.
 	 *
-	 * @return string
+	 * @return MetaType
 	 */
-	public function get_meta_type(): string {
-		return Repo::META_TERM;
+	public function get_meta_type(): MetaType {
+		return MetaType::TERM;
 	}
 
 

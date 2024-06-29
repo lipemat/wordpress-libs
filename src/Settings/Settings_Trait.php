@@ -3,6 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Settings;
 
+use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 use Lipe\Lib\Meta\Repo;
 
@@ -39,10 +40,10 @@ trait Settings_Trait {
 	/**
 	 * Used to determine the type of meta to retrieve or update.
 	 *
-	 * @return string
+	 * @return MetaType
 	 */
-	public function get_meta_type(): string {
-		return Repo::META_OPTION;
+	public function get_meta_type(): MetaType {
+		return MetaType::OPTION;
 	}
 
 

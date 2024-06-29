@@ -32,13 +32,11 @@ trait Mutator_Trait {
 	 *
 	 * Used to determine the type of meta to retrieve or update.
 	 *
-	 * @phpstan-return Repo::META_*
-	 *
 	 * @example 'post','user','comment','term', 'blog', 'option'
 	 *
-	 * @return string
+	 * @return MetaType
 	 */
-	abstract public function get_meta_type(): string;
+	abstract public function get_meta_type(): MetaType;
 
 
 	/**

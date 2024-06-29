@@ -7,6 +7,7 @@ use Lipe\Lib\CMB2\Field\Term_Select_2\Select_2_Field;
 use Lipe\Lib\Libs\Scripts;
 use Lipe\Lib\Libs\Scripts\ScriptHandles;
 use Lipe\Lib\Libs\Scripts\StyleHandles;
+use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Taxonomy\Get_Terms;
 use Lipe\Lib\Traits\Memoize;
@@ -203,7 +204,7 @@ class Term_Select_2 {
 		}
 
 		$meta_type = $registered->field->get_box()->get_object_type();
-		if ( '' !== $id && 0 !== $id && Repo::in()->supports_taxonomy_relationships( $meta_type, $registered->field ) ) {
+		if ( '' !== $id && 0 !== $id && Repo::in()->supports_taxonomy_relationships( MetaType::tryFrom( $meta_type ), $registered->field ) ) {
 			if ( $registered->field->is_repeatable() ) {
 				$ids = \array_merge( ...$meta_value );
 				wp_set_object_terms( (int) $id, \array_map( '\intval', $ids ), $registered->taxonomy );

@@ -3,6 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Site;
 
+use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 use Lipe\Lib\Meta\Repo;
 
@@ -92,10 +93,10 @@ trait Site_Trait {
 	/**
 	 * Used to determine the type of meta to retrieve or update.
 	 *
-	 * @return string
+	 * @return MetaType
 	 */
-	public function get_meta_type(): string {
-		return Repo::META_BLOG;
+	public function get_meta_type(): MetaType {
+		return MetaType::BLOG;
 	}
 
 

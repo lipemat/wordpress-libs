@@ -3,7 +3,6 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Meta;
 
-use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\CMB2\Field\Term_Select_2;
 use Lipe\Lib\CMB2\Field\Term_Select_2\Select_2_Field;
 use Lipe\Lib\CMB2\Field\Type;
@@ -47,14 +46,12 @@ trait Translate {
 	 * - Only `post` meta type is currently supported.
 	 * - Only taxonomy type fields are supported.
 	 *
-	 * @phpstan-param Repo::META_*|string $meta_type
-	 *
-	 * @param string                      $meta_type - The meta type.
-	 * @param Registered                  $field     - The field to check for duplicate taxonomy fields.
+	 * @param ?MetaType  $meta_type - The meta type.
+	 * @param Registered $field     - The field to check for duplicate taxonomy fields.
 	 *
 	 * @return bool
 	 */
-	public function supports_taxonomy_relationships( string $meta_type, Registered $field ): bool {
+	public function supports_taxonomy_relationships( ?MetaType $meta_type, Registered $field ): bool {
 		if ( DataType::TAXONOMY !== $field->get_data_type() && DataType::TAXONOMY_SINGULAR !== $field->get_data_type() ) {
 			return false;
 		}
@@ -66,22 +63,20 @@ trait Translate {
 			}
 		}
 
-		return 'post' === $meta_type;
+		return MetaType::POST === $meta_type;
 	}
 
 
 	/**
 	 * Get a value from the standard WP meta api or the options api.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $key       - The meta key.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string $object_id - The object id.
+	 * @param string     $key       - The meta key.
+	 * @param MetaType   $meta_type - The meta type.
 	 *
 	 * @return mixed
 	 */
-	protected function get_meta_value( int|string $object_id, string $key, string $meta_type ): mixed {
+	protected function get_meta_value( int|string $object_id, string $key, MetaType $meta_type ): mixed {
 		$field = $this->get_registered( $key );
 		if ( null !== $field && null !== $field->get_group() ) {
 			$group = $this->get_meta_value( $object_id, $field->get_group()->id, $meta_type );
@@ -89,10 +84,10 @@ trait Translate {
 				return $field->get_default();
 			}
 			$value = $group[ $this->group_row ][ $key ] ?? null;
-		} elseif ( Repo::META_OPTION === $meta_type ) {
+		} elseif ( MetaType::OPTION === $meta_type ) {
 			$value = cmb2_options( (string) $object_id )->get( $key, null );
 		} else {
-			$value = get_metadata( $meta_type, (int) $object_id, $key, true );
+			$value = get_metadata( $meta_type->value, (int) $object_id, $key, true );
 		}
 
 		if ( null !== $field && null !== $field->get_escape_cb() ) {
@@ -109,16 +104,14 @@ trait Translate {
 	/**
 	 * Update a value from the standard WP meta api or the options api.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $key       - The meta key.
-	 * @param mixed                $value     - The meta value.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string $object_id - The object id.
+	 * @param string     $key       - The meta key.
+	 * @param mixed      $value     - The meta value.
+	 * @param MetaType   $meta_type - The meta type.
 	 *
 	 * @return bool|int
 	 */
-	protected function update_meta_value( int|string $object_id, string $key, mixed $value, string $meta_type ): bool|int {
+	protected function update_meta_value( int|string $object_id, string $key, mixed $value, MetaType $meta_type ): bool|int {
 		$field = $this->get_registered( $key );
 		if ( null !== $field ) {
 			$cmb2_field = $field->get_cmb2_field( $object_id );
@@ -130,26 +123,24 @@ trait Translate {
 			}
 		}
 
-		if ( Repo::META_OPTION === $meta_type ) {
+		if ( MetaType::OPTION === $meta_type ) {
 			return cmb2_options( (string) $object_id )->update( $key, $value, true );
 		}
 
-		return update_metadata( $meta_type, (int) $object_id, $key, $value );
+		return update_metadata( $meta_type->value, (int) $object_id, $key, $value );
 	}
 
 
 	/**
 	 * Update a meta key from the standard WP meta api or the options api.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $key       - The meta key.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string $object_id - The object id.
+	 * @param string     $key       - The meta key.
+	 * @param MetaType   $meta_type - The meta type.
 	 *
 	 * @return void
 	 */
-	protected function delete_meta_value( int|string $object_id, string $key, string $meta_type ): void {
+	protected function delete_meta_value( int|string $object_id, string $key, MetaType $meta_type ): void {
 		$field = $this->get_registered( $key );
 		if ( null !== $field && null !== $field->get_group() ) {
 			$group = $this->get_meta_value( $object_id, $field->get_group()->id, $meta_type );
@@ -158,10 +149,10 @@ trait Translate {
 			return;
 		}
 
-		if ( Repo::META_OPTION === $meta_type ) {
+		if ( MetaType::OPTION === $meta_type ) {
 			cmb2_options( (string) $object_id )->remove( $key, true );
 		} else {
-			delete_metadata( $meta_type, (int) $object_id, $key );
+			delete_metadata( $meta_type->value, (int) $object_id, $key );
 		}
 	}
 
@@ -169,15 +160,13 @@ trait Translate {
 	/**
 	 * Get the boolean result from a CMB2 checkbox
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $key       - The meta key.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string $object_id - The object id.
+	 * @param string     $key       - The meta key.
+	 * @param MetaType   $meta_type - The meta type.
 	 *
 	 * @return bool
 	 */
-	protected function get_checkbox_field_value( int|string $object_id, string $key, string $meta_type ): bool {
+	protected function get_checkbox_field_value( int|string $object_id, string $key, MetaType $meta_type ): bool {
 		$value = $this->get_meta_value( $object_id, $key, $meta_type );
 
 		return ( 'on' === $value );
@@ -190,16 +179,14 @@ trait Translate {
 	 *
 	 * Any truthy value will be considered checked.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $key       - The meta key.
-	 * @param bool|int|string      $checked   - Is the checkbox checked?.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string      $object_id - The object id.
+	 * @param string          $key       - The meta key.
+	 * @param bool|int|string $checked   - Is the checkbox checked?.
+	 * @param MetaType        $meta_type - The meta type.
 	 *
 	 * @return void
 	 */
-	protected function update_checkbox_field_value( int|string $object_id, string $key, bool|int|string $checked, string $meta_type ): void {
+	protected function update_checkbox_field_value( int|string $object_id, string $key, bool|int|string $checked, MetaType $meta_type ): void {
 		if ( true === $checked || 'on' === $checked || '1' === $checked || 1 === $checked ) {
 			$this->update_meta_value( $object_id, $key, 'on', $meta_type );
 		} else {
@@ -212,15 +199,13 @@ trait Translate {
 	 * CMB2 saves file fields as 2 separate meta keys.
 	 * This returns an array of both.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $key       - The meta key.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string $object_id - The object id.
+	 * @param string     $key       - The meta key.
+	 * @param MetaType   $meta_type - The meta type.
 	 *
 	 * @return ?array{id: string, url: string}
 	 */
-	protected function get_file_field_value( int|string $object_id, string $key, string $meta_type ): ?array {
+	protected function get_file_field_value( int|string $object_id, string $key, MetaType $meta_type ): ?array {
 		$url = $this->get_meta_value( $object_id, $key, $meta_type );
 		if ( \is_string( $url ) && '' !== \trim( $url ) ) {
 			// Add the extra field so groups meta will be translated properly.
@@ -242,16 +227,14 @@ trait Translate {
 	 * CMB2 saves file fields as 2 separate meta keys
 	 * This saves both meta keys.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
-	 * @param int|string           $object_id     - The object id.
-	 * @param string               $key           - The meta key.
-	 * @param int                  $attachment_id - The attachment id.
-	 * @param string               $meta_type     - The meta type.
+	 * @param int|string $object_id     - The object id.
+	 * @param string     $key           - The meta key.
+	 * @param int        $attachment_id - The attachment id.
+	 * @param MetaType   $meta_type     - The meta type.
 	 *
 	 * @return void
 	 */
-	protected function update_file_field_value( int|string $object_id, string $key, int $attachment_id, string $meta_type ): void {
+	protected function update_file_field_value( int|string $object_id, string $key, int $attachment_id, MetaType $meta_type ): void {
 		// Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->registered[ $key ]->get_group() ) {
 			$this->registered[ $key . '_id' ] = $this->registered[ $key ];
@@ -265,15 +248,13 @@ trait Translate {
 	 * CMB2 saves file fields as 2 separate meta keys.
 	 * This deletes both.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $key       - The meta key.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string $object_id - The object id.
+	 * @param string     $key       - The meta key.
+	 * @param MetaType   $meta_type - The meta type.
 	 *
 	 * @return void
 	 */
-	protected function delete_file_field_value( int|string $object_id, string $key, string $meta_type ): void {
+	protected function delete_file_field_value( int|string $object_id, string $key, MetaType $meta_type ): void {
 		// Add the extra field so groups meta will be translated properly.
 		if ( null !== $this->registered[ $key ]->get_group() ) {
 			$this->registered[ $key . '_id' ] = $this->registered[ $key ];
@@ -288,15 +269,13 @@ trait Translate {
 	 * This return the array with all the group's fields translated to
 	 * appropriate data types.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $group_id  - The group id.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string $object_id - The object id.
+	 * @param string     $group_id  - The group id.
+	 * @param MetaType   $meta_type - The meta type.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	protected function get_group_field_value( int|string $object_id, string $group_id, string $meta_type ): array {
+	protected function get_group_field_value( int|string $object_id, string $group_id, MetaType $meta_type ): array {
 		$values = [];
 
 		$existing = $this->get_meta_value( $object_id, $group_id, $meta_type );
@@ -318,14 +297,12 @@ trait Translate {
 	/**
 	 * Update all the field values within a group.
 	 *
-	 * @phpstan-param Repo::META_*             $meta_type
-	 *
 	 * @param int|string                       $object_id - The object id.
 	 * @param string                           $group_id  - The group id.
 	 * @param array<int, array<string, mixed>> $values    - The values.
-	 * @param string                           $meta_type - The meta type.
+	 * @param MetaType                         $meta_type - The meta type.
 	 */
-	protected function update_group_field_values( int|string $object_id, string $group_id, array $values, string $meta_type ): void {
+	protected function update_group_field_values( int|string $object_id, string $group_id, array $values, MetaType $meta_type ): void {
 		$fields = $this->get_group_fields( $group_id );
 		foreach ( $values as $_row => $_values ) {
 			$this->group_row = $_row;
@@ -350,18 +327,16 @@ trait Translate {
 	/**
 	 * Update a single field within a group.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
 	 * @internal
 	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $key       - The meta key.
-	 * @param mixed                $value     - The value.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string $object_id - The object id.
+	 * @param string     $key       - The meta key.
+	 * @param mixed      $value     - The value.
+	 * @param MetaType   $meta_type - The meta type.
 	 *
 	 * @return bool|int
 	 */
-	protected function update_group_sub_field_value( int|string $object_id, string $key, mixed $value, string $meta_type ): bool|int {
+	protected function update_group_sub_field_value( int|string $object_id, string $key, mixed $value, MetaType $meta_type ): bool|int {
 		$field = $this->get_registered( $key );
 		if ( null === $field || null === $field->get_group() ) {
 			return false;
@@ -383,18 +358,16 @@ trait Translate {
 	 * We must loop through the individual files to trigger any hooks
 	 * and/or remove taxonomy relationships.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
 	 * @internal
 	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $group_id  - The meta key.
-	 * @param int                  $row       - The row index in the group.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string $object_id - The object id.
+	 * @param string     $group_id  - The meta key.
+	 * @param int        $row       - The row index in the group.
+	 * @param MetaType   $meta_type - The meta type.
 	 *
 	 * @return bool|int
 	 */
-	protected function delete_group_row( int|string $object_id, string $group_id, int $row, string $meta_type ): bool|int {
+	protected function delete_group_row( int|string $object_id, string $group_id, int $row, MetaType $meta_type ): bool|int {
 		$this->group_row = $row;
 		foreach ( $this->get_group_fields( $group_id ) as $field ) {
 			Repo::in()->delete_value( $object_id, $field, $meta_type );
@@ -434,17 +407,15 @@ trait Translate {
 	 * CMB2 saves taxonomy fields as terms or meta value for options.
 	 * We pull from either here.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $field_id  - The field id.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string $object_id - The object id.
+	 * @param string     $field_id  - The field id.
+	 * @param MetaType   $meta_type - The meta type.
 	 *
 	 * @throws \RuntimeException -- If we received a WP_Error.
 	 *
 	 * @return \WP_Term[]
 	 */
-	protected function get_taxonomy_field_value( int|string $object_id, string $field_id, string $meta_type ): array {
+	protected function get_taxonomy_field_value( int|string $object_id, string $field_id, MetaType $meta_type ): array {
 		$field = $this->get_registered( $field_id );
 		if ( null === $field || ! $field->variation instanceof Taxonomy ) {
 			return [];
@@ -479,17 +450,15 @@ trait Translate {
 	 * CMB2 saves taxonomy fields as terms or meta value for options.
 	 * We do the same here.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $key       - The meta key.
-	 * @param int[]                $terms     - Term ids.
-	 * @param string               $meta_type - The meta type.
-	 * @param bool                 $singular  - Is the meta of type singular.
+	 * @param int|string $object_id - The object id.
+	 * @param string     $key       - The meta key.
+	 * @param int[]      $terms     - Term ids.
+	 * @param MetaType   $meta_type - The meta type.
+	 * @param bool       $singular  - Is the meta of type singular.
 	 *
 	 * @return void
 	 */
-	protected function update_taxonomy_field_value( int|string $object_id, string $key, array $terms, string $meta_type, bool $singular = false ): void {
+	protected function update_taxonomy_field_value( int|string $object_id, string $key, array $terms, MetaType $meta_type, bool $singular = false ): void {
 		$field = $this->get_registered( $key );
 		if ( null === $field ) {
 			return;
@@ -535,15 +504,13 @@ trait Translate {
 	 *
 	 * Does not delete the actual terms, just the assignment of them.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $field_id  - The field id.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string $object_id - The object id.
+	 * @param string     $field_id  - The field id.
+	 * @param MetaType   $meta_type - The meta type.
 	 *
 	 * @return void
 	 */
-	protected function delete_taxonomy_field_value( int|string $object_id, string $field_id, string $meta_type ): void {
+	protected function delete_taxonomy_field_value( int|string $object_id, string $field_id, MetaType $meta_type ): void {
 		$field = $this->get_registered( $field_id );
 		if ( null === $field ) {
 			return;
@@ -560,15 +527,13 @@ trait Translate {
 	 * Retrieve a single term from a taxonomy field that allows
 	 * selecting only a single term.
 	 *
-	 * @phpstan-param Repo::META_* $meta_type
-	 *
-	 * @param int|string           $object_id - The object id.
-	 * @param string               $field_id  - The field id.
-	 * @param string               $meta_type - The meta type.
+	 * @param int|string $object_id - The object id.
+	 * @param string     $field_id  - The field id.
+	 * @param MetaType   $meta_type - The meta type.
 	 *
 	 * @return \WP_Term|false
 	 */
-	protected function get_taxonomy_singular_field_value( int|string $object_id, string $field_id, string $meta_type ): \WP_Term|bool {
+	protected function get_taxonomy_singular_field_value( int|string $object_id, string $field_id, MetaType $meta_type ): \WP_Term|bool {
 		try {
 			$terms = $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type );
 		} catch ( \RuntimeException ) {

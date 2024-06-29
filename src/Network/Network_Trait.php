@@ -3,6 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Network;
 
+use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
@@ -118,10 +119,10 @@ trait Network_Trait {
 	/**
 	 * Used to determine the type of meta to retrieve or update.
 	 *
-	 * @return string
+	 * @return MetaType
 	 */
-	public function get_meta_type(): string {
-		return 'site';
+	public function get_meta_type(): MetaType {
+		return MetaType::SITE;
 	}
 
 

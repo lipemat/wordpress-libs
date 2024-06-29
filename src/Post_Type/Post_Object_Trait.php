@@ -3,6 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Post_Type;
 
+use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 use Lipe\Lib\Meta\Repo;
 
@@ -101,10 +102,10 @@ trait Post_Object_Trait {
 	 * Used by the Mutator_Trait to determine the type
 	 * of meta to retrieve or update.
 	 *
-	 * @return string
+	 * @return MetaType
 	 */
-	public function get_meta_type(): string {
-		return Repo::META_POST;
+	public function get_meta_type(): MetaType {
+		return MetaType::POST;
 	}
 
 

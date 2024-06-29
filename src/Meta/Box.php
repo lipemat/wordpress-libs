@@ -4,7 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Meta;
 
 /**
- *
+ * Interface for WP classic meta boxes.
  *
  * @author Mat Lipe
  * @since  4.10.0
