@@ -2,9 +2,7 @@
 /** @noinspection ClassMethodNameMatchesFieldNameInspection */
 declare( strict_types=1 );
 
-namespace Lipe\Lib\CMB2\Variation;
-
-use Lipe\Lib\CMB2\Field;
+namespace Lipe\Lib\CMB2;
 
 /**
  *  These allow you to add arbitrary text/markup at different points in the field markup.
@@ -191,16 +189,14 @@ trait Display {
 	 *
 	 * @var bool
 	 */
-	public bool $on_front;
+	protected bool $on_front;
 
 	/**
 	 * Order the field will display in.
 	 *
-	 * @internal
-	 *
 	 * @var int
 	 */
-	public int $position = 0;
+	protected int $position = 0;
 
 
 	/**

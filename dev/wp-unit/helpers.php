@@ -73,6 +73,6 @@ function set_private_property( string|object $object, string $property, mixed $v
 }
 
 function tests_reset_container(): void {
-	set_private_property( Repo::in(), 'fields', [] );
+	set_private_property( Repo::in(), 'registered', [] );
 	Repo::in()->clear_memoize_cache();
 }

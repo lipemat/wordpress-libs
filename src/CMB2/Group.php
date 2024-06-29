@@ -4,6 +4,8 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Group\Layout;
+use Lipe\Lib\Meta\DataType;
+use Lipe\Lib\Meta\Registered;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
 
@@ -97,24 +99,6 @@ class Group extends Field {
 
 
 	/**
-	 * Group constructor.
-	 *
-	 * Same as Field, but with a different hook.
-	 *
-	 * @interal
-	 *
-	 * @param string $id    - ID of the field.
-	 * @param string $name  - Field label.
-	 * @param Box    $box   - Parent class using this Field.
-	 * @param ?Group $group - Group this field is assigned to.
-	 */
-	public function __construct( string $id, string $name, Box $box, ?Group $group ) {
-		$this->hook();
-		parent::__construct( $id, $name, $box, $group );
-	}
-
-
-	/**
 	 * Hook into `cmb2_init` to register all the fields.
 	 *
 	 * We use `cmb2_init` instead of `cmb2_admin_init` so this may be used in the admin
@@ -143,7 +127,7 @@ class Group extends Field {
 	 * @return Field_Type
 	 */
 	public function field( string $id, string $name ): Field_Type {
-		$field = $this->add_field( new Field( $id, $name, $this->box, $this ) );
+		$field = $this->add_field( Field::factory( $id, $name, $this->box, $this ) );
 		return Field_Type::factory( $field, $this->box );
 	}
 
@@ -262,15 +246,15 @@ class Group extends Field {
 	 * @return void
 	 */
 	protected function add_field_to_group( Field $field ): void {
-		if ( Utils::in()->is_repeatable( $this ) && Repo::in()->supports_taxonomy_relationships( $this->box->get_object_type(), $field ) ) {
+		$registered = Registered::factory( $field );
+		if ( Registered::factory( $this )->is_repeatable() && Repo::in()->supports_taxonomy_relationships( $this->box->get_object_type(), $registered ) ) {
 			/* translators: {field type} */
-			throw new \LogicException( \sprintf( esc_html__( 'Taxonomy fields are not supported by repeating groups. %s', 'lipe' ), esc_html( $field->get_id() ) ) );
+			throw new \LogicException( \sprintf( esc_html__( 'Taxonomy fields are not supported by repeating groups. %s', 'lipe' ), esc_html( $field->id ) ) );
 		}
 
-		$field->box_id = $this->box_id;
 		$args = $field->get_field_args();
-		$args['group'] = $this->get_id();
-		$this->box->get_cmb2_box()->add_group_field( $this->id, $args, $field->position );
+		$args['group'] = $this->id;
+		$this->box->get_cmb2_box()->add_group_field( $this->id, $args, $registered->get_position() );
 
 		Repo::in()->register_field( $field );
 	}
@@ -302,21 +286,23 @@ class Group extends Field {
 			'single' => true,
 			'type'   => 'array',
 		];
-		if ( (bool) $this->show_in_rest && Utils::in()->is_public_rest_data( $this ) ) {
+		$group = Registered::factory( $this );
+		if ( $group->is_public_rest_data() ) {
 			$properties = [];
 			foreach ( $this->get_fields() as $field ) {
-				$field_id = $this->translate_sub_field_rest_key( $field );
+				$registered = Registered::factory( $field );
+				$field_id = $this->translate_sub_field_rest_key( $registered );
 				$properties[ $field_id ] = [
 					'type' => 'string',
 				];
-				if ( Utils::in()->is_using_array_data( $field ) ) {
+				if ( $registered->is_using_array_data() ) {
 					$properties[ $field_id ] = [
 						'type'  => 'array',
 						'items' => [
 							'type' => 'string',
 						],
 					];
-				} elseif ( Utils::in()->is_using_object_data( $field ) ) {
+				} elseif ( $registered->is_using_object_data() ) {
 					$properties[ $field_id ] = [
 						'type'                 => 'object',
 						'additionalProperties' => [
@@ -325,7 +311,7 @@ class Group extends Field {
 					];
 				}
 
-				if ( Repo::TYPE_FILE === $field->data_type ) {
+				if ( DataType::FILE === $registered->get_data_type() ) {
 					$properties[ $field_id . '_id' ] = [
 						'type' => 'number',
 					];
@@ -343,7 +329,7 @@ class Group extends Field {
 			$config['sanitize_callback'] = [ $this, 'untranslate_sub_field_rest_keys' ];
 		}
 
-		$this->box->register_meta_on_all_types( $this, $config );
+		$this->box->register_meta_on_all_types( $group, $config );
 	}
 
 
@@ -380,7 +366,7 @@ class Group extends Field {
 				}
 				$field = $fields[ $key ];
 				unset( $group[ $key ] );
-				$group[ $this->translate_sub_field_rest_key( $field ) ] = $value;
+				$group[ $this->translate_sub_field_rest_key( Registered::factory( $field ) ) ] = $value;
 			}
 			return $group;
 		}, $group_values );
@@ -405,7 +391,7 @@ class Group extends Field {
 		}
 
 		$map = Arrays::in()->flatten_assoc( function( Field $field ) {
-			return [ $this->translate_sub_field_rest_key( $field ) => $field ];
+			return [ $this->translate_sub_field_rest_key( Registered::factory( $field ) ) => $field ];
 		}, $this->get_fields() );
 
 		return \array_map( function( $group ) use ( $map ) {
@@ -414,7 +400,7 @@ class Group extends Field {
 					continue;
 				}
 				unset( $group[ $key ] );
-				$group[ $map[ $key ]->get_id() ] = $value;
+				$group[ $map[ $key ]->id ] = $value;
 			}
 			return $group;
 		}, $group_values );
@@ -428,19 +414,16 @@ class Group extends Field {
 	 * the key like we do with top level fields, or use the value of
 	 * `rest_group_short` if it is a string.
 	 *
-	 * @param Field $field - Field to translate.
+	 * @param Registered $field - Field to translate.
 	 *
 	 * @return string
 	 */
-	protected function translate_sub_field_rest_key( Field $field ): string {
-		if ( ! isset( $field->rest_group_short ) || false === $field->rest_group_short ) {
+	protected function translate_sub_field_rest_key( Registered $field ): string {
+		if ( ! $field->has_rest_short_name() ) {
 			return $field->get_id();
 		}
-		if ( \is_string( $field->rest_group_short ) ) {
-			return $field->rest_group_short;
-		}
 
-		return Utils::in()->get_rest_short_name( $field );
+		return $field->get_rest_short_name();
 	}
 
 
@@ -454,7 +437,7 @@ class Group extends Field {
 	 * @return Field
 	 */
 	public function add_field( Field $field ): Field {
-		$this->fields[ $field->get_id() ] = $field;
+		$this->fields[ $field->id ] = $field;
 		return $field;
 	}
 }

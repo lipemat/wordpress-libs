@@ -87,7 +87,7 @@ class Term_Select_2Test extends \WP_Ajax_UnitTestCase {
 		$box = $this->get_box();
 		$echo = function( array|string $value ) use ( $box ) {
 			return get_echo( function() use ( $value, $box ) {
-				$fields = call_private_method( $box, 'get_fields' );
+				$fields = get_private_property( $box, 'fields' );
 				$field = new \CMB2_Field( [ 'field_args' => $fields['ts']->get_field_args() ] );
 				do_action( 'cmb2_render_' . Type::TERM_SELECT_2->value, $field, $value, 1, 'post', new \CMB2_Types( $field ) );
 			} );

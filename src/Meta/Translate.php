@@ -5,7 +5,7 @@ namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\CMB2\Field\Term_Select_2;
-use Lipe\Lib\CMB2\Field\Term_Select_2\Register;
+use Lipe\Lib\CMB2\Field\Term_Select_2\Select_2_Field;
 use Lipe\Lib\CMB2\Field\Type;
 use Lipe\Lib\CMB2\Variation\Taxonomy;
 use Lipe\Lib\Traits\Memoize;
@@ -19,9 +19,9 @@ trait Translate {
 	/**
 	 * All fields that have been registered
 	 *
-	 * @var Field[]
+	 * @var Registered[]
 	 */
-	protected array $fields = [];
+	protected array $registered = [];
 
 	/**
 	 * Used internally to track, which group row are on.
@@ -36,9 +36,9 @@ trait Translate {
 	 *
 	 * @param ?string $field_id - The field id.
 	 *
-	 * @return null|Field
+	 * @return ?Registered
 	 */
-	abstract protected function get_field( ?string $field_id ): ?Field;
+	abstract protected function get_registered( ?string $field_id ): ?Registered;
 
 
 	/**
@@ -50,18 +50,18 @@ trait Translate {
 	 * @phpstan-param Repo::META_*|string $meta_type
 	 *
 	 * @param string                      $meta_type - The meta type.
-	 * @param Field                       $field     - The field to check for duplicate taxonomy fields.
+	 * @param Registered                  $field     - The field to check for duplicate taxonomy fields.
 	 *
 	 * @return bool
 	 */
-	public function supports_taxonomy_relationships( string $meta_type, Field $field ): bool {
-		if ( Repo::TYPE_TAXONOMY !== $field->data_type && Repo::TYPE_TAXONOMY_SINGULAR !== $field->data_type ) {
+	public function supports_taxonomy_relationships( string $meta_type, Registered $field ): bool {
+		if ( DataType::TAXONOMY !== $field->get_data_type() && DataType::TAXONOMY_SINGULAR !== $field->get_data_type() ) {
 			return false;
 		}
 		// Select 2 can turn off assigning terms.
 		if ( Type::TERM_SELECT_2 === $field->get_type() ) {
-			$registered = Term_Select_2::in()->get_registered( $field->get_id() );
-			if ( $registered instanceof Register && ! $registered->assign_terms ) {
+			$registered = Term_Select_2::in()->get_select_2_fields( $field->get_id() );
+			if ( $registered instanceof Select_2_Field && ! $registered->assign_terms ) {
 				return false;
 			}
 		}
@@ -82,11 +82,11 @@ trait Translate {
 	 * @return mixed
 	 */
 	protected function get_meta_value( int|string $object_id, string $key, string $meta_type ): mixed {
-		$field = $this->get_field( $key );
-		if ( null !== $field && null !== $field->group ) {
-			$group = $this->get_meta_value( $object_id, $field->group->get_id(), $meta_type );
-			if ( '' === $group && isset( $field->default ) ) {
-				return $field->default;
+		$field = $this->get_registered( $key );
+		if ( null !== $field && null !== $field->get_group() ) {
+			$group = $this->get_meta_value( $object_id, $field->get_group()->id, $meta_type );
+			if ( '' === $group && null !== $field->get_default() ) {
+				return $field->get_default();
 			}
 			$value = $group[ $this->group_row ][ $key ] ?? null;
 		} elseif ( Repo::META_OPTION === $meta_type ) {
@@ -95,7 +95,7 @@ trait Translate {
 			$value = get_metadata( $meta_type, (int) $object_id, $key, true );
 		}
 
-		if ( null !== $field && null !== $field->escape_cb ) {
+		if ( null !== $field && null !== $field->get_escape_cb() ) {
 			$field = $field->get_cmb2_field( $object_id );
 			if ( null !== $field ) {
 				return $field->escaped_value( 'esc_attr', $value );
@@ -119,13 +119,13 @@ trait Translate {
 	 * @return bool|int
 	 */
 	protected function update_meta_value( int|string $object_id, string $key, mixed $value, string $meta_type ): bool|int {
-		$field = $this->get_field( $key );
+		$field = $this->get_registered( $key );
 		if ( null !== $field ) {
 			$cmb2_field = $field->get_cmb2_field( $object_id );
-			if ( null !== $cmb2_field && null !== $field->sanitization_cb ) {
+			if ( null !== $cmb2_field && null !== $field->get_sanitization_cb() ) {
 				$value = $cmb2_field->sanitization_cb( $value );
 			}
-			if ( null !== $field->group ) {
+			if ( null !== $field->get_group() ) {
 				return $this->update_group_sub_field_value( $object_id, $key, $value, $meta_type );
 			}
 		}
@@ -150,11 +150,11 @@ trait Translate {
 	 * @return void
 	 */
 	protected function delete_meta_value( int|string $object_id, string $key, string $meta_type ): void {
-		$field = $this->get_field( $key );
-		if ( null !== $field && null !== $field->group ) {
-			$group = $this->get_meta_value( $object_id, $field->group->get_id(), $meta_type );
+		$field = $this->get_registered( $key );
+		if ( null !== $field && null !== $field->get_group() ) {
+			$group = $this->get_meta_value( $object_id, $field->get_group()->id, $meta_type );
 			$group[ $this->group_row ][ $key ] = null;
-			$this->update_meta_value( $object_id, $field->group->get_id(), $group, $meta_type );
+			$this->update_meta_value( $object_id, $field->get_group()->id, $group, $meta_type );
 			return;
 		}
 
@@ -224,8 +224,8 @@ trait Translate {
 		$url = $this->get_meta_value( $object_id, $key, $meta_type );
 		if ( \is_string( $url ) && '' !== \trim( $url ) ) {
 			// Add the extra field so groups meta will be translated properly.
-			if ( null !== $this->fields[ $key ]->group ) {
-				$this->fields[ $key . '_id' ] = $this->fields[ $key ];
+			if ( null !== $this->registered[ $key ]->get_group() ) {
+				$this->registered[ $key . '_id' ] = $this->registered[ $key ];
 			}
 
 			return [
@@ -253,8 +253,8 @@ trait Translate {
 	 */
 	protected function update_file_field_value( int|string $object_id, string $key, int $attachment_id, string $meta_type ): void {
 		// Add the extra field so groups meta will be translated properly.
-		if ( null !== $this->fields[ $key ]->group ) {
-			$this->fields[ $key . '_id' ] = $this->fields[ $key ];
+		if ( null !== $this->registered[ $key ]->get_group() ) {
+			$this->registered[ $key . '_id' ] = $this->registered[ $key ];
 		}
 		$this->update_meta_value( $object_id, $key, \wp_get_attachment_url( $attachment_id ), $meta_type );
 		$this->update_meta_value( $object_id, "{$key}_id", $attachment_id, $meta_type );
@@ -275,8 +275,8 @@ trait Translate {
 	 */
 	protected function delete_file_field_value( int|string $object_id, string $key, string $meta_type ): void {
 		// Add the extra field so groups meta will be translated properly.
-		if ( null !== $this->fields[ $key ]->group ) {
-			$this->fields[ $key . '_id' ] = $this->fields[ $key ];
+		if ( null !== $this->registered[ $key ]->get_group() ) {
+			$this->registered[ $key . '_id' ] = $this->registered[ $key ];
 		}
 		$this->delete_meta_value( $object_id, $key, $meta_type );
 		$this->delete_meta_value( $object_id, $key . '_id', $meta_type );
@@ -362,18 +362,18 @@ trait Translate {
 	 * @return bool|int
 	 */
 	protected function update_group_sub_field_value( int|string $object_id, string $key, mixed $value, string $meta_type ): bool|int {
-		$field = $this->get_field( $key );
-		if ( null === $field || null === $field->group ) {
+		$field = $this->get_registered( $key );
+		if ( null === $field || null === $field->get_group() ) {
 			return false;
 		}
 
-		$group = $this->get_meta_value( $object_id, $field->group->get_id(), $meta_type );
+		$group = $this->get_meta_value( $object_id, $field->get_group()->id, $meta_type );
 		if ( ! \is_array( $group ) ) {
 			$group = [];
 		}
 		$group[ $this->group_row ][ $key ] = $value;
 
-		return $this->update_meta_value( $object_id, $field->group->get_id(), $group, $meta_type );
+		return $this->update_meta_value( $object_id, $field->get_group()->id, $group, $meta_type );
 	}
 
 
@@ -411,8 +411,6 @@ trait Translate {
 	/**
 	 * Get all the fields assigned to this group.
 	 *
-	 * @internal
-	 *
 	 * @param string $group - The group id.
 	 *
 	 * @return string[]
@@ -420,11 +418,11 @@ trait Translate {
 	protected function get_group_fields( string $group ): array {
 		$groups = $this->once( function() {
 			$groups = [];
-			\array_map( function( Field $field ) use ( &$groups ) {
-				if ( null !== $field->group ) {
-					$groups[ $field->group->get_id() ][] = $field->get_id();
+			\array_map( function( Registered $field ) use ( &$groups ) {
+				if ( null !== $field->get_group() ) {
+					$groups[ $field->get_group()->id ][] = $field->get_id();
 				}
-			}, $this->fields );
+			}, $this->registered );
 			return $groups;
 		}, __METHOD__ );
 
@@ -447,11 +445,11 @@ trait Translate {
 	 * @return \WP_Term[]
 	 */
 	protected function get_taxonomy_field_value( int|string $object_id, string $field_id, string $meta_type ): array {
-		$field = $this->get_field( $field_id );
-		if ( ! $field instanceof Taxonomy ) {
+		$field = $this->get_registered( $field_id );
+		if ( null === $field || ! $field->variation instanceof Taxonomy ) {
 			return [];
 		}
-		$taxonomy = $field->taxonomy;
+		$taxonomy = $field->variation->get_taxonomy();
 		if ( ! $this->supports_taxonomy_relationships( $meta_type, $field ) ) {
 			return $this->maybe_use_main_blog( $field_id, function() use ( $object_id, $field_id, $meta_type ) {
 				$meta_value = (array) $this->get_meta_value( $object_id, $field_id, $meta_type );
@@ -492,11 +490,11 @@ trait Translate {
 	 * @return void
 	 */
 	protected function update_taxonomy_field_value( int|string $object_id, string $key, array $terms, string $meta_type, bool $singular = false ): void {
-		$field = $this->get_field( $key );
+		$field = $this->get_registered( $key );
 		if ( null === $field ) {
 			return;
 		}
-		if ( null !== $field->sanitization_cb ) {
+		if ( null !== $field->get_sanitization_cb() ) {
 			$cmb2_field = $field->get_cmb2_field( $object_id );
 			if ( null !== $cmb2_field ) {
 				$terms = $cmb2_field->sanitization_cb( $terms );
@@ -504,12 +502,12 @@ trait Translate {
 		}
 
 		// Stored as term relationship.
-		if ( $field instanceof Taxonomy && $this->supports_taxonomy_relationships( $meta_type, $field ) ) {
+		if ( $field->variation instanceof Taxonomy && $this->supports_taxonomy_relationships( $meta_type, $field ) ) {
 			$terms = \array_map( function( $term ) {
 				// Term ids are perceived as term slug when strings.
 				return is_numeric( $term ) ? (int) $term : $term;
 			}, $terms );
-			wp_set_object_terms( (int) $object_id, $terms, $field->taxonomy );
+			wp_set_object_terms( (int) $object_id, $terms, $field->variation->get_taxonomy() );
 			return;
 		}
 
@@ -546,10 +544,12 @@ trait Translate {
 	 * @return void
 	 */
 	protected function delete_taxonomy_field_value( int|string $object_id, string $field_id, string $meta_type ): void {
-		$field = $this->get_field( $field_id );
-		if ( $field instanceof Taxonomy && $this->supports_taxonomy_relationships( $meta_type, $field ) ) {
-			$taxonomy = $field->taxonomy;
-			wp_delete_object_term_relationships( (int) $object_id, $taxonomy );
+		$field = $this->get_registered( $field_id );
+		if ( null === $field ) {
+			return;
+		}
+		if ( $field->variation instanceof Taxonomy && $this->supports_taxonomy_relationships( $meta_type, $field ) ) {
+			wp_delete_object_term_relationships( (int) $object_id, $field->variation->get_taxonomy() );
 		} else {
 			$this->delete_meta_value( $object_id, $field_id, $meta_type );
 		}
@@ -592,11 +592,11 @@ trait Translate {
 	 */
 	protected function get_term_id_from_slug( string $key, int|string $value ): ?int {
 		if ( ! is_numeric( $value ) ) {
-			$field = $this->get_field( $key );
-			if ( ! $field instanceof Taxonomy ) {
+			$field = $this->get_registered( $key );
+			if ( null === $field || ! $field->variation instanceof Taxonomy ) {
 				return null;
 			}
-			$term = get_term_by( 'slug', $value, $field->taxonomy );
+			$term = get_term_by( 'slug', $value, $field->variation->get_taxonomy() );
 			if ( false !== $term && \is_a( $term, \WP_Term::class ) ) {
 				return $term->term_id;
 			}
@@ -625,7 +625,7 @@ trait Translate {
 	 * @return mixed;
 	 */
 	protected function maybe_use_main_blog( string $field_id, callable $callback ): mixed {
-		$field = $this->get_field( $field_id );
+		$field = $this->get_registered( $field_id );
 		if ( null === $field ) {
 			throw new \RuntimeException( esc_html( "Field with id `{$field_id}` does not exist." ) );
 		}

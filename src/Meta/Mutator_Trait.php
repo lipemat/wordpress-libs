@@ -22,9 +22,9 @@ trait Mutator_Trait {
 	 *
 	 * @example post_id, term_id, user_id, comment_id, site_id, <custom>
 	 *
-	 * @return mixed
+	 * @return string|int
 	 */
-	abstract public function get_id();
+	abstract public function get_id(): string|int;
 
 
 	/**
@@ -117,7 +117,7 @@ trait Mutator_Trait {
 
 
 	/**
-	 * Get a value of this object's meta field
+	 * Get a value of this object's meta field.
 	 * using the meta repo to map the appropriate data type.
 	 *
 	 * @param string     $key           - Meta key to retrieve.

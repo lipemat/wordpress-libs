@@ -1,12 +1,12 @@
 <?php
+/** @noinspection ClassMethodNameMatchesFieldNameInspection */
 declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
 use Lipe\Lib\CMB2\Field\Type;
-use Lipe\Lib\CMB2\Variation\Display;
-use Lipe\Lib\CMB2\Variation\FieldInterface;
+use Lipe\Lib\Meta\Registered;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
 
@@ -15,30 +15,19 @@ use Lipe\Lib\Util\Arrays;
  *
  * @phpstan-import-type DELETE_CB from Event_Callbacks
  * @phpstan-import-type CHANGE_CB from Event_Callbacks
- * @phpstan-type ESC_CB callable( mixed $value, array<string, mixed>, \CMB2_Field ): mixed
+ * @phpstan-import-type ESC_CB from Registered
  */
-class Field implements FieldInterface {
+class Field {
 	use Display;
 
 	/**
-	 * ID of meta box this field is assigned to.
-	 *
-	 * @internal
-	 *
-	 * @var string
-	 */
-	public string $box_id;
-
-	/**
 	 * Used by the Repo to determine the data type of this field.
-	 *
-	 * @interal
 	 *
 	 * @phpstan-var Repo::TYPE_*
 	 *
 	 * @var string
 	 */
-	public string $data_type = Repo::TYPE_DEFAULT;
+	protected string $data_type = Repo::TYPE_DEFAULT;
 
 	/**
 	 * Specify a default value for the field.
@@ -49,7 +38,7 @@ class Field implements FieldInterface {
 	 *
 	 * @var string|false|array<mixed>
 	 */
-	public string|array|false $default;
+	protected string|array|false $default;
 
 	/**
 	 * Bypass the CMB escaping (escapes before display) methods with your own callback.
@@ -59,12 +48,10 @@ class Field implements FieldInterface {
 	 *
 	 * @see  Field::escape_cb()
 	 *
-	 * @internal
-	 *
 	 * @phpstan-var ESC_CB
 	 * @var callable
 	 */
-	public $escape_cb;
+	protected $escape_cb;
 
 	/**
 	 * Bypass the CMB sanitization (sanitizes before saving) methods with your own callback.
@@ -75,16 +62,14 @@ class Field implements FieldInterface {
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
 	 *
 	 * @see     Field::sanitization_cb()
-	 * @see     Field::$meta_sanitize
+	 * @see     Field::$meta_sanitizer
 	 *
 	 * @example sanitize_function( $value, $field_args, $field ){ return string }
-	 *
-	 * @internal
 	 *
 	 * @phpstan-var ESC_CB
 	 * @var callable
 	 */
-	public $sanitization_cb;
+	protected $sanitization_cb;
 
 	/**
 	 * Used internally to store the CMB sanitization callback used
@@ -96,12 +81,10 @@ class Field implements FieldInterface {
 	 *
 	 * @see Field::$sanitization_cb
 	 *
-	 * @internal
-	 *
 	 * @phpstan-var ESC_CB
 	 * @var callable
 	 */
-	public $meta_sanitize;
+	protected $meta_sanitizer;
 
 	/**
 	 * To override the box's `show_in_rest` for this field.
@@ -123,7 +106,7 @@ class Field implements FieldInterface {
 	 *
 	 * @var string|bool
 	 */
-	public string|bool $show_in_rest;
+	protected string|bool $show_in_rest;
 
 	/**
 	 * Used to configure some strings for thinks like taxonomy and repeater fields.
@@ -140,7 +123,7 @@ class Field implements FieldInterface {
 	 *
 	 * @var  array<string, string>
 	 */
-	public array $text = [];
+	protected array $text = [];
 
 	/**
 	 * Enable revision support for 'post' objects.
@@ -149,11 +132,9 @@ class Field implements FieldInterface {
 	 *
 	 * @see   register_meta()
 	 *
-	 * @internal
-	 *
 	 * @var bool
 	 */
-	public bool $revisions_enabled;
+	protected bool $revisions_enabled;
 
 	/**
 	 * Will modify default attributes (class, input type, rows, etc),
@@ -218,7 +199,7 @@ class Field implements FieldInterface {
 	 *
 	 * @var string|bool
 	 */
-	protected string|bool $rest_group_short;
+	protected string|bool $rest_short_name;
 
 	/**
 	 * The type of field
@@ -317,61 +298,15 @@ class Field implements FieldInterface {
 	 * @param Box    $box   - Parent class using this Field.
 	 * @param ?Group $group - Group this field is assigned to.
 	 */
-	public function __construct(
-		protected readonly string $id,
-		protected readonly string $name,
-		protected readonly Box $box,
+	final protected function __construct(
+		public readonly string $id,
+		public readonly string $name,
+		public readonly Box $box,
 		public readonly ?Group $group,
 	) {
-	}
-
-
-	/**
-	 * The data key. If using for posts, will be the post-meta key.
-	 * If using for an options page, will be the array key.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#id
-	 *
-	 * @required
-	 *
-	 * @example 'lipe/project/meta/category-fields/caption',
-	 *
-	 * @return string
-	 */
-	public function get_id(): string {
-		return $this->id;
-	}
-
-
-	/**
-	 * The field label
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#name
-	 *
-	 * @return string
-	 */
-	public function get_name(): string {
-		return $this->name;
-	}
-
-
-	/**
-	 * Get the box this field is assigned to.
-	 *
-	 * @return Box
-	 */
-	public function get_box(): Box {
-		return $this->box;
-	}
-
-
-	/**
-	 * Get the group this field is assigned to.
-	 *
-	 * @return ?Group
-	 */
-	public function get_group(): ?Group {
-		return $this->group;
+		if ( method_exists( $this, 'hook' ) ) {
+			$this->hook();
+		}
 	}
 
 
@@ -450,12 +385,12 @@ class Field implements FieldInterface {
 	 */
 	public function default( callable|string|array $default_value ): Field {
 		if ( \is_callable( $default_value ) ) {
-			new Default_Callback( $this, $this->get_box(), $default_value );
+			Default_Callback::factory( $this, $this->box, $default_value );
 			$this->default_cb = $default_value;
 		} else {
 			$this->default = $default_value;
 			if ( 'options-page' === $this->box->get_object_type() ) {
-				add_filter( "cmb2_default_option_{$this->box->get_id()}_{$this->get_id()}", function() {
+				add_filter( "cmb2_default_option_{$this->box->get_id()}_{$this->id}", function() {
 					return $this->default;
 				} );
 			}
@@ -519,9 +454,9 @@ class Field implements FieldInterface {
 	 * @return Field
 	 */
 	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ): Field {
-		if ( \CMB2_Utils::does_not_support_repeating( $this->get_type()->value ) ) {
+		if ( \CMB2_Utils::does_not_support_repeating( $this->type->value ) ) {
 			/* translators: {field type} */
-			_doing_it_wrong( __METHOD__, \sprintf( esc_html__( 'Fields of `%s` type do not support repeating.', 'lipe' ), esc_html( $this->get_type()->value ) ), '5.0.0' );
+			_doing_it_wrong( __METHOD__, \sprintf( esc_html__( 'Fields of `%s` type do not support repeating.', 'lipe' ), esc_html( $this->type->value ) ), '5.0.0' );
 		}
 
 		$this->repeatable = $repeatable;
@@ -603,12 +538,11 @@ class Field implements FieldInterface {
 	 * @return $this
 	 */
 	public function revisions_enabled( bool $enable = true ): Field {
-		$box = $this->get_box();
 		if ( null !== $this->group ) {
 			_doing_it_wrong( __METHOD__, "Revision may only be enabled on a group. Not a group's field .", '4.5.0' );
 			return $this;
 		}
-		if ( 'post' !== $box->get_object_type() ) {
+		if ( 'post' !== $this->box->get_object_type() ) {
 			_doing_it_wrong( __METHOD__, "Revisions are only supported on 'post' objects.", '4.5.0' );
 			return $this;
 		}
@@ -648,7 +582,7 @@ class Field implements FieldInterface {
 	 */
 	public function show_in_rest( bool|string $methods = \WP_REST_Server::ALLMETHODS ): Field {
 		if ( null !== $this->group ) {
-			_doing_it_wrong( __METHOD__, wp_kses_post( "Show in rest may only be added to whole group. Not a group's field. `{$this->get_id()}` is not applicable." ), '2.19.0' );
+			_doing_it_wrong( __METHOD__, wp_kses_post( "Show in rest may only be added to whole group. Not a group's field. `{$this->id}` is not applicable." ), '2.19.0' );
 		}
 		$this->show_in_rest = $methods;
 		return $this;
@@ -658,7 +592,8 @@ class Field implements FieldInterface {
 	/**
 	 * Historically, the full field keys were used for group child fields.
 	 *
-	 * Opt-in to shorten the field keys like we do for top level fields.
+	 * - Opt-in to shorten the field keys like we do for top level fields.
+	 * - Also may be used to specify a custom top level key.
 	 *
 	 * @since 4.10.0
 	 *
@@ -666,11 +601,8 @@ class Field implements FieldInterface {
 	 *
 	 * @return Field
 	 */
-	public function rest_group_short( bool|string $short = true ): Field {
-		if ( null === $this->group ) {
-			_doing_it_wrong( __METHOD__, wp_kses_post( "Group short fields only apply to a group's child field. `{$this->get_id()}` is not applicable." ), '4.10.0' );
-		}
-		$this->rest_group_short = $short;
+	public function rest_short_name( bool|string $short = true ): Field {
+		$this->rest_short_name = $short;
 		return $this;
 	}
 
@@ -697,21 +629,6 @@ class Field implements FieldInterface {
 		$this->render_row_cb( [ Tabs::in(), 'render_field' ] );
 
 		return $this;
-	}
-
-
-	/**
-	 * The type of field
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#type
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
-	 *
-	 * @see  Field_Type
-	 *
-	 * @return Type
-	 */
-	public function get_type(): Type {
-		return $this->type;
 	}
 
 
@@ -743,18 +660,6 @@ class Field implements FieldInterface {
 
 
 	/**
-	 * Is this field repeatable?
-	 *
-	 * @interal
-	 *
-	 * @return bool
-	 */
-	public function is_repeatable(): bool {
-		return $this->repeatable;
-	}
-
-
-	/**
 	 * Callback to be fired when a meta item is deleted.
 	 *
 	 * Fired when:
@@ -778,7 +683,7 @@ class Field implements FieldInterface {
 	 * @return Field
 	 */
 	public function delete_cb( callable $callback ): Field {
-		$this->event_callbacks[] = new Event_Callbacks( $this, $callback, Event_Callbacks::TYPE_DELETE );
+		$this->event_callbacks[] = Event_Callbacks::factory( $this, $callback, Event_Callbacks::TYPE_DELETE );
 		return $this;
 	}
 
@@ -809,7 +714,7 @@ class Field implements FieldInterface {
 	 * @return Field
 	 */
 	public function change_cb( callable $callback ): Field {
-		$this->event_callbacks[] = new Event_Callbacks( $this, $callback, Event_Callbacks::TYPE_CHANGE );
+		$this->event_callbacks[] = Event_Callbacks::factory( $this, $callback, Event_Callbacks::TYPE_CHANGE );
 
 		return $this;
 	}
@@ -830,27 +735,13 @@ class Field implements FieldInterface {
 	 * @return Field
 	 */
 	public function sanitization_cb( callable $callback ): Field {
-		if ( [ 'options-page' ] !== $this->box->get_object_types() && Utils::in()->is_allowed_to_register_meta( $this ) ) {
-			$this->meta_sanitize = $callback;
+		$registered = Registered::factory( $this );
+		if ( [ Box::TYPE_OPTIONS ] !== $this->box->get_object_types() && $registered->is_allowed_to_register_meta() ) {
+			$this->meta_sanitizer = $callback;
 		} else {
 			$this->sanitization_cb = $callback;
 		}
 		return $this;
-	}
-
-
-	/**
-	 * Retrieve the CMB2 version of this field.
-	 *
-	 * @since 2.22.1
-	 *
-	 * @param int|string $object_id - The object id to pass on to CMB2.
-	 *
-	 * @return ?\CMB2_Field
-	 */
-	public function get_cmb2_field( int|string $object_id = 0 ): ?\CMB2_Field {
-		$parent_id = $this->group?->get_id() ?? $this->box->get_id();
-		return cmb2_get_field( $parent_id, $this->get_id(), $object_id );
 	}
 
 
@@ -890,5 +781,20 @@ class Field implements FieldInterface {
 		$field = new static( $field->id, $field->name, $field->box, $field->group );
 		$box->add_field( $field );
 		return $field;
+	}
+
+
+	/**
+	 * Create a new field.
+	 *
+	 * @param string $id    - ID of the field.
+	 * @param string $name  - Field label.
+	 * @param Box    $box   - Parent class using this Field.
+	 * @param ?Group $group - Group this field is assigned to.
+	 *
+	 * @return static
+	 */
+	public static function factory( string $id, string $name, Box $box, ?Group $group = null ): static {
+		return new static( $id, $name, $box, $group );
 	}
 }

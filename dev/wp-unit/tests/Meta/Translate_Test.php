@@ -30,12 +30,12 @@ class Translate_Test extends \WP_UnitTestCase {
 			}
 
 
-			protected function get_field( ?string $field_id ): ?Field {
+			protected function get_registered( ?string $field_id ): ?Registered {
 				if ( '_' !== $field_id ) {
 					return null;
 				}
 				$box = new Box( 'test-translate', [ 'post' ], 'Translate test' );
-				return $box->field( $field_id, $field_id )->taxonomy_select( 'category' );
+				return Registered::factory( $box->field( $field_id, $field_id )->taxonomy_select( 'category' ) );
 			}
 		};
 
@@ -135,7 +135,7 @@ class Translate_Test extends \WP_UnitTestCase {
 
 
 	public function test_supports_taxonomy_relationship(): void {
-		$get_field = fn( string $field ) => call_private_method( Repo::in(), 'get_field', [ $field ] );
+		$get_field = fn( string $field ) => call_private_method( Repo::in(), 'get_registered', [ $field ] );
 		$box = new Box( __METHOD__, [ 'post' ], 'Test Taxonomy Field' );
 		$box->field( 'taxonomy/sr/1', 'SR 1' )
 		    ->taxonomy_select( 'category' );

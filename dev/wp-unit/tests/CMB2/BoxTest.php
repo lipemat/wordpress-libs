@@ -5,6 +5,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Field\Type;
+use Lipe\Lib\Meta\Registered;
 use Lipe\Lib\Settings\Settings_Trait;
 use mocks\Comment_Mock;
 use mocks\Post_Mock;
@@ -74,9 +75,9 @@ class BoxTest extends \WP_UnitTestCase {
 		    ->column( 3 )
 		    ->position( 14 );
 		/** @var Field $field */
-		$field = call_private_method( $box, 'get_fields' )['t1'];
+		$field = get_private_property( $box, 'fields' )['t1'];
 		$this->assertEquals( 3, get_private_property( $field, 'column' )['position'] ?? false );
-		$this->assertEquals( 14, $field->position );
+		$this->assertEquals( 14, get_private_property( $field, 'position' ) );
 		$this->assertEquals( [ 'o' => 'one', 't' => 'two' ], get_private_property( $field, 'options' ) );
 
 		$group = $box->group( 'g1', 'Group 1' );
@@ -87,14 +88,14 @@ class BoxTest extends \WP_UnitTestCase {
 		      ->default( 'on' );
 
 		/** @var Group $group */
-		$group = call_private_method( $box, 'get_fields' )['g1'];
+		$group = get_private_property( $box, 'fields' )['g1'];
 		/** @var Field $field */
-		$field = call_private_method( $group, 'get_fields' )['t2'];
+		$field = get_private_property( $group, 'fields' )['t2'];
 
 		$this->assertEquals( 4, get_private_property( $field, 'column' )['position'] );
-		$this->assertEquals( 9, $field->position );
-		$this->assertEquals( Type::CHECKBOX, $field->get_type() );
-		$this->assertEquals( 'on', $field->default );
+		$this->assertEquals( 9, get_private_property( $field, 'position' ) );
+		$this->assertEquals( Type::CHECKBOX, get_private_property( $field, 'type' ) );
+		$this->assertEquals( 'on', Registered::factory( $field )->get_default() );
 
 		do_action( 'cmb2_init' );
 		$post = Post_Mock::factory( self::factory()->post->create_and_get() );

@@ -246,45 +246,46 @@ class GroupTest extends \WP_Test_REST_TestCase {
 		$result = $this->get_response( '/wp/v2/posts/' . $post->get_id(), [], 'GET' );
 		$this->assertSame( [
 			'footnotes' => '',
+			't2'        => '__t2',
 			'g3'        => [
 				[
 					'first/things/last'   => '__last',
 					'second/things/after' => '__after',
 				],
 			],
-			't2'        => '__t2',
 		], $result->data['meta'] );
 
 		$group->field( 'first/things/last', '' )
 		      ->text()
-		      ->rest_group_short();
+		      ->rest_short_name();
 		do_action( 'cmb2_init' );
 		$result = $this->get_response( '/wp/v2/posts/' . $post->get_id(), [], 'GET' );
 		$this->assertSame( [
 			'footnotes' => '',
+			't2'        => '__t2',
 			'g3'        => [
 				[
 					'last'                => '__last',
 					'second/things/after' => '__after',
 				],
 			],
-			't2'        => '__t2',
 		], $result->data['meta'] );
 
 		$group->field( 'second/things/after', '' )
 		      ->text()
-		      ->rest_group_short( 'customField' );
+		      ->rest_short_name( 'customField' );
 		do_action( 'cmb2_init' );
 		$result = $this->get_response( '/wp/v2/posts/' . $post->get_id(), [], 'GET' );
 		$this->assertSame( [
 			'footnotes' => '',
+			't2'        => '__t2',
 			'g3'        => [
 				[
 					'last'        => '__last',
 					'customField' => '__after',
 				],
 			],
-			't2'        => '__t2',
+
 		], $result->data['meta'] );
 
 		wp_set_current_user( self::factory()->user->create( [
@@ -312,24 +313,6 @@ class GroupTest extends \WP_Test_REST_TestCase {
 		];
 		$this->assertNull( $post['first/things/last'] );
 		$this->assertNull( $post['second/things/after'] );
-	}
-
-
-	public function test_doing_short_group_wrong(): void {
-		$box = new Box( 'rested', [ 'post' ], 'Rested Group' );
-		$box->field( 'meta/prefixed/t2', 'Test 2' )
-		    ->text()
-		    ->rest_group_short();
-
-		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
-		$group->show_in_rest();
-		$group->field( 'first/things/last', '' )
-		      ->text()
-		      ->show_in_rest()
-		      ->rest_group_short();
-
-		$this->expectDoingItWrong( Field::class . '::rest_group_short', "Group short fields only apply to a group's child field. `meta/prefixed/t2` is not applicable. (This message was added in version 4.10.0.)" );
-		$this->expectDoingItWrong( Field::class . '::show_in_rest', "Show in rest may only be added to whole group. Not a group's field. `first/things/last` is not applicable. (This message was added in version 2.19.0.)" );
 	}
 
 

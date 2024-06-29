@@ -3,6 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\Meta\Registered;
 use Lipe\Lib\Theme\Dashicons;
 
 /**
@@ -271,17 +272,17 @@ class Options_Page extends Box {
 	 *
 	 * Gives a universal place for amending the config.
 	 *
-	 * @param Field                $field  - The field object.
-	 * @param array<string, mixed> $config - The field config.
+	 * @param Registered           $registered - The registered field.
+	 * @param array<string, mixed> $config     - The field config.
 	 */
-	public function register_meta_on_all_types( Field $field, array $config ): void {
+	public function register_meta_on_all_types( Registered $registered, array $config ): void {
 		unset( $config['single'] );
 
-		if ( isset( $field->show_in_rest ) && false !== $field->show_in_rest ) {
-			$config = $this->translate_rest_keys( $field, $config );
-			add_filter( 'rest_pre_get_setting', function( $pre, $option ) use ( $field, $config ) {
+		if ( false !== $registered->get_show_in_rest() ) {
+			$config = $this->translate_rest_keys( $registered, $config );
+			add_filter( 'rest_pre_get_setting', function( $pre, $option ) use ( $registered, $config ) {
 				if ( isset( $config['show_in_rest'] ) && $option === $config['show_in_rest']['name'] ) {
-					return cmb2_options( $this->id )->get( $field->get_id(), $field->default ?? false );
+					return cmb2_options( $this->id )->get( $registered->get_id(), $registered->get_default() ?? false );
 				}
 				return $pre;
 			}, 9, 2 );
@@ -292,6 +293,6 @@ class Options_Page extends Box {
 			return;
 		}
 
-		register_setting( 'options', $field->get_id(), $config );
+		register_setting( 'options', $registered->get_id(), $config );
 	}
 }

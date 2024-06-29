@@ -3,6 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\Meta\Registered;
+
 /**
  * Custom handling for default values using a callback.
  *
@@ -13,12 +15,12 @@ class Default_Callback {
 	/**
 	 * Build an instance for handling default values on this field.
 	 *
-	 * @param Field                                 $field    - Field instance.
+	 * @param Registered                            $field    - Field instance.
 	 * @param Box                                   $box      - Box instance.
 	 * @param callable( object, \CMB2_Field): mixed $callback - Callback to use for default value.
 	 */
-	public function __construct(
-		protected readonly Field $field,
+	final protected function __construct(
+		protected readonly Registered $field,
 		protected readonly Box $box,
 		protected $callback,
 	) {
@@ -103,5 +105,19 @@ class Default_Callback {
 		}
 		$cmb2_field->object_id( $this->box->get_id() );
 		return \call_user_func( $this->callback, $cmb2_field->properties, $cmb2_field );
+	}
+
+
+	/**
+	 * Create an instance of the default callback handler.
+	 *
+	 * @param Field    $field    - Field instance.
+	 * @param Box      $box      - Box instance.
+	 * @param callable $callback - Callback to use for default value.
+	 *
+	 * @return Default_Callback
+	 */
+	public static function factory( Field $field, Box $box, callable $callback ): Default_Callback {
+		return new static( Registered::factory( $field ), $box, $callback );
 	}
 }

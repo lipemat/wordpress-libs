@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Variation\Taxonomy;
+use Lipe\Lib\Meta\Registered;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Taxonomy\Get_Terms;
 
@@ -33,14 +34,21 @@ class Event_Callbacks {
 	 *
 	 * @var Box
 	 */
-	protected Box $box;
+	protected readonly Box $box;
+
+	/**
+	 * The field variation we are working with.
+	 *
+	 * @var Field
+	 */
+	protected readonly Field $variation;
 
 	/**
 	 * Meta key
 	 *
 	 * @var string
 	 */
-	protected string $key;
+	protected readonly string $key;
 
 	/**
 	 * Box type this field is registered on.
@@ -54,7 +62,7 @@ class Event_Callbacks {
 	 *
 	 * @var string
 	 */
-	protected string $box_type;
+	protected readonly string $box_type;
 
 	/**
 	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
@@ -65,7 +73,7 @@ class Event_Callbacks {
 	 *
 	 * @var array
 	 */
-	public array $object_types;
+	public readonly array $object_types;
 
 	/**
 	 * Previous value before an update.
@@ -81,17 +89,17 @@ class Event_Callbacks {
 	 * @phpstan-param static::TYPE_*      $cb_type
 	 * @phpstan-param CHANGE_CB|DELETE_CB $callback
 	 *
-	 * @param Field                       $field    - Field to register events for.
+	 * @param Registered                  $field    - Field to register events for.
 	 * @param callable                    $callback - Callback to run when the field changes or is deleted.
 	 * @param string                      $cb_type  - Callback type, either 'change' or 'delete'.
 	 */
-	public function __construct(
-		protected Field $field,
+	final protected function __construct(
+		protected readonly Registered $field,
 		protected $callback,
 		string $cb_type,
 	) {
-		$box = $this->field->get_box();
-		$this->box = $box;
+		$this->box = $this->field->get_box();
+		$this->variation = $this->field->variation;
 		$this->box_type = $this->box->get_object_type();
 		$this->key = $field->get_id();
 		$this->object_types = $this->box->get_object_types();
@@ -144,11 +152,11 @@ class Event_Callbacks {
 	 */
 	public function taxonomy_change_hooks(): void {
 		add_action( 'set_object_terms', function( ...$args ) {
-			if ( ! $this->field instanceof Taxonomy ) {
+			[ $object_id, $terms, $tt_ids, $taxonomy, $append, $old_tt_ids ] = $args;
+			if ( ! $this->variation instanceof Taxonomy || $this->variation->get_taxonomy() !== $taxonomy ) {
 				return;
 			}
-			[ $object_id, $terms, $tt_ids, $taxonomy, $append, $old_tt_ids ] = $args;
-			if ( $this->field->taxonomy !== $taxonomy || $tt_ids === $old_tt_ids ) {
+			if ( $tt_ids === $old_tt_ids ) {
 				return;
 			}
 
@@ -165,11 +173,11 @@ class Event_Callbacks {
 
 		// If a previously existing term is removed from this item, it has changed.
 		add_action( 'deleted_term_relationships', function( ...$args ) {
-			if ( ! $this->field instanceof Taxonomy ) {
+			if ( ! $this->variation instanceof Taxonomy ) {
 				return;
 			}
 			[ $object_id, $tt_ids, $taxonomy ] = $args;
-			if ( $this->field->taxonomy !== $taxonomy || $tt_ids === $this->previous_value ) {
+			if ( $tt_ids === $this->previous_value || $this->variation->get_taxonomy() !== $taxonomy ) {
 				return;
 			}
 			if ( \in_array( get_post_type( $object_id ), $this->object_types, true ) ) {
@@ -188,11 +196,11 @@ class Event_Callbacks {
 	 */
 	protected function taxonomy_delete_hooks(): void {
 		add_action( 'deleted_term_relationships', function( ...$args ) {
-			if ( ! $this->field instanceof Taxonomy ) {
+			if ( ! $this->variation instanceof Taxonomy ) {
 				return;
 			}
 			[ $object_id, $tt_ids, $taxonomy ] = $args;
-			if ( $this->field->taxonomy !== $taxonomy || $tt_ids === $this->previous_value ) {
+			if ( $tt_ids === $this->previous_value || $this->variation->get_taxonomy() !== $taxonomy ) {
 				return;
 			}
 			if ( \in_array( get_post_type( $object_id ), $this->object_types, true ) ) {
@@ -211,11 +219,11 @@ class Event_Callbacks {
 	 */
 	protected function track_previous_taxonomy_value(): void {
 		add_action( 'delete_term_relationships', function( ...$args ) {
-			if ( ! $this->field instanceof Taxonomy ) {
+			if ( ! $this->variation instanceof Taxonomy ) {
 				return;
 			}
 			[ $object_id, $tt_ids, $taxonomy ] = $args;
-			if ( $this->field->taxonomy !== $taxonomy ) {
+			if ( $this->variation->get_taxonomy() !== $taxonomy ) {
 				return;
 			}
 			if ( \in_array( get_post_type( $object_id ), $this->object_types, true ) ) {
@@ -395,5 +403,22 @@ class Event_Callbacks {
 			$this->previous_value,
 			$this->box_type
 		);
+	}
+
+
+	/**
+	 * Create a Event_Callbacks instance from a field and callback.
+	 *
+	 * @phpstan-param static::TYPE_*      $cb_type
+	 * @phpstan-param CHANGE_CB|DELETE_CB $callback
+	 *
+	 * @param Field                       $field    - Field to register events for.
+	 * @param callable                    $callback - Callback to run when the field changes or is deleted.
+	 * @param string                      $cb_type  - Callback type, either 'change' or 'delete'.
+	 *
+	 * @return static
+	 */
+	public static function factory( Field $field, callable $callback, string $cb_type ): static {
+		return new static( Registered::factory( $field ), $callback, $cb_type );
 	}
 }

@@ -13,7 +13,6 @@ use Lipe\Lib\Traits\Singleton;
 class Repo {
 	use Singleton;
 	use Translate;
-	use Validation;
 
 	public const TYPE_CHECKBOX          = 'checkbox';
 	public const TYPE_DEFAULT           = 'default';
@@ -35,10 +34,11 @@ class Repo {
 	 *
 	 * @param Field $field - The field to register.
 	 *
-	 * @return void
+	 * @return Registered
 	 */
-	public function register_field( Field $field ): void {
-		$this->fields[ $field->get_id() ] = $field;
+	public function register_field( Field $field ): Registered {
+		$this->registered[ $field->id ] = Registered::factory( $field );
+		return $this->registered[ $field->id ];
 	}
 
 
@@ -53,7 +53,7 @@ class Repo {
 	 * @return void
 	 */
 	public function validate_fields(): void {
-		$this->warn_for_conflicting_taxonomies();
+		Validation::in()->warn_for_conflicting_taxonomies( $this->registered );
 	}
 
 
@@ -69,7 +69,7 @@ class Repo {
 	 * @return void
 	 */
 	public function pre_update_field( string $key ): void {
-		$this->warn_for_repeatable_group_sub_fields( $key );
+		Validation::in()->warn_for_repeatable_group_sub_fields( $key, $this->get_registered( $key ) );
 	}
 
 
@@ -78,10 +78,10 @@ class Repo {
 	 *
 	 * @param ?string $field_id - The field id to return.
 	 *
-	 * @return null|Field
+	 * @return ?Registered
 	 */
-	protected function get_field( ?string $field_id ): ?Field {
-		return $this->fields[ $field_id ] ?? null;
+	protected function get_registered( ?string $field_id ): ?Registered {
+		return $this->registered[ $field_id ] ?? null;
 	}
 
 
@@ -95,9 +95,9 @@ class Repo {
 	 * @return string
 	 */
 	protected function get_field_data_type( string $field_id ): string {
-		$field = $this->get_field( $field_id );
+		$field = $this->get_registered( $field_id );
 		if ( null !== $field ) {
-			return $field->data_type;
+			return $field->get_data_type()->value;
 		}
 		return static::TYPE_DEFAULT;
 	}

@@ -5,7 +5,7 @@ namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Field\Checkbox;
 use Lipe\Lib\CMB2\Field\Term_Select_2;
-use Lipe\Lib\CMB2\Field\Term_Select_2\Register;
+use Lipe\Lib\CMB2\Field\Term_Select_2\Select_2_Field;
 use Lipe\Lib\CMB2\Field\True_False;
 use Lipe\Lib\CMB2\Field\Type;
 use Lipe\Lib\CMB2\Variation\Date;
@@ -715,7 +715,7 @@ class Field_Type {
 		$this->field = Taxonomy::from( $this->field, $this->box );
 		$_args = $this->field->taxonomy_args( $taxonomy, $no_terms_text, $remove_default );
 		$field = $this->field->set_args( Type::TERM_SELECT_2, $_args, Repo::TYPE_TAXONOMY );
-		Register::factory( $field, $taxonomy, $assign_terms );
+		Select_2_Field::factory( $field, $taxonomy, $assign_terms );
 		return $field;
 	}
 

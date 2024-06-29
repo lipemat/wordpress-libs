@@ -5,7 +5,9 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
+use Lipe\Lib\Meta\DataType;
 use Lipe\Lib\Meta\Meta_Box;
+use Lipe\Lib\Meta\Registered;
 use Lipe\Lib\Meta\Repo;
 
 /**
@@ -427,7 +429,7 @@ class Box {
 		if ( $field->group instanceof Group ) {
 			$field->group->add_field( $field );
 		} else {
-			$this->fields[ $field->get_id() ] = $field;
+			$this->fields[ $field->id ] = $field;
 		}
 
 		return $field;
@@ -445,7 +447,7 @@ class Box {
 	 * @return Field_Type
 	 */
 	public function field( string $id, string $name ): Field_Type {
-		$field = $this->add_field( new Field( $id, $name, $this, null ) );
+		$field = $this->add_field( Field::factory( $id, $name, $this, null ) );
 		return Field_Type::factory( $field, $this );
 	}
 
@@ -464,11 +466,9 @@ class Box {
 	 * @return Group
 	 */
 	public function group( string $id, string $name, ?string $row_title = null ): Group {
-		$group = new Group( $id, $name, $this, null );
+		$group = Group::factory( $id, $name, $this );
 		$this->add_field( $group );
 		Field_Type::factory( $group, $this )->group( $row_title );
-
-		$this->hook();
 		return $group;
 	}
 
@@ -650,16 +650,6 @@ class Box {
 
 
 	/**
-	 * Get all fields registered to this box.
-	 *
-	 * @return Field[]|Group[]
-	 */
-	protected function get_fields(): array {
-		return $this->fields;
-	}
-
-
-	/**
 	 * Get the arguments for this box.
 	 *
 	 * @return array<string, mixed>
@@ -720,8 +710,7 @@ class Box {
 	 */
 	protected function add_field_to_box( Field $field ): void {
 		$box = $this->get_cmb2_box();
-		$box->add_field( $field->get_field_args(), $field->position );
-		$field->box_id = $this->id;
+		$box->add_field( $field->get_field_args(), Registered::factory( $field )->get_position() );
 
 		Repo::in()->register_field( $field );
 	}
@@ -742,30 +731,28 @@ class Box {
 	 *
 	 * @internal
 	 *
-	 * @param Field                $field  - The field to register.
-	 * @param array<string, mixed> $config - The config to register.
+	 * @param Registered           $registered - The field to register.
+	 * @param array<string, mixed> $config     - The config to register.
 	 */
-	public function register_meta_on_all_types( Field $field, array $config ): void {
-		if ( isset( $field->default ) ) {
-			$config['default'] = $field->default;
+	public function register_meta_on_all_types( Registered $registered, array $config ): void {
+		if ( null !== $registered->get_default() ) {
+			$config['default'] = $registered->get_default();
 		}
 
-		if ( isset( $config['show_in_rest'] ) ) {
-			$config = $this->translate_rest_keys( $field, $config );
+		if ( false !== $registered->get_show_in_rest() ) {
+			$config = $this->translate_rest_keys( $registered, $config );
 		}
 
-		if ( null !== $field->meta_sanitize ) {
-			$config['sanitize_callback'] = function( $value ) use ( $field, $config ) {
+		if ( null !== $registered->get_meta_sanitizer() ) {
+			$config['sanitize_callback'] = function( $value ) use ( $registered, $config ) {
 				// Allow other sanitize callbacks to run like group untranslate of fields.
 				if ( isset( $config['sanitize_callback'] ) ) {
 					$value = \call_user_func( $config['sanitize_callback'], $value );
 				}
-				return \call_user_func( $field->meta_sanitize, $value, $field->get_field_args(), $field->get_cmb2_field() );
+				return \call_user_func( $registered->get_meta_sanitizer(), $value, $registered->get_config(), $registered->get_cmb2_field() );
 			};
 		}
-		if ( isset( $field->revisions_enabled ) ) {
-			$config['revisions_enabled'] = $field->revisions_enabled;
-		}
+		$config['revisions_enabled'] = $registered->are_revisions_enabled();
 
 		// Nothing to register.
 		if ( 3 > \count( $config ) ) {
@@ -784,15 +771,15 @@ class Box {
 
 		foreach ( $sub_types as $_type ) {
 			$config['object_subtype'] = $_type;
-			register_meta( $type, $field->get_id(), $config );
+			register_meta( $type, $registered->get_id(), $config );
 
 			// A secondary field for file ids.
-			if ( Repo::TYPE_FILE === $field->data_type ) {
+			if ( DataType::FILE === $registered->get_data_type() ) {
 				if ( isset( $config['show_in_rest']['name'] ) ) {
 					$config['show_in_rest']['name'] .= '_id';
 					unset( $config['show_in_rest']['prepare_callback'] );
 				}
-				register_meta( $type, $field->get_id() . '_id', $config );
+				register_meta( $type, $registered->get_id() . '_id', $config );
 			}
 		}
 	}
@@ -808,18 +795,17 @@ class Box {
 	 * @return void
 	 */
 	protected function register_fields(): void {
-		$fields = $this->get_fields();
 		$show_in_rest = $this->show_in_rest ?? false;
 
 		// Run through the fields first for adjustments to box config.
-		\array_walk( $fields, function( Field $field ) use ( $show_in_rest ) {
-			$this->register_meta( $field );
+		\array_walk( $this->fields, function( Field $field ) use ( $show_in_rest ) {
+			$this->register_meta( Registered::factory( $field ) );
 			if ( false === $show_in_rest ) {
 				$this->selectively_show_in_rest( $field );
 			}
 		} );
 
-		\array_walk( $fields, function( Field $field ) {
+		\array_walk( $this->fields, function( Field $field ) {
 			$this->add_field_to_box( $field );
 		} );
 	}
@@ -833,25 +819,25 @@ class Box {
 	 *
 	 * @requires WP 5.5+ for default values.
 	 *
-	 * @param Field $field - The field to register.
+	 * @param Registered $registered - The field to register the meta for.
 	 */
-	protected function register_meta( Field $field ): void {
-		if ( ! Utils::in()->is_allowed_to_register_meta( $field ) ) {
+	protected function register_meta( Registered $registered ): void {
+		if ( ! $registered->is_allowed_to_register_meta() ) {
 			return;
 		}
 		$config = [
 			'single' => true,
 			'type'   => 'string',
 		];
-		if ( Utils::in()->is_using_array_data( $field ) ) {
+		if ( $registered->is_using_array_data() ) {
 			$config['type'] = 'array';
-		} elseif ( Utils::in()->is_using_object_data( $field ) ) {
+		} elseif ( $registered->is_using_object_data() ) {
 			$config['type'] = 'object';
 		}
 
-		if ( isset( $field->show_in_rest ) && false !== $field->show_in_rest && Utils::in()->is_public_rest_data( $field ) ) {
-			$config['show_in_rest'] = $field->show_in_rest;
-			if ( Utils::in()->is_using_array_data( $field ) ) {
+		if ( $registered->is_public_rest_data() ) {
+			$config['show_in_rest'] = $registered->get_show_in_rest();
+			if ( $registered->is_using_array_data() ) {
 				$config['show_in_rest'] = [
 					'schema' => [
 						'items' => [
@@ -861,7 +847,7 @@ class Box {
 				];
 			}
 
-			if ( Utils::in()->is_using_object_data( $field ) ) {
+			if ( $registered->is_using_object_data() ) {
 				$config['show_in_rest'] = [
 					'schema' => [
 						'additionalProperties' => [
@@ -872,7 +858,7 @@ class Box {
 			}
 		}
 
-		$this->register_meta_on_all_types( $field, $config );
+		$this->register_meta_on_all_types( $registered, $config );
 	}
 
 
@@ -882,15 +868,13 @@ class Box {
 	 *
 	 * Makes selectively adding fields to rest much simpler.
 	 *
-	 * @internal
-	 *
 	 * @param Field $field - The field to check.
 	 */
 	protected function selectively_show_in_rest( Field $field ): void {
-		if ( isset( $field->show_in_rest ) && false !== $field->show_in_rest ) {
+		if ( false !== Registered::factory( $field )->get_show_in_rest() ) {
 			$this->show_in_rest = true;
 		} else {
-			$field->show_in_rest = false;
+			$field->show_in_rest( false );
 		}
 	}
 
@@ -900,15 +884,15 @@ class Box {
 	 * If you need the long names due to conflicts, they will still
 	 * be available via /cmb2 values.
 	 *
-	 * @param Field                $field  - The field to translate.
-	 * @param array<string, mixed> $config - The config array to translate.
-	 *
 	 * @notice This can never be changed, or it will break sites!!
+	 *
+	 * @param Registered           $field  - The field to translate.
+	 * @param array<string, mixed> $config - The config array to translate.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function translate_rest_keys( Field $field, array $config ): array {
-		if ( isset( $config['show_in_rest'] ) ) {
+	public function translate_rest_keys( Registered $field, array $config ): array {
+		if ( false !== $field->get_show_in_rest() ) {
 			if ( 'post' === $this->get_object_type() ) {
 				// Post type must support 'custom-fields' to allow REST meta.
 				\array_walk( $this->object_types, function( $type ) {
@@ -919,7 +903,7 @@ class Box {
 			if ( ! \is_array( $config['show_in_rest'] ) ) {
 				$config['show_in_rest'] = [];
 			}
-			$config['show_in_rest']['name'] = Utils::in()->get_rest_short_name( $field );
+			$config['show_in_rest']['name'] = $field->get_rest_short_name();
 		}
 		return $config;
 	}

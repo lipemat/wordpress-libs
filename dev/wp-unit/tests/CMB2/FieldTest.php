@@ -80,6 +80,10 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		    ->show_in_rest( \WP_REST_Server::ALLMETHODS );
 		$box->field( 't2', 'Test 2' )
 		    ->text();
+		$box->field( 'some-weird-name', 'Some Weird Name' )
+		    ->text()
+		    ->show_in_rest()
+		    ->rest_short_name( 'better' );
 		$group = $box->group( 't3', 'Test 3' );
 		$group->show_in_rest();
 		$group
@@ -101,6 +105,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		$this->assertEquals( 'returnee', $response['cmb2']['rested']['unit-testing/t1'] );
 		// Important this remains intact, or we'll break sites!!
 		$this->assertArrayHasKey( 't1', $response['meta'], 'Keys are not being shortened in rest!' );
+		$this->assertArrayHasKey( 'better', $response['meta'], 'Specified short keys are not working the REST!' );
 		$this->assertEquals( 'returnee', $response['meta']['t1'] );
 		$this->assertArrayNotHasKey( 't2', $response['meta'] );
 		$this->assertEquals( [ [ 'first' => 'omg', 'second' => 'foo' ] ], $response['meta']['t3'] );

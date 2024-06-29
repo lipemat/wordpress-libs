@@ -31,7 +31,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 	private array $changed = [];
 
 
-	public function setUp() : void {
+	public function setUp(): void {
 		parent::setUp();
 		$this->attachment_id = self::factory()->attachment->create_upload_object( DIR_TESTDATA . '/images/test-image.png' );
 		$this->deleted = [];
@@ -40,14 +40,14 @@ class Mutator_Test extends \WP_UnitTestCase {
 	}
 
 
-	public function tearDown() : void {
+	public function tearDown(): void {
 		wp_delete_attachment( $this->attachment_id, true );
 
 		parent::tearDown();
 	}
 
 
-	private function register_box( $object_types = [ 'post' ], $id = 'mu-test' ) : void {
+	private function register_box( $object_types = [ 'post' ], $id = 'mu-test' ): void {
 		$changed = function( $object_id, $value, $key, $previous, $type ) {
 			$this->changed[] = $object_id;
 			$this->changed_args = \func_get_args();
@@ -87,14 +87,14 @@ class Mutator_Test extends \WP_UnitTestCase {
 	}
 
 
-	private function get_options_box() : Options_Page {
+	private function get_options_box(): Options_Page {
 		return new class() {
 			use Settings_Trait;
 		};
 	}
 
 
-	private function get_tags() : array {
+	private function get_tags(): array {
 		return get_terms( [
 			'include'    => $this->tags,
 			'taxonomy'   => 'post_tag',
@@ -103,7 +103,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 	}
 
 
-	private function get_tags_from_meta( array $ids ) : array {
+	private function get_tags_from_meta( array $ids ): array {
 		return get_terms( [
 			'include'    => $ids,
 			'taxonomy'   => 'post_tag',
@@ -112,7 +112,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 	}
 
 
-	public function test_update_meta_callabale() : void {
+	public function test_update_meta_callabale(): void {
 		$o = Post_Mock::factory( 1 );
 		$o->update_meta( 'text', 'normal' );
 		$o['text'] = function( $p ) {
@@ -129,7 +129,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 	}
 
 
-	public function test_delete_callbacks() : void {
+	public function test_delete_callbacks(): void {
 		$id = self::factory()->post->create();
 		$o = Post_Mock::factory( $id );
 		$this->changed = [];
@@ -210,7 +210,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 		// CMB2 direct (eg. saving a post).
 		$this->changed = [];
 		$this->deleted = [];
-		$field = call_private_method( Repo::in(), 'get_field', [ 'tags' ] )->get_cmb2_field();
+		$field = call_private_method( Repo::in(), 'get_registered', [ 'tags' ] )->get_cmb2_field();
 		$field->object_id( $id );
 		$field->save_field( $this->tags );
 		$this->assertEquals( [
@@ -238,7 +238,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 		$this->assertEquals( [ $id ], $this->deleted );
 		$this->assertEquals( [ $id, $id ], $this->changed );
 
-		$field = call_private_method( Repo::in(), 'get_field', [ 'file' ] )->get_cmb2_field();
+		$field = call_private_method( Repo::in(), 'get_registered', [ 'file' ] )->get_cmb2_field();
 		$field->object_id( $id );
 		$field->remove_data();
 		$this->assertEquals( [ $id ], $this->deleted );
@@ -247,14 +247,14 @@ class Mutator_Test extends \WP_UnitTestCase {
 		$this->assertEquals( [ $id, $id ], $this->deleted );
 		$this->assertEquals( [ $id, $id, $id, $id ], $this->changed );
 
-		$field = call_private_method( Repo::in(), 'get_field', [ 'checkbox' ] )->get_cmb2_field();
+		$field = call_private_method( Repo::in(), 'get_registered', [ 'checkbox' ] )->get_cmb2_field();
 		$field->object_id( $id );
 		$field->save_field( 'on' );
 		$field->remove_data();
 		$this->assertEquals( [ $id, $id, $id ], $this->deleted );
 		$this->assertCount( 6, $this->changed );
 
-		$field = call_private_method( Repo::in(), 'get_field', [ 'text' ] )->get_cmb2_field();
+		$field = call_private_method( Repo::in(), 'get_registered', [ 'text' ] )->get_cmb2_field();
 		$field->object_id( $id );
 		$field->remove_data();
 		$field->save_field( 'test' );
@@ -264,7 +264,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 	}
 
 
-	public function test_delete_callback_options() : void {
+	public function test_delete_callback_options(): void {
 		$cat_id = self::factory()->category->create();
 		$post_id = self::factory()->post->create();
 
@@ -328,7 +328,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 		$this->changed = [];
 		$this->deleted = [];
 		/** @var \CMB2_Field $field */
-		$field = call_private_method( Repo::in(), 'get_field', [ 'categories' ] )->get_cmb2_field();
+		$field = call_private_method( Repo::in(), 'get_registered', [ 'categories' ] )->get_cmb2_field();
 		$field->object_id( $post_id );
 		$field->remove_data();
 		$this->assertEquals( [], $this->deleted );
@@ -353,7 +353,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 	}
 
 
-	public function test_update_callback() : void {
+	public function test_update_callback(): void {
 		$cat_id = self::factory()->category->create();
 		$id = self::factory()->post->create();
 		$o = Post_Mock::factory( $id );
@@ -387,13 +387,13 @@ class Mutator_Test extends \WP_UnitTestCase {
 		$this->changed = [];
 		$this->deleted = [];
 		// CMB2 direct (eg. saving a post).
-		$field = call_private_method( Repo::in(), 'get_field', [ 'tags' ] )->get_cmb2_field();
+		$field = call_private_method( Repo::in(), 'get_registered', [ 'tags' ] )->get_cmb2_field();
 		$field->object_id( $id );
 		$field->save_field( $this->tags );
 		$this->assertEquals( [ $id ], $this->changed );
 		$this->assertEmpty( $this->deleted );
 
-		$field = call_private_method( Repo::in(), 'get_field', [ 'file' ] )->get_cmb2_field();
+		$field = call_private_method( Repo::in(), 'get_registered', [ 'file' ] )->get_cmb2_field();
 		$field->object_id( $id );
 		$field->save_field( 'x' );
 		$this->assertEquals( [ $id, $id ], $this->changed );
@@ -402,7 +402,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 		$this->assertEquals( [ $id, $id, $id, $id ], $this->changed );
 		$this->assertEquals( [ $id ], $this->deleted );
 
-		$field = call_private_method( Repo::in(), 'get_field', [ 'checkbox' ] )->get_cmb2_field();
+		$field = call_private_method( Repo::in(), 'get_registered', [ 'checkbox' ] )->get_cmb2_field();
 		$field->object_id( $id );
 		$field->save_field( 'on' );
 		$this->assertCount( 5, $this->changed );
@@ -410,7 +410,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 		$this->assertCount( 5, $this->changed );
 		$this->assertEquals( [ $id ], $this->deleted );
 
-		$field = call_private_method( Repo::in(), 'get_field', [ 'text' ] )->get_cmb2_field();
+		$field = call_private_method( Repo::in(), 'get_registered', [ 'text' ] )->get_cmb2_field();
 		$field->object_id( $id );
 		$field->save_field( 'V' );
 		$this->assertCount( 6, $this->changed );
@@ -418,7 +418,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 	}
 
 
-	public function test_update_callback_options() : void {
+	public function test_update_callback_options(): void {
 		$cat_id = self::factory()->category->create();
 		$post_id = self::factory()->post->create();
 		// Options.
@@ -442,7 +442,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 		// CMB2 direct (eg. saving a post).
 		$this->changed = [];
 		/** @var \CMB2_Field $field */
-		$field = call_private_method( Repo::in(), 'get_field', [ 'categories' ] )->get_cmb2_field();
+		$field = call_private_method( Repo::in(), 'get_registered', [ 'categories' ] )->get_cmb2_field();
 		$field->object_id( $post_id );
 		cmb2_options( $i )->update( 'categories', [ $cat_id ], true );
 		$this->assertEquals( [ $i ], $this->changed );
@@ -450,7 +450,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 	}
 
 
-	public function test_post_object() : void {
+	public function test_post_object(): void {
 		$cat_id = self::factory()->category->create();
 		$post_id = self::factory()->post->create();
 		$o = Post_Mock::factory( $post_id );
@@ -489,7 +489,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 	}
 
 
-	public function test_user_object() : void {
+	public function test_user_object(): void {
 		$o = User_Mock::factory( 1 );
 
 		$o['categories'] = [ 1 ];
@@ -519,7 +519,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 	}
 
 
-	public function test_comments_object() : void {
+	public function test_comments_object(): void {
 		$o = Comment_Mock::factory( 1 );
 		$o['categories'] = [ 1 ];
 		$this->assertEquals( get_term( 1 ), $o['categories'] );
@@ -544,7 +544,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 	}
 
 
-	public function test_terms_object() : void {
+	public function test_terms_object(): void {
 		$cat_id = self::factory()->category->create();
 		$assigned = self::factory()->category->create();
 		$o = Term_Mock::factory( $cat_id );
@@ -575,7 +575,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 	}
 
 
-	public function test_settings_object() : void {
+	public function test_settings_object(): void {
 		$cat_id = self::factory()->category->create();
 		$o = new Settings_Mock();
 		$o['categories'] = [ $cat_id ];

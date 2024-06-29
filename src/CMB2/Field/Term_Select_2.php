@@ -3,8 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2\Field;
 
-use Lipe\Lib\CMB2\Field\Term_Select_2\Register;
-use Lipe\Lib\CMB2\Utils;
+use Lipe\Lib\CMB2\Field\Term_Select_2\Select_2_Field;
 use Lipe\Lib\Libs\Scripts;
 use Lipe\Lib\Libs\Scripts\ScriptHandles;
 use Lipe\Lib\Libs\Scripts\StyleHandles;
@@ -27,7 +26,7 @@ class Term_Select_2 {
 	/**
 	 * Fields that have been registered.
 	 *
-	 * @var Register[]
+	 * @var Select_2_Field[]
 	 */
 	protected static array $registered = [];
 
@@ -61,7 +60,7 @@ class Term_Select_2 {
 	public function ajax_get_terms(): void {
 		$id = sanitize_text_field( wp_unslash( $_POST['id'] ?? '' ) );
 		check_ajax_referer( self::NONCE . $id );
-		$field = $this->get_registered( $id );
+		$field = $this->get_select_2_fields( $id );
 		if ( null === $field ) {
 			wp_send_json_error( 'Field not found.' );
 		}
@@ -190,7 +189,7 @@ class Term_Select_2 {
 			return $filtered;
 		}
 
-		$registered = $this->get_registered( $field_args['id'] );
+		$registered = $this->get_select_2_fields( $field_args['id'] );
 		foreach ( $meta_value as $key => $val ) {
 			if ( ! \is_array( $val ) ) {
 				$meta_value[ $key ] = (int) ( $val );
@@ -205,7 +204,7 @@ class Term_Select_2 {
 
 		$meta_type = $registered->field->get_box()->get_object_type();
 		if ( '' !== $id && 0 !== $id && Repo::in()->supports_taxonomy_relationships( $meta_type, $registered->field ) ) {
-			if ( Utils::in()->is_repeatable( $registered->field ) ) {
+			if ( $registered->field->is_repeatable() ) {
 				$ids = \array_merge( ...$meta_value );
 				wp_set_object_terms( (int) $id, \array_map( '\intval', $ids ), $registered->taxonomy );
 			} else {
@@ -227,7 +226,7 @@ class Term_Select_2 {
 	 * @return null|array<string[]>|string[]|string
 	 */
 	public function esc_values( mixed $filtered, array|null|string $values, array $field_args ): null|array|string {
-		$field = $this->get_registered( $field_args['id'] );
+		$field = $this->get_select_2_fields( $field_args['id'] );
 		if ( ! \is_array( $values ) || null === $field ) {
 			return $filtered;
 		}
@@ -267,7 +266,7 @@ class Term_Select_2 {
 	 *
 	 * @param string $field_id - The field id.
 	 */
-	public function get_registered( string $field_id ): ?Register {
+	public function get_select_2_fields( string $field_id ): ?Select_2_Field {
 		return static::$registered[ $field_id ] ?? null;
 	}
 
@@ -275,7 +274,7 @@ class Term_Select_2 {
 	/**
 	 * JS configurations for multiple select2 fields.
 	 *
-	 * @return array{ajaxUrl: string, fields: list<Register>}
+	 * @return array{ajaxUrl: string, fields: list<Select_2_Field>}
 	 */
 	public function js_config(): array {
 		$url = html_entity_decode( admin_url( 'admin-ajax.php' ) );
@@ -290,9 +289,9 @@ class Term_Select_2 {
 	/**
 	 * Register a field with Select 2.
 	 *
-	 * @param Register $field - The field to register.
+	 * @param Select_2_Field $field - The field to register.
 	 */
-	public function register( Register $field ): void {
+	public function register( Select_2_Field $field ): void {
 		static::$registered[ $field->field->get_id() ] = $field;
 		static::init_once();
 	}

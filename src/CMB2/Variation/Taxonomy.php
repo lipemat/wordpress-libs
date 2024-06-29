@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2\Variation;
 
 use Lipe\Lib\CMB2\Field;
+use Lipe\Lib\Meta\DataType;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Taxonomy\Get_Terms;
 
@@ -24,7 +25,7 @@ class Taxonomy extends Field {
 	 *
 	 * @var string
 	 */
-	public string $taxonomy;
+	protected string $taxonomy;
 
 	/**
 	 * Whether to show select all button for items
@@ -165,12 +166,21 @@ class Taxonomy extends Field {
 	 * @return Taxonomy
 	 */
 	public function store_user_terms_in_meta( bool $use_meta = true ): Taxonomy {
-		$box = $this->get_box();
-		if ( ! \in_array( $this->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) || ! \in_array( 'user', $box->get_object_types(), true ) ) {
+		if ( ! \in_array( $this->data_type, [ Repo::TYPE_TAXONOMY, Repo::TYPE_TAXONOMY_SINGULAR ], true ) || ! \in_array( 'user', $this->box->get_object_types(), true ) ) {
 			_doing_it_wrong( __METHOD__, 'Storing user terms in meta only applies to taxonomy fields registered on users.', '3.14.0' );
 		}
 		$this->store_user_terms_in_meta = $use_meta;
 
 		return $this;
+	}
+
+
+	/**
+	 * Get the taxonomy slug.
+	 *
+	 * @return string
+	 */
+	public function get_taxonomy(): string {
+		return $this->taxonomy;
 	}
 }
