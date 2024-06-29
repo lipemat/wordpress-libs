@@ -1,10 +1,9 @@
 <?php
+//phpcs:disable WordPress.PHP.DiscouragedPHPFunctions -- Intentionally obfuscating contents.
+//phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Don't have a better place to log errors.
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
-
-//phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
-//phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 
 /**
  * Encrypt/Decrypt a string using a custom key.
@@ -60,7 +59,7 @@ class Crypt {
 		try {
 			$json = json_decode( (string) base64_decode( $message, true ), true, 512, JSON_THROW_ON_ERROR );
 		} catch ( \JsonException $e ) {
-			error_log( "Unable to decrypt message: {$message}. {$e->getMessage()}" ); //phpcs:ignore
+			error_log( "Unable to decrypt message: {$message}. {$e->getMessage()}" );
 			return null;
 		}
 		$iterations = (int) abs( $json['iterations'] ?? static::ITERATIONS );
@@ -70,7 +69,7 @@ class Crypt {
 			$iv = (string) hex2bin( $json['iv'] );
 			$hash_key = (string) hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, $iterations, $this->get_key_size() ) );
 		} catch ( \Exception $e ) {
-			error_log( "Unable to decrypt message: {$message}. {$e->getMessage()}" ); //phpcs:ignore
+			error_log( "Unable to decrypt message: {$message}. {$e->getMessage()}" );
 			return null;
 		}
 

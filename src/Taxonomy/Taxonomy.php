@@ -727,7 +727,7 @@ class Taxonomy {
 	 * @action manage_posts_extra_tablenav 1000
 	 */
 	protected function clear_filters_button(): void {
-		// phpcs:ignore WordPress.Security.NonceVerification -- Nonce not required.
+		// phpcs:ignore WordPress.Security.NonceVerification -- No nonce is available.
 		$post_type = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : '';
 		if ( '' !== $post_type ) {
 			$base_url = admin_url( 'edit.php?post_type=' . $post_type );

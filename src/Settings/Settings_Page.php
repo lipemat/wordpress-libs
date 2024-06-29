@@ -144,10 +144,10 @@ class Settings_Page {
 			foreach ( $section->get_fields() as $field ) {
 				$value = null;
 				if ( isset( $_POST[ $field->id ] ) ) {
-					// phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- Input is sanitized inside `update_option`.
-					$value = wp_unslash( $_POST[ $field->id ] );
-					if ( ! \is_array( $value ) ) {
-						$value = \trim( $value );
+					if ( \is_array( $_POST[ $field->id ] ) ) {
+						$value = \array_map( 'sanitize_text_field', \wp_unslash( $_POST[ $field->id ] ) );
+					} else {
+						$value = \trim( sanitize_text_field( \wp_unslash( $_POST[ $field->id ] ) ) );
 					}
 				}
 				update_site_option( $field->id, $value );

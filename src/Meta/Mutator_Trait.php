@@ -1,5 +1,5 @@
 <?php
-//phpcs:disable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+//phpcs:disable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- ArrayAccess methods are camelCase.
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Meta;

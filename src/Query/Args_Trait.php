@@ -82,25 +82,4 @@ trait Args_Trait {
 
 		return $args;
 	}
-
-
-	/**
-	 * Prevent setting any non-existent properties on this class.
-	 *
-	 * If the property does not exist, the argument is not supported.
-	 *
-	 * @noinspection MagicMethodsValidityInspection
-	 *
-	 * @param string $name  - Name of non-existent property.
-	 * @param mixed  $value - Value attempted to set, which we don't care about.
-	 *
-	 * @throws \LogicException - Any usage throws.
-	 *
-	 * @phpstan-return no-return
-	 * @return void
-	 */
-	public function __set( string $name, mixed $value ) { //phpcs:ignore -- $value is required in the magic method.
-		/* translators: {property name} {class name} */
-		throw new \LogicException( \sprintf( esc_html__( 'Attempting to use the non-existent `%1$s` argument on %2$s.', 'lipe' ), esc_html( $name ), __CLASS__ ) );
-	}
 }

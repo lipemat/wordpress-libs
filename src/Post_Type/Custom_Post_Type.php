@@ -487,7 +487,7 @@ class Custom_Post_Type {
 			2  => __( 'Custom field updated.' ),
 			3  => __( 'Custom field deleted.' ),
 			4  => \sprintf( __( '%s updated.' ), $single ),
-			//phpcs:ignore WordPress.Security.NonceVerification -- No nonce needed.
+			//phpcs:ignore WordPress.Security.NonceVerification -- Data is cast to int, pretty safe.
 			5  => isset( $_GET['revision'] ) ? \sprintf( __( '%1$s restored to revision from %2$s' ), $single, wp_post_revision_title( (int) $_GET['revision'], false ) ) : null,
 			6  => \sprintf( __( '%1$s published. %2$s' ), $single, $view_link ),
 			7  => \sprintf( __( '%s saved.' ), $single ),

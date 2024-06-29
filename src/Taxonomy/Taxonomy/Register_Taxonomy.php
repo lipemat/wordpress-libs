@@ -1,5 +1,5 @@
 <?php
-//phpcs:disable Squiz.Commenting.VariableComment.MissingVar
+//phpcs:disable Squiz.Commenting.VariableComment.MissingVar -- Clutters up typed properties.
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy\Taxonomy;

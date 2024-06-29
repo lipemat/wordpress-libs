@@ -1,5 +1,5 @@
 <?php
-//phpcs:disable WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
+//phpcs:disable WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase -- Nothing we can do about this.
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Blocks\Args;

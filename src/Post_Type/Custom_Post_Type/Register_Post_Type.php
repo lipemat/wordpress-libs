@@ -1,5 +1,5 @@
 <?php
-//phpcs:disable Squiz.Commenting.VariableComment.MissingVar
+//phpcs:disable Squiz.Commenting.VariableComment.MissingVar -- Just clutters up typed code.
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Post_Type\Custom_Post_Type;
