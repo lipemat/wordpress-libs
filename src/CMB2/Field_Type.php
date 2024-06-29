@@ -48,7 +48,7 @@ class Field_Type {
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#title
 	 */
 	public function title(): Field {
-		return $this->field->set_args( Type::TITLE, [ 'type' => 'title' ], Repo::TYPE_DEFAULT );
+		return $this->field->set_args( Type::TITLE, [], Repo::TYPE_DEFAULT );
 	}
 
 
