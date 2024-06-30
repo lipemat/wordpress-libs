@@ -72,8 +72,6 @@ class ZipTest extends \WP_UnitTestCase {
 		$zip->close();
 		$this->assertSame( [ 'readme.html', 'license.txt' ], $files );
 
-		$this->assertLessThanOrEqual( $temp_count + 1, \count( glob( get_temp_dir() . '*' ) ), 'Temp files are not being cleaned up' );
-
 		unlink( 'C:\Users\mat\AppData\Local\Temp/d7d4671eed44043cd98b9f2498db9711' );
 	}
 

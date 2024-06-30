@@ -388,7 +388,7 @@ class Field {
 			$this->default_cb = $default_value;
 		} else {
 			$this->default = $default_value;
-			if ( 'options-page' === $this->box->get_object_type() ) {
+			if ( BoxType::OPTIONS === $this->box->get_box_type() ) {
 				add_filter( "cmb2_default_option_{$this->box->get_id()}_{$this->id}", function() {
 					return $this->default;
 				} );
@@ -541,7 +541,7 @@ class Field {
 			_doing_it_wrong( __METHOD__, "Revision may only be enabled on a group. Not a group's field .", '4.5.0' );
 			return $this;
 		}
-		if ( 'post' !== $this->box->get_object_type() ) {
+		if ( BoxType::POST !== $this->box->get_box_type() ) {
 			_doing_it_wrong( __METHOD__, "Revisions are only supported on 'post' objects.", '4.5.0' );
 			return $this;
 		}
@@ -733,7 +733,7 @@ class Field {
 	 */
 	public function sanitization_cb( callable $callback ): static {
 		$registered = Registered::factory( $this );
-		if ( [ Box::TYPE_OPTIONS ] !== $this->box->get_object_types() && $registered->is_allowed_to_register_meta() ) {
+		if ( [ BoxType::OPTIONS->value ] !== $this->box->get_object_types() && $registered->is_allowed_to_register_meta() ) {
 			$this->meta_sanitizer = $callback;
 		} else {
 			$this->sanitization_cb = $callback;

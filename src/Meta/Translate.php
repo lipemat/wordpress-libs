@@ -3,6 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Meta;
 
+use Lipe\Lib\CMB2\BoxType;
 use Lipe\Lib\CMB2\Field\Term_Select_2;
 use Lipe\Lib\CMB2\Field\Term_Select_2\Select_2_Field;
 use Lipe\Lib\CMB2\Field\Type;
@@ -46,12 +47,12 @@ trait Translate {
 	 * - Only `post` meta type is currently supported.
 	 * - Only taxonomy type fields are supported.
 	 *
-	 * @param ?MetaType  $meta_type - The meta type.
-	 * @param Registered $field     - The field to check for duplicate taxonomy fields.
+	 * @param null|BoxType|MetaType $meta_type - The meta type.
+	 * @param Registered            $field     - The field to check for duplicate taxonomy fields.
 	 *
 	 * @return bool
 	 */
-	public function supports_taxonomy_relationships( ?MetaType $meta_type, Registered $field ): bool {
+	public function supports_taxonomy_relationships( null|BoxType|MetaType $meta_type, Registered $field ): bool {
 		if ( DataType::TAXONOMY !== $field->get_data_type() && DataType::TAXONOMY_SINGULAR !== $field->get_data_type() ) {
 			return false;
 		}
@@ -63,7 +64,7 @@ trait Translate {
 			}
 		}
 
-		return MetaType::POST === $meta_type;
+		return MetaType::POST === $meta_type || BoxType::POST === $meta_type;
 	}
 
 

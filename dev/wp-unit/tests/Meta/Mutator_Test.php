@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\CMB2\Box;
+use Lipe\Lib\CMB2\BoxType;
 use Lipe\Lib\CMB2\Options_Page;
 use Lipe\Lib\Settings\Settings_Trait;
 use mocks\Comment_Mock;
@@ -141,7 +142,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 			$this->tags,
 			'tags',
 			[],
-			'post',
+			BoxType::POST,
 		], $this->changed_args );
 
 		// Via meta repo.
@@ -154,7 +155,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 			$id,
 			'tags',
 			$this->tags,
-			'post',
+			BoxType::POST,
 		], $this->deleted_args );
 		$this->assertEquals( [ $id, $id, $id ], $this->changed );
 		$o['file'] = $this->attachment_id;
@@ -166,13 +167,13 @@ class Mutator_Test extends \WP_UnitTestCase {
 			'',
 			'file',
 			wp_get_attachment_image_url( $this->attachment_id ),
-			'post',
+			BoxType::POST,
 		], $this->changed_args );
 		$this->assertEquals( [
 			$id,
 			'file',
 			wp_get_attachment_image_url( $this->attachment_id ),
-			'post',
+			BoxType::POST,
 		], $this->deleted_args );
 		unset( $o['file'] );
 		$this->assertEquals( [ $id, $id, $id ], $this->deleted );
@@ -196,13 +197,13 @@ class Mutator_Test extends \WP_UnitTestCase {
 			'',
 			'checkbox',
 			true,
-			'post',
+			BoxType::POST,
 		], $this->changed_args );
 		$this->assertEquals( [
 			$id,
 			'checkbox',
 			true,
-			'post',
+			BoxType::POST,
 		], $this->deleted_args );
 
 		$this->assertEquals( [ $id, $id, $id, $id, $id, $id ], $this->deleted );
@@ -218,7 +219,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 			$this->tags,
 			'tags',
 			[],
-			'post',
+			BoxType::POST,
 		], $this->changed_args );
 		$field->save_field( null );
 		$this->assertEquals( [
@@ -226,13 +227,13 @@ class Mutator_Test extends \WP_UnitTestCase {
 			[],
 			'tags',
 			$this->tags,
-			'post',
+			BoxType::POST,
 		], $this->changed_args );
 		$this->assertEquals( [
 			$id,
 			'tags',
 			$this->tags,
-			'post',
+			BoxType::POST,
 		], $this->deleted_args );
 
 		$this->assertEquals( [ $id ], $this->deleted );
@@ -282,7 +283,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 			$cat_id,
 			'categories',
 			null,
-			'options-page',
+			BoxType::OPTIONS,
 		], $this->changed_args );
 
 		$this->assertEquals( [ $id, $id ], $this->changed );
@@ -294,13 +295,13 @@ class Mutator_Test extends \WP_UnitTestCase {
 			null,
 			'categories',
 			$cat_id,
-			'options-page',
+			BoxType::OPTIONS,
 		], $this->changed_args );
 		$this->assertEquals( [
 			$id,
 			'categories',
 			$cat_id,
-			'options-page',
+			BoxType::OPTIONS,
 		], $this->deleted_args );
 
 		unset( $o['tags'] );
@@ -340,13 +341,13 @@ class Mutator_Test extends \WP_UnitTestCase {
 			null,
 			'categories',
 			$cat_id,
-			'options-page',
+			BoxType::OPTIONS,
 		], $this->changed_args );
 		$this->assertEquals( [
 			$id,
 			'categories',
 			$cat_id,
-			'options-page',
+			BoxType::OPTIONS,
 		], $this->deleted_args );
 		$this->assertEquals( [ $id, ], $this->deleted );
 		$this->assertEquals( [ $id, $id ], $this->changed );

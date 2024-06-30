@@ -26,12 +26,6 @@ class Box {
 	public const CONTEXT_AFTER_TITLE      = 'after_title';
 	public const CONTEXT_AFTER_EDITOR     = 'after_editor';
 
-	public const TYPE_COMMENT = 'comment';
-	public const TYPE_OPTIONS = 'options-page';
-	public const TYPE_USER    = 'user';
-	public const TYPE_TERM    = 'term';
-	public const TYPE_POST    = 'post';
-
 	/**
 	 * Used as a flag to allow REST fields to be added
 	 * to the `meta` response without the `cmb2` REST
@@ -359,14 +353,19 @@ class Box {
 	protected string $tab_style = 'vertical';
 
 	/**
+	 * The type of CMB2 box.
+	 *
+	 * @var BoxType
+	 */
+	protected BoxType $box_type;
+
+	/**
 	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#object_types
 	 * @example ['page', 'post']
 	 *
-	 * @phpstan-var array<Box::TYPE_*|string>
-	 *
-	 * @var array
+	 * @var string[]
 	 */
 	protected array $object_types = [];
 
@@ -381,16 +380,15 @@ class Box {
 	/**
 	 * Register a new meta box.
 	 *
-	 * @phpstan-param array<Box::TYPE_*|string> $object_types
-	 *
-	 * @param string                            $id           - ID of this box.
-	 * @param array                             $object_types - [post type slugs], or 'user', 'term', 'comment', or 'options-page'.
-	 * @param string|null                       $title        - Title of this box (false to omit displaying).
+	 * @param string   $id           - ID of this box.
+	 * @param string[] $object_types - [post type slugs], or 'user', 'term', 'comment', or 'options-page'.
+	 * @param ?string  $title        - Title of this box (false to omit displaying).
 	 *
 	 */
 	public function __construct( string $id, array $object_types, ?string $title ) {
 		$this->id = $id;
 		$this->object_types = $object_types;
+		$this->box_type = BoxType::tryFrom( $object_types[0] ?? '' ) ?? BoxType::POST;
 		$this->title = $title;
 
 		$this->hook();
@@ -624,15 +622,10 @@ class Box {
 	 * @note `$this->objects_types` may contain [post type slugs] which
 	 *        will all map to `post`.
 	 *
-	 * @phpstan-return Box::TYPE_*
-	 * @return string
+	 * @return BoxType
 	 */
-	public function get_object_type(): string {
-		if ( isset( $this->object_types[0] ) && \in_array( $this->object_types[0], [ self::TYPE_COMMENT, self::TYPE_OPTIONS, self::TYPE_USER, self::TYPE_TERM ], true ) ) {
-			return $this->object_types[0];
-		}
-
-		return self::TYPE_POST;
+	public function get_box_type(): BoxType {
+		return $this->box_type;
 	}
 
 
@@ -640,9 +633,7 @@ class Box {
 	 * Get the full list of object types this box
 	 * is registered to.
 	 *
-	 * @phpstan-return array<Box::TYPE_*|string>
-	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public function get_object_types(): array {
 		return $this->object_types;
@@ -759,19 +750,19 @@ class Box {
 			return;
 		}
 
-		$type = $this->get_object_type();
+		$type = $this->get_box_type();
 		$sub_types = $this->object_types;
-		if ( 'term' === $type ) {
+		if ( BoxType::TERM === $type ) {
 			if ( isset( $this->taxonomies ) ) {
 				$sub_types = $this->taxonomies;
 			}
-		} elseif ( \in_array( $type, [ 'user', 'comment' ], true ) ) {
+		} elseif ( \in_array( $type, [ BoxType::USER, BoxType::COMMENT ], true ) ) {
 			$sub_types = [ false ];
 		}
 
 		foreach ( $sub_types as $_type ) {
 			$config['object_subtype'] = $_type;
-			register_meta( $type, $registered->get_id(), $config );
+			register_meta( $type->value, $registered->get_id(), $config );
 
 			// A secondary field for file ids.
 			if ( DataType::FILE === $registered->get_data_type() ) {
@@ -779,7 +770,7 @@ class Box {
 					$config['show_in_rest']['name'] .= '_id';
 					unset( $config['show_in_rest']['prepare_callback'] );
 				}
-				register_meta( $type, $registered->get_id() . '_id', $config );
+				register_meta( $type->value, $registered->get_id() . '_id', $config );
 			}
 		}
 	}
@@ -893,7 +884,7 @@ class Box {
 	 */
 	public function translate_rest_keys( Registered $field, array $config ): array {
 		if ( false !== $field->get_show_in_rest() ) {
-			if ( 'post' === $this->get_object_type() ) {
+			if ( BoxType::POST === $this->get_box_type() ) {
 				// Post type must support 'custom-fields' to allow REST meta.
 				\array_walk( $this->object_types, function( $type ) {
 					add_post_type_support( $type, 'custom-fields' );

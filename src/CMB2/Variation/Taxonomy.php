@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2\Variation;
 
 use Lipe\Lib\CMB2\Field;
+use Lipe\Lib\CMB2\BoxType;
 use Lipe\Lib\Meta\DataType;
 use Lipe\Lib\Taxonomy\Get_Terms;
 
@@ -165,7 +166,7 @@ class Taxonomy extends Field {
 	 * @return Taxonomy
 	 */
 	public function store_user_terms_in_meta( bool $use_meta = true ): Taxonomy {
-		if ( ! \in_array( $this->data_type, [ DataType::TAXONOMY, DataType::TAXONOMY_SINGULAR ], true ) || ! \in_array( 'user', $this->box->get_object_types(), true ) ) {
+		if ( ! \in_array( $this->data_type, [ DataType::TAXONOMY, DataType::TAXONOMY_SINGULAR ], true ) || ! \in_array( BoxType::USER->value, $this->box->get_object_types(), true ) ) {
 			_doing_it_wrong( __METHOD__, 'Storing user terms in meta only applies to taxonomy fields registered on users.', '3.14.0' );
 		}
 		$this->store_user_terms_in_meta = $use_meta;

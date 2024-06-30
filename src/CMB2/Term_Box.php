@@ -41,7 +41,7 @@ class Term_Box extends Box {
 	 * @param string   $title      - Meta box title.
 	 */
 	public function __construct( string $id, array $taxonomies, $title ) {
+		parent::__construct( $id, [ BoxType::TERM->value ], $title );
 		$this->taxonomies = $taxonomies;
-		parent::__construct( $id, [ Box::TYPE_TERM ], $title );
 	}
 }

@@ -186,7 +186,7 @@ class Options_Page extends Box {
 
 		add_action( "cmb2_init_hookup_{$id}", [ $this, 'run_options_hookup_on_front_end' ] );
 
-		parent::__construct( $id, [ Box::TYPE_OPTIONS ], $title );
+		parent::__construct( $id, [ BoxType::OPTIONS->value ], $title );
 	}
 
 

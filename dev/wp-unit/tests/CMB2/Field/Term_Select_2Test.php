@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2\Field;
 
 use Lipe\Lib\CMB2\Box;
+use Lipe\Lib\CMB2\BoxType;
 
 /**
  * @author Mat Lipe
@@ -65,7 +66,7 @@ class Term_Select_2Test extends \WP_Ajax_UnitTestCase {
 		$this->assertSame( [ $cat_1, $cat_2, $cat_5 ], wp_get_object_terms( 1, 'category', [ 'fields' => 'ids' ] ) );
 
 		// Object type does not support terms.
-		set_private_property( $this->get_box(), 'object_types', [ Box::TYPE_COMMENT ] );
+		set_private_property( $this->get_box(), 'object_types', [ BoxType::COMMENT->value ] );
 		apply_filters( 'cmb2_sanitize_' . Type::TERM_SELECT_2->value, null, [ [ $cat_1 ], [ $cat_4 ] ], 1, [ 'id' => 'ts' ] );
 		$this->assertSame( [ $cat_1, $cat_2, $cat_5 ], wp_get_object_terms( 1, 'category', [ 'fields' => 'ids' ] ) );
 	}

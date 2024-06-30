@@ -34,13 +34,13 @@ class Default_Callback {
 	 * @return void
 	 */
 	protected function hook(): void {
-		if ( 'options-page' === $this->box->get_object_type() ) {
+		if ( BoxType::OPTIONS === $this->box->get_box_type() ) {
 			add_filter( "cmb2_default_option_{$this->box->get_id()}_{$this->field->get_id()}", [
 				$this,
 				'default_option_callback',
 			], 11 );
 		} else {
-			add_filter( "default_{$this->box->get_object_type()}_metadata", [
+			add_filter( "default_{$this->box->get_box_type()->value}_metadata", [
 				$this,
 				'default_meta_callback',
 			], 11, 3 );
@@ -71,10 +71,10 @@ class Default_Callback {
 		}
 
 		// Will create an infinite loop if filter is intact.
-		remove_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11 );
+		remove_filter( "default_{$this->box->get_box_type()->value}_metadata", [ $this, 'default_meta_callback' ], 11 );
 		$cmb2_field = $this->field->get_cmb2_field( $object_id );
 		if ( null !== $cmb2_field ) {
-			add_filter( "default_{$this->box->get_object_type()}_metadata", [ $this, 'default_meta_callback' ], 11, 3 );
+			add_filter( "default_{$this->box->get_box_type()->value}_metadata", [ $this, 'default_meta_callback' ], 11, 3 );
 			return \call_user_func( $this->callback, $cmb2_field->properties, $cmb2_field );
 		}
 

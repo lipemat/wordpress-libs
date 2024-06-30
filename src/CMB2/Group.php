@@ -248,7 +248,7 @@ class Group extends Field {
 	 */
 	protected function add_field_to_group( Field $field ): void {
 		$registered = Registered::factory( $field );
-		if ( Registered::factory( $this )->is_repeatable() && Repo::in()->supports_taxonomy_relationships( MetaType::tryFrom( $this->box->get_object_type() ), $registered ) ) {
+		if ( Registered::factory( $this )->is_repeatable() && Repo::in()->supports_taxonomy_relationships( $this->box->get_box_type(), $registered ) ) {
 			/* translators: {field type} */
 			throw new \LogicException( \sprintf( esc_html__( 'Taxonomy fields are not supported by repeating groups. %s', 'lipe' ), esc_html( $field->id ) ) );
 		}

@@ -32,7 +32,7 @@ class Comment_Box extends Box {
 	 * @param string $title Metabox title.
 	 */
 	public function __construct( string $id, $title ) {
-		parent::__construct( $id, [ Box::TYPE_COMMENT ], $title );
+		parent::__construct( $id, [ BoxType::COMMENT->value ], $title );
 		$this->context( static::CONTEXT_NORMAL );
 	}
 }

@@ -203,8 +203,8 @@ class Term_Select_2 {
 			return $meta_value;
 		}
 
-		$meta_type = $registered->field->get_box()->get_object_type();
-		if ( '' !== $id && 0 !== $id && Repo::in()->supports_taxonomy_relationships( MetaType::tryFrom( $meta_type ), $registered->field ) ) {
+		$box_type = $registered->field->get_box()->get_box_type();
+		if ( '' !== $id && 0 !== $id && Repo::in()->supports_taxonomy_relationships( $box_type, $registered->field ) ) {
 			if ( $registered->field->is_repeatable() ) {
 				$ids = \array_merge( ...$meta_value );
 				wp_set_object_terms( (int) $id, \array_map( '\intval', $ids ), $registered->taxonomy );
