@@ -34,7 +34,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 
 	public function setUp(): void {
 		parent::setUp();
-		$this->attachment_id = self::factory()->attachment->create_upload_object( DIR_TESTDATA . '/images/test-image.png' );
+		$this->attachment_id = self::factory()->attachment->create_upload_object( DIR_TEST_IMAGES . '/test-image.png' );
 		$this->deleted = [];
 
 		$this->register_box();

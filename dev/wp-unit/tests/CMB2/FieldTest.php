@@ -237,15 +237,13 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		    ->text()
 		    ->revisions_enabled( false );
 		call_private_method( $box, 'register_fields' );
-		// So we can reuse the same method saying "doing it wrong".
-		$this->assertCount( 1, $this->caught_doing_it_wrong );
-		$this->caught_doing_it_wrong = [];
+		$this->expectDoingItWrong( 'Lipe\Lib\CMB2\Field::revisions_enabled' );
 
 		$box = new Term_Box( 'options', [ 'category' ], 'Sanitize Box' );
 		$box->field( 'tos', 'TEST 1' )
 		    ->text()
 		    ->revisions_enabled( false );
-		$this->setExpectedIncorrectUsage( 'Lipe\Lib\CMB2\Field::revisions_enabled' );
+		$this->expectDoingItWrong( 'Lipe\Lib\CMB2\Field::revisions_enabled' );
 		call_private_method( $box, 'register_fields' );
 	}
 }

@@ -220,7 +220,7 @@ class BoxTest extends \WP_UnitTestCase {
 			'url' => $url,
 		], $object->get_option( 'nf' ) );
 
-		$attachment_id = self::factory()->attachment->create_upload_object( DIR_TESTDATA . '/images/test-image.png' );
+		$attachment_id = self::factory()->attachment->create_upload_object( DIR_TEST_IMAGES . '/test-image.png' );
 		$object->update_option( 'nf', $attachment_id );
 		$this->assertEquals( [
 			'id'  => $attachment_id,

@@ -38,7 +38,7 @@ class GroupTest extends \WP_Test_REST_TestCase {
 		$this->category = self::factory()->category->create_and_get();
 		$this->post_tags = self::factory()->tag->create_many( 3 );
 		$this->attachment_id =
-			self::factory()->attachment->create_upload_object( DIR_TESTDATA . '/images/test-image.png' );
+			self::factory()->attachment->create_upload_object( DIR_TEST_IMAGES . '/test-image.png' );
 		$b = new Box( 'Y', [ 'post' ], 'Y' );
 		$g = $b->group( 'G', 'G' );
 		$g->field( 'C', 'Checkbox' )
