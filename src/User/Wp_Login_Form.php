@@ -126,6 +126,20 @@ class Wp_Login_Form implements Args_Interface {
 	public bool $remember;
 
 	/**
+	 * Add `required` attribute to the username field.
+	 *
+	 * @var bool
+	 */
+	public bool $required_username;
+
+	/**
+	 * Add `required` attribute to the password field.
+	 *
+	 * @var bool
+	 */
+	public bool $required_password;
+
+	/**
 	 * Default value for the username field.
 	 *
 	 * @default empty.
