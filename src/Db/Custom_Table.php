@@ -50,7 +50,7 @@ class Custom_Table {
 	final protected function __construct(
 		protected readonly Table $config
 	) {
-		global $wpdb;
+		$wpdb = $this->get_wpdb();
 		if ( \str_starts_with( $this->config->get_table_base(), $wpdb->prefix ) ) {
 			$this->table = $this->config->get_table_base();
 		} else {
@@ -85,9 +85,12 @@ class Custom_Table {
 	 * @return array
 	 */
 	public function get( array $where = [], ?int $count = null, ?string $order_by = null, string $order = 'ASC' ): array {
-		global $wpdb;
+		$wpdb = $this->get_wpdb();
 		$query = $this->get_select_query( [], $where, $count, $order_by, $order );
 		$data = $wpdb->get_results( $query, ARRAY_A );
+		if ( null === $data ) {
+			return [];
+		}
 		return \array_map( [ $this, 'format_values' ], $data );
 	}
 
@@ -107,7 +110,7 @@ class Custom_Table {
 	 * @return ?array
 	 */
 	public function get_one( array $where = [], ?string $order_by = null, string $order = 'ASC' ): ?array {
-		global $wpdb;
+		$wpdb = $this->get_wpdb();
 		$query = $this->get_select_query( [], $where, 1, $order_by, $order );
 		$data = $wpdb->get_row( $query, ARRAY_A );
 		if ( null !== $data ) {
@@ -138,18 +141,21 @@ class Custom_Table {
 	 * @return array
 	 */
 	public function get_paginated( int $page, int $per_page, array $where = [], ?string $order_by = null, string $order = 'ASC' ): array {
-		global $wpdb;
+		$wpdb = $this->get_wpdb();
 		$offset = null;
 		if ( $page > 1 ) {
 			$offset = ( $page - 1 ) * $per_page;
 		}
 		$query = $this->get_select_query( [], $where, $per_page, $order_by, $order, $offset );
 		$items = $wpdb->get_results( $query, ARRAY_A );
-		$total = $wpdb->get_var( "SELECT COUNT(*) FROM `{$this->table()}` {$this->last_where}" );
+		if ( null === $items ) {
+			$items = [];
+		}
+		$total = (int) ( $wpdb->get_var( "SELECT COUNT(*) FROM `{$this->table()}` {$this->last_where}" ) ?? 0 );
 
 		return [
 			'items'       => \array_map( [ $this, 'format_values' ], $items ),
-			'total'       => (int) $total,
+			'total'       => $total,
 			'total_pages' => (int) \ceil( $total / $per_page ),
 		];
 	}
@@ -164,7 +170,7 @@ class Custom_Table {
 	 * @return ?array
 	 */
 	public function get_by_id( int $id ): ?array {
-		global $wpdb;
+		$wpdb = $this->get_wpdb();
 		$query = $this->get_select_query( [], [ $this->config->get_id_field() => $id ] );
 		$data = $wpdb->get_row( $query, ARRAY_A );
 		if ( null !== $data ) {
@@ -184,7 +190,7 @@ class Custom_Table {
 	 * @return ?int - insert id on success or null on failure.
 	 */
 	public function add( array $columns ): ?int {
-		global $wpdb;
+		$wpdb = $this->get_wpdb();
 		unset( $columns[ $this->config->get_id_field() ] );
 		$columns = $this->sort_columns( $columns );
 
@@ -201,7 +207,7 @@ class Custom_Table {
 	 * @param int $id - The id of the item to delete.
 	 */
 	public function delete( int $id ): bool {
-		global $wpdb;
+		$wpdb = $this->get_wpdb();
 		$deleted = $wpdb->delete( $this->table(), [ $this->config->get_id_field() => $id ], [ '%d' ] );
 		return 1 === $deleted;
 	}
@@ -217,7 +223,7 @@ class Custom_Table {
 	 * @return false|int - Number of rows deleted or false on failure.
 	 */
 	public function delete_where( array $where ): bool|int {
-		global $wpdb;
+		$wpdb = $this->get_wpdb();
 		$formats = $this->get_formats( $where );
 		return $wpdb->delete( $this->table(), $where, $formats );
 	}
@@ -234,7 +240,7 @@ class Custom_Table {
 	 * @return bool - True if the row was updated.
 	 */
 	public function update( int $id, array $columns ): bool {
-		global $wpdb;
+		$wpdb = $this->get_wpdb();
 		$updated = $wpdb->update( $this->table(), $columns, [ $this->config->get_id_field() => $id ], $this->get_formats( $columns ), [ '%d' ] );
 		return 1 === $updated;
 	}
@@ -252,7 +258,7 @@ class Custom_Table {
 	 * @return false|int - Number of rows updated or false on failure.
 	 */
 	public function update_where( array $where, array $columns ): bool|int {
-		global $wpdb;
+		$wpdb = $this->get_wpdb();
 		$formats = $this->get_formats( $columns );
 		return $wpdb->update( $this->table(), $columns, $where, $formats, $this->get_formats( $where ) );
 	}
@@ -273,7 +279,7 @@ class Custom_Table {
 	 * @return int|bool - The number of rows affected or false on failure.
 	 */
 	public function replace( int $id, array $columns ): int|bool {
-		global $wpdb;
+		$wpdb = $this->get_wpdb();
 		$columns = $this->sort_columns( $columns );
 		$columns[ $this->config->get_id_field() ] = $id;
 		return $wpdb->replace( $this->table(), $columns, $this->get_formats( $columns ) );
@@ -288,7 +294,7 @@ class Custom_Table {
 	 * @phpstan-param key-of<COLUMNS>|null   $order_by
 	 * @phpstan-param self::ORDER_*          $order
 	 *
-	 * @param array<string>                  $columns   Array of columns we want to return.
+	 * @param string[]                       $columns   Array of columns we want to return.
 	 *                                                  Any empty array will return all columns.
 	 * @param array                          $where     Array of where column => value.
 	 *                                                  Adding a % within the value will turn the
@@ -302,14 +308,15 @@ class Custom_Table {
 	 * @return string
 	 */
 	public function get_select_query( array $columns, array $where, ?int $count = null, ?string $order_by = null, string $order = 'ASC', ?int $offset = null ): string {
-		global $wpdb;
+		$wpdb = $this->get_wpdb();
 		if ( 0 === \count( $columns ) ) {
 			$db_columns = '*';
 		} else {
-			$db_columns = \implode( ', ', \array_map( fn( string $column ) => "`{$column}`", $columns ) );
+			$db_columns = \implode( ', ', \array_map( fn( string $column ): string => "`{$column}`", $columns ) );
 		}
 
-		$sql = $wpdb->prepare( "SELECT $db_columns FROM %i", $this->table() );
+		// @phpstan-ignore-next-line -- False positive on literal-string.
+		$sql = (string) $wpdb->prepare( "SELECT {$db_columns} FROM %i", $this->table() );
 		$this->last_where = '';
 
 		if ( \count( $where ) > 0 ) {
@@ -338,8 +345,8 @@ class Custom_Table {
 				$this,
 			] );
 			if ( \count( $db_wheres ) > 0 ) {
-				$where_clause = ' WHERE ' . \implode( ' AND ', $db_wheres );
-				$this->last_where = $wpdb->prepare( $where_clause, $values );
+				// @phpstan-ignore-next-line -- False positive on literal-string.
+				$this->last_where = (string) $wpdb->prepare( ' WHERE ' . \implode( ' AND ', $db_wheres ), $values );
 				$sql .= $this->last_where;
 			}
 		}
@@ -441,6 +448,17 @@ class Custom_Table {
 			}
 		}
 		return $formats;
+	}
+
+
+	/**
+	 * Get the global wpdb object in a way we can guarantee it exists.
+	 *
+	 * @return \wpdb
+	 */
+	protected function get_wpdb(): \wpdb {
+		global $wpdb;
+		return $wpdb;
 	}
 
 
