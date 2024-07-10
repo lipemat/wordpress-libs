@@ -30,8 +30,13 @@ use Lipe\Lib\Meta\Repo;
  * @property string $home
  * @property int    $post_count
  * @property string $siteurl
+ *
+ * @template OPTIONS of array<string, mixed>
  */
 trait Site_Trait {
+	/**
+	 * @use Mutator_Trait<OPTIONS>
+	 */
 	use Mutator_Trait;
 
 	/**
@@ -123,11 +128,11 @@ trait Site_Trait {
 	/**
 	 * Create a new instance of this class.
 	 *
-	 * @param int|null|\WP_Site $site - Site object, ID, or null for current site..
+	 * @param int|\WP_Site|null $site - Site object, ID, or null for current site..
 	 *
 	 * @return static
 	 */
-	public static function factory( $site = null ) {
+	public static function factory( null|int|\WP_Site $site = null ): static {
 		return new static( $site );
 	}
 }

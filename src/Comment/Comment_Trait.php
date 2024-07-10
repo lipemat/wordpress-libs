@@ -25,8 +25,13 @@ use Lipe\Lib\Meta\Repo;
  * @property string $comment_post_ID
  * @property string $comment_type
  * @property string $user_id
+ *
+ * @template OPTIONS of array<string, mixed>
  */
 trait Comment_Trait {
+	/**
+	 * @use Mutator_Trait<OPTIONS>
+	 */
 	use Mutator_Trait;
 
 	/**
@@ -113,7 +118,7 @@ trait Comment_Trait {
 	 *
 	 * @return static
 	 */
-	public static function factory( $comment ) {
+	public static function factory( int|\WP_Comment $comment ): static {
 		return new static( $comment );
 	}
 }

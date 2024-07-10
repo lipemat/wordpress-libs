@@ -48,8 +48,13 @@ use Lipe\Lib\Meta\Repo;
  * @method string translate_level_to_cap( int $level )
  * @method void for_site( int $site_id = '' )
  * @method int get_site_id()
+ *
+ * @template OPTIONS of array<string, mixed>
  */
 trait User_Trait {
+	/**
+	 * @use Mutator_Trait<OPTIONS>
+	 */
 	use Mutator_Trait;
 
 	/**
@@ -57,29 +62,29 @@ trait User_Trait {
 	 *
 	 * @var int
 	 */
-	protected $user_id;
+	protected int $user_id;
 
 	/**
 	 * User object
 	 *
 	 * @var ?\WP_User
 	 */
-	protected $user;
+	protected null|\WP_User $user;
 
 
 	/**
 	 * User_Trait constructor.
 	 *
-	 * @param int|null|\WP_User $user - User ID, WP_User object, or null for the current user.
+	 * @param \WP_User|int|null $user - User ID, WP_User object, or null for the current user.
 	 */
-	public function __construct( $user = null ) {
+	public function __construct( null|\WP_User|int $user = null ) {
 		if ( null === $user ) {
 			if ( is_user_logged_in() ) {
 				$this->user_id = get_current_user_id();
 			} else {
 				_doing_it_wrong( __CLASS__, "You can't use the `User` object without a user id available.", '3.14.0' );
 			}
-		} elseif ( is_a( $user, \WP_User::class ) ) {
+		} elseif ( \is_a( $user, \WP_User::class ) ) {
 			$this->user = $user;
 			$this->user_id = $user->ID;
 		} else {
@@ -157,11 +162,11 @@ trait User_Trait {
 	/**
 	 * Get an instance of this class.
 	 *
-	 * @param int|null|\WP_User $user - User ID, WP_User object, or null for the current user.
+	 * @param \WP_User|int|null $user - User ID, WP_User object, or null for the current user.
 	 *
 	 * @return static
 	 */
-	public static function factory( $user = null ) {
+	public static function factory( null|\WP_User|int $user = null ): static {
 		return new static( $user );
 	}
 }

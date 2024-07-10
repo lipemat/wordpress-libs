@@ -25,6 +25,9 @@ use Lipe\Lib\Meta\Repo;
  * @template OPTIONS of array<string, mixed>
  */
 trait Settings_Trait {
+	/**
+	 * @use Mutator_Trait<OPTIONS>
+	 */
 	use Mutator_Trait;
 
 	/**
@@ -62,7 +65,7 @@ trait Settings_Trait {
 	 * @phpstan-return D|OPTIONS[T]
 	 * @return mixed
 	 */
-	public function get_option( string $key, $default_value = null ) {
+	public function get_option( string $key, mixed $default_value = null ) {
 		return $this->get_meta( $key, $default_value );
 	}
 
@@ -83,12 +86,12 @@ trait Settings_Trait {
 	 * @phpstan-param OPTIONS[T]|(callable( D|OPTIONS[T]): OPTIONS[T]) $value
 	 *
 	 * @param string         $key              - Option key.
-	 * @param mixed|callable $value            - Option value.
-	 * @param mixed          $callback_default - Default value for get during callback.
+	 * @param mixed|callable $value            - Option value or callback.
+	 * @param mixed          $callback_default - Default value for get_meta during callback.
 	 *
 	 * @return void
 	 */
-	public function update_option( string $key, $value, $callback_default = null ): void {
+	public function update_option( string $key, mixed $value, mixed $callback_default = null ): void {
 		$this->update_meta( $key, $value, $callback_default );
 	}
 }

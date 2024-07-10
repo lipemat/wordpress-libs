@@ -20,8 +20,13 @@ use Lipe\Lib\Meta\Repo;
  * @property int    $term_group
  * @property int    $term_id
  * @property int    $term_taxonomy_id
+ *
+ * @template OPTIONS of array<string, mixed>
  */
 trait Taxonomy_Trait {
+	/**
+	 * @use Mutator_Trait<OPTIONS>
+	 */
 	use Mutator_Trait;
 
 	/**

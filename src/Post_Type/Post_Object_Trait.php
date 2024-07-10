@@ -36,8 +36,13 @@ use Lipe\Lib\Meta\Repo;
  * @property string $post_title
  * @property string $post_type
  * @property string $to_ping
+ *
+ * @template OPTIONS of array<string, mixed>
  */
 trait Post_Object_Trait {
+	/**
+	 * @use Mutator_Trait<OPTIONS>
+	 */
 	use Mutator_Trait;
 
 	/**
