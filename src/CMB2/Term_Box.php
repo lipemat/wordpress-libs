@@ -40,7 +40,7 @@ class Term_Box extends Box {
 	 * @param string[] $taxonomies - Taxonomies to add meta box to.
 	 * @param string   $title      - Meta box title.
 	 */
-	public function __construct( string $id, array $taxonomies, $title ) {
+	public function __construct( string $id, array $taxonomies, string $title ) {
 		parent::__construct( $id, [ BoxType::TERM->value ], $title );
 		$this->taxonomies = $taxonomies;
 	}

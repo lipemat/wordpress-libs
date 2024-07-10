@@ -31,7 +31,7 @@ class RepoTest extends \WP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$cat_id = self::factory()->category->create();
 
-		$box = new User_Box( 'g', null );
+		$box = new User_Box( 'g', '' );
 		$box->field( 'u', 'uu' )
 		    ->true_false();
 		$box->field( 'tt', 'ttt' )

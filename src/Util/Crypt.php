@@ -97,14 +97,14 @@ class Crypt {
 		$hash_key = (string) hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, static::ITERATIONS, $this->get_key_size() ) );
 
 		$output = [
-			'ciphertext' => base64_encode( (string) openssl_encrypt( $plaintext, static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv ) ),
+			'ciphertext' => \base64_encode( (string) openssl_encrypt( $plaintext, static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv ) ),
 			'iv'         => bin2hex( $iv ),
 			'salt'       => bin2hex( $salt ),
 			'iterations' => static::ITERATIONS,
 		];
 		unset( $iv, $salt, $hash_key );
 
-		return base64_encode( (string) wp_json_encode( $output ) );
+		return \base64_encode( (string) wp_json_encode( $output ) );
 	}
 
 
@@ -118,7 +118,7 @@ class Crypt {
 	 * @return int
 	 */
 	protected function get_key_size(): int {
-		return preg_replace( '/\D/', '', static::METHOD ) / 4;
+		return \absint( \preg_replace( '/\D/', '', static::METHOD ) / 4 );
 	}
 
 
