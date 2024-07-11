@@ -71,7 +71,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 		// More than 1 criterion.
 		$specific = $this->db()->get_one( [
 			'option_value' => 'shared_value',
-			'autoload'     => 'no',
+			'autoload'     => \version_compare( $GLOBALS['wp_version'], '6.5', '>' ) ? 'off' : 'no',
 		] );
 		$this->assertSame( 'a_option', $specific['option_name'] );
 		$this->assertSame( 'shared_value', $specific['option_value'] );
@@ -154,26 +154,29 @@ class Custom_TableTest extends \WP_UnitTestCase {
 
 
 	public function test_get(): void {
-		$v = $this->db()->get();
-		$this->assertNotEmpty( $v );
+		$all = $this->db()->get();
+		$this->assertNotEmpty( $all );
 
 		// Single item.
 		$single = $this->db()->get( [ 'option_name' => 'start_of_week' ], 1 );
 		$this->assertCount( 1, $single );
-		$this->assertSame( $single[0], Arrays::in()->find( $v, fn( $item ) => 'start_of_week' === $item['option_name'] ) );
+		$this->assertSame( $single[0], Arrays::in()->find( $all, fn( $item ) => 'start_of_week' === $item['option_name'] ) );
 
 		// Multiple items.
+		$autoload = \version_compare( $GLOBALS['wp_version'], '6.5', '>' ) ? 'on' : 'yes';
 		$multiple = $this->db()->get( [
 			'option_name' => '%c%',
-			'autoload'    => 'yes',
+			'autoload'    => $autoload,
 		], 5 );
 		$this->assertCount( 5, $multiple );
-		$filtered = \array_filter( $v, fn( $row ) => \str_contains( $row['option_name'], 'c' ) );
+
+		$filtered = \array_filter( $all, fn( $row ) => \str_contains( $row['option_name'], 'c' ) && $autoload === $row['autoload'] );
 		$this->assertSame( \array_slice( $filtered, 0, 5 ), $multiple );
 
 		// Order by name DESC
 		$by_name = $this->db()->get( [
 			'option_name' => '%c%',
+			'autoload'    => $autoload,
 		], 5, 'option_name', 'DESC' );
 		\usort( $filtered, fn( $a, $b ) => \strcmp( $b['option_name'], $a['option_name'] ) );
 		$this->assertSame( \array_slice( $filtered, 0, 5 ), $by_name );
@@ -181,6 +184,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 		// Order by name ASC
 		$asc = $this->db()->get( [
 			'option_name' => '%c%',
+			'autoload'    => $autoload,
 		], 5, 'option_name', 'ASC' );
 		\usort( $filtered, fn( $a, $b ) => \strcmp( $a['option_name'], $b['option_name'] ) );
 		$this->assertSame( \array_slice( $filtered, 0, 5 ), $asc );
@@ -244,17 +248,17 @@ class Custom_TableTest extends \WP_UnitTestCase {
 
 
 	public function test_delete(): void {
-		$v = $this->db()->get();
-		$this->assertNotEmpty( $v );
+		$all = $this->db()->get();
+		$this->assertNotEmpty( $all );
 
-		$first = $v[0];
-		$this->assertSame( $first['option_value'], get_option( $first['option_name'] ) );
+		$first = $all[0];
+		$this->assertSame( maybe_unserialize( $first['option_value'] ), get_option( $first['option_name'] ) );
 		$this->assertSame( $first, $this->db()->get_by_id( $first['option_id'] ) );
 		$this->assertTrue( $this->db()->delete( $first['option_id'] ) );
 		$this->assertNull( $this->db()->get_by_id( $first['option_id'] ) );
 
-		$last = $v[ \count( $v ) - 1 ];
-		$this->assertSame( $last['option_value'], get_option( $last['option_name'] ) );
+		$last = $all[ \count( $all ) - 1 ];
+		$this->assertSame( maybe_unserialize( $last['option_value'] ), get_option( $last['option_name'] ) );
 		$this->assertSame( $last, $this->db()->get_by_id( $last['option_id'] ) );
 		$this->assertTrue( $this->db()->delete( $last['option_id'] ) );
 		$this->assertEmpty( $this->db()->get_by_id( $last['option_id'] ) );
@@ -415,7 +419,10 @@ class Custom_TableTest extends \WP_UnitTestCase {
 			$this->assertIsString( $row['option_value'] );
 			$this->assertThat( $row['autoload'], $this->logicalOr(
 				$this->equalTo( 'yes' ),
-				$this->equalTo( 'no' )
+				$this->equalTo( 'no' ),
+				$this->equalTo( 'auto' ),
+				$this->equalTo( 'on' ),
+				$this->equalTo( 'off' ),
 			) );
 		}
 
