@@ -68,13 +68,19 @@ class Initial_Data {
 	 */
 	public function get_post_data( ?array $posts = null, bool $with_links = false, array|bool $embed = false ): array {
 		if ( null === $posts && ! is_404() ) {
-			$posts = $GLOBALS['wp_query']->posts;
+			$posts = $GLOBALS['wp_query'] instanceof \WP_Query ? $GLOBALS['wp_query']->posts : [];
 		}
 
-		return \array_map( function( $post ) use ( $with_links, $embed ) {
+		return \array_map( function( \WP_Post|int $post ) use ( $with_links, $embed ) {
+			if ( ! $post instanceof \WP_Post ) {
+				$post = get_post( $post );
+			}
+			if ( ! $post instanceof \WP_Post ) {
+				return [];
+			}
 			$controller = new \WP_REST_Posts_Controller( $post->post_type );
 			return $this->get_response( $controller, $post, $with_links, $embed );
-		}, $posts );
+		}, $posts ?? [] );
 	}
 
 

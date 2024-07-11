@@ -468,6 +468,9 @@ class Custom_Post_Type {
 	 */
 	protected function adjust_post_updated_messages( array $messages = [] ): array {
 		global $post, $post_ID;
+		if ( ! $post instanceof \WP_Post ) {
+			return $messages;
+		}
 
 		$single = $this->labels()->get_label( Labels::SINGULAR_NAME ) ?? '';
 		$lower_label = \strtolower( $single );
@@ -638,7 +641,7 @@ class Custom_Post_Type {
 			return $is_link;
 		} );
 
-		add_filter( 'is_post_type_viewable', function( $is_viewable, $post_type ) {
+		add_filter( 'is_post_type_viewable', function( bool $is_viewable, \WP_Post_Type $post_type ) {
 			if ( $this->name === $post_type->name ) {
 				return false;
 			}

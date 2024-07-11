@@ -342,6 +342,9 @@ class Taxonomy {
 		if ( ! $this->post_list_filter || ! \in_array( $typenow, $this->post_types, true ) ) {
 			return;
 		}
+		if ( ! $wp_query instanceof \WP_Query ) {
+			return;
+		}
 
 		$args = new Wp_Dropdown_Categories( [] );
 		$args->orderby = 'name';
