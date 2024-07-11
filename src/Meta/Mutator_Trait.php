@@ -203,6 +203,7 @@ trait Mutator_Trait {
 	 *
 	 * @param string    $field_id - Meta key to retrieve.
 	 *
+	 * @phpstan-return OPTIONS[T]|null
 	 * @return mixed
 	 */
 	public function offsetGet( $field_id ): mixed {
