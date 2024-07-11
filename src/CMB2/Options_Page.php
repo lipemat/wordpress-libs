@@ -277,6 +277,8 @@ class Options_Page extends Box {
 	 */
 	public function register_meta_on_all_types( Registered $registered, array $config ): void {
 		unset( $config['single'] );
+		$config['label'] = $registered->variation->name;
+		$config['description'] = "Lives under the `{$registered->get_box()->get_id()}` option.";
 
 		if ( false !== $registered->get_show_in_rest() ) {
 			$config = $this->translate_rest_keys( $registered, $config );

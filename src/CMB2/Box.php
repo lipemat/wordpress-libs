@@ -817,8 +817,9 @@ class Box {
 			return;
 		}
 		$config = [
-			'single' => true,
-			'type'   => 'string',
+			'single'      => true,
+			'type'        => 'string',
+			'description' => $registered->variation->name,
 		];
 		if ( $registered->is_using_array_data() ) {
 			$config['type'] = 'array';
