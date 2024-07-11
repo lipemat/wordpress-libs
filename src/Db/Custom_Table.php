@@ -315,8 +315,7 @@ class Custom_Table {
 			$db_columns = \implode( ', ', \array_map( fn( string $column ): string => "`{$column}`", $columns ) );
 		}
 
-		// @phpstan-ignore-next-line -- False positive on literal-string.
-		$sql = (string) $wpdb->prepare( "SELECT {$db_columns} FROM %i", $this->table() );
+		$sql = (string) $wpdb->prepare( 'SELECT %1$s FROM %2$i', $db_columns, $this->table() );
 		$this->last_where = '';
 
 		if ( \count( $where ) > 0 ) {
@@ -345,7 +344,7 @@ class Custom_Table {
 				$this,
 			] );
 			if ( \count( $db_wheres ) > 0 ) {
-				// @phpstan-ignore-next-line -- False positive on literal-string.
+				// @phpstan-ignore-next-line -- Building the WHERE statement dynamically instead of literal-string.
 				$this->last_where = (string) $wpdb->prepare( ' WHERE ' . \implode( ' AND ', $db_wheres ), $values );
 				$sql .= $this->last_where;
 			}
