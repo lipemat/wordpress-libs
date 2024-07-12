@@ -4,7 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Post_Type;
 
 /**
- * A fluent interface for changing the labels of a <post type singular> type during the register.
+ * A fluent interface for changing the labels of a `Custom_Post_Type type` during the register.
  *
  * @link   https://developer.wordpress.org/reference/functions/get_post_type_labels/
  *
@@ -51,20 +51,11 @@ class Labels {
 	public const FILTER_BY_DATE           = 'filter_by_date';
 
 	/**
+	 * Holds any customizations to the labels.
+	 *
 	 * @var array<self::*, string> $labels
 	 */
 	protected array $labels = [];
-
-
-	/**
-	 * Labels constructor.
-	 *
-	 * @param Custom_Post_Type $cpt - The Custom_Post_Type instance currently registering.
-	 */
-	public function __construct(
-		protected Custom_Post_Type $cpt
-	) {
-	}
 
 
 	/**

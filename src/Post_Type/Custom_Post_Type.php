@@ -284,7 +284,7 @@ class Custom_Post_Type {
 	 */
 	final public function __construct( string $post_type ) {
 		$this->name = $post_type;
-		$this->labels = new Labels( $this );
+		$this->labels = new Labels();
 		$this->capabilities = new Capabilities( $this );
 		$this->register_args = new Register_Post_Type( [] );
 		$this->register_args->supports = static::DEFAULT_SUPPORTS;
