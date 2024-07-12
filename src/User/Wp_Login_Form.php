@@ -15,6 +15,9 @@ use Lipe\Lib\Query\Args_Interface;
  * @link   https://developer.wordpress.org/reference/functions/wp_login_form/#parameters
  */
 class Wp_Login_Form implements Args_Interface {
+	/**
+	 * @use Args_Trait<array<string, mixed>>
+	 */
 	use Args_Trait;
 
 	/**

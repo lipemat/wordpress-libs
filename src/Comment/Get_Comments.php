@@ -20,6 +20,9 @@ use Lipe\Lib\Query\Query_Args;
  * @link   https://developer.wordpress.org/reference/classes/wp_comment_query/__construct/
  */
 class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, Args_Interface {
+	/**
+	 * @use Args_Trait<array<string, mixed>>
+	 */
 	use Args_Trait;
 	use Date_Query_Trait;
 	use Meta_Query_Trait;

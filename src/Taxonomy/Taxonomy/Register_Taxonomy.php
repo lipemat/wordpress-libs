@@ -31,6 +31,9 @@ use Lipe\Lib\Taxonomy\Get_Terms;
  *  }
  */
 class Register_Taxonomy implements Args_Interface {
+	/**
+	 * @use Args_Trait<array<string, mixed>>
+	 */
 	use Args_Trait;
 
 	/**

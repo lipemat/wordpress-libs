@@ -33,6 +33,9 @@ use Lipe\Lib\Query\Args_Interface;
  * @phpstan-type Attributes array<string, ATTR_SHAPE>
  */
 class Register_Block implements Args_Interface {
+	/**
+	 * @use Args_Trait<array<string, mixed>>
+	 */
 	use Args_Trait;
 
 	/**

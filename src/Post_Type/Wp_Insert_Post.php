@@ -16,9 +16,42 @@ use Lipe\Lib\Query\Args_Trait;
  * @see    wp_update_post()
  *
  * @link   https://developer.wordpress.org/reference/functions/wp_insert_post/
+ *
+ *
+ * @phpstan-type INSERT_POST array{
+ *      ID?: int,
+ *      post_author: int,
+ *      post_date: string,
+ *      post_date_gmt: string,
+ *      post_content: string,
+ *      post_content_filtered: string,
+ *      post_title: string,
+ *      post_excerpt: string,
+ *      post_status: string,
+ *      post_type: string,
+ *      comment_status: Wp_Insert_Post::STATUS_*,
+ *      ping_status: Wp_Insert_Post::STATUS_*,
+ *      post_password: string,
+ *      post_name: string,
+ *      to_ping: string,
+ *      pinged: string,
+ *      post_modified: string,
+ *      post_modified_gmt: string,
+ *      post_parent: int,
+ *      menu_order: int,
+ *      post_mime_type: string,
+ *      guid: string
+ * }
+ *
  */
 class Wp_Insert_Post implements Args_Interface {
+	/**
+	 * @use Args_Trait<\Partial<INSERT_POST>>
+	 */
 	use Args_Trait;
+
+	public const STATUS_OPEN   = 'open';
+	public const STATUS_CLOSED = 'closed';
 
 	/**
 	 * The post ID. If equal to something other than 0, the post with that ID will be updated.
@@ -115,7 +148,7 @@ class Wp_Insert_Post implements Args_Interface {
 	 *
 	 * Default is the value of 'default_comment_status' option.
 	 *
-	 * @phpstan-var 'open'|'closed'
+	 * @phpstan-var self::STATUS_*
 	 *
 	 * @var string
 	 */
@@ -126,7 +159,7 @@ class Wp_Insert_Post implements Args_Interface {
 	 *
 	 * Default is the value of 'default_ping_status' option.
 	 *
-	 * @phpstan-var 'open'|'closed'
+	 * @phpstan-var self::STATUS_*
 	 *
 	 * @var string
 	 */

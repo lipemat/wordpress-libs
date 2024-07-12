@@ -15,6 +15,9 @@ use Lipe\Lib\Query\Args_Trait;
  * @link   https://developer.wordpress.org/reference/functions/register_post_status/
  */
 class Register_Post_Status implements Args_Interface {
+	/**
+	 * @use Args_Trait<array<string, mixed>>
+	 */
 	use Args_Trait;
 
 	/**

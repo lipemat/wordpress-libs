@@ -12,6 +12,9 @@ use Lipe\Lib\Query\Args_Trait;
  *
  */
 class Wp_Terms_Checklist implements Args_Interface {
+	/**
+	 * @use Args_Trait<array<string, mixed>>
+	 */
 	use Args_Trait;
 
 	/**

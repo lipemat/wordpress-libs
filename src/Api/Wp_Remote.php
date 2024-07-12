@@ -23,6 +23,9 @@ use Lipe\Lib\Query\Args_Trait;
  * @link   https://developer.wordpress.org/reference/classes/wp_http/request/
  */
 class Wp_Remote implements Args_Interface {
+	/**
+	 * @use Args_Trait<array<string, mixed>>
+	 */
 	use Args_Trait;
 
 	public const METHOD_GET     = 'GET';

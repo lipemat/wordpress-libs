@@ -16,6 +16,9 @@ use Lipe\Lib\Query\Args_Trait;
  *
  */
 class FieldArgs implements Args_Interface {
+	/**
+	 * @use Args_Trait<array{label_for?:string, class?: string}>
+	 */
 	use Args_Trait;
 
 	/**

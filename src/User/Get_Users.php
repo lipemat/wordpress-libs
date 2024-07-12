@@ -17,8 +17,11 @@ use Lipe\Lib\Query\Clause\Meta_Query_Trait;
  * @link   https://developer.wordpress.org/reference/classes/wp_user_query/prepare_query/
  */
 class Get_Users implements Meta_Query_Interface, Args_Interface {
-	use Meta_Query_Trait;
+	/**
+	 * @use Args_Trait<array<string, mixed>>
+	 */
 	use Args_Trait;
+	use Meta_Query_Trait;
 
 	public const FIELD_ID           = 'ID';
 	public const FIELD_DISPLAY_NAME = 'display_name';

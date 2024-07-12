@@ -18,6 +18,9 @@ use Lipe\Lib\Query\Args_Trait;
  * @link   https://developer.wordpress.org/reference/functions/wp_insert_comment/
  */
 class Update_Comment implements Args_Interface {
+	/**
+	 * @use Args_Trait<array<string, mixed>>
+	 */
 	use Args_Trait;
 
 	/**

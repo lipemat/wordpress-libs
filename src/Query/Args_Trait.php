@@ -12,6 +12,8 @@ use Lipe\Lib\Query\Clause\Tax_Query;
  *
  * @author Mat Lipe
  * @since  4.5.0
+ *
+ * @template EXISTING of array<string, mixed>
  */
 trait Args_Trait {
 	/**
@@ -33,6 +35,8 @@ trait Args_Trait {
 
 	/**
 	 * Optionally pass existing arguments to preload this class.
+	 *
+	 * @phpstan-param EXISTING     $existing
 	 *
 	 * @param array<string, mixed> $existing - Existing arguments to preload.
 	 */

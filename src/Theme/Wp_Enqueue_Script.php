@@ -18,6 +18,9 @@ use Lipe\Lib\Query\Args_Trait;
  *
  */
 class Wp_Enqueue_Script implements Args_Interface {
+	/**
+	 * @use Args_Trait<array<string, mixed>>
+	 */
 	use Args_Trait;
 
 	public const STRATEGY_ASYNC = 'async';

@@ -19,6 +19,9 @@ use Lipe\Lib\Query\Args_Interface;
  * @link   https://developer.wordpress.org/reference/functions/wp_insert_user/
  */
 class Update_User implements Args_Interface {
+	/**
+	 * @use Args_Trait<array<string, mixed>>
+	 */
 	use Args_Trait;
 
 	/**

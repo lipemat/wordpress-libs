@@ -16,6 +16,9 @@ use Lipe\Lib\Query\Args_Trait;
  *
  */
 class Register_Setting implements Args_Interface {
+	/**
+	 * @use Args_Trait<array<string, mixed>>
+	 */
 	use Args_Trait;
 
 	public const GROUP_DISCUSSION = 'discussion';
