@@ -66,11 +66,11 @@ trait Post_Object_Trait {
 	 *
 	 * @param int|\WP_Post|null $post - Post ID, WP_Post object, or null for global post.
 	 */
-	public function __construct( $post = null ) {
+	public function __construct( int|\WP_Post|null $post = null ) {
 		if ( null === $post ) {
 			$post = get_post();
 		}
-		if ( is_a( $post, \WP_Post::class ) ) {
+		if ( $post instanceof \WP_Post ) {
 			$this->post = $post;
 			$this->post_id = $this->post->ID;
 		} else {
