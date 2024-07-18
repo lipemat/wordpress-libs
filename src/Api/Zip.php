@@ -5,6 +5,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Api;
 
 use Lipe\Lib\Traits\Singleton;
+use Lipe\Lib\Util\Files;
 use Lipe\Lib\Util\Testing;
 
 /**
@@ -115,7 +116,7 @@ class Zip {
 		$this->maybe_serve_existing_file( $paths->zip_name, $paths->zip_path );
 
 		if ( ! is_dir( $paths->file_path ) ) {
-			$this->get_wp_filesystem()->mkdir( $paths->file_path );
+			Files::in()->get_wp_filesystem()->mkdir( $paths->file_path );
 			if ( ! is_dir( $paths->file_path ) ) {
 				wp_die( 'Unable to create zip file' );
 			}
@@ -159,7 +160,7 @@ class Zip {
 		if ( \count( $success ) > 0 ) {
 			$zip->close();
 			foreach ( $success as $file ) {
-				$this->get_wp_filesystem()->delete( $file );
+				Files::in()->get_wp_filesystem()->delete( $file );
 			}
 			$this->maybe_serve_existing_file( $paths->zip_name, $paths->zip_path );
 		}
@@ -188,7 +189,7 @@ class Zip {
 	 * @return void
 	 */
 	protected function maybe_serve_existing_file( string $name, string $path ): void {
-		if ( ! $this->get_wp_filesystem()->is_readable( $path ) ) {
+		if ( ! Files::in()->get_wp_filesystem()->is_readable( $path ) ) {
 			return;
 		}
 		if ( headers_sent() ) {
@@ -201,27 +202,12 @@ class Zip {
 		\header( 'Content-Type: application/zip' );
 		\header( 'Content-disposition: attachment; filename="' . $name . '.zip";' );
 		\header( 'Content-Length: ' . \filesize( $path ) );
-		$zip_contents = $this->get_wp_filesystem()->get_contents( $path );
+		$zip_contents = Files::in()->get_wp_filesystem()->get_contents( $path );
 		if ( false !== $zip_contents ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput
 			echo $zip_contents;
 		}
 		Testing::in()->exit();
-	}
-
-
-	/**
-	 * Get the WP Filesystem object.
-	 *
-	 * @return \WP_Filesystem_Base
-	 */
-	protected function get_wp_filesystem(): \WP_Filesystem_Base {
-		global $wp_filesystem;
-		if ( ! $wp_filesystem ) {
-			require_once ABSPATH . '/wp-admin/includes/file.php';
-			WP_Filesystem();
-		}
-		return $wp_filesystem;
 	}
 
 
