@@ -284,7 +284,7 @@ class Options_Page extends Box {
 			$config = $this->translate_rest_keys( $registered, $config );
 			add_filter( 'rest_pre_get_setting', function( $pre, $option ) use ( $registered, $config ) {
 				if ( isset( $config['show_in_rest'] ) && $option === $config['show_in_rest']['name'] ) {
-					return cmb2_options( $this->id )->get( $registered->get_id(), $registered->get_default() ?? false );
+					return cmb2_options( $this->id )->get( $registered->get_id(), $registered->get_default( $registered->get_box()->get_id() ) ?? false );
 				}
 				return $pre;
 			}, 9, 2 );

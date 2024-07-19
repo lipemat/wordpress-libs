@@ -60,8 +60,18 @@ class Registered {
 	 * @return ?\CMB2_Field
 	 */
 	public function get_cmb2_field( int|string $object_id = 0 ): ?\CMB2_Field {
-		$parent_id = $this->get_group()?->id ?? $this->get_box()->get_id();
-		return cmb2_get_field( $parent_id, $this->get_id(), $object_id );
+		if ( null !== $this->get_group() ) {
+			$box = $this->get_box()->get_cmb2_box();
+			$group = cmb2_get_field( $this->get_box()->get_id(), $this->get_group()->id, $object_id, $this->get_box()->get_box_type()->value );
+			$field = $box->get_field( $this->get_config(), $group );
+			if ( false === $field ) {
+				return null;
+			}
+			$field->object_id( $object_id );
+			return $field;
+		}
+
+		return cmb2_get_field( $this->get_box()->get_id(), $this->get_id(), $object_id, $this->get_box()->get_box_type()->value );
 	}
 
 
