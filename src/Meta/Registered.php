@@ -80,13 +80,25 @@ class Registered {
 	/**
 	 * Get default value for the field.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#default
-	 * @see  Field::$default
+	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#default
+	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#default_cb
+	 * @see    Field::default()
 	 *
-	 * @return string|false|null|array<mixed>
+	 * @notice Will not use the `default_cb` if no object_id is passed.
+	 *
+	 * @param null|int|string $object_id - The object id to pass on to the default callback if available.
+	 *
+	 * @return mixed
 	 */
-	public function get_default(): string|array|false|null {
-		return $this->get_config()['default'] ?? null;
+	public function get_default( null|int|string $object_id = null ): mixed {
+		$config = $this->get_config();
+		if ( isset( $config['default'] ) ) {
+			return $config['default'];
+		}
+		if ( null !== $object_id && isset( $config['default_cb'] ) && null !== $this->get_cmb2_field( $object_id ) ) {
+			return \call_user_func( $config['default_cb'], $config, $this->get_cmb2_field( $object_id ) );
+		}
+		return null;
 	}
 
 

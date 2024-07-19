@@ -81,8 +81,11 @@ trait Translate {
 		$field = $this->get_registered( $key );
 		if ( null !== $field && null !== $field->get_group() ) {
 			$group = $this->get_meta_value( $object_id, $field->get_group()->id, $meta_type );
-			if ( '' === $group && null !== $field->get_default() ) {
-				return $field->get_default();
+			if ( '' === $group ) {
+				$default = $field->get_default( $object_id );
+				if ( null !== $default ) {
+					return $default;
+				}
 			}
 			$value = $group[ $this->group_row ][ $key ] ?? null;
 		} elseif ( MetaType::OPTION === $meta_type ) {
