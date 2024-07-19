@@ -17,10 +17,20 @@ class Checkbox extends Field {
 	 * @notice  Checkboxes are tricky.
 	 * @see     https://github.com/CMB2/CMB2/wiki/Tips-&-Tricks#setting-a-default-value-for-a-checkbox
 	 *
-	 * @example
-	 * ```
+	 * @example On a posts screen
+	 * ```php
 	 * function prefix_set_test_default($field_args, \CMB2_Field $field) {
 	 *      return isset($_GET['post']) ? '' : true;
+	 * }
+	 * ```
+	 *
+	 * @example On an options screen.
+	 * ```php
+	 * public function default_checkbox_value(): string {
+	 *      if (false === get_option(self::NAME)) {
+	 *          return 'on';
+	 *      }
+	 *      return '';
 	 * }
 	 * ```
 	 *
