@@ -367,16 +367,13 @@ class Field {
 	 * Specify a default value for the field, or a
 	 * function which will return a default value.
 	 *
-	 * @example = 'John'
+	 * @see     Checkbox::default() -- checkboxes are tricky.
+	 *
 	 * @example function prefix_set_test_default( $field_args, \CMB2_Field $field ) {
 	 *                      return 'Post ID: '. $field->object_id
 	 *                  }
 	 *
-	 * @notice  checkboxes are tricky
-	 *          https://github.com/CMB2/CMB2/wiki/Tips-&-Tricks#setting-a-default-value-for-a-checkbox
-	 *
-	 * @notice  A callback is not currently supported for retrieval of a group
-	 *          sub-field, but works in the admin to populate fields.
+	 * @example = 'John'
 	 *
 	 * @param callable|string|array<mixed> $default_value - A default value, or a function which will return a value.
 	 *

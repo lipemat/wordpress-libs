@@ -61,6 +61,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function true_false(): Field {
+		$this->field = Variation\Checkbox::from( $this->field, $this->box );
 		return $this->field->set_args( Type::CHECKBOX, [
 			'render_class' => True_False::class,
 		], DataType::CHECKBOX );
@@ -357,6 +358,7 @@ class Field_Type {
 	 * @return Field
 	 */
 	public function checkbox( string $layout = 'block' ): Field {
+		$this->field = Variation\Checkbox::from( $this->field, $this->box );
 		$_args = [];
 		if ( 'block' !== $layout ) {
 			$_args['render_row_cb'] = [ Checkbox::in(), 'render_field_callback' ];
