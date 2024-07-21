@@ -85,7 +85,7 @@ abstract class Db {
 
 		$this->run_for_version( [ $this, 'run_updates' ], (string) static::DB_VERSION );
 
-		_deprecated_class( self::class, '4.10.0', Custom_Table::class ); //phpcs:ignore
+		_deprecated_file( self::class, '4.10.0', Custom_Table::class );
 	}
 
 
