@@ -26,7 +26,9 @@ class Wp_Remote implements ArgsRules {
 	/**
 	 * @use Args<array<string, mixed>>
 	 */
-	use Args;
+	use Args {
+		get_args as parent_get_args;
+	}
 
 	public const METHOD_GET     = 'GET';
 	public const METHOD_POST    = 'POST';
@@ -206,15 +208,6 @@ class Wp_Remote implements ArgsRules {
 	 */
 	public int $limit_response_size;
 
-	/**
-	 * Map of args to their wp_remote_* counterparts.
-	 *
-	 * @var array<string, string>
-	 */
-	protected array $map = [
-		'user_agent' => 'user-agent',
-	];
-
 
 	/**
 	 * Add a header to this request.
@@ -227,5 +220,20 @@ class Wp_Remote implements ArgsRules {
 	public function header( string $key, string $value ): static {
 		$this->headers[ $key ] = $value;
 		return $this;
+	}
+
+
+	/**
+	 * Map 'user_agent' to 'user-agent' to fix '-' vs '_'.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function get_args(): array {
+		$args = $this->parent_get_args();
+		if ( isset( $args['user_agent'] ) ) {
+			$args['user-agent'] = $args['user_agent'];
+			unset( $args['user_agent'] );
+		}
+		return $args;
 	}
 }
