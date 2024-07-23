@@ -3,8 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Api;
 
-use Lipe\Lib\Query\Args_Interface;
-use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\ArgsTrait;
 
 /**
  * A fluent interface for calling the `wp_remote_*` functions.
@@ -22,11 +22,11 @@ use Lipe\Lib\Query\Args_Trait;
  * @link   https://developer.wordpress.org/reference/functions/wp_remote_post/
  * @link   https://developer.wordpress.org/reference/classes/wp_http/request/
  */
-class Wp_Remote implements Args_Interface {
+class Wp_Remote implements ArgsRules {
 	/**
-	 * @use Args_Trait<array<string, mixed>>
+	 * @use ArgsTrait<array<string, mixed>>
 	 */
-	use Args_Trait;
+	use ArgsTrait;
 
 	public const METHOD_GET     = 'GET';
 	public const METHOD_POST    = 'POST';
@@ -214,4 +214,18 @@ class Wp_Remote implements Args_Interface {
 	protected array $map = [
 		'user_agent' => 'user-agent',
 	];
+
+
+	/**
+	 * Add a header to this request.
+	 *
+	 * @param string $key   - The header key.
+	 * @param string $value - The header value.
+	 *
+	 * @return static
+	 */
+	public function header( string $key, string $value ): static {
+		$this->headers[ $key ] = $value;
+		return $this;
+	}
 }
