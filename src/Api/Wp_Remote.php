@@ -136,7 +136,7 @@ class Wp_Remote implements ArgsRules {
 	 *
 	 * Default null.
 	 *
-	 * @var string|array<string, mixed>
+	 * @var string|array<int|string, mixed>
 	 */
 	public string|array $body;
 
