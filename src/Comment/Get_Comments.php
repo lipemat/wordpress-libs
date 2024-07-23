@@ -3,13 +3,12 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Comment;
 
-use Lipe\Lib\Query\Args_Interface;
-use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\ArgsTrait;
 use Lipe\Lib\Query\Clause\Date_Query_Interface;
 use Lipe\Lib\Query\Clause\Date_Query_Trait;
 use Lipe\Lib\Query\Clause\Meta_Query_Interface;
 use Lipe\Lib\Query\Clause\Meta_Query_Trait;
-use Lipe\Lib\Query\Query_Args;
 
 /**
  * A fluent interface for the `get_comments` function in WordPress.
@@ -19,11 +18,11 @@ use Lipe\Lib\Query\Query_Args;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_comment_query/__construct/
  */
-class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, Args_Interface {
+class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, ArgsRules {
 	/**
-	 * @use Args_Trait<array<string, mixed>>
+	 * @use ArgsTrait<array<string, mixed>>
 	 */
-	use Args_Trait;
+	use ArgsTrait;
 	use Date_Query_Trait;
 	use Meta_Query_Trait;
 

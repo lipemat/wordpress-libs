@@ -3,8 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\User;
 
-use Lipe\Lib\Query\Args_Trait;
-use Lipe\Lib\Query\Args_Interface;
+use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\ArgsTrait;
 use Lipe\Lib\Query\Clause\Meta_Query_Interface;
 use Lipe\Lib\Query\Clause\Meta_Query_Trait;
 
@@ -16,11 +16,11 @@ use Lipe\Lib\Query\Clause\Meta_Query_Trait;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_user_query/prepare_query/
  */
-class Get_Users implements Meta_Query_Interface, Args_Interface {
+class Get_Users implements Meta_Query_Interface, ArgsRules {
 	/**
-	 * @use Args_Trait<array<string, mixed>>
+	 * @use ArgsTrait<array<string, mixed>>
 	 */
-	use Args_Trait;
+	use ArgsTrait;
 	use Meta_Query_Trait;
 
 	public const FIELD_ID           = 'ID';

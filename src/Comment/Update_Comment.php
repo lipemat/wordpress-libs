@@ -3,8 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Comment;
 
-use Lipe\Lib\Query\Args_Interface;
-use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\ArgsTrait;
 
 /**
  * A fluent interface for calling `wp_insert_comment` and `wp_update_comment` comments.
@@ -17,11 +17,11 @@ use Lipe\Lib\Query\Args_Trait;
  *
  * @link   https://developer.wordpress.org/reference/functions/wp_insert_comment/
  */
-class Update_Comment implements Args_Interface {
+class Update_Comment implements ArgsRules {
 	/**
-	 * @use Args_Trait<array<string, mixed>>
+	 * @use ArgsTrait<array<string, mixed>>
 	 */
-	use Args_Trait;
+	use ArgsTrait;
 
 	/**
 	 * ID of the comment to update.

@@ -1,7 +1,7 @@
 <?php
 declare( strict_types=1 );
 
-namespace Lipe\Lib\Query;
+namespace Lipe\Lib\Args;
 
 use Lipe\Lib\Query\Clause\Date_Query;
 use Lipe\Lib\Query\Clause\Meta_Query;
@@ -15,22 +15,13 @@ use Lipe\Lib\Query\Clause\Tax_Query;
  *
  * @template EXISTING of array<string, mixed>
  */
-trait Args_Trait {
+trait ArgsTrait {
 	/**
 	 * Various sub-clauses to be flattened via `get_args`.
 	 *
 	 * @var array<Date_Query|Meta_Query|Tax_Query>
 	 */
 	protected array $clauses = [];
-
-	/**
-	 * Subclasses which contain their own args to be flattened via `get_args`.
-	 *
-	 * The array key is the property name, and the value is the class to be flattened.
-	 *
-	 * @var array<string, Args_Interface>
-	 */
-	protected array $sub_args = [];
 
 
 	/**
@@ -54,11 +45,11 @@ trait Args_Trait {
 	/**
 	 * Merge the arguments from another Args_Interface object into this one.
 	 *
-	 * @param Args_Interface $overrides - Args to override the current ones.
+	 * @param ArgsRules $overrides - Args to override the current ones.
 	 *
 	 * @return void
 	 */
-	public function merge( Args_Interface $overrides ): void {
+	public function merge( ArgsRules $overrides ): void {
 		$this->__construct( $overrides->get_args() );
 	}
 
@@ -72,13 +63,16 @@ trait Args_Trait {
 		foreach ( $this->clauses as $clause ) {
 			$clause->flatten( $this );
 		}
-		foreach ( $this->sub_args as $prop => $sub_class ) {
-			$this->{$prop} = $sub_class->get_args();
-		}
 
 		$args = [];
-		foreach ( get_object_vars( $this ) as $_var => $_value ) {
-			if ( ! isset( $this->{$_var} ) || 'clauses' === $_var || 'sub_args' === $_var ) {
+		$object_vars = Utils::in()->get_public_object_vars( $this );
+		foreach ( $object_vars as $_var => $_value ) {
+			if ( $_value instanceof ArgsRules ) {
+				$args[ $_var ] = $_value->get_args();
+				continue;
+			}
+
+			if ( ! isset( $this->{$_var} ) ) {
 				continue;
 			}
 			$args[ $_var ] = $this->{$_var};

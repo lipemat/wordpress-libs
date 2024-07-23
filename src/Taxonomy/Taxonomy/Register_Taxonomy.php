@@ -4,8 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy\Taxonomy;
 
-use Lipe\Lib\Query\Args_Interface;
-use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\ArgsTrait;
 use Lipe\Lib\Taxonomy\Capabilities;
 use Lipe\Lib\Taxonomy\Get_Terms;
 
@@ -30,11 +30,11 @@ use Lipe\Lib\Taxonomy\Get_Terms;
  *      description?: string,
  *  }
  */
-class Register_Taxonomy implements Args_Interface {
+class Register_Taxonomy implements ArgsRules {
 	/**
-	 * @use Args_Trait<array<string, mixed>>
+	 * @use ArgsTrait<array<string, mixed>>
 	 */
-	use Args_Trait;
+	use ArgsTrait;
 
 	/**
 	 * An array of labels for this taxonomy. By default, Tag labels are used for non-hierarchical taxonomies, and Category labels are used
@@ -219,9 +219,9 @@ class Register_Taxonomy implements Args_Interface {
 	 *
 	 * @link https://developer.wordpress.org/reference/classes/wp_term_query/__construct/
 	 *
-	 * @var array<string, mixed>
+	 * @var array<string, mixed>|Get_Terms
 	 */
-	public array $args;
+	public array|Get_Terms $args;
 
 
 	/**
@@ -231,10 +231,10 @@ class Register_Taxonomy implements Args_Interface {
 	 * @return Get_Terms
 	 */
 	public function args(): Get_Terms {
-		if ( isset( $this->sub_args['args'] ) && $this->sub_args['args'] instanceof Get_Terms ) {
-			return $this->sub_args['args'];
+		if ( isset( $this->args ) && $this->args instanceof Get_Terms ) {
+			return $this->args;
 		}
-		$this->sub_args['args'] = new Get_Terms( [] );
-		return $this->sub_args['args'];
+		$this->args = new Get_Terms( [] );
+		return $this->args;
 	}
 }

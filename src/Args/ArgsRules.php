@@ -1,7 +1,7 @@
 <?php
 declare( strict_types=1 );
 
-namespace Lipe\Lib\Query;
+namespace Lipe\Lib\Args;
 
 /**
  * Sister implementation to the `Args_Class` trait.
@@ -11,7 +11,7 @@ namespace Lipe\Lib\Query;
  * @author Mat Lipe
  * @since  4.5.0
  */
-interface Args_Interface {
+interface ArgsRules {
 	/**
 	 * Optionally pass existing arguments to preload this class.
 	 *
@@ -31,9 +31,9 @@ interface Args_Interface {
 	/**
 	 * Merge the arguments from another Args_Interface object into this one.
 	 *
-	 * @param Args_Interface $overrides - Args to override the current ones.
+	 * @param ArgsRules $overrides - Args to override the current ones.
 	 *
 	 * @return void
 	 */
-	public function merge( Args_Interface $overrides ): void;
+	public function merge( ArgsRules $overrides ): void;
 }

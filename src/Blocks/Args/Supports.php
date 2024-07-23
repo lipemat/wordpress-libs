@@ -4,8 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Blocks\Args;
 
-use Lipe\Lib\Query\Args_Interface;
-use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\ArgsTrait;
 
 /**
  * A fluent interface for the `supports` argument of `register_block_type`.
@@ -15,11 +15,11 @@ use Lipe\Lib\Query\Args_Trait;
  *
  * @link   https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports
  */
-class Supports implements Args_Interface {
+class Supports implements ArgsRules {
 	/**
-	 * @use Args_Trait<array<string, mixed>>
+	 * @use ArgsTrait<array<string, mixed>>
 	 */
-	use Args_Trait;
+	use ArgsTrait;
 
 	/**
 	 * Anchors let you link directly to a specific block on a page.

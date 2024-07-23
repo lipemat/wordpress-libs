@@ -3,8 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Settings;
 
-use Lipe\Lib\Query\Args_Interface;
-use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\ArgsTrait;
 
 /**
  * A Fluent interface for registering a setting.
@@ -15,11 +15,11 @@ use Lipe\Lib\Query\Args_Trait;
  * @since  4.10.0
  *
  */
-class Register_Setting implements Args_Interface {
+class Register_Setting implements ArgsRules {
 	/**
-	 * @use Args_Trait<array<string, mixed>>
+	 * @use ArgsTrait<array<string, mixed>>
 	 */
-	use Args_Trait;
+	use ArgsTrait;
 
 	public const GROUP_DISCUSSION = 'discussion';
 	public const GROUP_GENERAL    = 'general';

@@ -3,7 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Query\Clause;
 
-use Lipe\Lib\Query\Args_Interface;
+use Lipe\Lib\Args\ArgsRules;
 
 /**
  * Generate a `meta_query` argument for various WP queries.
@@ -323,7 +323,7 @@ class Meta_Query implements Clause_Interface {
 	 *
 	 * @interal
 	 *
-	 * @param Args_Interface $args_class - The class to add the meta_query to.
+	 * @param ArgsRules $args_class - The class to add the meta_query to.
 	 *
 	 * @throws \LogicException - If called with access to the `meta_query` property.
 	 *

@@ -3,19 +3,19 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy;
 
-use Lipe\Lib\Query\Args_Interface;
-use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\ArgsTrait;
 
 /**
  * @author Mat Lipe
  * @since  May 2024
  *
  */
-class Wp_Terms_Checklist implements Args_Interface {
+class Wp_Terms_Checklist implements ArgsRules {
 	/**
-	 * @use Args_Trait<array<string, mixed>>
+	 * @use ArgsTrait<array<string, mixed>>
 	 */
-	use Args_Trait;
+	use ArgsTrait;
 
 	/**
 	 * ID of the category to output along with its descendants.

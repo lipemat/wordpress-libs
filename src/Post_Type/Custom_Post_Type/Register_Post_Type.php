@@ -4,9 +4,9 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Post_Type\Custom_Post_Type;
 
+use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\ArgsTrait;
 use Lipe\Lib\Post_Type\Capabilities;
-use Lipe\Lib\Query\Args_Interface;
-use Lipe\Lib\Query\Args_Trait;
 
 /**
  * A fluent interface for registering a custom post type.
@@ -24,11 +24,11 @@ use Lipe\Lib\Query\Args_Trait;
  *     ep_mask?: int,
  * }
  */
-class Register_Post_Type implements Args_Interface {
+class Register_Post_Type implements ArgsRules {
 	/**
-	 * @use Args_Trait<array<string, mixed>>
+	 * @use ArgsTrait<array<string, mixed>>
 	 */
-	use Args_Trait;
+	use ArgsTrait;
 
 	public const TEMPLATE_LOCK_ALL     = 'all';
 	public const TEMPLATE_LOCK_CONTENT = 'contentOnly';

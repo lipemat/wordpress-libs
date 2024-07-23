@@ -4,8 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\User;
 
-use Lipe\Lib\Query\Args_Trait;
-use Lipe\Lib\Query\Args_Interface;
+use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\ArgsTrait;
 
 /**
  * A fluent interface for `wp_insert_user` and `wp_update_user`.
@@ -18,11 +18,11 @@ use Lipe\Lib\Query\Args_Interface;
  *
  * @link   https://developer.wordpress.org/reference/functions/wp_insert_user/
  */
-class Update_User implements Args_Interface {
+class Update_User implements ArgsRules {
 	/**
-	 * @use Args_Trait<array<string, mixed>>
+	 * @use ArgsTrait<array<string, mixed>>
 	 */
-	use Args_Trait;
+	use ArgsTrait;
 
 	/**
 	 * User ID. If supplied, the user will be updated.

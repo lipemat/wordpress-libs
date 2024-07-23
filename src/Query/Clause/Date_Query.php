@@ -3,7 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Query\Clause;
 
-use Lipe\Lib\Query\Args_Interface;
+use Lipe\Lib\Args\ArgsRules;
 
 /**
  * Generate a `date_query` argument for a `WP_Query.
@@ -348,7 +348,7 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @internal
 	 *
-	 * @param Args_Interface $args_class - Args class, which supports properties this method will assign.
+	 * @param ArgsRules $args_class - Args class, which supports properties this method will assign.
 	 *
 	 * @throws \LogicException - If the provided class does have a `date_query` property.
 	 *
