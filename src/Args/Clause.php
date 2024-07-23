@@ -1,7 +1,7 @@
 <?php
 declare( strict_types=1 );
 
-namespace Lipe\Lib\Query\Clause;
+namespace Lipe\Lib\Args;
 
 /**
  * Shared methods and interface for various query clauses.
@@ -9,9 +9,9 @@ namespace Lipe\Lib\Query\Clause;
  * @author   Mat Lipe
  * @since    4.0.0
  *
- * @template QUERY of Clause_Interface
+ * @template QUERY of ClauseRules
  */
-trait Clause_Trait {
+trait Clause {
 	/**
 	 * Query clause classes.
 	 *
@@ -29,9 +29,10 @@ trait Clause_Trait {
 	/**
 	 * Parent clause if within a nested clause.
 	 *
-	 * @var QUERY|null
+	 * @phpstan-var QUERY|null
+	 * @var ?ClauseRules
 	 */
-	protected ?Clause_Interface $parent_clause = null;
+	protected ?ClauseRules $parent_clause = null;
 
 
 	/**
@@ -46,13 +47,13 @@ trait Clause_Trait {
 	/**
 	 * Set the parent clause when constructing a child clause.
 	 *
-	 * @phpstan-param QUERY    $parent_clause
+	 * @phpstan-param QUERY $parent_clause
 	 *
-	 * @param Clause_Interface $parent_clause - Clause to put the next clause under.
+	 * @param ClauseRules   $parent_clause - Clause to put the next clause under.
 	 *
 	 * @return void
 	 */
-	public function set_parent_clause( Clause_Interface $parent_clause ): void {
+	public function set_parent_clause( ClauseRules $parent_clause ): void {
 		$this->parent_clause = $parent_clause;
 	}
 
@@ -70,7 +71,7 @@ trait Clause_Trait {
 	 *
 	 * @return static
 	 */
-	public function relation( string $relation = 'AND' ): Clause_Interface {
+	public function relation( string $relation = 'AND' ): ClauseRules {
 		$this->clauses['relation'] = $relation;
 
 		return $this;
@@ -89,7 +90,7 @@ trait Clause_Trait {
 	 * @phpstan-return QUERY
 	 * @return static
 	 */
-	public function nested_clause( string $relation = 'AND' ): Clause_Interface {
+	public function nested_clause( string $relation = 'AND' ): ClauseRules {
 		if ( ! isset( $this->clauses['relation'] ) ) {
 			$this->relation();
 		}
@@ -108,9 +109,9 @@ trait Clause_Trait {
 	 * @throws \LogicException - If we are not in a nested class.
 	 *
 	 * @phpstan-return QUERY
-	 * @return Clause_Interface
+	 * @return ClauseRules
 	 */
-	public function parent_clause(): Clause_Interface {
+	public function parent_clause(): ClauseRules {
 		if ( null === $this->parent_clause ) {
 			throw new \LogicException( esc_html__( 'You cannot switch to a parent clause if you are not already nested.', 'lipe' ) );
 		}
@@ -125,11 +126,11 @@ trait Clause_Trait {
 	 * @phpstan-param QUERY        $level
 	 *
 	 * @param array<string, mixed> $clauses - The clauses array to append to.
-	 * @param Clause_Interface     $level   - The clause to determine the level of nesting.
+	 * @param ClauseRules          $level   - The clause to determine the level of nesting.
 	 *
 	 * @return void
 	 */
-	protected function extract_nested( array &$clauses, Clause_Interface $level ): void {
+	protected function extract_nested( array &$clauses, ClauseRules $level ): void {
 		if ( [] !== $level->nested ) {
 			foreach ( $level->nested as $nested ) {
 				$clauses[] = $nested->clauses;

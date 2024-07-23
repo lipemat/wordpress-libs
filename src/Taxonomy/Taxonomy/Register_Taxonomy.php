@@ -4,8 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy\Taxonomy;
 
+use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
-use Lipe\Lib\Args\ArgsTrait;
 use Lipe\Lib\Taxonomy\Capabilities;
 use Lipe\Lib\Taxonomy\Get_Terms;
 
@@ -32,9 +32,9 @@ use Lipe\Lib\Taxonomy\Get_Terms;
  */
 class Register_Taxonomy implements ArgsRules {
 	/**
-	 * @use ArgsTrait<array<string, mixed>>
+	 * @use Args<array<string, mixed>>
 	 */
-	use ArgsTrait;
+	use Args;
 
 	/**
 	 * An array of labels for this taxonomy. By default, Tag labels are used for non-hierarchical taxonomies, and Category labels are used

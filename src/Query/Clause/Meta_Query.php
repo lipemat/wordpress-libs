@@ -4,6 +4,8 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Query\Clause;
 
 use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\Clause;
+use Lipe\Lib\Args\ClauseRules;
 
 /**
  * Generate a `meta_query` argument for various WP queries.
@@ -13,17 +15,17 @@ use Lipe\Lib\Args\ArgsRules;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters
  *
- * @implements  Clause_Interface<Meta_Query>
+ * @implements  ClauseRules<Meta_Query>
  *
  * @internal
  */
-class Meta_Query implements Clause_Interface {
+class Meta_Query implements ClauseRules {
 	/**
 	 * Pass generic to trait.
 	 *
-	 * @use Clause_Trait<Meta_Query>
+	 * @use Clause<Meta_Query>
 	 */
-	use Clause_Trait;
+	use Clause;
 
 	/**
 	 * Compare in meta clauses.

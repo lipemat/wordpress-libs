@@ -4,8 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy;
 
+use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
-use Lipe\Lib\Args\ArgsTrait;
 use Lipe\Lib\Query\Clause\Meta_Query_Interface;
 use Lipe\Lib\Query\Clause\Meta_Query_Trait;
 
@@ -19,9 +19,9 @@ use Lipe\Lib\Query\Clause\Meta_Query_Trait;
  */
 class Get_Terms implements Meta_Query_Interface, ArgsRules {
 	/**
-	 * @use ArgsTrait<array<string, mixed>>
+	 * @use Args<array<string, mixed>>
 	 */
-	use ArgsTrait;
+	use Args;
 	use Meta_Query_Trait;
 
 	public const FIELD_ALL                = 'all';

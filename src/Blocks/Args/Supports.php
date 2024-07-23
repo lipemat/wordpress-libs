@@ -4,8 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Blocks\Args;
 
+use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
-use Lipe\Lib\Args\ArgsTrait;
 
 /**
  * A fluent interface for the `supports` argument of `register_block_type`.
@@ -17,9 +17,9 @@ use Lipe\Lib\Args\ArgsTrait;
  */
 class Supports implements ArgsRules {
 	/**
-	 * @use ArgsTrait<array<string, mixed>>
+	 * @use Args<array<string, mixed>>
 	 */
-	use ArgsTrait;
+	use Args;
 
 	/**
 	 * Anchors let you link directly to a specific block on a page.

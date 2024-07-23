@@ -4,8 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Blocks;
 
+use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
-use Lipe\Lib\Args\ArgsTrait;
 use Lipe\Lib\Blocks\Args\Supports;
 
 /**
@@ -34,9 +34,9 @@ use Lipe\Lib\Blocks\Args\Supports;
  */
 class Register_Block implements ArgsRules {
 	/**
-	 * @use ArgsTrait<array<string, mixed>>
+	 * @use Args<array<string, mixed>>
 	 */
-	use ArgsTrait;
+	use Args;
 
 	/**
 	 * Block API version.

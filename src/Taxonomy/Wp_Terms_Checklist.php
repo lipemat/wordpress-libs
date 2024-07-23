@@ -3,8 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy;
 
+use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
-use Lipe\Lib\Args\ArgsTrait;
 
 /**
  * @author Mat Lipe
@@ -13,9 +13,9 @@ use Lipe\Lib\Args\ArgsTrait;
  */
 class Wp_Terms_Checklist implements ArgsRules {
 	/**
-	 * @use ArgsTrait<array<string, mixed>>
+	 * @use Args<array<string, mixed>>
 	 */
-	use ArgsTrait;
+	use Args;
 
 	/**
 	 * ID of the category to output along with its descendants.

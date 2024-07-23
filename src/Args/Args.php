@@ -15,7 +15,7 @@ use Lipe\Lib\Query\Clause\Tax_Query;
  *
  * @template EXISTING of array<string, mixed>
  */
-trait ArgsTrait {
+trait Args {
 	/**
 	 * Various sub-clauses to be flattened via `get_args`.
 	 *

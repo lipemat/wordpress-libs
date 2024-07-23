@@ -4,8 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\User;
 
+use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
-use Lipe\Lib\Args\ArgsTrait;
 
 /**
  * A fluent interface for `wp_insert_user` and `wp_update_user`.
@@ -20,9 +20,9 @@ use Lipe\Lib\Args\ArgsTrait;
  */
 class Update_User implements ArgsRules {
 	/**
-	 * @use ArgsTrait<array<string, mixed>>
+	 * @use Args<array<string, mixed>>
 	 */
-	use ArgsTrait;
+	use Args;
 
 	/**
 	 * User ID. If supplied, the user will be updated.

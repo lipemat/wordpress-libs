@@ -3,8 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Settings;
 
+use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
-use Lipe\Lib\Args\ArgsTrait;
 
 /**
  * A Fluent interface for registering a setting.
@@ -17,9 +17,9 @@ use Lipe\Lib\Args\ArgsTrait;
  */
 class Register_Setting implements ArgsRules {
 	/**
-	 * @use ArgsTrait<array<string, mixed>>
+	 * @use Args<array<string, mixed>>
 	 */
-	use ArgsTrait;
+	use Args;
 
 	public const GROUP_DISCUSSION = 'discussion';
 	public const GROUP_GENERAL    = 'general';

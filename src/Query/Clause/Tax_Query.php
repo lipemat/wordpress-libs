@@ -4,6 +4,8 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Query\Clause;
 
 use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\Clause;
+use Lipe\Lib\Args\ClauseRules;
 
 /**
  * Generate a `tax_query` argument for a `WP_Query.
@@ -13,17 +15,17 @@ use Lipe\Lib\Args\ArgsRules;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters
  *
- * @implements Clause_Interface<Tax_Query>
+ * @implements ClauseRules<Tax_Query>
  *
  * @internal
  */
-class Tax_Query implements Clause_Interface {
+class Tax_Query implements ClauseRules {
 	/**
 	 * Pass generic to trait.
 	 *
-	 * @use Clause_Trait<Tax_Query>
+	 * @use Clause<Tax_Query>
 	 */
-	use Clause_Trait;
+	use Clause;
 
 	public const FIELD_ID          = 'term_id';
 	public const FIELD_NAME        = 'name';

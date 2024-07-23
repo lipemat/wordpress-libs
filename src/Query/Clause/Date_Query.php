@@ -4,6 +4,8 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Query\Clause;
 
 use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\Clause;
+use Lipe\Lib\Args\ClauseRules;
 
 /**
  * Generate a `date_query` argument for a `WP_Query.
@@ -19,15 +21,15 @@ use Lipe\Lib\Args\ArgsRules;
  *
  * @phpstan-type COMPARE '='|'!='|'>'|'>='|'<'|'<='|'IN'|'NOT IN'|'BETWEEN'|'NOT BETWEEN'|''
  *
- * @implements Clause_Interface<Date_Query>
+ * @implements ClauseRules<Date_Query>
  */
-class Date_Query implements Clause_Interface {
+class Date_Query implements ClauseRules {
 	/**
 	 * Pass generic to trait.
 	 *
-	 * @use Clause_Trait<Date_Query>
+	 * @use Clause<Date_Query>
 	 */
-	use Clause_Trait;
+	use Clause;
 
 	/**
 	 * Current clauses index in $this->clauses.

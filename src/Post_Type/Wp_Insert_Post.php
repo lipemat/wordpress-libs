@@ -3,8 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Post_Type;
 
+use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
-use Lipe\Lib\Args\ArgsTrait;
 
 /**
  * A fluent interface for calling `wp_insert_post' or `wp_update_post'.
@@ -46,9 +46,9 @@ use Lipe\Lib\Args\ArgsTrait;
  */
 class Wp_Insert_Post implements ArgsRules {
 	/**
-	 * @use ArgsTrait<\Partial<INSERT_POST>>
+	 * @use Args<\Partial<INSERT_POST>>
 	 */
-	use ArgsTrait;
+	use Args;
 
 	public const STATUS_OPEN   = 'open';
 	public const STATUS_CLOSED = 'closed';

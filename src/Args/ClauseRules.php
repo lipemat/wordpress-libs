@@ -1,9 +1,7 @@
 <?php
 declare( strict_types=1 );
 
-namespace Lipe\Lib\Query\Clause;
-
-use Lipe\Lib\Args\ArgsRules;
+namespace Lipe\Lib\Args;
 
 /**
  * Interface for sub-clauses added to Args classes.
@@ -11,9 +9,9 @@ use Lipe\Lib\Args\ArgsRules;
  * @author Mat Lipe
  * @since  November 2023
  *
- * @template CLAUSE of Clause_Interface
+ * @template CLAUSE of ClauseRules
  */
-interface Clause_Interface {
+interface ClauseRules {
 	/**
 	 * Prevent different construct definitions from causing errors.
 	 */
@@ -23,13 +21,13 @@ interface Clause_Interface {
 	/**
 	 * Set the parent clause when constructing a child clause.
 	 *
-	 * @phpstan-param CLAUSE   $parent_clause
+	 * @phpstan-param CLAUSE $parent_clause
 	 *
-	 * @param Clause_Interface $parent_clause - Clause to put the next clause under.
+	 * @param ClauseRules    $parent_clause - Clause to put the next clause under.
 	 *
 	 * @return void
 	 */
-	public function set_parent_clause( Clause_Interface $parent_clause ): void;
+	public function set_parent_clause( ClauseRules $parent_clause ): void;
 
 
 	/**
@@ -55,7 +53,7 @@ interface Clause_Interface {
 	 *
 	 * @return static
 	 */
-	public function relation( string $relation = 'AND' ): Clause_Interface;
+	public function relation( string $relation = 'AND' ): ClauseRules;
 
 
 	/**
@@ -68,7 +66,7 @@ interface Clause_Interface {
 	 * @phpstan-return CLAUSE
 	 * @return static
 	 */
-	public function nested_clause( string $relation = 'AND' ): Clause_Interface;
+	public function nested_clause( string $relation = 'AND' ): ClauseRules;
 
 
 	/**
@@ -77,7 +75,7 @@ interface Clause_Interface {
 	 * @throws \LogicException - If we are not in a nested class.
 	 *
 	 * @phpstan-return CLAUSE
-	 * @return Clause_Interface<CLAUSE>
+	 * @return ClauseRules<CLAUSE>
 	 */
-	public function parent_clause(): Clause_Interface;
+	public function parent_clause(): ClauseRules;
 }

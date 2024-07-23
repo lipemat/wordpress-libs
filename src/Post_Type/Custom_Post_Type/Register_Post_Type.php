@@ -4,8 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Post_Type\Custom_Post_Type;
 
+use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
-use Lipe\Lib\Args\ArgsTrait;
 use Lipe\Lib\Post_Type\Capabilities;
 
 /**
@@ -26,9 +26,9 @@ use Lipe\Lib\Post_Type\Capabilities;
  */
 class Register_Post_Type implements ArgsRules {
 	/**
-	 * @use ArgsTrait<array<string, mixed>>
+	 * @use Args<array<string, mixed>>
 	 */
-	use ArgsTrait;
+	use Args;
 
 	public const TEMPLATE_LOCK_ALL     = 'all';
 	public const TEMPLATE_LOCK_CONTENT = 'contentOnly';

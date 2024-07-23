@@ -3,8 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Query;
 
+use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
-use Lipe\Lib\Args\ArgsTrait;
 use Lipe\Lib\Query\Clause\Date_Query_Interface;
 use Lipe\Lib\Query\Clause\Date_Query_Trait;
 use Lipe\Lib\Query\Clause\Meta_Query_Interface;
@@ -27,9 +27,9 @@ use Lipe\Lib\Query\Clause\Tax_Query_Trait;
  */
 class Query_Args implements Meta_Query_Interface, Date_Query_Interface, ArgsRules, Tax_Query_Interface {
 	/**
-	 * @use ArgsTrait<array<string, mixed>>
+	 * @use Args<array<string, mixed>>
 	 */
-	use ArgsTrait;
+	use Args;
 	use Date_Query_Trait;
 	use Meta_Query_Trait;
 	use Tax_Query_Trait;
