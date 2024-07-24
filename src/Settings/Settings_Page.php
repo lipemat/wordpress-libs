@@ -208,6 +208,28 @@ class Settings_Page {
 
 
 	/**
+	 * Are we currently viewing this settings page?
+	 *
+	 * @return bool
+	 */
+	public function is_settings_page(): bool {
+		if ( ! \function_exists( 'get_current_screen' ) ) {
+			return false;
+		}
+		$screen = get_current_screen();
+		if ( ! $screen instanceof \WP_Screen ) {
+			return false;
+		}
+		$hook = get_plugin_page_hook( $this->settings->get_id(), $this->settings->get_parent_menu_slug() ?? '' );
+		if ( null === $hook ) {
+			return false;
+		}
+
+		return $hook === $screen->id;
+	}
+
+
+	/**
 	 * Register and display status messages when settings are updated.
 	 *
 	 * @return void

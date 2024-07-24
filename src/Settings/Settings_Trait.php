@@ -5,7 +5,6 @@ namespace Lipe\Lib\Settings;
 
 use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
-use Lipe\Lib\Meta\Repo;
 
 /**
  * CMB2 registered settings pages.
