@@ -55,20 +55,6 @@ class Options_Page extends Box {
 	public $display_cb;
 
 	/**
-	 * This parameter is for options-page meta boxes only,
-	 * and is sent along to add_menu_page() to define the menu icon.
-	 * Only applicable if parent_slug is left empty.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#icon_url
-	 *
-	 * @example 'dashicons-chart-pie'
-	 * @see     Dashicons
-	 *
-	 * @var string
-	 */
-	public string $icon_url;
-
-	/**
 	 * Sent along to add_menu_page()/add_submenu_page() to define the menu title.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#menu_title
@@ -136,6 +122,19 @@ class Options_Page extends Box {
 	 * @var string
 	 */
 	public string $option_key;
+
+	/**
+	 * This parameter is sent along to add_menu_page() to define the menu icon.
+	 * Only applicable if `parent_slug` is left empty.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#icon_url
+	 *
+	 * @example 'dashicons-chart-pie'
+	 * @see     Dashicons
+	 *
+	 * @var string
+	 */
+	protected string $icon_url;
 
 	/**
 	 * Holds default values specified on individual fields
