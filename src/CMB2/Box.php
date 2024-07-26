@@ -348,6 +348,7 @@ class Box {
 	 *
 	 * @see     Box::tabs_style()
 	 *
+	 * @phpstan-var Tabs::STYLE_* $layout
 	 * @var string
 	 */
 	protected string $tab_style = 'vertical';
@@ -576,11 +577,13 @@ class Box {
 	 * Should the tabs display vertical or horizontal?
 	 * Default is vertical when not calling this.
 	 *
-	 * @param string $layout - vertical, horizontal.
+	 * @phpstan-param Tabs::STYLE_* $layout
+	 *
+	 * @param string                $layout - vertical, horizontal.
 	 *
 	 * @return void
 	 */
-	public function tabs_style( string $layout = 'horizontal' ): void {
+	public function tabs_style( string $layout ): void {
 		$this->tab_style = $layout;
 	}
 

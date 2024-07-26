@@ -24,6 +24,9 @@ class Tabs {
 
 	public const TAB_FIELD = 'lipe/lib/cmb2/box/tabs/active-tab';
 
+	public const STYLE_HORIZONTAL = 'horizontal';
+	public const STYLE_VERTICAL   = 'vertical';
+
 	/**
 	 * Current CMB2 instance
 	 *
