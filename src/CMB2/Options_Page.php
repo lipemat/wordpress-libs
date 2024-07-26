@@ -10,61 +10,6 @@ use Lipe\Lib\Theme\Dashicons;
  * CMB2 Option Page fluent interface.
  */
 class Options_Page extends Box {
-
-	/**
-	 * Set to `network_admin_menu` to add the options page to the network admin menu.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#admin_menu_hook
-	 *
-	 * @example 'network_admin_menu'
-	 *
-	 * @var string
-	 */
-	public string $admin_menu_hook = 'admin_menu';
-
-	/**
-	 * Sent along to add_menu_page()/add_submenu_page()
-	 * to define the capability required to view the options page.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#capability
-	 *
-	 * @example 'edit_posts'
-	 *
-	 * @var string
-	 */
-	public string $capability = 'manage_options';
-
-	/**
-	 * On settings pages (not options-general.php sub-pages), allows disabling
-	 * of error displaying
-	 *
-	 * @notice  This only exists in example-functions.php and not in docs.
-	 *          May require more testing.
-	 *
-	 * @var bool
-	 */
-	public bool $disable_settings_errors;
-
-	/**
-	 * Allows overriding the options page form output.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
-	 *
-	 * @var callable
-	 */
-	public $display_cb;
-
-	/**
-	 * Sent along to add_menu_page()/add_submenu_page() to define the menu title.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#menu_title
-	 *
-	 * @example 'Site Options
-	 *
-	 * @var string
-	 */
-	public string $menu_title;
-
 	/**
 	 * Allows specifying a custom callback for setting the
 	 * error/success message on save.
@@ -75,30 +20,7 @@ class Options_Page extends Box {
 	 *
 	 * @var callable
 	 */
-	public $message_cb;
-
-	/**
-	 * Sent along to add_submenu_page() to define the parent-menu item slug.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#parent_slug
-	 *
-	 * @example 'tools.php'
-	 *
-	 * @var string
-	 */
-	public string $parent_slug;
-
-	/**
-	 * Sent along to add_menu_page() to define the menu position.
-	 * Only applicable if parent_slug is left empty.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#position
-	 *
-	 * @example 6
-	 *
-	 * @var int
-	 */
-	public int $position;
+	protected $message_cb;
 
 	/**
 	 * Defines the text for the options page save button. defaults to 'Save'.
@@ -112,7 +34,16 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	public string $save_button;
+	protected string $save_button;
+
+	/**
+	 * Allows overriding the options page form output.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
+	 *
+	 * @var callable
+	 */
+	protected $display_cb;
 
 	/**
 	 * Defines the settings page slug. Defaults to $id.
@@ -121,7 +52,63 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	public string $option_key;
+	protected string $option_key;
+
+	/**
+	 * Sent along to add_submenu_page() to define the parent-menu item slug.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#parent_slug
+	 *
+	 * @example 'tools.php'
+	 *
+	 * @var string
+	 */
+	protected string $parent_slug;
+
+	/**
+	 * Sent along to add_menu_page()/add_submenu_page() to define the menu title.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#menu_title
+	 *
+	 * @example 'Site Options
+	 *
+	 * @var string
+	 */
+	protected string $menu_title;
+
+	/**
+	 * Sent along to add_menu_page()/add_submenu_page()
+	 * to define the capability required to view the options page.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#capability
+	 *
+	 * @example 'edit_posts'
+	 *
+	 * @var string
+	 */
+	protected string $capability = 'manage_options';
+
+	/**
+	 * Set to `network_admin_menu` to add the options page to the network admin menu.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#admin_menu_hook
+	 *
+	 * @phpstan-var 'admin_menu'|'network_admin_menu'
+	 * @var string
+	 */
+	protected string $admin_menu_hook = 'admin_menu';
+
+	/**
+	 * Sent along to add_menu_page() to define the menu position.
+	 * Only applicable if `parent_slug` is left empty.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#position
+	 *
+	 * @example 6
+	 *
+	 * @var int
+	 */
+	protected int $position;
 
 	/**
 	 * This parameter is sent along to add_menu_page() to define the menu icon.
@@ -154,13 +141,53 @@ class Options_Page extends Box {
 	 * @param string|null $title - Options page title.
 	 */
 	public function __construct( string $id, ?string $title ) {
-		if ( ! isset( $this->option_key ) ) {
-			$this->option_key = $id;
-		}
-
+		$this->option_key = $id;
 		add_action( "cmb2_init_hookup_{$id}", [ $this, 'run_options_hookup_on_front_end' ] );
 
 		parent::__construct( $id, [ BoxType::OPTIONS->value ], $title );
+	}
+
+
+	/**
+	 * Sent along to add_menu_page()/add_submenu_page()
+	 * to define the capability required to view the options page.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#capability
+	 *
+	 * @default 'manage_options'
+	 *
+	 * @param string $capability - The capability required to view the options page.
+	 */
+	public function capability( string $capability ): void {
+		$this->capability = $capability;
+	}
+
+
+	/**
+	 * Sent along to add_menu_page()/add_submenu_page() to define the menu title.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#menu_title
+	 *
+	 * @example 'Site Options
+	 *
+	 * @param string $menu_title - The title of the menu.
+	 */
+	public function menu_title( string $menu_title ): void {
+		$this->menu_title = $menu_title;
+	}
+
+
+	/**
+	 * Sent along to add_submenu_page() to define the parent-menu item slug.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#parent_slug
+	 *
+	 * @example 'tools.php'
+	 *
+	 * @param string $parent_slug - The parent slug.
+	 */
+	public function parent_slug( string $parent_slug ): void {
+		$this->parent_slug = $parent_slug;
 	}
 
 
@@ -181,6 +208,21 @@ class Options_Page extends Box {
 
 
 	/**
+	 * Sent along to add_menu_page() to define the menu position.
+	 * - Only applicable if `parent_slug` is left empty.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#position
+	 *
+	 * @param int $position - The position of the menu.
+	 *
+	 * @return void
+	 */
+	public function position( int $position ): void {
+		$this->position = $position;
+	}
+
+
+	/**
 	 * Set the icon for the options page.
 	 * - Sent along to add_menu_page() to define the menu icon.
 	 * - Only applicable if `parent_slug` is left empty.
@@ -197,10 +239,56 @@ class Options_Page extends Box {
 
 
 	/**
+	 * Override the options page form output.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
+	 *
+	 * @phpstan-param callable( \CMB2 $cmb ): void $display_cb
+	 *
+	 * @param callable                             $display_cb - The callback to render the display.
+	 *
+	 * @return void
+	 */
+	public function display_cb( callable $display_cb ): void {
+		$this->display_cb = $display_cb;
+	}
+
+
+	/**
+	 * Use a custom callback to set the error/info message when the
+	 * settings are saved.
+	 *
+	 * @link     https://github.com/CMB2/CMB2/wiki/Box-Properties#message_cb
+	 * @link     https://github.com/CMB2/CMB2/commit/43d513c135e52c327bafa06309821c29323ae2dd#diff-378c74d0ffffc1759b8779a135476777
+	 *
+	 * @phpstan-param callable( \CMB2 $cmb, array{
+	 *     is_options_page: bool,
+	 *     should_nofify: bool,
+	 *     is_updated: bool,
+	 *     setting: string,
+	 *     code: string,
+	 *     message: string,
+	 *     type: string,
+	 * } $args ): void $message_cb
+	 *
+	 * @formatter:off
+	 *
+	 * @param callable $message_cb - Callback to set custom messages.
+	 *
+	 * @formatter:on
+	 *
+	 * @return void
+	 */
+	public function message_cb( callable $message_cb ): void {
+		$this->message_cb = $message_cb;
+	}
+
+
+	/**
 	 * Specify the save button text.
 	 * Set to `null` to create a read-only form which has no save button.
 	 *
-	 * @param null|string $text - The text to display on the save button.
+	 * @param ?string $text - The text to display on the save button.
 	 *
 	 * @return void
 	 */
