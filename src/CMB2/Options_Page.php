@@ -146,23 +146,6 @@ class Options_Page extends Box {
 	public string $option_key;
 
 	/**
-	 * Break the settings page into tabs by specifying more than one
-	 * settings page to the same tab group.
-	 *
-	 * All settings pages set to tab group will display on the same settings
-	 * page with tabs to navigate between them. The settings may be registered anywhere
-	 * in the admin menu and will still combine when displayed.
-	 *
-	 * @example $settings->tab_group = 'first'
-	 *          $another_settings->tab_group = 'first'
-	 *          Both will display on the same settings page with different menus
-	 *          to get there.
-	 *
-	 * @var string
-	 */
-	public string $tab_group;
-
-	/**
 	 * Holds default values specified on individual fields
 	 * for use with the get filter.
 	 * CMB2 saves options as a single blob, so we use the
