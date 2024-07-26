@@ -52,7 +52,7 @@ trait Settings_Trait {
 	/**
 	 * Get an option from the Meta repo.
 	 *
-	 * @template T of static::*
+	 * @template T of key-of<OPTIONS>
 	 * @template D of mixed
 	 *
 	 * @phpstan-param T $key
