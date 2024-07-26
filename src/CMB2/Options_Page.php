@@ -12,8 +12,7 @@ use Lipe\Lib\Theme\Dashicons;
 class Options_Page extends Box {
 
 	/**
-	 * This parameter is for options-page metaboxes only and defaults to 'admin_menu',
-	 * to register your options-page at the network level:
+	 * Set to `network_admin_menu` to add the options page to the network admin menu.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#admin_menu_hook
 	 *
@@ -24,8 +23,7 @@ class Options_Page extends Box {
 	public string $admin_menu_hook = 'admin_menu';
 
 	/**
-	 * This parameter is for options-page metaboxes only,
-	 * and is sent along to add_menu_page()/add_submenu_page()
+	 * Sent along to add_menu_page()/add_submenu_page()
 	 * to define the capability required to view the options page.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#capability
@@ -48,8 +46,7 @@ class Options_Page extends Box {
 	public bool $disable_settings_errors;
 
 	/**
-	 * This parameter is for options-page metaboxes only
-	 * and allows overriding the options page form output.
+	 * Allows overriding the options page form output.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
 	 *
@@ -72,8 +69,7 @@ class Options_Page extends Box {
 	public string $icon_url;
 
 	/**
-	 * This parameter is for options-page metaboxes only,
-	 * and is sent along to add_menu_page()/add_submenu_page() to define the menu title.
+	 * Sent along to add_menu_page()/add_submenu_page() to define the menu title.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#menu_title
 	 *
@@ -96,8 +92,7 @@ class Options_Page extends Box {
 	public $message_cb;
 
 	/**
-	 * This parameter is for options-page metaboxes only,
-	 * and is sent along to add_submenu_page() to define the parent-menu item slug.
+	 * Sent along to add_submenu_page() to define the parent-menu item slug.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#parent_slug
 	 *
@@ -108,8 +103,7 @@ class Options_Page extends Box {
 	public string $parent_slug;
 
 	/**
-	 * This parameter is for options-page metaboxes only,
-	 * and is sent along to add_menu_page() to define the menu position.
+	 * Sent along to add_menu_page() to define the menu position.
 	 * Only applicable if parent_slug is left empty.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#position
@@ -121,8 +115,7 @@ class Options_Page extends Box {
 	public int $position;
 
 	/**
-	 * This parameter is for options-page metaboxes only and
-	 * defines the text for the options page save button. defaults to 'Save'.
+	 * Defines the text for the options page save button. defaults to 'Save'.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#save_button
 	 *
@@ -136,8 +129,7 @@ class Options_Page extends Box {
 	public string $save_button;
 
 	/**
-	 * This parameter is for options-page metaboxes only and
-	 * defines the settings page slug. Defaults to $id.
+	 * Defines the settings page slug. Defaults to $id.
 	 *
 	 * @example 'my_options_page_slug'
 	 *
@@ -186,6 +178,22 @@ class Options_Page extends Box {
 		} else {
 			$this->admin_menu_hook = 'admin_menu';
 		}
+	}
+
+
+	/**
+	 * Set the icon for the options page.
+	 * - Sent along to add_menu_page() to define the menu icon.
+	 * - Only applicable if `parent_slug` is left empty.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#icon_url
+	 *
+	 * @param string|Dashicons $icon - The icon to use.
+	 *
+	 * @return void
+	 */
+	public function icon( string|Dashicons $icon ): void {
+		$this->icon_url = $icon instanceof Dashicons ? $icon->value : $icon;
 	}
 
 
