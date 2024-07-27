@@ -6,13 +6,36 @@ namespace Lipe\Lib\Rest_Api;
 
 use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
-use Lipe\Lib\Util\Arrays;
 
 /**
  * Generate JSON data, which mimics the return of wp-json API.
  *
  * Use most commonly to get the json data without making a request to the API.
  * Thus preventing an antipattern when using React etc.
+ *
+ * @phpstan-type REST_POST array{
+ *      author: int,
+ *      categories?: list<int>,
+ *      comment_status: string,
+ *      content: array{rendered: string,protected: bool},
+ *      date: string,
+ *      date_gmt: string,
+ *      excerpt?: array{ rendered: string, protected: bool},
+ *      format?: string,
+ *      guid: array{ rendered: string},
+ *      id: int,
+ *      link: string,
+ *      modified: string,
+ *      modified_gmt: string,
+ *      ping_status: string,
+ *      slug: string,
+ *      status: 'publish' | 'future' | 'draft' | 'pending' | 'private',
+ *      sticky?: bool,
+ *      tags?: list<int>,
+ *      template: string,
+ *      title: array{rendered: string},
+ *      type: string,
+ * }
  */
 class Initial_Data {
 	use Singleton;
@@ -64,6 +87,7 @@ class Initial_Data {
 	 * @param bool            $with_links - To include links inside the response.
 	 * @param bool|string[]   $embed      - Whether to embed all links, a filtered list of link relations, or no links.
 	 *
+	 * @phpstan-return array<REST_POST>
 	 * @return array<array<mixed>>
 	 */
 	public function get_post_data( ?array $posts = null, bool $with_links = false, array|bool $embed = false ): array {
@@ -71,6 +95,7 @@ class Initial_Data {
 			$posts = $GLOBALS['wp_query'] instanceof \WP_Query ? $GLOBALS['wp_query']->posts : [];
 		}
 
+		// @phpstan-ignore-next-line -- Too many layers of array_map to type.
 		return \array_map( function( \WP_Post|int $post ) use ( $with_links, $embed ) {
 			if ( ! $post instanceof \WP_Post ) {
 				$post = get_post( $post );
