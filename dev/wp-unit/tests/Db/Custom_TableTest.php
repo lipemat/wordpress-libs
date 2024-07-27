@@ -71,7 +71,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 		// More than 1 criterion.
 		$specific = $this->db()->get_one( [
 			'option_value' => 'shared_value',
-			'autoload'     => \version_compare( $GLOBALS['wp_version'], '6.5', '>' ) ? 'off' : 'no',
+			'autoload'     => \version_compare( $GLOBALS['wp_version'], '6.6', '>' ) ? 'off' : 'no',
 		] );
 		$this->assertSame( 'a_option', $specific['option_name'] );
 		$this->assertSame( 'shared_value', $specific['option_value'] );
@@ -163,7 +163,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 		$this->assertSame( $single[0], Arrays::in()->find( $all, fn( $item ) => 'start_of_week' === $item['option_name'] ) );
 
 		// Multiple items.
-		$autoload = \version_compare( $GLOBALS['wp_version'], '6.5', '>' ) ? 'on' : 'yes';
+		$autoload = \version_compare( $GLOBALS['wp_version'], '6.6', '>' ) ? 'on' : 'yes';
 		$multiple = $this->db()->get( [
 			'option_name' => '%c%',
 			'autoload'    => $autoload,

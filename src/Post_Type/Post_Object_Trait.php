@@ -5,7 +5,6 @@ namespace Lipe\Lib\Post_Type;
 
 use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
-use Lipe\Lib\Meta\Repo;
 
 /**
  * Shared methods for interacting with the WordPress post object.

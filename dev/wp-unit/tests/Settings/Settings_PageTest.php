@@ -25,6 +25,7 @@ class Settings_PageTest extends \WP_UnitTestCase {
 		wp_set_current_user( self::factory()->user->create( [
 			'role' => 'administrator',
 		] ) );
+		remove_all_actions( 'admin_menu' );
 	}
 
 
