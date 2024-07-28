@@ -393,10 +393,10 @@ class Custom_Post_Type {
 	 *        array('core/paragraph', array('placeholder' => 'Add Description…'))
 	 *    ]
 	 *
-	 * @phpstan-param Register_Post_Type::TEMPLATE_LOCK*          $template_lock
+	 * @phpstan-param Register_Post_Type::TEMPLATE_LOCK*              $template_lock
 	 *
-	 * @param array<int, array<int, string|array<string, mixed>>> $template      - The template to use.
-	 * @param bool|string                                         $template_lock - The template lock to use.
+	 * @param array<int, array<int, string|array<string|int, mixed>>> $template      - The template to use.
+	 * @param bool|string                                             $template_lock - The template lock to use.
 	 *
 	 * @return Custom_Post_Type
 	 */

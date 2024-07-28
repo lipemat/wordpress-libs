@@ -364,7 +364,7 @@ class Register_Post_Type implements ArgsRules {
 	 *
 	 * Default empty array.
 	 *
-	 * @var array<int, array<int, string|array<string, mixed>>>
+	 * @var array<int, array<int, string|array<string|int, mixed>>>
 	 */
 	public array $template;
 
