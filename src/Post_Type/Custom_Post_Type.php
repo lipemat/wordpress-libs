@@ -785,7 +785,7 @@ class Custom_Post_Type {
 		$args->show_in_menu = $args->show_in_menu ?? $args->show_ui;
 		$args->show_in_admin_bar = $this->show_in_admin_bar ?? (bool) $args->show_in_menu;
 		$args->capability_type = $this->capability_type;
-		$args->capabilities = $this->capabilities->get_capabilities();
+		$args->capabilities = \array_merge( $this->register_args->capabilities ?? [], $this->capabilities->get_capabilities() );
 		$args->hierarchical = $this->hierarchical;
 		$args->taxonomies = $this->taxonomies;
 		$args->has_archive = $this->has_archive;
