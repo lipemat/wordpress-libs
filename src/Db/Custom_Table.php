@@ -271,17 +271,15 @@ class Custom_Table {
 	 * has the same value in a unique index, the old row is deleted
 	 * before the new row is added.
 	 *
-	 * @phpstan-param COLUMNS $columns
+	 * @phpstan-param PARTIALS $columns
 	 *
-	 * @param int             $id      - ID of the item to replace.
-	 * @param array           $columns - column => value pairs to replace.
+	 * @param array            $columns - column => value pairs to replace.
 	 *
 	 * @return int|bool - The number of rows affected or false on failure.
 	 */
-	public function replace( int $id, array $columns ): int|bool {
+	public function replace( array $columns ): int|bool {
 		$wpdb = $this->get_wpdb();
 		$columns = $this->sort_columns( $columns );
-		$columns[ $this->config->get_id_field() ] = $id;
 		return $wpdb->replace( $this->table(), $columns, $this->get_formats( $columns ) );
 	}
 

@@ -274,7 +274,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 		$this->assertCount( 5, $v['items'] );
 
 		// Create a new item because the id does not exist.
-		$this->assertSame( 1, $this->db()->replace( $v['total'] + 1_000, [
+		$this->assertSame( 1, $this->db()->replace( [
 			'option_name'  => 'new_option',
 			'option_value' => 'new_value',
 			'autoload'     => 'yes',
@@ -287,7 +287,8 @@ class Custom_TableTest extends \WP_UnitTestCase {
 
 		// Replace an existing item.
 		$third = $after['items'][3];
-		$this->assertSame( 2, $this->db()->replace( $third['option_id'], [
+		$this->assertSame( 2, $this->db()->replace( [
+			'option_id'    => $third['option_id'],
 			'option_name'  => 'replaced-option',
 			'option_value' => 'actually-replaced',
 			'autoload'     => 'no',
