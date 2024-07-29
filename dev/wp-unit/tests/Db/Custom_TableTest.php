@@ -229,7 +229,11 @@ class Custom_TableTest extends \WP_UnitTestCase {
 			'option_value' => 'shared_value',
 		] ) );
 
-		wp_cache_flush_group( 'options' );
+		if ( wp_cache_supports( 'flush_group' )) {
+			wp_cache_flush_group( 'options' );
+		} else {
+			wp_cache_flush();
+		}
 		$this->assertFalse( get_option( 'first-option' ) );
 		$this->assertFalse( get_option( 'second-option' ) );
 	}
@@ -263,7 +267,11 @@ class Custom_TableTest extends \WP_UnitTestCase {
 		$this->assertTrue( $this->db()->delete( $last['option_id'] ) );
 		$this->assertEmpty( $this->db()->get_by_id( $last['option_id'] ) );
 
-		wp_cache_flush_group( 'options' );
+		if ( wp_cache_supports( 'flush_group' ) ) {
+			wp_cache_flush_group( 'options' );
+		} else {
+			wp_cache_flush();
+		}
 		$this->assertFalse( get_option( $first['option_name'] ) );
 		$this->assertFalse( get_option( $last['option_name'] ) );
 	}
@@ -405,7 +413,11 @@ class Custom_TableTest extends \WP_UnitTestCase {
 			'option_name' => 'test_option_2',
 		] )['option_value'] );
 
-		wp_cache_flush_group( 'options' );
+		if ( wp_cache_supports( 'flush_group' ) ) {
+			wp_cache_flush_group( 'options' );
+		} else {
+			wp_cache_flush();
+		}
 		$this->assertSame( 'new_value', get_option( 'test_option' ) );
 		$this->assertSame( 'new_value', get_option( 'test_option_2' ) );
 	}
