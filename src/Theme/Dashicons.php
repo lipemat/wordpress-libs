@@ -363,9 +363,16 @@ enum Dashicons: string {
 	/**
 	 * Generate an HTML icon tag for the dashicon.
 	 *
+	 * @param string|\BackedEnum $class_name - Optional custom CSS class to add to the icon.
+	 *
 	 * @return string
 	 */
-	public function icon(): string {
-		return '<i class="dashicons ' . $this->value . '"></i>';
+	public function icon( string|\BackedEnum $class_name = '' ): string {
+		$classes = new Class_Names( [
+			self::FONT,
+			$this->value,
+			$class_name,
+		] );
+		return '<i class="' . $classes . '"></i>';
 	}
 }
