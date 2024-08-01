@@ -81,7 +81,7 @@ class Custom_Post_Type {
 	 * Arguments passed to `register_post_type()` after all
 	 * properties are set.
 	 *
-	 * @see Custom_Post_Type::post_type_args()
+	 * @see Custom_Post_Type::get_post_type_args()
 	 *
 	 * @var Register_Post_Type
 	 */
@@ -95,20 +95,6 @@ class Custom_Post_Type {
 	 * @var bool
 	 */
 	protected bool $auto_admin_caps = true;
-
-	/**
-	 * Triggers the handling of rewrites for this post type.
-	 *
-	 * To prevent all rewrite, set to false.
-	 *
-	 * Defaults to true, using `$post_type` as slug. To specify rewrite rules,
-	 * an array can be passed.
-	 *
-	 * @phpstan-var bool|REWRITE
-	 *
-	 * @var bool|array
-	 */
-	protected array|bool $rewrite;
 
 
 	/**
@@ -160,7 +146,7 @@ class Custom_Post_Type {
 	 */
 	protected function register(): void {
 		static::$registry[ $this->name ] = $this;
-		register_post_type( $this->name, $this->post_type_args() );
+		register_post_type( $this->name, $this->get_post_type_args() );
 		$this->add_administrator_capabilities( get_post_type_object( $this->name ) );
 	}
 
@@ -477,7 +463,7 @@ class Custom_Post_Type {
 		}, 10, 2 );
 
 		add_action( 'registered_post_type', function() {
-			$rewrites = $this->rewrites();
+			$rewrites = $this->get_rewrites();
 			if ( \is_array( $rewrites ) && isset( $rewrites['slug'] ) && '' !== $rewrites['slug'] ) {
 				remove_rewrite_tag( "%{$rewrites['slug']}%" );
 			} else {
@@ -792,7 +778,7 @@ class Custom_Post_Type {
 	 * @param array|bool           $rewrite - The rewrites to use.
 	 */
 	public function rewrite( bool|array $rewrite ): void {
-		$this->rewrite = $rewrite;
+		$this->register_args->rewrite = $rewrite;
 	}
 
 
@@ -850,24 +836,25 @@ class Custom_Post_Type {
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function post_type_args(): array {
+	protected function get_post_type_args(): array {
 		$args = $this->register_args;
-		$args->can_export = $args->can_export ?? true;
-		$args->capabilities = \array_merge( $this->register_args->capabilities ?? [], $this->capabilities->get_capabilities() );
-		$args->capability_type = $args->capability_type ?? 'post';
-		$args->description = $args->description ?? '';
-		$args->exclude_from_search = $args->exclude_from_search ?? ! $args->public;
-		$args->has_archive = $args->has_archive ?? true;
-		$args->hierarchical = $args->hierarchical ?? false;
-		$args->labels = $this->post_type_labels();
-		$args->public = $args->public ?? true;
-		$args->publicly_queryable = $args->publicly_queryable ?? $args->public;
-		$args->rewrite = $this->rewrites();
-		$args->show_in_admin_bar = $args->show_in_admin_bar ?? (bool) $args->show_in_menu;
-		$args->show_in_menu = $args->show_in_menu ?? $args->show_ui;
-		$args->show_in_nav_menus = $args->show_in_nav_menus ?? $args->public;
-		$args->show_ui = $args->show_ui ?? $args->public;
-		$args->taxonomies = $args->taxonomies ?? [];
+
+		$args->can_export ??= true;
+		$args->capabilities = \array_merge( $args->capabilities ?? [], $this->capabilities->get_capabilities() );
+		$args->capability_type ??= 'post';
+		$args->description ??= '';
+		$args->exclude_from_search ??= ! $args->public;
+		$args->has_archive ??= true;
+		$args->hierarchical ??= false;
+		$args->labels = $this->get_post_type_labels();
+		$args->public ??= true;
+		$args->publicly_queryable ??= $args->public;
+		$args->rewrite = $this->get_rewrites();
+		$args->show_in_admin_bar ??= (bool) $args->show_in_menu;
+		$args->show_in_menu ??= $args->show_ui;
+		$args->show_in_nav_menus ??= $args->public;
+		$args->show_ui ??= $args->public;
+		$args->taxonomies ??= [];
 
 		$args = apply_filters( 'lipe/lib/schema/post_type_args', $args->get_args(), $this->name );
 		return apply_filters( "lipe/lib/schema/post_type_args_{$this->name}", $args );
@@ -879,7 +866,7 @@ class Custom_Post_Type {
 	 *
 	 * @return array<Labels::*, string>
 	 */
-	protected function post_type_labels(): array {
+	protected function get_post_type_labels(): array {
 		$single = $this->labels()->get_label( Labels::SINGULAR_NAME );
 		$plural = $this->labels()->get_label( Labels::NAME );
 
@@ -940,8 +927,8 @@ class Custom_Post_Type {
 	 *
 	 * @return REWRITE|boolean
 	 */
-	protected function rewrites(): array|bool {
-		return $this->rewrite ?? [
+	protected function get_rewrites(): array|bool {
+		return $this->register_args->rewrite ?? [
 			'slug'       => sanitize_title_with_dashes( $this->name ),
 			'with_front' => false,
 		];

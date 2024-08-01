@@ -12,7 +12,7 @@ namespace Lipe\Lib\Post_Type;
  * @since  4.0.0
  *
  * @see    Custom_Post_Type::labels()
- * @see    Custom_Post_Type::post_type_labels()
+ * @see    Custom_Post_Type::get_post_type_labels()
  */
 class Labels {
 	public const NAME                     = 'name';
