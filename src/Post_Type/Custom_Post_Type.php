@@ -643,7 +643,7 @@ class Custom_Post_Type {
 	/**
 	 * A short descriptive summary of what the post type is.
 	 *
-	 * Default empty.
+	 * @default ''
 	 *
 	 * @param string $description - The description.
 	 */
@@ -655,7 +655,7 @@ class Custom_Post_Type {
 	/**
 	 * Whether to exclude posts with this post type from front end search results.
 	 *
-	 * Default is the opposite value of `$public`.
+	 * @default Opposite value of `$public`.
 	 *
 	 * @param bool $is_excluded - Whether to exclude from search.
 	 */
@@ -705,6 +705,8 @@ class Custom_Post_Type {
 	 * While the default settings of `$exclude_from_search`, `$publicly_queryable`, `$show_ui`, and `$show_in_nav_menus`
 	 * are inherited from `$public`, each does not rely on this relationship and controls a very specific intention.
 	 *
+	 * @default true
+	 *
 	 * @param bool $is_public - Whether to make the post type public.
 	 */
 	public function public( bool $is_public ): void {
@@ -721,7 +723,7 @@ class Custom_Post_Type {
 	 * - `?{post_type_key}={single_post_slug}`
 	 * - `?{post_type_query_var}={single_post_slug}`
 	 *
-	 * If not set, the default is inherited from `$public`.
+	 * @default `$public`
 	 *
 	 * @param bool $is_queryable - Is the post type queryable.
 	 */
@@ -733,7 +735,7 @@ class Custom_Post_Type {
 	/**
 	 * Sets the query_var key for this post type.
 	 *
-	 * Defaults to `$post_type` key.
+	 * @default `$post_type`
 	 *
 	 * - If false, a post type cannot be loaded at `?{query_var}={post_slug}`.
 	 * - If specified as a string, the query `?{query_var_string}={post_slug}` will be valid.
@@ -755,9 +757,7 @@ class Custom_Post_Type {
 	 * @phpstan-param callable( \WP_Post ): void $register_cb
 	 *
 	 * @formatter:off
-	 *
-	 * @param callable                           $register_cb - The callback function.
-	 *
+	 * @param callable $register_cb - The callback function.
 	 * @formatter:on
 	 */
 	public function register_meta_box_cb( callable $register_cb ): void {
@@ -770,7 +770,7 @@ class Custom_Post_Type {
 	 *
 	 * To prevent all rewrite, set to false.
 	 *
-	 * Defaults to `true`, using `$post_type` as slug. To specify rewrite rules,
+	 * @default `true` using `$post_type` as slug. To specify rewrite rules,
 	 * an array can be passed.
 	 *
 	 * @phpstan-param bool|REWRITE $rewrite
@@ -785,7 +785,7 @@ class Custom_Post_Type {
 	/**
 	 * Makes this post type available via the admin bar.
 	 *
-	 * Default is value of `$show_in_menu`.
+	 * @default `$show_in_menu`.
 	 *
 	 * @param bool $show - Whether to show in the admin bar.
 	 */
@@ -797,7 +797,7 @@ class Custom_Post_Type {
 	/**
 	 * Makes this post type available for selection in navigation menus.
 	 *
-	 * Default is value of `$public`.
+	 * @default `$public`.
 	 *
 	 * @param bool $show - Whether to show in nav menus.
 	 */
@@ -809,7 +809,7 @@ class Custom_Post_Type {
 	/**
 	 * Whether to generate and allow a UI for managing this post type in the admin.
 	 *
-	 * Default is value of `$public`.
+	 * @default `$public`.
 	 *
 	 * @param bool $show_ui - Whether to show the UI.
 	 */
