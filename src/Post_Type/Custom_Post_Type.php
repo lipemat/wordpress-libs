@@ -843,18 +843,20 @@ class Custom_Post_Type {
 		$args->capabilities = \array_merge( $args->capabilities ?? [], $this->capabilities->get_capabilities() );
 		$args->capability_type ??= 'post';
 		$args->description ??= '';
-		$args->exclude_from_search ??= ! $args->public;
 		$args->has_archive ??= true;
 		$args->hierarchical ??= false;
 		$args->labels = $this->get_post_type_labels();
-		$args->public ??= true;
-		$args->publicly_queryable ??= $args->public;
 		$args->rewrite = $this->get_rewrites();
-		$args->show_in_admin_bar ??= (bool) $args->show_in_menu;
-		$args->show_in_menu ??= $args->show_ui;
-		$args->show_in_nav_menus ??= $args->public;
-		$args->show_ui ??= $args->public;
 		$args->taxonomies ??= [];
+
+		// These properties depend on each other.
+		$args->public ??= true;
+		$args->exclude_from_search ??= ! $args->public;
+		$args->publicly_queryable ??= $args->public;
+		$args->show_ui ??= $args->public;
+		$args->show_in_menu ??= $args->show_ui;
+		$args->show_in_admin_bar ??= (bool) $args->show_in_menu;
+		$args->show_in_nav_menus ??= $args->public;
 
 		$args = apply_filters( 'lipe/lib/schema/post_type_args', $args->get_args(), $this->name );
 		return apply_filters( "lipe/lib/schema/post_type_args_{$this->name}", $args );

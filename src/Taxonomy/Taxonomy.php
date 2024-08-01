@@ -661,12 +661,15 @@ class Taxonomy {
 		$args->description ??= '';
 		$args->hierarchical ??= false;
 		$args->labels = $this->get_taxonomy_labels();
+		$args->rewrite = $this->get_rewrites();
+		$args->sort ??= false;
+
+		// These properties depend on each other.
 		$args->public ??= true;
 		$args->publicly_queryable ??= $args->public;
-		$args->rewrite = $this->get_rewrites();
 		$args->show_in_nav_menus ??= $args->public;
 		$args->show_ui ??= $args->public;
-		$args->sort ??= false;
+
 		if ( isset( $this->args ) ) {
 			$args->args = $this->args->get_args();
 		}

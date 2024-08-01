@@ -12,7 +12,7 @@ class TaxonomyTest extends \WP_UnitTestCase {
 	public function test_set_default_term(): void {
 		wp_set_current_user( 1 );
 		$tax = new Taxonomy( 'unit-testing', [ 'post' ] );
-		$tax->set_default_term( 'tsdt', 'test set default term', 'optional description' );
+		$tax->default_term( 'tsdt', 'test set default term', 'optional description' );
 		do_action( 'wp_loaded' );
 		$term = \get_term_by( 'slug', 'tsdt', 'unit-testing' );
 		$this->assertTrue( is_a( $term, \WP_Term::class ) );
