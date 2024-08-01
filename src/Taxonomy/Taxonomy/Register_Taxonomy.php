@@ -167,7 +167,13 @@ class Register_Taxonomy implements ArgsRules {
 	 *
 	 * Default true, using `$taxonomy` as slug.
 	 *
-	 * To prevent rewrite, set to false. To specify rewrite rules, an array can be passed with any of these keys:
+	 * To prevent a rewrite, set to false. To specify rewrite rules, an array can be passed with any of these keys:
+	 *  `array{
+	 *      slug?: string
+	 *      with_front?: bool
+	 *      hierarchical?: bool
+	 *      ep_mask?: int
+	 * }`
 	 *
 	 * @var bool|array<string,mixed>
 	 * @phpstan-var bool|REWRITE

@@ -11,7 +11,7 @@ namespace Lipe\Lib\Taxonomy;
  * @since    5.0.0
  *
  * @see      Taxonomy::labels()
- * @see      Taxonomy::taxonomy_labels()
+ * @see      Taxonomy::get_taxonomy_labels()
  */
 class Labels {
 	public const ADD_NEW_ITEM               = 'add_new_item';

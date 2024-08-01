@@ -18,7 +18,7 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 			'show_in_rest' => false,
 		] );
 		$tax = new Taxonomy( 'test', [ $post_type->name ] );
-		$tax->set_labels( 'Tag', 'Tags' );
+		$tax->labels( 'Tag', 'Tags' );
 		$tax->capabilities()->assign_terms( 'exist' );
 		$tax->add_initial_terms( [ 'one', 'two' ] );
 		do_action( 'wp_loaded' );
