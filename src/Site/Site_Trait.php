@@ -1,7 +1,9 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Site;
 
+use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 use Lipe\Lib\Meta\Repo;
 
@@ -26,10 +28,15 @@ use Lipe\Lib\Meta\Repo;
  * @property string $spam
  * @property string $blogname
  * @property string $home
- * @property int $post_count
+ * @property int    $post_count
  * @property string $siteurl
+ *
+ * @template OPTIONS of array<string, mixed>
  */
 trait Site_Trait {
+	/**
+	 * @use Mutator_Trait<OPTIONS>
+	 */
 	use Mutator_Trait;
 
 	/**
@@ -91,10 +98,10 @@ trait Site_Trait {
 	/**
 	 * Used to determine the type of meta to retrieve or update.
 	 *
-	 * @return string
+	 * @return MetaType
 	 */
-	public function get_meta_type(): string {
-		return Repo::META_BLOG;
+	public function get_meta_type(): MetaType {
+		return MetaType::BLOG;
 	}
 
 
@@ -121,11 +128,11 @@ trait Site_Trait {
 	/**
 	 * Create a new instance of this class.
 	 *
-	 * @param int|null|\WP_Site $site - Site object, ID, or null for current site..
+	 * @param int|\WP_Site|null $site - Site object, ID, or null for current site..
 	 *
 	 * @return static
 	 */
-	public static function factory( $site = null ) {
+	public static function factory( null|int|\WP_Site $site = null ): static {
 		return new static( $site );
 	}
 }

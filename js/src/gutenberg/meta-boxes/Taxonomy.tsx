@@ -11,7 +11,7 @@ export type TaxonomyMetaBox = {
 	checkedOnTop: boolean;
 };
 
-type Props = {};
+type Props = Record<string, never>;
 
 
 const Taxonomy = ( {}: Props ) => {

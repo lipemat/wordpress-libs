@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
@@ -6,20 +7,17 @@ namespace Lipe\Lib\CMB2;
  * A fluent interface for a CMB2 taxonomy meta box.
  */
 class Term_Box extends Box {
-
 	/**
 	 * If object_types is set to 'term', and set to false,
 	 * will remove the fields from the new-term screen.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#new_term_section
 	 *
-	 * @default true
+	 * Default true
 	 *
-	 * @example false
-	 *
-	 * @var string
+	 * @var bool
 	 */
-	public $new_term_section;
+	public bool $new_term_section;
 
 	/**
 	 * If object_types is set to 'term',
@@ -42,8 +40,8 @@ class Term_Box extends Box {
 	 * @param string[] $taxonomies - Taxonomies to add meta box to.
 	 * @param string   $title      - Meta box title.
 	 */
-	public function __construct( $id, array $taxonomies, $title ) {
+	public function __construct( string $id, array $taxonomies, string $title ) {
+		parent::__construct( $id, [ BoxType::TERM->value ], $title );
 		$this->taxonomies = $taxonomies;
-		parent::__construct( $id, [ Box::TYPE_TERM ], $title );
 	}
 }

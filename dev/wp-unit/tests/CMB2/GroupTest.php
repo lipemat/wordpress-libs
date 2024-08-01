@@ -38,7 +38,7 @@ class GroupTest extends \WP_Test_REST_TestCase {
 		$this->category = self::factory()->category->create_and_get();
 		$this->post_tags = self::factory()->tag->create_many( 3 );
 		$this->attachment_id =
-			self::factory()->attachment->create_upload_object( DIR_TESTDATA . '/images/test-image.png' );
+			self::factory()->attachment->create_upload_object( DIR_TEST_IMAGES . '/test-image.png' );
 		$b = new Box( 'Y', [ 'post' ], 'Y' );
 		$g = $b->group( 'G', 'G' );
 		$g->field( 'C', 'Checkbox' )
@@ -166,7 +166,7 @@ class GroupTest extends \WP_Test_REST_TestCase {
 	}
 
 
-	public function test_updating_repeable_group(): void {
+	public function test_updating_repeatable_group(): void {
 		$b = new Box( 'Y', [ 'post' ], 'Y' );
 		$g = $b->group( 'R', 'R' );
 		$g->repeatable( true );
@@ -246,45 +246,46 @@ class GroupTest extends \WP_Test_REST_TestCase {
 		$result = $this->get_response( '/wp/v2/posts/' . $post->get_id(), [], 'GET' );
 		$this->assertSame( [
 			'footnotes' => '',
+			't2'        => '__t2',
 			'g3'        => [
 				[
 					'first/things/last'   => '__last',
 					'second/things/after' => '__after',
 				],
 			],
-			't2'        => '__t2',
 		], $result->data['meta'] );
 
 		$group->field( 'first/things/last', '' )
 		      ->text()
-		      ->rest_group_short();
+		      ->rest_short_name();
 		do_action( 'cmb2_init' );
 		$result = $this->get_response( '/wp/v2/posts/' . $post->get_id(), [], 'GET' );
 		$this->assertSame( [
 			'footnotes' => '',
+			't2'        => '__t2',
 			'g3'        => [
 				[
 					'last'                => '__last',
 					'second/things/after' => '__after',
 				],
 			],
-			't2'        => '__t2',
 		], $result->data['meta'] );
 
 		$group->field( 'second/things/after', '' )
 		      ->text()
-		      ->rest_group_short( 'customField' );
+		      ->rest_short_name( 'customField' );
 		do_action( 'cmb2_init' );
 		$result = $this->get_response( '/wp/v2/posts/' . $post->get_id(), [], 'GET' );
 		$this->assertSame( [
 			'footnotes' => '',
+			't2'        => '__t2',
 			'g3'        => [
 				[
 					'last'        => '__last',
 					'customField' => '__after',
 				],
 			],
-			't2'        => '__t2',
+
 		], $result->data['meta'] );
 
 		wp_set_current_user( self::factory()->user->create( [
@@ -315,63 +316,50 @@ class GroupTest extends \WP_Test_REST_TestCase {
 	}
 
 
-	public function test_doing_short_group_wrong(): void {
-		$box = new Box( 'rested', [ 'post' ], 'Rested Group' );
-		$box->field( 'meta/prefixed/t2', 'Test 2' )
-		    ->text()
-		    ->rest_group_short();
-
-		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
-		$group->show_in_rest();
-		$group->field( 'first/things/last', '' )
-		      ->text()
-		      ->show_in_rest()
-		      ->rest_group_short();
-
-		$this->expectDoingItWrong( Field::class . '::rest_group_short', "Group short fields only apply to a group's child field. `meta/prefixed/t2` is not applicable. (This message was added in version 4.10.0.)" );
-		$this->expectDoingItWrong( Field::class . '::show_in_rest', "Show in rest may only be added to whole group. Not a group's field. `first/things/last` is not applicable. (This message was added in version 2.19.0.)" );
-	}
-
-
 	public function test_sortable(): void {
 		$box = new Box( 'sortable', [ 'post' ], 'Sortable Group' );
 		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
 		$group->field( 'first/things/last', '' )->text();
 		do_action( 'cmb2_init' );
 
-		$this->assertArrayNotHasKey( 'sortable', $group->options );
-
-		$group = $box->group( 'group/prefixed/g3', 'Group 3', null, null, null, true );
-		$this->assertTrue( $group->options['sortable'] );
-
-		$group = $box->group( 'group/prefixed/g3', 'Group 3', null, null, null, false );
-		$this->assertFalse( $group->options['sortable'] );
+		$this->assertArrayNotHasKey( 'sortable', get_private_property( $group, 'options' ) );
 
 		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
-		$this->assertArrayNotHasKey( 'sortable', $group->options );
-		$group->repeatable( true );
-		$this->assertTrue( $group->options['sortable'] );
+		$group->sortable();
+		$this->assertTrue( get_private_property( $group, 'options' )['sortable'] );
+
+		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
+		$group->sortable( false );
+		$this->assertFalse( get_private_property( $group, 'options' )['sortable'] );
+
+		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
+		$this->assertArrayNotHasKey( 'sortable', get_private_property( $group, 'options' ) );
+		$group->repeatable();
+		$this->assertTrue( get_private_property( $group, 'options' )['sortable'] );
 
 		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
 		$group->repeatable( false );
-		$this->assertFalse( $group->options['sortable'] );
+		$this->assertFalse( get_private_property( $group, 'options' )['sortable'] );
 
-		$group = $box->group( 'group/prefixed/g3', 'Group 3', null, null, null, false );
-		$group->repeatable( true );
-		$this->assertFalse( $group->options['sortable'] );
+		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
+		$group->sortable( false );
+		$group->repeatable();
+		$this->assertFalse( get_private_property( $group, 'options' )['sortable'] );
 
-		$group = $box->group( 'group/prefixed/g3', 'Group 3', null, null, null, true );
+		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
+		$group->sortable();
 		$group->repeatable( false );
-		$this->assertTrue( $group->options['sortable'] );
+		$this->assertTrue( get_private_property( $group, 'options' )['sortable'] );
 	}
 
 
 	public function test_sortable_rendered(): void {
 		$box = new Box( 'sortable', [ 'post' ], 'Sortable Group' );
 
-		$group = $box->group( 'group/prefixed/g5', 'Group 3', null, null, null, true );
+		$group = $box->group( 'group/prefixed/g5', 'Group 3' );
+		$group->sortable();
 		$group->repeatable( false );
-		$this->assertTrue( $group->options['sortable'] );
+		$this->assertTrue( get_private_property( $group, 'options' )['sortable'] );
 		$group->field( 'group/prefixed/g5/first', '' )->text();
 
 		do_action( 'cmb2_init' );
@@ -384,7 +372,7 @@ class GroupTest extends \WP_Test_REST_TestCase {
 		$group = $box->group( 'group/prefixed/g6', 'Group 3' );
 		$group->field( 'group/prefixed/g6/first', '' )->text();
 		$group->repeatable( false );
-		$this->assertFalse( $group->options['sortable'] );
+		$this->assertFalse( get_private_property( $group, 'options' )['sortable'] );
 		do_action( 'cmb2_init' );
 		$rendered = get_echo( function() {
 			cmb2_get_field( 'sortable', 'group/prefixed/g6' )->render_field();
@@ -424,7 +412,7 @@ class GroupTest extends \WP_Test_REST_TestCase {
 	public function test_repeatable_with_unsupported_field(): void {
 		$box = new Box( 'repeatable', [ 'page' ], 'Repeatable Group' );
 		$group = $box->group( 'group/prefixed/g3', 'Group 3' );
-		$group->repeatable( true );
+		$group->repeatable();
 		$group->field( 'ruf/first', '' )->taxonomy_select( 'category' );
 
 		$catch = false;
@@ -440,8 +428,8 @@ class GroupTest extends \WP_Test_REST_TestCase {
 		$group->repeatable( false );
 		do_action( 'cmb2_init' );
 
-		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_conflicting_taxonomies', 'Fields: &quot;ruf/first, ruf/last&quot; are conflicting on the taxonomy: category for object type: page. You may only have taxonomy field per an object. (This message was added in version 4.10.0.)' );
-		$group->field( 'ruf/last', '' )->taxonomy_select_2( 'category' );
+		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_conflicting_taxonomies', 'Fields: "ruf/first, ruf/last" are conflicting on the taxonomy: category for object type: page. You may only have taxonomy field per an object. (This message was added in version 4.10.0.)' );
+		$group->field( 'ruf/last', '' )->taxonomy_select_hierarchical( 'category' );
 		do_action( 'cmb2_init' );
 
 		$group->repeatable( true );

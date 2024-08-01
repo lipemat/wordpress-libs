@@ -4,8 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy;
 
-use Lipe\Lib\Query\Args_Trait;
-use Lipe\Lib\Query\Args_Interface;
+use Lipe\Lib\Args\Args;
+use Lipe\Lib\Args\ArgsRules;
 use Lipe\Lib\Query\Clause\Meta_Query_Interface;
 use Lipe\Lib\Query\Clause\Meta_Query_Trait;
 
@@ -17,9 +17,12 @@ use Lipe\Lib\Query\Clause\Meta_Query_Trait;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_term_query/__construct/
  */
-class Get_Terms implements Meta_Query_Interface, Args_Interface {
+class Get_Terms implements Meta_Query_Interface, ArgsRules {
+	/**
+	 * @use Args<array<string, mixed>>
+	 */
+	use Args;
 	use Meta_Query_Trait;
-	use Args_Trait;
 
 	public const FIELD_ALL                = 'all';
 	public const FIELD_ALL_WITH_OBJECT_ID = 'all_with_object_id';
@@ -309,7 +312,7 @@ class Get_Terms implements Meta_Query_Interface, Args_Interface {
 	/**
 	 * Get the lightest possible version of the get_terms args.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function get_light_args(): array {
 		return \array_merge( [

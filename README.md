@@ -4,7 +4,6 @@
   <a href="https://github.com/lipemat/wordpress-libs/releases/latest">
     <img alt="Version" src="https://img.shields.io/packagist/v/lipemat/wordpress-libs.svg?label=version" />
   </a>
-  <img alt="WordPress" src="https://img.shields.io/badge/wordpress->=6.2.0green.svg">
   <img alt="PHP" src="https://img.shields.io/packagist/php-v/lipemat/wordpress-libs.svg?color=brown" />
   <img alt="License" src="https://img.shields.io/packagist/l/lipemat/wordpress-libs.svg">
 </p>

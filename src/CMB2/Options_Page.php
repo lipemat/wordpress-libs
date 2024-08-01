@@ -1,85 +1,15 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
+
+use Lipe\Lib\Meta\Registered;
+use Lipe\Lib\Theme\Dashicons;
 
 /**
  * CMB2 Option Page fluent interface.
  */
 class Options_Page extends Box {
-
-	/**
-	 * This parameter is for options-page metaboxes only and defaults to 'admin_menu',
-	 * to register your options-page at the network level:
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#admin_menu_hook
-	 *
-	 * @example 'network_admin_menu'
-	 *
-	 * @var string
-	 */
-	public string $admin_menu_hook = 'admin_menu';
-
-	/**
-	 * This parameter is for options-page metaboxes only,
-	 * and is sent along to add_menu_page()/add_submenu_page()
-	 * to define the capability required to view the options page.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#capability
-	 *
-	 * @example 'edit_posts'
-	 *
-	 * @var string
-	 */
-	public string $capability = 'manage_options';
-
-	/**
-	 * On settings pages (not options-general.php sub-pages), allows disabling
-	 * of error displaying
-	 *
-	 * @notice  only exists in example-functions.php and not in docs. May require
-	 *         more testing.
-	 *
-	 * @example = true
-	 *
-	 * @var bool
-	 */
-	public $disable_settings_errors;
-
-	/**
-	 * This parameter is for options-page metaboxes only
-	 * and allows overriding the options page form output.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
-	 *
-	 * @var callable
-	 */
-	public $display_cb;
-
-	/**
-	 * This parameter is for options-page meta boxes only,
-	 * and is sent along to add_menu_page() to define the menu icon.
-	 * Only applicable if parent_slug is left empty.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#icon_url
-	 *
-	 * @example 'dashicons-chart-pie'
-	 *
-	 * @var string
-	 */
-	public $icon_url;
-
-	/**
-	 * This parameter is for options-page metaboxes only,
-	 * and is sent along to add_menu_page()/add_submenu_page() to define the menu title.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#menu_title
-	 *
-	 * @example 'Site Options
-	 *
-	 * @var string
-	 */
-	public $menu_title;
-
 	/**
 	 * Allows specifying a custom callback for setting the
 	 * error/success message on save.
@@ -90,36 +20,10 @@ class Options_Page extends Box {
 	 *
 	 * @var callable
 	 */
-	public $message_cb;
+	protected $message_cb;
 
 	/**
-	 * This parameter is for options-page metaboxes only,
-	 * and is sent along to add_submenu_page() to define the parent-menu item slug.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#parent_slug
-	 *
-	 * @example 'tools.php'
-	 *
-	 * @var string
-	 */
-	public $parent_slug;
-
-	/**
-	 * This parameter is for options-page metaboxes only,
-	 * and is sent along to add_menu_page() to define the menu position.
-	 * Only applicable if parent_slug is left empty.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#position
-	 *
-	 * @example 6
-	 *
-	 * @var int
-	 */
-	public $position;
-
-	/**
-	 * This parameter is for options-page metaboxes only and
-	 * defines the text for the options page save button. defaults to 'Save'.
+	 * Defines the text for the options page save button. defaults to 'Save'.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#save_button
 	 *
@@ -130,34 +34,94 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	public $save_button;
+	protected string $save_button;
 
 	/**
-	 * This parameter is for options-page metaboxes only and
-	 * defines the settings page slug. Defaults to $id.
+	 * Allows overriding the options page form output.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
+	 *
+	 * @var callable
+	 */
+	protected $display_cb;
+
+	/**
+	 * Defines the settings page slug. Defaults to $id.
 	 *
 	 * @example 'my_options_page_slug'
 	 *
 	 * @var string
 	 */
-	public $option_key;
+	protected string $option_key;
 
 	/**
-	 * Break the settings page into tabs by specifying more than one
-	 * settings page to the same tab group.
+	 * Sent along to add_submenu_page() to define the parent-menu item slug.
 	 *
-	 * All settings pages set to tab group will display on the same settings
-	 * page with tabs to navigate between them. The settings may be registered anywhere
-	 * in the admin menu and will still combine when displayed.
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#parent_slug
 	 *
-	 * @example $settings->tab_group = 'first'
-	 *          $another_settings->tab_group = 'first'
-	 *          Both will display on the same settings page with different menus
-	 *          to get there.
+	 * @example 'tools.php'
 	 *
 	 * @var string
 	 */
-	public $tab_group;
+	protected string $parent_slug;
+
+	/**
+	 * Sent along to add_menu_page()/add_submenu_page() to define the menu title.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#menu_title
+	 *
+	 * @example 'Site Options
+	 *
+	 * @var string
+	 */
+	protected string $menu_title;
+
+	/**
+	 * Sent along to add_menu_page()/add_submenu_page()
+	 * to define the capability required to view the options page.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#capability
+	 *
+	 * @example 'edit_posts'
+	 *
+	 * @var string
+	 */
+	protected string $capability = 'manage_options';
+
+	/**
+	 * Set to `network_admin_menu` to add the options page to the network admin menu.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#admin_menu_hook
+	 *
+	 * @phpstan-var 'admin_menu'|'network_admin_menu'
+	 * @var string
+	 */
+	protected string $admin_menu_hook = 'admin_menu';
+
+	/**
+	 * Sent along to add_menu_page() to define the menu position.
+	 * Only applicable if `parent_slug` is left empty.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#position
+	 *
+	 * @example 6
+	 *
+	 * @var int
+	 */
+	protected int $position;
+
+	/**
+	 * This parameter is sent along to add_menu_page() to define the menu icon.
+	 * Only applicable if `parent_slug` is left empty.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#icon_url
+	 *
+	 * @example 'dashicons-chart-pie'
+	 * @see     Dashicons
+	 *
+	 * @var string
+	 */
+	protected string $icon_url;
 
 	/**
 	 * Holds default values specified on individual fields
@@ -165,9 +129,9 @@ class Options_Page extends Box {
 	 * CMB2 saves options as a single blob, so we use the
 	 * filter to inject the default on retrieval.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
-	protected $default_values = [];
+	protected array $default_values = [];
 
 
 	/**
@@ -177,13 +141,53 @@ class Options_Page extends Box {
 	 * @param string|null $title - Options page title.
 	 */
 	public function __construct( string $id, ?string $title ) {
-		if ( null === $this->option_key ) {
-			$this->option_key = $id;
-		}
-
+		$this->option_key = $id;
 		add_action( "cmb2_init_hookup_{$id}", [ $this, 'run_options_hookup_on_front_end' ] );
 
-		parent::__construct( $id, [ Box::TYPE_OPTIONS ], $title );
+		parent::__construct( $id, [ BoxType::OPTIONS->value ], $title );
+	}
+
+
+	/**
+	 * Sent along to add_menu_page()/add_submenu_page()
+	 * to define the capability required to view the options page.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#capability
+	 *
+	 * @default 'manage_options'
+	 *
+	 * @param string $capability - The capability required to view the options page.
+	 */
+	public function capability( string $capability ): void {
+		$this->capability = $capability;
+	}
+
+
+	/**
+	 * Sent along to add_menu_page()/add_submenu_page() to define the menu title.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#menu_title
+	 *
+	 * @example 'Site Options
+	 *
+	 * @param string $menu_title - The title of the menu.
+	 */
+	public function menu_title( string $menu_title ): void {
+		$this->menu_title = $menu_title;
+	}
+
+
+	/**
+	 * Sent along to add_submenu_page() to define the parent-menu item slug.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#parent_slug
+	 *
+	 * @example 'tools.php'
+	 *
+	 * @param string $parent_slug - The parent slug.
+	 */
+	public function parent_slug( string $parent_slug ): void {
+		$this->parent_slug = $parent_slug;
 	}
 
 
@@ -204,10 +208,87 @@ class Options_Page extends Box {
 
 
 	/**
+	 * Sent along to add_menu_page() to define the menu position.
+	 * - Only applicable if `parent_slug` is left empty.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#position
+	 *
+	 * @param int $position - The position of the menu.
+	 *
+	 * @return void
+	 */
+	public function position( int $position ): void {
+		$this->position = $position;
+	}
+
+
+	/**
+	 * Set the icon for the options page.
+	 * - Sent along to add_menu_page() to define the menu icon.
+	 * - Only applicable if `parent_slug` is left empty.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#icon_url
+	 *
+	 * @param string|Dashicons $icon - The icon to use.
+	 *
+	 * @return void
+	 */
+	public function icon( string|Dashicons $icon ): void {
+		$this->icon_url = $icon instanceof Dashicons ? $icon->value : $icon;
+	}
+
+
+	/**
+	 * Override the options page form output.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
+	 *
+	 * @phpstan-param callable( \CMB2 $cmb ): void $display_cb
+	 *
+	 * @param callable                             $display_cb - The callback to render the display.
+	 *
+	 * @return void
+	 */
+	public function display_cb( callable $display_cb ): void {
+		$this->display_cb = $display_cb;
+	}
+
+
+	/**
+	 * Use a custom callback to set the error/info message when the
+	 * settings are saved.
+	 *
+	 * @link     https://github.com/CMB2/CMB2/wiki/Box-Properties#message_cb
+	 * @link     https://github.com/CMB2/CMB2/commit/43d513c135e52c327bafa06309821c29323ae2dd#diff-378c74d0ffffc1759b8779a135476777
+	 *
+	 * @phpstan-param callable( \CMB2 $cmb, array{
+	 *     is_options_page: bool,
+	 *     should_nofify: bool,
+	 *     is_updated: bool,
+	 *     setting: string,
+	 *     code: string,
+	 *     message: string,
+	 *     type: string,
+	 * } $args ): void $message_cb
+	 *
+	 * @formatter:off
+	 *
+	 * @param callable $message_cb - Callback to set custom messages.
+	 *
+	 * @formatter:on
+	 *
+	 * @return void
+	 */
+	public function message_cb( callable $message_cb ): void {
+		$this->message_cb = $message_cb;
+	}
+
+
+	/**
 	 * Specify the save button text.
 	 * Set to `null` to create a read-only form which has no save button.
 	 *
-	 * @param null|string $text - The text to display on the save button.
+	 * @param ?string $text - The text to display on the save button.
 	 *
 	 * @return void
 	 */
@@ -269,17 +350,19 @@ class Options_Page extends Box {
 	 *
 	 * Gives a universal place for amending the config.
 	 *
-	 * @param Field $field  - The field object.
-	 * @param array $config - The field config.
+	 * @param Registered           $registered - The registered field.
+	 * @param array<string, mixed> $config     - The field config.
 	 */
-	public function register_meta_on_all_types( Field $field, array $config ): void {
+	public function register_meta_on_all_types( Registered $registered, array $config ): void {
 		unset( $config['single'] );
+		$config['label'] = $registered->variation->name;
+		$config['description'] = "Lives under the `{$registered->get_box()->get_id()}` option.";
 
-		if ( \is_string( $field->show_in_rest ) || true === $field->show_in_rest ) {
-			$config = $this->translate_rest_keys( $field, $config );
-			add_filter( 'rest_pre_get_setting', function( $pre, $option ) use ( $field, $config ) {
+		if ( false !== $registered->get_show_in_rest() ) {
+			$config = $this->translate_rest_keys( $registered, $config );
+			add_filter( 'rest_pre_get_setting', function( $pre, $option ) use ( $registered, $config ) {
 				if ( isset( $config['show_in_rest'] ) && $option === $config['show_in_rest']['name'] ) {
-					cmb2_options( $this->id )->get( $field->get_id(), $field->default );
+					return cmb2_options( $this->id )->get( $registered->get_id(), $registered->get_default( $registered->get_box()->get_id() ) ?? false );
 				}
 				return $pre;
 			}, 9, 2 );
@@ -290,6 +373,6 @@ class Options_Page extends Box {
 			return;
 		}
 
-		register_setting( 'options', $field->get_id(), $config );
+		register_setting( 'options', $registered->get_id(), $config );
 	}
 }

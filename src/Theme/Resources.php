@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Theme;
 
@@ -19,13 +20,6 @@ class Resources {
 	public const INTEGRITY = 'lipe/lib/theme/styles/integrity';
 
 	/**
-	 * Script handles to be loaded with the `async` attribute.
-	 *
-	 * @var string[]
-	 */
-	protected static array $async = [];
-
-	/**
 	 * Classes to be added to the main <body> tag.
 	 *
 	 * @var string[]
@@ -38,13 +32,6 @@ class Resources {
 	 * @var array<null|string>
 	 */
 	protected static array $crossorigin = [];
-
-	/**
-	 * Script handles to be loaded with the `defer` attribute.
-	 *
-	 * @var string[]
-	 */
-	protected static array $deffer = [];
 
 	/**
 	 * Script handles to be loaded with the `integrity` attribute.
@@ -69,7 +56,7 @@ class Resources {
 	 * @see Resources::get_content_hash()
 	 * @see Resources::get_file_modified_time()
 	 *
-	 * @return null|string
+	 * @return ?string
 	 */
 	public function get_revision(): ?string {
 		return $this->once( function() {
@@ -78,10 +65,11 @@ class Resources {
 				// Not available in root, so we try the wp-content directory.
 				$file = trailingslashit( WP_CONTENT_DIR ) . '.revision';
 			}
+			$version = false;
 			if ( \is_readable( $file ) ) {
-				$version = \file_get_contents( $file ); //phpcs:ignore
+				$version = \file_get_contents( $file );
 			}
-			if ( empty( $version ) ) {
+			if ( false === $version ) {
 				return null;
 			}
 			return \trim( $version );
@@ -219,12 +207,7 @@ class Resources {
 			if ( $admin_also ) {
 				add_action( 'admin_enqueue_scripts', $enqueue );
 			}
-			if ( version_compare( $GLOBALS['wp_version'], '6.3.0', '>=' ) ) {
-				wp_script_add_data( 'livereload', 'strategy', 'async' );
-			} else {
-				// @phpstan-ignore-next-line
-				$this->async_javascript( 'livereload' );
-			}
+			wp_script_add_data( 'livereload', 'strategy', 'async' );
 		}
 	}
 
@@ -243,82 +226,6 @@ class Resources {
 			add_filter( 'body_class', function( $classes ) {
 				return \array_unique( \array_merge( static::$body_class, $classes ) );
 			}, 11 );
-		}, __METHOD__ );
-	}
-
-
-	/**
-	 * Defer an enqueued script by its handle.
-	 *
-	 * @link       https://make.wordpress.org/core/2023/07/14/registering-scripts-with-async-and-defer-attributes-in-wordpress-6-3/
-	 *
-	 * @todo       Once WordPress 6.3 is available, look at using the `wp_script_add_data` `strategy` approach.
-	 *       `wp_script_add_data( $handle, 'strategy', 'defer' );`
-	 *
-	 * @deprecated Will be removed in version 5. Use `wp_script_add_data($handle, 'strategy', 'defer');` instead.
-	 *
-	 * May be called before or after `wp_enqueue_script` but must be called
-	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
-	 * on if enqueued for the footer or header.
-	 *
-	 * 1. Downloads the file during HTML execution and executes it only after HTML parsing is completed.
-	 * 2. Will not block the browser during download.
-	 * 3. Good replacement for any script, which uses a `jQuery(document).ready` or window.onload.
-	 * 4. Defer scripts are also guaranteed to execute in the order they appear
-	 * in the document but after any non `defer` script.
-	 * 5. The DOM is guaranteed to be available for the script.
-	 *
-	 * @param string $handle - The handle used to enqueued this script.
-	 *
-	 * @return void
-	 */
-	public function defer_javascript( string $handle ): void {
-		_deprecated_function( __METHOD__, '4.10.0', 'wp_script_add_data($handle, \'strategy\', \'defer\');' );
-		static::$deffer[] = $handle;
-		$this->once( function() {
-			add_filter( 'script_loader_tag', function( $tag, $handle ) {
-				if ( \in_array( $handle, static::$deffer, true ) ) {
-					return \str_replace( '<script', '<script defer', $tag );
-				}
-				return $tag;
-			}, 11, 2 );
-		}, __METHOD__ );
-	}
-
-
-	/**
-	 * Async an enqueued script by its handle.
-	 *
-	 * @link       https://make.wordpress.org/core/2023/07/14/registering-scripts-with-async-and-defer-attributes-in-wordpress-6-3/
-	 *
-	 * @todo       Once WordPress 6.3 is available, look at using the `wp_script_add_data` `strategy` approach.
-	 *       `wp_script_add_data( $handle, 'strategy', 'defer' );`
-	 *
-	 * @deprecated Will be removed in version 5. Use `wp_script_add_data($handle, 'strategy', 'async');` instead.
-	 *
-	 * May be called before or after `wp_enqueue_script` but must be called
-	 * before either `wp_print_scripts()` or `wp_print_footer_scripts() depending
-	 * on if enqueued for the footer or header.
-	 *
-	 * 1. Downloads the file during HTML execution and executes it when finished downloading.
-	 * 2. Will not block the browser during download.
-	 * 3. Executes at an unpredictable time so must be self-contained.
-	 * 4. Good for scripts such as Google Analytics.
-	 *
-	 * @param string $handle - The handle used to enqueued this script.
-	 *
-	 * @return void
-	 */
-	public function async_javascript( string $handle ): void {
-		_deprecated_function( __METHOD__, '4.10.0', 'wp_script_add_data($handle, \'strategy\', \'async\');' );
-		static::$async[] = $handle;
-		$this->once( function() {
-			add_filter( 'script_loader_tag', function( $tag, $handle ) {
-				if ( \in_array( $handle, static::$async, true ) ) {
-					return str_replace( '<script', '<script async', $tag );
-				}
-				return $tag;
-			}, 11, 2 );
 		}, __METHOD__ );
 	}
 
@@ -459,10 +366,10 @@ class Resources {
 
 			$url = ( \defined( 'SCRIPT_DEBUG' ) && \SCRIPT_DEBUG ) ? $cdn[ $handle ]['dev'] : $cdn[ $handle ]['min'];
 
-			//phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+			//phpcs:ignore WordPress.WP.EnqueuedResourceParameters -- Version handled by CDN URL.
 			wp_register_script( $handle, $url, $deps, null, $cdn[ $handle ]['footer'] );
 
-			if ( ! empty( $cdn[ $handle ]['inline'] ) ) {
+			if ( isset( $cdn[ $handle ]['inline'] ) ) {
 				wp_add_inline_script( $handle, $cdn[ $handle ]['inline'] );
 			}
 
@@ -502,8 +409,8 @@ class Resources {
 
 		// Add `integrity="<hash>"` to `<script>` tag.
 		$integrity = null;
-		if ( \array_key_exists( $url, $cached ) ) {
-			if ( ! empty( $cached[ $url ] ) ) {
+		if ( isset( $cached[ $url ] ) ) {
+			if ( \is_string( $cached[ $url ] ) && '' !== $cached[ $url ] ) {
 				$integrity = $cached[ $url ];
 			}
 		} else {
@@ -513,7 +420,7 @@ class Resources {
 			}
 			try {
 				$meta = json_decode( $response['body'], true, 512, JSON_THROW_ON_ERROR );
-			} catch ( \JsonException $e ) {
+			} catch ( \JsonException ) {
 				return false;
 			}
 			$integrity = $meta['integrity'] ?? null;
@@ -521,7 +428,7 @@ class Resources {
 			update_network_option( 0, static::INTEGRITY, $cached );
 		}
 
-		if ( ! empty( $integrity ) ) {
+		if ( null !== $integrity ) {
 			$this->integrity_javascript( $handle, $integrity );
 			return true;
 		}

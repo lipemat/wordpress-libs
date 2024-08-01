@@ -2,7 +2,7 @@
 
 namespace Lipe\Lib\Query\Clause;
 
-use Lipe\Lib\Query\Args;
+use Lipe\Lib\Query\Query_Args;
 
 /**
  * @author Mat Lipe
@@ -11,8 +11,8 @@ use Lipe\Lib\Query\Args;
  */
 class Meta_QueryTest extends \WP_UnitTestCase {
 
-	public function test_in() : void {
-		$args = new Args();
+	public function test_in(): void {
+		$args = new Query_Args( [] );
 		$args->meta_query()
 		     ->relation( 'OR' )
 		     ->in( [ 'some-key', 'another-key' ], [ '0', 'two', false, 0 ] )
@@ -34,8 +34,8 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_not_equals() : void {
-		$args = new Args();
+	public function test_not_equals(): void {
+		$args = new Query_Args( [] );
 		$args->meta_query()
 		     ->not_equals( 'some-key', 'one' )
 		     ->advanced( 'CHAR' );
@@ -53,8 +53,8 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_exists() : void {
-		$args = new Args();
+	public function test_exists(): void {
+		$args = new Query_Args( [] );
 		$args->meta_query()
 		     ->exists( 'some-key' );
 
@@ -69,8 +69,8 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_nested_clause() : void {
-		$args = new Args();
+	public function test_nested_clause(): void {
+		$args = new Query_Args( [] );
 		$args->meta_query()
 		     ->in( 'some-key', [ 'one', 'two' ] )
 		     ->nested_clause()
@@ -105,8 +105,8 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 	}
 
 
-	public function tested_nested_multiple() : void {
-		$args = new Args();
+	public function tested_nested_multiple(): void {
+		$args = new Query_Args( [] );
 		$args->meta_query()
 		     ->exists( 'some-key' )
 		     ->nested_clause( 'OR' )
@@ -163,8 +163,8 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_existing_merge() : void {
-		$args = new Args( [
+	public function test_existing_merge(): void {
+		$args = new Query_Args( [
 			'meta_query' => [
 				[
 					'key'   => 'existing',
@@ -199,7 +199,7 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 				],
 			],
 		] );
-		$args = new Args();
+		$args = new Query_Args( [] );
 		$args->meta_query()->in( 'new', [ '1' ] )
 		     ->relation( 'OR' );
 		$args->merge_query( $query );

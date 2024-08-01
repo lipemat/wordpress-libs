@@ -1,25 +1,31 @@
 <?php
-
+// phpcs:disable WordPress.WP.I18n -- Using global translations.
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy;
 
+use Lipe\Lib\Taxonomy\Taxonomy\Menu;
+use Lipe\Lib\Taxonomy\Taxonomy\Register_Taxonomy;
+use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Util\Actions;
+use Lipe\Lib\Util\Strings;
 
 /**
- * Register taxonomies
+ * Register taxonomy with WordPress.
  *
- * @notice Must be constructed before the init hook runs
+ * Follows many of the standard `register_taxonomy` arguments with some
+ * customizations and additional features.
  *
- * @example
- * $tax = new Taxonomy( %slug% );
- * $tax->hierarchical = FALSE;
- * $tax->meta_box_cb = false;
- * $tax->set_label( %singular%, %plural%  );
- * $tax->post_types = array( self::NAME );
- * $tax->slug = %slug;
+ * @link   https://developer.wordpress.org/reference/functions/register_taxonomy/
+ *
+ * @notice Must be constructed before the `init` hook runs
+ *
+ * @phpstan-import-type REWRITE from Register_Taxonomy
+ * @phpstan-import-type DEFAULT from Register_Taxonomy
  */
 class Taxonomy {
+	use Memoize;
+
 	protected const REGISTRY_OPTION = 'lipe/lib/schema/taxonomy_registry';
 
 	/**
@@ -30,267 +36,18 @@ class Taxonomy {
 	protected static array $registry = [];
 
 	/**
-	 * Array of arguments to automatically use inside `wp_get_object_terms()` for this taxonomy.
+	 * Array of post types to attach this taxonomy to.
 	 *
-	 * @var array<string,mixed>
+	 * @var string[]
 	 */
-	public array $args;
-
-	/**
-	 * The arguments for the taxonomy
-	 * Set these in the constructed class
-	 *
-	 * @var mixed
-	 */
-	public $post_types = [];
-
-	/**
-	 * Whether a taxonomy is intended for use publicly either via the
-	 * admin interface or by front-end users.
-	 * The default settings of `$publicly_queryable`, `$show_ui`,
-	 * and `$show_in_nav_menus` are inherited from `$public`.
-	 *
-	 * @default true
-	 *
-	 * @var bool
-	 */
-	public bool $public = true;
-
-	/**
-	 * Whether the taxonomy is publicly queryable.
-	 *
-	 * @default $this->public
-	 *
-	 * @var bool
-	 */
-	public bool $publicly_queryable;
-
-	/**
-	 * Whether to generate a default UI for managing this taxonomy.
-	 *
-	 * @notice `$this->show_in_rest` must be true to show in Gutenberg.
-	 *
-	 * @default $this->public
-	 *
-	 * @var bool
-	 */
-	public bool $show_ui;
-
-	/**
-	 * Slug to use for this taxonomy rewrite.
-	 *
-	 * @var string
-	 */
-	public string $slug;
-
-	/**
-	 * Whether to allow automatic creation of taxonomy columns
-	 * on associated post-types lists
-	 *
-	 * @default false
-	 *
-	 * @var bool
-	 */
-	public bool $show_admin_column;
-
-	/**
-	 * Show this taxonomy in the admin menu.
-	 * If set to true, it will show up under all object_types the
-	 * taxonomy is assigned to.
-	 *
-	 * If a menu slug is provided, the taxonomy will show under the
-	 * menu provided.
-	 *
-	 * If an array is provided, the taxonomy will show under the menu
-	 * provided by the array key, and the order provided by the array value.
-	 *
-	 * @example 'tools.php'
-	 * @example [ 'tools.php' => 6 ]
-	 *
-	 * @notice $this->show_ui must be set to true.
-	 * @notice  this is extended to specify a menu slug
-	 *
-	 * @default $this->show_ui
-	 *
-	 * @var bool|string|array
-	 */
-	public $show_in_menu;
-
-	/**
-	 * True makes this taxonomy available for selection in navigation menus.
-	 *
-	 * @default $this->public
-	 *
-	 * @var bool
-	 */
-	public bool $show_in_nav_menus;
-
-	/**
-	 * Whether to include the taxonomy in the REST API
-	 *
-	 * @notice  Must be set to true to show in the Gutenberg editor.
-	 *
-	 * @default false
-	 *
-	 * @var bool
-	 */
-	public bool $show_in_rest = false;
-
-	/**
-	 * To change the base url of REST API route
-	 *
-	 * @default $this->taxonomy
-	 *
-	 * @var string
-	 */
-	public string $rest_base;
-
-	/**
-	 * To change the namespace URL of REST API route.
-	 *
-	 * Default is wp/v2.
-	 *
-	 * @var string
-	 */
-	public string $rest_namespace;
-
-	/**
-	 * REST API Controller class name.
-	 *
-	 * @default 'WP_REST_Terms_Controller'
-	 *
-	 * @var string
-	 */
-	public string $rest_controller_class;
-
-	/**
-	 * Whether to allow the Tag Cloud widget to use this taxonomy.
-	 *
-	 * @default $this->show_ui
-	 *
-	 * @var bool
-	 */
-	public bool $show_tagcloud;
-
-	/**
-	 * Whether to show the taxonomy in the quick/bulk edit panel
-	 *
-	 * @default $this->show_ui
-	 *
-	 * @var bool
-	 */
-	public bool $show_in_quick_edit;
-
-	/**
-	 * Provide a callback function for the meta box display.
-	 *
-	 * - If not set, `post_categories_meta_box()` is used for
-	 *  hierarchical taxonomies, and `post_tags_meta_box()` is used for non-hierarchical.
-	 * - If false, no meta box is shown.
-	 *
-	 * @phpstan-var false|callable(\WP_Post,array): void
-	 *
-	 * @var false|callable
-	 */
-	public $meta_box_cb;
-
-	/**
-	 * Callback function for sanitizing taxonomy data saved from a meta box.
-	 *
-	 * If no callback is defined, an appropriate one is determined based on the value of `$meta_box_cb`.
-	 *
-	 * @phpstan-var callable(string,mixed): (int|string)[]
-	 *
-	 * @var callable
-	 */
-	public $meta_box_sanitize_cb;
-
-	/***
-	 * Include a description of the taxonomy.
-	 *
-	 * @default ''
-	 *
-	 * @var string
-	 */
-	public string $description = '';
-
-	/**
-	 * Is this taxonomy hierarchical (have descendants) like categories
-	 * or not hierarchical like tags.
-	 *
-	 * @default false
-	 *
-	 * @var bool
-	 */
-	public bool $hierarchical = false;
-
-	/**
-	 * Works much like a hook, in that it will be called when the count is updated.
-	 *
-	 * Defaults:
-	 * - `_update_post_term_count()` for taxonomies attached to post types, which confirms
-	 *  that the objects are published before counting them.
-	 * - `_update_generic_term_count()` for taxonomies attached to other object types, such as users.
-	 *
-	 * @phpstan-var callable(int[],\WP_Taxonomy): void
-	 *
-	 * @var callable
-	 */
-	public $update_count_callback;
-
-	/**
-	 * False to disable the query_var, set as string to use
-	 * custom query_var instead of default
-	 * True is not seen as a valid entry and will result in 404 issues.
-	 *
-	 * @default $this->taxonomy
-	 *
-	 * @var false|string|null
-	 */
-	public $query_var;
-
-	/**
-	 * Triggers the handling of rewrites for this taxonomy.
-	 *
-	 * Default true, using `$taxonomy` as slug.
-	 *
-	 * - To prevent a rewrite, set to false.
-	 * - To specify rewrite rules, an array can be passed with any of these keys:
-	 *
-	 * @phpstan-var bool|array{
-	 *     slug?: string,
-	 *     with_front?: bool,
-	 *     hierarchical?: bool,
-	 *     ep_mask?: int,
-	 * }
-	 *
-	 * @var bool|array<string,mixed>
-	 */
-	public $rewrite;
+	public readonly array $post_types;
 
 	/**
 	 * Array of capabilities for this taxonomy.
 	 *
-	 * @phpstan-var array{
-	 *     manage_terms: string,
-	 *     edit_terms: string,
-	 *     delete_terms: string,
-	 *     assign_terms: string,
-	 * }
-	 *
-	 * @var array<string,string>
+	 * @var Capabilities
 	 */
-	public array $capabilities;
-
-	/**
-	 * Whether terms in this taxonomy should be sorted in the
-	 * order they are provided to `wp_set_object_terms()`
-	 *
-	 * Default false.
-	 *
-	 * @var bool
-	 */
-	public bool $sort = false;
+	public readonly Capabilities $capabilities;
 
 	/**
 	 * Override any generated labels.
@@ -299,60 +56,40 @@ class Taxonomy {
 	 * Updating this property will fine tune existing or set special not included ones.
 	 *
 	 * @see      get_taxonomy_labels
-	 * @see      Taxonomy::taxonomy_labels()
+	 * @see      Taxonomy::get_taxonomy_labels()
 	 *
-	 * @example  `['name_field_description' => [ $description, $description ]]`
-	 *
-	 * @var array<string,string>
+	 * @var Labels
 	 */
-	public array $labels = [];
+	public readonly Labels $labels;
 
 	/**
 	 * The taxonomy slug.
 	 *
 	 * @var string
 	 */
-	protected string $taxonomy = '';
+	public readonly string $name;
 
 	/**
-	 * The default term added to new posts.
+	 * The arguments to pass to `register_taxonomy()`.
 	 *
-	 * @phpstan-var string|array{
-	 *     name: string,
-	 *     slug?: string,
-	 *     description?: string,
-	 * }
+	 * @see Taxonomy::get_taxonomy_args()
 	 *
-	 * @var string|array<string,string>
+	 * @var Register_Taxonomy
 	 */
-	protected $default_term;
+	public readonly Register_Taxonomy $register_args;
 
 	/**
-	 * The singular label for the taxonomy.
+	 * Array of arguments to automatically use inside `wp_get_object_terms()` for this taxonomy.
 	 *
-	 * @var string
+	 * @var Get_Terms
 	 */
-	protected string $label_singular = '';
-
-	/**
-	 * The plural label for the taxonomy.
-	 *
-	 * @var string
-	 */
-	protected string $label_plural = '';
-
-	/**
-	 * Label used for the admin menu.
-	 *
-	 * @var string
-	 */
-	protected string $label_menu = '';
+	protected Get_Terms $args;
 
 	/**
 	 * Terms to be automatically added to a taxonomy when
 	 * it's registered.
 	 *
-	 * @var array
+	 * @var array<string|int, string>
 	 */
 	protected array $initial_terms = [];
 
@@ -367,40 +104,18 @@ class Taxonomy {
 	/**
 	 * Add hooks to register taxonomy.
 	 *
-	 * @todo                     Remove default parameters in version 5.
-	 *
-	 * @param string       $taxonomy          - Taxonomy Slug (will convert a title to a slug as well).
-	 * @param string|array $post_types        - May also be set by $this->post_types = array.
-	 * @param string|bool  $show_admin_column - Whether to generate a post list column or not.
-	 *                                        If a `string is passed` it wil be used for the
-	 *                                        column label.
-	 * @param bool         $post_list_filter  - Auto generate a post list filter for this taxonomy.
-	 *
-	 * @phpstan-ignore-next-line -- Using default parameters for backwards compatibility.
+	 * @param string   $taxonomy   - Taxonomy Slug.
+	 * @param string[] $post_types - Post types to attach this taxonomy to.
 	 */
-	public function __construct( string $taxonomy, $post_types = [ - 1 ], $show_admin_column = '0', bool $post_list_filter = false ) {
-		if ( [ - 1 ] === $post_types ) {
-			_doing_it_wrong( __METHOD__, '4.5.0', 'The `$post_types` argument is required. To not use post types, pass an empty array.' );
-			$post_types = [];
-		}
-		if ( true === $post_list_filter ) {
-			_deprecated_argument( __METHOD__, '4.5.0', 'The `$post_list_filter` argument is deprecated. Use the `Taxonomy::post_list_filter()` method instead.' );
-		}
-		if ( '0' !== $show_admin_column ) {
-			_deprecated_argument( __METHOD__, '4.5.0', 'The `$show_admin_column` argument is deprecated. Use the `Taxonomy::show_admin_column()` method instead.' );
-		} else {
-			$show_admin_column = false;
-		}
+	public function __construct( string $taxonomy, array $post_types ) {
+		$this->post_types = $post_types;
+		$this->name = $taxonomy;
+		$this->labels = new Labels( $this );
+		$this->capabilities = new Capabilities( $this );
+		$this->register_args = new Register_Taxonomy( [] );
 
-		$this->post_types = (array) $post_types;
-		$this->show_admin_column = (bool) $show_admin_column;
-		$this->post_list_filter( $post_list_filter );
-		$this->taxonomy = \strtolower( \str_replace( ' ', '_', $taxonomy ) );
+		$this->labels();
 		$this->hook();
-
-		if ( \is_string( $show_admin_column ) ) {
-			$this->show_admin_column( $show_admin_column );
-		}
 	}
 
 
@@ -409,16 +124,19 @@ class Taxonomy {
 	 *
 	 * @return void
 	 */
-	public function hook(): void {
+	protected function hook(): void {
 		// So we can add and edit stuff on init hook.
-		add_action( 'wp_loaded', [ $this, 'register' ], 8, 0 );
-		add_action( 'admin_menu', [ $this, 'add_as_submenu' ] );
-
-		add_action( 'restrict_manage_posts', [ $this, 'post_list_filters' ] );
+		add_action( 'wp_loaded', function() {
+			$this->register();
+		}, 8, 0 );
+		add_action( 'restrict_manage_posts', function() {
+			$this->post_list_filters();
+		} );
 		if ( is_admin() ) {
-			add_action( 'parse_tax_query', [ $this, 'post_list_query_filters' ] );
 			// If some taxonomies are not registered on the front end.
-			Actions::in()->add_single_action( 'wp_loaded', [ __CLASS__, 'check_rewrite_rules' ], 1000 );
+			add_action( 'wp_loaded', function() {
+				$this->static_once( fn() => $this->check_rewrite_rules(), 'check_rewrite_rules' );
+			}, 1_000 );
 		}
 	}
 
@@ -432,7 +150,7 @@ class Taxonomy {
 	 * @return Capabilities
 	 */
 	public function capabilities(): Capabilities {
-		return new Capabilities( $this );
+		return $this->capabilities;
 	}
 
 
@@ -445,114 +163,84 @@ class Taxonomy {
 	 *  - 'simple' for a meta box with a simplified list of checkboxes
 	 *  - 'dropdown' for a meta box with a dropdown menu
 	 *
-	 * @phpstan-param 'radio'|'dropdown'|'simple' $type
+	 * @phpstan-param Meta_Box::TYPE_* $type
 	 *
-	 * @param string                              $type          - The type of UI to render.
-	 * @param bool                                $checked_ontop - Move checked items to top.
+	 * @param string                   $type          - The type of UI to render.
+	 * @param bool                     $checked_ontop - Move checked items to top.
 	 *
 	 * @return void
 	 */
 	public function meta_box( string $type, bool $checked_ontop = false ): void {
-		$box = new Meta_Box( $this->taxonomy, $type, $checked_ontop );
-		$this->meta_box_sanitize_cb = [ $box, 'translate_string_term_ids_to_int' ];
+		$box = new Meta_Box( $this->name, $type, $checked_ontop );
+		$this->register_args->meta_box_sanitize_cb = [ $box, 'translate_string_term_ids_to_int' ];
 	}
 
 
 	/**
-	 * Filters to query to match the taxonomy drop-downs on the post list page
+	 * Provide a callback function for the meta box display.
 	 *
-	 * Added to `parse_tax_query` action by `$this->hook()`.
+	 * @see      Taxonomy::meta_box()
 	 *
-	 * @param \WP_Query $query - The WP_Query object.
+	 * @since    5.0.0
+	 *
+	 * @formatter:off
+	 * @phpstan-param false|callable(\WP_Post,array{args: array{taxonomy: string}, id: string, title: string}): void $callback
+	 * @phpstan-param callable(string,mixed): (int|string)[]                                                         $sanitize
+	 *
+	 * @param callable|false $callback - Callback function for the meta box display.
+	 * @param callable       $sanitize - Callback function for sanitizing taxonomy data saved from a meta box.
+	 * @formatter:on
 	 *
 	 * @return void
 	 */
-	public function post_list_query_filters( \WP_Query $query ): void {
-		global $pagenow;
-
-		if ( 'edit.php' !== $pagenow || empty( $query->query_vars['post_type'] ) || ! \in_array( $query->query_vars['post_type'], $this->post_types, true ) ) {
-			return;
-		}
-
-		$tax_query = [];
-		if ( isset( $query->query_vars[ $this->taxonomy ] ) && ! empty( $query->query_vars[ $this->taxonomy ] ) ) {
-			if ( is_numeric( $query->query_vars[ $this->taxonomy ] ) ) {
-				$field = 'id';
-			} else {
-				$field = 'slug';
-			}
-			$tax_query[] = [
-				'taxonomy' => $this->taxonomy,
-				'terms'    => $query->query_vars[ $this->taxonomy ],
-				'field'    => $field,
-			];
-		}
-
-		if ( ! empty( $tax_query ) ) {
-			$query->tax_query = new \WP_Tax_Query( $tax_query );
-		}
+	public function custom_meta_box( callable|false $callback, callable $sanitize ): void {
+		$this->register_args->meta_box_cb = $callback;
+		$this->register_args->meta_box_sanitize_cb = $sanitize;
 	}
 
 
 	/**
 	 * Creates the drop-downs to filter the post list by this taxonomy
 	 *
-	 * @uses added to restrict_manage_posts hook by $this->hook()
+	 * @action restrict_manage_posts 10 0
 	 *
 	 * @return void
 	 */
-	public function post_list_filters(): void {
+	protected function post_list_filters(): void {
 		global $typenow, $wp_query;
-		$been_filtered = false;
-
 		if ( ! $this->post_list_filter || ! \in_array( $typenow, $this->post_types, true ) ) {
 			return;
 		}
+		if ( ! $wp_query instanceof \WP_Query ) {
+			return;
+		}
 
-		$args = [
-			'orderby'      => 'name',
-			'hierarchical' => true,
-			'show_count'   => true,
-			'hide_empty'   => true,
-		];
-
+		$args = new Wp_Dropdown_Categories( [] );
+		$args->orderby = 'name';
+		$args->value_field = 'slug';
+		$args->hierarchical = true;
+		$args->show_count = true;
+		$args->hide_empty = true;
 		/* translators: Plural label of taxonomy. */
-		$args['show_option_all'] = sprintf( __( 'All %s' ), $this->get_label( 'plural' ) ); //phpcs:ignore WordPress.WP.I18n.MissingArgDomain
-		$args['taxonomy'] = $this->taxonomy;
-		$args['name'] = $this->taxonomy;
+		$args->show_option_all = \sprintf( __( 'All %s' ), $this->labels->get_label( 'name' ) ?? $this->labels->get_label( 'singular_name' ) ?? '' );
+		$args->taxonomy = $this->name;
+		$args->name = $this->name;
 
-		if ( ! empty( $wp_query->query[ $this->taxonomy ] ) ) {
-			if ( \is_numeric( $wp_query->query[ $this->taxonomy ] ) ) {
-				$args['selected'] = (string) $wp_query->query[ $this->taxonomy ];
-			} else {
-				$term = get_term_by( 'slug', $wp_query->query[ $this->taxonomy ], $this->taxonomy );
-				if ( $term instanceof \WP_Term ) {
-					$args['selected'] = $term->term_id;
-				}
-			}
-			$been_filtered = true;
+		if ( isset( $wp_query->query[ $this->name ] ) && '' !== $wp_query->query[ $this->name ] ) {
+			$args->selected = (string) $wp_query->query[ $this->name ];
+			add_action( 'manage_posts_extra_tablenav', function() {
+				$this->static_once( fn() => $this->clear_filters_button(), 'clear_filters_button' );
+			}, 1_000 );
 		}
-		wp_dropdown_categories( $args );
 
-		if ( $been_filtered && ! empty( $_GET['post_type'] ) ) { //phpcs:ignore
-			$post_type = \sanitize_key( $_GET['post_type'] ); //phpcs:ignore
-			?>
-			<a
-				style="margin: 0 4px 0 1px;"
-				href="<?= esc_url( admin_url( 'edit.php?post_type=' . esc_attr( $post_type ) ) ) ?>"
-				class="button"
-			>
-				<?php esc_html_e( 'Clear Filters', 'lipe' ); ?>
-			</a>
-			<?php
-		}
+		wp_dropdown_categories( $args->get_args() );
 	}
 
 
 	/**
 	 * Specify terms to be added automatically when a taxonomy is created.
 	 *
-	 * @param array $terms = array( <slug> => <name> ) || array( <name> ).
+	 * @param array<int|string, string> $terms = array( <slug> => <name> ) || array( <name> ).
 	 *
 	 * @return void
 	 */
@@ -572,65 +260,10 @@ class Taxonomy {
 	 * @param string $column - Column slug.
 	 */
 	public function remove_column( string $column ): void {
-		add_filter( "manage_edit-{$this->taxonomy}_columns", function( $columns ) use ( $column ) {
+		add_filter( "manage_edit-{$this->name}_columns", function( $columns ) use ( $column ) {
 			unset( $columns[ $column ] );
 			return $columns;
 		} );
-	}
-
-
-	/**
-	 * Return the slug of this taxonomy, formatted appropriately.
-	 *
-	 * @return string
-	 */
-	public function get_slug(): string {
-		if ( empty( $this->slug ) ) {
-			$this->slug = \strtolower( \str_replace( ' ', '-', $this->taxonomy ) );
-		}
-
-		return $this->slug;
-	}
-
-
-	/**
-	 * If $this->show_in_menu was set to a slug instead
-	 * of a boolean, we add the taxonomy as a submenu of
-	 * the provided slug.
-	 *
-	 * The taxonomy will be added at the end of the menu unless
-	 * an order is provided by setting $this->show_in_menu to an array.
-	 *
-	 * @see   Taxonomy::$show_in_menu
-	 *
-	 * @internal
-	 *
-	 * @return void
-	 */
-	public function add_as_submenu(): void {
-		global $submenu;
-		$edit_tags_file = 'edit-tags.php?taxonomy=%s';
-
-		if ( ! \is_bool( $this->show_in_menu ) && ! empty( $this->show_in_menu ) ) {
-			$tax = get_taxonomy( $this->taxonomy );
-			$parent = $this->show_in_menu;
-			$order = 100;
-			if ( false !== $tax ) {
-				if ( \is_array( $parent ) && \is_array( $this->show_in_menu ) ) {
-					$parent = \key( $this->show_in_menu );
-					$order = \reset( $this->show_in_menu );
-				}
-				//phpcs:ignore
-				$submenu[ $parent ][ $order ] = [
-					esc_attr( $tax->labels->menu_name ),
-					$tax->cap->manage_terms,
-					\sprintf( $edit_tags_file, $tax->name ),
-				];
-				\ksort( $submenu[ $parent ] );
-			}
-		}
-		// Set the current parent menu for the custom location.
-		add_filter( 'parent_file', [ $this, 'set_current_menu' ] );
 	}
 
 
@@ -644,14 +277,14 @@ class Taxonomy {
 	 * @param string $label - Optional label to use for the column.
 	 */
 	public function show_admin_column( string $label = '' ): void {
-		$this->show_admin_column = true;
+		$this->register_args->show_admin_column = true;
 		if ( '' === $label ) {
 			return;
 		}
 		Actions::in()->add_filter_all( array_map( function( $post_type ) {
 			return "manage_{$post_type}_posts_columns";
 		}, $this->post_types ), function( array $columns ) use ( $label ) {
-			$columns[ 'taxonomy-' . $this->taxonomy ] = $label;
+			$columns[ 'taxonomy-' . $this->name ] = $label;
 			return $columns;
 		} );
 	}
@@ -683,8 +316,8 @@ class Taxonomy {
 	 *
 	 * @return void
 	 */
-	public function set_default_term( string $slug, string $name, string $description = '' ): void {
-		$this->default_term = [
+	public function default_term( string $slug, string $name, string $description = '' ): void {
+		$this->register_args->default_term = [
 			'description' => $description,
 			'name'        => $name,
 			'slug'        => $slug,
@@ -693,40 +326,244 @@ class Taxonomy {
 
 
 	/**
-	 * Set the current admin menu, so the correct one is highlighted.
-	 * Only used when $this->show_menu is set to a slug of a menu.
+	 * Show the taxonomy in the admin menu under a specific menu and priority.
 	 *
-	 * @filter parent_file 10 1
+	 * - By default will simply enable the taxonomy to show in the menu.
+	 * - Use the `parent_menu` method to add a top-level menu item.
+	 * - Use the `sub_menu` method to add a sub-menu item.
 	 *
-	 * @see    Taxonomy::add_as_submenu();
+	 * @since 5.0.0
 	 *
-	 * @interanl
-	 *
-	 * @param string $parent_file - Parent file slug to set as current.
-	 *
-	 * @return string
+	 * @return Menu
 	 */
-	public function set_current_menu( string $parent_file ): string {
-		$screen = \get_current_screen();
-		if ( null === $screen || null === $this->show_in_menu ) {
-			return $parent_file;
-		}
-		if ( "edit-{$this->taxonomy}" === $screen->id && $this->taxonomy === $screen->taxonomy ) {
-			return \is_array( $this->show_in_menu ) ? (string) \key( $this->show_in_menu ) : (string) $this->show_in_menu;
-		}
+	public function show_in_menu(): Menu {
+		$this->register_args->show_in_menu = true;
+		return new Menu( $this );
+	}
 
-		return $parent_file;
+
+	/**
+	 * Show or hide this post type in the REST API.
+	 *
+	 * @since    5.0.0
+	 *
+	 * @see      Custom_Post_Type::rest_controllers()
+	 *
+	 * @formatter:off
+	 * @phpstan-param class-string<\WP_REST_Controller> $controller
+	 *
+	 * @param bool    $show       - Whether to show in REST.
+	 * @param ?string $base       - The base to use. Defaults to the taxonomy.
+	 * @param string  $space      - The namespace to use.
+	 * @param string  $controller - The controller class to use.
+	 * @formatter:on
+	 *
+	 * @return void
+	 */
+	public function show_in_rest( bool $show = true, ?string $base = null, string $space = 'wp/v2', string $controller = \WP_REST_Terms_Controller::class ): void {
+		$this->register_args->show_in_rest = $show;
+
+		if ( $show ) {
+			$this->register_args->rest_base = $base ?? $this->name;
+			$this->register_args->rest_namespace = $space;
+			$this->register_args->rest_controller_class = $controller;
+		} else {
+			unset( $this->register_args->rest_base, $this->register_args->rest_namespace, $this->register_args->rest_controller_class );
+		}
+	}
+
+
+	/**
+	 * Query arguments to automatically use inside `wp_get_object_terms()`
+	 * for this taxonomy.
+	 *
+	 * @param Get_Terms $query_args - The arguments to use.
+	 */
+	public function args( Get_Terms $query_args ): void {
+		$this->args = $query_args;
+	}
+
+
+	/**
+	 * Include a description of the taxonomy.
+	 *
+	 * @param string $description - The description to use.
+	 */
+	public function description( string $description ): void {
+		$this->register_args->description = $description;
+	}
+
+
+	/**
+	 * Is this taxonomy hierarchical (have descendants) like categories
+	 * or not hierarchical like tags.
+	 *
+	 * @default false
+	 *
+	 * @param bool $is_hierarchical - Whether to make the taxonomy hierarchical.
+	 */
+	public function hierarchical( bool $is_hierarchical ): void {
+		$this->register_args->hierarchical = $is_hierarchical;
+	}
+
+
+	/**
+	 * Whether a taxonomy is intended for use publicly either via the
+	 * admin interface or by front-end users.
+	 * The default settings of `$publicly_queryable`, `$show_ui`,
+	 * and `$show_in_nav_menus` are inherited from `$public`.
+	 *
+	 * @default true
+	 *
+	 * @param bool $is_public - Whether to make the taxonomy public.
+	 */
+	public function public( bool $is_public ): void {
+		$this->register_args->public = $is_public;
+	}
+
+
+	/**
+	 * Whether the taxonomy is publicly queryable.
+	 *
+	 * @default `$public`
+	 *
+	 * @param bool $is_queryable - Whether to allow public queries.
+	 */
+	public function publicly_queryable( bool $is_queryable ): void {
+		$this->register_args->publicly_queryable = $is_queryable;
+	}
+
+
+	/**
+	 * False to disable the query_var, set as string to use
+	 * custom query_var instead of default.
+	 *
+	 * True is not seen as a valid entry and will result in 404 issues.
+	 *
+	 * @default `$taxonomy`
+	 *
+	 * @param false|string $query_var - Custom query var to use.
+	 */
+	public function query_var( bool|string $query_var ): void {
+		$this->register_args->query_var = $query_var;
+	}
+
+
+	/**
+	 * Triggers the handling of rewrites for this taxonomy.
+	 *
+	 * Default true, using `$taxonomy` as slug.
+	 *
+	 * - To prevent a rewrite, set to false.
+	 * - To specify rewrite rules, an array can be passed with any of these keys:
+	 *   `array{
+	 *      slug?: string
+	 *      with_front?: bool
+	 *      hierarchical?: bool
+	 *      ep_mask?: int
+	 *   }`
+	 *
+	 * @phpstan-param bool|REWRITE $rewrite
+	 *
+	 * @param array|bool           $rewrite - Configuration for rewrites.
+	 */
+	public function rewrite( bool|array $rewrite ): void {
+		$this->register_args->rewrite = $rewrite;
+	}
+
+
+	/**
+	 * True makes this taxonomy available for selection in navigation menus.
+	 *
+	 * @default `$public`
+	 *
+	 * @param bool $show - Whether to show in nav menus.
+	 */
+	public function show_in_nav_menus( bool $show ): void {
+		$this->register_args->show_in_nav_menus = $show;
+	}
+
+
+	/**
+	 * Whether to show the taxonomy in the quick/bulk edit panel
+	 *
+	 * @default `$show_ui`
+	 *
+	 * @param bool $show - Whether to show in the quick edit panel.
+	 */
+	public function show_in_quick_edit( bool $show ): void {
+		$this->register_args->show_in_quick_edit = $show;
+	}
+
+
+	/**
+	 * Whether to allow the Tag Cloud widget to use this taxonomy.
+	 *
+	 * @default `$show_ui`
+	 *
+	 * @param bool $show - Whether to show the tag cloud.
+	 */
+	public function show_tagcloud( bool $show ): void {
+		$this->register_args->show_tagcloud = $show;
+	}
+
+
+	/**
+	 * Whether to generate a default UI for managing this taxonomy.
+	 *
+	 * @notice  `$show_in_rest` must be true to show in Gutenberg.
+	 *
+	 * @default `$public`
+	 *
+	 * @param bool $show - Whether to show the UI.
+	 */
+	public function show_ui( bool $show ): void {
+		$this->register_args->show_ui = $show;
+	}
+
+
+	/**
+	 * Whether terms in this taxonomy should be sorted in the
+	 * order they are provided to `wp_set_object_terms()`
+	 *
+	 * @default false
+	 *
+	 * @param bool $should_short - Whether to sort the terms.
+	 */
+	public function sort( bool $should_short ): void {
+		$this->register_args->sort = $should_short;
+	}
+
+
+	/**
+	 * Works much like a hook, in that it will be called when the count is updated.
+	 *
+	 * Defaults:
+	 * - `_update_post_term_count()` for taxonomies attached to post types, which confirms
+	 * that the objects are published before counting them.
+	 * - `_update_generic_term_count()` for taxonomies attached to other object types, such as users.
+	 *
+	 * @phpstan-param callable(int[],\WP_Taxonomy): void $update_cb
+	 *
+	 * @formatter:off
+	 * @param callable $update_cb - Callback function to use.
+	 * @formatter:on
+	 */
+	public function update_count_callback( callable $update_cb ): void {
+		$this->register_args->update_count_callback = $update_cb;
 	}
 
 
 	/**
 	 * Handles any calls, which need to run to register this taxonomy.
 	 *
+	 * @action wp_loaded 8 0
+	 *
 	 * @return void
 	 */
-	public function register(): void {
-		$this->register_taxonomy();
-		static::$registry[ $this->taxonomy ] = $this;
+	protected function register(): void {
+		register_taxonomy( $this->name, $this->post_types, $this->get_taxonomy_args() );
+		static::$registry[ $this->name ] = $this;
 		if ( \count( $this->initial_terms ) > 0 ) {
 			$this->insert_initial_terms();
 		}
@@ -734,53 +571,24 @@ class Taxonomy {
 
 
 	/**
-	 * Sets the singular and plural labels automatically
+	 * Sets the singular and plural labels automatically.
 	 *
 	 * @param string $singular - The singular label to use.
 	 * @param string $plural   - The plural label to use.
 	 *
-	 * @return void
+	 * @return Labels
 	 */
-	public function set_label( string $singular = '', string $plural = '' ): void {
+	public function labels( string $singular = '', string $plural = '' ): Labels {
 		if ( '' === $singular ) {
-			$singular = ucwords( \str_replace( '_', ' ', $this->taxonomy ) );
+			$singular = \ucwords( \str_replace( [ '-', '_' ], ' ', $this->name ) );
 		}
 		if ( '' === $plural ) {
-			if ( 'y' === \substr( $singular, - 1 ) ) {
-				$plural = \substr( $singular, 0, - 1 ) . 'ies';
-			} else {
-				$plural = $singular . 's';
-			}
+			$plural = Strings::in()->pluralize( $singular );
 		}
 
-		$this->label_singular = $singular;
-		$this->label_plural = $plural;
-	}
-
-
-	/**
-	 * Returns the set menu label, or the plural label if not set.
-	 *
-	 * @return string
-	 */
-	public function get_menu_label(): string {
-		if ( '' === $this->label_menu ) {
-			$this->label_menu = $this->label_plural;
-		}
-
-		return $this->label_menu;
-	}
-
-
-	/**
-	 * Sets the label for the menu
-	 *
-	 * @param string $label - The label to set it to.
-	 *
-	 * @return void
-	 */
-	public function set_menu_label( string $label ): void {
-		$this->label_menu = $label;
+		$this->labels->singular_name( $singular );
+		$this->labels->name( $plural );
+		return $this->labels;
 	}
 
 
@@ -795,16 +603,16 @@ class Taxonomy {
 	 * @return void
 	 */
 	public function show_in_admin_bar(): void {
-		$cap = $this->capabilities['edit_terms'] ?? 'manage_categories';
+		$cap = $this->capabilities->get_cap( 'edit_terms' ) ?? 'manage_categories';
 		if ( ! current_user_can( $cap ) ) {
 			return;
 		}
 		add_action( 'admin_bar_menu', function( \WP_Admin_Bar $wp_admin_bar ) {
 			$wp_admin_bar->add_menu( [
-				'id'     => 'new-' . $this->taxonomy,
-				'title'  => $this->get_label(),
+				'id'     => 'new-' . $this->name,
+				'title'  => $this->labels->get_label( 'singular_name' ) ?? '',
 				'parent' => 'new-content',
-				'href'   => admin_url( 'edit-tags.php?taxonomy=' . $this->taxonomy ),
+				'href'   => admin_url( 'edit-tags.php?taxonomy=' . $this->name ),
 			] );
 		}, 100 );
 	}
@@ -820,10 +628,10 @@ class Taxonomy {
 	protected function insert_initial_terms(): void {
 		$already_defaulted = get_option( 'lipe/lib/taxonomy/defaults-registry', [] );
 
-		if ( ! isset( $already_defaulted[ $this->get_slug() ] ) ) {
+		if ( ! isset( $already_defaulted[ $this->name ] ) ) {
 			// Don't do anything if the taxonomy already has terms.
 			$existing = get_terms( [
-				'taxonomy' => $this->taxonomy,
+				'taxonomy' => $this->name,
 				'fields'   => 'count',
 			] );
 			if ( \is_numeric( $existing ) && 0 === (int) $existing ) {
@@ -832,63 +640,42 @@ class Taxonomy {
 					if ( ! \is_numeric( $slug ) ) {
 						$args['slug'] = $slug;
 					}
-					wp_insert_term( $term, $this->taxonomy, $args );
+					wp_insert_term( $term, $this->name, $args );
 				}
 			}
-			$already_defaulted[ $this->get_slug() ] = 1;
+			$already_defaulted[ $this->name ] = 1;
 			update_option( 'lipe/lib/taxonomy/defaults-registry', $already_defaulted, true );
 		}
 	}
 
 
 	/**
-	 * Register this taxonomy with WordPress
+	 * Build the args array for the taxonomy definition
 	 *
-	 * Allow using a different process for registering taxonomies via
-	 * child classes.
+	 * @return array<string, mixed>
 	 */
-	protected function register_taxonomy(): void {
-		register_taxonomy( $this->taxonomy, $this->post_types, $this->taxonomy_args() );
-	}
+	protected function get_taxonomy_args(): array {
+		$args = $this->register_args;
 
+		$args->capabilities = $this->capabilities->get_capabilities();
+		$args->description ??= '';
+		$args->hierarchical ??= false;
+		$args->labels = $this->get_taxonomy_labels();
+		$args->rewrite = $this->get_rewrites();
+		$args->sort ??= false;
 
-	/**
-	 * Build the args array for the post type definition
-	 *
-	 * @uses may be overridden using the matching class vars
-	 *
-	 * @return array
-	 */
-	protected function taxonomy_args(): array {
-		$args = [
-			'labels'                => $this->taxonomy_labels(),
-			'args'                  => $this->args ?? null,
-			'public'                => $this->public,
-			'publicly_queryable'    => $this->publicly_queryable ?? $this->public,
-			'show_ui'               => $this->show_ui ?? $this->public,
-			'show_in_menu'          => $this->show_in_menu,
-			'show_in_nav_menus'     => $this->show_in_nav_menus ?? $this->public,
-			'show_in_rest'          => $this->show_in_rest,
-			'rest_base'             => $this->rest_base ?? null,
-			'rest_namespace'        => $this->rest_namespace ?? null,
-			'rest_controller_class' => $this->rest_controller_class ?? null,
-			'show_tagcloud'         => $this->show_tagcloud ?? null,
-			'show_in_quick_edit'    => $this->show_in_quick_edit ?? null,
-			'meta_box_cb'           => $this->meta_box_cb,
-			'meta_box_sanitize_cb'  => $this->meta_box_sanitize_cb,
-			'show_admin_column'     => $this->show_admin_column,
-			'description'           => $this->description ?? null,
-			'hierarchical'          => $this->hierarchical ?? null,
-			'update_count_callback' => $this->update_count_callback,
-			'query_var'             => $this->query_var ?? $this->taxonomy,
-			'rewrite'               => $this->rewrites(),
-			'capabilities'          => $this->capabilities ?? [],
-			'sort'                  => $this->sort,
-			'default_term'          => $this->default_term,
-		];
+		// These properties depend on each other.
+		$args->public ??= true;
+		$args->publicly_queryable ??= $args->public;
+		$args->show_in_nav_menus ??= $args->public;
+		$args->show_ui ??= $args->public;
 
-		$args = apply_filters( 'lipe/lib/taxonomy/args', $args, $this->taxonomy );
-		return apply_filters( "lipe/lib/taxonomy/args_{$this->taxonomy}", $args );
+		if ( isset( $this->args ) ) {
+			$args->args = $this->args->get_args();
+		}
+
+		$args = apply_filters( 'lipe/lib/taxonomy/args', $args->get_args(), $this->name );
+		return apply_filters( "lipe/lib/taxonomy/args_{$this->name}", $args );
 	}
 
 
@@ -898,89 +685,57 @@ class Taxonomy {
 	 * @param string|null $single - The singular label to use.
 	 * @param string|null $plural - The plural label to use.
 	 *
-	 * @return array
+	 * @return array<Labels::*, string>
 	 */
-	protected function taxonomy_labels( ?string $single = null, ?string $plural = null ): array {
-		$single = $single ?? $this->get_label();
-		$plural = $plural ?? $this->get_label( 'plural' );
+	protected function get_taxonomy_labels( ?string $single = null, ?string $plural = null ): array {
+		$single = $single ?? $this->labels->get_label( 'singular_name' );
+		$plural = (string) ( $plural ?? $this->labels->get_label( 'name' ) );
+		$menu = $this->labels->get_label( 'menu_name' ) ?? $this->labels->get_label( 'name' );
 
-		// phpcs:disable WordPress.WP.I18n
 		$labels = [
 			'name'                       => $plural,
 			'singular_name'              => $single,
-			'search_items'               => sprintf( __( 'Search %s' ), $plural ),
-			'popular_items'              => sprintf( __( 'Popular %s' ), $plural ),
-			'all_items'                  => sprintf( __( 'All %s' ), $plural ),
-			'parent_item'                => sprintf( __( 'Parent %s' ), $single ),
-			'parent_item_colon'          => sprintf( __( 'Parent %s:' ), $single ),
-			'edit_item'                  => sprintf( __( 'Edit %s' ), $single ),
-			'view_item'                  => sprintf( __( 'View %s' ), $single ),
-			'update_item'                => sprintf( __( 'Update %s' ), $single ),
-			'add_new_item'               => sprintf( __( 'Add New %s' ), $single ),
-			'new_item_name'              => sprintf( __( 'New %s Name' ), $single ),
-			'separate_items_with_commas' => sprintf( __( 'Separate %s with commas' ), $plural ),
-			'add_or_remove_items'        => sprintf( __( 'Add or remove %s' ), $plural ),
-			'choose_from_most_used'      => sprintf( __( 'Choose from the most used %s' ), $plural ),
-			'not_found'                  => sprintf( __( 'No %s found' ), $plural ),
-			'no_terms'                   => sprintf( __( 'No %s' ), $plural ),
-			'no_item'                    => sprintf( __( 'No %s' ), strtolower( $plural ) ), // For extended taxos.
-			'items_list_navigation'      => sprintf( __( '%s list navigation' ), $plural ),
-			'items_list'                 => sprintf( __( '%s list' ), $plural ),
+			'search_items'               => \sprintf( __( 'Search %s' ), $plural ),
+			'popular_items'              => \sprintf( __( 'Popular %s' ), $plural ),
+			'all_items'                  => \sprintf( __( 'All %s' ), $plural ),
+			'parent_item'                => \sprintf( __( 'Parent %s' ), $single ),
+			'parent_item_colon'          => \sprintf( __( 'Parent %s:' ), $single ),
+			'edit_item'                  => \sprintf( __( 'Edit %s' ), $single ),
+			'view_item'                  => \sprintf( __( 'View %s' ), $single ),
+			'update_item'                => \sprintf( __( 'Update %s' ), $single ),
+			'add_new_item'               => \sprintf( __( 'Add New %s' ), $single ),
+			'new_item_name'              => \sprintf( __( 'New %s Name' ), $single ),
+			'separate_items_with_commas' => \sprintf( __( 'Separate %s with commas' ), $plural ),
+			'add_or_remove_items'        => \sprintf( __( 'Add or remove %s' ), $plural ),
+			'choose_from_most_used'      => \sprintf( __( 'Choose from the most used %s' ), $plural ),
+			'not_found'                  => \sprintf( __( 'No %s found' ), $plural ),
+			'no_terms'                   => \sprintf( __( 'No %s' ), $plural ),
+			'no_item'                    => \sprintf( __( 'No %s' ), \strtolower( $plural ) ), // For extended taxos.
+			'items_list_navigation'      => \sprintf( __( '%s list navigation' ), $plural ),
+			'items_list'                 => \sprintf( __( '%s list' ), $plural ),
 			'most_used'                  => __( 'Most Used' ),
-			'back_to_items'              => sprintf( __( '&larr; Back to %s' ), $plural ),
-			'menu_name'                  => $this->get_menu_label(),
+			'back_to_items'              => \sprintf( __( '&larr; Back to %s' ), $plural ),
+			'menu_name'                  => $menu,
 		];
-		// phpcs:enable WordPress.WP.I18n
+		$labels = wp_parse_args( $this->labels->get_labels(), $labels );
 
-		if ( ! empty( $this->labels ) ) {
-			$labels = wp_parse_args( $this->labels, $labels );
-		}
-
-		$labels = apply_filters( 'lipe/lib/taxonomy/labels', $labels, $this->taxonomy );
-		return apply_filters( "lipe/lib/taxonomy/labels_{$this->taxonomy}", $labels );
-	}
-
-
-	/**
-	 * Retrieve a singular or plural label.
-	 * Auto generate the label if necessary.
-	 *
-	 * @param 'plural' | 'singular' $quantity - The label quantity to retrieve.
-	 *
-	 * @return string
-	 */
-	protected function get_label( string $quantity = 'singular' ): string {
-		if ( 'plural' === $quantity ) {
-			if ( '' === $this->label_plural ) {
-				$this->set_label( $this->label_singular );
-			}
-
-			return $this->label_plural;
-		}
-
-		if ( '' === $this->label_singular ) {
-			$this->set_label();
-		}
-
-		return $this->label_singular;
+		$labels = apply_filters( 'lipe/lib/taxonomy/labels', $labels, $this->name );
+		return apply_filters( "lipe/lib/taxonomy/labels_{$this->name}", $labels );
 	}
 
 
 	/**
 	 * Build rewrite args or pass the class var if set.
 	 *
-	 * @return array|bool|null
+	 * @phpstan-return REWRITE|bool
+	 * @return array|bool
 	 */
-	protected function rewrites() {
-		if ( empty( $this->rewrite ) ) {
-			return [
-				'slug'         => $this->get_slug(),
-				'with_front'   => false,
-				'hierarchical' => $this->hierarchical,
-			];
-		}
-
-		return $this->rewrite;
+	protected function get_rewrites(): array|bool {
+		return $this->register_args->rewrite ?? [
+			'slug'         => sanitize_title_with_dashes( $this->name ),
+			'with_front'   => false,
+			'hierarchical' => $this->register_args->hierarchical ?? false,
+		];
 	}
 
 
@@ -988,14 +743,38 @@ class Taxonomy {
 	 * If the taxonomies registered through this API have changed,
 	 * rewrite rules need to be flushed.
 	 *
-	 * @static
+	 * @action wp_loaded 1_000 0
 	 */
-	public static function check_rewrite_rules(): void {
-		$slugs = wp_list_pluck( static::$registry, 'slug' );
-		if ( get_option( static::REGISTRY_OPTION ) !== $slugs ) {
+	protected function check_rewrite_rules(): void {
+		$slugs = \array_keys( static::$registry );
+		if ( get_option( self::REGISTRY_OPTION ) !== $slugs ) {
 			flush_rewrite_rules();
-			update_option( static::REGISTRY_OPTION, $slugs );
+			update_option( self::REGISTRY_OPTION, $slugs );
 		}
+	}
+
+
+	/**
+	 * Render a button to clear the filters on the post list page.
+	 *
+	 * @action manage_posts_extra_tablenav 1000
+	 */
+	protected function clear_filters_button(): void {
+		// phpcs:ignore WordPress.Security.NonceVerification -- No nonce is available.
+		$post_type = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : '';
+		if ( '' !== $post_type ) {
+			$base_url = admin_url( 'edit.php?post_type=' . $post_type );
+		} else {
+			$base_url = admin_url( 'edit.php' );
+		}
+		?>
+		<a
+			href="<?= esc_url( $base_url ) ?>"
+			class="button lipe-libs-taxonomy-clear-filters"
+		>
+			<?php esc_html_e( 'Clear Filters', 'lipe' ); ?>
+		</a>
+		<?php
 	}
 
 
@@ -1004,7 +783,7 @@ class Taxonomy {
 	 *
 	 * @param string $taxonomy - Taxonomy slug.
 	 *
-	 * @return Taxonomy|null
+	 * @return ?Taxonomy
 	 */
 	public static function get_taxonomy( string $taxonomy ): ?Taxonomy {
 		return static::$registry[ $taxonomy ] ?? null;

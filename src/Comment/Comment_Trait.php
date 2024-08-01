@@ -1,7 +1,9 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Comment;
 
+use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 use Lipe\Lib\Meta\Repo;
 
@@ -23,8 +25,13 @@ use Lipe\Lib\Meta\Repo;
  * @property string $comment_post_ID
  * @property string $comment_type
  * @property string $user_id
+ *
+ * @template OPTIONS of array<string, mixed>
  */
 trait Comment_Trait {
+	/**
+	 * @use Mutator_Trait<OPTIONS>
+	 */
 	use Mutator_Trait;
 
 	/**
@@ -97,10 +104,10 @@ trait Comment_Trait {
 	/**
 	 * Used to determine the type of meta to retrieve or update.
 	 *
-	 * @return string
+	 * @return MetaType
 	 */
-	public function get_meta_type(): string {
-		return Repo::META_COMMENT;
+	public function get_meta_type(): MetaType {
+		return MetaType::COMMENT;
 	}
 
 
@@ -111,7 +118,7 @@ trait Comment_Trait {
 	 *
 	 * @return static
 	 */
-	public static function factory( $comment ) {
+	public static function factory( int|\WP_Comment $comment ): static {
 		return new static( $comment );
 	}
 }

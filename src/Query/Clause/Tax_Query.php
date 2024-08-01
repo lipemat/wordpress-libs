@@ -3,7 +3,9 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Query\Clause;
 
-use Lipe\Lib\Query\Args_Interface;
+use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\Clause;
+use Lipe\Lib\Args\ClauseRules;
 
 /**
  * Generate a `tax_query` argument for a `WP_Query.
@@ -13,17 +15,17 @@ use Lipe\Lib\Query\Args_Interface;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters
  *
- * @implements Clause_Interface<Tax_Query>
+ * @implements ClauseRules<Tax_Query>
  *
  * @internal
  */
-class Tax_Query implements Clause_Interface {
+class Tax_Query implements ClauseRules {
 	/**
 	 * Pass generic to trait.
 	 *
-	 * @use Clause_Trait<Tax_Query>
+	 * @use Clause<Tax_Query>
 	 */
-	use Clause_Trait;
+	use Clause;
 
 	public const FIELD_ID          = 'term_id';
 	public const FIELD_NAME        = 'name';
@@ -117,7 +119,7 @@ class Tax_Query implements Clause_Interface {
 	 *
 	 * @internal
 	 *
-	 * @param Args_Interface $args_class - Args class, which supports properties this method will assign.
+	 * @param ArgsRules $args_class - Args class, which supports properties this method will assign.
 	 *
 	 * @throws \LogicException - If the `tax_query` property is not defined on the args class.
 	 *
@@ -140,7 +142,7 @@ class Tax_Query implements Clause_Interface {
 	 * @phpstan-param 'AND'|'IN'|'NOT IN'|'EXISTS'|'NOT EXISTS' $operator
 	 * @phpstan-param static::FIELD_*                           $field
 	 *
-	 * @param string|int|array<int,string|int>                  $terms    - Term(s) to query.
+	 * @param int|string|array<int,string|int>                  $terms    - Term(s) to query.
 	 * @param string                                            $taxonomy - Taxonomy to query.
 	 * @param string                                            $field    - Field to query against.
 	 * @param string                                            $operator - MySQL operator to use.
@@ -148,7 +150,7 @@ class Tax_Query implements Clause_Interface {
 	 *
 	 * @return void
 	 */
-	protected function add_clause( $terms, string $taxonomy, string $field, string $operator, bool $children = true ): void {
+	protected function add_clause( array|int|string $terms, string $taxonomy, string $field, string $operator, bool $children = true ): void {
 		$clause = \array_filter( [
 			'taxonomy' => $taxonomy,
 			'field'    => $field,

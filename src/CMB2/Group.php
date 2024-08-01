@@ -1,8 +1,12 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Group\Layout;
+use Lipe\Lib\Meta\DataType;
+use Lipe\Lib\Meta\MetaType;
+use Lipe\Lib\Meta\Registered;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
 
@@ -13,8 +17,6 @@ use Lipe\Lib\Util\Arrays;
  * A fluent interface for CMB2 group properties.
  */
 class Group extends Field {
-	use Box_Trait;
-
 	/**
 	 * ONLY APPLIES TO GROUPS
 	 *
@@ -80,33 +82,54 @@ class Group extends Field {
 	 *
 	 * @var string
 	 */
-	protected $layout = 'block';
+	protected string $layout = 'block';
+
+	/**
+	 * All fields registered to this box.
+	 *
+	 * @var Field[]
+	 */
+	protected array $fields = [];
+
+	/**
+	 * Repeatable group options.
+	 *
+	 * @var array<'add_button'|'closed'|'remove_button'|'remove_confirm'|'sortable',bool|string>
+	 */
+	protected array $options = [];
 
 
 	/**
-	 * Group constructor.
+	 * Hook into `cmb2_init` to register all the fields.
 	 *
-	 * @link                     https://github.com/CMB2/CMB2/wiki/Field-Types#group
-	 * @internal
+	 * We use `cmb2_init` instead of `cmb2_admin_init` so this may be used in the admin
+	 * or on the front end.
 	 *
-	 * @param string      $id                      - Field ID.
-	 * @param string|null $title                   - Group title.
-	 * @param Box         $box                     - Box object.
-	 * @param string|null $group_title             - include a {#} to have replaced with number.
-	 * @param string|null $add_button_text         - Defaults to 'Add Another'.
-	 * @param string|null $remove_button_text      - Defaults to 'Remove'.
-	 * @param bool        $sortable                - Whether the group is sortable.
-	 * @param bool        $closed                  - Whether the group is closed by default.
-	 * @param string|null $remove_confirm          - A message to display when a user attempts
-	 *                                             to delete a group.
-	 *                                             (Defaults to null/false for no confirmation).
+	 * If the core plugin is registering fields via `cmb2_admin_init` only, this will
+	 * never get called anyway, so we can control if we need front end fields from there.
 	 *
-	 * @phpstan-ignore-next-line -- Too many default arguments to account for.
+	 * @return void
 	 */
-	public function __construct( string $id, ?string $title, Box $box, ?string $group_title = null, ?string $add_button_text = null, ?string $remove_button_text = null, ?bool $sortable = null, bool $closed = false, ?string $remove_confirm = null ) {
-		$this->type()->group( $group_title, $add_button_text, $remove_button_text, $sortable, $closed, $remove_confirm );
+	protected function hook(): void {
+		add_action( 'cmb2_init', function() {
+			$this->register_fields();
+		}, 12 );
+	}
 
-		parent::__construct( $id, $title, $box );
+
+	/**
+	 * Add a field to this Group
+	 *
+	 * @example $group->field( $id, $name )->checkbox();
+	 *
+	 * @param string $id   - Field ID.
+	 * @param string $name - Field name.
+	 *
+	 * @return Field_Type
+	 */
+	public function field( string $id, string $name ): Field_Type {
+		$field = $this->add_field( Field::factory( $id, $name, $this->box, $this ) );
+		return Field_Type::factory( $field, $this->box );
 	}
 
 
@@ -115,18 +138,18 @@ class Group extends Field {
 	 *
 	 * Options: block (default), row, table
 	 *
-	 * @phpstan-param 'block'|'row'|'table' $layout
+	 * @phpstan-param Layout::* $layout
 	 *
-	 * @param string                        $layout - Layout type.
+	 * @param string            $layout - Layout type.
 	 *
 	 * @return Group
 	 */
 	public function layout( string $layout ): Group {
-		if ( 'block' === $layout ) {
+		if ( Layout::BLOCK === $layout ) {
 			return $this;
 		}
 		Layout::init_once();
-		if ( ! empty( $this->tab ) ) {
+		if ( isset( $this->tab ) ) {
 			$this->tab_content_cb = [ Layout::in(), 'render_group_callback' ];
 		} else {
 			$this->render_row_cb( [ Layout::in(), 'render_group_callback' ] );
@@ -141,19 +164,58 @@ class Group extends Field {
 	/**
 	 * Set the group to be repeatable.
 	 *
-	 * Will enable sortable if not already specified as false when `\Lipe\Lib\CMB2\Field_Type::group` is called.
+	 * @param bool    $repeatable      - Enable/disable repeatable support for this group.
+	 * @param ?string $add_row_text    - Text used for the add group button.
+	 * @param ?string $remove_row_text - Text used for the remove group button.
+	 * @param ?string $remove_confirm  - Text used for the remove group confirmation.
 	 *
-	 * @param bool    $repeatable   - Enable/disable repeatable support for this group.
-	 * @param ?string $add_row_text - Unused in group context. @deprecated.
-	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function repeatable( bool $repeatable = true, ?string $add_row_text = null ): Field {
+	public function repeatable( bool $repeatable = true, ?string $add_row_text = null, ?string $remove_row_text = null, ?string $remove_confirm = null ): static {
 		$this->repeatable = $repeatable;
 
-		if ( ! isset( $this->options['sortable'] ) ) {
-			$this->options = \array_merge( $this->options, [ 'sortable' => $repeatable ] );
+		$options = [];
+		if ( null !== $add_row_text ) {
+			$options['add_button'] = $add_row_text;
 		}
+		if ( null !== $remove_row_text ) {
+			$options['remove_button'] = $remove_row_text;
+		}
+		if ( null !== $remove_confirm ) {
+			$options['remove_confirm'] = $remove_confirm;
+		}
+		if ( ! isset( $this->options['sortable'] ) ) {
+			$options['sortable'] = $repeatable;
+		}
+		$this->options = \array_merge( $this->options, $options );
+
+		return $this;
+	}
+
+
+	/**
+	 * Set the group to be sortable.
+	 *
+	 * @param bool $sortable - Enable/disable sortable support for this group.
+	 *
+	 * @return Group
+	 */
+	public function sortable( bool $sortable = true ): Group {
+		$this->options = \array_merge( $this->options, [ 'sortable' => $sortable ] );
+
+		return $this;
+	}
+
+
+	/**
+	 * Set the group to be closed by default.
+	 *
+	 * @param bool $closed - Enable/disable closed by default for this group.
+	 *
+	 * @return Group
+	 */
+	public function closed( bool $closed = true ): Group {
+		$this->options = \array_merge( $this->options, [ 'closed' => $closed ] );
 
 		return $this;
 	}
@@ -165,7 +227,7 @@ class Group extends Field {
 	 *
 	 * @see Box::add_field_to_box()
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function get_field_args(): array {
 		$args = parent::get_field_args();
@@ -185,21 +247,15 @@ class Group extends Field {
 	 * @return void
 	 */
 	protected function add_field_to_group( Field $field ): void {
-		if ( null === $this->box || ! property_exists( $this->box, 'cmb' ) || null === $this->box->cmb ) {
-			throw new \LogicException( esc_html__( 'You must add the group to the box before you add fields to the group.', 'lipe' ) );
-		}
-
-		if ( $this->is_repeatable() && Repo::in()->supports_taxonomy_relationships( $this->box->get_object_type(), $field ) ) {
+		$registered = Registered::factory( $field );
+		if ( Registered::factory( $this )->is_repeatable() && Repo::in()->supports_taxonomy_relationships( $this->box->get_box_type(), $registered ) ) {
 			/* translators: {field type} */
-			throw new \LogicException( \sprintf( esc_html__( 'Taxonomy fields are not supported by repeating groups. %s', 'lipe' ), esc_html( $field->get_id() ) ) );
+			throw new \LogicException( \sprintf( esc_html__( 'Taxonomy fields are not supported by repeating groups. %s', 'lipe' ), esc_html( $field->id ) ) );
 		}
 
-		$field->group = $this->get_id();
-		$field->box_id = $this->box_id;
-		$box = $this->box->get_box();
-		if ( $box instanceof \CMB2 ) {
-			$box->add_group_field( $this->id, $field->get_field_args(), $field->position );
-		}
+		$args = $field->get_field_args();
+		$args['group'] = $this->id;
+		$this->box->get_cmb2_box()->add_group_field( $this->id, $args, $registered->get_position() );
 
 		Repo::in()->register_field( $field );
 	}
@@ -212,11 +268,9 @@ class Group extends Field {
 	 * Allows for storing/appending a fields properties beyond
 	 * a basic return pattern.
 	 *
-	 * @internal
-	 *
 	 * @return void
 	 */
-	public function register_fields(): void {
+	protected function register_fields(): void {
 		$this->register_meta();
 		\array_map( function( Field $field ) {
 			$this->add_field_to_group( $field );
@@ -233,22 +287,23 @@ class Group extends Field {
 			'single' => true,
 			'type'   => 'array',
 		];
-		if ( (bool) $this->show_in_rest && $this->is_public_rest_data( $this ) ) {
+		$group = Registered::factory( $this );
+		if ( $group->is_public_rest_data() ) {
 			$properties = [];
 			foreach ( $this->get_fields() as $field ) {
-				$field_id = $this->translate_sub_field_rest_key( $field );
+				$registered = Registered::factory( $field );
+				$field_id = $this->translate_sub_field_rest_key( $registered );
 				$properties[ $field_id ] = [
 					'type' => 'string',
 				];
-				if ( $field->is_using_array_data() ) {
+				if ( $registered->is_using_array_data() ) {
 					$properties[ $field_id ] = [
 						'type'  => 'array',
 						'items' => [
 							'type' => 'string',
 						],
 					];
-				}
-				if ( $field->is_using_object_data() ) {
+				} elseif ( $registered->is_using_object_data() ) {
 					$properties[ $field_id ] = [
 						'type'                 => 'object',
 						'additionalProperties' => [
@@ -257,7 +312,7 @@ class Group extends Field {
 					];
 				}
 
-				if ( Repo::TYPE_FILE === $field->data_type ) {
+				if ( DataType::FILE === $registered->get_data_type() ) {
 					$properties[ $field_id . '_id' ] = [
 						'type' => 'number',
 					];
@@ -275,45 +330,17 @@ class Group extends Field {
 			$config['sanitize_callback'] = [ $this, 'untranslate_sub_field_rest_keys' ];
 		}
 
-		if ( $this->box instanceof Box ) {
-			$this->box->register_meta_on_all_types( $this, $config );
-		}
+		$this->box->register_meta_on_all_types( $group, $config );
 	}
 
 
 	/**
-	 * Get the full list of object types this box
-	 * is registered to.
+	 * Get all fields registered to this box.
 	 *
-	 * @return array
+	 * @return Field[]|Group[]
 	 */
-	public function get_object_types(): array {
-		if ( $this->box instanceof Box ) {
-			return $this->box->get_object_types();
-		}
-		return [];
-	}
-
-
-	/**
-	 * Are we currently working with a Group?
-	 *
-	 * @return bool
-	 */
-	public function is_group(): bool {
-		return true;
-	}
-
-
-	/**
-	 * Add a group to a box.
-	 *
-	 * This is a no-op for groups.
-	 *
-	 * @throws \LogicException - If trying to add to another group.
-	 */
-	public function group(): void {
-		throw new \LogicException( esc_html__( 'You cannot add a group to another group.', 'lipe' ) );
+	protected function get_fields(): array {
+		return $this->fields;
 	}
 
 
@@ -327,9 +354,9 @@ class Group extends Field {
 	 *
 	 * @interal
 	 *
-	 * @param array $group_values - Group values before being sent to the REST API.
+	 * @param array<string, mixed> $group_values - Group values before being sent to the REST API.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function translate_sub_field_rest_keys( array $group_values ): array {
 		$fields = $this->get_fields();
@@ -340,7 +367,7 @@ class Group extends Field {
 				}
 				$field = $fields[ $key ];
 				unset( $group[ $key ] );
-				$group[ $this->translate_sub_field_rest_key( $field ) ] = $value;
+				$group[ $this->translate_sub_field_rest_key( Registered::factory( $field ) ) ] = $value;
 			}
 			return $group;
 		}, $group_values );
@@ -351,9 +378,9 @@ class Group extends Field {
 	 * Map this groups fields back to their original keys when updating
 	 * the metadata via the REST API.
 	 *
-	 * @param array $group_values - Group values sent to the REST API.
+	 * @param array<string, mixed> $group_values - Group values sent to the REST API.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function untranslate_sub_field_rest_keys( array $group_values ): array {
 		if ( \function_exists( 'wp_is_rest_endpoint' ) ) {
@@ -365,7 +392,7 @@ class Group extends Field {
 		}
 
 		$map = Arrays::in()->flatten_assoc( function( Field $field ) {
-			return [ $this->translate_sub_field_rest_key( $field ) => $field ];
+			return [ $this->translate_sub_field_rest_key( Registered::factory( $field ) ) => $field ];
 		}, $this->get_fields() );
 
 		return \array_map( function( $group ) use ( $map ) {
@@ -374,7 +401,7 @@ class Group extends Field {
 					continue;
 				}
 				unset( $group[ $key ] );
-				$group[ $map[ $key ]->get_id() ] = $value;
+				$group[ $map[ $key ]->id ] = $value;
 			}
 			return $group;
 		}, $group_values );
@@ -388,18 +415,30 @@ class Group extends Field {
 	 * the key like we do with top level fields, or use the value of
 	 * `rest_group_short` if it is a string.
 	 *
-	 * @param Field $field - Field to translate.
+	 * @param Registered $field - Field to translate.
 	 *
 	 * @return string
 	 */
-	protected function translate_sub_field_rest_key( Field $field ): string {
-		if ( ! isset( $field->rest_group_short ) || false === $field->rest_group_short ) {
+	protected function translate_sub_field_rest_key( Registered $field ): string {
+		if ( ! $field->has_rest_short_name() ) {
 			return $field->get_id();
-		}
-		if ( \is_string( $field->rest_group_short ) ) {
-			return $field->rest_group_short;
 		}
 
 		return $field->get_rest_short_name();
+	}
+
+
+	/**
+	 * Add a field to this Group.
+	 *
+	 * May be used to add or replace fields.
+	 *
+	 * @param Field $field - Field object.
+	 *
+	 * @return Field
+	 */
+	public function add_field( Field $field ): Field {
+		$this->fields[ $field->id ] = $field;
+		return $field;
 	}
 }

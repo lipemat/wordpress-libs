@@ -21,17 +21,17 @@ use mocks\User_Mock;
  * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
  */
 class RepoTest extends \WP_UnitTestCase {
-	public function setUp() : void {
+	public function setUp(): void {
 		parent::setUp();
 		\CMB2_Bootstrap_2101::initiate()->include_cmb();
 	}
 
 
-	public function test_get_value() : void {
+	public function test_get_value(): void {
 		$user_id = self::factory()->user->create();
 		$cat_id = self::factory()->category->create();
 
-		$box = new User_Box( 'g', null );
+		$box = new User_Box( 'g', '' );
 		$box->field( 'u', 'uu' )
 		    ->true_false();
 		$box->field( 'tt', 'ttt' )
@@ -52,7 +52,7 @@ class RepoTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_get_file_field_value() : void {
+	public function test_get_file_field_value(): void {
 		$post = self::factory()->post->create_and_get();
 
 		$box = new Box( 'f', [ 'post' ], null );
@@ -66,7 +66,7 @@ class RepoTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_post_id_availability() : void {
+	public function test_post_id_availability(): void {
 		$box = new Box( 'f', [ 'post' ], null );
 		$box->field( 't', 'tt' )
 		    ->text()
@@ -80,11 +80,11 @@ class RepoTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_taxonomy_single() : void {
+	public function test_taxonomy_single(): void {
 		$box = new User_Box( 's', 'SS' );
 		$box->field( 's', 'S' )
 		    ->taxonomy_select( 'category' )
-		    ->column( 3, null, null, true );
+		    ->column( 3, '', null, true );
 		do_action( 'cmb2_init' );
 		$term = self::factory()->category->create();
 

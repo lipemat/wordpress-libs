@@ -1,5 +1,4 @@
 <?php
-
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Theme;
@@ -79,25 +78,24 @@ class CSS_Modules {
 	 *
 	 * @param string $file - File with the path from CSS module JSON directory.
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	public function styles( string $file ): array {
 		$file_with_prefix = $this->prepend . $file . '.pcss';
 		if ( '' !== $this->combined_filename ) {
-			if ( 0 === \strpos( $file, '../' ) ) {
+			if ( \str_starts_with( $file, '../' ) ) {
 				$file_with_prefix = \substr( $file, 3 ) . '.pcss';
 			}
 			return $this->get_combined_css_classes()[ $file_with_prefix ] ?? [];
 		}
 
 		try {
-			//phpcs:ignore -- Reading local file.
-			$file_contents = @\file_get_contents( trailingslashit( $this->path ) . "{$file_with_prefix}.json" );
+			$file_contents = \file_get_contents( trailingslashit( $this->path ) . "{$file_with_prefix}.json" );
 			if ( false === $file_contents ) {
 				return [];
 			}
 			$classes = json_decode( $file_contents, true, 3, JSON_THROW_ON_ERROR );
-		} catch ( \JsonException $exception ) {
+		} catch ( \JsonException ) {
 			return [];
 		}
 		return (array) $classes;
@@ -107,18 +105,17 @@ class CSS_Modules {
 	/**
 	 * Retrieve the CSS module classes from the `combined.json` file.
 	 *
-	 * @return array
+	 * @return array<string, array<string, string>>
 	 */
 	protected function get_combined_css_classes(): array {
 		return $this->once( function() {
 			try {
-				//phpcs:ignore -- Reading local file.
-				$file_contents = @\file_get_contents( trailingslashit( $this->path ) . $this->combined_filename );
+				$file_contents = \file_get_contents( trailingslashit( $this->path ) . $this->combined_filename );
 				if ( false === $file_contents ) {
 					return [];
 				}
 				$classes = \json_decode( $file_contents, true, 3, JSON_THROW_ON_ERROR );
-			} catch ( \JsonException $exception ) {
+			} catch ( \JsonException ) {
 				return [];
 			}
 			return (array) $classes;

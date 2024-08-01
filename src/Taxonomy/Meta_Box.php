@@ -163,7 +163,7 @@ class Meta_Box {
 					esc_html( $object->labels->singular_name )
 				);
 
-				$args = new Wp_Dropdown_Categories();
+				$args = new Wp_Dropdown_Categories( [] );
 				$args->option_none_value = ( is_taxonomy_hierarchical( $this->taxonomy ) ? '-1' : '' );
 				$args->show_option_none = $object->labels->no_item;
 				$args->hide_empty = false;
@@ -189,7 +189,7 @@ class Meta_Box {
 					<?php
 					$walker = $this->get_walker();
 
-					$args = new Wp_Terms_Checklist();
+					$args = new Wp_Terms_Checklist( [] );
 					$args->taxonomy = $this->taxonomy;
 					$args->selected_cats = $selected;
 					$args->checked_ontop = $this->checked_ontop;

@@ -1,9 +1,10 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Settings;
 
+use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
-use Lipe\Lib\Meta\Repo;
 
 /**
  * CMB2 registered settings pages.
@@ -23,6 +24,9 @@ use Lipe\Lib\Meta\Repo;
  * @template OPTIONS of array<string, mixed>
  */
 trait Settings_Trait {
+	/**
+	 * @use Mutator_Trait<OPTIONS>
+	 */
 	use Mutator_Trait;
 
 	/**
@@ -38,17 +42,17 @@ trait Settings_Trait {
 	/**
 	 * Used to determine the type of meta to retrieve or update.
 	 *
-	 * @return string
+	 * @return MetaType
 	 */
-	public function get_meta_type(): string {
-		return Repo::META_OPTION;
+	public function get_meta_type(): MetaType {
+		return MetaType::OPTION;
 	}
 
 
 	/**
 	 * Get an option from the Meta repo.
 	 *
-	 * @template T of static::*
+	 * @template T of key-of<OPTIONS>
 	 * @template D of mixed
 	 *
 	 * @phpstan-param T $key
@@ -60,7 +64,7 @@ trait Settings_Trait {
 	 * @phpstan-return D|OPTIONS[T]
 	 * @return mixed
 	 */
-	public function get_option( string $key, $default_value = null ) {
+	public function get_option( string $key, mixed $default_value = null ) {
 		return $this->get_meta( $key, $default_value );
 	}
 
@@ -81,12 +85,12 @@ trait Settings_Trait {
 	 * @phpstan-param OPTIONS[T]|(callable( D|OPTIONS[T]): OPTIONS[T]) $value
 	 *
 	 * @param string         $key              - Option key.
-	 * @param mixed|callable $value            - Option value.
-	 * @param mixed          $callback_default - Default value for get during callback.
+	 * @param mixed|callable $value            - Option value or callback.
+	 * @param mixed          $callback_default - Default value for get_meta during callback.
 	 *
 	 * @return void
 	 */
-	public function update_option( string $key, $value, $callback_default = null ): void {
+	public function update_option( string $key, mixed $value, mixed $callback_default = null ): void {
 		$this->update_meta( $key, $value, $callback_default );
 	}
 }

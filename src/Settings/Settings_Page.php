@@ -3,8 +3,6 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Settings;
 
-use Lipe\Lib\Settings\Settings_Page\Field;
-use Lipe\Lib\Settings\Settings_Page\FieldArgs;
 use Lipe\Lib\Settings\Settings_Page\Settings;
 
 /**
@@ -146,10 +144,10 @@ class Settings_Page {
 			foreach ( $section->get_fields() as $field ) {
 				$value = null;
 				if ( isset( $_POST[ $field->id ] ) ) {
-					// phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- Input is sanitized inside `update_option`.
-					$value = wp_unslash( $_POST[ $field->id ] );
-					if ( ! \is_array( $value ) ) {
-						$value = \trim( $value );
+					if ( \is_array( $_POST[ $field->id ] ) ) {
+						$value = \array_map( 'sanitize_text_field', \wp_unslash( $_POST[ $field->id ] ) );
+					} else {
+						$value = \trim( sanitize_text_field( \wp_unslash( $_POST[ $field->id ] ) ) );
 					}
 				}
 				update_site_option( $field->id, $value );
@@ -206,6 +204,28 @@ class Settings_Page {
 			</form>
 		</div>
 		<?php
+	}
+
+
+	/**
+	 * Are we currently viewing this settings page?
+	 *
+	 * @return bool
+	 */
+	public function is_settings_page(): bool {
+		if ( ! \function_exists( 'get_current_screen' ) ) {
+			return false;
+		}
+		$screen = get_current_screen();
+		if ( ! $screen instanceof \WP_Screen ) {
+			return false;
+		}
+		$hook = get_plugin_page_hook( $this->settings->get_id(), $this->settings->get_parent_menu_slug() ?? '' );
+		if ( null === $hook ) {
+			return false;
+		}
+
+		return $hook === $screen->id;
 	}
 
 

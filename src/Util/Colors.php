@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
@@ -21,12 +22,10 @@ class Colors {
 	 * @return string
 	 */
 	public function hex_to_rgba( string $color, float $transparency = 1.0 ): string {
-		if ( empty( $color ) || '#' !== $color[0] ) {
+		if ( '' === $color || '#' !== $color[0] ) {
 			return $color;
 		}
-
-		$color = substr( $color, 1 );
-
+		$color = \substr( $color, 1 );
 		if ( 6 === \strlen( $color ) ) {
 			$hex = [ $color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5] ];
 		} elseif ( 3 === \strlen( $color ) ) {
@@ -35,12 +34,12 @@ class Colors {
 			// Something is not right.
 			return 'rgb(0,0,0)';
 		}
-		$rgb = array_map( 'hexdec', $hex );
+		$rgb = \array_map( 'hexdec', $hex );
 		if ( 1.0 === $transparency ) {
-			return 'rgb(' . implode( ',', $rgb ) . ')';
+			return 'rgb(' . \implode( ',', $rgb ) . ')';
 		}
 
-		return 'rgba(' . implode( ',', $rgb ) . ',' . $transparency . ')';
+		return 'rgba(' . \implode( ',', $rgb ) . ',' . $transparency . ')';
 	}
 
 
@@ -52,12 +51,12 @@ class Colors {
 	 * @return string
 	 */
 	public function rgba_to_hex( string $rgba ): string {
-		if ( empty( $rgba ) || '#' === $rgba[0] ) {
+		if ( '' === $rgba || '#' === $rgba[0] ) {
 			return $rgba;
 		}
 
-		preg_match( '/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i', $rgba, $by_color );
+		\preg_match( '/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i', $rgba, $by_color );
 
-		return sprintf( '#%02x%02x%02x', $by_color[1], $by_color[2], $by_color[3] );
+		return \sprintf( '#%02x%02x%02x', $by_color[1], $by_color[2], $by_color[3] );
 	}
 }

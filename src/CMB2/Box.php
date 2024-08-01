@@ -5,6 +5,9 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\Tabs;
+use Lipe\Lib\Meta\DataType;
+use Lipe\Lib\Meta\Meta_Box;
+use Lipe\Lib\Meta\Registered;
 use Lipe\Lib\Meta\Repo;
 
 /**
@@ -14,8 +17,6 @@ use Lipe\Lib\Meta\Repo;
  *
  */
 class Box {
-	use Box_Trait;
-
 	public const CONTEXT_NORMAL   = 'normal';
 	public const CONTEXT_SIDE     = 'side';
 	public const CONTEXT_ADVANCED = 'advanced';
@@ -24,12 +25,6 @@ class Box {
 	public const CONTEXT_BEFORE_PERMALINK = 'before_permalink';
 	public const CONTEXT_AFTER_TITLE      = 'after_title';
 	public const CONTEXT_AFTER_EDITOR     = 'after_editor';
-
-	public const TYPE_COMMENT = 'comment';
-	public const TYPE_OPTIONS = 'options-page';
-	public const TYPE_USER    = 'user';
-	public const TYPE_TERM    = 'term';
-	public const TYPE_POST    = 'post';
 
 	/**
 	 * Used as a flag to allow REST fields to be added
@@ -43,7 +38,7 @@ class Box {
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#priority
 	 *
-	 * @phpstan-var  'high' | 'core' | 'default' | 'low'
+	 * @phpstan-var  Meta_Box::PRIORITY_*
 	 *
 	 * @var string
 	 */
@@ -58,9 +53,9 @@ class Box {
 	 * @example 'additional-class'
 	 * @example array( 'additional-class', 'another-class' ),
 	 *
-	 * @var mixed
+	 * @var string|array<string>
 	 */
-	public $classes;
+	public string|array $classes;
 
 	/**
 	 * Like the classes property, allows adding classes to the CMB2 wrapper,
@@ -133,8 +128,6 @@ class Box {
 	 *
 	 * @link  https://gist.github.com/jtsternberg/a70e845aca44356b8fbf05aafff4d0c8
 	 *
-	 * @todo  Add link to docs once they exist.
-	 *
 	 * @var callable
 	 */
 	public $register_rest_field_cb;
@@ -169,14 +162,17 @@ class Box {
 	 * compatibility.
 	 *
 	 * We have our own Gutenberg/block-editor properties in this class so use those instead
-	 * of this property if you are working with Gutenberg
+	 * of this property if you are working with Gutenberg.
 	 *
 	 * @see Box::$display_when_gutenberg_active
 	 * @see Box::$gutenberg_compatible
 	 *
 	 * More: https://wordpress.org/gutenberg/handbook/designers-developers/developers/backwards-compatibility/meta-box/
 	 *
-	 * @var array
+	 * @var array{
+	 *     __back_compat_meta_box?: bool,
+	 *     __block_editor_compatible_meta_box?: bool
+	 * }
 	 */
 	public array $mb_callback_args;
 
@@ -252,7 +248,7 @@ class Box {
 	 *
 	 * @var string|bool
 	 */
-	public $show_in_rest;
+	public string|bool $show_in_rest;
 
 	/**
 	 * Whether to show labels for the fields
@@ -296,9 +292,9 @@ class Box {
 	/**
 	 * Tabs for this box
 	 *
-	 * @see     Box::add_tab
+	 * @see Box::add_tab
 	 *
-	 * @var array
+	 * @var array<string, string>
 	 */
 	public array $tabs = [];
 
@@ -352,25 +348,127 @@ class Box {
 	 *
 	 * @see     Box::tabs_style()
 	 *
+	 * @phpstan-var Tabs::STYLE_* $layout
 	 * @var string
 	 */
 	protected string $tab_style = 'vertical';
+
+	/**
+	 * The type of CMB2 box.
+	 *
+	 * @var BoxType
+	 */
+	protected BoxType $box_type;
+
+	/**
+	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#object_types
+	 * @example ['page', 'post']
+	 *
+	 * @var string[]
+	 */
+	protected array $object_types = [];
+
+	/**
+	 * All fields registered to this box.
+	 *
+	 * @var Field[]|Group[]
+	 */
+	protected array $fields = [];
 
 
 	/**
 	 * Register a new meta box.
 	 *
-	 * @phpstan-param array<Box::TYPE_*|string> $object_types
-	 *
-	 * @param string                            $id           - ID of this box.
-	 * @param array                             $object_types - [post type slugs], or 'user', 'term', 'comment', or 'options-page'.
-	 * @param string|null                       $title        - Title of this box (false to omit displaying).
+	 * @param string   $id           - ID of this box.
+	 * @param string[] $object_types - [post type slugs], or 'user', 'term', 'comment', or 'options-page'.
+	 * @param ?string  $title        - Title of this box (false to omit displaying).
 	 *
 	 */
 	public function __construct( string $id, array $object_types, ?string $title ) {
 		$this->id = $id;
 		$this->object_types = $object_types;
+		$this->box_type = BoxType::tryFrom( $object_types[0] ?? '' ) ?? BoxType::POST;
 		$this->title = $title;
+
+		$this->hook();
+	}
+
+
+	/**
+	 * Hook into `cmb2_init` to register all the fields.
+	 *
+	 * We use `cmb2_init` instead of `cmb2_admin_init` so this may be used in the admin
+	 * or on the front end.
+	 *
+	 * If the core plugin is registering fields via `cmb2_admin_init` only, this will
+	 * never get called anyway, so we can control if we need front end fields from there.
+	 *
+	 * @return void
+	 */
+	protected function hook(): void {
+		add_action( 'cmb2_init', function() {
+			$this->register_fields();
+		}, 11 );
+		add_action( 'cmb2_init', [ Repo::in(), 'validate_fields' ], 20 );
+	}
+
+
+	/**
+	 * Add a field to this box.
+	 *
+	 * May be used to add or replace fields.
+	 *
+	 * @param Field $field - The field to add.
+	 *
+	 * @return Field
+	 */
+	public function add_field( Field $field ): Field {
+		if ( $field->group instanceof Group ) {
+			$field->group->add_field( $field );
+		} else {
+			$this->fields[ $field->id ] = $field;
+		}
+
+		return $field;
+	}
+
+
+	/**
+	 * Add a field to this box.
+	 *
+	 * @example $box->field( $id, $name )->checkbox();
+	 *
+	 * @param string $id   - Field ID.
+	 * @param string $name - Field name.
+	 *
+	 * @return Field_Type
+	 */
+	public function field( string $id, string $name ): Field_Type {
+		$field = $this->add_field( Field::factory( $id, $name, $this, null ) );
+		return Field_Type::factory( $field, $this );
+	}
+
+
+	/**
+	 * Add a group to this box.
+	 *
+	 * For shorthand calls where no special setting is necessary.
+	 *
+	 * @example $group = $box->group( $id, $name );
+	 *
+	 * @param string  $id        - Group ID.
+	 * @param string  $name      - Group title.
+	 * @param ?string $row_title - include a {#} to have replaced with number.
+	 *
+	 * @return Group
+	 */
+	public function group( string $id, string $name, ?string $row_title = null ): Group {
+		$group = Group::factory( $id, $name, $this );
+		$this->add_field( $group );
+		Field_Type::factory( $group, $this )->group( $row_title );
+		return $group;
 	}
 
 
@@ -421,7 +519,7 @@ class Box {
 	 * be included in default WP response even if the box is set to true
 	 * and all fields are in the /cmb2 response.
 	 *
-	 * @see     Box_Trait::selectively_show_in_rest()
+	 * @see     Box::selectively_show_in_rest()
 	 *
 	 * @example WP_REST_Server::READABLE // Same as `true`
 	 * @example WP_REST_Server::ALLMETHODS
@@ -444,7 +542,7 @@ class Box {
 
 	/**
 	 * Add a tab to this box which can later be assigned to fields via
-	 * Field::tab( $id );
+	 * Field::tab($id);
 	 *
 	 * @see     Field::tab;
 	 *
@@ -479,11 +577,13 @@ class Box {
 	 * Should the tabs display vertical or horizontal?
 	 * Default is vertical when not calling this.
 	 *
-	 * @param string $layout - vertical, horizontal.
+	 * @phpstan-param Tabs::STYLE_* $layout
+	 *
+	 * @param string                $layout - vertical, horizontal.
 	 *
 	 * @return void
 	 */
-	public function tabs_style( string $layout = 'horizontal' ): void {
+	public function tabs_style( string $layout ): void {
 		$this->tab_style = $layout;
 	}
 
@@ -507,8 +607,8 @@ class Box {
 	 *
 	 * @return \CMB2
 	 */
-	public function get_box(): \CMB2 {
-		if ( ! empty( $this->cmb ) ) {
+	public function get_cmb2_box(): \CMB2 {
+		if ( isset( $this->cmb ) ) {
 			return $this->cmb;
 		}
 
@@ -520,9 +620,33 @@ class Box {
 
 
 	/**
+	 * Get the type of object this box is registered to.
+	 *
+	 * @note `$this->objects_types` may contain [post type slugs] which
+	 *        will all map to `post`.
+	 *
+	 * @return BoxType
+	 */
+	public function get_box_type(): BoxType {
+		return $this->box_type;
+	}
+
+
+	/**
+	 * Get the full list of object types this box
+	 * is registered to.
+	 *
+	 * @return string[]
+	 */
+	public function get_object_types(): array {
+		return $this->object_types;
+	}
+
+
+	/**
 	 * Get the arguments for this box.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function get_args(): array {
 		$args = [];
@@ -550,7 +674,10 @@ class Box {
 	 *
 	 * @link https://wordpress.org/gutenberg/handbook/designers-developers/developers/backwards-compatibility/meta-box/
 	 *
-	 * @return array
+	 * @return array{
+	 *     __back_compat_meta_box?: bool,
+	 *     __block_editor_compatible_meta_box?: bool
+	 * }
 	 */
 	protected function get_meta_box_callback_args(): array {
 		if ( ! isset( $this->mb_callback_args['__block_editor_compatible_meta_box'] ) ) {
@@ -576,9 +703,8 @@ class Box {
 	 * @return void
 	 */
 	protected function add_field_to_box( Field $field ): void {
-		$box = $this->get_box();
-		$box->add_field( $field->get_field_args(), $field->position );
-		$field->box_id = $this->id;
+		$box = $this->get_cmb2_box();
+		$box->add_field( $field->get_field_args(), Registered::factory( $field )->get_position() );
 
 		Repo::in()->register_field( $field );
 	}
@@ -599,58 +725,181 @@ class Box {
 	 *
 	 * @internal
 	 *
-	 * @param Field $field  - The field to register.
-	 * @param array $config - The config to register.
+	 * @param Registered           $registered - The field to register.
+	 * @param array<string, mixed> $config     - The config to register.
 	 */
-	public function register_meta_on_all_types( Field $field, array $config ): void {
-		if ( ! empty( $field->default ) ) {
-			$config['default'] = $field->default;
+	public function register_meta_on_all_types( Registered $registered, array $config ): void {
+		if ( null !== $registered->get_default() ) {
+			$config['default'] = $registered->get_default();
 		}
 
-		if ( isset( $config['show_in_rest'] ) ) {
-			$config = $this->translate_rest_keys( $field, $config );
+		if ( false !== $registered->get_show_in_rest() ) {
+			$config = $this->translate_rest_keys( $registered, $config );
 		}
 
-		if ( null !== $field->sanitize_callback ) {
-			$config['sanitize_callback'] = function( $value ) use ( $field, $config ) {
+		if ( null !== $registered->get_meta_sanitizer() ) {
+			$config['sanitize_callback'] = function( $value ) use ( $registered, $config ) {
 				// Allow other sanitize callbacks to run like group untranslate of fields.
 				if ( isset( $config['sanitize_callback'] ) ) {
 					$value = \call_user_func( $config['sanitize_callback'], $value );
 				}
-				return \call_user_func( $field->sanitize_callback, $value, $field->get_field_args(), $field->get_cmb2_field() );
+				return \call_user_func( $registered->get_meta_sanitizer(), $value, $registered->get_config(), $registered->get_cmb2_field() );
 			};
 		}
-		if ( isset( $field->revisions_enabled ) ) {
-			$config['revisions_enabled'] = $field->revisions_enabled;
-		}
+		$config['revisions_enabled'] = $registered->are_revisions_enabled();
 
 		// Nothing to register.
 		if ( 3 > \count( $config ) ) {
 			return;
 		}
 
-		$type = $this->get_object_type();
+		$type = $this->get_box_type();
 		$sub_types = $this->object_types;
-		if ( 'term' === $type ) {
+		if ( BoxType::TERM === $type ) {
 			if ( isset( $this->taxonomies ) ) {
 				$sub_types = $this->taxonomies;
 			}
-		} elseif ( \in_array( $type, [ 'user', 'comment' ], true ) ) {
+		} elseif ( \in_array( $type, [ BoxType::USER, BoxType::COMMENT ], true ) ) {
 			$sub_types = [ false ];
 		}
 
 		foreach ( $sub_types as $_type ) {
 			$config['object_subtype'] = $_type;
-			register_meta( $type, $field->get_id(), $config );
+			register_meta( $type->value, $registered->get_id(), $config );
 
 			// A secondary field for file ids.
-			if ( Repo::TYPE_FILE === $field->data_type ) {
-				if ( ! empty( $config['show_in_rest']['name'] ) ) {
+			if ( DataType::FILE === $registered->get_data_type() ) {
+				if ( isset( $config['show_in_rest']['name'] ) ) {
 					$config['show_in_rest']['name'] .= '_id';
 					unset( $config['show_in_rest']['prepare_callback'] );
 				}
-				register_meta( $type, $field->get_id() . '_id', $config );
+				register_meta( $type->value, $registered->get_id() . '_id', $config );
 			}
 		}
+	}
+
+
+	/**
+	 * Registers any fields which were adding using $this->field()
+	 * when the `cmb2_init` action fires.
+	 *
+	 * Allows for storing/appending a fields properties beyond
+	 * a basic return pattern.
+	 *
+	 * @return void
+	 */
+	protected function register_fields(): void {
+		$show_in_rest = $this->show_in_rest ?? false;
+
+		// Run through the fields first for adjustments to box config.
+		\array_walk( $this->fields, function( Field $field ) use ( $show_in_rest ) {
+			$this->register_meta( Registered::factory( $field ) );
+			if ( false === $show_in_rest ) {
+				$this->selectively_show_in_rest( $field );
+			}
+		} );
+
+		\array_walk( $this->fields, function( Field $field ) {
+			$this->add_field_to_box( $field );
+		} );
+	}
+
+
+	/**
+	 * Register the meta field with WP core for things like
+	 * `show_in_rest` and `default.
+	 *
+	 * Only supports simple data types.
+	 *
+	 * @requires WP 5.5+ for default values.
+	 *
+	 * @param Registered $registered - The field to register the meta for.
+	 */
+	protected function register_meta( Registered $registered ): void {
+		if ( ! $registered->is_allowed_to_register_meta() ) {
+			return;
+		}
+		$config = [
+			'single'      => true,
+			'type'        => 'string',
+			'description' => $registered->variation->name,
+		];
+		if ( $registered->is_using_array_data() ) {
+			$config['type'] = 'array';
+		} elseif ( $registered->is_using_object_data() ) {
+			$config['type'] = 'object';
+		}
+
+		if ( $registered->is_public_rest_data() ) {
+			$config['show_in_rest'] = $registered->get_show_in_rest();
+			if ( $registered->is_using_array_data() ) {
+				$config['show_in_rest'] = [
+					'schema' => [
+						'items' => [
+							'type' => 'string',
+						],
+					],
+				];
+			}
+
+			if ( $registered->is_using_object_data() ) {
+				$config['show_in_rest'] = [
+					'schema' => [
+						'additionalProperties' => [
+							'type' => 'string',
+						],
+					],
+				];
+			}
+		}
+
+		$this->register_meta_on_all_types( $registered, $config );
+	}
+
+
+	/**
+	 * If we have marked particular fields `show_in_rest` without marking the box,
+	 * this marks the box "true" which marking any non specified fields to "false".
+	 *
+	 * Makes selectively adding fields to rest much simpler.
+	 *
+	 * @param Field $field - The field to check.
+	 */
+	protected function selectively_show_in_rest( Field $field ): void {
+		if ( false !== Registered::factory( $field )->get_show_in_rest() ) {
+			$this->show_in_rest = true;
+		} else {
+			$field->show_in_rest( false );
+		}
+	}
+
+
+	/**
+	 * Translates long /namespaced names to API friendly.
+	 * If you need the long names due to conflicts, they will still
+	 * be available via /cmb2 values.
+	 *
+	 * @notice This can never be changed, or it will break sites!!
+	 *
+	 * @param Registered           $field  - The field to translate.
+	 * @param array<string, mixed> $config - The config array to translate.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function translate_rest_keys( Registered $field, array $config ): array {
+		if ( false !== $field->get_show_in_rest() ) {
+			if ( BoxType::POST === $this->get_box_type() ) {
+				// Post type must support 'custom-fields' to allow REST meta.
+				\array_walk( $this->object_types, function( $type ) {
+					add_post_type_support( $type, 'custom-fields' );
+				} );
+			}
+
+			if ( ! \is_array( $config['show_in_rest'] ) ) {
+				$config['show_in_rest'] = [];
+			}
+			$config['show_in_rest']['name'] = $field->get_rest_short_name();
+		}
+		return $config;
 	}
 }

@@ -3,7 +3,9 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Query\Clause;
 
-use Lipe\Lib\Query\Args_Interface;
+use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\Clause;
+use Lipe\Lib\Args\ClauseRules;
 
 /**
  * Generate a `date_query` argument for a `WP_Query.
@@ -19,15 +21,15 @@ use Lipe\Lib\Query\Args_Interface;
  *
  * @phpstan-type COMPARE '='|'!='|'>'|'>='|'<'|'<='|'IN'|'NOT IN'|'BETWEEN'|'NOT BETWEEN'|''
  *
- * @implements Clause_Interface<Date_Query>
+ * @implements ClauseRules<Date_Query>
  */
-class Date_Query implements Clause_Interface {
+class Date_Query implements ClauseRules {
 	/**
 	 * Pass generic to trait.
 	 *
-	 * @use Clause_Trait<Date_Query>
+	 * @use Clause<Date_Query>
 	 */
-	use Clause_Trait;
+	use Clause;
 
 	/**
 	 * Current clauses index in $this->clauses.
@@ -46,7 +48,7 @@ class Date_Query implements Clause_Interface {
 	 * @phpstan-param numeric-string $month
 	 * @phpstan-param numeric-string $day
 	 *
-	 * @param ?string                $year  - Year to retrieve posts after.
+	 * @param string                 $year  - Year to retrieve posts after.
 	 * @param ?string                $month - Month to retrieve posts after.
 	 * @param ?string                $day   - Day to retrieve posts after.
 	 *
@@ -86,7 +88,7 @@ class Date_Query implements Clause_Interface {
 	 * @phpstan-param numeric-string $month
 	 * @phpstan-param numeric-string $day
 	 *
-	 * @param ?string                $year  - Year to retrieve posts before.
+	 * @param string                 $year  - Year to retrieve posts before.
 	 * @param ?string                $month - Month to retrieve posts before.
 	 * @param ?string                $day   - Day to retrieve posts before.
 	 *
@@ -175,7 +177,7 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @return Date_Query
 	 */
-	public function year( $year ): Date_Query {
+	public function year( array|int $year ): Date_Query {
 		$this->update_current_clause( $year, 'year' );
 		return $this;
 	}
@@ -191,7 +193,7 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @return Date_Query
 	 */
-	public function month( $month ): Date_Query {
+	public function month( array|int $month ): Date_Query {
 		$this->update_current_clause( $month, 'month' );
 		return $this;
 	}
@@ -207,7 +209,7 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @return Date_Query
 	 */
-	public function week( $week ): Date_Query {
+	public function week( array|int $week ): Date_Query {
 		$this->update_current_clause( $week, 'week' );
 		return $this;
 	}
@@ -221,7 +223,7 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @param int|int[]                                $day - Day of the month to retrieve posts for.
 	 */
-	public function day( $day ): Date_Query {
+	public function day( array|int $day ): Date_Query {
 		$this->update_current_clause( $day, 'day' );
 		return $this;
 	}
@@ -237,7 +239,7 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @return Date_Query
 	 */
-	public function hour( $hour ): Date_Query {
+	public function hour( array|int $hour ): Date_Query {
 		$this->update_current_clause( $hour, 'hour' );
 		return $this;
 	}
@@ -253,7 +255,7 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @return Date_Query
 	 */
-	public function minute( $minute ): Date_Query {
+	public function minute( array|int $minute ): Date_Query {
 		$this->update_current_clause( $minute, 'minute' );
 		return $this;
 	}
@@ -269,7 +271,7 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @return Date_Query
 	 */
-	public function second( $second ): Date_Query {
+	public function second( array|int $second ): Date_Query {
 		$this->update_current_clause( $second, 'second' );
 		return $this;
 	}
@@ -285,7 +287,7 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @return Date_Query
 	 */
-	public function dayofyear( $dayofyear ): Date_Query {
+	public function dayofyear( array|int $dayofyear ): Date_Query {
 		$this->update_current_clause( $dayofyear, 'dayofyear' );
 		return $this;
 	}
@@ -301,7 +303,7 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @return Date_Query
 	 */
-	public function dayofweek( $dayofweek ): Date_Query {
+	public function dayofweek( array|int $dayofweek ): Date_Query {
 		$this->update_current_clause( $dayofweek, 'dayofweek' );
 		return $this;
 	}
@@ -317,7 +319,7 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @return Date_Query
 	 */
-	public function dayofweek_iso( $dayofweek_iso ): Date_Query {
+	public function dayofweek_iso( array|int $dayofweek_iso ): Date_Query {
 		$this->update_current_clause( $dayofweek_iso, 'dayofweek_iso' );
 		return $this;
 	}
@@ -333,7 +335,7 @@ class Date_Query implements Clause_Interface {
 	 * @return Date_Query
 	 */
 	public function next_clause(): Date_Query {
-		if ( empty( $this->clauses['relation'] ) ) {
+		if ( ! isset( $this->clauses['relation'] ) ) {
 			$this->relation();
 		}
 		$this->clauses[] = [];
@@ -348,11 +350,9 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @internal
 	 *
-	 * @param Args_Interface $args_class - Args class, which supports properties this method will assign.
+	 * @param ArgsRules $args_class - Args class, which supports properties this method will assign.
 	 *
 	 * @throws \LogicException - If the provided class does have a `date_query` property.
-	 *
-	 * @throws \LogicException - If called with access to the `date_query` property.
 	 *
 	 * @return void
 	 */
@@ -376,13 +376,13 @@ class Date_Query implements Clause_Interface {
 	 *
 	 * @link https://developer.wordpress.org/reference/classes/wp_query/#date-parameters
 	 *
-	 * @param string|int|bool|array<string|int|bool> $value - Value to update the current clause with.
+	 * @param bool|int|string|array<string|int|bool> $value - Value to update the current clause with.
 	 * @param string                                 $key   - Key to update in the current clause.
 	 *
 	 * @return void
 	 */
-	protected function update_current_clause( $value, string $key ): void {
-		if ( empty( $this->clauses[ $this->current_index ] ) ) {
+	protected function update_current_clause( array|bool|int|string $value, string $key ): void {
+		if ( ! isset( $this->clauses[ $this->current_index ] ) ) {
 			$this->clauses[ $this->current_index ] = [];
 		}
 		$this->clauses[ $this->current_index ] = \array_merge( $this->clauses[ $this->current_index ], [

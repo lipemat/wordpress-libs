@@ -136,22 +136,18 @@ class ResourcesTest extends \WP_UnitTestCase {
 	public function test_async_javascript(): void {
 		[ $url, $callback ] = $this->get_script_handler();
 		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
-
-		$this->expectDeprecated( Resources::class . '::async_javascript' );
 		[ $url, $callback, $handle ] = $this->get_script_handler();
-		Resources::in()->async_javascript( $handle );
-		$this->assertEquals( "<script async src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+		wp_script_add_data( $handle, 'strategy', 'async' );
+		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js' async data-wp-strategy='async'></script>" . "\n", $callback() );
 	}
 
 
 	public function test_defer_javascript(): void {
 		[ $url, $callback ] = $this->get_script_handler();
 		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
-
-		$this->expectDeprecated( Resources::class . '::defer_javascript' );
 		[ $url, $callback, $handle ] = $this->get_script_handler();
-		Resources::in()->defer_javascript( $handle );
-		$this->assertEquals( "<script defer src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+		wp_script_add_data( $handle, 'strategy', 'defer' );
+		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js' defer data-wp-strategy='defer'></script>" . "\n", $callback() );
 	}
 
 

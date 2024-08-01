@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Traits;
 
@@ -10,23 +11,30 @@ use Lipe\Lib\Util\Cache;
  * with different caches based on the arguments provided.
  *
  * @example public function heavy( $text ) {
- *              return $this->memoize( function ( $text ) {
+ *              return $this->memoize(function ($text) {
  *                   echo 'called' . "\n";
  *                    return $text;
- *                }, __METHOD__, $text );
+ *                }, __METHOD__, $text);
  *            }
- *          $test->heavy( 'as can be'. "\n" ); //called
- *          $test->heavy( 'as can be x2' . "\n"); //called
- *          $test->heavy( 'as can be X3'. "\n" ); // called
- *          $test->heavy( 'as can be x2' . "\n"); //Not called
+ *          $test->heavy('as can be'. "\n"); //called
+ *          $test->heavy('as can be x2' . "\n"); //called
+ *          $test->heavy('as can be X3'. "\n"); // called
+ *          $test->heavy('as can be x2' . "\n"); //Not called
  */
 trait Memoize {
 	/**
 	 * The local cache to store the results of memoized calls.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected array $memoize_cache = [];
+
+	/**
+	 * The static cache to store the results of static calls.
+	 *
+	 * @var array<string, mixed>
+	 */
+	protected static array $static_cache = [];
 
 
 	/**
@@ -46,7 +54,7 @@ trait Memoize {
 	 *
 	 * @return mixed
 	 */
-	public function persistent( callable $callback, string $identifier, $expire = 0, ...$args ) {
+	public function persistent( callable $callback, string $identifier, $expire = 0, ...$args ): mixed {
 		$cache_key = $this->get_cache_key( $identifier, $args );
 		$data = Cache::in()->get( $cache_key, __CLASS__ );
 		if ( false === $data ) {
@@ -73,7 +81,7 @@ trait Memoize {
 	 *
 	 * @return mixed
 	 */
-	public function once( callable $callback, string $identifier, ...$args ) {
+	public function once( callable $callback, string $identifier, ...$args ): mixed {
 		$key = "{$identifier}::once";
 		if ( ! \array_key_exists( $key, $this->memoize_cache ) ) {
 			$this->memoize_cache[ $key ] = $callback( ...$args );
@@ -99,9 +107,9 @@ trait Memoize {
 	 *
 	 * @return mixed
 	 */
-	public function memoize( callable $callback, string $identifier, ...$args ) {
-		// Closure use their object id to differenciate.
-		$cache_args = Arrays::in()->map_recursive( fn( $arg ) => $arg instanceof \Closure ? 'clousure-' . \spl_object_id( $arg ) : $arg, $args );
+	public function memoize( callable $callback, string $identifier, ...$args ): mixed {
+		// Closure use their object id to differentiate.
+		$cache_args = Arrays::in()->map_recursive( fn( $arg ) => $arg instanceof \Closure ? 'closure-' . \spl_object_id( $arg ) : $arg, $args );
 
 		$key = $this->get_cache_key( $identifier, $cache_args );
 		if ( ! \array_key_exists( $key, $this->memoize_cache ) ) {
@@ -113,13 +121,43 @@ trait Memoize {
 
 
 	/**
+	 * Pass me a callback, a method identifier, and some optional arguments and
+	 * I will return the same result every time I'm called for the same
+	 * class and identifier, regardless of how many times a class is instantiated.
+	 *
+	 * Used when something should only be called once per class even when a class
+	 * is constructed multiple times.
+	 *
+	 * Think if it like using a static variable within a method as a flag to only run once.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param callable $callback     - Callback, which returns the value to store and return.
+	 * @param string   $identifier   - Something unique to identify the method being used
+	 *                               so we can determine the difference in the cache.
+	 *                               `__METHOD__` works nicely here.
+	 * @param mixed    ...$args      - Arguments will be passed to the callback.
+	 *
+	 * @return mixed
+	 */
+	public function static_once( callable $callback, string $identifier, ...$args ): mixed {
+		$key = \get_class( $this ) . '::' . $identifier;
+		if ( ! \array_key_exists( $key, static::$static_cache ) ) {
+			static::$static_cache[ $key ] = $callback( ...$args );
+		}
+
+		return static::$static_cache[ $key ];
+	}
+
+
+	/**
 	 * Delete a single item from the caches without clearing
 	 * the entire class and cache group.
 	 *
 	 * @see Memoize::clear_memoize_cache()
 	 *
-	 * @param string $identifier - Identifier used with original method to store value.
-	 * @param array  ...$args    - Arguments passed to original method when storing value.
+	 * @param string       $identifier - Identifier used with original method to store value.
+	 * @param array<mixed> ...$args    - Arguments passed to original method when storing value.
 	 *
 	 * @return bool - Result of deleting the cache from external object cache.
 	 */
@@ -142,6 +180,7 @@ trait Memoize {
 	 */
 	public function clear_memoize_cache(): void {
 		$this->memoize_cache = [];
+		static::$static_cache = [];
 		Cache::in()->flush_group( __CLASS__ );
 	}
 
@@ -154,11 +193,8 @@ trait Memoize {
 	 *
 	 * @since 4.2.0
 	 *
-	 * @todo  Switch to `murmur3f` algorihtum when PHP 8.1 becomes the
-	 *        minium supported version.
-	 *
-	 * @param string $identifier - Unique key to hold the cache.
-	 * @param array  $args       - Arguments passed to the original method.
+	 * @param string       $identifier - Unique key to hold the cache.
+	 * @param array<mixed> $args       - Arguments passed to the original method.
 	 *
 	 * @return string
 	 */
@@ -172,6 +208,6 @@ trait Memoize {
 			return $identifier;
 		}
 
-		return \hash( 'fnv1a64', (string) wp_json_encode( [ $args, $identifier ] ) );
+		return \hash( 'murmur3f', (string) wp_json_encode( [ $args, $identifier ] ) );
 	}
 }

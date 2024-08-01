@@ -5,7 +5,6 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Settings;
 
 use Lipe\Lib\Settings\Settings_Page\Field;
-use Lipe\Lib\Settings\Settings_Page\FieldArgs;
 use Lipe\Lib\Settings\Settings_Page\SectionArgs;
 use Lipe\Lib\Settings\Settings_Page\Settings;
 use mocks\Settings_Page_Mock;
@@ -26,6 +25,7 @@ class Settings_PageTest extends \WP_UnitTestCase {
 		wp_set_current_user( self::factory()->user->create( [
 			'role' => 'administrator',
 		] ) );
+		remove_all_actions( 'admin_menu' );
 	}
 
 
@@ -241,6 +241,27 @@ class Settings_PageTest extends \WP_UnitTestCase {
 				6 => 'dashicons-format-gallery',
 			],
 		], $menu );
+	}
+
+
+	/**
+	 * @dataProvider provideIsSettingsPage
+	 */
+	public function test_is_setting_page( ?string $parent, bool $network ): void {
+		$mocked = $this->mock_settings( $network, [ 'get_parent_menu_slug' ] );
+		$mocked->method( 'get_parent_menu_slug' )->willReturn( $parent );
+		$settings_page = Settings_Page::factory( $mocked );
+		$settings_page->init();
+		if ( $network ) {
+			do_action( 'network_admin_menu' );
+		} else {
+			do_action( 'admin_menu' );
+		}
+
+		$this->assertFalse( $settings_page->is_settings_page() );
+		$GLOBALS['hook_suffix'] = get_plugin_page_hook( $settings_page->settings->get_id(), $parent ?? '' );
+		set_current_screen();
+		$this->assertTrue( $settings_page->is_settings_page() );
 	}
 
 
@@ -500,6 +521,20 @@ class Settings_PageTest extends \WP_UnitTestCase {
 	}
 
 
+	/**
+	 * @param bool  $is_network
+	 * @param array $methods_to_mock
+	 *
+	 * @return Settings|MockObject
+	 */
+	private function mock_settings( bool $is_network, array $methods_to_mock ): Settings|MockObject {
+		return $this->getMockBuilder( Settings_Page_Mock::class )
+		            ->setConstructorArgs( [ $is_network ] )
+		            ->onlyMethods( $methods_to_mock )
+		            ->getMock();
+	}
+
+
 	public static function provideFieldExtras(): array {
 		return [
 			'default'             => [
@@ -529,16 +564,24 @@ class Settings_PageTest extends \WP_UnitTestCase {
 	}
 
 
-	/**
-	 * @param bool  $is_network
-	 * @param array $methods_to_mock
-	 *
-	 * @return Settings|MockObject
-	 */
-	private function mock_settings( bool $is_network, array $methods_to_mock ): Settings|MockObject {
-		return $this->getMockBuilder( Settings_Page_Mock::class )
-		            ->setConstructorArgs( [ $is_network ] )
-		            ->onlyMethods( $methods_to_mock )
-		            ->getMock();
+	public static function provideIsSettingsPage(): array {
+		return [
+			'top-level'   => [
+				'parent'  => null,
+				'network' => false,
+			],
+			'sub-menu'    => [
+				'parent'  => 'plugins.php',
+				'network' => false,
+			],
+			'network'     => [
+				'parent'  => null,
+				'network' => true,
+			],
+			'network-sub' => [
+				'parent'  => 'themes.php',
+				'network' => true,
+			],
+		];
 	}
 }

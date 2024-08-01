@@ -3,8 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Settings;
 
-use Lipe\Lib\Query\Args_Interface;
-use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Args\Args;
+use Lipe\Lib\Args\ArgsRules;
 
 /**
  * A Fluent interface for registering a setting.
@@ -15,8 +15,11 @@ use Lipe\Lib\Query\Args_Trait;
  * @since  4.10.0
  *
  */
-class Register_Setting implements Args_Interface {
-	use Args_Trait;
+class Register_Setting implements ArgsRules {
+	/**
+	 * @use Args<array<string, mixed>>
+	 */
+	use Args;
 
 	public const GROUP_DISCUSSION = 'discussion';
 	public const GROUP_GENERAL    = 'general';
@@ -46,6 +49,16 @@ class Register_Setting implements Args_Interface {
 	 * @var string
 	 */
 	public string $description;
+
+	/**
+	 * The label will be displayed to users when editing core or custom settings
+	 * via block editors.
+	 *
+	 * @since WP 6.6.
+	 *
+	 * @var string
+	 */
+	public string $label;
 
 	/**
 	 * A callback function that sanitizes the option’s value.

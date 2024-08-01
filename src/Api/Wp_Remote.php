@@ -3,8 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Api;
 
-use Lipe\Lib\Query\Args_Interface;
-use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Args\Args;
+use Lipe\Lib\Args\ArgsRules;
 
 /**
  * A fluent interface for calling the `wp_remote_*` functions.
@@ -22,8 +22,13 @@ use Lipe\Lib\Query\Args_Trait;
  * @link   https://developer.wordpress.org/reference/functions/wp_remote_post/
  * @link   https://developer.wordpress.org/reference/classes/wp_http/request/
  */
-class Wp_Remote implements Args_Interface {
-	use Args_Trait;
+class Wp_Remote implements ArgsRules {
+	/**
+	 * @use Args<array<string, mixed>>
+	 */
+	use Args {
+		get_args as parent_get_args;
+	}
 
 	public const METHOD_GET     = 'GET';
 	public const METHOD_POST    = 'POST';
@@ -131,9 +136,9 @@ class Wp_Remote implements Args_Interface {
 	 *
 	 * Default null.
 	 *
-	 * @var string|array
+	 * @var string|array<int|string, mixed>
 	 */
-	public $body;
+	public string|array $body;
 
 	/**
 	 * Whether to compress the $body when sending the request.
@@ -203,12 +208,32 @@ class Wp_Remote implements Args_Interface {
 	 */
 	public int $limit_response_size;
 
+
 	/**
-	 * Map of args to their wp_remote_* counterparts.
+	 * Add a header to this request.
 	 *
-	 * @var array<string, string>
+	 * @param string $key   - The header key.
+	 * @param string $value - The header value.
+	 *
+	 * @return static
 	 */
-	protected array $map = [
-		'user_agent' => 'user-agent',
-	];
+	public function header( string $key, string $value ): static {
+		$this->headers[ $key ] = $value;
+		return $this;
+	}
+
+
+	/**
+	 * Map 'user_agent' to 'user-agent' to fix '-' vs '_'.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function get_args(): array {
+		$args = $this->parent_get_args();
+		if ( isset( $args['user_agent'] ) ) {
+			$args['user-agent'] = $args['user_agent'];
+			unset( $args['user_agent'] );
+		}
+		return $args;
+	}
 }

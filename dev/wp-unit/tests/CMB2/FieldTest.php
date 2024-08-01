@@ -4,6 +4,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Settings\Settings_Trait;
 use mocks\Post_Mock;
@@ -30,12 +31,13 @@ class FieldTest extends \WP_Test_REST_TestCase {
 
 
 	public function test_field_type_array(): void {
-		$field = new Field( 't', 'test', null );
-		$field->type()->text_date( 'M', 'time_key', [ 'passive' => 1 ] );
-		$field->attributes = [ 'directly' => 1 ];
+		$box = new Box( 'test-term-select', [ 'post' ], 'Term Select Test' );
+		$field = $box->field( 't', 'test' )
+		             ->text_date( 'M', 'time_key', [ 'passive' => 1 ] );
+		$field->attributes( [ 'directly' => 1 ] );
 
 		$args = $field->get_field_args();
-		$this->assertEquals( [ 'directly' => 1 ], $args['attributes'] );
+		$this->assertEquals( [ 'directly' => 1, 'data-datepicker' => '{"passive":1}' ], $args['attributes'] );
 		$this->assertEquals( 'time_key', $args['timezone_meta_key'] );
 		$this->assertEquals( 'text_date', $args['type'] );
 	}
@@ -44,7 +46,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 	public function test_taxonomy_retrieval(): void {
 		$term = self::factory()->category->create_and_get();
 		update_term_meta( $term->term_id, 'tc', [ $term->slug ] );
-		$terms = Repo::in()->get_value( $term->term_id, 'tc', 'term' );
+		$terms = Repo::in()->get_value( $term->term_id, 'tc', MetaType::TERM );
 		$this->assertEquals( $term->term_id, $terms[0]->term_id );
 	}
 
@@ -79,6 +81,10 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		    ->show_in_rest( \WP_REST_Server::ALLMETHODS );
 		$box->field( 't2', 'Test 2' )
 		    ->text();
+		$box->field( 'some-weird-name', 'Some Weird Name' )
+		    ->text()
+		    ->show_in_rest()
+		    ->rest_short_name( 'better' );
 		$group = $box->group( 't3', 'Test 3' );
 		$group->show_in_rest();
 		$group
@@ -88,7 +94,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 			->field( 'second', '' )
 			->text();
 		do_action( 'cmb2_init' );
-		( new \CMB2_REST( $box->get_box() ) )->universal_hooks()::register_cmb2_fields();
+		( new \CMB2_REST( $box->get_cmb2_box() ) )->universal_hooks()::register_cmb2_fields();
 
 		$post = Post_Mock::factory( self::factory()->post->create_and_get() );
 		$post['unit-testing/t1'] = 'returnee';
@@ -98,8 +104,9 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		$request->set_query_params( [ 'domain' => 'unit-test.com', 'site_name' => 'Unit Test' ] );
 		$response = rest_get_server()->dispatch( $request )->data;
 		$this->assertEquals( 'returnee', $response['cmb2']['rested']['unit-testing/t1'] );
-		// Important this remains intact or we'll break sites!!
+		// Important this remains intact, or we'll break sites!!
 		$this->assertArrayHasKey( 't1', $response['meta'], 'Keys are not being shortened in rest!' );
+		$this->assertArrayHasKey( 'better', $response['meta'], 'Specified short keys are not working the REST!' );
 		$this->assertEquals( 'returnee', $response['meta']['t1'] );
 		$this->assertArrayNotHasKey( 't2', $response['meta'] );
 		$this->assertEquals( [ [ 'first' => 'omg', 'second' => 'foo' ] ], $response['meta']['t3'] );
@@ -112,7 +119,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		$box->field( 'd1', 'Default 1' )
 		    ->text()
 		    ->default( 'secret' );
-		$group = $box->group( 'd1-alot', null )
+		$group = $box->group( 'd1-alot', '' )
 		             ->default( [ [ 'first' => 'omg', 'second' => 'foo' ] ] );
 		$group
 			->field( 'first', '' )
@@ -184,7 +191,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 			->field( 'first-tos', '' )
 			->text();
 		do_action( 'cmb2_init' );
-		( new \CMB2_REST( $box->get_box() ) )->universal_hooks()::register_cmb2_fields();
+		( new \CMB2_REST( $box->get_cmb2_box() ) )->universal_hooks()::register_cmb2_fields();
 
 		$post = Post_Mock::factory( self::factory()->post->create_and_get( [
 			'post_type' => 'page',
@@ -216,29 +223,27 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		$box->field( 'tos', 'TEST 1' )
 		    ->text()
 		    ->revisions_enabled( true );
-		$box->register_fields();
+		call_private_method( $box, 'register_fields' );
 		$this->assertContains( 'tos', wp_post_revision_meta_keys( 'page' ) );
 
 		$box->field( 'tos', 'TEST 1' )
 		    ->text()
 		    ->revisions_enabled( false );
-		$box->register_fields();
+		call_private_method( $box, 'register_fields' );
 		$this->assertNotContains( 'tos', wp_post_revision_meta_keys( 'page' ) );
 
 		$box = new Options_Page( 'options', 'Sanitize Box' );
 		$box->field( 'tos', 'TEST 1' )
 		    ->text()
 		    ->revisions_enabled( false );
-		$box->register_fields();
-		// So we can reuse the same method saying "doing it wrong".
-		$this->assertCount( 1, $this->caught_doing_it_wrong );
-		$this->caught_doing_it_wrong = [];
+		call_private_method( $box, 'register_fields' );
+		$this->expectDoingItWrong( 'Lipe\Lib\CMB2\Field::revisions_enabled' );
 
 		$box = new Term_Box( 'options', [ 'category' ], 'Sanitize Box' );
 		$box->field( 'tos', 'TEST 1' )
 		    ->text()
 		    ->revisions_enabled( false );
-		$this->setExpectedIncorrectUsage( 'Lipe\Lib\CMB2\Field::revisions_enabled' );
-		$box->register_fields();
+		$this->expectDoingItWrong( 'Lipe\Lib\CMB2\Field::revisions_enabled' );
+		call_private_method( $box, 'register_fields' );
 	}
 }

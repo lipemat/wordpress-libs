@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
@@ -10,7 +11,7 @@ use Lipe\Lib\Traits\Singleton;
  * Load a namespaced folder from a specified directory.
  *
  * @example load a namespaced folder from root dir
- *          Autoloader::add( "Products\\", __DIR__ . '/Products' );
+ *          Autoloader::add("Products\\", __DIR__ . '/Products');
  */
 class Autoloader {
 	use Singleton;
@@ -18,7 +19,7 @@ class Autoloader {
 	/**
 	 * Map of registered namespaces and their path.
 	 *
-	 * Stored as `[ [<namespace>, <path>] ]` to allow the same namespace to be
+	 * Stored as `[[<namespace>, <path>]]` to allow the same namespace to be
 	 * registered multiple times with different paths.
 	 *
 	 * @var array<array<string>>
@@ -55,7 +56,7 @@ class Autoloader {
 	 * @return void
 	 */
 	public function register( bool $prepend = true ): void {
-		spl_autoload_register( [ $this, 'maybe_load_class' ], true, $prepend );
+		\spl_autoload_register( [ $this, 'maybe_load_class' ], true, $prepend );
 	}
 
 
@@ -63,7 +64,7 @@ class Autoloader {
 	 * Removes this instance from the registered autoloader.
 	 */
 	public function unregister(): void {
-		spl_autoload_unregister( [ $this, 'maybe_load_class' ] );
+		\spl_autoload_unregister( [ $this, 'maybe_load_class' ] );
 	}
 
 
@@ -76,8 +77,8 @@ class Autoloader {
 	 * @return void
 	 */
 	protected function add_namespace( string $name_space, string $path ): void {
-		$name_space = trim( $name_space, '\\' ) . '\\';
-		$path = rtrim( $path, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR;
+		$name_space = \trim( $name_space, '\\' ) . '\\';
+		$path = \rtrim( $path, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR;
 		$this->namespaces[] = [ $name_space, $path ];
 	}
 
@@ -94,10 +95,8 @@ class Autoloader {
 		$file = $this->find_file( $class_name );
 		if ( null !== $file ) {
 			require $file;
-
 			return true;
 		}
-
 		return false;
 	}
 
@@ -112,7 +111,6 @@ class Autoloader {
 	 */
 	protected function find_file( string $class_name ): ?string {
 		$class_name = \ltrim( $class_name, '\\' );
-
 		foreach ( $this->namespaces as $current ) {
 			[ $prefix, $base_dir ] = $current;
 
@@ -125,7 +123,6 @@ class Autoloader {
 				}
 			}
 		}
-
 		return null;
 	}
 }

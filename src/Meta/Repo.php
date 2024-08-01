@@ -10,34 +10,20 @@ use Lipe\Lib\Traits\Singleton;
  * Repo to hold the different field types for our meta keys
  * and return the appropriate data based on field type.
  */
-class Repo extends Translate_Abstract {
+class Repo {
 	use Singleton;
-	use Validation;
-
-	public const TYPE_CHECKBOX          = 'checkbox';
-	public const TYPE_DEFAULT           = 'default';
-	public const TYPE_FILE              = 'file';
-	public const TYPE_GROUP             = 'group';
-	public const TYPE_TAXONOMY          = 'taxonomy';
-	public const TYPE_TAXONOMY_SINGULAR = 'taxonomy-singular';
-
-	public const META_BLOG    = 'blog';
-	public const META_COMMENT = 'comment';
-	public const META_OPTION  = 'option';
-	public const META_POST    = 'post';
-	public const META_TERM    = 'term';
-	public const META_USER    = 'user';
-
+	use Translate;
 
 	/**
 	 * Store a field's id mapped to the field object
 	 *
 	 * @param Field $field - The field to register.
 	 *
-	 * @return void
+	 * @return Registered
 	 */
-	public function register_field( Field $field ): void {
-		$this->fields[ $field->get_id() ] = $field;
+	public function register_field( Field $field ): Registered {
+		$this->registered[ $field->id ] = Registered::factory( $field );
+		return $this->registered[ $field->id ];
 	}
 
 
@@ -52,7 +38,7 @@ class Repo extends Translate_Abstract {
 	 * @return void
 	 */
 	public function validate_fields(): void {
-		$this->warn_for_conflicting_taxonomies();
+		Validation::in()->warn_for_conflicting_taxonomies( $this->registered );
 	}
 
 
@@ -68,7 +54,7 @@ class Repo extends Translate_Abstract {
 	 * @return void
 	 */
 	public function pre_update_field( string $key ): void {
-		$this->warn_for_repeatable_group_sub_fields( $key );
+		Validation::in()->warn_for_repeatable_group_sub_fields( $key, $this->get_registered( $key ) );
 	}
 
 
@@ -77,28 +63,26 @@ class Repo extends Translate_Abstract {
 	 *
 	 * @param ?string $field_id - The field id to return.
 	 *
-	 * @return null|Field
+	 * @return ?Registered
 	 */
-	protected function get_field( ?string $field_id ): ?Field {
-		return $this->fields[ $field_id ] ?? null;
+	protected function get_registered( ?string $field_id ): ?Registered {
+		return $this->registered[ $field_id ] ?? null;
 	}
 
 
 	/**
 	 * Get the data type of registered field by an id.
 	 *
-	 * @phpstan-return static::TYPE_*
-	 *
 	 * @param string $field_id - The field id whose type to return.
 	 *
-	 * @return string
+	 * @return DataType
 	 */
-	protected function get_field_data_type( string $field_id ): string {
-		$field = $this->get_field( $field_id );
+	protected function get_field_data_type( string $field_id ): DataType {
+		$field = $this->get_registered( $field_id );
 		if ( null !== $field ) {
-			return $field->data_type;
+			return $field->get_data_type();
 		}
-		return static::TYPE_DEFAULT;
+		return DataType::DEFAULT;
 	}
 
 
@@ -108,22 +92,20 @@ class Repo extends Translate_Abstract {
 	 * Use the registered fields and registered types to determine the appropriate method to
 	 * return the data.
 	 *
-	 * @phpstan-param static::META_* $meta_type
-	 *
-	 * @param int|string             $object_id - id of post, term, user, <custom>.
-	 * @param string                 $field_id  - field id to return.
-	 * @param string                 $meta_type - user, term, post, <custom> (defaults to 'post').
+	 * @param int|string $object_id - id of post, term, user, <custom>.
+	 * @param string     $field_id  - field id to return.
+	 * @param MetaType   $meta_type - user, term, post, <custom> (defaults to 'post').
 	 *
 	 * @return mixed
 	 */
-	public function get_value( int|string $object_id, string $field_id, string $meta_type = 'post' ): mixed {
+	public function get_value( int|string $object_id, string $field_id, MetaType $meta_type = MetaType::POST ): mixed {
 		return match ( $this->get_field_data_type( $field_id ) ) {
-			static::TYPE_CHECKBOX          => $this->get_checkbox_field_value( $object_id, $field_id, $meta_type ),
-			static::TYPE_FILE              => $this->get_file_field_value( $object_id, $field_id, $meta_type ),
-			static::TYPE_GROUP             => $this->get_group_field_value( $object_id, $field_id, $meta_type ),
-			static::TYPE_TAXONOMY          => $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type ),
-			static::TYPE_TAXONOMY_SINGULAR => $this->get_taxonomy_singular_field_value( $object_id, $field_id, $meta_type ),
-			default                        => $this->get_meta_value( $object_id, $field_id, $meta_type ),
+			DataType::CHECKBOX          => $this->get_checkbox_field_value( $object_id, $field_id, $meta_type ),
+			DataType::FILE              => $this->get_file_field_value( $object_id, $field_id, $meta_type ),
+			DataType::GROUP             => $this->get_group_field_value( $object_id, $field_id, $meta_type ),
+			DataType::TAXONOMY          => $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type ),
+			DataType::TAXONOMY_SINGULAR => $this->get_taxonomy_singular_field_value( $object_id, $field_id, $meta_type ),
+			default                     => $this->get_meta_value( $object_id, $field_id, $meta_type ),
 		};
 	}
 
@@ -134,23 +116,21 @@ class Repo extends Translate_Abstract {
 	 * Use the registered fields and registered types to determine the appropriate method to
 	 * set the data.
 	 *
-	 * @phpstan-param static::META_* $meta_type
-	 *
-	 * @param int|string             $object_id - id of post, term, user, <custom>.
-	 * @param string                 $field_id  - field id to set.
-	 * @param mixed                  $value     - Value to save.
-	 * @param string                 $meta_type - user, term, post, <custom> (defaults to 'post').
+	 * @param int|string $object_id - id of post, term, user, <custom>.
+	 * @param string     $field_id  - field id to set.
+	 * @param mixed      $value     - Value to save.
+	 * @param MetaType   $meta_type - user, term, post, <custom> (defaults to 'post').
 	 *
 	 * @return void
 	 */
-	public function update_value( int|string $object_id, string $field_id, mixed $value, string $meta_type = 'post' ): void {
+	public function update_value( int|string $object_id, string $field_id, mixed $value, MetaType $meta_type = MetaType::POST ): void {
 		match ( $this->get_field_data_type( $field_id ) ) {
-			static::TYPE_CHECKBOX          => $this->update_checkbox_field_value( $object_id, $field_id, $value, $meta_type ),
-			static::TYPE_FILE              => $this->update_file_field_value( $object_id, $field_id, (int) $value, $meta_type ),
-			static::TYPE_GROUP             => $this->update_group_field_values( $object_id, $field_id, (array) $value, $meta_type ),
-			static::TYPE_TAXONOMY          => $this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type ),
-			static::TYPE_TAXONOMY_SINGULAR => $this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type, true ),
-			default                        => $this->update_meta_value( $object_id, $field_id, $value, $meta_type ),
+			DataType::CHECKBOX          => $this->update_checkbox_field_value( $object_id, $field_id, $value, $meta_type ),
+			DataType::FILE              => $this->update_file_field_value( $object_id, $field_id, (int) $value, $meta_type ),
+			DataType::GROUP             => $this->update_group_field_values( $object_id, $field_id, (array) $value, $meta_type ),
+			DataType::TAXONOMY          => $this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type ),
+			DataType::TAXONOMY_SINGULAR => $this->update_taxonomy_field_value( $object_id, $field_id, (array) $value, $meta_type, true ),
+			default                     => $this->update_meta_value( $object_id, $field_id, $value, $meta_type ),
 		};
 	}
 
@@ -161,20 +141,18 @@ class Repo extends Translate_Abstract {
 	 * Use the registered fields and registered types to determine the appropriate method to
 	 * delete the data.
 	 *
-	 * @phpstan-param static::META_* $meta_type
-	 *
-	 * @param int|string             $object_id - id of post, term, user, <custom>.
-	 * @param string                 $field_id  - field id to set.
-	 * @param string                 $meta_type - user, term, post, <custom> (defaults to 'post').
+	 * @param int|string $object_id - id of post, term, user, <custom>.
+	 * @param string     $field_id  - field id to set.
+	 * @param MetaType   $meta_type - user, term, post, <custom> (defaults to 'post').
 	 *
 	 * @return void
 	 */
-	public function delete_value( int|string $object_id, string $field_id, string $meta_type ): void {
+	public function delete_value( int|string $object_id, string $field_id, MetaType $meta_type ): void {
 		match ( $this->get_field_data_type( $field_id ) ) {
-			static::TYPE_FILE              => $this->delete_file_field_value( $object_id, $field_id, $meta_type ),
-			static::TYPE_TAXONOMY,
-			static::TYPE_TAXONOMY_SINGULAR => $this->delete_taxonomy_field_value( $object_id, $field_id, $meta_type ),
-			default                        => $this->delete_meta_value( $object_id, $field_id, $meta_type ),
+			DataType::FILE              => $this->delete_file_field_value( $object_id, $field_id, $meta_type ),
+			DataType::TAXONOMY,
+			DataType::TAXONOMY_SINGULAR => $this->delete_taxonomy_field_value( $object_id, $field_id, $meta_type ),
+			default                     => $this->delete_meta_value( $object_id, $field_id, $meta_type ),
 		};
 	}
 }

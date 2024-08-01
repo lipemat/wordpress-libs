@@ -3,8 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\User;
 
-use Lipe\Lib\Query\Args_Trait;
-use Lipe\Lib\Query\Args_Interface;
+use Lipe\Lib\Args\Args;
+use Lipe\Lib\Args\ArgsRules;
 
 /**
  * A fluent interface for the `wp_login_form` function in WordPress.
@@ -14,8 +14,11 @@ use Lipe\Lib\Query\Args_Interface;
  *
  * @link   https://developer.wordpress.org/reference/functions/wp_login_form/#parameters
  */
-class Wp_Login_Form implements Args_Interface {
-	use Args_Trait;
+class Wp_Login_Form implements ArgsRules {
+	/**
+	 * @use Args<array<string, mixed>>
+	 */
+	use Args;
 
 	/**
 	 *  Whether to display the login form or return the form HTML code.
@@ -124,6 +127,20 @@ class Wp_Login_Form implements Args_Interface {
 	 * @var bool
 	 */
 	public bool $remember;
+
+	/**
+	 * Add `required` attribute to the username field.
+	 *
+	 * @var bool
+	 */
+	public bool $required_username;
+
+	/**
+	 * Add `required` attribute to the password field.
+	 *
+	 * @var bool
+	 */
+	public bool $required_password;
 
 	/**
 	 * Default value for the username field.

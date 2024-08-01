@@ -3,8 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Comment;
 
-use Lipe\Lib\Query\Args_Interface;
-use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Args\Args;
+use Lipe\Lib\Args\ArgsRules;
 use Lipe\Lib\Query\Clause\Date_Query_Interface;
 use Lipe\Lib\Query\Clause\Date_Query_Trait;
 use Lipe\Lib\Query\Clause\Meta_Query_Interface;
@@ -18,10 +18,16 @@ use Lipe\Lib\Query\Clause\Meta_Query_Trait;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_comment_query/__construct/
  */
-class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, Args_Interface {
-	use Args_Trait;
+class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, ArgsRules {
+	/**
+	 * @use Args<array<string, mixed>>
+	 */
+	use Args;
 	use Date_Query_Trait;
 	use Meta_Query_Trait;
+
+	public const ORDER_ASC  = 'ASC';
+	public const ORDER_DESC = 'DESC';
 
 	public const ORDERBY_AGENT        = 'comment_agent';
 	public const ORDERBY_APPROVED     = 'comment_approved';
@@ -40,6 +46,13 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, Args_I
 	public const ORDERBY_USER_ID      = 'user_id';
 	public const ORDERBY_COMMENT_IN   = 'comment__in';
 	public const ORDERBY_META_VALUE   = 'meta_value';
+
+	public const STATUS_HOLD    = 'hold';
+	public const STATUS_APPROVE = 'approve';
+	public const STATUS_ALL     = 'all';
+
+	public const TYPE_COMMENT = 'comment';
+	public const TYPE_PINGS   = 'pings';
 
 	/**
 	 * Comment author email address.
@@ -207,14 +220,14 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, Args_I
 	 *
 	 * @var string|array<int,string>
 	 */
-	public $orderby;
+	public string|array $orderby;
 
 	/**
 	 * How to order retrieved comments. Accepts 'ASC', 'DESC'.
 	 *
 	 * Default: 'DESC'.
 	 *
-	 * @phpstan-var 'ASC'|'DESC'
+	 * @phpstan-var self::ORDER_*
 	 *
 	 * @var string
 	 */
@@ -308,7 +321,7 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, Args_I
 	 *
 	 * @var string|array<int,string>
 	 */
-	public $post_status;
+	public string|array $post_status;
 
 	/**
 	 * Post type or array of post types to retrieve affiliated comments for. Pass 'any' to match any value.
@@ -317,7 +330,7 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, Args_I
 	 *
 	 * @var string|array<int,string>
 	 */
-	public $post_type;
+	public string|array $post_type;
 
 	/**
 	 * Post name to retrieve affiliated comments for.
@@ -356,9 +369,10 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, Args_I
 	 *
 	 * Default 'all'.
 	 *
+	 * @phpstan-var self::STATUS_*|array<int, self::STATUS_*>|string
 	 * @var string|array<int,string>
 	 */
-	public $status;
+	public string|array $status;
 
 	/**
 	 * Include comments of a given type, or array of types. Accepts:
@@ -369,9 +383,10 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, Args_I
 	 *
 	 * Default empty.
 	 *
+	 * @phpstan-var self::TYPE_*|array<int,self::TYPE_*>|string
 	 * @var string|array<int,string>
 	 */
-	public $type;
+	public string|array $type;
 
 	/**
 	 * Include comments from a given array of comment types.
@@ -416,7 +431,7 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, Args_I
 	 *
 	 * @var false|string
 	 */
-	public $hierarchical;
+	public string|false $hierarchical;
 
 	/**
 	 * Unique cache key to be produced when this query is stored in an object cache.
@@ -471,22 +486,22 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, Args_I
 	 *   - 'meta_value'
 	 *
 	 * @phpstan-param self::ORDERBY*|array<int,self::ORDERBY*> $orderby
-	 * @phpstan-param 'ASC'|'DESC'|''                          $order
+	 * @phpstan-param self::ORDER_*|''                         $order
 	 *
-	 * @param string|array                                     $orderby - Comment field to order by.
+	 * @param array|string                                     $orderby - Comment field to order by.
 	 * @param string                                           $order   - Optional order of the order by.
 	 *
 	 * @throws \LogicException - If orderby has prerequisites not met.
 	 *
 	 * @return void
 	 */
-	public function orderby( $orderby, string $order = '' ): void {
-		if ( \in_array( static::ORDERBY_COMMENT_IN, (array) $orderby, true ) ) {
-			if ( empty( $this->comment__in ) ) {
+	public function orderby( array|string $orderby, string $order = '' ): void {
+		if ( \in_array( self::ORDERBY_COMMENT_IN, (array) $orderby, true ) ) {
+			if ( ! isset( $this->comment__in ) || [] === $this->comment__in ) {
 				throw new \LogicException( esc_html__( 'You cannot order by `comment__in` unless you specify the comment ins.', 'lipe' ) );
 			}
-		} elseif ( \in_array( static::ORDERBY_META_VALUE, (array) $orderby, true ) ) {
-			if ( empty( $this->meta_key ) ) {
+		} elseif ( \in_array( self::ORDERBY_META_VALUE, (array) $orderby, true ) ) {
+			if ( ! isset( $this->meta_key ) || '' === $this->meta_key ) {
 				throw new \LogicException( esc_html__( 'You cannot order by `meta_value` unless you specify the `meta_key`.', 'lipe' ) );
 			}
 		}
@@ -527,7 +542,7 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, Args_I
 	/**
 	 * Get the lightest possible version of the `get_comments` args.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function get_light_args(): array {
 		return \array_merge( [

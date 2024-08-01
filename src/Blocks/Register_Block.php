@@ -4,9 +4,9 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Blocks;
 
+use Lipe\Lib\Args\Args;
+use Lipe\Lib\Args\ArgsRules;
 use Lipe\Lib\Blocks\Args\Supports;
-use Lipe\Lib\Query\Args_Trait;
-use Lipe\Lib\Query\Args_Interface;
 
 /**
  * A fluent interface for calling `register_block_type`.
@@ -32,8 +32,11 @@ use Lipe\Lib\Query\Args_Interface;
  * }
  * @phpstan-type Attributes array<string, ATTR_SHAPE>
  */
-class Register_Block implements Args_Interface {
-	use Args_Trait;
+class Register_Block implements ArgsRules {
+	/**
+	 * @use Args<array<string, mixed>>
+	 */
+	use Args;
 
 	/**
 	 * Block API version.
@@ -123,9 +126,9 @@ class Register_Block implements Args_Interface {
 	 *
 	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/
 	 *
-	 * @var array<string,mixed>
+	 * @var array<string,mixed>|Supports
 	 */
-	public array $supports;
+	public array|Supports $supports;
 
 	/**
 	 * Structured data for the block preview.
@@ -303,10 +306,10 @@ class Register_Block implements Args_Interface {
 	 * @return Supports
 	 */
 	public function supports(): Supports {
-		if ( isset( $this->sub_args['supports'] ) && $this->sub_args['supports'] instanceof Supports ) {
-			return $this->sub_args['supports'];
+		if ( isset( $this->supports ) && $this->supports instanceof Supports ) {
+			return $this->supports;
 		}
-		$this->sub_args['supports'] = new Supports();
-		return $this->sub_args['supports'];
+		$this->supports = new Supports( [] );
+		return $this->supports;
 	}
 }

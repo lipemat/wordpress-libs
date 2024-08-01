@@ -1,7 +1,9 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Network;
 
+use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 
 /**
@@ -17,8 +19,13 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @property string $domain
  * @property string $site_name
  * @property string $path
+ *
+ * @template OPTIONS of array<string, mixed>
  */
 trait Network_Trait {
+	/**
+	 * @use Mutator_Trait<OPTIONS>
+	 */
 	use Mutator_Trait;
 
 	/**
@@ -117,21 +124,21 @@ trait Network_Trait {
 	/**
 	 * Used to determine the type of meta to retrieve or update.
 	 *
-	 * @return string
+	 * @return MetaType
 	 */
-	public function get_meta_type(): string {
-		return 'site';
+	public function get_meta_type(): MetaType {
+		return MetaType::SITE;
 	}
 
 
 	/**
 	 * Create an instance of this class.
 	 *
-	 * @param int|null|\WP_Network $network - Network ID, object or null for the current network.
+	 * @param int|\WP_Network|null $network - Network ID, object or null for the current network.
 	 *
 	 * @return static
 	 */
-	public static function factory( $network = null ) {
+	public static function factory( null|int|\WP_Network $network = null ): static {
 		return new static( $network );
 	}
 }

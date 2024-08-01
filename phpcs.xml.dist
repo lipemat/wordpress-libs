@@ -3,7 +3,7 @@
 	<!-- See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-Ruleset -->
 
 	<description>Ruleset for WordPress Libs</description>
-    <version>4.2.1</version>
+	<version>4.2.1</version>
 
 	<!-- Include when not specified -->
 	<file>./src</file>
@@ -15,10 +15,10 @@
 	<arg name="cache" value="./.phpcs.cache" />
 
 	<!-- @see https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#various-sniffs-set-the-minimum-supported-wp-version -->
-    <config name="minimum_wp_version" value="6.2" />
+	<config name="minimum_wp_version" value="6.3" />
 
 	<!-- @see https://github.com/PHPCompatibility/PHPCompatibilityWP#how-to-use -->
-    <config name="testVersion" value="8.1-" />
+	<config name="testVersion" value="8.1-" />
 
 	<rule ref="LipePlugin">
 		<exclude name="Generic.PHP.DisallowShortOpenTag.EchoFound" />

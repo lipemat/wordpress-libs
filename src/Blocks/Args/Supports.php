@@ -1,11 +1,11 @@
 <?php
-//phpcs:disable WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
+//phpcs:disable WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase -- Nothing we can do about this.
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Blocks\Args;
 
-use Lipe\Lib\Query\Args_Interface;
-use Lipe\Lib\Query\Args_Trait;
+use Lipe\Lib\Args\Args;
+use Lipe\Lib\Args\ArgsRules;
 
 /**
  * A fluent interface for the `supports` argument of `register_block_type`.
@@ -15,8 +15,11 @@ use Lipe\Lib\Query\Args_Trait;
  *
  * @link   https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports
  */
-class Supports implements Args_Interface {
-	use Args_Trait;
+class Supports implements ArgsRules {
+	/**
+	 * @use Args<array<string, mixed>>
+	 */
+	use Args;
 
 	/**
 	 * Anchors let you link directly to a specific block on a page.
@@ -32,7 +35,7 @@ class Supports implements Args_Interface {
 	 *
 	 * @var bool|array<int, 'left' | 'right' | 'full' | 'wide'>
 	 */
-	public $align;
+	public array|bool $align;
 
 	/**
 	 * This property allows to enable wide alignment for your theme.

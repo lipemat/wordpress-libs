@@ -1,8 +1,8 @@
 <?php
+//phpcs:disable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- ArrayAccess methods are camelCase.
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Meta;
-
-//phpcs:disable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 
 /**
  * Meta interaction support for Object Traits which use the Meta Repo.
@@ -15,6 +15,7 @@ namespace Lipe\Lib\Meta;
  * not work
  *
  * All methods will manipulate data in the database directly.
+ * @template OPTIONS of array<string, mixed>
  */
 trait Mutator_Trait {
 	/**
@@ -22,9 +23,9 @@ trait Mutator_Trait {
 	 *
 	 * @example post_id, term_id, user_id, comment_id, site_id, <custom>
 	 *
-	 * @return mixed
+	 * @return string|int
 	 */
-	abstract public function get_id();
+	abstract public function get_id(): string|int;
 
 
 	/**
@@ -32,13 +33,11 @@ trait Mutator_Trait {
 	 *
 	 * Used to determine the type of meta to retrieve or update.
 	 *
-	 * @phpstan-return Repo::META_*
-	 *
 	 * @example 'post','user','comment','term', 'blog', 'option'
 	 *
-	 * @return string
+	 * @return MetaType
 	 */
-	abstract public function get_meta_type(): string;
+	abstract public function get_meta_type(): MetaType;
 
 
 	/**
@@ -117,12 +116,19 @@ trait Mutator_Trait {
 
 
 	/**
-	 * Get a value of this object's meta field
+	 * Get a value of this object's meta field.
 	 * using the meta repo to map the appropriate data type.
+	 *
+	 * @template T of key-of<OPTIONS>
+	 * @template D of mixed
+	 *
+	 * @phpstan-param T  $key
+	 * @phpstan-param D  $default_value
 	 *
 	 * @param string     $key           - Meta key to retrieve.
 	 * @param mixed|null $default_value - Default value to return if meta is empty.
 	 *
+	 * @phpstan-return D|OPTIONS[T]
 	 * @return mixed
 	 */
 	public function get_meta( string $key, mixed $default_value = null ): mixed {
@@ -141,21 +147,31 @@ trait Mutator_Trait {
 	 * Update a value of this object's meta field
 	 * using the meta repo to map the appropriate data type.
 	 *
-	 * @param string         $key      - Meta key to update.
-	 * @param mixed|callable ...$value - If a callable is passed it will be called with the
-	 *                                 previous value as the only argument.
-	 *                                 If a callable is passed with an additional argument,
-	 *                                 it will be used as the default value for `$this->get_meta()`.
+	 * If a callable is passed, it will be called with the previous value
+	 * as the only argument.
+	 * If `$callback_default` is passed, it will be used as the default value for `$this->get_meta()`.
+	 *
+	 * @template T of key-of<OPTIONS>
+	 * @template D of mixed
+	 *
+	 * @phpstan-param T      $key
+	 * @phpstan-param D      $callback_default
+	 *
+	 * @phpstan-param OPTIONS[T]|(callable( D|OPTIONS[T]): OPTIONS[T]) $value
+	 *
+	 * @param string         $key              - Meta key to update.
+	 * @param mixed|callable $value            - Meta value or callback.
+	 * @param mixed          $callback_default - Default value for get_meta during callback.
 	 *
 	 * @return void
 	 */
-	public function update_meta( string $key, ...$value ): void {
+	public function update_meta( string $key, mixed $value, mixed $callback_default = null ): void {
 		Repo::in()->pre_update_field( $key );
 
-		if ( \is_callable( $value[0] ) ) {
-			$value[0] = $value[0]( $this->get_meta( $key, $value[1] ?? null ) );
+		if ( \is_callable( $value ) ) {
+			$value = $value( $this->get_meta( $key, $callback_default ) );
 		}
-		Repo::instance()->update_value( $this->get_id(), $key, $value[0], $this->get_meta_type() );
+		Repo::instance()->update_value( $this->get_id(), $key, $value, $this->get_meta_type() );
 	}
 
 
@@ -163,7 +179,11 @@ trait Mutator_Trait {
 	 * Delete the value of this object's meta field
 	 * using the meta repo to map the appropriate data type.
 	 *
-	 * @param string $key - Meta key to delete.
+	 * @template T of key-of<OPTIONS>
+	 *
+	 * @phpstan-param T $key
+	 *
+	 * @param string    $key - Meta key to delete.
 	 *
 	 * @return void
 	 */
@@ -177,8 +197,13 @@ trait Mutator_Trait {
 	/**
 	 * Get meta value by key.
 	 *
-	 * @param string $field_id - Meta key to retrieve.
+	 * @template T of key-of<OPTIONS>
 	 *
+	 * @phpstan-param T $field_id
+	 *
+	 * @param string    $field_id - Meta key to retrieve.
+	 *
+	 * @phpstan-return OPTIONS[T]|null
 	 * @return mixed
 	 */
 	public function offsetGet( $field_id ): mixed {
@@ -188,6 +213,11 @@ trait Mutator_Trait {
 
 	/**
 	 * Update meta value by key.
+	 *
+	 * @template T of key-of<OPTIONS>
+	 *
+	 * @phpstan-param T      $field_id
+	 * @phpstan-param OPTIONS[T]|(callable( null ): OPTIONS[T]) $value
 	 *
 	 * @param string         $field_id - Meta key to update.
 	 * @param mixed|callable $value    - If a callable is passed it will be called with the
@@ -201,7 +231,11 @@ trait Mutator_Trait {
 	/**
 	 * Delete meta value by key.
 	 *
-	 * @param string $field_id - Meta key to delete.
+	 * @template T of key-of<OPTIONS>
+	 *
+	 * @phpstan-param T $field_id
+	 *
+	 * @param string    $field_id - Meta key to delete.
 	 */
 	public function offsetUnset( $field_id ): void {
 		$this->delete_meta( $field_id );
@@ -211,11 +245,15 @@ trait Mutator_Trait {
 	/**
 	 * Check if meta value exists by key.
 	 *
-	 * @param string $field_id - Meta key to check.
+	 * @template T of key-of<OPTIONS>
+	 *
+	 * @phpstan-param T $field_id
+	 *
+	 * @param string    $field_id - Meta key to check.
 	 *
 	 * @return bool
 	 */
 	public function offsetExists( $field_id ): bool {
-		return ! empty( $this->get_meta( $field_id ) );
+		return null !== $this->get_meta( $field_id );
 	}
 }

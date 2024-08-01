@@ -41,21 +41,28 @@
 	padding: 0 !important;
 }
 
-.cmb-group-row-fields td,
-.cmb-group-row-fields th {
-	border: none !important;
-	border-bottom: #eee solid 1px !important;
-}
+.cmb-group-row-fields {
+	position: relative;
 
-.cmb-group-row-fields tr:last-of-type td {
-	border-bottom: none !important;
-}
+	td,
+	th {
+		border: none !important;
+		border-bottom: #eee solid 1px !important;
+	}
 
-.cmb-group-row-fields th {
-	background: #f9f9f9;
-	border-right: 1px solid #e1e1e1 !important;
-	vertical-align: top;
-	width: 20%;
+	th {
+		background: #f9f9f9;
+		border-right: 1px solid #e1e1e1 !important;
+		vertical-align: center;
+		width: 20%;
+		text-align: left;
+	}
+
+	tr:last-of-type {
+		td {
+			border-bottom: none !important;
+		}
+	}
 }
 
 .cmb-group-table-control {

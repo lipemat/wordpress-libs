@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
@@ -12,6 +13,8 @@ class Url {
 
 	/**
 	 * Returns the url of the page you are currently on
+	 *
+	 * @noinspection HttpUrlsUsage
 	 *
 	 * @param bool $with_query - Include any URL query in the URL.
 	 *
@@ -35,9 +38,9 @@ class Url {
 	 * @param string $url - URL to retrieve from.
 	 * @param string $key - Name of URL key to retrieve.
 	 *
-	 * @return string|array|null
+	 * @return string|array<string, string>|null
 	 */
-	public function get_query_arg( string $url, string $key ) {
+	public function get_query_arg( string $url, string $key ): array|string|null {
 		$query_str = (string) wp_parse_url( $url, PHP_URL_QUERY );
 		wp_parse_str( $query_str, $query_vars );
 		return $query_vars[ $key ] ?? null;

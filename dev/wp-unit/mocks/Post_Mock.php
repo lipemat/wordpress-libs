@@ -18,7 +18,7 @@ class Post_Mock implements \ArrayAccess {
 	public const NAME = 'post';
 
 
-	public static function factory( $post = null ) : Post_Mock {
+	public static function factory( int|\WP_Post|null $post = null ): Post_Mock {
 		return new self( $post );
 	}
 }

@@ -3,7 +3,9 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Query\Clause;
 
-use Lipe\Lib\Query\Args_Interface;
+use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Args\Clause;
+use Lipe\Lib\Args\ClauseRules;
 
 /**
  * Generate a `meta_query` argument for various WP queries.
@@ -13,17 +15,17 @@ use Lipe\Lib\Query\Args_Interface;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters
  *
- * @implements  Clause_Interface<Meta_Query>
+ * @implements  ClauseRules<Meta_Query>
  *
  * @internal
  */
-class Meta_Query implements Clause_Interface {
+class Meta_Query implements ClauseRules {
 	/**
 	 * Pass generic to trait.
 	 *
-	 * @use Clause_Trait<Meta_Query>
+	 * @use Clause<Meta_Query>
 	 */
-	use Clause_Trait;
+	use Clause;
 
 	/**
 	 * Compare in meta clauses.
@@ -306,7 +308,6 @@ class Meta_Query implements Clause_Interface {
 		if ( ! is_numeric( $current ) ) {
 			throw new \LogicException( esc_html__( 'You must create a meta clause before you add advanced parameters to it!', 'lipe' ) );
 		}
-		$current = \array_key_last( $this->clauses );
 		$this->clauses[ $current ] = \array_merge(
 			$this->clauses[ $current ],
 			\array_filter( [
@@ -324,7 +325,7 @@ class Meta_Query implements Clause_Interface {
 	 *
 	 * @interal
 	 *
-	 * @param Args_Interface $args_class - The class to add the meta_query to.
+	 * @param ArgsRules $args_class - The class to add the meta_query to.
 	 *
 	 * @throws \LogicException - If called with access to the `meta_query` property.
 	 *

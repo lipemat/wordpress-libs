@@ -3,6 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\CMB2\Variation\Taxonomy;
+use Lipe\Lib\Meta\Registered;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Taxonomy\Get_Terms;
 
@@ -19,31 +21,34 @@ use Lipe\Lib\Taxonomy\Get_Terms;
  * @since  4.0.0
  *
  * @interal
+ *
+ * @phpstan-type DELETE_CB callable( int $object_id, string $key, mixed $previous, BoxType $type ): void
+ * @phpstan-type CHANGE_CB callable( int $object_id, mixed $value, string $key, mixed $previous, BoxType $type): void
  */
 class Event_Callbacks {
 	public const TYPE_CHANGE = 'change';
 	public const TYPE_DELETE = 'delete';
 
 	/**
-	 * Field to register events for.
-	 *
-	 * @var Field
-	 */
-	protected Field $field;
-
-	/**
 	 * Box this field is registered on.
 	 *
 	 * @var Box
 	 */
-	protected Box $box;
+	protected readonly Box $box;
+
+	/**
+	 * The field variation we are working with.
+	 *
+	 * @var Field
+	 */
+	protected readonly Field $variation;
 
 	/**
 	 * Meta key
 	 *
 	 * @var string
 	 */
-	protected string $key;
+	protected readonly string $key;
 
 	/**
 	 * Box type this field is registered on.
@@ -51,51 +56,47 @@ class Event_Callbacks {
 	 * Usually the box type corresponds to the meta type use for
 	 * WP hooks, but it is not an exact match as box types are limited.
 	 *
-	 * @see Box_Trait::get_object_type
+	 * @see Box::get_box_type
 	 *
-	 * @phpstan-var Box::TYPE_*
-	 *
-	 * @var string
+	 * @var BoxType
 	 */
-	protected string $box_type;
+	protected readonly BoxType $box_type;
 
 	/**
 	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
 	 *
-	 * @see Box_Trait::$object_types
+	 * @see Box::$object_types
 	 *
-	 * @phpstan-var array<Box::TYPE_*|string>
-	 *
-	 * @var array
+	 * @var string[]
 	 */
-	public array $object_types;
+	public readonly array $object_types;
 
 	/**
 	 * Previous value before an update.
 	 *
 	 * @var mixed
 	 */
-	protected $previous_value;
+	protected mixed $previous_value = null;
 
 
 	/**
 	 * Register callback events for this field.
 	 *
-	 * @phpstan-param static::TYPE_* $cb_type
+	 * @phpstan-param static::TYPE_*      $cb_type
+	 * @phpstan-param CHANGE_CB|DELETE_CB $callback
 	 *
-	 * @param Field                  $field   - Field to register events for.
-	 * @param string                 $cb_type - Callback type, either 'change' or 'delete'.
-	 *
-	 * @throws \InvalidArgumentException -- If the field is not registered on a box.
+	 * @param Registered                  $field    - Field to register events for.
+	 * @param callable                    $callback - Callback to run when the field changes or is deleted.
+	 * @param string                      $cb_type  - Callback type, either 'change' or 'delete'.
 	 */
-	public function __construct( Field $field, string $cb_type ) {
-		$this->field = $field;
-		$box = $this->field->get_box();
-		if ( ! $box instanceof Box ) {
-			throw new \InvalidArgumentException( 'Field must be registered on a box.' );
-		}
-		$this->box = $box;
-		$this->box_type = $this->box->get_object_type();
+	final protected function __construct(
+		protected readonly Registered $field,
+		protected $callback,
+		string $cb_type,
+	) {
+		$this->box = $this->field->get_box();
+		$this->variation = $this->field->variation;
+		$this->box_type = $this->box->get_box_type();
 		$this->key = $field->get_id();
 		$this->object_types = $this->box->get_object_types();
 
@@ -122,7 +123,7 @@ class Event_Callbacks {
 				$this->taxonomy_delete_hooks();
 			}
 			// Option page fields.
-		} elseif ( [ 'options-page' ] === $this->object_types ) {
+		} elseif ( BoxType::OPTIONS === $this->box_type ) {
 			if ( static::TYPE_CHANGE === $cb_type ) {
 				$this->options_change_hooks();
 			} else {
@@ -148,7 +149,10 @@ class Event_Callbacks {
 	public function taxonomy_change_hooks(): void {
 		add_action( 'set_object_terms', function( ...$args ) {
 			[ $object_id, $terms, $tt_ids, $taxonomy, $append, $old_tt_ids ] = $args;
-			if ( $this->field->taxonomy !== $taxonomy || $tt_ids === $old_tt_ids ) {
+			if ( ! $this->variation instanceof Taxonomy || $this->variation->get_taxonomy() !== $taxonomy ) {
+				return;
+			}
+			if ( $tt_ids === $old_tt_ids ) {
 				return;
 			}
 
@@ -165,8 +169,11 @@ class Event_Callbacks {
 
 		// If a previously existing term is removed from this item, it has changed.
 		add_action( 'deleted_term_relationships', function( ...$args ) {
+			if ( ! $this->variation instanceof Taxonomy ) {
+				return;
+			}
 			[ $object_id, $tt_ids, $taxonomy ] = $args;
-			if ( $this->field->taxonomy !== $taxonomy || $tt_ids === $this->previous_value ) {
+			if ( $tt_ids === $this->previous_value || $this->variation->get_taxonomy() !== $taxonomy ) {
 				return;
 			}
 			if ( \in_array( get_post_type( $object_id ), $this->object_types, true ) ) {
@@ -185,8 +192,11 @@ class Event_Callbacks {
 	 */
 	protected function taxonomy_delete_hooks(): void {
 		add_action( 'deleted_term_relationships', function( ...$args ) {
+			if ( ! $this->variation instanceof Taxonomy ) {
+				return;
+			}
 			[ $object_id, $tt_ids, $taxonomy ] = $args;
-			if ( $this->field->taxonomy !== $taxonomy || $tt_ids === $this->previous_value ) {
+			if ( $tt_ids === $this->previous_value || $this->variation->get_taxonomy() !== $taxonomy ) {
 				return;
 			}
 			if ( \in_array( get_post_type( $object_id ), $this->object_types, true ) ) {
@@ -205,8 +215,11 @@ class Event_Callbacks {
 	 */
 	protected function track_previous_taxonomy_value(): void {
 		add_action( 'delete_term_relationships', function( ...$args ) {
+			if ( ! $this->variation instanceof Taxonomy ) {
+				return;
+			}
 			[ $object_id, $tt_ids, $taxonomy ] = $args;
-			if ( $this->field->taxonomy !== $taxonomy ) {
+			if ( $this->variation->get_taxonomy() !== $taxonomy ) {
 				return;
 			}
 			if ( \in_array( get_post_type( $object_id ), $this->object_types, true ) ) {
@@ -277,7 +290,7 @@ class Event_Callbacks {
 		add_action( $action, function( ...$args ) {
 			[ $old_value, $value ] = $args;
 			$this->previous_value = $old_value[ $this->key ] ?? null;
-			if ( empty( $value[ $this->key ] ) && ! empty( $old_value[ $this->key ] ) ) {
+			if ( ! isset( $value[ $this->key ] ) && isset( $old_value[ $this->key ] ) ) {
 				$this->fire_delete_callback( $this->box->get_id() );
 			}
 		}, 10, 2 );
@@ -290,13 +303,13 @@ class Event_Callbacks {
 	 * @return void
 	 */
 	public function meta_change_hooks(): void {
-		add_action( "added_{$this->box_type}_meta", function( ...$args ) {
+		add_action( "added_{$this->box_type->value}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key, $value ] = $args;
 			if ( $this->key === $key ) {
 				$this->fire_change_callback( $object_id, $value );
 			}
 		}, 10, 4 );
-		add_action( "updated_{$this->box_type}_meta", function( ...$args ) {
+		add_action( "updated_{$this->box_type->value}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key, $value ] = $args;
 			if ( $this->key === $key && $value !== $this->previous_value ) {
 				$this->fire_change_callback( $object_id, $value );
@@ -304,7 +317,7 @@ class Event_Callbacks {
 		}, 10, 4 );
 
 		// If the value previously existed and is now deleted, it has changed.
-		add_action( "deleted_{$this->box_type}_meta", function( ...$args ) {
+		add_action( "deleted_{$this->box_type->value}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key, $value ] = $args;
 			if ( $this->key === $key && null !== $this->previous_value ) {
 				$this->fire_change_callback( $object_id, $value );
@@ -319,7 +332,7 @@ class Event_Callbacks {
 	 * @return void
 	 */
 	protected function meta_delete_hooks(): void {
-		add_action( "deleted_{$this->box_type}_meta", function( ...$args ) {
+		add_action( "deleted_{$this->box_type->value}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key, $value ] = $args;
 			if ( $this->key === $key && null !== $this->previous_value ) {
 				$this->fire_delete_callback( $object_id );
@@ -336,16 +349,16 @@ class Event_Callbacks {
 	 * @return void
 	 */
 	protected function track_previous_meta_value(): void {
-		add_action( "update_{$this->box_type}_meta", function( ...$args ) {
+		add_action( "update_{$this->box_type->value}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key ] = $args;
 			if ( $this->key === $key ) {
-				$this->previous_value = get_metadata_raw( $this->box_type, $object_id, $this->key, true );
+				$this->previous_value = get_metadata_raw( $this->box_type->value, $object_id, $this->key, true );
 			}
 		}, 10, 3 );
-		add_action( "delete_{$this->box_type}_meta", function( ...$args ) {
+		add_action( "delete_{$this->box_type->value}_meta", function( ...$args ) {
 			[ $meta_ids, $object_id, $key ] = $args;
 			if ( $this->key === $key ) {
-				$this->previous_value = get_metadata_raw( $this->box_type, $object_id, $this->key, true );
+				$this->previous_value = get_metadata_raw( $this->box_type->value, $object_id, $this->key, true );
 			}
 		}, 10, 3 );
 	}
@@ -359,9 +372,9 @@ class Event_Callbacks {
 	 *
 	 * @return void
 	 */
-	public function fire_change_callback( $object_id, $value ): void {
+	public function fire_change_callback( int|string $object_id, mixed $value ): void {
 		\call_user_func(
-			$this->field->change_cb,
+			$this->callback,
 			$object_id,
 			$value,
 			$this->key,
@@ -378,13 +391,30 @@ class Event_Callbacks {
 	 *
 	 * @return void
 	 */
-	public function fire_delete_callback( $object_id ): void {
+	public function fire_delete_callback( int|string $object_id ): void {
 		\call_user_func(
-			$this->field->delete_cb,
+			$this->callback,
 			$object_id,
 			$this->key,
 			$this->previous_value,
 			$this->box_type
 		);
+	}
+
+
+	/**
+	 * Create a Event_Callbacks instance from a field and callback.
+	 *
+	 * @phpstan-param static::TYPE_*      $cb_type
+	 * @phpstan-param CHANGE_CB|DELETE_CB $callback
+	 *
+	 * @param Field                       $field    - Field to register events for.
+	 * @param callable                    $callback - Callback to run when the field changes or is deleted.
+	 * @param string                      $cb_type  - Callback type, either 'change' or 'delete'.
+	 *
+	 * @return static
+	 */
+	public static function factory( Field $field, callable $callback, string $cb_type ): static {
+		return new static( Registered::factory( $field ), $callback, $cb_type );
 	}
 }

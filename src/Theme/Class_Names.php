@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Theme;
 
@@ -18,11 +19,10 @@ use Lipe\Lib\Util\Arrays;
  *          // Conditionally add an active class as we go.
  *          $class[ 'active' ] = isset( $_POST['domain_list'] );
  *
- * @todo Once PHP 8.1 is required, complete unit tests for BackedEnum.
+ * @phpstan-type POSSIBLE array<string|\BackedEnum>|array<string,bool>|string|\BackedEnum
+ * @phpstan-type CSS_CLASSES POSSIBLE|array<POSSIBLE>
  *
- * @phpstan-type CSS_CLASSES string|\BackedEnum|array<int, string|\BackedEnum>|array<string, bool>|array<array<string, bool>|array<string|\BackedEnum>>
- *
- * @implements \ArrayAccess<string, array|string>
+ * @implements \ArrayAccess<string|\BackedEnum, string>
  */
 class Class_Names implements \ArrayAccess {
 
@@ -68,11 +68,11 @@ class Class_Names implements \ArrayAccess {
 	 *
 	 * @phpstan-param CSS_CLASSES      $classes
 	 *
-	 * @param string|\BackedEnum|array $classes - Classes to parse.
+	 * @param \BackedEnum|array|string $classes - Classes to parse.
 	 *
 	 * @return void
 	 */
-	protected function parse_classes( $classes ): void {
+	protected function parse_classes( \BackedEnum|array|string $classes ): void {
 		if ( \is_string( $classes ) ) {
 			$this->classes[] = $classes;
 			return;
@@ -100,11 +100,11 @@ class Class_Names implements \ArrayAccess {
 	/**
 	 * Get the index of a class name if it exists.
 	 *
-	 * @param string|\BackedEnum $css_class - Class name to search for.
+	 * @param \BackedEnum|string $css_class - Class name to search for.
 	 *
 	 * @return int|false
 	 */
-	protected function get_classes_key( $css_class ) {
+	protected function get_classes_key( \BackedEnum|string $css_class ): bool|int {
 		if ( $css_class instanceof \BackedEnum ) {
 			$css_class = (string) $css_class->value;
 		}
@@ -141,9 +141,13 @@ class Class_Names implements \ArrayAccess {
 	 *
 	 * @return string
 	 */
-	#[\ReturnTypeWillChange]
-	public function offsetGet( $offset ) {
-		return Template::in()->sanitize_html_class( $this->classes[ (int) $this->get_classes_key( $offset ) ] );
+	public function offsetGet( $offset ): string {
+		$match = $this->get_classes_key( $offset );
+		if ( false === $match ) {
+			return '';
+		}
+
+		return Template::in()->sanitize_html_class( $this->classes[ $match ] );
 	}
 
 
@@ -151,7 +155,7 @@ class Class_Names implements \ArrayAccess {
 	 * Add or remove a class name from the list.
 	 *
 	 * @param null|string|\BackedEnum $offset - Class name.
-	 * @param string|array|bool $value  - True to add class or false to remove it.
+	 * @param bool|string             $value  - True to add class or false to remove it.
 	 *
 	 * @return void
 	 */
