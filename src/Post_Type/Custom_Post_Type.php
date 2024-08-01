@@ -49,45 +49,6 @@ class Custom_Post_Type {
 	protected static array $registry = [];
 
 	/**
-	 * Tf true, will auto add custom capability type caps to administrator
-	 *
-	 * Default true.
-	 *
-	 * @var bool
-	 */
-	public bool $auto_admin_caps = true;
-
-	/**
-	 * A short descriptive summary of what the post type is.
-	 *
-	 * Default empty.
-	 *
-	 * @var string
-	 */
-	public string $description;
-
-	/**
-	 * Whether the post type is hierarchical (e.g., page).
-	 *
-	 * @var bool
-	 */
-	public bool $hierarchical = false;
-
-	/**
-	 * The strings to use to build the read, edit, and delete capabilities.
-	 *
-	 * Passed as an array to allow for alternative plurals when using this argument
-	 * as a base to build the capabilities.
-	 * - e.g., array('story', 'stories').
-	 *
-	 * @var string|array{
-	 *      0: string,
-	 *      1: string,
-	 *  }
-	 */
-	public string|array $capability_type = 'post';
-
-	/**
 	 * Array of capabilities for this post type.
 	 *
 	 * `$capability_type` is used as a base to build capabilities by default.
@@ -97,156 +58,6 @@ class Custom_Post_Type {
 	 * @var Capabilities
 	 */
 	public readonly Capabilities $capabilities;
-
-	/**
-	 * Whether to delete posts of this type when deleting a user.
-	 *   - If true, posts of this type belonging to the user will be moved to Trash
-	 *     when the user is deleted.
-	 *   - If false, posts of this type belonging to the user will *not* be
-	 *     trashed or deleted.
-	 *   - If not set (the default), posts are trashed if post type supports
-	 *     the 'author' feature. Otherwise, posts are not trashed or deleted.
-	 *
-	 * @var bool
-	 */
-	public bool $delete_with_user;
-
-	/**
-	 * Provide a callback function that will be called when setting
-	 * up the meta boxes for the edit form.
-	 *
-	 * The callback function takes one argument $post,
-	 * which contains the WP_Post object for the currently edited post
-	 *
-	 * @phpstan-var callable( \WP_Post ) : void
-	 * @var callable
-	 */
-	public $register_meta_box_cb;
-
-	/**
-	 * Whether to use the internal default meta capability handling.
-	 *
-	 * @var bool
-	 */
-	public bool $map_meta_cap;
-
-	/**
-	 * Whether a post type is intended for use publicly either via the admin interface or by front-end users.
-	 *
-	 * While the default settings of `$exclude_from_search`, `$publicly_queryable`, `$show_ui`, and `$show_in_nav_menus`
-	 * are inherited from `$public`, each does not rely on this relationship and controls a very specific intention.
-	 *
-	 * @var bool
-	 */
-	public bool $public = true;
-
-	/**
-	 * Whether queries can be performed on the front end for the post type as part of `parse_request()`.
-	 *
-	 * Endpoints would include:
-	 *
-	 *   - `?post_type={post_type_key}`
-	 *   - `?{post_type_key}={single_post_slug}`
-	 *   - `?{post_type_query_var}={single_post_slug}`
-	 *
-	 * If not set, the default is inherited from `$public`.
-	 *
-	 * @var bool
-	 */
-	public bool $publicly_queryable;
-
-	/**
-	 * Whether to exclude posts with this post type from front end search results.
-	 *
-	 * Default is the opposite value of `$public`.
-	 *
-	 * @var bool
-	 */
-	public bool $exclude_from_search;
-
-	/**
-	 * Enables post type archives.
-	 *
-	 * Will use post type slug if set to true, otherwise
-	 * will use provided string.
-	 *
-	 * @link https://developer.wordpress.org/reference/functions/register_post_type/#has_archive
-	 *
-	 * @var bool|string
-	 */
-	public string|bool $has_archive = true;
-
-	/**
-	 * Sets the query_var key for this post type.
-	 *
-	 * Defaults to `$post_type` key.
-	 *
-	 *   - If false, a post type cannot be loaded at `?{query_var}={post_slug}`.
-	 *   - If specified as a string, the query `?{query_var_string}={post_slug}` will be valid.
-	 *
-	 * @var string|bool
-	 */
-	public string|bool $query_var = true;
-
-	/**
-	 * Whether to generate and allow a UI for managing this post type in the admin.
-	 *
-	 * Default is value of `$public`.
-	 *
-	 * @var bool
-	 */
-	public bool $show_ui;
-
-	/**
-	 * Makes this post type available for selection in navigation menus.
-	 *
-	 * Default is value of `$public`.
-	 *
-	 * @var bool
-	 */
-	public bool $show_in_nav_menus;
-
-	/**
-	 * Makes this post type available via the admin bar.
-	 *
-	 * Default is value of `$show_in_menu`.
-	 *
-	 * @var bool
-	 */
-	public bool $show_in_admin_bar;
-
-	/**
-	 * Triggers the handling of rewrites for this post type.
-	 *
-	 * To prevent all rewrite, set to false.
-	 *
-	 * Defaults to true, using `$post_type` as slug. To specify rewrite rules,
-	 * an array can be passed.
-	 *
-	 * @phpstan-var bool|REWRITE
-	 *
-	 * @var bool|array
-	 */
-	public array|bool $rewrite;
-
-	/**
-	 * Whether to allow this post type to be exported.
-	 *
-	 * @var bool
-	 */
-	public bool $can_export = true;
-
-	/**
-	 * An array of taxonomy identifiers that will be registered for the post type.
-	 *
-	 * Taxonomies can be registered later with `register_taxonomy()` or
-	 * `register_taxonomy_for_object_type()`.
-	 *
-	 * Default empty array.
-	 *
-	 * @var array<int,string>
-	 */
-	public array $taxonomies = [];
 
 	/**
 	 * Individual labels for the post type.
@@ -276,6 +87,29 @@ class Custom_Post_Type {
 	 */
 	public readonly Register_Post_Type $register_args;
 
+	/**
+	 * Tf true, will auto add custom capability type caps to administrator
+	 *
+	 * Default true.
+	 *
+	 * @var bool
+	 */
+	protected bool $auto_admin_caps = true;
+
+	/**
+	 * Triggers the handling of rewrites for this post type.
+	 *
+	 * To prevent all rewrite, set to false.
+	 *
+	 * Defaults to true, using `$post_type` as slug. To specify rewrite rules,
+	 * an array can be passed.
+	 *
+	 * @phpstan-var bool|REWRITE
+	 *
+	 * @var bool|array
+	 */
+	protected array|bool $rewrite;
+
 
 	/**
 	 * Takes care of the necessary hook and registering.
@@ -290,7 +124,7 @@ class Custom_Post_Type {
 		$this->register_args->supports = static::DEFAULT_SUPPORTS;
 
 		$this->hook();
-		$this->set_labels();
+		$this->labels();
 	}
 
 
@@ -336,7 +170,7 @@ class Custom_Post_Type {
 	 *
 	 * @param string $label - Text to use.
 	 */
-	public function set_featured_image_labels( string $label ): void {
+	public function featured_image_labels( string $label ): void {
 		$lowercase = \strtolower( $label );
 
 		$this->labels()->featured_image( $label );
@@ -352,9 +186,9 @@ class Custom_Post_Type {
 	 * @param string $singular - The singular label for the post type.
 	 * @param string $plural   - The plural label for the post type.
 	 *
-	 * @return void
+	 * @return Labels
 	 */
-	public function set_labels( string $singular = '', string $plural = '' ): void {
+	public function labels( string $singular = '', string $plural = '' ): Labels {
 		if ( '' === $singular ) {
 			$singular = \str_replace( '_', ' ', $this->name );
 			$singular = \ucwords( $singular );
@@ -363,19 +197,8 @@ class Custom_Post_Type {
 		if ( '' === $plural ) {
 			$plural = Strings::in()->pluralize( $singular );
 		}
-		$this->labels()->singular_name( $singular );
-		$this->labels()->name( $plural );
-	}
-
-
-	/**
-	 * Adjust specific labels using the fluent interface.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return Labels
-	 */
-	public function labels(): Labels {
+		$this->labels->singular_name( $singular );
+		$this->labels->name( $plural );
 		return $this->labels;
 	}
 
@@ -477,7 +300,12 @@ class Custom_Post_Type {
 
 		$view_link = false;
 		$preview_link = false;
-		if ( false !== $this->public && false !== $this->publicly_queryable ) {
+
+		if (
+			( ! isset( $this->register_args->public ) || false !== $this->register_args->public )
+			&&
+			( ! isset( $this->register_args->publicly_queryable ) || false !== $this->register_args->publicly_queryable )
+		) {
 			$url = esc_url( (string) get_permalink( $post_ID ) );
 			$preview_url = add_query_arg( 'preview', 'true', $url );
 			$view_link = '<a href="' . $url . '">' . \sprintf( __( 'View the %s...' ), $this->labels()->get_label( Labels::NAME ), $lower_label ) . '</a>';
@@ -632,7 +460,7 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	public function disable_single(): void {
-		$this->show_in_nav_menus = false;
+		$this->show_in_nav_menus( false );
 
 		add_filter( 'genesis_link_post_title', function( $is_link ) {
 			if ( get_post_type() === $this->name ) {
@@ -770,41 +598,276 @@ class Custom_Post_Type {
 
 
 	/**
+	 * Tf true, will auto add custom capability type caps to administrator.
+	 *
+	 * @default true
+	 *
+	 * @param bool $allowed - Whether to allow auto admin caps.
+	 */
+	public function allow_auto_admin_caps( bool $allowed ): void {
+		$this->auto_admin_caps = $allowed;
+	}
+
+
+	/**
+	 * Whether to allow this post type to be exported.
+	 *
+	 * @param bool $can_export - Whether to allow export.
+	 */
+	public function can_export( bool $can_export ): void {
+		$this->register_args->can_export = $can_export;
+	}
+
+
+	/**
+	 * The strings to use to build the read, edit, and delete capabilities.
+	 *
+	 * Passed as an array to allow for alternative plurals when using this argument
+	 * as a base to build the capabilities.
+	 * - e.g., array('story', 'stories').
+	 *
+	 * @phpstan-param string|array{
+	 *     0: string,
+	 *     1: string
+	 * }                   $capability_type
+	 *
+	 * @param array|string $capability_type - The capability type.
+	 */
+	public function capability_type( array|string $capability_type ): void {
+		$this->register_args->capability_type = $capability_type;
+	}
+
+
+	/**
+	 * Whether to delete posts of this type when deleting a user.
+	 * - If true, posts of this type belonging to the user will be moved to Trash
+	 * when the user is deleted.
+	 * - If false, posts of this type belonging to the user will *not* be
+	 * trashed or deleted.
+	 * - If not set (the default), posts are trashed if post type supports
+	 * the 'author' feature. Otherwise, posts are not trashed or deleted.
+	 *
+	 * @param bool $delete_with_user - Whether to delete with user.
+	 */
+	public function delete_with_user( bool $delete_with_user ): void {
+		$this->register_args->delete_with_user = $delete_with_user;
+	}
+
+
+	/**
+	 * A short descriptive summary of what the post type is.
+	 *
+	 * Default empty.
+	 *
+	 * @param string $description - The description.
+	 */
+	public function description( string $description ): void {
+		$this->register_args->description = $description;
+	}
+
+
+	/**
+	 * Whether to exclude posts with this post type from front end search results.
+	 *
+	 * Default is the opposite value of `$public`.
+	 *
+	 * @param bool $is_excluded - Whether to exclude from search.
+	 */
+	public function exclude_from_search( bool $is_excluded ): void {
+		$this->register_args->exclude_from_search = $is_excluded;
+	}
+
+
+	/**
+	 * Enables post type archives.
+	 *
+	 * Will use post type slug if set to true, otherwise
+	 * will use provided string.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/register_post_type/#has_archive
+	 *
+	 * @param bool|string $has_archive - Does the post type have an archive.
+	 */
+	public function has_archive( bool|string $has_archive ): void {
+		$this->register_args->has_archive = $has_archive;
+	}
+
+
+	/**
+	 * Whether the post type is hierarchical (e.g., page).
+	 *
+	 * @param bool $is_hierarchical - Whether to make the post type hierarchical.
+	 */
+	public function hierarchical( bool $is_hierarchical ): void {
+		$this->register_args->hierarchical = $is_hierarchical;
+	}
+
+
+	/**
+	 * Whether to use the internal default meta capability handling.
+	 *
+	 * @param bool $use_mapping - Whether to use mapping.
+	 */
+	public function map_meta_cap( bool $use_mapping ): void {
+		$this->register_args->map_meta_cap = $use_mapping;
+	}
+
+
+	/**
+	 * Whether a post type is intended for use publicly either via the admin interface or by front-end users.
+	 *
+	 * While the default settings of `$exclude_from_search`, `$publicly_queryable`, `$show_ui`, and `$show_in_nav_menus`
+	 * are inherited from `$public`, each does not rely on this relationship and controls a very specific intention.
+	 *
+	 * @param bool $is_public - Whether to make the post type public.
+	 */
+	public function public( bool $is_public ): void {
+		$this->register_args->public = $is_public;
+	}
+
+
+	/**
+	 * Whether queries can be performed on the front end for the post type as part of `parse_request()`.
+	 *
+	 * Endpoints would include:
+	 *
+	 * - `?post_type={post_type_key}`
+	 * - `?{post_type_key}={single_post_slug}`
+	 * - `?{post_type_query_var}={single_post_slug}`
+	 *
+	 * If not set, the default is inherited from `$public`.
+	 *
+	 * @param bool $is_queryable - Is the post type queryable.
+	 */
+	public function publicly_queryable( bool $is_queryable ): void {
+		$this->register_args->publicly_queryable = $is_queryable;
+	}
+
+
+	/**
+	 * Sets the query_var key for this post type.
+	 *
+	 * Defaults to `$post_type` key.
+	 *
+	 * - If false, a post type cannot be loaded at `?{query_var}={post_slug}`.
+	 * - If specified as a string, the query `?{query_var_string}={post_slug}` will be valid.
+	 *
+	 * @param bool|string $query_var - The query var to use.
+	 */
+	public function query_var( bool|string $query_var ): void {
+		$this->register_args->query_var = $query_var;
+	}
+
+
+	/**
+	 * Provide a callback function that will be called when setting
+	 * up the meta boxes for the edit form.
+	 *
+	 * The callback function takes one argument $post,
+	 * which contains the WP_Post object for the currently edited post
+	 *
+	 * @phpstan-param callable( \WP_Post ): void $register_cb
+	 *
+	 * @formatter:off
+	 *
+	 * @param callable                           $register_cb - The callback function.
+	 *
+	 * @formatter:on
+	 */
+	public function register_meta_box_cb( callable $register_cb ): void {
+		$this->register_args->register_meta_box_cb = $register_cb;
+	}
+
+
+	/**
+	 * Triggers the handling of rewrites for this post type.
+	 *
+	 * To prevent all rewrite, set to false.
+	 *
+	 * Defaults to `true`, using `$post_type` as slug. To specify rewrite rules,
+	 * an array can be passed.
+	 *
+	 * @phpstan-param bool|REWRITE $rewrite
+	 *
+	 * @param array|bool           $rewrite - The rewrites to use.
+	 */
+	public function rewrite( bool|array $rewrite ): void {
+		$this->rewrite = $rewrite;
+	}
+
+
+	/**
+	 * Makes this post type available via the admin bar.
+	 *
+	 * Default is value of `$show_in_menu`.
+	 *
+	 * @param bool $show - Whether to show in the admin bar.
+	 */
+	public function show_in_admin_bar( bool $show ): void {
+		$this->register_args->show_in_admin_bar = $show;
+	}
+
+
+	/**
+	 * Makes this post type available for selection in navigation menus.
+	 *
+	 * Default is value of `$public`.
+	 *
+	 * @param bool $show - Whether to show in nav menus.
+	 */
+	public function show_in_nav_menus( bool $show ): void {
+		$this->register_args->show_in_nav_menus = $show;
+	}
+
+
+	/**
+	 * Whether to generate and allow a UI for managing this post type in the admin.
+	 *
+	 * Default is value of `$public`.
+	 *
+	 * @param bool $show_ui - Whether to show the UI.
+	 */
+	public function show_ui( bool $show_ui ): void {
+		$this->register_args->show_ui = $show_ui;
+	}
+
+
+	/**
+	 * An array of taxonomy identifiers that will be registered for the post type.
+	 *
+	 * Taxonomies can be registered later with `register_taxonomy()` or
+	 * `register_taxonomy_for_object_type()`.
+	 *
+	 * @param array<int, string> $taxonomies - The taxonomies to use.
+	 */
+	public function taxonomies( array $taxonomies ): void {
+		$this->register_args->taxonomies = $taxonomies;
+	}
+
+
+	/**
 	 * Build the args array for the post type definition.
 	 *
 	 * @return array<string, mixed>
 	 */
 	protected function post_type_args(): array {
 		$args = $this->register_args;
-		$args->labels = $this->post_type_labels();
-		$args->description = $this->description ?? '';
-		$args->public = $this->public;
-		$args->publicly_queryable = $this->publicly_queryable ?? $this->public;
-		$args->show_ui = $this->show_ui ?? $this->public;
-		$args->show_in_nav_menus = $this->show_in_nav_menus ?? $this->public;
-		$args->show_in_menu = $args->show_in_menu ?? $args->show_ui;
-		$args->show_in_admin_bar = $this->show_in_admin_bar ?? (bool) $args->show_in_menu;
-		$args->capability_type = $this->capability_type;
+		$args->can_export = $args->can_export ?? true;
 		$args->capabilities = \array_merge( $this->register_args->capabilities ?? [], $this->capabilities->get_capabilities() );
-		$args->hierarchical = $this->hierarchical;
-		$args->taxonomies = $this->taxonomies;
-		$args->has_archive = $this->has_archive;
+		$args->capability_type = $args->capability_type ?? 'post';
+		$args->description = $args->description ?? '';
+		$args->exclude_from_search = $args->exclude_from_search ?? ! $args->public;
+		$args->has_archive = $args->has_archive ?? true;
+		$args->hierarchical = $args->hierarchical ?? false;
+		$args->labels = $this->post_type_labels();
+		$args->public = $args->public ?? true;
+		$args->publicly_queryable = $args->publicly_queryable ?? $args->public;
 		$args->rewrite = $this->rewrites();
-		$args->query_var = $this->query_var;
-		$args->can_export = $this->can_export;
-
-		if ( isset( $this->exclude_from_search ) ) {
-			$args->exclude_from_search = $this->exclude_from_search;
-		}
-		if ( isset( $this->map_meta_cap ) ) {
-			$args->map_meta_cap = $this->map_meta_cap;
-		}
-		if ( null !== $this->register_meta_box_cb ) {
-			$args->register_meta_box_cb = $this->register_meta_box_cb;
-		}
-		if ( isset( $this->delete_with_user ) ) {
-			$args->delete_with_user = $this->delete_with_user;
-		}
+		$args->show_in_admin_bar = $args->show_in_admin_bar ?? (bool) $args->show_in_menu;
+		$args->show_in_menu = $args->show_in_menu ?? $args->show_ui;
+		$args->show_in_nav_menus = $args->show_in_nav_menus ?? $args->public;
+		$args->show_ui = $args->show_ui ?? $args->public;
+		$args->taxonomies = $args->taxonomies ?? [];
 
 		$args = apply_filters( 'lipe/lib/schema/post_type_args', $args->get_args(), $this->name );
 		return apply_filters( "lipe/lib/schema/post_type_args_{$this->name}", $args );
@@ -870,7 +933,7 @@ class Custom_Post_Type {
 	 *
 	 * @link    https://developer.wordpress.org/reference/functions/register_post_type/#rewrite
 	 *
-	 * Build the rewrites param. Will send defaults if not set/
+	 * Build the rewrites param with defaults if not set.
 	 *
 	 * @notice  The `ep_mask` parameter is mostly ignored and most likely
 	 *          never needed to change.
@@ -902,7 +965,7 @@ class Custom_Post_Type {
 			return;
 		}
 
-		$previous = get_option( static::CUSTOM_CAPS_OPTION, [] );
+		$previous = get_option( self::CUSTOM_CAPS_OPTION, [] );
 		if ( isset( $previous[ $post_type->capability_type ] ) ) {
 			return;
 		}
@@ -916,7 +979,7 @@ class Custom_Post_Type {
 		}
 
 		$previous[ $post_type->capability_type ] = 1;
-		update_option( static::CUSTOM_CAPS_OPTION, $previous );
+		update_option( self::CUSTOM_CAPS_OPTION, $previous );
 	}
 
 

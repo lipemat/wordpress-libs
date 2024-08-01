@@ -238,7 +238,7 @@ class Capabilities {
 	 */
 	protected function set( string $capability_name, string $capability ): Capabilities {
 		$this->capabilities[ $capability_name ] = $capability;
-		$this->post_type->map_meta_cap = true;
+		$this->post_type->map_meta_cap( true );
 		return $this;
 	}
 
