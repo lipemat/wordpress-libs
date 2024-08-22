@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Version 2.0.4 -->
+<!-- Version 2.0.6 -->
 <phpunit
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
@@ -10,9 +10,12 @@
 	displayDetailsOnIncompleteTests="true"
 	displayDetailsOnSkippedTests="true"
 	displayDetailsOnTestsThatTriggerDeprecations="true"
-	displayDetailsOnTestsThatTriggerWarnings="true"
 	displayDetailsOnTestsThatTriggerNotices="true"
+	displayDetailsOnTestsThatTriggerWarnings="true"
+	failOnDeprecation="true"
 	failOnEmptyTestSuite="true"
+	failOnNotice="true"
+	failOnWarning="true"
 	stopOnError="true"
 	stopOnFailure="true"
 >
