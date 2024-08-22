@@ -415,7 +415,7 @@ class Field_Type {
 	 */
 	public function text_date_timestamp( string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [], array $time_picker_options = [] ): Date {
 		$this->field = Date::from( $this->field, $this->box );
-		return $this->field->set_args( Type::TEXT_DATETIME_TIMESTAMP, $this->field->date_args( $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), DataType::DEFAULT );
+		return $this->field->set_args( Type::TEXT_DATE_TIMESTAMP, $this->field->date_args( $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), DataType::DEFAULT );
 	}
 
 
@@ -434,7 +434,7 @@ class Field_Type {
 	 */
 	public function text_datetime_timestamp( string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = [], array $time_picker_options = [] ): Date {
 		$this->field = Date::from( $this->field, $this->box );
-		return $this->field->set_args( Type::TEXT_DATE_TIMESTAMP, $this->field->date_args( $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), DataType::DEFAULT );
+		return $this->field->set_args( Type::TEXT_DATETIME_TIMESTAMP, $this->field->date_args( $date_format, $timezone_meta_key, $date_picker_options, $time_picker_options ), DataType::DEFAULT );
 	}
 
 
