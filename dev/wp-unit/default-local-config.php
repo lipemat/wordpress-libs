@@ -19,3 +19,6 @@ define( 'WP_TESTS_TITLE', 'WP Libs unit tests' );
 define( 'WP_UNIT_DIR', 'E:/SVN/wp-unit' );
 
 define( 'ABSPATH', $root . '/wp/' );
+
+// To suppress PHPStorm inspection errors.
+define( 'SCRIPT_DEBUG', false );
