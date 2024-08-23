@@ -3,7 +3,7 @@
 	<!-- See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-Ruleset -->
 
 	<description>Ruleset for WordPress Libs</description>
-	<version>4.2.1</version>
+	<version>4.3.0</version>
 
 	<!-- Include when not specified -->
 	<file>./src</file>
@@ -18,7 +18,7 @@
 	<config name="minimum_wp_version" value="6.3" />
 
 	<!-- @see https://github.com/PHPCompatibility/PHPCompatibilityWP#how-to-use -->
-	<config name="testVersion" value="8.1-" />
+	<config name="testVersion" value="8.2-" />
 
 	<rule ref="LipePlugin">
 		<exclude name="Generic.PHP.DisallowShortOpenTag.EchoFound" />
