@@ -1,4 +1,4 @@
-# @version 2.3.0
+# @version 2.4.1
 
 includes:
     # Include the lipemat phpstan rules.
@@ -27,5 +27,4 @@ parameters:
     paths:
         - src
     scanFiles:
-        - dev/stubs/wp-smush.php
         - %rootDir%/../../../stubs/cmb2/cmb2-2.10.php
