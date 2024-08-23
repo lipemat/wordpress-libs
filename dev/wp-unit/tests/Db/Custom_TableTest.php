@@ -107,7 +107,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 		$query = $this->db()->get_select_query( $columns, $where, $count, $order_by, $order, $offset );
 		$this->assertSame( $expected, $query );
 
-		$this->assertNotFalse( $wpdb->get_results( $query ) );
+		$this->assertNotNull( $wpdb->get_results( $query ) );
 	}
 
 
@@ -229,7 +229,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 			'option_value' => 'shared_value',
 		] ) );
 
-		if ( wp_cache_supports( 'flush_group' )) {
+		if ( wp_cache_supports( 'flush_group' ) ) {
 			wp_cache_flush_group( 'options' );
 		} else {
 			wp_cache_flush();
@@ -660,7 +660,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 				'order_by' => null,
 				'order'    => 'ASC',
 				'offset'   => 10,
-				'expected' => "SELECT * FROM `{$wpdb->options}` OFFSET 10",
+				'expected' => "SELECT * FROM `{$wpdb->options}` LIMIT 1000000 OFFSET 10",
 			],
 			'where and offset'  => [
 				'columns'  => [],
@@ -669,7 +669,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 				'order_by' => null,
 				'order'    => 'ASC',
 				'offset'   => 100,
-				'expected' => "SELECT * FROM `{$wpdb->options}` WHERE `option_name` = 'test' OFFSET 100",
+				'expected' => "SELECT * FROM `{$wpdb->options}` WHERE `option_name` = 'test' LIMIT 1000000 OFFSET 100",
 			],
 			'everything'        => [
 				'columns'  => [ 'option_name', 'option_value' ],

@@ -355,11 +355,15 @@ class Custom_Table {
 		} elseif ( 'ASC' !== $order ) {
 			$sql .= $wpdb->prepare( " ORDER BY %i $order", $this->config->get_id_field() );
 		}
-		if ( null !== $count ) {
-			$sql .= " LIMIT $count";
+		if ( null !== $count || null !== $offset ) {
+			// An offset always requires a LIMIT.
+			if ( null === $count ) {
+				$count = 1_000_000;
+			}
+			$sql .= " LIMIT {$count}";
 		}
 		if ( null !== $offset ) {
-			$sql .= " OFFSET $offset";
+			$sql .= " OFFSET {$offset}";
 		}
 		return $sql;
 	}
