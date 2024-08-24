@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Theme\Scripts;
 
 use mocks\Handles;
+use mocks\Scripts;
 
 /**
  * @author   Mat Lipe
@@ -101,6 +102,25 @@ class ManifestTest extends \WP_UnitTestCase {
 		$js->enqueue();
 		$script = get_echo( fn() => wp_scripts()->do_item( Handles::MASTER_JS->handle() ) );
 		$this->assertStringContainsString( 'async', $script );
+	}
+
+
+	public function test_in_editor(): void {
+		global $editor_styles;
+
+		$this->assertTrue( Handles::FRONT_END_CSS->in_editor() );
+		$this->assertFalse( Handles::ADMIN_JS->in_editor() );
+
+		$editor_styles = [];
+		remove_theme_support( 'editor-styles' );
+		$this->assertFalse( current_theme_supports( 'editor-styles' ) );
+
+		remove_all_actions( 'init' );
+		Common::factory( Handles::cases(), new Scripts() )->init_once();
+		$this->assertFalse( current_theme_supports( 'editor-styles' ) );
+		do_action( 'init' );
+		$this->assertSame( [ 'css-dist/front-end.min.css' ], $editor_styles );
+		$this->assertTrue( current_theme_supports( 'editor-styles' ) );
 	}
 
 

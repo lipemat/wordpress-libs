@@ -101,7 +101,7 @@ class Common {
 	 */
 	public function include_styles_in_editor(): void {
 		foreach ( $this->handles as $resource ) {
-			if ( $resource->in_editor() ) {
+			if ( ! $resource->in_editor() ) {
 				continue;
 			}
 			add_theme_support( 'editor-styles' );
