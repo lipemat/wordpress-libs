@@ -22,7 +22,7 @@ use Lipe\Lib\Util\Arrays;
  * @phpstan-type POSSIBLE array<string|\BackedEnum>|array<string,bool>|string|\BackedEnum
  * @phpstan-type CSS_CLASSES POSSIBLE|array<POSSIBLE>
  *
- * @implements \ArrayAccess<string|\BackedEnum, string>
+ * @implements \ArrayAccess<string, string>
  */
 class Class_Names implements \ArrayAccess {
 
