@@ -175,16 +175,19 @@ class Custom_Post_Type {
 	 * @return Labels
 	 */
 	public function labels( string $singular = '', string $plural = '' ): Labels {
-		if ( '' === $singular ) {
-			$singular = \str_replace( '_', ' ', $this->name );
+		if ( '' === $singular && null === $this->labels->get_label( Labels::SINGULAR_NAME ) ) {
+			$singular = \str_replace( [ '_', '-' ], ' ', $this->name );
 			$singular = \ucwords( $singular );
 		}
-
-		if ( '' === $plural ) {
+		if ( '' === $plural && null === $this->labels->get_label( Labels::NAME ) ) {
 			$plural = Strings::in()->pluralize( $singular );
 		}
-		$this->labels->singular_name( $singular );
-		$this->labels->name( $plural );
+		if ( '' !== $singular ) {
+			$this->labels->singular_name( $singular );
+		}
+		if ( '' !== $plural ) {
+			$this->labels->name( $plural );
+		}
 		return $this->labels;
 	}
 
