@@ -68,7 +68,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function name( string $label ): Labels {
-		return $this->set( 'name', $label );
+		return $this->set( self::NAME, $label );
 	}
 
 
@@ -82,7 +82,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function singular_name( string $label ): Labels {
-		return $this->set( 'singular_name', $label );
+		return $this->set( self::SINGULAR_NAME, $label );
 	}
 
 
@@ -94,7 +94,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function add_new( string $label ): Labels {
-		return $this->set( 'add_new', $label );
+		return $this->set( self::ADD_NEW, $label );
 	}
 
 
@@ -108,7 +108,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function add_new_item( string $label ): Labels {
-		return $this->set( 'add_new_item', $label );
+		return $this->set( self::ADD_NEW_ITEM, $label );
 	}
 
 
@@ -120,7 +120,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function archive_label( string $label ): Labels {
-		return $this->set( 'archive_label', $label );
+		return $this->set( self::ARCHIVE_LABEL, $label );
 	}
 
 
@@ -134,7 +134,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function edit_item( string $label ): Labels {
-		return $this->set( 'edit_item', $label );
+		return $this->set( self::EDIT_ITEM, $label );
 	}
 
 
@@ -148,7 +148,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function new_item( string $label ): Labels {
-		return $this->set( 'new_item', $label );
+		return $this->set( self::NEW_ITEM, $label );
 	}
 
 
@@ -162,7 +162,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function view_item( string $label ): Labels {
-		return $this->set( 'view_item', $label );
+		return $this->set( self::VIEW_ITEM, $label );
 	}
 
 
@@ -176,7 +176,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function view_items( string $label ): Labels {
-		return $this->set( 'view_items', $label );
+		return $this->set( self::VIEW_ITEMS, $label );
 	}
 
 
@@ -190,7 +190,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function search_items( string $label ): Labels {
-		return $this->set( 'search_items', $label );
+		return $this->set( self::SEARCH_ITEMS, $label );
 	}
 
 
@@ -204,7 +204,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function not_found( string $label ): Labels {
-		return $this->set( 'not_found', $label );
+		return $this->set( self::NOT_FOUND, $label );
 	}
 
 
@@ -218,7 +218,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function not_found_in_trash( string $label ): Labels {
-		return $this->set( 'not_found_in_trash', $label );
+		return $this->set( self::NOT_FOUND_IN_TRASH, $label );
 	}
 
 
@@ -233,7 +233,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function parent_item_colon( string $label ): Labels {
-		return $this->set( 'parent_item_colon', $label );
+		return $this->set( self::PARENT_ITEM_COLON, $label );
 	}
 
 
@@ -247,7 +247,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function all_items( string $label ): Labels {
-		return $this->set( 'all_items', $label );
+		return $this->set( self::ALL_ITEMS, $label );
 	}
 
 
@@ -261,7 +261,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function archives( string $label ): Labels {
-		return $this->set( 'archives', $label );
+		return $this->set( self::ARCHIVES, $label );
 	}
 
 
@@ -275,7 +275,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function attributes( string $label ): Labels {
-		return $this->set( 'attributes', $label );
+		return $this->set( self::ATTRIBUTES, $label );
 	}
 
 
@@ -289,7 +289,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function insert_into_item( string $label ): Labels {
-		return $this->set( 'insert_into_item', $label );
+		return $this->set( self::INSERT_INTO_ITEM, $label );
 	}
 
 
@@ -303,7 +303,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function uploaded_to_this_item( string $label ): Labels {
-		return $this->set( 'uploaded_to_this_item', $label );
+		return $this->set( self::UPLOADED_TO_THIS_ITEM, $label );
 	}
 
 
@@ -319,7 +319,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function featured_image( string $label ): Labels {
-		return $this->set( 'featured_image', $label );
+		return $this->set( self::FEATURED_IMAGE, $label );
 	}
 
 
@@ -335,7 +335,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function set_featured_image( string $label ): Labels {
-		return $this->set( 'set_featured_image', $label );
+		return $this->set( self::SET_FEATURED_IMAGE, $label );
 	}
 
 
@@ -351,7 +351,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function remove_featured_image( string $label ): Labels {
-		return $this->set( 'remove_featured_image', $label );
+		return $this->set( self::REMOVE_FEATURED_IMAGE, $label );
 	}
 
 
@@ -367,7 +367,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function use_featured_image( string $label ): Labels {
-		return $this->set( 'use_featured_image', $label );
+		return $this->set( self::USE_FEATURED_IMAGE, $label );
 	}
 
 
@@ -381,7 +381,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function menu_name( string $label ): Labels {
-		return $this->set( 'menu_name', $label );
+		return $this->set( self::MENU_NAME, $label );
 	}
 
 
@@ -395,7 +395,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function filter_items_list( string $label ): Labels {
-		return $this->set( 'filter_items_list', $label );
+		return $this->set( self::FILTER_ITEMS_LIST, $label );
 	}
 
 
@@ -409,7 +409,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function filter_by_date( string $label ): Labels {
-		return $this->set( 'filter_by_date', $label );
+		return $this->set( self::FILTER_BY_DATE, $label );
 	}
 
 
@@ -423,7 +423,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function items_list_navigation( string $label ): Labels {
-		return $this->set( 'items_list_navigation', $label );
+		return $this->set( self::ITEMS_LIST_NAVIGATION, $label );
 	}
 
 
@@ -437,7 +437,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function items_list( string $label ): Labels {
-		return $this->set( 'items_list', $label );
+		return $this->set( self::ITEMS_LIST, $label );
 	}
 
 
@@ -451,7 +451,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function item_published( string $label ): Labels {
-		return $this->set( 'item_published', $label );
+		return $this->set( self::ITEM_PUBLISHED, $label );
 	}
 
 
@@ -465,7 +465,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function item_published_privately( string $label ): Labels {
-		return $this->set( 'item_published_privately', $label );
+		return $this->set( self::ITEM_PUBLISHED_PRIVATELY, $label );
 	}
 
 
@@ -479,7 +479,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function item_reverted_to_draft( string $label ): Labels {
-		return $this->set( 'item_reverted_to_draft', $label );
+		return $this->set( self::ITEM_REVERTED_TO_DRAFT, $label );
 	}
 
 
@@ -493,7 +493,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function item_scheduled( string $label ): Labels {
-		return $this->set( 'item_scheduled', $label );
+		return $this->set( self::ITEM_SCHEDULED, $label );
 	}
 
 
@@ -507,7 +507,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function item_updated( string $label ): Labels {
-		return $this->set( 'item_updated', $label );
+		return $this->set( self::ITEM_UPDATED, $label );
 	}
 
 
@@ -521,7 +521,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function item_link( string $label ): Labels {
-		return $this->set( 'item_link', $label );
+		return $this->set( self::ITEM_LINK, $label );
 	}
 
 
@@ -535,7 +535,7 @@ class Labels {
 	 * @return Labels
 	 */
 	public function item_link_description( string $label ): Labels {
-		return $this->set( 'item_link_description', $label );
+		return $this->set( self::ITEM_LINK_DESCRIPTION, $label );
 	}
 
 
