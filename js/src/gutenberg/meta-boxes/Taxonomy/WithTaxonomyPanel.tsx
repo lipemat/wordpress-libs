@@ -1,10 +1,13 @@
-import {PluginDocumentSettingPanel} from '@wordpress/edit-post';
 import {__, sprintf} from '@wordpress/i18n';
 import {useEntityRecord, useEntityRecords} from '@wordpress/core-data';
 import {type ComponentType, type PropsWithChildren, useEffect} from 'react';
 import type {Tag, Taxonomy} from '@wordpress/core-data/entities';
 import {useTerms} from '@lipemat/js-boilerplate-gutenberg';
 import {dispatch} from '@wordpress/data';
+
+// @todo Remove this fallback when minimum WP version is 6.6.
+// @ts-ignore
+const PluginDocumentSettingPanel = window.wp.editor?.PluginDocumentSettingPanel ?? window.wp.editPost.PluginDocumentSettingPanel;
 
 export type FromPanel = {
 	tax: Taxonomy<'edit'> | null;
