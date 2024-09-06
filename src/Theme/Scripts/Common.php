@@ -170,17 +170,12 @@ class Common {
 	 * 1. In block editors.
 	 * 2. In iframe block editors.
 	 * 3. On the front-end.
-	 * We skip #3 because we want the block styles to load on the front-end
-	 * after the front-end.css file is loaded.
 	 *
 	 * @link   https://make.wordpress.org/core/2023/07/18/miscellaneous-editor-changes-in-wordpress-6-3/#post-editor-iframed
 	 *
 	 * @action enqueue_block_assets 11 0
 	 */
 	public function block_scripts(): void {
-		if ( ! is_admin() ) {
-			return;
-		}
 		foreach ( $this->handles as $resource ) {
 			if ( ! $resource->is_block_asset() ) {
 				continue;
