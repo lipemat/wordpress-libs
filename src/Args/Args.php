@@ -43,7 +43,7 @@ trait Args {
 
 
 	/**
-	 * Merge the arguments from another Args_Interface object into this one.
+	 * Merge the arguments from another `ArgsRules` object into this one.
 	 *
 	 * @param ArgsRules $overrides - Args to override the current ones.
 	 *

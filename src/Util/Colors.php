@@ -57,6 +57,6 @@ class Colors {
 
 		\preg_match( '/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i', $rgba, $by_color );
 
-		return \sprintf( '#%02x%02x%02x', $by_color[1], $by_color[2], $by_color[3] );
+		return \sprintf( '#%02x%02x%02x', $by_color[1] ?? '', $by_color[2] ?? '', $by_color[3] ?? '' );
 	}
 }
