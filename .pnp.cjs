@@ -29597,7 +29597,10 @@ Required by: ${issuerForDisplay}
             if (runtimeState.enableTopLevelFallback) {
               if (dependencyReference == null && fallbackReference === null) {
                 const reference = runtimeState.fallbackPool.get(dependencyName);
-                if (reference != null) {
+                // # Warnings suppressed via @lipemat/js-boilerplate/fix-pnp script. 
+if (! alwaysWarnOnFallback && reference != null) { 
+dependencyReference = reference; 
+} else if (alwaysWarnOnFallback && reference != null) {
                   fallbackReference = reference;
                 }
               }
