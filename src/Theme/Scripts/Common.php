@@ -38,30 +38,20 @@ class Common {
 	/**
 	 * Add the actions and filters for the class.
 	 *
-	 * @return void
+	 * @return Common
 	 */
-	public function init_once(): void {
-		$this->static_once( function() {
-			add_action( 'setup_theme', function() {
-				$this->load_css_enums();
-				$this->support_block_inline_styles();
-			} );
-			add_action( 'init', function() {
-				$this->include_styles_in_editor();
-			} );
-			add_action( 'admin_enqueue_scripts', function() {
-				$this->admin_scripts();
-			}, 11 );
-			add_action( 'enqueue_block_assets', function() {
-				$this->block_scripts();
-			}, 11 );
-			add_action( 'wp_enqueue_scripts', function() {
-				$this->theme_scripts();
-			}, 11 );
-			add_filter( 'wp_headers', fn( $a ) => $this->revision_header( $a ) );
-			add_action( 'wp_head', function() {
-				$this->remove_scripts();
-			}, - 1 );
+	public function init_once(): Common {
+		return $this->static_once( function() {
+			add_action( 'setup_theme', [ $this, 'load_css_enums' ] );
+			add_action( 'setup_theme', [ $this, 'support_block_inline_styles' ] );
+			add_action( 'init', [ $this, 'include_styles_in_editor' ] );
+			add_action( 'admin_enqueue_scripts', [ $this, 'admin_scripts' ], 11 );
+			add_action( 'enqueue_block_assets', [ $this, 'block_scripts' ], 11 );
+			add_action( 'wp_enqueue_scripts', [ $this, 'theme_scripts' ], 11 );
+			add_filter( 'wp_headers', [ $this, 'revision_header' ] );
+			add_action( 'wp_head', [ $this, 'remove_scripts' ], - 1 );
+
+			return $this;
 		}, __METHOD__ );
 	}
 
