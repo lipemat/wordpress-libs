@@ -6,7 +6,7 @@ namespace Lipe\Lib\Post_Type;
 /**
  * A fluent interface for setting post type capabilities.
  *
- * @link https://developer.wordpress.org/reference/functions/register_post_type/#capabilities
+ * @link https://developer.wordpress.org/reference/functions/get_post_type_capabilities/
  *
  * @see  Custom_Post_Type::capabilities()
  */
