@@ -18,14 +18,14 @@ use Lipe\Lib\CMB2\Group;
  *
  * @phpstan-type ESC_CB callable( mixed $value, array<string, mixed>, \CMB2_Field ): mixed
  */
-class Registered {
+readonly class Registered {
 	/**
 	 * Build the Registered object.
 	 *
 	 * @param Field $variation - The field variation we are working with.
 	 */
 	final protected function __construct(
-		public readonly Field $variation
+		public Field $variation
 	) {
 	}
 
@@ -109,6 +109,16 @@ class Registered {
 			return \call_user_func( $config['default_cb'], $config, $this->get_cmb2_field( $object_id ) );
 		}
 		return null;
+	}
+
+
+	/**
+	 * Get the fields long description if one has been provided.
+	 *
+	 * @return ?string
+	 */
+	public function get_description(): ?string {
+		return $this->get_config()['desc'] ?? null;
 	}
 
 

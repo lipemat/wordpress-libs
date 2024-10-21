@@ -76,6 +76,8 @@ class Register_Meta implements ArgsRules {
 	/**
 	 * A human-readable label of the data attached to this meta key.
 	 *
+	 * Used to display in areas like block binding attributes in the editor.
+	 *
 	 * @var string
 	 */
 	public string $label;

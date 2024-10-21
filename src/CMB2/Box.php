@@ -822,7 +822,8 @@ class Box {
 		$config = [
 			'single'      => true,
 			'type'        => 'string',
-			'description' => $registered->variation->name,
+			'description' => $registered->get_description() ?? $registered->variation->name,
+			'label'       => $registered->variation->name,
 		];
 		if ( $registered->is_using_array_data() ) {
 			$config['type'] = 'array';

@@ -269,4 +269,19 @@ class BoxTest extends \WP_UnitTestCase {
 		$box->remove_box_wrap();
 		$this->assertArrayHasKey( 'remove_box_wrap', call_private_method( $box, 'get_args' ) );
 	}
+
+
+	public function test_register_meta_label(): void {
+		$box = new Box( 'no-title', [ 'post' ], null );
+		$box->field( 'with-description', 'With Description' )
+		    ->text()
+		    ->description( 'A longer description' );
+		$box->field( 'no-descrption', 'No Description' )
+		    ->text();
+
+		do_action( 'cmb2_init' );
+		$meta = get_registered_meta_keys( 'post', 'post' );
+		$this->assertSame( 'With Description', $meta['with-description']['label'] );
+		$this->assertSame( 'A longer description', $meta['with-description']['description'] );
+	}
 }
