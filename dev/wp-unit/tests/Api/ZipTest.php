@@ -46,9 +46,8 @@ class ZipTest extends \WP_UnitTestCase {
 
 
 	public function test_build_zip(): void {
-		unlink( 'C:\Users\mat\AppData\Local\Temp/d7d4671eed44043cd98b9f2498db9711' );
-		$this->assertFalse( file_exists( 'C:\Users\mat\AppData\Local\Temp/d7d4671eed44043cd98b9f2498db9711' ) );
-		$temp_count = \count( glob( get_temp_dir() . '*' ) );
+		@\unlink( 'C:\Users\mat\AppData\Local\Temp/d7d4671eed44043cd98b9f2498db9711' );
+		self::assertFileDoesNotExist( 'C:\Users\mat\AppData\Local\Temp/d7d4671eed44043cd98b9f2498db9711' );
 
 		get_echo( function() {
 			try {
@@ -61,7 +60,7 @@ class ZipTest extends \WP_UnitTestCase {
 			}
 		} );
 
-		$this->assertTrue( file_exists( 'C:\Users\mat\AppData\Local\Temp/d7d4671eed44043cd98b9f2498db9711' ) );
+		$this->assertFileExists( 'C:\Users\mat\AppData\Local\Temp/d7d4671eed44043cd98b9f2498db9711' );
 
 		$zip = new \ZipArchive;
 		$zip->open( 'C:\Users\mat\AppData\Local\Temp/d7d4671eed44043cd98b9f2498db9711' );
@@ -72,7 +71,7 @@ class ZipTest extends \WP_UnitTestCase {
 		$zip->close();
 		$this->assertSame( [ 'readme.html', 'license.txt' ], $files );
 
-		unlink( 'C:\Users\mat\AppData\Local\Temp/d7d4671eed44043cd98b9f2498db9711' );
+		@\unlink( 'C:\Users\mat\AppData\Local\Temp/d7d4671eed44043cd98b9f2498db9711' );
 	}
 
 
