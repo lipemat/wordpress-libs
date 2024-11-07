@@ -19,9 +19,9 @@ use Lipe\Lib\Blocks\Args\Supports;
  * @link   https://developer.wordpress.org/reference/functions/register_block_type/
  *
  * @phpstan-type ATTR_SHAPE array{
- *     type:string,
- *     default?:mixed,
- *     enum?:array<string|int|bool>,
+ *     type: 'null'|'boolean'|'object'|'array'|'number'|'string'|'integer',
+ *     default?: mixed,
+ *     enum?: array<string|int|bool>,
  *     items?: array{
  *       type: string,
  *       required?: array<string>,
