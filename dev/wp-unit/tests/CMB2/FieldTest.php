@@ -143,7 +143,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		    ->text();
 		$box->field( __FUNCTION__ . '-d2', __METHOD__ . '-d2' )
 		    ->text()
-		    ->default( function( array $config, \CMB2_Field $field ) {
+			->default_cb( function( array $config, \CMB2_Field $field ) {
 			    $object = Post_Mock::factory( $field->object_id() );
 			    return $object->get_meta( 'd1' ) . '-cb';
 		    } );
@@ -168,7 +168,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		    ->default( 'secret' );
 		$box->field( __FUNCTION__ . '-o2', 'Options Default Callback' )
 		    ->text()
-		    ->default( function( array $config, \CMB2_Field $field ) use ( $c ) {
+			->default_cb( function( array $config, \CMB2_Field $field ) use ( $c ) {
 			    return $c->get_option( 'o1' ) . '-cb';
 		    } );
 		do_action( 'cmb2_init' );

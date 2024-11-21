@@ -219,9 +219,6 @@ class Field {
 	 *
 	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#default_cb
 	 *
-	 * @notice Not currently support for retrieval of group sub-fields but
-	 *         works to populate defaults in the admin.
-	 *
 	 * @var callable
 	 */
 	protected $default_cb;
@@ -364,16 +361,9 @@ class Field {
 
 
 	/**
-	 * Specify a default value for the field, or a
-	 * function which will return a default value.
+	 * Specify a default value for the field.
 	 *
 	 * @see     Checkbox::default() -- checkboxes are tricky.
-	 *
-	 * @example function prefix_set_test_default( $field_args, \CMB2_Field $field ) {
-	 *                      return 'Post ID: '. $field->object_id
-	 *                  }
-	 *
-	 * @example = 'John'
 	 *
 	 * @param callable|string|array<mixed> $default_value - A default value, or a function which will return a value.
 	 *
@@ -381,8 +371,8 @@ class Field {
 	 */
 	public function default( callable|string|array $default_value ): static {
 		if ( \is_callable( $default_value ) ) {
-			Default_Callback::factory( $this, $this->box, $default_value );
-			$this->default_cb = $default_value;
+			_doing_it_wrong( __METHOD__, 'Callbacks should use `default_cb` instead of `default`', '3.2.1' );
+			$this->default_cb( $default_value );
 		} else {
 			$this->default = $default_value;
 			if ( BoxType::OPTIONS === $this->box->get_box_type() ) {
@@ -391,6 +381,30 @@ class Field {
 				} );
 			}
 		}
+		return $this;
+	}
+
+
+	/**
+	 * Specify a callback which will return the default value for this field.
+	 *
+	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#default_cb
+	 *
+	 * @since    5.2.1
+	 *
+	 * @phpstan-param callable( array<string, mixed>, \CMB2_Field ): mixed $callback
+	 *
+	 * @formatter:off
+	 *
+	 * @param callable $callback - Callback to retrieve the default value.
+	 *
+	 * @formatter:on
+	 *
+	 * @return static
+	 */
+	public function default_cb( callable $callback ): static {
+		Default_Callback::factory( $this, $this->box, $callback );
+		$this->default_cb = $callback;
 		return $this;
 	}
 

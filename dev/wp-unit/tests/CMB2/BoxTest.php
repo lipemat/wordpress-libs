@@ -80,6 +80,7 @@ class BoxTest extends \WP_UnitTestCase {
 		$this->assertEquals( 14, get_private_property( $field, 'position' ) );
 		$this->assertEquals( [ 'o' => 'one', 't' => 'two' ], get_private_property( $field, 'options' ) );
 
+		$this->expectDoingItWrong( 'Lipe\Lib\CMB2\Field::default', 'Callbacks should use `default_cb` instead of `default` (This message was added in version 3.2.1.)' );
 		$group = $box->group( 'g1', 'Group 1' );
 		$group->field( 't2', 'TEST 2' )
 		      ->checkbox()
@@ -89,22 +90,29 @@ class BoxTest extends \WP_UnitTestCase {
 		$group->field( 't3', 'TEST 3' )
 		      ->text()
 		      ->default( 'some other' );
+		$group->field( 't4', 'TEST 4' )
+		      ->text()
+		      ->default_cb( fn() => 'some value' );
 		do_action( 'cmb2_init' );
 
 		/** @var Group $group */
 		$group = get_private_property( $box, 'fields' )['g1'];
 		/** @var Field $field */
 		$field = get_private_property( $group, 'fields' )['t2'];
+		/** @var Field $t4 */
+		$t4 = get_private_property( $group, 'fields' )['t4'];
 
 		$this->assertEquals( 4, get_private_property( $field, 'column' )['position'] );
 		$this->assertEquals( 9, get_private_property( $field, 'position' ) );
 		$this->assertEquals( Type::CHECKBOX, get_private_property( $field, 'type' ) );
 		$this->assertEquals( 'on', Registered::factory( $field )->get_default( 10 ) );
+		$this->assertEquals( 'some value', Registered::factory( $t4 )->get_default( 10 ) );
 		$this->assertEquals( 'some other', Registered::factory( get_private_property( $group, 'fields' )['t3'] )->get_default() );
 
 		$post = Post_Mock::factory( self::factory()->post->create_and_get() );
 		$this->assertTrue( $post->get_meta( 't2' ) );
 		$this->assertEquals( 'some other', $post->get_meta( 't3' ) );
+		$this->assertEquals( 'some value', $post->get_meta( 't4' ) );
 	}
 
 

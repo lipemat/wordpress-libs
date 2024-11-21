@@ -29,7 +29,7 @@ class CheckboxTest extends \WP_UnitTestCase {
 		$box = new Box( 'checkbox-text/default', [ 'post' ], 'Test Box' );
 		$field = $box->field( 'checker', 'Checker' )
 		             ->checkbox()
-		             ->default( fn( array $args, \CMB2_Field $field ) => isset( $_GET['post'] ) ? '' : true );
+			->default_cb( fn( array $args, \CMB2_Field $field ) => isset( $_GET['post'] ) ? '' : true );
 
 		$this->assertInstanceOf( Checkbox::class, $field );
 
