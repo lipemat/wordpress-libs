@@ -43,7 +43,7 @@ class Repo {
 
 
 	/**
-	 * Handle any special field validation for a single field.
+	 * Handle any special field validation when updating a single field.
 	 *
 	 * @since 4.10.0
 	 *
@@ -54,6 +54,22 @@ class Repo {
 	 * @return void
 	 */
 	public function pre_update_field( string $key ): void {
+		Validation::in()->warn_for_repeatable_group_sub_fields( $key, $this->get_registered( $key ) );
+	}
+
+
+	/**
+	 * Handle any special field validation when retrieving a single field
+	 *
+	 * @since 5.2.1
+	 *
+	 * @interal
+	 *
+	 * @param string $key - ID of the field.
+	 *
+	 * @return void
+	 */
+	public function pre_get_field( string $key ): void {
 		Validation::in()->warn_for_repeatable_group_sub_fields( $key, $this->get_registered( $key ) );
 	}
 

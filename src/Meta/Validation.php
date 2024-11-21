@@ -39,7 +39,7 @@ class Validation {
 		}
 		if ( true === $group?->is_repeatable() ) {
 			/* translators: {field id} */
-			_doing_it_wrong( __METHOD__, wp_kses_post( \sprintf( __( 'Accessing sub-fields on repeatable groups will only update the first item. Use the group key instead. %s', 'lipe' ), $field_id ) ), '4.10.0' );
+			_doing_it_wrong( __METHOD__, wp_kses_post( \sprintf( __( 'Accessing sub-fields on repeatable groups will only read/update the first item. Use the group key instead. %s', 'lipe' ), $field_id ) ), '4.10.0' );
 		}
 	}
 

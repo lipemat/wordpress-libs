@@ -404,7 +404,7 @@ class GroupTest extends \WP_Test_REST_TestCase {
 
 		$this->assertSame( '__last', $post['group/prefixed/g3'][0]['first/things/last'] );
 		$this->assertSame( '__after', $post['group/prefixed/g3'][0]['second/things/after'] );
-		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_repeatable_group_sub_fields', 'Accessing sub-fields on repeatable groups will only update the first item. Use the group key instead. second/things/after (This message was added in version 4.10.0.)' );
+		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_repeatable_group_sub_fields', 'Accessing sub-fields on repeatable groups will only read/update the first item. Use the group key instead. second/things/after (This message was added in version 4.10.0.)' );
 		$this->assertSame( '__after', $post['second/things/after'] );
 	}
 

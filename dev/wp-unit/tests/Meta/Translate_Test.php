@@ -127,7 +127,7 @@ class Translate_Test extends \WP_UnitTestCase {
 			$this->assertSame( (string) ( $i + 1 ), $item[ __METHOD__ . 'servings' ] );
 		}
 
-		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_repeatable_group_sub_fields', 'Accessing sub-fields on repeatable groups will only update the first item. Use the group key instead. Lipe\Lib\Meta\Translate_Test::test_multiple_group_fieldsservings (This message was added in version 4.10.0.)' );
+		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_repeatable_group_sub_fields', 'Accessing sub-fields on repeatable groups will only read/update the first item. Use the group key instead. Lipe\Lib\Meta\Translate_Test::test_multiple_group_fieldsservings (This message was added in version 4.10.0.)' );
 
 		$this->assertSame( '1', $post->get_meta( __METHOD__ . 'servings' ) );
 		$this->assertSame( '100', $post->get_meta( __METHOD__ . 'calories' ) );

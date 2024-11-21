@@ -132,7 +132,7 @@ trait Mutator_Trait {
 	 * @return mixed
 	 */
 	public function get_meta( string $key, mixed $default_value = null ): mixed {
-		Repo::in()->pre_update_field( $key );
+		Repo::in()->pre_get_field( $key );
 
 		$value = Repo::in()->get_value( $this->get_id(), $key, $this->get_meta_type() );
 		if ( null !== $default_value && empty( $value ) ) {
