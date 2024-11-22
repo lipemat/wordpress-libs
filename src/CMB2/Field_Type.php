@@ -16,7 +16,6 @@ use Lipe\Lib\CMB2\Variation\Text;
 use Lipe\Lib\CMB2\Variation\TextUrl;
 use Lipe\Lib\CMB2\Variation\Wysiwyg;
 use Lipe\Lib\Meta\DataType;
-use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Util\Arrays;
 
 /**
@@ -590,7 +589,10 @@ class Field_Type {
 	/**
 	 * Standard select dropdown.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#select
+	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Types#select
+	 *
+	 * @notice If a callback is passed and this field is displayed using `column`,
+	 *         the callback will be called again for each row in the posts list table.
 	 *
 	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
 	 *
