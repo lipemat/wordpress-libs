@@ -87,7 +87,7 @@ class Post_List_Filter {
 			$selected = $this->get_selected_filter();
 			foreach ( $this->filter_column->get_options() as $value => $label ) {
 				?>
-				<option class="level-0" value="<?= esc_attr( $value ) ?>" <?php selected( $selected, $value ); ?>>
+				<option class="level-0" value="<?= esc_attr( (string) $value ) ?>" <?php selected( $selected, $value ); ?>>
 					<?= esc_html( $label ) ?>
 				</option>
 				<?php

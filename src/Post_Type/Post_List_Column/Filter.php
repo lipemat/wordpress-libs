@@ -30,9 +30,9 @@ interface Filter {
 	/**
 	 * Get the options to add to filter drop-down select.
 	 *
-	 * array{value: label}
+	 * array{value => label}
 	 *
-	 * @return array<string, string>
+	 * @return array<string|int, string>
 	 */
 	public function get_options(): array;
 
