@@ -289,7 +289,12 @@ class BoxTest extends \WP_UnitTestCase {
 
 		do_action( 'cmb2_init' );
 		$meta = get_registered_meta_keys( 'post', 'post' );
-		$this->assertSame( 'With Description', $meta['with-description']['label'] );
+
+		if ( version_compare( $GLOBALS['wp_version'], '6.7', '>=' ) ) {
+			$this->assertSame( 'With Description', $meta['with-description']['label'] );
+		} else {
+			$this->assertArrayNotHasKey( 'label', $meta['with-description'] );
+		}
 		$this->assertSame( 'A longer description', $meta['with-description']['description'] );
 	}
 }
