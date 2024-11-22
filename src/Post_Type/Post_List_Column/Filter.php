@@ -11,6 +11,13 @@ namespace Lipe\Lib\Post_Type\Post_List_Column;
  *
  */
 interface Filter {
+	/**
+	 * Get the post types to add the column to.
+	 *
+	 * @return string[]
+	 */
+	public function get_post_types(): array;
+
 
 	/**
 	 * Get the label for the filter drop-down.

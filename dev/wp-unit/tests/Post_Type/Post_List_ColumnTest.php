@@ -1,9 +1,8 @@
 <?php
 declare( strict_types=1 );
 
-namespace Lipe\Lip\Post_Type;
+namespace Lipe\Lib\Post_Type;
 
-use Lipe\Lib\Post_Type\Post_List_Column;
 use Lipe\Lib\Post_Type\Post_List_Column\Filter;
 use Lipe\Lib\Post_Type\Post_List_Column\ListColumn;
 
@@ -96,7 +95,7 @@ class Post_List_ColumnTest extends \WP_UnitTestCase {
 		do_action( 'parse_query', $query );
 		$this->assertArrayNotHasKey( 'slug', $query->query_vars );
 
-		$nonce = get_private_property( Post_List_Column::class, 'NONCE' );
+		$nonce = get_private_property( Post_List_Filter::class, 'NONCE' );
 		$_REQUEST[ $nonce ] = wp_create_nonce( $nonce );
 		do_action( 'parse_query', $query );
 		if ( $included ) {
