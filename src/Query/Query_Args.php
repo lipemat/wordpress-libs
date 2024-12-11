@@ -633,7 +633,7 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, ArgsRule
 	public function merge_query( \WP_Query $query ): void {
 		foreach ( $query->query as $arg => $value ) {
 			if ( '' !== $value && \property_exists( $this, $arg ) && ! isset( $this->{$arg} ) ) {
-				if ( 'paged' === $arg ) {
+				if ( 'paged' === $arg || 'page' === $arg ) {
 					$this->{$arg} = (int) $value;
 				} else {
 					$this->{$arg} = $value;

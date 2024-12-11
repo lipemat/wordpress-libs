@@ -53,9 +53,11 @@ class ArgsTest extends \WP_UnitTestCase {
 		$query = new \WP_Query();
 		$query->parse_query( [
 			'paged' => '2',
+			'page' => '4',
 		] );
 		$args = new Query_Args( [] );
 		$args->merge_query( $query );
 		$this->assertEquals( 2, $args->get_args()['paged'] );
+		$this->assertEquals( 4, $args->get_args()['page'] );
 	}
 }
