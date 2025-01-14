@@ -8,6 +8,7 @@ use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Settings\Settings_Trait;
 use mocks\Post_Mock;
+use mocks\Settings_Mock;
 
 /**
  * @requires function \CMB2_Bootstrap_2101::initiate
@@ -143,7 +144,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		    ->text();
 		$box->field( __FUNCTION__ . '-d2', __METHOD__ . '-d2' )
 		    ->text()
-			->default_cb( function( array $config, \CMB2_Field $field ) {
+		    ->default_cb( function( array $config, \CMB2_Field $field ) {
 			    $object = Post_Mock::factory( $field->object_id() );
 			    return $object->get_meta( 'd1' ) . '-cb';
 		    } );
@@ -162,20 +163,24 @@ class FieldTest extends \WP_Test_REST_TestCase {
 
 			public const NAME = 'options-defaulted';
 		};
-		$box = new Options_Page( 'options-defaulted', 'Default Box' );
-		$box->field( 'o1', 'Options Default 1' )
+		$box = new Options_Page( $c::NAME, 'Default Box' );
+		$o1 = __FUNCTION__ . 'o1';
+		$box->field( $o1, 'Options Default 1' )
 		    ->text()
 		    ->default( 'secret' );
 		$box->field( __FUNCTION__ . '-o2', 'Options Default Callback' )
 		    ->text()
-			->default_cb( function( array $config, \CMB2_Field $field ) use ( $c ) {
-			    return $c->get_option( 'o1' ) . '-cb';
+		    ->default_cb( function( array $config, \CMB2_Field $field ) use ( $c, $o1 ) {
+			    return $c->get_option( $o1 ) . '-cb';
 		    } );
 		do_action( 'cmb2_init' );
 
-		$this->assertEquals( 'secret', \cmb2_options( 'options-defaulted' )->get( 'o1' ) );
-		$this->assertEquals( 'secret', $c->get_option( 'o1' ) );
-		$this->assertEquals( 'secret-cb', \cmb2_options( 'options-defaulted' )->get( __FUNCTION__ . '-o2' ) );
+		$field = cmb2_get_field( $c::NAME, __FUNCTION__ . '-o2', $c::NAME, BoxType::OPTIONS->value );
+		$this->assertEquals( 'secret-cb', $field->get_default() );
+
+		$this->assertEquals( 'secret', \cmb2_options( $c::NAME )->get( $o1 ) );
+		$this->assertEquals( 'secret', $c->get_option( $o1 ) );
+		$this->assertEquals( 'secret-cb', \cmb2_options( $c::NAME )->get( __FUNCTION__ . '-o2' ) );
 		$this->assertEquals( 'secret-cb', $c->get_option( __FUNCTION__ . '-o2' ) );
 	}
 

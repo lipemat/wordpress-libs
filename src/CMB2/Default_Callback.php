@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\Meta\Registered;
+use Lipe\Lib\Util\Actions;
 
 /**
  * Custom handling for default values using a callback.
@@ -35,15 +36,15 @@ class Default_Callback {
 	 */
 	protected function hook(): void {
 		if ( BoxType::OPTIONS === $this->box->get_box_type() ) {
-			add_filter( "cmb2_default_option_{$this->box->get_id()}_{$this->field->get_id()}", [
+			Actions::in()->add_looping_filter( "cmb2_default_option_{$this->box->get_id()}_{$this->field->get_id()}", [
 				$this,
 				'default_option_callback',
 			], 11 );
 		} else {
-			add_filter( "default_{$this->box->get_box_type()->value}_metadata", [
+			Actions::in()->add_looping_filter( "default_{$this->box->get_box_type()->value}_metadata", [
 				$this,
 				'default_meta_callback',
-			], 11, 3 );
+			], 11 );
 		}
 	}
 
@@ -70,15 +71,12 @@ class Default_Callback {
 			return $value;
 		}
 
-		// Will create an infinite loop if filter is intact.
-		remove_filter( "default_{$this->box->get_box_type()->value}_metadata", [ $this, 'default_meta_callback' ], 11 );
-		$cmb2_field = $this->field->get_cmb2_field( $object_id );
-		if ( null !== $cmb2_field ) {
-			add_filter( "default_{$this->box->get_box_type()->value}_metadata", [ $this, 'default_meta_callback' ], 11, 3 );
-			return \call_user_func( $this->callback, $cmb2_field->properties, $cmb2_field );
+		$cmb2_field = $this->field->get_cmb2_field();
+		if ( null === $cmb2_field ) {
+			return false;
 		}
-
-		return false;
+		$cmb2_field->object_id( $object_id );
+		return \call_user_func( $this->callback, $cmb2_field->properties, $cmb2_field );
 	}
 
 
@@ -89,7 +87,7 @@ class Default_Callback {
 	 * options pages, this takes care of returning default
 	 * values when retrieving options.
 	 *
-	 * CMB2 stores options data a one big blog, so we
+	 * CMB2 stores options data a one big blob, so we
 	 * can't tap into WP core default option filters.
 	 * Instead, we tap into the custom filters added to
 	 * lipemat/cmb2.
