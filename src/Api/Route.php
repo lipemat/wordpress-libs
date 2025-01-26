@@ -227,7 +227,7 @@ class Route {
 		foreach ( $this->routes as $_route => $_args ) {
 			add_rewrite_rule( $_route . '/([^/]+)/?.?', 'index.php?post_type=' . self::POST_TYPE . '&p=' . $this->get_post_id() . '&' . self::QUERY_VAR . '=' . $_route . '&' . self::PARAM_QUERY_VAR . '=$matches[1]', 'top' );
 
-			add_rewrite_rule( $_route, 'index.php?post_type=' . self::POST_TYPE . '&p=' . $this->get_post_id() . '&' . self::QUERY_VAR . '=' . $_route, 'top' );
+			add_rewrite_rule( '^' . $_route . '/?$', 'index.php?post_type=' . self::POST_TYPE . '&p=' . $this->get_post_id() . '&' . self::QUERY_VAR . '=' . $_route, 'top' );
 		}
 	}
 
