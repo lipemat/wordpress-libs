@@ -6,6 +6,7 @@ declare( strict_types=1 );
  * Version 2.6.3
  */
 
+use Lipe\Lib\Api\Route;
 use Lipe\Lib\Meta\Repo;
 
 /**
@@ -74,5 +75,6 @@ function set_private_property( string|object $object, string $property, mixed $v
 
 function tests_reset_container(): void {
 	set_private_property( Repo::in(), 'registered', [] );
+	set_private_property( Route::in(), 'routes', [] );
 	Repo::in()->clear_memoize_cache();
 }
