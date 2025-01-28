@@ -34,7 +34,7 @@ function removeDefaultMetaBox( taxonomy: string ): void {
 	} else {
 		// @todo Remove `core/edit-post` fallback when minimum WP version is 6.5.
 		// eslint-disable-next-line
-		dispatch( 'core/edit-post' ).removeEditorPanel( sprintf( 'taxonomy-panel-%1$s', taxonomy ) );
+		dispatch( 'core/edit-post' ).removeEditorPanel( sprintf( 'taxonomy-panel-%1$s', taxonomy ) ); // @ts-ignore
 	}
 }
 
@@ -74,7 +74,7 @@ export default function WithTaxonomyPanel(
 			icon={tax?.name === undefined ? 'download' : null}
 		>
 			<WrappedComponent
-				tax={tax}
+				tax={tax ?? null}
 				terms={terms ?? []}
 				assigned={assigned}
 				setAssigned={setAssigned}

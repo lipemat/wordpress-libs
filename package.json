@@ -24,15 +24,16 @@
   },
   "devDependencies": {
     "@lipemat/eslint-config": "^3.3.1",
-    "@lipemat/js-boilerplate": "^10.9.0",
+    "@lipemat/js-boilerplate": "10.11.1",
     "@lipemat/js-boilerplate-gutenberg": "^3.3.3",
     "@lipemat/stylelint-config": "^2.2.1",
     "@types/jquery": "^3.5.30",
     "@types/lipemat__js-boilerplate": "lipemat/types-js-boilerplate#semver:^2.12.1",
-    "@types/node": "^18",
+    "@types/node": "~20.11.0",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18",
     "@types/select2": "^4.0.63",
+    "@types/webpack-env": "^1.18.5",
     "eslint": "^8",
     "stylelint": "^14",
     "ts-node": "^10.9.1",
@@ -41,7 +42,8 @@
   "resolutions": {
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18",
-    "react": "^18.3.1"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
-  "packageManager": "yarn@4.5.0"
+  "packageManager": "yarn@4.6.0"
 }
