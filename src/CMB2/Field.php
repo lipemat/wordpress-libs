@@ -16,6 +16,7 @@ use Lipe\Lib\Util\Arrays;
  * @phpstan-import-type DELETE_CB from Event_Callbacks
  * @phpstan-import-type CHANGE_CB from Event_Callbacks
  * @phpstan-import-type ESC_CB from Registered
+ * @phpstan-import-type DEFAULT_CB from Default_Callback
  */
 class Field {
 	use Display;
@@ -391,7 +392,7 @@ class Field {
 	 *
 	 * @since    5.2.1
 	 *
-	 * @phpstan-param callable( array<string, mixed>, \CMB2_Field ): mixed $callback
+	 * @phpstan-param DEFAULT_CB $callback
 	 *
 	 * @formatter:off
 	 *

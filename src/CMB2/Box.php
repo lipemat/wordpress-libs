@@ -756,7 +756,7 @@ class Box {
 		$type = $this->get_box_type();
 		$sub_types = $this->object_types;
 		if ( BoxType::TERM === $type ) {
-			if ( isset( $this->taxonomies ) ) {
+			if ( \property_exists( $this, 'taxonomies' ) && isset( $this->taxonomies ) ) {
 				$sub_types = $this->taxonomies;
 			}
 		} elseif ( \in_array( $type, [ BoxType::USER, BoxType::COMMENT ], true ) ) {

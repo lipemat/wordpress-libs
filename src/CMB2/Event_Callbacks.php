@@ -22,12 +22,21 @@ use Lipe\Lib\Taxonomy\Get_Terms;
  *
  * @interal
  *
- * @phpstan-type DELETE_CB callable( int $object_id, string $key, mixed $previous, BoxType $type ): void
- * @phpstan-type CHANGE_CB callable( int $object_id, mixed $value, string $key, mixed $previous, BoxType $type): void
+ * @phpstan-type DELETE_CB callable( int|string $object_id, string $key, mixed $previous, BoxType $type ): void
+ * @phpstan-type CHANGE_CB callable( int|string $object_id, mixed $value, string $key, mixed $previous, BoxType $type): void
  */
 class Event_Callbacks {
 	public const TYPE_CHANGE = 'change';
 	public const TYPE_DELETE = 'delete';
+
+	/**
+	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
+	 *
+	 * @see Box::$object_types
+	 *
+	 * @var string[]
+	 */
+	public readonly array $object_types;
 
 	/**
 	 * Box this field is registered on.
@@ -61,15 +70,6 @@ class Event_Callbacks {
 	 * @var BoxType
 	 */
 	protected readonly BoxType $box_type;
-
-	/**
-	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
-	 *
-	 * @see Box::$object_types
-	 *
-	 * @var string[]
-	 */
-	public readonly array $object_types;
 
 	/**
 	 * Previous value before an update.

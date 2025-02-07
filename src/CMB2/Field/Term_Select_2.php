@@ -183,7 +183,7 @@ class Term_Select_2 {
 	 * @param int|string           $id         - Post id on post screens, field key on settings screens.
 	 * @param array<string, mixed> $field_args - The field args.
 	 *
-	 * @return list<int>|list<List<int>>|null
+	 * @return int[]|array<List<int>>|null
 	 */
 	public function set_object_terms( mixed $filtered, mixed $meta_value, int|string $id, array $field_args ): ?array {
 		if ( ! \is_array( $meta_value ) ) {

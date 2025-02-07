@@ -160,7 +160,7 @@ class Api {
 		}
 
 		$this->doing_api = true;
-		$args = \array_filter( \explode( '/', $wp->query_vars[ self::NAME ] ) );
+		$args = \array_filter( \explode( '/', $wp->query_vars[ self::NAME ] ), fn( $value ) => '' !== $value );
 		$endpoint = \array_shift( $args );
 		if ( null === $endpoint ) {
 			return;

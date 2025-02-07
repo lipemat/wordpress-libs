@@ -379,9 +379,9 @@ class Custom_Post_Type {
 	 * @return void
 	 */
 	public function add_support( string $feature ): void {
-		$supports = $this->register_args->supports;
-		$supports[] = $feature;
-		$this->register_args->supports = \array_unique( $supports );
+		if ( ! \in_array( $feature, $this->register_args->supports, true ) ) {
+			$this->register_args->supports[] = $feature;
+		}
 	}
 
 
@@ -573,7 +573,7 @@ class Custom_Post_Type {
 	 *
 	 * @return void
 	 */
-	public function show_in_menu( Dashicons|string $icon = '', ?string $parent_menu = null, int $position = 5, ): void {
+	public function show_in_menu( Dashicons|string $icon = '', ?string $parent_menu = null, int $position = 5 ): void {
 		$this->register_args->show_in_menu = true;
 		$this->register_args->menu_position = $position;
 

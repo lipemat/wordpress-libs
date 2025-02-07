@@ -16,7 +16,7 @@ use Lipe\Lib\CMB2\Group;
  * @author Mat Lipe
  * @since  5.0.0
  *
- * @phpstan-type ESC_CB callable( mixed $value, array<string, mixed>, \CMB2_Field ): mixed
+ * @phpstan-type ESC_CB callable( mixed $value, array<string, mixed>, ?\CMB2_Field ): mixed
  */
 readonly class Registered {
 	/**

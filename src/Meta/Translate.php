@@ -446,7 +446,7 @@ trait Translate {
 			return [];
 		}
 
-		return \array_filter( $terms );
+		return $terms;
 	}
 
 
@@ -591,7 +591,7 @@ trait Translate {
 	 *
 	 * @throws \RuntimeException -- If the field does not exist.
 	 *
-	 * @return mixed;
+	 * @return mixed
 	 */
 	protected function maybe_use_main_blog( string $field_id, callable $callback ): mixed {
 		$field = $this->get_registered( $field_id );

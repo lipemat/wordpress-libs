@@ -36,9 +36,19 @@ class Select_2_Field implements \JsonSerializable {
 	 * @return array{id: string, noResultsText: string}
 	 */
 	public function jsonSerialize(): array {
+		$no_results_text = $this->field->get_text( 'no_terms_text' );
+		if ( null === $no_results_text ) {
+			$tax = get_taxonomy( $this->taxonomy );
+			if ( $tax instanceof \WP_Taxonomy ) {
+				$no_results_text = $tax->labels->not_found;
+			} else {
+				$no_results_text = '';
+			}
+		}
+
 		return [
 			'id'            => $this->field->get_id(),
-			'noResultsText' => $this->field->get_text( 'no_terms_text' ) ?? get_taxonomy( $this->taxonomy )->labels->not_found ?? '',
+			'noResultsText' => $no_results_text,
 		];
 	}
 

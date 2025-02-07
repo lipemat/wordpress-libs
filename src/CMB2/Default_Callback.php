@@ -11,14 +11,18 @@ use Lipe\Lib\Util\Actions;
  *
  * @author Mat Lipe
  * @since  5.0.0
+ *
+ * @phpstan-type DEFAULT_CB callable( array<string, mixed>, \CMB2_Field ): mixed
  */
 class Default_Callback {
 	/**
 	 * Build an instance for handling default values on this field.
 	 *
-	 * @param Registered                            $field    - Field instance.
-	 * @param Box                                   $box      - Box instance.
-	 * @param callable( object, \CMB2_Field): mixed $callback - Callback to use for default value.
+	 * @phpstan-param DEFAULT_CB $callback
+	 *
+	 * @param Registered         $field    - Field instance.
+	 * @param Box                $box      - Box instance.
+	 * @param callable           $callback - Callback to use for default value.
 	 */
 	final protected function __construct(
 		protected readonly Registered $field,
@@ -109,9 +113,11 @@ class Default_Callback {
 	/**
 	 * Create an instance of the default callback handler.
 	 *
-	 * @param Field    $field    - Field instance.
-	 * @param Box      $box      - Box instance.
-	 * @param callable $callback - Callback to use for default value.
+	 * @phpstan-param DEFAULT_CB $callback
+	 *
+	 * @param Field              $field    - Field instance.
+	 * @param Box                $box      - Box instance.
+	 * @param callable           $callback - Callback to use for default value.
 	 *
 	 * @return Default_Callback
 	 */

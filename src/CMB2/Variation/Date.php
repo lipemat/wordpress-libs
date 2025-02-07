@@ -32,7 +32,7 @@ class Date extends Field {
 	 *
 	 * Defaults to timezone stored in WP options.
 	 *
-	 * @var string;
+	 * @var string
 	 */
 	protected string $timezone;
 
