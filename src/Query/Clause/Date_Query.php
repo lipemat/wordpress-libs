@@ -59,7 +59,7 @@ class Date_Query implements ClauseRules {
 			'year'  => $year,
 			'month' => $month,
 			'day'   => $day,
-		] ), 'after' );
+		], fn( ?string $value ) => null !== $value && '0' !== $value ), 'after' );
 		return $this;
 	}
 
@@ -99,7 +99,7 @@ class Date_Query implements ClauseRules {
 			'year'  => $year,
 			'month' => $month,
 			'day'   => $day,
-		] ), 'before' );
+		], fn( ?string $value ) => null !== $value && '0' !== $value ), 'before' );
 		return $this;
 	}
 

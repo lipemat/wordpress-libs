@@ -76,8 +76,8 @@ trait Settings_Trait {
 	 * as the only argument.
 	 * If `$callback_default` is passed, it will be used as the default value for `$this->get_meta()`.
 	 *
-	 * @template T of static::*
-	 * @template D of mixed
+	 * @template T of key-of<OPTIONS>
+	 * @template D
 	 *
 	 * @phpstan-param T      $key
 	 * @phpstan-param D      $callback_default

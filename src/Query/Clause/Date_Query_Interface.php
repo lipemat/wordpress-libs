@@ -6,7 +6,7 @@ namespace Lipe\Lib\Query\Clause;
 /**
  * Interface for arguments supporting date queries.
  *
- * @property array $date_query
+ * @property array<string, mixed>|array<int, array<string, mixed>> $date_query
  */
 interface Date_Query_Interface {
 	/**

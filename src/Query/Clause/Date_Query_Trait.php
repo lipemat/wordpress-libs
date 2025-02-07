@@ -16,7 +16,7 @@ trait Date_Query_Trait {
 	 *
 	 * @internal
 	 *
-	 * @var array<mixed>
+	 * @var array<string, mixed>|array<int, array<string, mixed>>
 	 */
 	public array $date_query;
 
