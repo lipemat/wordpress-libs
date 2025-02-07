@@ -356,11 +356,11 @@ class Meta_Query implements ClauseRules {
 	 *
 	 * @return void
 	 */
-	protected function add_clause( $value, $key, string $compare ): void {
+	protected function add_clause( string|int|array $value, string|array $key, string $compare ): void {
 		$this->clauses[] = \array_filter( [
 			'key'     => $key,
 			'value'   => $value,
 			'compare' => $compare,
-		] );
+		], fn( $value ) => ! \in_array( $value, [ [], '', 0, '0' ], true ) );
 	}
 }

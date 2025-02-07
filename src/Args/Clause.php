@@ -123,10 +123,10 @@ trait Clause {
 	 * Loop through the nested clauses and append them to
 	 * the clause array at the correct level.
 	 *
-	 * @phpstan-param QUERY        $level
+	 * @phpstan-param QUERY            $level
 	 *
-	 * @param array<string, mixed> $clauses - The clauses array to append to.
-	 * @param ClauseRules          $level   - The clause to determine the level of nesting.
+	 * @param array<int|string, mixed> $clauses - The clauses array to append to.
+	 * @param ClauseRules              $level   - The clause to determine the level of nesting.
 	 *
 	 * @return void
 	 */

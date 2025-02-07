@@ -105,6 +105,16 @@ trait User_Trait {
 
 
 	/**
+	 * Used to determine the type of meta to retrieve or update.
+	 *
+	 * @return MetaType
+	 */
+	public function get_meta_type(): MetaType {
+		return MetaType::USER;
+	}
+
+
+	/**
 	 * Get the user object.
 	 *
 	 * @return \WP_User|null
@@ -118,16 +128,6 @@ trait User_Trait {
 		}
 
 		return $this->user ?? null;
-	}
-
-
-	/**
-	 * Used to determine the type of meta to retrieve or update.
-	 *
-	 * @return MetaType
-	 */
-	public function get_meta_type(): MetaType {
-		return MetaType::USER;
 	}
 
 

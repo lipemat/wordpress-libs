@@ -350,7 +350,7 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, ArgsRule
 	/**
 	 * Page slug.
 	 *
-	 * @var string;
+	 * @var string
 	 */
 	public string $pagename;
 
@@ -604,8 +604,8 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, ArgsRule
 				throw new \LogicException( esc_html__( 'You cannot order by `post__in` unless you specify the post ins.', 'lipe' ) );
 			}
 		} elseif ( \in_array( static::ORDERBY_NAME_IN, (array) $orderby, true ) ) {
-			if ( ! isset( $this->post__name__in ) || [] === $this->post__name__in ) {
-				throw new \LogicException( esc_html__( 'You cannot order by `post__name__in` unless you specify the post name ins.', 'lipe' ) );
+			if ( ! isset( $this->post_name__in ) || [] === $this->post_name__in ) {
+				throw new \LogicException( esc_html__( 'You cannot order by `post_name__in` unless you specify the post name ins.', 'lipe' ) );
 			}
 		} elseif ( \in_array( static::ORDERBY_PARENT_IN, (array) $orderby, true ) ) {
 			if ( ! isset( $this->post_parent__in ) || [] === $this->post_parent__in ) {

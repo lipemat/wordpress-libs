@@ -156,7 +156,7 @@ class Tax_Query implements ClauseRules {
 			'field'    => $field,
 			'terms'    => $terms,
 			'operator' => $operator,
-		] );
+		], fn( $value ) => ! \in_array( $value, [ [], 0, '0', '' ], true ) );
 
 		if ( false === $children ) {
 			$clause['include_children'] = false;

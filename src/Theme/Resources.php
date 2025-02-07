@@ -321,45 +321,57 @@ class Resources {
 			unset( $handles[ $jquery ] );
 		}
 
-		$jquery = wp_scripts()->query( 'jquery' )->ver ?? 0;
-		$jquery_migrate = wp_scripts()->query( 'jquery-migrate' )->ver ?? 0;
-		$lodash = wp_scripts()->query( 'lodash' )->ver ?? 0;
-		$react = wp_scripts()->query( 'react' )->ver ?? 0;
-		$react_dom = wp_scripts()->query( 'react-dom' )->ver ?? 0;
+		$jquery = wp_scripts()->query( 'jquery' );
+		$jquery_migrate = wp_scripts()->query( 'jquery-migrate' );
+		$lodash = wp_scripts()->query( 'lodash' );
+		$react = wp_scripts()->query( 'react' );
+		$react_dom = wp_scripts()->query( 'react-dom' );
 
-		$cdn = [
-			'jquery-core'    => [
-				'dev'    => 'https://unpkg.com/jquery@' . $jquery . '/dist/jquery.js',
-				'min'    => 'https://unpkg.com/jquery@' . $jquery . '/dist/jquery.min.js',
+		$cdn = [];
+		if ( $jquery instanceof \_WP_Dependency ) {
+			$cdn['jquery-core'] = [
+				'dev'    => 'https://unpkg.com/jquery@' . $jquery->ver . '/dist/jquery.js',
+				'min'    => 'https://unpkg.com/jquery@' . $jquery->ver . '/dist/jquery.min.js',
 				'footer' => false,
-			],
-			'jquery-migrate' => [
-				'dev'    => 'https://unpkg.com/jquery-migrate@' . $jquery_migrate . '/dist/jquery-migrate.js',
-				'min'    => 'https://unpkg.com/jquery-migrate@' . $jquery_migrate . '/dist/jquery-migrate.min.js',
+			];
+		}
+		if ( $jquery_migrate instanceof \_WP_Dependency ) {
+			$cdn['jquery-migrate'] = [
+				'dev'    => 'https://unpkg.com/jquery-migrate@' . $jquery_migrate->ver . '/dist/jquery-migrate.js',
+				'min'    => 'https://unpkg.com/jquery-migrate@' . $jquery_migrate->ver . '/dist/jquery-migrate.min.js',
 				'footer' => false,
-			],
-			'lodash'         => [
-				'dev'    => 'https://unpkg.com/lodash@' . $lodash . '/lodash.js',
-				'min'    => 'https://unpkg.com/lodash@' . $lodash . '/lodash.min.js',
+			];
+		}
+		if ( $lodash instanceof \_WP_Dependency ) {
+			$cdn['lodash'] = [
+				'dev'    => 'https://unpkg.com/lodash@' . $lodash->ver . '/lodash.js',
+				'min'    => 'https://unpkg.com/lodash@' . $lodash->ver . '/lodash.min.js',
 				'footer' => true,
 				'inline' => 'window.lodash = _.noConflict();',
-			],
-			'react'          => [
-				'dev'    => 'https://unpkg.com/react@' . $react . '/umd/react.development.js',
-				'min'    => 'https://unpkg.com/react@' . $react . '/umd/react.production.min.js',
+			];
+		}
+		if ( $react instanceof \_WP_Dependency ) {
+			$cdn['react'] = [
+				'dev'    => 'https://unpkg.com/react@' . $react->ver . '/umd/react.development.js',
+				'min'    => 'https://unpkg.com/react@' . $react->ver . '/umd/react.production.min.js',
 				'footer' => true,
-			],
-			'react-dom'      => [
-				'dev'    => 'https://unpkg.com/react-dom@' . $react_dom . '/umd/react-dom.development.js',
-				'min'    => 'https://unpkg.com/react-dom@' . $react_dom . '/umd/react-dom.production.min.js',
+			];
+		}
+		if ( $react_dom instanceof \_WP_Dependency ) {
+			$cdn['react-dom'] = [
+				'dev'    => 'https://unpkg.com/react-dom@' . $react_dom->ver . '/umd/react-dom.development.js',
+				'min'    => 'https://unpkg.com/react-dom@' . $react_dom->ver . '/umd/react-dom.production.min.js',
 				'footer' => true,
-			],
-		];
+			];
+		}
 
 		foreach ( $handles as $handle ) {
+			if ( ! isset( $cdn[ $handle ] ) ) {
+				continue;
+			}
 			$deps = [];
 			$core = wp_scripts()->query( $handle );
-			if ( ! \is_bool( $core ) && is_a( $core, \_WP_Dependency::class ) ) {
+			if ( $core instanceof \_WP_Dependency ) {
 				$deps = $core->deps;
 				wp_deregister_script( $handle );
 			}

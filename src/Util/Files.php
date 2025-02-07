@@ -28,7 +28,6 @@ class Files {
 		}
 
 		$directory = new \RecursiveDirectoryIterator( $source, \RecursiveDirectoryIterator::SKIP_DOTS );
-		/** @var \RecursiveDirectoryIterator $iterator */
 		$iterator = new \RecursiveIteratorIterator( $directory, \RecursiveIteratorIterator::SELF_FIRST );
 
 		foreach ( $iterator as $item ) {

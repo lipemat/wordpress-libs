@@ -47,7 +47,7 @@ trait Tax_Query_Trait {
 	/**
 	 * Tag slug. Comma-separated (either), Plus-separated (all).
 	 *
-	 * @var string;
+	 * @var string
 	 */
 	public string $tag;
 

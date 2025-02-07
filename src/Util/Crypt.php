@@ -57,23 +57,23 @@ class Crypt {
 	 */
 	public function decrypt( string $message ): ?string {
 		try {
-			$json = json_decode( (string) base64_decode( $message, true ), true, 512, JSON_THROW_ON_ERROR );
+			$json = \json_decode( (string) \base64_decode( $message, true ), true, 512, JSON_THROW_ON_ERROR );
 		} catch ( \JsonException $e ) {
-			error_log( "Unable to decrypt message: {$message}. {$e->getMessage()}" );
+			\error_log( "Unable to decrypt message: {$message}. {$e->getMessage()}" );
 			return null;
 		}
-		$iterations = (int) abs( $json['iterations'] ?? static::ITERATIONS );
+		$iterations = \max( 1, \absint( $json['iterations'] ?? static::ITERATIONS ) );
 
 		try {
-			$salt = (string) hex2bin( $json['salt'] );
-			$iv = (string) hex2bin( $json['iv'] );
-			$hash_key = (string) hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, $iterations, $this->get_key_size() ) );
+			$salt = (string) \hex2bin( $json['salt'] );
+			$iv = (string) \hex2bin( $json['iv'] );
+			$hash_key = (string) \hex2bin( \hash_pbkdf2( static::ALGORITHM, $this->key, $salt, $iterations, $this->get_key_size() ) );
 		} catch ( \Exception $e ) {
-			error_log( "Unable to decrypt message: {$message}. {$e->getMessage()}" );
+			\error_log( "Unable to decrypt message: {$message}. {$e->getMessage()}" );
 			return null;
 		}
 
-		return (string) openssl_decrypt( (string) base64_decode( $json['ciphertext'], true ), static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv );
+		return (string) \openssl_decrypt( (string) \base64_decode( $json['ciphertext'], true ), static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv );
 	}
 
 
@@ -88,18 +88,18 @@ class Crypt {
 	 */
 	public function encrypt( string $plaintext ): ?string {
 		try {
-			$iv = random_bytes( max( 1, (int) openssl_cipher_iv_length( static::METHOD ) ) );
-			$salt = random_bytes( 256 );
+			$iv = \random_bytes( \max( 1, (int) \openssl_cipher_iv_length( static::METHOD ) ) );
+			$salt = \random_bytes( 256 );
 		} catch ( \Exception ) {
 			return null;
 		}
 
-		$hash_key = (string) hex2bin( hash_pbkdf2( static::ALGORITHM, $this->key, $salt, static::ITERATIONS, $this->get_key_size() ) );
+		$hash_key = (string) \hex2bin( \hash_pbkdf2( static::ALGORITHM, $this->key, $salt, \max( 1, \absint( static::ITERATIONS ) ), $this->get_key_size() ) );
 
 		$output = [
-			'ciphertext' => \base64_encode( (string) openssl_encrypt( $plaintext, static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv ) ),
-			'iv'         => bin2hex( $iv ),
-			'salt'       => bin2hex( $salt ),
+			'ciphertext' => \base64_encode( (string) \openssl_encrypt( $plaintext, static::METHOD, $hash_key, OPENSSL_RAW_DATA, $iv ) ),
+			'iv'         => \bin2hex( $iv ),
+			'salt'       => \bin2hex( $salt ),
 			'iterations' => static::ITERATIONS,
 		];
 		unset( $iv, $salt, $hash_key );
@@ -115,10 +115,10 @@ class Crypt {
 	 *
 	 * @notice This size is 4 times larger than the one used in `crypto-js`.
 	 *
-	 * @return int
+	 * @return positive-int
 	 */
 	protected function get_key_size(): int {
-		return \absint( \preg_replace( '/\D/', '', static::METHOD ) / 4 );
+		return \max( 1, \absint( \preg_replace( '/\D/', '', static::METHOD ) / 4 ) );
 	}
 
 
@@ -137,7 +137,7 @@ class Crypt {
 			return false;
 		}
 		try {
-			$array = json_decode( $decoded, true, 512, JSON_THROW_ON_ERROR );
+			$array = \json_decode( $decoded, true, 512, JSON_THROW_ON_ERROR );
 		} catch ( \JsonException ) {
 			return false;
 		}

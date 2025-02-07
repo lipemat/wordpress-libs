@@ -43,14 +43,14 @@ class Versions {
 	/**
 	 * Keeps track of the updates to run
 	 *
-	 * @var array<array{version:string, callable:callable, args:mixed}>>
+	 * @var array<array{version:string, callable:callable, args:mixed}>
 	 */
 	protected array $updates = [];
 
 	/**
 	 * Items registered to run only once
 	 *
-	 * @var array<array{callable:callable, args:mixed}>>
+	 * @var array<array{callable:callable, args:mixed}>
 	 */
 	protected array $once = [];
 

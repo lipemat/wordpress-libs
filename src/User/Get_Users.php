@@ -107,7 +107,7 @@ class Get_Users implements Meta_Query_Interface, ArgsRules {
 	 *
 	 * Default empty.
 	 *
-	 * @var string;
+	 * @var string
 	 */
 	public string $search;
 
@@ -166,7 +166,7 @@ class Get_Users implements Meta_Query_Interface, ArgsRules {
 	 *
 	 * @phpstan-var 'ASC'|'DESC'
 	 *
-	 * @var string;
+	 * @var string
 	 */
 	public string $order;
 
@@ -295,7 +295,7 @@ class Get_Users implements Meta_Query_Interface, ArgsRules {
 	 *
 	 * Default empty.
 	 *
-	 * @var string;
+	 * @var string
 	 */
 	public string $login;
 

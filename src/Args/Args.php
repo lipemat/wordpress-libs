@@ -32,13 +32,7 @@ trait Args {
 	 * @param array<string, mixed> $existing - Existing arguments to preload.
 	 */
 	public function __construct( array $existing ) {
-		foreach ( $existing as $arg => $value ) {
-			if ( \property_exists( $this, $arg ) ) {
-				$this->{$arg} = $value;
-			} else {
-				_doing_it_wrong( __METHOD__, esc_html( "Attempting to use the non-existent `{$arg}` argument during the construct of " . __CLASS__ . '.' ), '5.0.0' );
-			}
-		}
+		$this->load_array_into_properties( $existing );
 	}
 
 
@@ -50,7 +44,7 @@ trait Args {
 	 * @return void
 	 */
 	public function merge( ArgsRules $overrides ): void {
-		$this->__construct( $overrides->get_args() );
+		$this->load_array_into_properties( $overrides->get_args() );
 	}
 
 
@@ -79,5 +73,26 @@ trait Args {
 		}
 
 		return $args;
+	}
+
+
+	/**
+	 * Set the arguments for this class based on an array
+	 * of values.
+	 *
+	 * @phpstan-param EXISTING     $existing
+	 *
+	 * @param array<string, mixed> $existing - Existing arguments to load into properties.
+	 *
+	 * @return void
+	 */
+	protected function load_array_into_properties( array $existing ): void {
+		foreach ( $existing as $arg => $value ) {
+			if ( \property_exists( $this, $arg ) ) {
+				$this->{$arg} = $value;
+			} else {
+				_doing_it_wrong( __METHOD__, esc_html( "Attempting to use the non-existent `{$arg}` argument during the construct of " . __CLASS__ . '.' ), '5.0.0' );
+			}
+		}
 	}
 }

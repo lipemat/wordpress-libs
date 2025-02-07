@@ -59,7 +59,7 @@ class Arrays {
 				return \trim( $value );
 			}
 			return $value;
-		}, $input_array ) ) );
+		}, $input_array ), fn( $value ) => ! \in_array( $value, [ '', 0, '0', null, false, [] ], true ) ) );
 		if ( ! $preserve_keys ) {
 			return \array_values( $clean );
 		}

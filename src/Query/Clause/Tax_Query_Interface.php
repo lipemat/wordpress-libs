@@ -8,7 +8,7 @@ namespace Lipe\Lib\Query\Clause;
  *
  * @since  4.5.0
  *
- * @property array $tax_query
+ * @property array<mixed> $tax_query
  */
 interface Tax_Query_Interface {
 	/**

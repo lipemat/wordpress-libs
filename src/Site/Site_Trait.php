@@ -5,7 +5,6 @@ namespace Lipe\Lib\Site;
 
 use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
-use Lipe\Lib\Meta\Repo;
 
 /**
  * Interact with a single site on a multisite installation.
@@ -49,9 +48,9 @@ trait Site_Trait {
 	/**
 	 * Site object.
 	 *
-	 * @var \WP_Site
+	 * @var ?\WP_Site
 	 */
-	protected $site;
+	protected ?\WP_Site $site = null;
 
 
 	/**
@@ -59,14 +58,14 @@ trait Site_Trait {
 	 *
 	 * @param int|null|\WP_Site $site - Site object, ID, or null for current site..
 	 */
-	public function __construct( $site = null ) {
+	final public function __construct( int|null|\WP_Site $site = null ) {
 		if ( null === $site ) {
 			$this->blog_id = \get_current_blog_id();
-		} elseif ( is_a( $site, \WP_Site::class ) ) {
+		} elseif ( $site instanceof \WP_Site ) {
 			$this->site = $site;
 			$this->blog_id = (int) $this->site->blog_id;
 		} else {
-			$this->blog_id = (int) $site;
+			$this->blog_id = $site;
 		}
 	}
 
@@ -111,7 +110,7 @@ trait Site_Trait {
 	 * @see \WP_Site::__get
 	 * @see Mutator_Trait::__get
 	 *
-	 * @return array
+	 * @return array{'id', 'network_id', 'blogname', 'siteurl', 'post_count', 'home'}
 	 */
 	protected function get_extended_properties(): array {
 		return [
