@@ -65,7 +65,7 @@ trait Post_Object_Trait {
 	 *
 	 * @param int|\WP_Post|null $post - Post ID, WP_Post object, or null for global post.
 	 */
-	public function __construct( int|\WP_Post|null $post = null ) {
+	final public function __construct( int|\WP_Post|null $post = null ) {
 		if ( null === $post ) {
 			$post = get_post();
 		}

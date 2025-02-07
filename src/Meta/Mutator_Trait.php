@@ -53,19 +53,20 @@ trait Mutator_Trait {
 	 * @return mixed
 	 */
 	public function __get( string $name ) {
-		if ( ! \method_exists( $this, 'get_object' ) ) {
-			/* translators: {property name} */
-			throw new \ErrorException( sprintf( esc_html__( 'Direct access to object properties is only available for objects with `get_object`:%s', 'lipe' ), __CLASS__ . ':' . esc_html( $name ) ) );
-		}
 		$object = $this->get_object();
-		if ( null !== $object && ( \property_exists( $object, $name ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $name ) ) ) ) {
+		if ( null === $object ) {
+			/* translators: {property name} */
+			throw new \ErrorException( \sprintf( esc_html__( 'Undefined object to retrieve property: %s', 'lipe' ), __CLASS__ . ':' . esc_html( $name ) ) );
+		}
+		if ( \property_exists( $object, $name ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $name ) ) ) {
 			return $object->{$name};
 		}
+
 		if ( \method_exists( $this, 'get_extended_properties' ) && \in_array( $name, $this->get_extended_properties(), true ) ) {
 			return $object->{$name};
 		}
 		/* translators: {property name} */
-		throw new \ErrorException( sprintf( esc_html__( 'Undefined property: %s', 'lipe' ), __CLASS__ . ':' . esc_html( $name ) ) );
+		throw new \ErrorException( \sprintf( esc_html__( 'Undefined property: %s', 'lipe' ), __CLASS__ . ':' . esc_html( $name ) ) );
 	}
 
 
@@ -75,18 +76,19 @@ trait Mutator_Trait {
 	 * @param string $name  - Property to set.
 	 * @param mixed  $value - Value to set.
 	 *
-	 * @throws \ErrorException - If `get_object` method not available.
+	 * @throws \ErrorException - If `property` does not exist.
 	 *
 	 * @return void
 	 */
 	public function __set( string $name, $value ) {
-		if ( ! \method_exists( $this, 'get_object' ) ) {
-			/* translators: {property name} */
-			throw new \ErrorException( sprintf( esc_html__( 'Direct access to object properties is only available for objects with `get_object`: %s', 'lipe' ), __CLASS__ . ':' . esc_html( $name ) ) );
-		}
 		$object = $this->get_object();
-		if ( null !== $object && ( \property_exists( $object, $name ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $name ) ) ) ) {
-			$object->{$name} = $value;
+		if ( null !== $object ) {
+			if ( \property_exists( $object, $name ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $name ) ) ) {
+				$object->{$name} = $value;
+			} else {
+				/* translators: {property name} */
+				throw new \ErrorException( \sprintf( esc_html__( 'Undefined property: %s', 'lipe' ), __CLASS__ . ':' . esc_html( $name ) ) );
+			}
 		}
 	}
 
@@ -94,24 +96,20 @@ trait Mutator_Trait {
 	/**
 	 * Call any method, which exists on the child Object
 	 *
-	 * @param string $name      - Name of the method.
-	 * @param array  $arguments - Passed arguments.
+	 * @param string       $name      - Name of the method.
+	 * @param array<mixed> $arguments - Passed arguments.
 	 *
 	 * @throws \ErrorException - If method does not exist.
 	 *
 	 * @return mixed
 	 */
 	public function __call( string $name, array $arguments ) {
-		if ( ! \method_exists( $this, 'get_object' ) ) {
-			/* translators: {property name} */
-			throw new \ErrorException( sprintf( esc_html__( 'Direct access to object methods is only available for objects with `get_object`: %s', 'lipe' ), __CLASS__ . ':' . esc_html( $name ) ) );
-		}
 		$object = $this->get_object();
 		if ( null !== $object && ( \method_exists( $object, $name ) ) ) {
 			return $object->{$name}( ...$arguments );
 		}
 		/* translators: {property name} */
-		throw new \ErrorException( sprintf( esc_html__( 'Method does not exist: %s', 'lipe' ), __CLASS__ . ':' . esc_html( $name ) ) );
+		throw new \ErrorException( \sprintf( esc_html__( 'Method does not exist: %s', 'lipe' ), __CLASS__ . ':' . esc_html( $name ) ) );
 	}
 
 
@@ -135,7 +133,7 @@ trait Mutator_Trait {
 		Repo::in()->pre_get_field( $key );
 
 		$value = Repo::in()->get_value( $this->get_id(), $key, $this->get_meta_type() );
-		if ( null !== $default_value && empty( $value ) ) {
+		if ( null !== $default_value && \in_array( $value, [ false, '', 0, '0', [], null ], true ) ) {
 			return $default_value;
 		}
 

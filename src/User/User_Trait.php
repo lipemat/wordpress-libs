@@ -138,7 +138,7 @@ trait User_Trait {
 	 * @see \WP_User::__get
 	 * @see Mutator_Trait::__get
 	 *
-	 * @return array
+	 * @return list<string>
 	 */
 	protected function get_extended_properties(): array {
 		return [
