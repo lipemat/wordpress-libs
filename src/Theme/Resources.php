@@ -321,62 +321,49 @@ class Resources {
 			unset( $handles[ $jquery ] );
 		}
 
-		$jquery = wp_scripts()->query( 'jquery' );
-		$jquery_migrate = wp_scripts()->query( 'jquery-migrate' );
-		$lodash = wp_scripts()->query( 'lodash' );
-		$react = wp_scripts()->query( 'react' );
-		$react_dom = wp_scripts()->query( 'react-dom' );
-
-		$cdn = [];
-		if ( $jquery instanceof \_WP_Dependency ) {
-			$cdn['jquery-core'] = [
-				'dev'    => 'https://unpkg.com/jquery@' . $jquery->ver . '/dist/jquery.js',
-				'min'    => 'https://unpkg.com/jquery@' . $jquery->ver . '/dist/jquery.min.js',
+		$cdn = [
+			'jquery-core'    => [
+				'dev'    => 'https://unpkg.com/jquery@{version}/dist/jquery.js',
+				'min'    => 'https://unpkg.com/jquery@{version}/dist/jquery.min.js',
 				'footer' => false,
-			];
-		}
-		if ( $jquery_migrate instanceof \_WP_Dependency ) {
-			$cdn['jquery-migrate'] = [
-				'dev'    => 'https://unpkg.com/jquery-migrate@' . $jquery_migrate->ver . '/dist/jquery-migrate.js',
-				'min'    => 'https://unpkg.com/jquery-migrate@' . $jquery_migrate->ver . '/dist/jquery-migrate.min.js',
+			],
+			'jquery-migrate' => [
+				'dev'    => 'https://unpkg.com/jquery-migrate@{version}/dist/jquery-migrate.js',
+				'min'    => 'https://unpkg.com/jquery-migrate@{version}/dist/jquery-migrate.min.js',
 				'footer' => false,
-			];
-		}
-		if ( $lodash instanceof \_WP_Dependency ) {
-			$cdn['lodash'] = [
-				'dev'    => 'https://unpkg.com/lodash@' . $lodash->ver . '/lodash.js',
-				'min'    => 'https://unpkg.com/lodash@' . $lodash->ver . '/lodash.min.js',
+			],
+			'lodash'         => [
+				'dev'    => 'https://unpkg.com/lodash@{version}/lodash.js',
+				'min'    => 'https://unpkg.com/lodash@{version}/lodash.min.js',
 				'footer' => true,
 				'inline' => 'window.lodash = _.noConflict();',
-			];
-		}
-		if ( $react instanceof \_WP_Dependency ) {
-			$cdn['react'] = [
-				'dev'    => 'https://unpkg.com/react@' . $react->ver . '/umd/react.development.js',
-				'min'    => 'https://unpkg.com/react@' . $react->ver . '/umd/react.production.min.js',
+			],
+			'react'          => [
+				'dev'    => 'https://unpkg.com/react@{version}/umd/react.development.js',
+				'min'    => 'https://unpkg.com/react@{version}/umd/react.production.min.js',
 				'footer' => true,
-			];
-		}
-		if ( $react_dom instanceof \_WP_Dependency ) {
-			$cdn['react-dom'] = [
-				'dev'    => 'https://unpkg.com/react-dom@' . $react_dom->ver . '/umd/react-dom.development.js',
-				'min'    => 'https://unpkg.com/react-dom@' . $react_dom->ver . '/umd/react-dom.production.min.js',
+			],
+			'react-dom'      => [
+				'dev'    => 'https://unpkg.com/react-dom@{version}/umd/react-dom.development.js',
+				'min'    => 'https://unpkg.com/react-dom@{version}/umd/react-dom.production.min.js',
 				'footer' => true,
-			];
-		}
+			],
+		];
 
 		foreach ( $handles as $handle ) {
 			if ( ! isset( $cdn[ $handle ] ) ) {
 				continue;
 			}
-			$deps = [];
-			$core = wp_scripts()->query( $handle );
-			if ( $core instanceof \_WP_Dependency ) {
-				$deps = $core->deps;
-				wp_deregister_script( $handle );
+			$script = wp_scripts()->query( $handle );
+			if ( ! $script instanceof \_WP_Dependency ) {
+				continue;
 			}
+			$deps = $script->deps;
+			wp_deregister_script( $handle );
 
 			$url = ( \defined( 'SCRIPT_DEBUG' ) && \SCRIPT_DEBUG ) ? $cdn[ $handle ]['dev'] : $cdn[ $handle ]['min'];
+
+			$url = \str_replace( '{version}', (string) $script->ver, $url );
 
 			//phpcs:ignore WordPress.WP.EnqueuedResourceParameters -- Version handled by CDN URL.
 			wp_register_script( $handle, $url, $deps, null, $cdn[ $handle ]['footer'] );
