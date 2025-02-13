@@ -358,12 +358,14 @@ class Resources {
 			if ( ! $script instanceof \_WP_Dependency ) {
 				continue;
 			}
+			// Remove extra fork version from the URL. @see https://github.com/WordPress/WordPress/commit/7bf145d0817db20d85b9e2bf6c020d982b6b90e9.
+			$version = (string) \preg_replace( '/^(\d+\.\d+\.\d+)\.\d/', '$1', (string) $script->ver );
 			$deps = $script->deps;
+
 			wp_deregister_script( $handle );
 
 			$url = ( \defined( 'SCRIPT_DEBUG' ) && \SCRIPT_DEBUG ) ? $cdn[ $handle ]['dev'] : $cdn[ $handle ]['min'];
-
-			$url = \str_replace( '{version}', (string) $script->ver, $url );
+			$url = \str_replace( '{version}', $version, $url );
 
 			//phpcs:ignore WordPress.WP.EnqueuedResourceParameters -- Version handled by CDN URL.
 			wp_register_script( $handle, $url, $deps, null, $cdn[ $handle ]['footer'] );

@@ -75,8 +75,13 @@ class ResourcesTest extends \WP_UnitTestCase {
 	 * unpkg CDN.
 	 */
 	public function test_use_cdn_for_resources(): void {
-		$this->markTestSkipped( 'This test is not working as expected.' );
 		$react_version = wp_scripts()->query( 'react' )->ver;
+		// Fix for non-existent react version introduced in WP 6.7.1.
+		// @todo Remove when WP core updates React to version 19.
+		if ( $react_version === '18.3.1.1' ) {
+			$react_version = '18.3.1';
+		}
+
 		$lodash_version = wp_scripts()->query( 'lodash' )->ver;
 		$jquery_version = wp_scripts()->query( 'jquery' )->ver;
 		$jquery_migrate_version = wp_scripts()->query( 'jquery-migrate' )->ver;
