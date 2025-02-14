@@ -3,6 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Theme;
 
+use Lipe\Lib\Api\Wp_Remote;
 use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
 
@@ -283,7 +284,7 @@ class Resources {
 		$this->once( function() {
 			add_filter( 'script_loader_tag', function( $tag, $handle ) {
 				if ( isset( static::$integrity[ $handle ] ) ) {
-					return str_replace( '<script', "<script integrity='" . static::$integrity[ $handle ] . "'", $tag );
+					return \str_replace( '<script', "<script integrity='" . static::$integrity[ $handle ] . "'", $tag );
 				}
 				return $tag;
 			}, 11, 2 );
@@ -362,23 +363,21 @@ class Resources {
 			$version = (string) \preg_replace( '/^(\d+\.\d+\.\d+)\.\d/', '$1', (string) $script->ver );
 			$deps = $script->deps;
 
-			wp_deregister_script( $handle );
-
 			$url = ( \defined( 'SCRIPT_DEBUG' ) && \SCRIPT_DEBUG ) ? $cdn[ $handle ]['dev'] : $cdn[ $handle ]['min'];
 			$url = \str_replace( '{version}', $version, $url );
 
+			// Add `integrity="<hash>"` to `<script>` tag.
+			if ( false === $this->unpkg_integrity( $handle, $url ) ) {
+				continue;
+			}
+
+			wp_deregister_script( $handle );
 			//phpcs:ignore WordPress.WP.EnqueuedResourceParameters -- Version handled by CDN URL.
 			wp_register_script( $handle, $url, $deps, null, $cdn[ $handle ]['footer'] );
 
 			if ( isset( $cdn[ $handle ]['inline'] ) ) {
 				wp_add_inline_script( $handle, $cdn[ $handle ]['inline'] );
 			}
-
-			// Add `crossorigin` to `<script>` tag.
-			$this->crossorigin_javascript( $handle );
-
-			// Add `integrity="<hash>"` to `<script>` tag.
-			$this->unpkg_integrity( $handle, $url );
 		}
 
 		// Adds `<link rel="dns-prefetch" href="//unpkg.com" />` to `<head>`.
@@ -406,30 +405,40 @@ class Resources {
 	 * @return bool
 	 */
 	public function unpkg_integrity( string $handle, string $url ): bool {
-		$cached = get_network_option( 0, static::INTEGRITY, [] );
+		$cached = get_network_option( 0, self::INTEGRITY, [] );
 
 		// Add `integrity="<hash>"` to `<script>` tag.
-		$integrity = null;
+		$integrity = '';
 		if ( isset( $cached[ $url ] ) ) {
 			if ( \is_string( $cached[ $url ] ) && '' !== $cached[ $url ] ) {
 				$integrity = $cached[ $url ];
 			}
 		} else {
-			$response = wp_safe_remote_get( "{$url}?meta" );
+			$failed_cache = wp_cache_get( self::INTEGRITY . $handle, 'default' );
+			if ( 'failed' === $failed_cache ) {
+				return false;
+			}
+			$remote_args = new Wp_Remote( [] );
+			$remote_args->timeout = 2;
+			$response = wp_safe_remote_get( "{$url}?meta", $remote_args->get_args() );
 			if ( is_wp_error( $response ) ) {
+				wp_cache_set( self::INTEGRITY . $handle, 'failed', 'default', DAY_IN_SECONDS );
 				return false;
 			}
 			try {
 				$meta = json_decode( $response['body'], true, 512, JSON_THROW_ON_ERROR );
 			} catch ( \JsonException ) {
+				//phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				\error_log( "Failed to decode JSON from unpkg.com. {$url}?meta" );
+				wp_cache_set( self::INTEGRITY . $handle, 'failed', 'default', DAY_IN_SECONDS );
 				return false;
 			}
-			$integrity = $meta['integrity'] ?? null;
+			$integrity = $meta['integrity'] ?? '';
 			$cached[ $url ] = $integrity;
-			update_network_option( 0, static::INTEGRITY, $cached );
+			update_network_option( 0, self::INTEGRITY, $cached );
 		}
 
-		if ( null !== $integrity ) {
+		if ( \is_string( $integrity ) && '' !== $integrity ) {
 			$this->integrity_javascript( $handle, $integrity );
 			return true;
 		}

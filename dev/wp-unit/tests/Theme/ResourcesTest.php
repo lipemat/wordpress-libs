@@ -78,7 +78,7 @@ class ResourcesTest extends \WP_UnitTestCase {
 		$react_version = wp_scripts()->query( 'react' )->ver;
 		// Fix for non-existent react version introduced in WP 6.7.1.
 		// @todo Remove when WP core updates React to version 19.
-		if ( $react_version === '18.3.1.1' ) {
+		if ( '18.3.1.1' === $react_version ) {
 			$react_version = '18.3.1';
 		}
 
@@ -97,9 +97,9 @@ class ResourcesTest extends \WP_UnitTestCase {
 		ob_start();
 		wp_scripts()->do_item( 'react' );
 		$script = \str_replace( '"', "'", ob_get_clean() );
-		$this->assertStringContainsString( "src='https://unpkg.com/react@" . $react_version . "/umd/react.production.min.js'", $script );
-		$this->assertStringContainsString( "integrity='", $script );
-		$this->assertStringContainsString( "crossorigin='anonymous'", $script );
+		self::assertStringContainsString( "src='https://unpkg.com/react@" . $react_version . "/umd/react.production.min.js'", $script );
+		self::assertStringContainsString( "integrity='", $script );
+		self::assertStringContainsString( "crossorigin='anonymous'", $script );
 
 		// Simulate admin screens.
 		set_current_screen( 'widgets.php' );
@@ -112,6 +112,17 @@ class ResourcesTest extends \WP_UnitTestCase {
 		$this->assertEquals( 'https://unpkg.com/jquery@' . $jquery_version . '/dist/jquery.min.js', wp_scripts()->query( 'jquery-core' )->src );
 		$this->assertEquals( 'https://unpkg.com/jquery-migrate@' . $jquery_migrate_version . '/dist/jquery-migrate.min.js', wp_scripts()->query( 'jquery-migrate' )->src );
 		unset( $GLOBALS['current_screen'] );
+	}
+
+
+	public function test_failed_use_cdn_for_resources(): void {
+		$this->assertEmpty( $this->requests );
+		wp_scripts()->query( 'react-dom' )->ver = '18.1.1.A';
+		Resources::in()->use_cdn_for_resources( [ 'react-dom' ] );
+
+		$this->assertSame( [ 'https://unpkg.com/react-dom@18.1.1.A/umd/react-dom.production.min.js?meta' ], $this->requests );
+
+		$this->assertSame( '/wp-includes/js/dist/vendor/react-dom.min.js', wp_scripts()->query( 'react-dom' )->src );
 	}
 
 
@@ -134,8 +145,20 @@ class ResourcesTest extends \WP_UnitTestCase {
 		$cache = get_network_option( 0, Resources::INTEGRITY, [] );
 		$this->assertEquals( 'sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7', $cache['https://unpkg.com/jquery@3.1.1/dist/jquery.min.js'] );
 		$this->assertCount( 1, $this->requests );
+	}
 
-		$this->assertFalse( Resources::in()->unpkg_integrity( 'not-exits', 'https://unpkg.com/not-exists/script' ) );
+
+	public function test_unpkg_integrity_failed(): void {
+		$this->assertCount( 0, $this->requests );
+		wp_register_script( __METHOD__, 'https://unpkg.com/react@18.3.1.1/umd/react.development.js', [], null );
+		$this->assertFalse( Resources::in()->unpkg_integrity( __METHOD__, 'https://unpkg.com/react@18.3.1.1/umd/react.development.js' ) );
+		$this->assertSame( [ 'https://unpkg.com/react@18.3.1.1/umd/react.development.js?meta' ], $this->requests );
+
+		$this->assertSame( [], get_network_option( 0, Resources::INTEGRITY, [] ) );
+		$this->assertSame( 'failed', wp_cache_get( Resources::INTEGRITY . __METHOD__ ) );
+
+		$this->assertFalse( Resources::in()->unpkg_integrity( __METHOD__, 'https://unpkg.com/react@18.3.1.1/umd/react.development.js' ) );
+		$this->assertSame( [ 'https://unpkg.com/react@18.3.1.1/umd/react.development.js?meta' ], $this->requests );
 	}
 
 
