@@ -123,7 +123,7 @@ class Arrays {
 	 * Works the same as `array_map` except the array key is passed as the
 	 * second argument to the callback and original keys are preserved.
 	 *
-	 * @phpstan-template TKey of array-key
+	 * @phpstan-template TKey
 	 * @phpstan-template T
 	 * @phpstan-template R
 	 *
@@ -163,7 +163,7 @@ class Arrays {
 	 * @link https://wiki.php.net/rfc/array_find
 	 * @todo Once minimum PHP version is 8.4, update to use native `array_find`.
 	 *
-	 * @template TKey of array-key
+	 * @template TKey
 	 * @template T
 	 *
 	 * @param array<TKey, T>           $items    - List of items to look through.
@@ -190,7 +190,7 @@ class Arrays {
 	 * @link https://wiki.php.net/rfc/array_find
 	 * @todo Once minimum PHP version is 8.4, update to use native `array_find_key`.
 	 *
-	 * @template TKey of array-key
+	 * @template TKey
 	 * @template T
 	 *
 	 * @param array<TKey, T>           $items    - List of items to look through.
@@ -224,9 +224,9 @@ class Arrays {
 	 *          [get_post(1), get_post(2)];
 	 *          // [1 => 'Hello World', 2 => 'Sample Page' ]
 	 *          `
-	 * @phpstan-template T of mixed
-	 * @phpstan-template K of array-key
-	 * @phpstan-template R of mixed
+	 * @phpstan-template T
+	 * @phpstan-template K
+	 * @phpstan-template R
 	 *
 	 * @phpstan-param callable( T ): array<K, R> $callback
 	 *
