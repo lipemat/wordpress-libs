@@ -83,7 +83,8 @@ class Tabs {
 	 * @return void
 	 */
 	public function opening_div( string $cmb_id, int|string $object_id, string $object_type, \CMB2 $cmb ): void {
-		if ( false === $cmb->prop( 'tabs' ) || [] === $cmb->prop( 'tabs' ) ) {
+		$tabs = $cmb->prop( 'tabs' );
+		if ( ! \is_array( $tabs ) || [] === $tabs ) {
 			return;
 		}
 		$this->cmb = $cmb;
@@ -134,8 +135,7 @@ class Tabs {
 	 */
 	public function render_nav( string $cmb_id, int|string $object_id, string $object_type, \CMB2 $cmb ): void {
 		$tabs = $cmb->prop( 'tabs' );
-
-		if ( false !== $tabs ) {
+		if ( \is_array( $tabs ) && [] !== $tabs ) {
 			echo '<ul class="cmb-tab-nav" data-js="lipe/lib/cmb2/box/tabs">';
 
 			//phpcs:ignore WordPress.Security.NonceVerification -- Using in a URL parameter to set the active tab.
