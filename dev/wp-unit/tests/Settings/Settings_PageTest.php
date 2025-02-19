@@ -474,7 +474,17 @@ class Settings_PageTest extends \WP_UnitTestCase {
 
 		$_GET['settings-updated'] = 'true';
 		get_echo( [ $mock, 'render' ] );
-		$this->assertSame( "<div id='setting-error-testing/anon/mock-settings' class='notice notice-success settings-error is-dismissible'> <p><strong>Settings Saved</strong></p></div> <div id='setting-error-testing/anon/mock-settings' class='notice notice-success settings-error is-dismissible'> <p><strong>Settings Saved</strong></p></div>", strip_ws_all( get_echo( fn() => call_private_method( $mock, 'display_status_messages' ) ) ) );
+		$this->assertEmpty( get_echo( fn() => call_private_method( $mock, 'display_status_messages' ) ) );
+
+		get_echo( [ $mock, 'render' ] );
+		// Still empty because we use 'option-general.php' as the parent menu.
+		$this->assertEmpty( get_echo( fn() => call_private_method( $mock, 'display_status_messages' ) ) );
+
+		$settings = $this->mock_settings( false, [ 'get_parent_menu_slug' ] );
+		$settings->method( 'get_parent_menu_slug' )->willReturn( 'tools.php' );
+		$mock = Settings_Page::factory( $settings );
+		get_echo( [ $mock, 'render' ] );
+		$this->assertSame( "<div id='setting-error-testing/anon/mock-settings' class='notice notice-success settings-error is-dismissible'> <p><strong>Settings Saved.</strong></p></div> <div id='setting-error-testing/anon/mock-settings' class='notice notice-success settings-error is-dismissible'> <p><strong>Settings Saved.</strong></p></div>", strip_ws_all( get_echo( fn() => call_private_method( $mock, 'display_status_messages' ) ) ) );
 	}
 
 

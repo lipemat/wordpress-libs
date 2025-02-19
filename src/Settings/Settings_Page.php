@@ -235,10 +235,16 @@ class Settings_Page {
 	 * @return void
 	 */
 	protected function display_status_messages(): void {
+		// options-general.php includes the "wp-admin/options-head.php" file already outputting messages.
+		if ( 'options-general.php' === $this->settings->get_parent_menu_slug() ) {
+			return;
+		}
+
 		// phpcs:ignore WordPress.Security.NonceVerification -- Redirect coming from WP core.
 		if ( isset( $_GET['settings-updated'] ) && 'true' === $_GET['settings-updated'] ) {
-			add_settings_error( $this->settings->get_id(), $this->settings->get_id(), __( 'Settings Saved', 'lipe' ), 'updated' );
+			add_settings_error( $this->settings->get_id(), $this->settings->get_id(), __( 'Settings Saved.', 'lipe' ), 'updated' );
 		}
+
 		settings_errors( $this->settings->get_id() );
 	}
 
