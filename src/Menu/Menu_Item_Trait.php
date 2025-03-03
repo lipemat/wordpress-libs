@@ -45,22 +45,30 @@ trait Menu_Item_Trait {
 	 * @return \WP_Post|null
 	 */
 	public function get_object(): ?\WP_Post {
-		if ( null === $this->post ) {
+		if ( ! isset( $this->post ) && 0 !== $this->post_id ) {
 			$this->post = get_post( $this->post_id );
 		}
-		if ( $this->post instanceof \WP_Post ) {
-			if ( ! \property_exists( $this->post, 'db_id' ) ) {
-				$item = wp_setup_nav_menu_item( $this->post );
-				if ( $item instanceof \WP_Post ) {
-					$this->post = $item;
-				}
-			}
-			if ( ! _is_valid_nav_menu_item( $this->post ) ) {
+
+		if ( ( $this->post instanceof \WP_Post ) && ! \property_exists( $this->post, 'db_id' ) ) {
+			$item = wp_setup_nav_menu_item( $this->post );
+			if ( $item instanceof \WP_Post && _is_valid_nav_menu_item( $item ) ) {
+				$this->post = $item;
+			} else {
 				$this->post = null;
 			}
 		}
 
-		return $this->post;
+		return $this->post ?? null;
+	}
+
+
+	/**
+	 * Does this post exist in the database?
+	 *
+	 * @return bool
+	 */
+	public function exists(): bool {
+		return null !== $this->get_object();
 	}
 
 

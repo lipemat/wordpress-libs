@@ -70,7 +70,7 @@ trait Comment_Trait {
 	 * @return \WP_Comment|null
 	 */
 	public function get_object(): ?\WP_Comment {
-		if ( ! isset( $this->comment ) ) {
+		if ( ! isset( $this->comment ) && 0 !== $this->comment_id ) {
 			$comment = get_comment( $this->comment_id );
 			if ( $comment instanceof \WP_Comment ) {
 				$this->comment = $comment;
@@ -79,7 +79,7 @@ trait Comment_Trait {
 			}
 		}
 
-		return $this->comment;
+		return $this->comment ?? null;
 	}
 
 
@@ -116,6 +116,16 @@ trait Comment_Trait {
 			return null;
 		}
 		return get_post( (int) $this->get_object()->comment_post_ID );
+	}
+
+
+	/**
+	 * Does this comment exist in the database?
+	 *
+	 * @return bool
+	 */
+	public function exists(): bool {
+		return null !== $this->get_object();
 	}
 
 

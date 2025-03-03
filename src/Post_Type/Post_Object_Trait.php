@@ -56,7 +56,7 @@ trait Post_Object_Trait {
 	 *
 	 * @var \WP_Post|null
 	 */
-	protected ?\WP_Post $post = null;
+	protected ?\WP_Post $post;
 
 
 	/**
@@ -81,14 +81,14 @@ trait Post_Object_Trait {
 	/**
 	 * Get the WP Post object.
 	 *
-	 * @return \WP_Post|null
+	 * @return ?\WP_Post
 	 */
 	public function get_object(): ?\WP_Post {
-		if ( null === $this->post ) {
+		if ( ! isset( $this->post ) && 0 !== $this->post_id ) {
 			$this->post = get_post( $this->post_id );
 		}
 
-		return $this->post;
+		return $this->post ?? null;
 	}
 
 
@@ -110,6 +110,16 @@ trait Post_Object_Trait {
 	 */
 	public function get_meta_type(): MetaType {
 		return MetaType::POST;
+	}
+
+
+	/**
+	 * Does this post exist in the database?
+	 *
+	 * @return bool
+	 */
+	public function exists(): bool {
+		return null !== $this->get_object();
 	}
 
 

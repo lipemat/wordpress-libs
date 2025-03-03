@@ -34,7 +34,6 @@ use Lipe\Lib\Meta\Repo;
  * @property string   $syntax_highlighting
  * @property string[] $roles
  *
- * @method bool exists()
  * @method bool[] get_role_caps()
  * @method void add_role( string $role )
  * @method void remove_role( string $role )
@@ -128,6 +127,16 @@ trait User_Trait {
 		}
 
 		return $this->user ?? null;
+	}
+
+
+	/**
+	 * Does this user exist in the database?
+	 *
+	 * @return bool
+	 */
+	public function exists(): bool {
+		return null !== $this->get_object();
 	}
 
 

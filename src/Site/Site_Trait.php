@@ -50,7 +50,7 @@ trait Site_Trait {
 	 *
 	 * @var ?\WP_Site
 	 */
-	protected ?\WP_Site $site = null;
+	protected ?\WP_Site $site;
 
 
 	/**
@@ -60,7 +60,7 @@ trait Site_Trait {
 	 */
 	final public function __construct( int|null|\WP_Site $site = null ) {
 		if ( null === $site ) {
-			$this->blog_id = \get_current_blog_id();
+			$this->blog_id = get_current_blog_id();
 		} elseif ( $site instanceof \WP_Site ) {
 			$this->site = $site;
 			$this->blog_id = (int) $this->site->blog_id;
@@ -76,11 +76,11 @@ trait Site_Trait {
 	 * @return \WP_Site|null
 	 */
 	public function get_object(): ?\WP_Site {
-		if ( null === $this->site ) {
-			$this->site = \get_site( $this->blog_id );
+		if ( ! isset( $this->site ) && 0 !== $this->blog_id ) {
+			$this->site = get_site( $this->blog_id );
 		}
 
-		return $this->site;
+		return $this->site ?? null;
 	}
 
 
@@ -121,6 +121,16 @@ trait Site_Trait {
 			'post_count',
 			'home',
 		];
+	}
+
+
+	/**
+	 * Does this site exist in the database?
+	 *
+	 * @return bool
+	 */
+	public function exists(): bool {
+		return null !== $this->get_object();
 	}
 
 

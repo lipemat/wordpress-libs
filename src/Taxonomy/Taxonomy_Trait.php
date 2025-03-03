@@ -41,7 +41,7 @@ trait Taxonomy_Trait {
 	 *
 	 * @var ?\WP_Term
 	 */
-	protected ?\WP_Term $term = null;
+	protected ?\WP_Term $term;
 
 
 	/**
@@ -50,7 +50,7 @@ trait Taxonomy_Trait {
 	 * @param int|\WP_Term $term - Term object or term ID.
 	 */
 	public function __construct( $term ) {
-		if ( is_a( $term, \WP_Term::class ) ) {
+		if ( \is_a( $term, \WP_Term::class ) ) {
 			$this->term = $term;
 			$this->term_id = $this->term->term_id;
 		} else {
@@ -62,15 +62,14 @@ trait Taxonomy_Trait {
 	/**
 	 * Get the term object.
 	 *
-	 * @return \WP_Term|null
+	 * @return ?\WP_Term
 	 */
 	public function get_object(): ?\WP_Term {
-		if ( null !== $this->term ) {
-			return $this->term;
+		if ( ! isset( $this->term ) && 0 !== $this->term_id ) {
+			$this->term = get_term( $this->term_id );
 		}
-		$this->term = get_term( $this->term_id );
 
-		return $this->term;
+		return $this->term ?? null;
 	}
 
 
@@ -91,6 +90,16 @@ trait Taxonomy_Trait {
 	 */
 	public function get_meta_type(): MetaType {
 		return MetaType::TERM;
+	}
+
+
+	/**
+	 * Does this term exist in the database?
+	 *
+	 * @return bool
+	 */
+	public function exists(): bool {
+		return null !== $this->get_object();
 	}
 
 

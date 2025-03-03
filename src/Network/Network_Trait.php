@@ -51,7 +51,7 @@ trait Network_Trait {
 	public function __construct( $network = null ) {
 		if ( null === $network ) {
 			$this->network_id = get_current_network_id();
-		} elseif ( is_a( $network, \WP_Network::class ) ) {
+		} elseif ( \is_a( $network, \WP_Network::class ) ) {
 			$this->network = $network;
 			$this->network_id = $this->network->id;
 		} else {
@@ -66,7 +66,7 @@ trait Network_Trait {
 	 * @return \WP_Network|null
 	 */
 	public function get_object(): ?\WP_Network {
-		if ( null === $this->network ) {
+		if ( ! isset( $this->network ) && 0 !== $this->network_id ) {
 			$this->network = get_network( $this->network_id );
 		}
 
@@ -128,6 +128,16 @@ trait Network_Trait {
 	 */
 	public function get_meta_type(): MetaType {
 		return MetaType::SITE;
+	}
+
+
+	/**
+	 * Does this network exist in the database?
+	 *
+	 * @return bool
+	 */
+	public function exists(): bool {
+		return null !== $this->get_object();
 	}
 
 
