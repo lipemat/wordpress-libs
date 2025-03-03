@@ -566,7 +566,7 @@ class Custom_Post_Type {
 	/**
 	 * Show or hide this post type in the menu.
 	 *
-	 * @param Dashicons|string $icon             - SVG, URL, 'none' or Dashicon class.
+	 * @param Dashicons|string $icon             - Base64 encoded SVG, URL, 'none' or Dashicon enum.
 	 * @param ?string          $parent_menu      - Parent menu item. Use existing top level menu like 'tools.php' or
 	 *                                           'edit.php?post_type=page'.
 	 * @param int              $position         - Position in the menu.

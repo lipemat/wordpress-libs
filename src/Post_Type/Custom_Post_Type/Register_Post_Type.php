@@ -211,6 +211,7 @@ class Register_Post_Type implements ArgsRules {
 	 *   - Pass a base64-encoded SVG using a data URI, which will be colored to match the color scheme -- this should begin with
 	 *   `data:image/svg+xml;base64,`.
 	 *   - Pass the name of a Dashicons helper class to use a font icon, e.g. `dashicons-chart-pie`.
+	 *   - Pass a URL to a custom icon.
 	 *   - Pass `'none'` to leave `div.wp-menu-image` empty, so an icon can be added via CSS.
 	 *
 	 * Defaults to use the posts icon.
