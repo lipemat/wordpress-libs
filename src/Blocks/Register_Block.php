@@ -30,7 +30,7 @@ use Lipe\Lib\Blocks\Args\Supports;
  *       }>
  *     }
  * }
- * @phpstan-type Attributes array<string, ATTR_SHAPE>
+ * @phpstan-type BLOCK_ATTRIBUTES array<string, ATTR_SHAPE>
  */
 class Register_Block implements ArgsRules {
 	/**
@@ -149,7 +149,7 @@ class Register_Block implements ArgsRules {
 	/**
 	 * Block type attributes property schemas.
 	 *
-	 * @phpstan-var Attributes
+	 * @phpstan-var BLOCK_ATTRIBUTES
 	 *
 	 * @var array<string, array<string, mixed>>
 	 */
