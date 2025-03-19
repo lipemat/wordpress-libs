@@ -42,8 +42,8 @@ class Common {
 	 */
 	public function init_once(): Common {
 		return $this->static_once( function() {
-			add_action( 'setup_theme', [ $this, 'load_css_enums' ] );
-			add_action( 'setup_theme', [ $this, 'support_block_inline_styles' ] );
+			add_action( 'after_setup_theme', [ $this, 'load_css_enums' ] );
+			add_action( 'after_setup_theme', [ $this, 'support_block_inline_styles' ] );
 			add_action( 'init', [ $this, 'include_styles_in_editor' ] );
 			add_action( 'admin_enqueue_scripts', [ $this, 'admin_scripts' ], 11 );
 			add_action( 'enqueue_block_assets', [ $this, 'block_scripts' ], 11 );
