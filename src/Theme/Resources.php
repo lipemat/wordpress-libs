@@ -428,17 +428,25 @@ class Resources {
 			try {
 				$meta = json_decode( $response['body'], true, 512, JSON_THROW_ON_ERROR );
 			} catch ( \JsonException ) {
-				//phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				//phpcs:ignore WordPress.PHP.DevelopmentFunctions
 				\error_log( "Failed to decode JSON from unpkg.com. {$url}?meta" );
 				wp_cache_set( self::INTEGRITY . $handle, 'failed', 'default', DAY_IN_SECONDS );
 				return false;
 			}
-			$integrity = $meta['integrity'] ?? '';
+
+			if ( ! isset( $meta['integrity'] ) || ! \is_string( $meta['integrity'] ) || '' === $meta['integrity'] ) {
+				//phpcs:ignore WordPress.PHP.DevelopmentFunctions
+				\error_log( "Integrity not returned from unpkg.com. {$url}?meta" );
+				wp_cache_set( self::INTEGRITY . $handle, 'failed', 'default', DAY_IN_SECONDS );
+				return false;
+			}
+
+			$integrity = $meta['integrity'];
 			$cached[ $url ] = $integrity;
 			update_network_option( 0, self::INTEGRITY, $cached );
 		}
 
-		if ( \is_string( $integrity ) && '' !== $integrity ) {
+		if ( '' !== $integrity ) {
 			$this->integrity_javascript( $handle, $integrity );
 			return true;
 		}
