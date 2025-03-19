@@ -13,9 +13,10 @@ namespace Lipe\Lib\Blocks\Args;
  */
 class Source {
 	public const SOURCE_ATTRIBUTE = 'attribute';
-	public const SOURCE_TEXT      = 'text';
 	public const SOURCE_HTML      = 'html';
+	public const SOURCE_META      = 'meta';
 	public const SOURCE_QUERY     = 'query';
+	public const SOURCE_TEXT      = 'text';
 
 
 	/**
@@ -98,6 +99,24 @@ class Source {
 			unset( $prop->selector );
 		} );
 		$this->prop->query = $query;
+		return $this->prop;
+	}
+
+
+	/**
+	 * Use a meta key to store/retrieve values.
+	 *
+	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-attributes/#meta-source-deprecated
+	 *
+	 * @deprecated
+	 *
+	 * @param string $key - Meta key to use for the attribute.
+	 *
+	 * @return Prop
+	 */
+	public function meta( string $key ): Prop {
+		$this->prop->meta = $key;
+		$this->prop->source = self::SOURCE_META;
 		return $this->prop;
 	}
 }

@@ -16,6 +16,9 @@ use Lipe\Lib\Blocks\Args\Prop;
  * @see    Register_Block
  *
  * @link   https://developer.wordpress.org/block-editor/reference-guides/block-api/block-attributes/
+ *
+ * @phpstan-import-type ATTR_SHAPE from Register_Block
+ * @template ATTR_NAMES of string
  */
 class Attributes implements ArgsRules {
 	/**
@@ -25,6 +28,7 @@ class Attributes implements ArgsRules {
 
 	/**
 	 * @var array<string, Prop>
+	 * @phpstan-var array<ATTR_NAMES, Prop>
 	 */
 	protected array $props = [];
 
@@ -32,7 +36,9 @@ class Attributes implements ArgsRules {
 	/**
 	 * Define a new property for block attributes.
 	 *
-	 * @param string $name - Name of the attribute.
+	 * @phpstan-param ATTR_NAMES $name
+	 *
+	 * @param string             $name - Name of the attribute.
 	 *
 	 * @return Prop
 	 */
@@ -43,7 +49,7 @@ class Attributes implements ArgsRules {
 
 
 	/**
-	 * @phpstan-return array<string, array<string, mixed>>
+	 * @phpstan-return array<ATTR_NAMES, ATTR_SHAPE>
 	 */
 	public function get_args(): array {
 		return \array_map( fn( $prop ) => $prop->get_args(), $this->props );

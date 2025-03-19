@@ -5,12 +5,15 @@ namespace Lipe\Lib\Blocks\Args;
 
 use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Blocks\Register_Block;
 
 /**
  * Property shape for a block attribute.
  *
  * @author Mat Lipe
  * @since  5.4.0
+ *
+ * @phpstan-import-type ATTR_SHAPE from Register_Block
  *
  */
 class Prop implements ArgsRules {
@@ -72,7 +75,7 @@ class Prop implements ArgsRules {
 	/**
 	 * The type of source.
 	 *
-	 * @phpstan-var self::SOURCE_*
+	 * @phpstan-var Source::SOURCE_*
 	 * @var string
 	 */
 	public string $source;
@@ -93,6 +96,14 @@ class Prop implements ArgsRules {
 	 * @var array<string, Prop>
 	 */
 	public array $query;
+
+	/**
+	 * Meta key to use for the attribute.
+	 *
+	 * @deprecated
+	 * @var string
+	 */
+	public string $meta;
 
 
 	/**
@@ -178,14 +189,13 @@ class Prop implements ArgsRules {
 
 
 	/**
-	 * @phpstan-return array<string, mixed>
+	 * @phpstan-return ATTR_SHAPE
 	 */
 	public function get_args(): array {
 		$args = $this->parent_get_args();
-		if ( ! isset( $this->query ) ) {
-			return $args;
+		if ( isset( $this->query ) ) {
+			$args['query'] = \array_map( fn( $prop ) => $prop->get_args(), $this->query );
 		}
-		$args['query'] = \array_map( fn( $prop ) => $prop->get_args(), $this->query );
-		return $args;
+		return $args; // @phpstan-ignore return.type
 	}
 }

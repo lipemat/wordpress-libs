@@ -6,6 +6,8 @@ namespace Lipe\Lib\Blocks;
 
 use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Blocks\Args\Prop;
+use Lipe\Lib\Blocks\Args\Source;
 use Lipe\Lib\Blocks\Args\Supports;
 
 /**
@@ -19,16 +21,17 @@ use Lipe\Lib\Blocks\Args\Supports;
  * @link   https://developer.wordpress.org/reference/functions/register_block_type/
  *
  * @phpstan-type ATTR_SHAPE array{
- *     type: 'null'|'boolean'|'object'|'array'|'number'|'string'|'integer',
+ *     type: Prop::TYPE_*,
  *     default?: mixed,
  *     enum?: array<string|int|bool>,
- *     items?: array{
- *       type: string,
- *       required?: array<string>,
- *       properties?: array<string, array{
- *          type: string,
- *       }>
- *     }
+ *     selector?: string,
+ *     source?: Source::SOURCE_*,
+ *     attribute?: string,
+ *     query?: array<string, array{
+ *         source?: Source::SOURCE_*,
+ *         type?: Prop::TYPE_*,
+ *         attribute?: string,
+ *     }>
  * }
  * @phpstan-type BLOCK_ATTRIBUTES array<string, ATTR_SHAPE>
  */
