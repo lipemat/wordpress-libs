@@ -13,7 +13,7 @@ use Lipe\Lib\Query\Clause\Tax_Query;
  * @author Mat Lipe
  * @since  4.5.0
  *
- * @template EXISTING of array<string, mixed>
+ * @template SHAPE of array<string, mixed>
  */
 trait Args {
 	/**
@@ -27,7 +27,7 @@ trait Args {
 	/**
 	 * Optionally pass existing arguments to preload this class.
 	 *
-	 * @phpstan-param EXISTING     $existing
+	 * @phpstan-param SHAPE        $existing
 	 *
 	 * @param array<string, mixed> $existing - Existing arguments to preload.
 	 */
@@ -39,7 +39,9 @@ trait Args {
 	/**
 	 * Merge the arguments from another `ArgsRules` object into this one.
 	 *
-	 * @param ArgsRules $overrides - Args to override the current ones.
+	 * @phpstan-param ArgsRules<SHAPE> $overrides
+	 *
+	 * @param ArgsRules                $overrides - Args to override the current ones.
 	 *
 	 * @return void
 	 */
@@ -51,6 +53,7 @@ trait Args {
 	/**
 	 * Get the finished arguments as an array.
 	 *
+	 * @phpstan-return SHAPE
 	 * @return array<string, mixed>
 	 */
 	public function get_args(): array {
@@ -80,7 +83,7 @@ trait Args {
 	 * Set the arguments for this class based on an array
 	 * of values.
 	 *
-	 * @phpstan-param EXISTING     $existing
+	 * @phpstan-param SHAPE        $existing
 	 *
 	 * @param array<string, mixed> $existing - Existing arguments to load into properties.
 	 *

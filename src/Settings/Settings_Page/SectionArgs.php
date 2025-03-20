@@ -14,6 +14,7 @@ use Lipe\Lib\Args\ArgsRules;
  *
  * @link   https://developer.wordpress.org/reference/functions/add_settings_section/
  *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class SectionArgs implements ArgsRules {
 	/**

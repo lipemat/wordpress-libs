@@ -17,6 +17,8 @@ use Lipe\Lib\Query\Clause\Meta_Query_Trait;
  * @since  4.0.0
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_comment_query/__construct/
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, ArgsRules {
 	/**

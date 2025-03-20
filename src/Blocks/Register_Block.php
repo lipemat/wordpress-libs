@@ -20,20 +20,23 @@ use Lipe\Lib\Blocks\Args\Supports;
  *
  * @link   https://developer.wordpress.org/reference/functions/register_block_type/
  *
+ * @phpstan-type QUERY array<string, array{
+ *          source?: Source::SOURCE_*,
+ *          type?: Prop::TYPE_*,
+ *          attribute?: string,
+ * }>
  * @phpstan-type ATTR_SHAPE array{
- *     type: Prop::TYPE_*,
+ *     type?: Prop::TYPE_*,
  *     default?: mixed,
- *     enum?: array<string|int|bool>,
+ *     enum?: list<string|int|bool>,
  *     selector?: string,
  *     source?: Source::SOURCE_*,
  *     attribute?: string,
- *     query?: array<string, array{
- *         source?: Source::SOURCE_*,
- *         type?: Prop::TYPE_*,
- *         attribute?: string,
- *     }>
+ *     query?: QUERY
  * }
  * @phpstan-type BLOCK_ATTRIBUTES array<string, ATTR_SHAPE>
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Register_Block implements ArgsRules {
 	/**

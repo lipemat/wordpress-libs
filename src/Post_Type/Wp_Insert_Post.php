@@ -43,6 +43,7 @@ use Lipe\Lib\Args\ArgsRules;
  *      guid: string
  * }
  *
+ * @implements ArgsRules<\Partial<INSERT_POST>>
  */
 class Wp_Insert_Post implements ArgsRules {
 	/**

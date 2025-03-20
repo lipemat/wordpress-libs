@@ -14,6 +14,7 @@ use Lipe\Lib\Args\ArgsRules;
  * @author Mat Lipe
  * @since  5.2.0
  *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Argument_Prop implements ArgsRules, PropRules {
 	use Prop;

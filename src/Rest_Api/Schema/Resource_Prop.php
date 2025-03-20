@@ -12,6 +12,7 @@ use Lipe\Lib\Rest_Api\Resource_Schema;
  * @author Mat Lipe
  * @since  5.2.0
  *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Resource_Prop implements ArgsRules, PropRules {
 	use Prop;

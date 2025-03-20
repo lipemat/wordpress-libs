@@ -350,13 +350,17 @@ class Date_Query implements ClauseRules {
 	 *
 	 * @internal
 	 *
+	 * @phpstan-param ArgsRules<array<string, mixed>> $args_class
+	 *
+	 * @formatter:off
 	 * @param ArgsRules $args_class - Args class, which supports properties this method will assign.
+	 * @formatter:on
 	 *
 	 * @throws \LogicException - If the provided class does have a `date_query` property.
 	 *
 	 * @return void
 	 */
-	public function flatten( $args_class ): void {
+	public function flatten( ArgsRules $args_class ): void {
 		$this->extract_nested( $this->clauses, $this );
 		if ( ! property_exists( $args_class, 'date_query' ) ) {
 			throw new \LogicException( esc_html__( 'The provided class does not support date queries. Did you use the `Date_Query_Trait`?', 'lipe' ) );

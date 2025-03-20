@@ -22,6 +22,8 @@ use Lipe\Lib\Args\ArgsRules;
  *     style_handle: string,
  *     is_default: bool
  * }
+ *
+ * @implements ArgsRules<\Partial<EXISTING>>
  */
 class Register_Block_Style implements ArgsRules {
 	/**

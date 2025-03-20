@@ -19,10 +19,12 @@ use Lipe\Lib\Blocks\Args\Prop;
  *
  * @phpstan-import-type ATTR_SHAPE from Register_Block
  * @template ATTR_NAMES of string
+ *
+ * @implements ArgsRules<array<ATTR_NAMES, ATTR_SHAPE>>
  */
 class Attributes implements ArgsRules {
 	/**
-	 * @use Args<array<string, mixed>>
+	 * @use Args<array<ATTR_NAMES, ATTR_SHAPE>>
 	 */
 	use Args;
 
@@ -31,6 +33,18 @@ class Attributes implements ArgsRules {
 	 * @phpstan-var array<ATTR_NAMES, Prop>
 	 */
 	protected array $props = [];
+
+
+	/**
+	 * Optionally pass existing arguments to preload this class.
+	 *
+	 * @phpstan-param array<ATTR_NAMES, ATTR_SHAPE> $existing
+	 *
+	 * @param array<string, mixed>                  $existing - Existing arguments to preload.
+	 */
+	public function __construct( array $existing ) {
+		$this->load_array_into_properties( $existing );
+	}
 
 
 	/**

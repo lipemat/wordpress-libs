@@ -13,6 +13,8 @@ use Lipe\Lib\Args\ArgsRules;
  * @since  4.0.0
  *
  * @link   https://developer.wordpress.org/reference/functions/register_post_status/
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Register_Post_Status implements ArgsRules {
 	/**

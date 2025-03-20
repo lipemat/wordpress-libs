@@ -31,6 +31,8 @@ use Lipe\Lib\Args\ArgsRules;
  *          prepare_callback: callable(mixed,\WP_REST_Request<array<string, mixed>>): mixed
  *     }
  * }
+ *
+ * @implements ArgsRules<\Partial<EXISTING>>
  */
 class Register_Meta implements ArgsRules {
 	/**

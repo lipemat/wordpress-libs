@@ -14,6 +14,8 @@ use Lipe\Lib\Rest_Api\Resource_Schema;
  * @since  5.2.0
  *
  * @link   https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#primitive-types
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class NullType implements TypeRules, ArgsRules {
 	/**

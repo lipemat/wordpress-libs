@@ -98,7 +98,7 @@ class Source {
 		\array_walk( $query, function( $prop ) {
 			unset( $prop->selector );
 		} );
-		$this->prop->query = $query;
+		$this->prop->query = \array_map( fn( $prop ) => $prop->get_args(), $query );
 		return $this->prop;
 	}
 

@@ -10,6 +10,8 @@ namespace Lipe\Lib\Args;
  *
  * @author Mat Lipe
  * @since  4.5.0
+ *
+ * @template SHAPE of array<string, mixed>
  */
 interface ArgsRules {
 	/**
@@ -23,6 +25,7 @@ interface ArgsRules {
 	/**
 	 * Get the finished arguments as an array.
 	 *
+	 * @phpstan-return SHAPE
 	 * @return array<string, mixed>
 	 */
 	public function get_args(): array;
@@ -31,7 +34,9 @@ interface ArgsRules {
 	/**
 	 * Merge the arguments from another Args_Interface object into this one.
 	 *
-	 * @param ArgsRules $overrides - Args to override the current ones.
+	 * @phpstan-param ArgsRules<SHAPE> $overrides
+	 *
+	 * @param ArgsRules                $overrides - Args to override the current ones.
 	 *
 	 * @return void
 	 */

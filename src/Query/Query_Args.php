@@ -24,6 +24,8 @@ use Lipe\Lib\Query\Clause\Tax_Query_Trait;
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_query/
  * @link   https://developer.wordpress.org/reference/classes/WP_Query/parse_query/
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Query_Args implements Meta_Query_Interface, Date_Query_Interface, ArgsRules, Tax_Query_Interface {
 	/**

@@ -16,6 +16,8 @@ use Lipe\Lib\Rest_Api\Schema\Argument_Prop;
  *
  * @author Mat Lipe
  * @since  5.2.0
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Arguments_Schema implements ArgsRules {
 	/**

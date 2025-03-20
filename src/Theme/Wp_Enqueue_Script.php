@@ -16,6 +16,7 @@ use Lipe\Lib\Args\ArgsRules;
  *
  * @see    wp_enqueue_script
  *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Wp_Enqueue_Script implements ArgsRules {
 	/**

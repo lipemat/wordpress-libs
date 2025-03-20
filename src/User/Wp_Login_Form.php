@@ -13,6 +13,8 @@ use Lipe\Lib\Args\ArgsRules;
  * @since  4.1.0
  *
  * @link   https://developer.wordpress.org/reference/functions/wp_login_form/#parameters
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Wp_Login_Form implements ArgsRules {
 	/**
@@ -23,7 +25,7 @@ class Wp_Login_Form implements ArgsRules {
 	/**
 	 *  Whether to display the login form or return the form HTML code.
 	 *
-	 * @default true ( echo ).
+	 * @default true (echo).
 	 *
 	 * @var bool
 	 */

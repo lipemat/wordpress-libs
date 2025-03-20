@@ -15,6 +15,8 @@ use Lipe\Lib\Query\Clause\Meta_Query_Trait;
  * @since  4.0.0
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_user_query/prepare_query/
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Get_Users implements Meta_Query_Interface, ArgsRules {
 	/**

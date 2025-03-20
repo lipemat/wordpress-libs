@@ -35,11 +35,15 @@ interface ClauseRules {
 	 *
 	 * @interal
 	 *
+	 * @phpstan-param ArgsRules<array<string, mixed>> $args_class
+	 *
+	 * @formatter:off
 	 * @param ArgsRules $args_class - Args class, which supports properties this method will assign.
+	 * @formatter:on
 	 *
 	 * @return void
 	 */
-	public function flatten( $args_class ): void;
+	public function flatten( ArgsRules $args_class ): void;
 
 
 	/**

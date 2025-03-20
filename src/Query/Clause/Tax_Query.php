@@ -18,6 +18,7 @@ use Lipe\Lib\Args\ClauseRules;
  * @implements ClauseRules<Tax_Query>
  *
  * @internal
+ *
  */
 class Tax_Query implements ClauseRules {
 	/**
@@ -119,13 +120,17 @@ class Tax_Query implements ClauseRules {
 	 *
 	 * @internal
 	 *
+	 * @phpstan-param ArgsRules<array<string, mixed>> $args_class
+	 *
+	 * @formatter:off
 	 * @param ArgsRules $args_class - Args class, which supports properties this method will assign.
+	 * @formatter:on
 	 *
 	 * @throws \LogicException - If the `tax_query` property is not defined on the args class.
 	 *
 	 * @return void
 	 */
-	public function flatten( $args_class ): void {
+	public function flatten( ArgsRules $args_class ): void {
 		$this->extract_nested( $this->clauses, $this );
 		if ( ! property_exists( $args_class, 'tax_query' ) ) {
 			throw new \LogicException( 'The `tax_query` property is required on the class using the `Tax_Query` trait.' );

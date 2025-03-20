@@ -14,6 +14,7 @@ use Lipe\Lib\Args\ArgsRules;
  * @author Mat Lipe
  * @since  4.10.0
  *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Register_Setting implements ArgsRules {
 	/**

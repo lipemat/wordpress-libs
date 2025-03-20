@@ -10,12 +10,14 @@ use Lipe\Lib\Query\Clause\Meta_Query_Interface;
 use Lipe\Lib\Query\Clause\Meta_Query_Trait;
 
 /**
- * A fluent interface for the `get_terms` function in WordPress.
+ * A fluent interface for the `get_terms` function.
  *
  * @author Mat Lipe
  * @since  4.0.0
  *
  * @link   https://developer.wordpress.org/reference/classes/wp_term_query/__construct/
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Get_Terms implements Meta_Query_Interface, ArgsRules {
 	/**

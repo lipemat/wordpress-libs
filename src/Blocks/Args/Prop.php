@@ -14,15 +14,15 @@ use Lipe\Lib\Blocks\Register_Block;
  * @since  5.4.0
  *
  * @phpstan-import-type ATTR_SHAPE from Register_Block
+ * @phpstan-import-type QUERY from Register_Block
  *
+ * @implements ArgsRules<ATTR_SHAPE>
  */
 class Prop implements ArgsRules {
 	/**
-	 * @use Args<array<string, mixed>>
+	 * @use Args<ATTR_SHAPE>
 	 */
-	use Args {
-		get_args as parent_get_args;
-	}
+	use Args;
 
 	public const TYPE_STRING  = 'string';
 	public const TYPE_ARRAY   = 'array';
@@ -43,7 +43,7 @@ class Prop implements ArgsRules {
 	/**
 	 * List of possible values for the property.
 	 *
-	 * @var list<string|int>
+	 * @var list<string|int|bool>
 	 */
 	public array $enum;
 
@@ -93,7 +93,8 @@ class Prop implements ArgsRules {
 	/**
 	 * List of props to query for out of the HTML markup.
 	 *
-	 * @var array<string, Prop>
+	 * @phpstan-var QUERY
+	 * @var array<string, array<string, string>>
 	 */
 	public array $query;
 
@@ -130,7 +131,7 @@ class Prop implements ArgsRules {
 	 *
 	 * @throws \InvalidArgumentException -- If enum value types do not match the attribute type.
 	 *
-	 * @param list<string|int> $values - List of possible values for this attribute.
+	 * @param list<string|int|bool> $values - List of possible values for this attribute.
 	 *
 	 * @return static
 	 */
@@ -185,17 +186,5 @@ class Prop implements ArgsRules {
 	 */
 	public function source(): Source {
 		return new Source( $this );
-	}
-
-
-	/**
-	 * @phpstan-return ATTR_SHAPE
-	 */
-	public function get_args(): array {
-		$args = $this->parent_get_args();
-		if ( isset( $this->query ) ) {
-			$args['query'] = \array_map( fn( $prop ) => $prop->get_args(), $this->query );
-		}
-		return $args; // @phpstan-ignore return.type
 	}
 }

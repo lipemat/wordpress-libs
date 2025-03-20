@@ -23,6 +23,8 @@ use Lipe\Lib\Post_Type\Capabilities;
  *     pages?: bool,
  *     ep_mask?: int,
  * }
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Register_Post_Type implements ArgsRules {
 	/**

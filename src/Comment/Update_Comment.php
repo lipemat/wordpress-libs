@@ -16,6 +16,8 @@ use Lipe\Lib\Args\ArgsRules;
  * @see    wp_update_comment()
  *
  * @link   https://developer.wordpress.org/reference/functions/wp_insert_comment/
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Update_Comment implements ArgsRules {
 	/**

@@ -325,13 +325,17 @@ class Meta_Query implements ClauseRules {
 	 *
 	 * @interal
 	 *
+	 * @phpstan-param ArgsRules<array<string, mixed>> $args_class
+	 *
+	 * @formatter:off
 	 * @param ArgsRules $args_class - The class to add the meta_query to.
+	 * @formatter:on
 	 *
 	 * @throws \LogicException - If called with access to the `meta_query` property.
 	 *
 	 * @return void
 	 */
-	public function flatten( $args_class ): void {
+	public function flatten( ArgsRules $args_class ): void {
 		$this->extract_nested( $this->clauses, $this );
 		if ( ! property_exists( $args_class, 'meta_query' ) ) {
 			throw new \LogicException( esc_html__( 'The provided class does not support meta queries. Did you use the `Meta_Query_Trait`?', 'lipe' ) );

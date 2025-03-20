@@ -7,9 +7,14 @@ use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
 
 /**
- * @author Mat Lipe
- * @since  May 2024
+ * A fluent interface for the `wp_terms_checklist()` function.
  *
+ * @link   https://developer.wordpress.org/reference/functions/wp_terms_checklist/
+ *
+ * @author Mat Lipe
+ * @since  4.10.0
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Wp_Terms_Checklist implements ArgsRules {
 	/**

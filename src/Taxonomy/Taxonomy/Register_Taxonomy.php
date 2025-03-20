@@ -28,7 +28,9 @@ use Lipe\Lib\Taxonomy\Get_Terms;
  *      name: string,
  *      slug?: string,
  *      description?: string,
- *  }
+ * }
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Register_Taxonomy implements ArgsRules {
 	/**

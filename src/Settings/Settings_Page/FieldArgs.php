@@ -14,6 +14,7 @@ use Lipe\Lib\Args\ArgsRules;
  *
  * @link   https://developer.wordpress.org/reference/functions/add_settings_field/#parameters
  *
+ * @implements ArgsRules<array{label_for?:string, class?: string}>
  */
 class FieldArgs implements ArgsRules {
 	/**

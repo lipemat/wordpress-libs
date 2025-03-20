@@ -21,6 +21,8 @@ use Lipe\Lib\Args\ArgsRules;
  *
  * @link   https://developer.wordpress.org/reference/functions/wp_remote_post/
  * @link   https://developer.wordpress.org/reference/classes/wp_http/request/
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Wp_Remote implements ArgsRules {
 	/**

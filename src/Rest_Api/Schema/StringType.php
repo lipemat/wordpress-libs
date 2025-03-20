@@ -14,6 +14,8 @@ use Lipe\Lib\Rest_Api\Resource_Schema;
  *
  * @link   https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#strings
  * @link   https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#format
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class StringType implements ArgsRules, TypeRules {
 	/**

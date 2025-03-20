@@ -14,6 +14,8 @@ use Lipe\Lib\Args\ArgsRules;
  * @since  4.7.0
  *
  * @link   https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports
+ *
+ * @implements ArgsRules<array<string, mixed>>
  */
 class Supports implements ArgsRules {
 	/**
