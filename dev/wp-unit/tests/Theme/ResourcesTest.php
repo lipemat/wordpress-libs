@@ -75,6 +75,8 @@ class ResourcesTest extends \WP_UnitTestCase {
 	 * unpkg CDN.
 	 */
 	public function test_use_cdn_for_resources(): void {
+		$this->markTestSkipped( 'Unpkg is having issues, skipping the test until they are stable.' );
+
 		$react_version = wp_scripts()->query( 'react' )->ver;
 		// Fix for non-existent react version introduced in WP 6.7.1.
 		// @todo Remove when WP core updates React to version 19.
@@ -116,6 +118,7 @@ class ResourcesTest extends \WP_UnitTestCase {
 
 
 	public function test_failed_use_cdn_for_resources(): void {
+		$this->markTestSkipped( 'Unpkg is having issues, skipping the test until they are stable.' );
 		$this->assertEmpty( $this->requests );
 		wp_scripts()->query( 'react-dom' )->ver = '18.1.1.A';
 		Resources::in()->use_cdn_for_resources( [ 'react-dom' ] );
@@ -131,6 +134,8 @@ class ResourcesTest extends \WP_UnitTestCase {
 	 * using the unpkg integrity.
 	 */
 	public function test_unpkg_integrity(): void {
+		$this->markTestSkipped( 'Unpkg is having issues, skipping the test until they are stable.' );
+
 		$this->assertArrayNotHasKey( 'https://unpkg.com/jquery@3.1.1/dist/jquery.min.js', get_network_option( 0, Resources::INTEGRITY, [] ) );
 		$this->assertEmpty( $this->requests );
 
@@ -149,6 +154,8 @@ class ResourcesTest extends \WP_UnitTestCase {
 
 
 	public function test_unpkg_integrity_failed(): void {
+		$this->markTestSkipped( 'Unpkg is having issues, skipping the test until they are stable.' );
+
 		$this->assertCount( 0, $this->requests );
 		wp_register_script( __METHOD__, 'https://unpkg.com/react@18.3.1.1/umd/react.development.js', [], null );
 		$this->assertFalse( Resources::in()->unpkg_integrity( __METHOD__, 'https://unpkg.com/react@18.3.1.1/umd/react.development.js' ) );

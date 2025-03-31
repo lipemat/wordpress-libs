@@ -179,8 +179,6 @@ class Common {
 	 * @action wp_enqueue_scripts 11 0
 	 */
 	public function theme_scripts(): void {
-		Resources::in()->use_cdn_for_resources( [ 'react', 'react-dom', 'jquery', 'lodash' ] );
-
 		foreach ( $this->handles as $resource ) {
 			if ( ! $resource->in_front_end() ) {
 				continue;
