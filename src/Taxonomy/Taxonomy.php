@@ -703,7 +703,7 @@ class Taxonomy {
 			'edit_item'                  => \sprintf( __( 'Edit %s' ), $single ),
 			'view_item'                  => \sprintf( __( 'View %s' ), $single ),
 			'update_item'                => \sprintf( __( 'Update %s' ), $single ),
-			'add_new_item'               => \sprintf( __( 'Add New %s' ), $single ),
+			'add_new_item'               => \sprintf( __( 'Add %s' ), $single ),
 			'new_item_name'              => \sprintf( __( 'New %s Name' ), $single ),
 			'separate_items_with_commas' => \sprintf( __( 'Separate %s with commas' ), $plural ),
 			'add_or_remove_items'        => \sprintf( __( 'Add or remove %s' ), $plural ),

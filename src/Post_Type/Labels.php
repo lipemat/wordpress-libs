@@ -87,7 +87,7 @@ class Labels {
 
 
 	/**
-	 * Default is 'Add New' for both hierarchical and non-hierarchical types.
+	 * Default is 'Add' for both hierarchical and non-hierarchical types.
 	 *
 	 * @param string $label - Add new post label.
 	 *
@@ -101,7 +101,7 @@ class Labels {
 	/**
 	 * Label for adding a new singular item.
 	 *
-	 * Default is 'Add New <post type singular>'
+	 * Default is 'Add <post type singular>'
 	 *
 	 * @param string $label - Label for adding a new singular item.
 	 *

@@ -878,8 +878,8 @@ class Custom_Post_Type {
 		$labels = [
 			'name'                     => $plural,
 			'singular_name'            => $single,
-			'add_new'                  => __( 'Add New' ),
-			'add_new_item'             => \sprintf( __( 'Add New %s' ), $single ),
+			'add_new'                  => __( 'Add' ),
+			'add_new_item'             => \sprintf( __( 'Add %s' ), $single ),
 			'edit_item'                => \sprintf( __( 'Edit %s' ), $single ),
 			'new_item'                 => \sprintf( __( 'New %s' ), $single ),
 			'view_item'                => \sprintf( __( 'View %s' ), $single ),
