@@ -366,7 +366,11 @@ class Settings_PageTest extends \WP_UnitTestCase {
 		$html = get_echo( function() {
 			require_once ABSPATH . 'wp-admin/menu-header.php';
 		} );
-		$this->assertStringContainsString( "<a href='admin.php?page=testing/anon/mock-settings' class=\"wp-first-item wp-not-current-submenu menu-top toplevel_page_testing/anon/mock-settings\" ><div class=\"wp-menu-arrow\"><div></div></div><div class='wp-menu-image dashicons-before dashicons-format-gallery' aria-hidden='true'><br /></div><div class='wp-menu-name'>Mock Settings Page</div></a>", $html );
+		if ( $GLOBALS['wp_version'] >= 6.8 ) {
+			self::assertStringContainsString( "<a href='admin.php?page=testing/anon/mock-settings' class=\"wp-first-item wp-not-current-submenu menu-top toplevel_page_testing/anon/mock-settings\" ><div class='wp-menu-image dashicons-before dashicons-format-gallery' aria-hidden='true'><br /></div><div class='wp-menu-name'>Mock Settings Page</div></a>", $html );
+		} else {
+			self::assertStringContainsString( "<a href='admin.php?page=testing/anon/mock-settings' class=\"wp-first-item wp-not-current-submenu menu-top toplevel_page_testing/anon/mock-settings\" ><div class=\"wp-menu-arrow\"><div></div></div><div class='wp-menu-image dashicons-before dashicons-format-gallery' aria-hidden='true'><br /></div><div class='wp-menu-name'>Mock Settings Page</div></a>", $html );
+		}
 	}
 
 
