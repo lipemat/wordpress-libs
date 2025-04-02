@@ -27,10 +27,10 @@ use Lipe\Lib\Args\ArgsRules;
  *      post_content_filtered: string,
  *      post_title: string,
  *      post_excerpt: string,
- *      post_status: string,
+ *      post_status: Wp_Insert_Post::STATUS_*,
  *      post_type: string,
- *      comment_status: Wp_Insert_Post::STATUS_*,
- *      ping_status: Wp_Insert_Post::STATUS_*,
+ *      comment_status: Wp_Insert_Post::PING_*,
+ *      ping_status: Wp_Insert_Post::PING_*,
  *      post_password: string,
  *      post_name: string,
  *      to_ping: string,
@@ -51,8 +51,16 @@ class Wp_Insert_Post implements ArgsRules {
 	 */
 	use Args;
 
-	public const STATUS_OPEN   = 'open';
-	public const STATUS_CLOSED = 'closed';
+	public const PING_OPEN   = 'open';
+	public const PING_CLOSED = 'closed';
+
+	public const STATUS_DRAFT   = 'draft';
+	public const STATUS_FUTURE  = 'future';
+	public const STATUS_INHERIT = 'inherit';
+	public const STATUS_PENDING = 'pending';
+	public const STATUS_PRIVATE = 'private';
+	public const STATUS_PUBLISH = 'publish';
+	public const STATUS_TRASH   = 'trash';
 
 	/**
 	 * The post ID. If equal to something other than 0, the post with that ID will be updated.
@@ -131,6 +139,7 @@ class Wp_Insert_Post implements ArgsRules {
 	 *
 	 * Default 'draft'.
 	 *
+	 * @phpstan-var self::STATUS_*
 	 * @var string
 	 */
 	public string $post_status;
@@ -149,7 +158,7 @@ class Wp_Insert_Post implements ArgsRules {
 	 *
 	 * Default is the value of 'default_comment_status' option.
 	 *
-	 * @phpstan-var self::STATUS_*
+	 * @phpstan-var self::PING_*
 	 *
 	 * @var string
 	 */
@@ -158,9 +167,9 @@ class Wp_Insert_Post implements ArgsRules {
 	/**
 	 * Whether the post can accept pings. Accepts 'open' or 'closed'.
 	 *
-	 * Default is the value of 'default_ping_status' option.
+	 * Default is the value of 'default_PING' option.
 	 *
-	 * @phpstan-var self::STATUS_*
+	 * @phpstan-var self::PING_*
 	 *
 	 * @var string
 	 */
