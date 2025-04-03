@@ -383,4 +383,15 @@ class Register_Post_Type implements ArgsRules {
 	 * @phpstan-var self::TEMPLATE_LOCK_*
 	 */
 	public string|false $template_lock;
+
+	/**
+	 * Whether the post type is embeddable using oembed.
+	 *
+	 * @since WP 6.8
+	 *
+	 * Default is value of `public`.
+	 *
+	 * @var bool
+	 */
+	public bool $embeddable;
 }

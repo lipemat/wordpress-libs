@@ -693,6 +693,22 @@ class Custom_Post_Type {
 
 
 	/**
+	 * Whether the post type is embeddable using oembed.
+	 *
+	 * Default is value of `public`.
+	 *
+	 * @since WP 6.8
+	 *
+	 * @param bool $is_embeddable - Whether to make the post type embeddable.
+	 *
+	 * @return void
+	 */
+	public function embeddable( bool $is_embeddable ): void {
+		$this->register_args->embeddable = $is_embeddable;
+	}
+
+
+	/**
 	 * Whether to use the internal default meta capability handling.
 	 *
 	 * @param bool $use_mapping - Whether to use mapping.
