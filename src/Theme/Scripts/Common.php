@@ -119,18 +119,25 @@ class Common {
 	 * Use on demand block stylesheet loading.
 	 *
 	 * @link https://make.wordpress.org/core/2021/07/01/block-styles-loading-enhancements-in-wordpress-5-8/
+	 * @link https://make.wordpress.org/core/2025/03/24/new-filter-should_load_block_assets_on_demand-in-6-8/
 	 *
 	 * @return void
 	 */
 	public function support_block_inline_styles(): void {
-		add_filter( 'should_load_separate_core_block_assets', '__return_true' );
+		$return_true = __return_true( ... );
+		// Previous filter covers both WP core and custom blocks.
+		add_filter( 'should_load_separate_core_block_assets', $return_true );
+
+		// New WP 6.8 filters, separate for WP core and custom blocks.
+		add_filter( 'should_load_separate_core_block_assets', $return_true );
+		add_filter( 'should_load_block_assets_on_demand', $return_true );
 
 		/**
 		 * Use stylesheets instead of inline styles for WP core blocks when
 		 * SCRIPT_DEBUG is true.
 		 */
 		if ( SCRIPT_DEBUG ) {
-			add_filter( 'styles_inline_size_limit', '__return_zero' );
+			add_filter( 'styles_inline_size_limit', __return_zero( ... ) );
 		}
 	}
 
