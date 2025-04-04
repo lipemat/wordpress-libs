@@ -150,6 +150,7 @@ trait Display {
 	 *
 	 * @interal
 	 *
+	 * @phpstan-var callable( \CMB2_Field ): bool $func
 	 * @var callable
 	 */
 	protected $show_on_cb;
@@ -418,10 +419,14 @@ trait Display {
 	/**
 	 * To show this field or not based on the result of a function.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_on_cb
-	 * @example should_i_show($field){ return bool}
+	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_on_cb
+	 * @example  should_i_show($field){ return bool}
 	 *
+	 * @phpstan-param callable( \CMB2_Field ): bool $func
+	 *
+	 * @formatter:off
 	 * @param callable $func - The function to use for determining if the field should show.
+	 * @formatter:on
 	 *
 	 * @return Field
 	 */
