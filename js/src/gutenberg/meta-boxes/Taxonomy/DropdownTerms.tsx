@@ -3,7 +3,8 @@ import type {FromPanel} from './WithTaxonomyPanel';
 
 const DropdownTerms = ( {assigned, setAssigned, terms, tax}: FromPanel ) => {
 	const options = terms.map( term => ( {label: term.name, value: term.id.toString()} ) );
-	options.unshift( {label: `- ${tax?.labels.no_terms ?? 'None'} -`, value: '0'} );
+	// @ts-expect-error -- Will be fixed on next update of types.
+	options.unshift( {label: `- ${tax?.labels.no_item ?? 'None'} -`, value: '0'} );
 
 	return (
 		<SelectControl

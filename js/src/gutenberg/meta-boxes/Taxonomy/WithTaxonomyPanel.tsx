@@ -19,6 +19,7 @@ export type FromPanel = {
 type Props = {
 	taxonomy: string;
 	checkedOnTop: boolean;
+	singular: boolean;
 };
 
 /**
@@ -43,7 +44,7 @@ export default function WithTaxonomyPanel(
 	WrappedComponent: ComponentType<FromPanel>,
 	props: PropsWithChildren<Props>
 ) {
-	const {taxonomy, checkedOnTop} = props;
+	const {taxonomy, checkedOnTop, singular} = props;
 
 	const {record: tax} = useEntityRecord( 'root', 'taxonomy', taxonomy );
 	const {records: terms} = useEntityRecords( 'taxonomy', taxonomy as 'post_tag', {
@@ -66,12 +67,14 @@ export default function WithTaxonomyPanel(
 		} );
 	}
 
+	const label = singular ? tax?.labels.singular_name : tax?.name;
+
 	return (
 		<PluginDocumentSettingPanel
 			key={taxonomy}
 			name={sprintf( 'lipe/libs/meta-boxes/taxonomy/%1$s', taxonomy )}
-			title={tax?.name ?? __( 'Loading…', 'lipe' )}
-			icon={tax?.name === undefined ? 'download' : null}
+			title={label ?? __( 'Loading…', 'lipe' )}
+			icon={null === label ? 'download' : null}
 		>
 			<WrappedComponent
 				tax={tax ?? null}

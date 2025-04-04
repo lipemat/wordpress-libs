@@ -33,6 +33,7 @@ const Taxonomy = ( {}: Props ) => {
 			return WithTaxonomyPanel( component, {
 				taxonomy: metaBox.taxonomy,
 				checkedOnTop: metaBox.checkedOnTop,
+				singular: metaBox.type !== 'simple',
 			} );
 		} )}
 	</> );
