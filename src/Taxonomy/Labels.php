@@ -19,20 +19,28 @@ class Labels {
 	public const ALL_ITEMS                  = 'all_items';
 	public const BACK_TO_ITEMS              = 'back_to_items';
 	public const CHOOSE_FROM_MOST_USED      = 'choose_from_most_used';
+	public const DESC_FIELD_DESCRIPTION     = 'desc_field_description';
 	public const EDIT_ITEM                  = 'edit_item';
+	public const FILTER_BY_ITEM             = 'filter_by_item';
+	public const ITEM_LINK                  = 'item_link';
+	public const ITEM_LINK_DESCRIPTION      = 'item_link_description';
 	public const ITEMS_LIST                 = 'items_list';
 	public const ITEMS_LIST_NAVIGATION      = 'items_list_navigation';
 	public const MENU_NAME                  = 'menu_name';
 	public const MOST_USED                  = 'most_used';
 	public const NAME                       = 'name';
+	public const NAME_ADMIN_BAR             = 'name_admin_bar';
+	public const NAME_FIELD_DESCRIPTION     = 'name_field_description';
 	public const NEW_ITEM_NAME              = 'new_item_name';
-	public const NOT_FOUND                  = 'not_found';
 	public const NO_ITEM                    = 'no_item';
 	public const NO_TERMS                   = 'no_terms';
+	public const NOT_FOUND                  = 'not_found';
+	public const PARENT_FIELD_DESCRIPTION   = 'parent_field_description';
 	public const PARENT_ITEM                = 'parent_item';
 	public const PARENT_ITEM_COLON          = 'parent_item_colon';
 	public const POPULAR_ITEMS              = 'popular_items';
 	public const SEARCH_ITEMS               = 'search_items';
+	public const SINGLE_FIELD_DESCRIPTION   = 'single_field_description';
 	public const SEPARATE_ITEMS_WITH_COMMAS = 'separate_items_with_commas';
 	public const SINGULAR_NAME              = 'singular_name';
 	public const UPDATE_ITEM                = 'update_item';
@@ -330,6 +338,102 @@ class Labels {
 	 */
 	public function menu_name( string $value ): Labels {
 		return $this->set( 'menu_name', $value );
+	}
+
+
+	/**
+	 * Description shown in the field.
+	 *
+	 * @param string $value - Description shown in the field.
+	 *
+	 * @return Labels
+	 */
+	public function desc_field_description( string $value ): Labels {
+		return $this->set( 'desc_field_description', $value );
+	}
+
+
+	/**
+	 * Description shown for the name of the field in the admin bar.
+	 *
+	 * @param string $value - Description shown for the name of the field in the admin bar.
+	 *
+	 * @return Labels
+	 */
+	public function name_admin_bar( string $value ): Labels {
+		return $this->set( 'name_admin_bar', $value );
+	}
+
+
+	/**
+	 * Description shown for the name of the field.
+	 *
+	 * @param string $value - Description shown for the name of the field.
+	 *
+	 * @return Labels
+	 */
+	public function name_field_description( string $value ): Labels {
+		return $this->set( 'name_field_description', $value );
+	}
+
+
+	/**
+	 * Description shown for the parent of the field.
+	 *
+	 * @param string $value - Description shown for the parent of the field.
+	 *
+	 * @return Labels
+	 */
+	public function parent_field_description( string $value ): Labels {
+		return $this->set( 'parent_field_description', $value );
+	}
+
+
+	/**
+	 * Description shown for the single field.
+	 *
+	 * @param string $value - Description shown for the single field.
+	 *
+	 * @return Labels
+	 */
+	public function single_field_description( string $value ): Labels {
+		return $this->set( 'single_field_description', $value );
+	}
+
+
+	/**
+	 * Set the filter by item label.
+	 *
+	 * @param string $value - Filter by item label.
+	 *
+	 * @return Labels
+	 */
+	public function filter_by_item( string $value ): Labels {
+		return $this->set( 'filter_by_item', $value );
+	}
+
+
+	/**
+	 * Set the item link label.
+	 *
+	 * @param string $value - Item link label.
+	 *
+	 * @return Labels
+	 */
+	public function item_link( string $value ): Labels {
+		return $this->set( 'item_link', $value );
+	}
+
+
+	/**
+	 * Set the item link description label.
+	 *
+	 * @param string $value - Item link description label.
+	 *
+	 * @return Labels
+	 */
+	public function item_link_description( string $value ): Labels {
+		return $this->set( 'item_link_description', $value );
 	}
 
 
