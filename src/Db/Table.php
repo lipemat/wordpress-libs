@@ -25,6 +25,10 @@ interface Table {
 	/**
 	 * Get the name of the field that is the primary key.
 	 *
+	 * @note PHPStan return must overriden in child class to reduce the type
+	 *       to the single key of the array.
+	 *       (e.g., phpstan-return "ID")
+	 *
 	 * @phpstan-return key-of<FORMATS>
 	 */
 	public function get_id_field(): string;
