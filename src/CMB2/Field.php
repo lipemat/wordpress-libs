@@ -310,11 +310,15 @@ class Field {
 	 * Add this field as a post list column on the attached
 	 * posts, comments, users, terms.
 	 *
+	 * @phpstan-param callable( array<string, mixed>, \CMB2_Field, mixed ): string $display_cb
+	 *
+	 * @formatter:off
 	 * @param bool|int      $position         - The column position.
 	 * @param string        $name             - defaults to field name.
 	 * @param callable|null $display_cb       - optional display callback.
 	 * @param bool          $disable_sorting  - Set to true to prevent this column from being
 	 *                                        sortable in post list.
+	 * @formatter:on
 	 *
 	 * @return static
 	 */

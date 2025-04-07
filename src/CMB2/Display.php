@@ -7,8 +7,8 @@ namespace Lipe\Lib\CMB2;
 /**
  *  These allow you to add arbitrary text/markup at different points in the field markup.
  *  These also accept a callback.
- *  The callback will receive $field_args as the first argument,
- *  and the CMB2_Field $field object as the second argument.
+ *  The callback will receive `array $field_args` as the first argument,
+ *  and the `CMB2_Field $field` object as the second argument.
  *
  * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
  *
@@ -201,7 +201,7 @@ trait Display {
 
 
 	/**
-	 * Set the position of the field in the meta box
+	 * Set the position of the field in the meta box.
 	 *
 	 * @param int $position - The position of the field.
 	 *
