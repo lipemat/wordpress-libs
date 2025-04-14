@@ -5,6 +5,7 @@ namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
+use Lipe\Lib\Rest_Api\Resource_Schema;
 
 /**
  * A fluent interface for
@@ -133,19 +134,13 @@ class Register_Meta implements ArgsRules {
 	/**
 	 * Whether data associated with this meta key can be considered public and should be accessible via the REST API.
 	 *
-	 * A custom post type must also declare support for custom fields for registered meta to be accessible via REST. When registering
-	 * complex meta values this argument may optionally be an array with 'schema' or 'prepare_callback' keys instead of a boolean.
-	 *
-	 * If this value is an array with a prepare_callback key, the callback is called here:
-	 * https://github.com/WordPress/wordpress-develop/blob/6.6.0/src/wp-includes/rest-api/fields/class-wp-rest-meta-fields.php#L127
-	 *
-	 * @see \Lipe\Lib\Rest_Api\Resource_Schema for construction the schema array.
+	 * @phpstan-var bool|array{
+	 *     name?: string,
+	 *     schema?: array<string,mixed>,
+	 *     prepare_callback?: callable(mixed,\WP_REST_Request<array<string,mixed>>,array<string,mixed>): mixed
+	 * }
 	 *
 	 * @var bool|array<string, mixed>
-	 * @phpstan-var bool|array{
-	 *     schema: array<string,mixed>,
-	 *     prepare_callback: callable(mixed,\WP_REST_Request<array<string,mixed>>,array<string,mixed>): mixed,
-	 * }
 	 */
 	public bool|array $show_in_rest;
 
@@ -157,4 +152,45 @@ class Register_Meta implements ArgsRules {
 	 * @var bool
 	 */
 	public bool $revisions_enabled;
+
+
+	/**
+	 * Include this meta key in the REST API response.
+	 *
+	 * - Use the property directly to set the value to `false`.
+	 * - Call the method with no arguments to set the value to `true`.
+	 *
+	 * @notice    A custom post type must also declare support for custom fields for
+	 *           registered meta to be accessible via REST.
+	 *
+	 *            `prepare_callback` is called here.
+	 * @link      https://github.com/WordPress/wordpress-develop/blob/6.6.0/src/wp-includes/rest-api/fields/class-wp-rest-meta-fields.php#L127
+	 *
+	 *
+	 * @phpstan-param callable(mixed,\WP_REST_Request<array<string,mixed>>,array<string,mixed>): mixed $prepare_callback
+	 *
+	 * @formatter:off
+	 *
+	 * @param ?string         $name             - Name in the `meta` array of the REST response.
+	 *                                             If not set, the meta key will be used.
+	 * @param ?Resource_Schema $schema           - REST schema for the meta key.
+	 * @param ?callable        $prepare_callback - Callback for preparing the meta value for the REST API.
+	 *
+	 * @formatter :on
+	 *
+	 * @return $this
+	 */
+	public function show_in_rest( ?string $name = null, ?Resource_Schema $schema = null, ?callable $prepare_callback = null ): static {
+		$this->show_in_rest = \array_filter( [
+			'name'             => $name,
+			'schema'           => $schema?->get_args(),
+			'prepare_callback' => $prepare_callback,
+		], fn( mixed $value ) => null !== $value );
+
+		if ( [] === $this->show_in_rest ) {
+			$this->show_in_rest = true;
+		}
+
+		return $this;
+	}
 }

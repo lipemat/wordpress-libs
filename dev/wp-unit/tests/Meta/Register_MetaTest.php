@@ -77,6 +77,64 @@ class Register_MetaTest extends \WP_Test_REST_TestCase {
 	}
 
 
+	public function test_show_in_rest(): void {
+		$schema = new Resource_Schema( [] );
+		$schema->type()->number()->minimum( 4 )->maximum( 10 );
+
+		$args = new Register_Meta( [] );
+		$args->show_in_rest();
+		$this->assertSame( [
+			'single'       => true,
+			'show_in_rest' => true,
+		], $args->get_args() );
+
+		$args->show_in_rest( 'customName' );
+		$this->assertSame( [
+			'single'       => true,
+			'show_in_rest' => [
+
+				'name' => 'customName',
+			],
+		], $args->get_args() );
+
+		$args->show_in_rest( null, $schema );
+		$this->assertSame( [
+			'single'       => true,
+			'show_in_rest' => [
+				'schema' => [
+					'$schema' => 'http://json-schema.org/draft-04/schema#',
+					'type'    => 'number',
+					'minimum' => 4,
+					'maximum' => 10,
+				],
+			],
+		], $args->get_args() );
+
+		$args->show_in_rest( null, null, '__return_null' );
+		$this->assertSame( [
+			'single'       => true,
+			'show_in_rest' => [
+				'prepare_callback' => '__return_null',
+			],
+		], $args->get_args() );
+
+		$args->show_in_rest( 'anotherName', $schema, '__return_null' );
+		$this->assertSame( [
+			'single'       => true,
+			'show_in_rest' => [
+				'name'             => 'anotherName',
+				'schema'           => [
+					'$schema' => 'http://json-schema.org/draft-04/schema#',
+					'type'    => 'number',
+					'minimum' => 4,
+					'maximum' => 10,
+				],
+				'prepare_callback' => '__return_null',
+			],
+		], $args->get_args() );
+	}
+
+
 	public function test_auth_callback(): void {
 		$post = self::factory()->post->create_and_get();
 		$id = update_post_meta( $post->ID, 'testing', 'test' );
