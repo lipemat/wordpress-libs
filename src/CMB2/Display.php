@@ -11,6 +11,9 @@ namespace Lipe\Lib\CMB2;
  *  and the `CMB2_Field $field` object as the second argument.
  *
  * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
+ * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
+ *
+ * @phpstan-type PARAM_CB string|(callable(array<string, mixed>, \CMB2_Field): (string|void) )
  *
  * @since 5.0.0
  */
@@ -18,70 +21,80 @@ trait Display {
 	/**
 	 * Display a message or any arbitrary text/markup before the field.
 	 *
-	 * @var callable(array<string, mixed>, \CMB2_Field): void|string
+	 * @phpstan-var PARAM_CB
+	 * @var callable|string
 	 */
 	protected $before;
 
 	/**
 	 * Display a message or any arbitrary text/markup after the field.
 	 *
-	 * @var callable(array<string, mixed>, \CMB2_Field): void|string
+	 * @phpstan-var PARAM_CB
+	 * @var callable|string
 	 */
 	protected $after;
 
 	/**
 	 * Display a message or any arbitrary text/markup before the field row.
 	 *
-	 * @var callable(array<string, mixed>, \CMB2_Field): void|string
+	 * @phpstan-var PARAM_CB
+	 * @var callable|string
 	 */
 	protected $before_row;
 
 	/**
 	 * Display a message or any arbitrary text/markup after the field row.
 	 *
-	 * @var callable(array<string, mixed>, \CMB2_Field): void|string
+	 * @phpstan-var PARAM_CB
+	 * @var callable|string
 	 */
 	protected $after_row;
 
 	/**
 	 * Display a message or any arbitrary text/markup before the field markup.
 	 *
-	 * @var callable(array<string, mixed>, \CMB2_Field): void|string
+	 * @phpstan-var PARAM_CB
+	 * @var callable|string
 	 */
 	protected $before_field;
 
 	/**
 	 * Display a message or any arbitrary text/markup after the field markup.
 	 *
-	 * @var callable(array<string, mixed>, \CMB2_Field): void|string
+	 * @phpstan-var PARAM_CB
+	 * @var callable|string
 	 */
 	protected $after_field;
 
 	/**
 	 * Display a message or any arbitrary text/markup before the field display markup.
 	 *
-	 * @var callable(array<string, mixed>, \CMB2_Field): void|string
+	 * @phpstan-var PARAM_CB
+	 * @var callable|string
 	 */
 	protected $before_display_wrap;
 
 	/**
 	 * Display a message or any arbitrary text/markup after the field display markup.
 	 *
-	 * @var callable(array<string, mixed>, \CMB2_Field): void|string
+	 * @phpstan-var PARAM_CB
+	 * @var callable|string
 	 */
 	protected $before_display;
 
 	/**
 	 * Display a message or any arbitrary text/markup after the field display markup.
 	 *
-	 * @var callable(array<string, mixed>, \CMB2_Field): void|string
+	 * @phpstan-var PARAM_CB
+	 * @var callable|string
 	 */
 	protected $after_display;
 
 	/**
 	 * Display a message or any arbitrary text/markup after the field display markup.
 	 *
-	 * @var callable(array<string, mixed>, \CMB2_Field): void|string
+	 * @phpstan-var PARAM_CB
+	 * @var callable|string
 	 */
 	protected $after_display_wrap;
 
@@ -219,9 +232,11 @@ trait Display {
 	/**
 	 * Display a message or any arbitrary text/markup after the field.
 	 *
-	 * @param callable(array<string, mixed>, \CMB2_Field): void|string $after - Callback or string to display after the field.
+	 * @phpstan-param PARAM_CB $after
+	 *
+	 * @param callable|string  $after - Callback or string to display after the field.
 	 */
-	public function after( callable|string $after ): static {
+	public function after( string|callable $after ): static {
 		$this->after = $after;
 		return $this;
 	}
@@ -230,7 +245,9 @@ trait Display {
 	/**
 	 * Display a message or any arbitrary text/markup after the field display markup.
 	 *
-	 * @param callable(array<string, mixed>, \CMB2_Field): void|string $after_display - Callback or string to display before the field.
+	 * @phpstan-param PARAM_CB $after_display
+	 *
+	 * @param callable|string  $after_display - Callback or string to display before the field.
 	 */
 	public function after_display( callable|string $after_display ): static {
 		$this->after_display = $after_display;
@@ -241,7 +258,9 @@ trait Display {
 	/**
 	 * Display a message or any arbitrary text/markup after the field display markup.
 	 *
-	 * @param callable(array<string, mixed>, \CMB2_Field): void|string $after_display_wrap - Callback or string to display after the field.
+	 * @phpstan-param PARAM_CB $after_display_wrap
+	 *
+	 * @param callable|string  $after_display_wrap - Callback or string to display after the field.
 	 */
 	public function after_display_wrap( callable|string $after_display_wrap ): static {
 		$this->after_display_wrap = $after_display_wrap;
@@ -252,7 +271,9 @@ trait Display {
 	/**
 	 * Display a message or any arbitrary text/markup after the field.
 	 *
-	 * @param callable(array<string, mixed>, \CMB2_Field): void|string $after_field - Callback or string to display after the field.
+	 * @phpstan-param PARAM_CB $after_field
+	 *
+	 * @param callable|string  $after_field - Callback or string to display after the field.
 	 */
 	public function after_field( callable|string $after_field ): static {
 		$this->after_field = $after_field;
@@ -263,7 +284,9 @@ trait Display {
 	/**
 	 * Display a message or any arbitrary text/markup after the field row.
 	 *
-	 * @param callable(array<string, mixed>, \CMB2_Field): void|string $after_row - Callback or string to display after the field.
+	 * @phpstan-param PARAM_CB $after_row
+	 *
+	 * @param callable|string  $after_row - Callback or string to display after the field.
 	 */
 	public function after_row( callable|string $after_row ): static {
 		$this->after_row = $after_row;
@@ -274,7 +297,9 @@ trait Display {
 	/**
 	 * Display a message or any arbitrary text/markup before the field.
 	 *
-	 * @param callable(array<string, mixed>, \CMB2_Field): void|string $before - Callback or string to display before the field.
+	 * @phpstan-param PARAM_CB $before
+	 *
+	 * @param callable|string  $before - Callback or string to display before the field.
 	 */
 	public function before( callable|string $before ): static {
 		$this->before = $before;
@@ -285,7 +310,9 @@ trait Display {
 	/**
 	 * Display a message or any arbitrary text/markup after the field display markup.
 	 *
-	 * @param callable(array<string, mixed>, \CMB2_Field): void|string $before_display - Callback or string to display before the field.
+	 * @phpstan-param PARAM_CB $before_display
+	 *
+	 * @param callable|string  $before_display - Callback or string to display before the field.
 	 */
 	public function before_display( callable|string $before_display ): static {
 		$this->before_display = $before_display;
@@ -296,7 +323,9 @@ trait Display {
 	/**
 	 * Display a message or any arbitrary text/markup before the field display markup.
 	 *
-	 * @param callable(array<string, mixed>, \CMB2_Field): void|string $before_display_wrap - Callback or string to display after the field.
+	 * @phpstan-param PARAM_CB $before_display_wrap
+	 *
+	 * @param callable|string  $before_display_wrap - Callback or string to display after the field.
 	 */
 	public function before_display_wrap( callable|string $before_display_wrap ): static {
 		$this->before_display_wrap = $before_display_wrap;
@@ -307,7 +336,9 @@ trait Display {
 	/**
 	 * Display a message or any arbitrary text/markup before the field markup.
 	 *
-	 * @param callable(array<string, mixed>, \CMB2_Field): void|string $before_field - Callback or string to display before the field.
+	 * @phpstan-param PARAM_CB $before_field
+	 *
+	 * @param callable|string  $before_field - Callback or string to display before the field.
 	 */
 	public function before_field( callable|string $before_field ): static {
 		$this->before_field = $before_field;
@@ -318,7 +349,9 @@ trait Display {
 	/**
 	 * Display a message or any arbitrary text/markup before the field row.
 	 *
-	 * @param callable(array<string, mixed>, \CMB2_Field): void|string $before_row - Callback or string to display before the field.
+	 * @phpstan-param PARAM_CB $before_row
+	 *
+	 * @param callable|string  $before_row - Callback or string to display before the field.
 	 */
 	public function before_row( callable|string $before_row ): static {
 		$this->before_row = $before_row;
