@@ -33,7 +33,7 @@ readonly class Registered {
 	/**
 	 * Are revisions enabled for this field?
 	 *
-	 * @see Field::$show_in_rest
+	 * @see Field::$revisions_enabled
 	 *
 	 * @return bool
 	 */
