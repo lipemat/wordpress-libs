@@ -48,4 +48,45 @@ class Strings {
 		}
 		return $word . 's';
 	}
+
+
+	/**
+	 * CMB2 formats the value of a money field using the current locale.
+	 *
+	 * - Strip the money symbols.
+	 * - Translate the value back to a float.
+	 * - If already a float or int, return it as a float.
+	 *
+	 * @see \CMB2_Sanitize::text_money
+	 *
+	 * @param string|int|float $value - The value with money symbols to unformat.
+	 *
+	 * @return float
+	 */
+	public function unformat_money_value( string|int|float $value ): float {
+		if ( ! \is_string( $value ) ) {
+			return (float) $value;
+		}
+
+		$wp_locale = $this->get_wp_locale();
+		$search = [
+			$wp_locale->number_format['thousands_sep'],
+			$wp_locale->number_format['decimal_point'],
+		];
+		$replace = [ '', '.' ];
+
+		return (float) \str_replace( $search, $replace, $value );
+	}
+
+
+	/**
+	 * Get instance of the `\WP_Locale` class in a way which
+	 * may be verified.
+	 *
+	 * @return \WP_Locale
+	 */
+	protected function get_wp_locale(): \WP_Locale {
+		global $wp_locale;
+		return $wp_locale instanceof \WP_Locale ? $wp_locale : new \WP_Locale();
+	}
 }

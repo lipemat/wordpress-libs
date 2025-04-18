@@ -18,6 +18,24 @@ class StringsTest extends \WP_UnitTestCase {
 	}
 
 
+	public function test_unformat_money_value(): void {
+		$utils = Strings::in();
+		$this->assertSame( 0.0, $utils->unformat_money_value( 0 ) );
+		$this->assertSame( 45.0, $utils->unformat_money_value( '45' ) );
+		$this->assertSame( 45.0, $utils->unformat_money_value( '45.00' ) );
+		$this->assertSame( 45.014, $utils->unformat_money_value( '45.014' ) );
+		$this->assertSame( 45_014.0, $utils->unformat_money_value( '45,014.00' ) );
+		$this->assertSame( 45.014, $utils->unformat_money_value( '45.014,00' ) );
+
+		$backup = clone $GLOBALS['wp_locale'];
+		$GLOBALS['wp_locale']->number_format['thousands_sep'] = '%';
+		$GLOBALS['wp_locale']->number_format['decimal_point'] = '!';
+		$this->assertSame( 45.014, $utils->unformat_money_value( '45!014' ) );
+		$this->assertSame( 45_014.0, $utils->unformat_money_value( '45%014!00' ) );
+		$GLOBALS['wp_locale'] = $backup;
+	}
+
+
 	public static function providePluralize(): array {
 		return [
 			[ 'dog', 'dogs' ],
