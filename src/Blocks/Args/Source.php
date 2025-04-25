@@ -95,10 +95,12 @@ class Source {
 	public function query( string $selector, array $query ): Prop {
 		$this->prop->selector = $selector;
 		$this->prop->source = self::SOURCE_QUERY;
-		\array_walk( $query, function( $prop ) {
-			unset( $prop->selector );
-		} );
-		$this->prop->query = \array_map( fn( $prop ) => $prop->get_args(), $query );
+		$this->prop->query = \array_map( function( $prop ) {
+			$args = $prop->get_args();
+			unset( $args['selector'] );
+			return $args;
+		}, $query );
+
 		return $this->prop;
 	}
 
