@@ -170,15 +170,6 @@ class Zip {
 
 
 	/**
-	 * Check to make sure the request is valid and kill the script if not.
-	 *
-	 * @return void
-	 */
-	protected function validate_request(): void {
-	}
-
-
-	/**
 	 * If the file exists, serve it, and kill the script.
 	 *
 	 * @noinspection PhpUnhandledExceptionInspection
