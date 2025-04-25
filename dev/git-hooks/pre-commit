@@ -81,6 +81,7 @@ function php_lint() {
 if [[ "true" == "$PHP_MULTI_VERSION_SUPPORT" ]]; then
 	php_lint 'php 8.2' &
 	php_lint 'php 8.3' &
+	php_lint 'php 8.4' &
 else
 	php_lint 'php' &
 fi
