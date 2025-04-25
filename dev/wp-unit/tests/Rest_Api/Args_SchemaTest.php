@@ -253,7 +253,11 @@ class Args_SchemaTest extends \WP_UnitTestCase {
 
 	public function test_throws_on_invalid_one_of(): void {
 		$this->expectException( \TypeError::class );
-		$this->expectExceptionMessage( 'Lipe\Lib\Rest_Api\Schema\Type::Lipe\Lib\Rest_Api\Schema\{closure}(): Argument #1 ($prop) must be of type Lipe\Lib\Rest_Api\Schema\Resource_Prop, Lipe\Lib\Rest_Api\Schema\Argument_Prop given' );
+		if ( PHP_VERSION_ID < 80400 ) {
+			$this->expectExceptionMessage( 'Lipe\Lib\Rest_Api\Schema\Type::Lipe\Lib\Rest_Api\Schema\{closure}(): Argument #1 ($prop) must be of type Lipe\Lib\Rest_Api\Schema\Resource_Prop, Lipe\Lib\Rest_Api\Schema\Argument_Prop given' );
+		} else {
+			$this->expectExceptionMessage( 'Lipe\Lib\Rest_Api\Schema\Type::{closure:Lipe\Lib\Rest_Api\Schema\Type::get_args():171}(): Argument #1 ($prop) must be of type Lipe\Lib\Rest_Api\Schema\Resource_Prop, Lipe\Lib\Rest_Api\Schema\Argument_Prop given' );
+		}
 
 		$schema = new Arguments_Schema( [] );
 		$schema->prop( 'test' )
@@ -265,7 +269,11 @@ class Args_SchemaTest extends \WP_UnitTestCase {
 
 	public function test_throws_on_invalid_any_of(): void {
 		$this->expectException( \TypeError::class );
-		$this->expectExceptionMessage( 'Lipe\Lib\Rest_Api\Schema\Type::Lipe\Lib\Rest_Api\Schema\{closure}(): Argument #1 ($prop) must be of type Lipe\Lib\Rest_Api\Schema\Resource_Prop, Lipe\Lib\Rest_Api\Schema\Argument_Prop given' );
+		if ( PHP_VERSION_ID < 80400 ) {
+			$this->expectExceptionMessage( 'Lipe\Lib\Rest_Api\Schema\Type::Lipe\Lib\Rest_Api\Schema\{closure}(): Argument #1 ($prop) must be of type Lipe\Lib\Rest_Api\Schema\Resource_Prop, Lipe\Lib\Rest_Api\Schema\Argument_Prop given' );
+		} else {
+			$this->expectExceptionMessage( 'Lipe\Lib\Rest_Api\Schema\Type::{closure:Lipe\Lib\Rest_Api\Schema\Type::get_args():166}(): Argument #1 ($prop) must be of type Lipe\Lib\Rest_Api\Schema\Resource_Prop, Lipe\Lib\Rest_Api\Schema\Argument_Prop given' );
+		}
 
 		$schema = new Arguments_Schema( [] );
 		$schema->prop( 'test' )
