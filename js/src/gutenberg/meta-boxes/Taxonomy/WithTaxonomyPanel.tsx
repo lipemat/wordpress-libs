@@ -6,7 +6,7 @@ import {useTerms} from '@lipemat/js-boilerplate-gutenberg';
 import {dispatch} from '@wordpress/data';
 
 // @todo Remove this fallback when minimum WP version is 6.6.
-// @ts-ignore
+// @ts-expect-error
 const PluginDocumentSettingPanel = window.wp.editor?.PluginDocumentSettingPanel ?? window.wp.editPost.PluginDocumentSettingPanel;
 
 export type FromPanel = {
@@ -34,8 +34,8 @@ function removeDefaultMetaBox( taxonomy: string ): void {
 		dispatch( 'core/editor' ).removeEditorPanel( sprintf( 'taxonomy-panel-%1$s', taxonomy ) );
 	} else {
 		// @todo Remove `core/edit-post` fallback when minimum WP version is 6.5.
-		// eslint-disable-next-line
-		dispatch( 'core/edit-post' ).removeEditorPanel( sprintf( 'taxonomy-panel-%1$s', taxonomy ) ); // @ts-ignore
+		// @ts-expect-error
+		dispatch( 'core/edit-post' ).removeEditorPanel( sprintf( 'taxonomy-panel-%1$s', taxonomy ) );
 	}
 }
 
