@@ -131,15 +131,11 @@ class Tax_Query implements ClauseRules {
 	 * @return void
 	 */
 	public function flatten( ArgsRules $args_class ): void {
-		if ( $this->flattened ) {
-			return;
-		}
 		$this->extract_nested( $this->clauses, $this );
 		if ( ! property_exists( $args_class, 'tax_query' ) ) {
 			throw new \LogicException( 'The `tax_query` property is required on the class using the `Tax_Query` trait.' );
 		}
 		$args_class->tax_query = \array_merge( $args_class->tax_query ?? [], $this->clauses );
-		$this->flattened = true;
 	}
 
 

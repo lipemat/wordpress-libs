@@ -361,9 +361,6 @@ class Date_Query implements ClauseRules {
 	 * @return void
 	 */
 	public function flatten( ArgsRules $args_class ): void {
-		if ( $this->flattened ) {
-			return;
-		}
 		$this->extract_nested( $this->clauses, $this );
 		if ( ! property_exists( $args_class, 'date_query' ) ) {
 			throw new \LogicException( esc_html__( 'The provided class does not support date queries. Did you use the `Date_Query_Trait`?', 'lipe' ) );
@@ -372,7 +369,6 @@ class Date_Query implements ClauseRules {
 			$args_class->date_query = [];
 		}
 		$args_class->date_query = \array_merge( $args_class->date_query, $this->clauses );
-		$this->flattened = true;
 	}
 
 

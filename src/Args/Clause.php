@@ -41,7 +41,7 @@ trait Clause {
 	 *
 	 * @var bool
 	 */
-	protected bool $flattened = false;
+	protected bool $is_flattended = false;
 
 
 	/**
@@ -125,6 +125,30 @@ trait Clause {
 			throw new \LogicException( esc_html__( 'You cannot switch to a parent clause if you are not already nested.', 'lipe' ) );
 		}
 		return $this->parent_clause;
+	}
+
+
+	/**
+	 * Mark the clause as flattended.
+	 *
+	 * - Used to prevent duplicate clauses when `get_args()` is called multiple times.
+	 *
+	 * @param bool $is_flattended - Whether the clause has been flattended.
+	 *
+	 * @return void
+	 */
+	public function set_is_flattended( bool $is_flattended ): void {
+		$this->is_flattended = $is_flattended;
+	}
+
+
+	/**
+	 * Get the flattended status of the clause.
+	 *
+	 * @return bool
+	 */
+	public function is_flattended(): bool {
+		return $this->is_flattended;
 	}
 
 

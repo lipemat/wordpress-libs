@@ -217,4 +217,39 @@ class Date_QueryTest extends \WP_UnitTestCase {
 			],
 		], $query->query_vars['date_query'] );
 	}
+
+
+	public function test_no_duplicate(): void {
+		$args = new Query_Args( [] );
+		$args->date_query()
+		     ->before( '1200', '01', '20' )
+		     ->inclusive()
+		     ->next_clause()
+		     ->relation( 'OR' )
+		     ->compare( 'BETWEEN' )
+		     ->before_string( '2023-01-14' );
+
+		$expected = [
+			'date_query' => [
+				'relation' => 'OR',
+				[
+					'before'    => [
+						'year'  => '1200',
+						'month' => '01',
+						'day'   => '20',
+					],
+					'inclusive' => true,
+				],
+				[
+					'before'  => '2023-01-14',
+					'compare' => 'BETWEEN',
+				],
+			],
+		];
+
+		$this->assertEquals( $expected, $args->get_args() );
+
+		// Call a second time to ensure no duplicates.
+		$this->assertEquals( $expected, $args->get_args() );
+	}
 }

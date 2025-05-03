@@ -225,7 +225,7 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 		     ->in( [ 'some-key', 'another-key' ], [ '0', 'two', false, 0 ] )
 		     ->advanced( 'REGEX', 'LIKE', 'BINARY' );
 
-		$this->assertSame( [
+		$expected = [
 			'meta_query' => [
 				'relation' => 'OR',
 				[
@@ -237,22 +237,12 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 					'type_key'    => 'BINARY',
 				],
 			],
-		], $args->get_args() );
+		];
+
+		$this->assertSame( $expected, $args->get_args() );
 
 		// Call a second time to ensure no duplicates.
-		$this->assertSame( [
-			'meta_query' => [
-				'relation' => 'OR',
-				[
-					'key'         => [ 'some-key', 'another-key' ],
-					'value'       => [ '0', 'two', false, 0 ],
-					'compare'     => 'IN',
-					'type'        => 'REGEX',
-					'compare_key' => 'LIKE',
-					'type_key'    => 'BINARY',
-				],
-			],
-		], $args->get_args() );
+		$this->assertSame( $expected, $args->get_args() );
 	}
 
 }
