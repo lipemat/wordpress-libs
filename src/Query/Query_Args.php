@@ -43,22 +43,23 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, ArgsRule
 	public const ORDER_ASC  = 'ASC';
 	public const ORDER_DESC = 'DESC';
 
-	public const ORDERBY_NONE          = 'none';
-	public const ORDERBY_NAME          = 'name';
-	public const ORDERBY_AUTHOR        = 'author';
-	public const ORDERBY_DATE          = 'date';
-	public const ORDERBY_TITLE         = 'title';
-	public const ORDERBY_MODIFIED      = 'modified';
-	public const ORDERBY_MENU_ORDER    = 'menu_order';
-	public const ORDERBY_PARENT        = 'parent';
+	public const ORDERBY_AUTHOR        = 'post_author';
+	public const ORDERBY_COMMENT_COUNT = 'comment_count';
+	public const ORDERBY_DATE          = 'post_date';
 	public const ORDERBY_ID            = 'ID';
+	public const ORDERBY_MENU_ORDER    = 'menu_order';
+	public const ORDERBY_META_VALUE    = 'meta_value';
+	public const ORDERBY_MODIFIED      = 'post_modified';
+	public const ORDERBY_NAME          = 'post_name';
+	public const ORDERBY_NAME_IN       = 'post_name__in';
+	public const ORDERBY_NONE          = 'none';
+	public const ORDERBY_PARENT        = 'parent';
+	public const ORDERBY_PARENT_IN     = 'post_parent__in';
+	public const ORDERBY_POST_IN       = 'post__in';
+	public const ORDERBY_POST_TYPE     = 'type';
 	public const ORDERBY_RAND          = 'rand';
 	public const ORDERBY_RELEVANCE     = 'relevance';
-	public const ORDERBY_COMMENT_COUNT = 'comment_count';
-	public const ORDERBY_META_VALUE    = 'meta_value';
-	public const ORDERBY_POST_IN       = 'post__in';
-	public const ORDERBY_NAME_IN       = 'post_name__in';
-	public const ORDERBY_PARENT_IN     = 'post_parent__in';
+	public const ORDERBY_TITLE         = 'post_title';
 
 	public const STATUS_ANY        = 'any';
 	public const STATUS_AUTO_DRAFT = 'auto-draft';
@@ -315,9 +316,9 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, ArgsRule
 	 *
 	 * Default is 'date', except when a search is being performed, when the default is 'relevance'.
 	 *
-	 * @phpstan-var static::ORDERBY*|array<int, static::ORDERBY*>|string|array<int,string>
+	 * @phpstan-var static::ORDERBY_*|array<self::ORDERBY_*, self::ORDER_*>
 	 *
-	 * @var string|array<int,string>
+	 * @var string|array<string,string>
 	 */
 	public $orderby;
 
@@ -573,28 +574,32 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, ArgsRule
 	 *
 	 * Accepted values are:
 	 *
-	 *   - 'none'
-	 *   - 'name'
-	 *   - 'author'
-	 *   - 'date'
-	 *   - 'title'
-	 *   - 'modified'
+	 *   - 'post_name',
+	 *   - 'post_author',
+	 *   - 'post_date',
+	 *   - 'post_title',
+	 *   - 'post_modified',
+	 *   - 'post_parent',
+	 *   - 'post_type',
+	 *   - 'name',
+	 *   - 'author',
+	 *   - 'date',
+	 *   - 'title',
+	 *   - 'modified',
+	 *   - 'parent',
+	 *   - 'type',
+	 *   - 'ID',
 	 *   - 'menu_order'
-	 *   - 'parent'
-	 *   - 'ID'
-	 *   - 'rand'
-	 *   - 'relevance'
-	 *   - 'comment_count'
-	 *   - 'meta_value'
-	 *   - 'post__in'
-	 *   - 'post_name__in'
-	 *   - 'post_parent__in'
 	 *
-	 * @phpstan-param self::ORDERBY*|array<int,self::ORDERBY*> $orderby
-	 * @phpstan-param self::ORDER_*|''                         $order
+	 * @see      \WP_Query::parse_orderby
 	 *
-	 * @param array|string                                     $orderby - Post field to order by.
-	 * @param string                                           $order   - Optional order of the order by.
+	 * @phpstan-param self::ORDERBY*|array<self::ORDERBY_*, self::ORDER_*> $orderby
+	 * @phpstan-param ($orderby is array ? '' : self::ORDER_* )            $order
+	 *
+	 * @formatter:off
+	 * @param array|string  $orderby - Post field to order by or array of fields and their order.
+	 * @param string        $order   - Order of the order by when using a single field.
+	 * @formatter:on
 	 *
 	 * @throws \LogicException - If field ordering by is not available.
 	 *
