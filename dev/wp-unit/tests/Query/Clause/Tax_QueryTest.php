@@ -17,7 +17,7 @@ class Tax_QueryTest extends \WP_UnitTestCase {
 		            ->relation( 'OR' )
 		            ->in( [ 'one', 'two' ], 'post_tag', true, 'slug' );
 
-		$this->assertEquals( [
+		$this->assertSame( [
 			'tax_query' => [
 				'relation' => 'OR',
 				[
@@ -29,14 +29,16 @@ class Tax_QueryTest extends \WP_UnitTestCase {
 			],
 		], $args->get_args() );
 
-		// Reset to prevent double up because `get_args` was called previously.
-		$args->tax_query = [];
+		$args = new Query_Args( [] );
+		$tax = $args->tax_query()
+		            ->relation( 'OR' )
+		            ->in( [ 'one', 'two' ], 'post_tag', true, 'slug' );
 
 		$tax->nested_clause()
 		    ->in( [ 4, 5 ], 'category' )
 		    ->in( [ 6, 7 ], 'post_tag' );
 
-		$this->assertEquals( [
+		$this->assertSame( [
 			'tax_query' => [
 				'relation' => 'OR',
 				[

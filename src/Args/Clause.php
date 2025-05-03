@@ -34,6 +34,15 @@ trait Clause {
 	 */
 	protected ?ClauseRules $parent_clause = null;
 
+	/**
+	 * Whether this clause has already been flattened.
+	 *
+	 * Helps prevent duplicates when `get_args()` is called multiple times.
+	 *
+	 * @var bool
+	 */
+	protected bool $flattened = false;
+
 
 	/**
 	 * Prevent different construct definitions from causing errors.
