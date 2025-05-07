@@ -5,7 +5,6 @@ import styles from './radio.pcss';
 
 const RadioTerms = ( {assigned, setAssigned, terms, tax}: FromPanel ) => {
 	const options = terms.map( term => ( {label: term.name, value: term.id.toString()} ) );
-	// @ts-expect-error -- Will be fixed on next update of types.
 	options.push( {label: tax?.labels.no_item ?? 'None', value: '0'} );
 
 	return (

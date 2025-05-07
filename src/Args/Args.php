@@ -58,7 +58,11 @@ trait Args {
 	 */
 	public function get_args(): array {
 		foreach ( $this->clauses as $clause ) {
+			if ( $clause->is_flattended() ) {
+				continue;
+			}
 			$clause->flatten( $this );
+			$clause->set_is_flattended( true );
 		}
 
 		$args = [];

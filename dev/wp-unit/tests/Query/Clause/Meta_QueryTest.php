@@ -18,7 +18,7 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 		     ->in( [ 'some-key', 'another-key' ], [ '0', 'two', false, 0 ] )
 		     ->advanced( 'REGEX', 'LIKE', 'BINARY' );
 
-		$this->assertEquals( [
+		$this->assertSame( [
 			'meta_query' => [
 				'relation' => 'OR',
 				[
@@ -40,7 +40,7 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 		     ->not_equals( 'some-key', 'one' )
 		     ->advanced( 'CHAR' );
 
-		$this->assertEquals( [
+		$this->assertSame( [
 			'meta_query' => [
 				[
 					'key'     => 'some-key',
@@ -58,7 +58,7 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 		$args->meta_query()
 		     ->exists( 'some-key' );
 
-		$this->assertEquals( [
+		$this->assertSame( [
 			'meta_query' => [
 				[
 					'key'     => 'some-key',
@@ -79,14 +79,14 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 		     ->advanced( 'BINARY' )
 		     ->not_exists( 'another-key' );
 
-		$this->assertEquals( [
+		$this->assertSame( [
 			'meta_query' => [
-				'relation' => 'AND',
 				[
 					'key'     => 'some-key',
 					'value'   => [ 'one', 'two' ],
 					'compare' => 'IN',
 				],
+				'relation' => 'AND',
 				[
 					'relation' => 'OR',
 					[
@@ -121,13 +121,13 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 		     ->parent_clause()
 		     ->not_exists( 'fifth-key' );
 
-		$this->assertEquals( [
+		$this->assertSame( [
 			'meta_query' => [
-				'relation' => 'AND',
 				[
 					'key'     => 'some-key',
 					'compare' => 'EXISTS',
 				],
+				'relation' => 'AND',
 				[
 					'key'     => 'fifth-key',
 					'compare' => 'NOT EXISTS',
@@ -152,8 +152,8 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 						'relation' => 'AND',
 						[
 							'key'     => 'between-key',
-							'compare' => 'BETWEEN',
 							'value'   => [ 1, 2 ],
+							'compare' => 'BETWEEN',
 							'type'    => 'NUMERIC',
 						],
 					],
@@ -176,17 +176,17 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 
 		$args->meta_query()->in( 'new', [ '1' ] )
 		     ->relation( 'OR' );
-		$this->assertEquals( [
+		$this->assertSame( [
 			'meta_query' => [
-				'relation' => 'OR',
 				[
 					'key'   => 'existing',
 					'value' => true,
 				],
+				'relation' => 'OR',
 				[
 					'key'     => 'new',
-					'compare' => 'IN',
 					'value'   => [ '1' ],
+					'compare' => 'IN',
 				],
 			],
 		], $args->get_args() );
@@ -203,17 +203,46 @@ class Meta_QueryTest extends \WP_UnitTestCase {
 		$args->meta_query()->in( 'new', [ '1' ] )
 		     ->relation( 'OR' );
 		$args->merge_query( $query );
-		$this->assertEquals( [
-			'relation' => 'OR',
+		$this->assertSame( [
 			[
 				'key'   => 'previous',
 				'value' => 'on',
 			],
 			[
 				'key'     => 'new',
-				'compare' => 'IN',
 				'value'   => [ '1' ],
+				'compare' => 'IN',
 			],
+			'relation' => 'OR',
 		], $query->query_vars['meta_query'] );
 	}
+
+
+	public function test_no_duplicate(): void {
+		$args = new Query_Args( [] );
+		$args->meta_query()
+		     ->relation( 'OR' )
+		     ->in( [ 'some-key', 'another-key' ], [ '0', 'two', false, 0 ] )
+		     ->advanced( 'REGEX', 'LIKE', 'BINARY' );
+
+		$expected = [
+			'meta_query' => [
+				'relation' => 'OR',
+				[
+					'key'         => [ 'some-key', 'another-key' ],
+					'value'       => [ '0', 'two', false, 0 ],
+					'compare'     => 'IN',
+					'type'        => 'REGEX',
+					'compare_key' => 'LIKE',
+					'type_key'    => 'BINARY',
+				],
+			],
+		];
+
+		$this->assertSame( $expected, $args->get_args() );
+
+		// Call a second time to ensure no duplicates.
+		$this->assertSame( $expected, $args->get_args() );
+	}
+
 }

@@ -337,13 +337,10 @@ class Meta_Query implements ClauseRules {
 	 */
 	public function flatten( ArgsRules $args_class ): void {
 		$this->extract_nested( $this->clauses, $this );
-		if ( ! property_exists( $args_class, 'meta_query' ) ) {
+		if ( ! \property_exists( $args_class, 'meta_query' ) ) {
 			throw new \LogicException( esc_html__( 'The provided class does not support meta queries. Did you use the `Meta_Query_Trait`?', 'lipe' ) );
 		}
-		if ( ! isset( $args_class->meta_query ) ) {
-			$args_class->meta_query = [];
-		}
-		$args_class->meta_query = \array_merge( $args_class->meta_query, $this->clauses );
+		$args_class->meta_query = \array_merge( $args_class->meta_query ?? [], $this->clauses );
 	}
 
 
