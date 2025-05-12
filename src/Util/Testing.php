@@ -21,6 +21,13 @@ class Testing {
 	 */
 	public bool $did_exit = false;
 
+	/**
+	 * An array to store error messages.
+	 *
+	 * @var array<string>
+	 */
+	public array $errors = [];
+
 
 	/**
 	 * Do a clean exit while throwing an exception in test context.
@@ -36,5 +43,19 @@ class Testing {
 			throw new \OutOfBoundsException( 'Exit called in test context.' );
 		}
 		exit;
+	}
+
+
+	/**
+	 * Log an error message while storing it in a variable in test context.
+	 *
+	 * @param string $message The message to log.
+	 */
+	public function error_log( string $message ): void {
+		if ( \defined( 'WP_UNIT_DIR' ) ) {
+			$this->errors[] = $message;
+			return;
+		}
+		\error_log( $message ); //phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 	}
 }
