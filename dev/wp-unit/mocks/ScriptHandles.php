@@ -15,7 +15,7 @@ use Lipe\Lib\Theme\Scripts\Util;
  *
  * @notice Intentially changed the names of some things to test versitiltiy.
  */
-enum Handles: string implements ResourceHandles {
+enum ScriptHandles: string implements ResourceHandles {
 	private const CSS_DIST_PATH = 'css-dist/';
 	private const JS_DIST_PATH  = 'js-dist/';
 
