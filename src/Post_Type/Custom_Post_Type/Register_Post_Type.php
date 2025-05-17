@@ -321,7 +321,7 @@ class Register_Post_Type implements ArgsRules {
 	 *
 	 * To prevent a rewrite, set to false.
 	 *
-	 * Defaults to true, using `$post_type` as slug. To specify rewrite rules,
+	 * Defaults to true, using `$post_type` slug. To specify rewrite rules,
 	 * an array can be passed.
 	 *
 	 * @var bool|array<string,mixed>

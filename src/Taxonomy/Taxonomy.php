@@ -419,6 +419,9 @@ class Taxonomy {
 	 */
 	public function public( bool $is_public ): void {
 		$this->register_args->public = $is_public;
+		if ( ! $is_public && ! isset( $this->register_args->rewrite ) ) {
+			$this->register_args->rewrite = false;
+		}
 	}
 
 
@@ -431,6 +434,9 @@ class Taxonomy {
 	 */
 	public function publicly_queryable( bool $is_queryable ): void {
 		$this->register_args->publicly_queryable = $is_queryable;
+		if ( ! $is_queryable ) {
+			$this->register_args->rewrite = false;
+		}
 	}
 
 

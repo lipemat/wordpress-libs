@@ -48,4 +48,22 @@ class TaxonomyTest extends \WP_UnitTestCase {
 		$tax->capabilities()->assign_terms( 'not-exists' );
 		$this->assertEquals( 'not-exists', $tax->capabilities->get_cap( 'assign_terms' ) );
 	}
+
+
+	public function test_automatic_rewrite_disabled(): void {
+		$tax = new Taxonomy( 'unit-testing', [ 'post' ] );
+		$tax->public( false );
+		$this->assertFalse( $tax->register_args->rewrite );
+
+		$tax = new Taxonomy( 'unit-testing', [ 'post' ] );
+		$tax->publicly_queryable( false );
+		$this->assertFalse( $tax->register_args->rewrite );
+
+		$tax = new Taxonomy( 'unit-testing', [ 'post' ] );
+		$tax->rewrite( true );
+		$tax->public( false );
+		$this->assertTrue( $tax->register_args->rewrite );
+		$tax->publicly_queryable( false );
+		$this->assertFalse( $tax->register_args->rewrite );
+	}
 }

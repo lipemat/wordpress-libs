@@ -55,4 +55,22 @@ class Custom_Post_TypeTest extends \WP_UnitTestCase {
 		$this->assertSame( 'Wp Unit Testing', $generated[ Labels::SINGULAR_NAME ] );
 		$this->assertSame( 'Wp Unit Testings', $generated[ Labels::NAME ] );
 	}
+
+
+	public function test_automatic_rewrite_disabled(): void {
+		$cpt = new Custom_Post_Type( 'wp-unit-testing' );
+		$cpt->public( false );
+		$this->assertFalse( $cpt->register_args->rewrite );
+
+		$cpt = new Custom_Post_Type( 'wp-unit-testing' );
+		$cpt->publicly_queryable( false );
+		$this->assertFalse( $cpt->register_args->rewrite );
+
+		$cpt = new Custom_Post_Type( 'wp-unit-testing' );
+		$cpt->rewrite( true );
+		$cpt->public( false );
+		$this->assertTrue( $cpt->register_args->rewrite );
+		$cpt->publicly_queryable( false );
+		$this->assertFalse( $cpt->register_args->rewrite );
+	}
 }
