@@ -25,7 +25,7 @@ trait Args {
 
 
 	/**
-	 * Optionally pass existing arguments to preload this class.
+	 * Optionally, pass existing arguments to preload this class.
 	 *
 	 * @phpstan-param SHAPE        $existing
 	 *

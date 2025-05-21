@@ -10,7 +10,7 @@ use Lipe\Lib\Util\Cache;
  * Support simple memoization for class methods, which respond
  * with different caches based on the arguments provided.
  *
- * @example public function heavy( $text ) {
+ * @example public function heavy ($text) {
  *              return $this->memoize(function ($text) {
  *                   echo 'called' . "\n";
  *                    return $text;
@@ -23,22 +23,22 @@ use Lipe\Lib\Util\Cache;
  */
 trait Memoize {
 	/**
-	 * The local cache to store the results of memoized calls.
-	 *
-	 * @var array<string, mixed>
-	 */
-	protected array $memoize_cache = [];
-
-	/**
 	 * The static cache to store the results of static calls.
 	 *
 	 * @var array<string, mixed>
 	 */
 	protected static array $static_cache = [];
 
+	/**
+	 * The local cache to store the results of memoized calls.
+	 *
+	 * @var array<string, mixed>
+	 */
+	protected array $memoize_cache = [];
+
 
 	/**
-	 * Pass me a callback, a method identifier, and some arguments and
+	 * Pass me a callback, a method identifier, and some arguments, and
 	 * I will return the same result every time the arguments are the same.
 	 *
 	 * If the arguments change, I will return a result matching the change.
@@ -108,7 +108,7 @@ trait Memoize {
 	 * @return mixed
 	 */
 	public function memoize( callable $callback, string $identifier, ...$args ): mixed {
-		// Closure use their object id to differentiate.
+		// Closure uses their object id to differentiate.
 		$cache_args = Arrays::in()->map_recursive( fn( $arg ) => $arg instanceof \Closure ? 'closure-' . \spl_object_id( $arg ) : $arg, $args );
 
 		$key = $this->get_cache_key( $identifier, $cache_args );
@@ -156,10 +156,10 @@ trait Memoize {
 	 *
 	 * @see Memoize::clear_memoize_cache()
 	 *
-	 * @param string       $identifier - Identifier used with original method to store value.
-	 * @param array<mixed> ...$args    - Arguments passed to original method when storing value.
+	 * @param string       $identifier - Identifier used with the original method to store value.
+	 * @param array<mixed> ...$args    - Arguments passed to the original method when storing value.
 	 *
-	 * @return bool - Result of deleting the cache from external object cache.
+	 * @return bool - Result of deleting the cache from an external object cache.
 	 */
 	public function clear_single_item( string $identifier, ...$args ): bool {
 		$cache_key = $this->get_cache_key( $identifier, $args );

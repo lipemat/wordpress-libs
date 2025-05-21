@@ -169,7 +169,7 @@ class Prop implements ArgsRules {
 
 		if ( ! $is_correct_type ) {
 			// translators: %s is the type of the attribute.
-			throw new \InvalidArgumentException( esc_html( \sprintf( __( 'Default value must be of type %s.', 'lipe' ), $this->type ) ) );
+			throw new \InvalidArgumentException( esc_html( \sprintf( __( 'The default value must be of type %s.', 'lipe' ), $this->type ) ) );
 		}
 
 		$this->default = $value;

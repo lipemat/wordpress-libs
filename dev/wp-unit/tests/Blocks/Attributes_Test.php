@@ -12,6 +12,32 @@ use PHPUnit\Framework\Attributes\DataProvider;
  *
  */
 final class Attributes_Test extends \WP_UnitTestCase {
+
+	public function test_existing(): void {
+		$attributes = new Attributes( [
+			'url' => [
+				'type'    => Prop::TYPE_STRING,
+				'default' => 'https://example.com',
+			],
+			'alt' => [
+				'type'    => Prop::TYPE_STRING,
+				'default' => 'Example',
+			],
+		] );
+
+		$this->assertSame( [
+			'url' => [
+				'type'    => 'string',
+				'default' => 'https://example.com',
+			],
+			'alt' => [
+				'type'    => 'string',
+				'default' => 'Example',
+			],
+		], $attributes->get_args() );
+	}
+
+
 	public function test_get_args(): void {
 		$attributes = new Attributes( [] );
 		$this->assertEmpty( $attributes->get_args() );
@@ -59,7 +85,7 @@ final class Attributes_Test extends \WP_UnitTestCase {
 	#[DataProvider( 'provideDefaultFails' )]
 	public function test_invalid_default( string $type, mixed $value ): void {
 		$this->expectException( \InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'Default value must be of type ' . $type . '.' );
+		$this->expectExceptionMessage( 'The default value must be of type ' . $type . '.' );
 
 		$attributes = new Attributes( [] );
 		$attributes->prop( 'url' )

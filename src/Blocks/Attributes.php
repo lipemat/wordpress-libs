@@ -36,14 +36,16 @@ class Attributes implements ArgsRules {
 
 
 	/**
-	 * Optionally pass existing arguments to preload this class.
+	 * Optionally, pass existing arguments to preload this class.
 	 *
 	 * @phpstan-param array<ATTR_NAMES, ATTR_SHAPE> $existing
 	 *
 	 * @param array<string, mixed>                  $existing - Existing arguments to preload.
 	 */
 	public function __construct( array $existing ) {
-		$this->load_array_into_properties( $existing );
+		foreach ( $existing as $name => $args ) {
+			$this->props[ $name ] = new Prop( $args );
+		}
 	}
 
 
