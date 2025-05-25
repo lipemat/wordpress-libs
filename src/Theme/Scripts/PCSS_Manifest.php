@@ -15,6 +15,13 @@ use Lipe\Lib\Theme\Resources;
 class PCSS_Manifest implements Manifest {
 	public const HANDLE = 'lipe/project/theme/scripts/pcss-manifest';
 
+	/**
+	 * Cache of the manifest file.
+	 *
+	 * @var array<string,string>
+	 */
+	protected static array $manifest = [];
+
 
 	/**
 	 * Instantiate the PCSS manifest.
@@ -60,15 +67,14 @@ class PCSS_Manifest implements Manifest {
 	 * @return array<string,string>
 	 */
 	protected function get_json(): array {
-		static $manifest = [];
-		if ( [] === $manifest ) {
+		if ( [] === static::$manifest ) {
 			$enum = $this->handle::from( self::HANDLE );
 			try {
-				$manifest = (array) \json_decode( (string) \file_get_contents( $enum->dist_path() . $enum->file() ), true, 512, JSON_THROW_ON_ERROR );
+				static::$manifest = (array) \json_decode( (string) \file_get_contents( $enum->dist_path() . $enum->file() ), true, 512, JSON_THROW_ON_ERROR );
 			} catch ( \JsonException ) {
 				throw new \RuntimeException( 'The PCSS manifest.json file is not available. You probably need to run `yarn dist`!' );
 			}
 		}
-		return $manifest;
+		return static::$manifest;
 	}
 }
