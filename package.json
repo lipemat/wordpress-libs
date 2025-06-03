@@ -25,7 +25,7 @@
   "devDependencies": {
     "@lipemat/eslint-config": "^4.0.3",
     "@lipemat/js-boilerplate": "^10.12.0",
-    "@lipemat/js-boilerplate-gutenberg": "^4.1.1",
+    "@lipemat/js-boilerplate-gutenberg": "^4.1.2",
     "@lipemat/stylelint-config": "^2.2.2",
     "@types/jquery": "^3.5.30",
     "@types/lipemat__js-boilerplate": "github:lipemat/types-js-boilerplate#semver:^3",
