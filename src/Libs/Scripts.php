@@ -42,7 +42,9 @@ class Scripts {
 		$dir = plugin_dir_url( \dirname( __DIR__ ) ) . 'js/dist/';
 		if ( SCRIPT_DEBUG && $this->is_webpack_running() ) {
 			$dir = set_url_scheme( 'https://starting-point.loc:3000/js/dist/' );
-			wp_enqueue_script( 'lipe/lib/scripts/runtime', $dir . 'runtime.js', [], $this->get_version(), true );
+			if ( doing_action( 'admin_enqueue_scripts' ) ) {
+				wp_enqueue_script( 'lipe/lib/scripts/runtime', $dir . 'runtime.js', [], $this->get_version(), true );
+			}
 		}
 
 		wp_enqueue_script( $script->value, "{$dir}{$script->file()}.js", $script->dependencies(), $this->get_version(), [
