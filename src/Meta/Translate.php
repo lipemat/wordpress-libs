@@ -32,16 +32,6 @@ trait Translate {
 
 
 	/**
-	 * Get a field, which was registered with CMB2 by an id.
-	 *
-	 * @param ?string $field_id - The field id.
-	 *
-	 * @return ?Registered
-	 */
-	abstract protected function get_registered( ?string $field_id ): ?Registered;
-
-
-	/**
 	 * Does this meta type and field support using object term taxonomy relationships?
 	 *
 	 * - Only `post` meta type is currently supported.
@@ -66,6 +56,16 @@ trait Translate {
 
 		return MetaType::POST === $meta_type || BoxType::POST === $meta_type;
 	}
+
+
+	/**
+	 * Get a field, which was registered with CMB2 by an id.
+	 *
+	 * @param ?string $field_id - The field id.
+	 *
+	 * @return ?Registered
+	 */
+	abstract protected function get_registered( ?string $field_id ): ?Registered;
 
 
 	/**
@@ -566,7 +566,7 @@ trait Translate {
 				return null;
 			}
 			$term = get_term_by( 'slug', $value, $field->variation->get_taxonomy() );
-			if ( false !== $term && \is_a( $term, \WP_Term::class ) ) {
+			if ( $term instanceof \WP_Term ) {
 				return $term->term_id;
 			}
 			return null;
