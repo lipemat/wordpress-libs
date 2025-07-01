@@ -428,7 +428,7 @@ class GroupTest extends \WP_Test_REST_TestCase {
 		$group->repeatable( false );
 		do_action( 'cmb2_init' );
 
-		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_conflicting_taxonomies', 'Fields: "ruf/first, ruf/last" are conflicting on the taxonomy: category for object type: page. You may only have taxonomy field per an object. (This message was added in version 4.10.0.)' );
+		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_conflicting_taxonomies', 'Fields: "ruf/first, ruf/last" are conflicting on the taxonomy: category for the object type: page. You may only have one taxonomy field per an object. (This message was added in version 4.10.0.)' );
 		$group->field( 'ruf/last', '' )->taxonomy_select_hierarchical( 'category' );
 		do_action( 'cmb2_init' );
 

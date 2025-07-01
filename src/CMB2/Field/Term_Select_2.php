@@ -7,7 +7,6 @@ use Lipe\Lib\CMB2\Field\Term_Select_2\Select_2_Field;
 use Lipe\Lib\Libs\Scripts;
 use Lipe\Lib\Libs\Scripts\ScriptHandles;
 use Lipe\Lib\Libs\Scripts\StyleHandles;
-use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Taxonomy\Get_Terms;
 use Lipe\Lib\Traits\Memoize;
@@ -21,7 +20,6 @@ class Term_Select_2 {
 	use Singleton;
 
 	public const GET_TERMS        = 'lipe/lib/cmb2/field-types/term-select-2/ajax';
-	public const CREATE_NEW_TERMS = 'create_terms';
 	public const NONCE            = 'lipe/lib/cmb2/field/term-select-2/nonce';
 
 	/**
@@ -83,7 +81,7 @@ class Term_Select_2 {
 			wp_send_json_error( $terms->get_error_message() );
 		}
 		if ( \is_string( $terms ) ) {
-			wp_send_json_error( 'Failed retrieving terms.' );
+			wp_send_json_error( 'Failed to retrieve terms.' );
 		}
 
 		$formatted = \array_map( fn( \WP_Term $term ) => [
@@ -137,7 +135,7 @@ class Term_Select_2 {
 	/**
 	 * Return the list of options, with selected options at the top preserving their order.
 	 *
-	 * Also handles the removal of selected options which no longer exist in the options array.
+	 * Also handles the removal of selected options which no longer exist in the option array.
 	 *
 	 * @param \CMB2_Types       $types - The field type object.
 	 * @param array<int|string> $value - The selected values.
@@ -176,7 +174,7 @@ class Term_Select_2 {
 
 
 	/**
-	 * Based on the passed options assign terms to the object.
+	 * Based on the passed options, assign terms to the object.
 	 *
 	 * @param mixed                $filtered   - The filtered value. (probably null).
 	 * @param mixed                $meta_value - The value of the field.

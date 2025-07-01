@@ -7,9 +7,8 @@ namespace Lipe\Lib\Traits;
  * Use a class as a singleton.
  */
 trait Singleton {
-
 	/**
-	 * Instance of this class for use as singleton
+	 * Instance of this class for use as a singleton.
 	 *
 	 * @var static
 	 */
@@ -31,7 +30,7 @@ trait Singleton {
 	public static function init(): void {
 		static::$instance = static::instance();
 		// @phpstan-ignore-next-line -- Some contexts will always return true/false.
-		if ( method_exists( static::$instance, 'hook' ) ) {
+		if ( \method_exists( static::$instance, 'hook' ) ) {
 			static::$instance->hook();
 		}
 		static::$initialized = true;

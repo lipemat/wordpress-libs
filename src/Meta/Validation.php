@@ -3,8 +3,6 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Meta;
 
-use Lipe\Lib\CMB2\Box;
-use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\CMB2\Field\Term_Select_2;
 use Lipe\Lib\CMB2\Field\Term_Select_2\Select_2_Field;
 use Lipe\Lib\CMB2\Field\Type;
@@ -45,7 +43,7 @@ class Validation {
 
 
 	/**
-	 * Check to make sure we have only registered on taxonomy field per object type.
+	 * Check to make sure we have only registered on the taxonomy field per object type.
 	 *
 	 * Multiple taxonomy fields on the same object type will cause unexpected assigning of object terms.
 	 *
@@ -79,7 +77,7 @@ class Validation {
 				if ( \count( $tax_fields ) > 1 ) {
 					_doing_it_wrong( __METHOD__, wp_kses_post( \sprintf(
 					/* translators: {field ids} {taxonomy} {post type} */
-						__( 'Fields: "%1$s" are conflicting on the taxonomy: %2$s for object type: %3$s. You may only have taxonomy field per an object.', 'lipe' ),
+						__( 'Fields: "%1$s" are conflicting on the taxonomy: %2$s for the object type: %3$s. You may only have one taxonomy field per an object.', 'lipe' ),
 						\implode( ', ', \array_map( fn( Registered $field ) => $field->get_id(), $tax_fields ) ),
 						$taxonomy,
 						$object_type
