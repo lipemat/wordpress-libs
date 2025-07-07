@@ -3,7 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
-use Lipe\Lib\Traits\Singleton;
+use Lipe\Lib\Libs\Container;
+use Lipe\Lib\Libs\Container\Instance;
 
 /**
  * Utility class for testing purposes.
@@ -12,7 +13,10 @@ use Lipe\Lib\Traits\Singleton;
  * @since  5.0.0
  */
 class Testing {
-	use Singleton;
+	/**
+	 * @use Instance<Testing>
+	 */
+	use Instance;
 
 	/**
 	 * Has the exit method been called?
@@ -37,11 +41,11 @@ class Testing {
 
 
 	/**
-	 * Do a clean exit while throwing an exception in test context.
+	 * Do a clean exit while throwing an exception within a test context.
 	 *
 	 * Like `wp_die()` but does not output any content.
 	 *
-	 * @throws \OutOfBoundsException -- If called in test context.
+	 * @throws \OutOfBoundsException -- If called within a test context.
 	 * @phpstan-return  never
 	 */
 	public function exit(): void {
@@ -54,7 +58,9 @@ class Testing {
 
 
 	/**
-	 * Log an error message while storing it in a variable in test context.
+	 * Log an error message while storing it in a variable within a test context.
+	 *
+	 * @noinspection ForgottenDebugOutputInspection
 	 *
 	 * @param string $message The message to log.
 	 */
