@@ -28,6 +28,13 @@ class Testing {
 	 */
 	public array $errors = [];
 
+	/**
+	 * Are we running in WP_DEBUG mode?
+	 *
+	 * @var bool
+	 */
+	public bool $is_wp_debug = WP_DEBUG;
+
 
 	/**
 	 * Do a clean exit while throwing an exception in test context.
@@ -57,5 +64,26 @@ class Testing {
 			return;
 		}
 		\error_log( $message ); //phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+	}
+
+
+	/**
+	 * Check if WP_DEBUG is enabled in a way that may be overridden
+	 * during unit tests.
+	 *
+	 * @return bool
+	 */
+	public function is_wp_debug(): bool {
+		return $this->is_wp_debug;
+	}
+
+
+	/**
+	 * Get the instance of this class.
+	 *
+	 * @return Testing
+	 */
+	public static function in(): Testing {
+		return Container::instance()->get( __CLASS__ );
 	}
 }
