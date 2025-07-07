@@ -7,6 +7,7 @@ declare( strict_types=1 );
  */
 
 use Lipe\Lib\Api\Route;
+use Lipe\Lib\Libs\Container;
 use Lipe\Lib\Meta\Repo;
 
 /**
@@ -77,4 +78,6 @@ function tests_reset_container(): void {
 	set_private_property( Repo::in(), 'registered', [] );
 	set_private_property( Route::in(), 'routes', [] );
 	Repo::in()->clear_memoize_cache();
+
+	Container::reset();
 }

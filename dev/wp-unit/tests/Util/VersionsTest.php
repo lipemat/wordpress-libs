@@ -9,7 +9,7 @@ class VersionsTest extends \WP_UnitTestCase {
 	public $run = 0;
 
 
-	public function testOnce() {
+	public function testOnce(): void {
 		Versions::in()->once( self::KEY, function() {
 			$this->run ++;
 		} );
