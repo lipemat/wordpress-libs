@@ -138,20 +138,28 @@ class Translate_Test extends \WP_UnitTestCase {
 		$box = new Box( __METHOD__, [ 'post' ], 'Test Taxonomy Field' );
 		$box->field( 'taxonomy/sr/1', 'SR 1' )
 		    ->taxonomy_select( 'category' );
+		$box->field( 'taxonomy/sr/2', 'SR 2' )
+		    ->taxonomy_select( 'post_tag' )
+		    ->store_terms_in_meta( true );
 		do_action( 'cmb2_init' );
 
 		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( MetaType::POST, $get_field( 'taxonomy/sr/1' ) ) );
 		$this->assertFalse( Repo::in()->supports_taxonomy_relationships( MetaType::COMMENT, $get_field( 'taxonomy/sr/1' ) ) );
+		$this->assertFalse( Repo::in()->supports_taxonomy_relationships( MetaType::POST, $get_field( 'taxonomy/sr/2' ) ) );
 
 		// Add a second taxonomy field.
 		$srg = $box->group( 'taxonomy/sr/group', 'SR Group' );
 		$srg->field( 'taxonomy/sr/group/1', 'SR Group 1' )
 		    ->taxonomy_select( 'category' );
+		$srg->field( 'taxonomy/sr/group/2', 'SR Group 2' )
+		    ->taxonomy_select( 'post_tag' )
+		    ->store_terms_in_meta( true );
 		$this->expectDoingItWrong( 'Lipe\Lib\Meta\Validation::warn_for_conflicting_taxonomies', 'Fields: "taxonomy/sr/1, taxonomy/sr/group/1" are conflicting on the taxonomy: category for the object type: post. You may only have one taxonomy field per an object. (This message was added in version 4.10.0.)' );
 		do_action( 'cmb2_init' );
 
 		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( MetaType::POST, $get_field( 'taxonomy/sr/1' ) ) );
 		$this->assertTrue( Repo::in()->supports_taxonomy_relationships( MetaType::POST, $get_field( 'taxonomy/sr/group/1' ) ) );
+		$this->assertFalse( Repo::in()->supports_taxonomy_relationships( MetaType::POST, $get_field( 'taxonomy/sr/group/2' ) ) );
 
 		// Change one field to text.
 		$box->field( 'taxonomy/sr/1', 'SR 1' )->text();

@@ -32,7 +32,7 @@ trait Translate {
 
 
 	/**
-	 * Does this meta type and field support using object term taxonomy relationships?
+	 * Do these meta type and field support using object term taxonomy relationships?
 	 *
 	 * - Only `post` meta type is currently supported.
 	 * - Only taxonomy type fields are supported.
@@ -50,6 +50,13 @@ trait Translate {
 		if ( Type::TERM_SELECT_2 === $field->get_type() ) {
 			$registered = Term_Select_2::in()->get_select_2_fields( $field->get_id() );
 			if ( $registered instanceof Select_2_Field && ! $registered->assign_terms ) {
+				return false;
+			}
+		}
+
+		if ( $field->variation instanceof Taxonomy ) {
+			$use_meta = $field->get_config()['store_terms_in_meta'] ?? false;
+			if ( true === $use_meta ) {
 				return false;
 			}
 		}

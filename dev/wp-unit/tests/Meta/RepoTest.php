@@ -9,9 +9,6 @@ namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\CMB2\Box;
 use Lipe\Lib\CMB2\User_Box;
-use Lipe\Project\Post_Types\Post;
-use Lipe\Project\Taxonomies\School;
-use Lipe\Project\User\User;
 use mocks\Post_Mock;
 use mocks\User_Mock;
 
@@ -48,7 +45,31 @@ class RepoTest extends \WP_UnitTestCase {
 		$o = User_Mock::factory( $user_id );
 		$o->update_meta( 'tt', [ $cat_id ] );
 
+		$this->assertSame( [ $cat_id ], get_user_meta( $user_id, 'tt', true ) );
 		$this->assertEquals( $o->get_meta( 'tt' )[0]->term_id, $cat_id );
+	}
+
+
+	public function test_store_terms_in_meta(): void {
+		$box = new Box( 'f', [ 'post' ], null );
+		$box->field( 't', 'tt' )
+		    ->taxonomy_multicheck( 'category' )
+		    ->store_terms_in_meta();
+		do_action( 'cmb2_init' );
+
+		$post = Post_Mock::factory( self::factory()->post->create_and_get() );
+		$term = self::factory()->term->create_and_get( [ 'taxonomy' => 'category' ] );
+
+		update_post_meta( $post->ID, 't', [ $term->term_id ] );
+
+		$this->assertEquals( [ $term ], $post->get_meta( 't' ) );
+		delete_post_meta( $post->ID, 't' );
+		$this->assertEmpty( $post->get_meta( 't' ) );
+
+		$post['t'] = [ $term->term_id ];
+		$this->assertEquals( $term, $post->get_meta( 't' )[0] );
+		$this->assertEquals( $term, $post['t'][0] );
+		$this->assertEquals( [ $term->term_id ], get_post_meta( $post->get_id(), 't', true ) );
 	}
 
 

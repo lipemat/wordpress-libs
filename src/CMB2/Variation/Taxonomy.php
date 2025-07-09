@@ -3,8 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2\Variation;
 
-use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\CMB2\BoxType;
+use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\Meta\DataType;
 use Lipe\Lib\Taxonomy\Get_Terms;
 
@@ -64,16 +64,35 @@ class Taxonomy extends Field {
 	 * Save terms assigned to users as meta instead of the default
 	 * object terms system.
 	 *
+	 * @deprecated In favor of `store_terms_in_meta` which applies to both
+	 *             posts and users.
+	 *
 	 * Prevent conflicts with User ID and Post ID in the same
 	 * `term_relationship` table.
 	 *
 	 * @notice Required lipemat version of CMB2 to support this argument.
 	 *
-	 * @see    \CMB2_Type_Taxonomy_Base::get_object_terms
+	 * * @see    \CMB2_Type_Taxonomy_Base::get_object_terms
+	 * * @see    \CMB2_Sanitize::taxonomy
 	 *
 	 * @var bool
 	 */
 	protected bool $store_user_terms_in_meta = true;
+
+	/**
+	 * Save terms assigned to posts as meta instead of the default
+	 * object terms system.
+	 *
+	 * Prevent conflicts with other fields already using the object terms system.
+	 *
+	 * @notice Required lipemat version of CMB2 to support this argument.
+	 *
+	 * * @see    \CMB2_Type_Taxonomy_Base::get_object_terms
+	 * * @see    \CMB2_Sanitize::taxonomy
+	 *
+	 * @var bool
+	 */
+	protected bool $store_terms_in_meta;
 
 
 	/**
@@ -153,6 +172,9 @@ class Taxonomy extends Field {
 	 * Save terms assigned to users as meta instead of the default
 	 * object terms system.
 	 *
+	 * @deprecated In favor of `store_terms_in_meta` which applies to both
+	 *             posts and users.
+	 *
 	 * Prevent conflicts with User ID and Post ID in the same
 	 * `term_relationship` table.
 	 *
@@ -170,6 +192,28 @@ class Taxonomy extends Field {
 			_doing_it_wrong( __METHOD__, 'Storing user terms in meta only applies to taxonomy fields registered on users.', '3.14.0' );
 		}
 		$this->store_user_terms_in_meta = $use_meta;
+
+		return $this;
+	}
+
+
+	/**
+	 * Save terms assigned to posts as meta instead of the default
+	 * object terms system.
+	 *
+	 * Prevent conflicts with other fields already using the object terms system.
+	 *
+	 * @since  5.6.0
+	 *
+	 * @see    \CMB2_Sanitize::taxonomy
+	 * @see    \CMB2_Type_Taxonomy_Base::get_object_terms
+	 *
+	 * @param bool $use_meta - Whether to use meta or not.
+	 *
+	 * @return $this
+	 */
+	public function store_terms_in_meta( bool $use_meta = true ): Taxonomy {
+		$this->store_terms_in_meta = $use_meta;
 
 		return $this;
 	}
