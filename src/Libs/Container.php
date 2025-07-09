@@ -4,9 +4,6 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Libs;
 
-use Lipe\Lib\Util;
-use Lipe\Lib\Util\Logger;
-
 /**
  * Container for holding instances of various classes.
  *
@@ -15,54 +12,95 @@ use Lipe\Lib\Util\Logger;
  *
  * @author Mat Lipe
  * @since  5.6.0
- *
- * @phpstan-type SERVICES array{
- *     "Lipe\Lib\Util\Logger\Handles": Logger\Handles,
- *     "Lipe\Lib\Util\Testing": Util\Testing,
- * }
- *
  */
 final class Container {
 	/**
 	 * The singleton instance of the container.
 	 *
-	 * @var self|null
+	 * @var ?self
 	 */
 	private static ?Container $instance = null;
 
 	/**
 	 * List of services available in the container.
 	 *
-	 * @var array
-	 * @phpstan-var array<key-of<SERVICES>, \Closure(): SERVICES[key-of<SERVICES>]| SERVICES[key-of<SERVICES>]>
+	 * @var array<class-string, mixed>
 	 */
-	private array $services;
-
+	private array $services = [];
 
 	/**
-	 * Constructor to load services.
+	 * Track services that have been initialized.
+	 *
+	 * @see Hooks::init()
+	 *
+	 * @var array<class-string, bool>
 	 */
-	private function __construct() {
-		$this->services[ Logger\Handles::class ] = fn() => new Logger\Handles();
-		$this->services[ Util\Testing::class ] = fn() => new Util\Testing();
-	}
+	private array $intialized = [];
 
 
 	/**
 	 * Get key from container
 	 *
-	 * @template TKey of key-of<SERVICES>
-	 * @phpstan-param TKey $id
+	 * @template T of object
+	 * @phpstan-param class-string<T> $id
 	 *
-	 * @param string       $id The identifier for the service.
+	 * @formatter:off
 	 *
-	 * @phpstan-return SERVICES[TKey]
+	 * @param string $id - The identifier for the service.
+	 *
+	 * @formatter:on
+	 *
+	 * @phpstan-return T|null
 	 */
-	public function get( string $id ): mixed {
-		if ( $this->services[ $id ] instanceof \Closure ) {
-			$this->services[ $id ] = $this->services[ $id ]();
-		}
-		return $this->services[ $id ];
+	public function get( string $id ): ?object {
+		return $this->services[ $id ] ?? null;
+	}
+
+
+	/**
+	 * Set a service in the container.
+	 *
+	 * @template T of object
+	 * @phpstan-param class-string<T> $id
+	 * @phpstan-param T               $class_instance
+	 *
+	 * @formatter:off
+	 * @param string $id             - The identifier for the service to set.
+	 * @param object $class_instance - The value to set for the service.
+	 * @formatter:on
+	 *
+	 * @return void
+	 */
+	public function set( string $id, object $class_instance ): void {
+		$this->services[ $id ] = $class_instance;
+	}
+
+
+	/**
+	 * Mark a service as initialized.
+	 *
+	 * @phpstan-param class-string $id
+	 *
+	 * @param string               $id - The identifier for the service to mark as initialized.
+	 *
+	 * @return void
+	 */
+	public function set_initialized( string $id ): void {
+		$this->intialized[ $id ] = true;
+	}
+
+
+	/**
+	 * Check if a service has been initialized.
+	 *
+	 * @phpstan-param class-string $id
+	 *
+	 * @param string               $id - The identifier for the service to check.
+	 *
+	 * @return bool - True if the service is initialized, false otherwise.
+	 */
+	public function is_initialized( string $id ): bool {
+		return isset( $this->intialized[ $id ] ) && $this->intialized[ $id ];
 	}
 
 

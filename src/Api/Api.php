@@ -4,14 +4,15 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Api;
 
-use Lipe\Lib\Traits\Singleton;
+use Lipe\Lib\Libs\Container\Hooks;
+use Lipe\Lib\Libs\Container\Instance;
 use Lipe\Lib\Traits\Version;
 use Lipe\Lib\Util\Arrays;
 
 /**
  * Simple API endpoint.
  *
- * While you could reverse engineer this class for some really creative implementations,
+ * While you could reversely engineer this class for some really creative implementations,
  * in PHP you really only need to use the 2 helper methods.
  * 1. `get_action`
  * 2. `get_url`
@@ -21,7 +22,8 @@ use Lipe\Lib\Util\Arrays;
  *          Api::in()->get_url('space', ['first' => 'FY', 'second' => 'TY']);
  */
 class Api {
-	use Singleton;
+	use Instance;
+	use Hooks;
 	use Version;
 
 	public const NAME = 'lipe/lib/api/api';
@@ -120,10 +122,10 @@ class Api {
 
 
 	/**
-	 * Get the url to root endpoint of this api (not route specific).
+	 * Get the url to the root endpoint of this api (not route-specific).
 	 *
 	 * Could be used independently to pass to a JS APP if you have a lot
-	 * of endpoints and don't want provided a full URL From `get_url`.
+	 * of endpoints and don't want to provide a full URL From `get_url`.
 	 *
 	 * @return string
 	 */

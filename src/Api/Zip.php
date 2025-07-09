@@ -4,7 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Api;
 
-use Lipe\Lib\Traits\Singleton;
+use Lipe\Lib\Libs\Container\Hooks;
+use Lipe\Lib\Libs\Container\Instance;
 use Lipe\Lib\Util\Files;
 use Lipe\Lib\Util\Testing;
 
@@ -24,7 +25,8 @@ use Lipe\Lib\Util\Testing;
  * ```
  */
 class Zip {
-	use Singleton {
+	use Instance;
+	use Hooks {
 		init as protected singleton_init;
 	}
 
@@ -246,7 +248,7 @@ class Zip {
 
 
 	/**
-	 * We need to load the api if we are loading this class
+	 * We need to load the api if we are loading this class.
 	 *
 	 * @return void
 	 */

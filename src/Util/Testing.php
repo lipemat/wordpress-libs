@@ -3,7 +3,6 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
-use Lipe\Lib\Libs\Container;
 use Lipe\Lib\Libs\Container\Instance;
 
 /**
@@ -13,9 +12,6 @@ use Lipe\Lib\Libs\Container\Instance;
  * @since  5.0.0
  */
 class Testing {
-	/**
-	 * @use Instance<Testing>
-	 */
 	use Instance;
 
 	/**
@@ -81,15 +77,5 @@ class Testing {
 	 */
 	public function is_wp_debug(): bool {
 		return $this->is_wp_debug;
-	}
-
-
-	/**
-	 * Get the instance of this class.
-	 *
-	 * @return Testing
-	 */
-	public static function in(): Testing {
-		return Container::instance()->get( __CLASS__ );
 	}
 }

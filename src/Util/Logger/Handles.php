@@ -3,7 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Util\Logger;
 
-use Lipe\Lib\Libs\Container;
+use Lipe\Lib\Libs\Container\Instance;
 
 /**
  * Registered handles for the Logger.
@@ -13,6 +13,8 @@ use Lipe\Lib\Libs\Container;
  *
  */
 class Handles {
+	use Instance;
+
 	/**
 	 * The array of registered handles.
 	 *
@@ -74,13 +76,5 @@ class Handles {
 		if ( isset( $this->handles[ $name ] ) ) {
 			unset( $this->handles[ $name ] );
 		}
-	}
-
-
-	/**
-	 * Get an instance of the Handles class.
-	 */
-	public static function in(): Handles {
-		return Container::instance()->get( __CLASS__ );
 	}
 }

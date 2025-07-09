@@ -4,6 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Api;
 
+use Lipe\Lib\Libs\Container;
+
 /**
  * @author Mat Lipe
  * @since  June 2024
@@ -145,11 +147,11 @@ class ZipTest extends \WP_UnitTestCase {
 
 
 	public function test_init(): void {
-		$this->assertFalse( get_private_property( Api::in(), 'initialized' ) );
-		$this->assertFalse( get_private_property( Zip::in(), 'initialized' ) );
+		$this->assertFalse( Container::instance()->is_initialized( Api::class ) );
+		$this->assertFalse( Container::instance()->is_initialized( Zip::class ) );
 		Zip::init();
-		$this->assertTrue( get_private_property( Api::in(), 'initialized' ) );
-		$this->assertTrue( get_private_property( Zip::in(), 'initialized' ) );
+		$this->assertTrue( Container::instance()->is_initialized( Api::class ) );
+		$this->assertTrue( Container::instance()->is_initialized( Zip::class ) );
 	}
 
 
