@@ -1,6 +1,6 @@
 {
   "name": "@lipemat/wordpress-libs",
-  "version": "11.2.0",
+  "version": "11.3.0",
   "description": "WP-Libs JS.",
   "author": "Mat Lipe <mat@onpointplugins.com>",
   "license": "UNLICENSED",
@@ -23,11 +23,11 @@
     "key": "D:/xampp/apache/certs/starting-point.loc.key"
   },
   "devDependencies": {
-    "@lipemat/eslint-config": "^4.0.3",
-    "@lipemat/js-boilerplate": "^10.12.0",
+    "@lipemat/eslint-config": "^4.0.4",
+    "@lipemat/js-boilerplate": "^10.13.0",
     "@lipemat/js-boilerplate-gutenberg": "^4.1.2",
     "@lipemat/stylelint-config": "^2.2.2",
-    "@types/jquery": "^3.5.30",
+    "@types/jquery": "^3",
     "@types/lipemat__js-boilerplate": "github:lipemat/types-js-boilerplate#semver:^3",
     "@types/node": "~20.11.0",
     "@types/react": "~18.3.2",
@@ -45,5 +45,5 @@
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
-  "packageManager": "yarn@4.9.1"
+  "packageManager": "yarn@4.9.2"
 }
