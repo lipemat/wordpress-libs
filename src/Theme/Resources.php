@@ -293,22 +293,13 @@ class Resources {
 
 
 	/**
-	 * Use a CDN for known resources instead of the bundle version in WP Core.
-	 *
-	 * The CDN is faster and more likely to already exist in the
-	 * user's browser cache.
-	 *
-	 * Script integrity and crossorigin are automatically retrieved and
-	 * added to `<script>` tags.
-	 *
-	 * @notice We exclude the `version=` from the URL to match external
-	 *         site's URL for browser caching purposes.
-	 *
-	 * @since  3.2.0
+	 * @deprecated 5.6.0 - Unstable CDN.
 	 *
 	 * @param array<'jquery' | 'react' | 'react-dom' | 'lodash'> $handles - Resource handles to include.
 	 */
 	public function use_cdn_for_resources( array $handles ): void {
+		_deprecated_function( __METHOD__, '5.6.0', );
+
 		// The admin will throw errors when calling `wp_deregister_script` in other actions.
 		if ( is_admin() && 'admin_enqueue_scripts' !== current_filter() ) {
 			return;
@@ -391,13 +382,7 @@ class Resources {
 
 
 	/**
-	 * Given an "unpkg.com" URL, this will retrieve the integrity hash
-	 * and add it to the provided handle.
-	 *
-	 * The resulting integrity is cached in a network option as a script's
-	 * integrity will never change unless it's version changes.
-	 * As versions of the script change, this will retrieve and
-	 * store new integrity hashes automatically.
+	 * @deprecated 5.6.0 - Unstable CDN.
 	 *
 	 * @param string $handle - Script handle.
 	 * @param string $url    - Full unpkg.com URL. (required as versions change).
@@ -405,6 +390,8 @@ class Resources {
 	 * @return bool
 	 */
 	public function unpkg_integrity( string $handle, string $url ): bool {
+		_deprecated_function( __METHOD__, '5.6.0', );
+
 		$cached = get_network_option( 0, self::INTEGRITY, [] );
 
 		// Add `integrity="<hash>"` to `<script>` tag.
