@@ -896,7 +896,7 @@ class Box {
 				} );
 			}
 
-			if ( ! \is_array( $config['show_in_rest'] ) ) {
+			if ( ! isset( $config['show_in_rest'] ) || ! \is_array( $config['show_in_rest'] ) ) {
 				$config['show_in_rest'] = [];
 			}
 			$config['show_in_rest']['name'] = $field->get_rest_short_name();
