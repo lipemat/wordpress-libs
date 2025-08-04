@@ -173,11 +173,12 @@ class Register_MetaTest extends \WP_Test_REST_TestCase {
 		$post = self::factory()->post->create_and_get();
 		$schema = new Resource_Schema( [] );
 		$schema->type()->number()->minimum( 4 )->maximum( 10 );
+		$plus_ten = \Lipe\Lib\Meta\plus_ten( ... );
 
 		$args = new Register_Meta( [] );
 		$args->show_in_rest = [
 			'schema'           => $schema->get_args(),
-			'prepare_callback' => '\Lipe\Lib\Meta\plus_ten',
+			'prepare_callback' => $plus_ten,
 		];
 		register_meta( 'post', 'testing', $args->get_args() );
 
@@ -197,7 +198,7 @@ class Register_MetaTest extends \WP_Test_REST_TestCase {
 						'minimum' => 4,
 						'maximum' => 10,
 					],
-					'prepare_callback' => '\Lipe\Lib\Meta\plus_ten',
+					'prepare_callback' => $plus_ten,
 				],
 				'revisions_enabled' => false,
 			], $meta );
@@ -215,7 +216,7 @@ class Register_MetaTest extends \WP_Test_REST_TestCase {
 						'minimum' => 4,
 						'maximum' => 10,
 					],
-					'prepare_callback' => '\Lipe\Lib\Meta\plus_ten',
+					'prepare_callback' => $plus_ten,
 				],
 				'revisions_enabled' => false,
 			], $meta );

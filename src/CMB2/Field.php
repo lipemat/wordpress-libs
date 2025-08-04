@@ -572,8 +572,8 @@ class Field {
 	 * is passed, the box's `show_in_rest` will be set to true and all
 	 * fields, which do not have a `show_in_rest` specified will be set false.
 	 *
-	 * Only individual fields that are explicitly set to WP_REST_Server::ALLMETHODS will
-	 * be included in default WP `meta` response even if the box is set to true
+	 * Only individual fields that are explicitly set to `WP_REST_Server::ALLMETHODS` will
+	 * be included in the default WP ` meta ` response even if the box is set to `true`
 	 * and all fields are in the /cmb2 response.
 	 *
 	 * CMB2 honors the WP_REST_SERVER methods of transport
@@ -585,7 +585,7 @@ class Field {
 	 *
 	 * @example WP_REST_Server::READABLE // Same as `true`.
 	 * @example WP_REST_Server::ALLMETHODS // All Methods must be used for the field
-	 *          show up under `meta`, otherwise will just show up under `cmb2`.
+	 *          show up under `meta`, otherwise it will just show up under `cmb2`.
 	 * @example WP_REST_Server::EDITABLE
 	 *
 	 * @phpstan-param \WP_REST_Server::*|bool $methods
@@ -596,7 +596,7 @@ class Field {
 	 */
 	public function show_in_rest( bool|string $methods = \WP_REST_Server::ALLMETHODS ): static {
 		if ( null !== $this->group ) {
-			_doing_it_wrong( __METHOD__, wp_kses_post( "Show in rest may only be added to whole group. Not a group's field. `{$this->id}` is not applicable." ), '2.19.0' );
+			_doing_it_wrong( __METHOD__, wp_kses_post( "Show in rest may only be added to the group. Not a group's field. `{$this->id}` is not applicable." ), '2.19.0' );
 		}
 		$this->show_in_rest = $methods;
 		return $this;

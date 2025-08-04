@@ -114,6 +114,43 @@ class FieldTest extends \WP_Test_REST_TestCase {
 	}
 
 
+	public function test_show_in_rest_edit_only(): void {
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'editor' ] ) );
+
+		$box = new Box( 'rested-edit-only', [ 'post' ], 'Sanitize Box' );
+		$box->field( 'unit-testing/t1', 'TEST 1' )
+		    ->text()
+		    ->show_in_rest( \WP_REST_Server::EDITABLE );
+		$box->field( 't2', 'Test 2' )
+		    ->text();
+		do_action( 'cmb2_init' );
+
+		( new \CMB2_REST( $box->get_cmb2_box() ) )->universal_hooks()::register_cmb2_fields();
+
+		$post = Post_Mock::factory( self::factory()->post->create_and_get() );
+		$post['unit-testing/t1'] = 'returnee';
+		$post['t2'] = 'before-request';
+
+		$request = new \WP_REST_Request( 'GET', '/wp/v2/posts/' . $post->get_id() );
+		$response = rest_get_server()->dispatch( $request )->data;
+		$this->assertArrayNotHasKey( 'rested-edit-only', $response['cmb2'] );
+		$this->assertArrayNotHasKey( 't1', $response['meta'] );
+
+		$request = new \WP_REST_Request( 'POST', '/wp/v2/posts/' . $post->get_id() );
+		$request->set_param( 'cmb2', [
+			'rested-edit-only' => [
+				'unit-testing/t1' => 'from-request',
+				't2'              => 'not-allowed-from-request',
+			],
+		] );
+		$response = rest_get_server()->dispatch( $request )->data;
+		$this->assertArrayNotHasKey( 'rested-edit-only', $response['cmb2'] );
+		$this->assertArrayNotHasKey( 't1', $response['meta'] );
+		$this->assertSame( 'from-request', get_post_meta( $post->get_id(), 'unit-testing/t1', true ) );
+		$this->assertSame( 'before-request', get_post_meta( $post->get_id(), 't2', true ) );
+	}
+
+
 	public function test_defaults(): void {
 		$post = self::factory()->post->create_and_get();
 		$box = new Box( 'defaulted', [ 'post' ], 'Default Box' );

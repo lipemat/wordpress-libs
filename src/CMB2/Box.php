@@ -888,7 +888,7 @@ class Box {
 	 * @return array<string, mixed>
 	 */
 	public function translate_rest_keys( Registered $field, array $config ): array {
-		if ( false !== $field->get_show_in_rest() ) {
+		if ( $field->is_public_rest_data() ) {
 			if ( BoxType::POST === $this->get_box_type() ) {
 				// Post type must support 'custom-fields' to allow REST meta.
 				\array_walk( $this->object_types, function( $type ) {
