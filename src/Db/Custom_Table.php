@@ -392,6 +392,8 @@ class Custom_Table {
 					static::FORMAT_FLOAT => (float) $value,
 					default              => $value,
 				};
+			} elseif ( null === $value ) {
+				$formatted[ $key ] = null;
 			}
 		}
 		return $formatted;

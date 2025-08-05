@@ -444,6 +444,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 				return [
 					'int_field'    => '%d',
 					'string_field' => '%s',
+					'maybe_empty'  => '%s',
 					'float_field'  => '%f',
 				];
 			}
@@ -462,6 +463,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 		dbDelta( "CREATE TABLE `{$wpdb->prefix}custom_table` (
 			`int_field` INT(11) auto_increment primary key,
 			`string_field` VARCHAR(255) NOT NULL,
+            `maybe_empty` VARCHAR(255) NULL DEFAULT '',
 			`float_field` FLOAT NOT NULL
 		)" );
 		$db = Custom_Table::factory( $table );
@@ -473,6 +475,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 		$raw = $db->get_by_id( 1 );
 		$this->assertIsInt( $raw['int_field'] );
 		$this->assertIsString( $raw['string_field'] );
+		$this->assertNull( $raw['maybe_empty'] );
 		$this->assertIsFloat( $raw['float_field'] );
 	}
 
