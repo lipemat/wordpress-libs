@@ -6,8 +6,6 @@ namespace Lipe\Lib\Libs\Container;
 use Lipe\Lib\Libs\Container;
 
 /**
- * Trait Instance
- *
  * Provides static methods to get an instance of the class from the container.
  *
  * Matches signature of the `Singleton` trait to prevent errors on existing projects

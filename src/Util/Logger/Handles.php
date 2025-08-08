@@ -24,8 +24,6 @@ class Handles {
 
 
 	/**
-	 * Constructor.
-	 *
 	 * Initializes the default handles and registers the Testing handle
 	 * if in a testing environment.
 	 */

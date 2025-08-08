@@ -6,8 +6,6 @@ namespace Lipe\Lib\Libs\Container;
 use Lipe\Lib\Libs\Container;
 
 /**
- * Trait Hooks
- *
  * Provides static methods to initialize a class and ensure it is only initialized once.
  *
  * @author Mat Lipe

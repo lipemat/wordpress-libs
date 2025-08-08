@@ -13,7 +13,8 @@ namespace Lipe\Lib\Util;
 class Logger {
 
 	/**
-	 * Constructor.
+	 * Constructs a new Logger instance for sending log messages
+	 * to the appropriate handles.
 	 *
 	 * @param string $id The identifier for the logger instance.
 	 */
