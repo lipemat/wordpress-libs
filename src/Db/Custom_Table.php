@@ -459,7 +459,7 @@ class Custom_Table {
 	 *
 	 * @return \wpdb
 	 */
-	protected function get_wpdb(): \wpdb {
+	public function get_wpdb(): \wpdb {
 		global $wpdb;
 		return $wpdb;
 	}
