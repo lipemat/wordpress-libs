@@ -61,8 +61,8 @@ class Testing {
 	 * @param string $message The message to log.
 	 */
 	public function error_log( string $message ): void {
+		$this->errors[] = $message;
 		if ( \defined( 'WP_UNIT_DIR' ) ) {
-			$this->errors[] = $message;
 			return;
 		}
 		\error_log( $message ); //phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
