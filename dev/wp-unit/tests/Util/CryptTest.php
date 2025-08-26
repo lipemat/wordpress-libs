@@ -3,6 +3,7 @@
 namespace Lipe\Project\Util;
 
 use Lipe\Lib\Util\Crypt;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CryptTest extends \WP_UnitTestCase {
 
@@ -25,9 +26,7 @@ class CryptTest extends \WP_UnitTestCase {
 	}
 
 
-	/**
-	 * @dataProvider provideIsEncrypted
-	 */
+	#[DataProvider( 'provideIsEncrypted' )]
 	public function test_is_encrypted( string $data, bool $encrypted ): void {
 		$this->assertSame( $encrypted, Crypt::is_encrypted( $data ) );
 	}

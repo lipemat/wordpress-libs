@@ -3,6 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Meta;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 /**
  * @author Mat Lipe
  * @since  June 2024
@@ -55,9 +57,7 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 	}
 
 
-	/**
-	 * @dataProvider provideSave
-	 */
+	#[DataProvider( 'provideSave' )]
 	public function test_save( \WP_Post $post, bool $valid, \WP_Post $saving ): void {
 		$box = $this->mock_box();
 		new Meta_Box( $box );

@@ -3,6 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Post_Type;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 /**
  * @author Mat Lipe
  * @since  August 2024
@@ -10,11 +12,7 @@ namespace Lipe\Lib\Post_Type;
  */
 class LabelsTest extends \WP_UnitTestCase {
 
-	/**
-	 * @dataProvider provideLabelTypes
-	 *
-	 * @param string $label
-	 */
+	#[DataProvider( 'provideLabelTypes' )]
 	public function test_get_label( string $label ): void {
 		$labels = new Labels();
 		$labels->{$label}( 'Test ' . $label );

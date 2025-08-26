@@ -8,13 +8,14 @@ use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Settings\Settings_Trait;
 use mocks\Post_Mock;
-use mocks\Settings_Mock;
+use PHPUnit\Framework\Attributes\RequiresFunction;
+use PHPUnit\Framework\Attributes\RequiresMethod;
 
 /**
- * @requires function \CMB2_Bootstrap_2101::initiate
  *
  * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
  */
+#[RequiresMethod( \CMB2_Bootstrap_2101::class, 'initiate' )]
 class FieldTest extends \WP_Test_REST_TestCase {
 	public function setUp(): void {
 		parent::setUp();
@@ -255,9 +256,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 	}
 
 
-	/**
-	 * @requires function wp_post_revision_meta_keys
-	 */
+	#[RequiresFunction( 'wp_post_revision_meta_keys' )]
 	public function test_revision_support(): void {
 		$this->assertNotContains( 'tos', wp_post_revision_meta_keys( 'page' ) );
 

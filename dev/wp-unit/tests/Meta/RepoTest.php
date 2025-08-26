@@ -11,12 +11,13 @@ use Lipe\Lib\CMB2\Box;
 use Lipe\Lib\CMB2\User_Box;
 use mocks\Post_Mock;
 use mocks\User_Mock;
+use PHPUnit\Framework\Attributes\RequiresMethod;
 
 /**
- * @requires function \CMB2_Bootstrap_2101::initiate
  *
  * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
  */
+#[RequiresMethod( \CMB2_Bootstrap_2101::class, 'initiate' )]
 class RepoTest extends \WP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
@@ -33,7 +34,7 @@ class RepoTest extends \WP_UnitTestCase {
 		    ->true_false();
 		$box->field( 'tt', 'ttt' )
 		    ->taxonomy_multicheck( 'category' )
-		    ->store_user_terms_in_meta();
+		    ->store_terms_in_meta();
 
 		do_action( 'cmb2_init' );
 

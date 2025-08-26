@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Db;
 
 use Lipe\Lib\Util\Arrays;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @author Mat Lipe
@@ -99,9 +100,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 	}
 
 
-	/**
-	 * @dataProvider provideSelectQuery
-	 */
+	#[DataProvider( 'provideSelectQuery' )]
 	public function test_get_select_query( array $columns, array $where, ?int $count, ?string $order_by, string $order, ?int $offset, string $expected ): void {
 		global $wpdb;
 		$query = $this->db()->get_select_query( $columns, $where, $count, $order_by, $order, $offset );
@@ -369,17 +368,13 @@ class Custom_TableTest extends \WP_UnitTestCase {
 	}
 
 
-	/**
-	 * @dataProvider provideSortColumns
-	 */
+	#[DataProvider( 'provideSortColumns' )]
 	public function test_sort_columns( array $columns, array $expected ): void {
 		$this->assertSame( $expected, call_private_method( $this->db(), 'sort_columns', [ $columns ] ) );
 	}
 
 
-	/**
-	 * @dataProvider provideFormats
-	 */
+	#[DataProvider( 'provideFormats' )]
 	public function test_get_formats( array $columns, array $expected ): void {
 		$this->assertSame( $expected, call_private_method( $this->db(), 'get_formats', [ $columns ] ) );
 	}

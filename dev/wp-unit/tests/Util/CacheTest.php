@@ -2,6 +2,8 @@
 
 namespace Lipe\Lib\Util;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class CacheTest extends \WP_UnitTestCase {
 
 	private const GROUP_1 = 'group_1';
@@ -10,7 +12,7 @@ class CacheTest extends \WP_UnitTestCase {
 	private const KEY_1 = 'key_1';
 
 
-	public function test_cache_groups() {
+	public function test_cache_groups(): void {
 		Cache::in()->set( self::KEY_1, '#1', self::GROUP_1 );
 		Cache::in()->set( self::KEY_1, '#2', self::GROUP_2 );
 		$this->assertEquals( '#1', Cache::in()->get( self::KEY_1, self::GROUP_1 ), 'cache not storing' );
@@ -73,9 +75,7 @@ class CacheTest extends \WP_UnitTestCase {
 	}
 
 
-	/**
-	 * @dataProvider provideFilterKey
-	 */
+	#[DataProvider( 'provideFilterKey' )]
 	public function test_filter_key( object|array|int|string $key, string|int $expected ): void {
 		$this->assertSame( $expected, call_private_method( Cache::in(), 'filter_key', [ $key ] ) );
 	}

@@ -5,6 +5,7 @@ namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\CMB2\Box;
 use mocks\Post_Mock;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @author Mat Lipe
@@ -170,9 +171,7 @@ class Translate_Test extends \WP_UnitTestCase {
 	}
 
 
-	/**
-	 * @dataProvider provideCheckboxValues
-	 */
+	#[DataProvider( 'provideCheckboxValues' )]
 	public function test_checkbox_field( mixed $value, bool $expected ): void {
 		$box = new Box( __METHOD__, [ 'post' ], 'Test Checkbox Field' );
 		$box->field( 'meta/prefixed/cf', 'Test 2' )->checkbox();

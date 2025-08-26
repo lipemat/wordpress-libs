@@ -5,6 +5,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Api;
 
 use Lipe\Lib\Libs\Container;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @author Mat Lipe
@@ -131,9 +132,7 @@ class ZipTest extends \WP_UnitTestCase {
 	}
 
 
-	/**
-	 * @dataProvider provideValidateRequest
-	 */
+	#[DataProvider( 'provideValidateRequest' )]
 	public function test_handle_request( array $post, callable $setup ): void {
 		$_POST = $post;
 		$setup( $this );

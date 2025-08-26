@@ -6,12 +6,13 @@ namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\Meta\Repo;
 use mocks\Post_Mock;
+use PHPUnit\Framework\Attributes\RequiresMethod;
 
 /**
- * @requires function \CMB2_Bootstrap_2101::initiate
  *
  * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
  */
+#[RequiresMethod( \CMB2_Bootstrap_2101::class, 'initiate' )]
 class GroupTest extends \WP_Test_REST_TestCase {
 	/**
 	 * @var \WP_Post

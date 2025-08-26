@@ -5,6 +5,7 @@ namespace Lipe\Lib\Post_Type;
 
 use Lipe\Lib\Post_Type\Post_List_Column\Filter;
 use Lipe\Lib\Post_Type\Post_List_Column\ListColumn;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 require_once ABSPATH . 'wp-admin/includes/class-wp-posts-list-table.php';
 
@@ -14,9 +15,7 @@ require_once ABSPATH . 'wp-admin/includes/class-wp-posts-list-table.php';
  *
  */
 class Post_List_ColumnTest extends \WP_UnitTestCase {
-	/**
-	 * @dataProvider providePostTypes
-	 */
+	#[DataProvider( 'providePostTypes' )]
 	public function test_render_filter( string $type, bool $included ): void {
 		[ $mock, $screen ] = $this->getMock();
 		$screen->post_type = $type;
@@ -49,9 +48,7 @@ class Post_List_ColumnTest extends \WP_UnitTestCase {
 	}
 
 
-	/**
-	 * @dataProvider providePostTypes
-	 */
+	#[DataProvider( 'providePostTypes' )]
 	public function test_maybe_filter_query( string $type, bool $included ): void {
 		[ $mock, $screen ] = $this->getMock();
 		$screen->post_type = $type;
@@ -106,9 +103,7 @@ class Post_List_ColumnTest extends \WP_UnitTestCase {
 	}
 
 
-	/**
-	 * @dataProvider providePostTypes
-	 */
+	#[DataProvider( 'providePostTypes' )]
 	public function test_add_column( string $type, bool $included ): void {
 		[ $mock, $screen ] = $this->getMock();
 		$screen->post_type = $type;
@@ -128,9 +123,7 @@ class Post_List_ColumnTest extends \WP_UnitTestCase {
 	}
 
 
-	/**
-	 * @dataProvider providePostTypes
-	 */
+	#[DataProvider( 'providePostTypes' )]
 	public function test_maybe_render_column( string $type, bool $included ): void {
 		[ $mock, $screen ] = $this->getMock();
 		// Not in the admin.

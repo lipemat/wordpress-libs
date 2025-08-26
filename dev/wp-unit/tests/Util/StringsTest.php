@@ -3,6 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 /**
  * @author Mat Lipe
  * @since  June 2024
@@ -10,9 +12,7 @@ namespace Lipe\Lib\Util;
  */
 class StringsTest extends \WP_UnitTestCase {
 
-	/**
-	 * @dataProvider providePluralize
-	 */
+	#[DataProvider( 'providePluralize' )]
 	public function test_pluralize( string $word, string $expected ): void {
 		$this->assertSame( $expected, Strings::instance()->pluralize( $word ) );
 	}

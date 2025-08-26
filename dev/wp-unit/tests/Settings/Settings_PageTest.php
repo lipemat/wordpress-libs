@@ -8,6 +8,7 @@ use Lipe\Lib\Settings\Settings_Page\Field;
 use Lipe\Lib\Settings\Settings_Page\SectionArgs;
 use Lipe\Lib\Settings\Settings_Page\Settings;
 use mocks\Settings_Page_Mock;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -244,9 +245,7 @@ class Settings_PageTest extends \WP_UnitTestCase {
 	}
 
 
-	/**
-	 * @dataProvider provideIsSettingsPage
-	 */
+	#[DataProvider( 'provideIsSettingsPage' )]
 	public function test_is_setting_page( ?string $parent, bool $network ): void {
 		$mocked = $this->mock_settings( $network, [ 'get_parent_menu_slug' ] );
 		$mocked->method( 'get_parent_menu_slug' )->willReturn( $parent );
@@ -520,9 +519,8 @@ class Settings_PageTest extends \WP_UnitTestCase {
 
 	/**
 	 * @noinspection PhpVoidFunctionResultUsedInspection
-	 *
-	 * @dataProvider provideFieldExtras
 	 */
+	#[DataProvider( 'provideFieldExtras' )]
 	public function test_field_extras( array $args, string $expected ): void {
 		$mock = Settings_Page::factory( new Settings_Page_Mock( false ) );
 		$field = $mock->settings->get_sections()[0]->get_fields()[0];

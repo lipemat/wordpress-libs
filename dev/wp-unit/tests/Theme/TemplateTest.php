@@ -2,6 +2,8 @@
 
 namespace Lipe\Lib\Theme;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 /**
  * @author Mat Lipe
  * @since  July 2022
@@ -33,9 +35,7 @@ class TemplateTest extends \WP_UnitTestCase {
 	}
 
 
-	/**
-	 * @dataProvider providerEscAttr
-	 */
+	#[DataProvider( 'providerEscAttr' )]
 	public function test_esc_attr( array $attr, string $expected ): void {
 		$this->assertSame( $expected, Template::in()->esc_attr( $attr ) );
 	}

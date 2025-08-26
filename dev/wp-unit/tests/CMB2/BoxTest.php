@@ -11,12 +11,13 @@ use mocks\Comment_Mock;
 use mocks\Post_Mock;
 use mocks\Term_Mock;
 use mocks\User_Mock;
+use PHPUnit\Framework\Attributes\RequiresMethod;
 
 /**
- * @requires function \CMB2_Bootstrap_2101::initiate
  *
  * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
  */
+#[RequiresMethod( \CMB2_Bootstrap_2101::class, 'initiate' )]
 class BoxTest extends \WP_UnitTestCase {
 	private $attachment_id;
 

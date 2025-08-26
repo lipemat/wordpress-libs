@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Post_Type;
 
 use Lipe\Lib\Post_Type\Post_List_Column\Filter;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 require_once ABSPATH . 'wp-admin/includes/class-wp-posts-list-table.php';
 
@@ -14,9 +15,7 @@ require_once ABSPATH . 'wp-admin/includes/class-wp-posts-list-table.php';
  */
 class Post_List_FilterTest extends \WP_UnitTestCase {
 
-	/**
-	 * @dataProvider providePostTypes
-	 */
+	#[DataProvider( 'providePostTypes' )]
 	public function test_maybe_filter_query( string $type, bool $included ): void {
 		$screen = \WP_Screen::get( 'post' );
 		$screen->post_type = $type;
@@ -64,9 +63,7 @@ class Post_List_FilterTest extends \WP_UnitTestCase {
 	}
 
 
-	/**
-	 * @dataProvider providePostTypes
-	 */
+	#[DataProvider( 'providePostTypes' )]
 	public function test_render_filter( string $type, bool $included ): void {
 		$screen = \WP_Screen::get( 'post' );
 		$screen->post_type = $type;
