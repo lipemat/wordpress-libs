@@ -3,14 +3,14 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
+use Lipe\Lib\Libs\Container\Instance;
 use Lipe\Lib\Traits\Memoize;
-use Lipe\Lib\Traits\Singleton;
 
 /**
  * Action and filter helpers.
  */
 class Actions {
-	use Singleton;
+	use Instance;
 	use Memoize;
 
 	/**
@@ -117,7 +117,7 @@ class Actions {
 	/**
 	 * Remove an action no matter where in the stack it is.
 	 * This may be called before or after the add_action() is
-	 * called which is being removed.
+	 * called on the action being removed.
 	 *
 	 * @param string   $action   - Action we are adding.
 	 * @param callable $callback - Callback.
@@ -135,7 +135,7 @@ class Actions {
 	/**
 	 * Remove a filter no matter where in the stack it is.
 	 * This may be called before or after the add_filter() is
-	 * called which is being removed.
+	 * called on the action being removed.
 	 *
 	 * @param string   $filter   - Filter we are adding.
 	 * @param callable $callback - Callback.
@@ -157,8 +157,8 @@ class Actions {
 	 * at a specified end action.
 	 *
 	 * Used to filter only during a specific stack or section of code.
-	 * Useful for targeting things like a widget or a template but may
-	 * be use when any starting and endpoint point is avialble via actions.
+	 * Useful for things like a widget or a template but may
+	 * be used when any starting and endpoint point is available via actions.
 	 *
 	 * @param string   $filter   - Filter we are adding.
 	 * @param callable $callback - Callback.
@@ -180,10 +180,10 @@ class Actions {
 
 
 	/**
-	 * Add an action which removes itself right before the callback
-	 * runs then adds itself back in after the callback has finished.
+	 * Adds an action which removes itself right before the callback
+	 *  runs, then adds itself back in after the callback has finished.
 	 *
-	 * Add an action which would otherwise cause infinite loops.
+	 * For actions which would otherwise cause infinite loops.
 	 *
 	 * @param string   $action   - Action we are adding.
 	 * @param callable $callback - Callback.
@@ -201,7 +201,7 @@ class Actions {
 
 	/**
 	 * Adds a filter which removes itself right before the callback
-	 * runs then adds itself back in after the callback has finished.
+	 *  runs, then adds itself back in after the callback has finished.
 	 *
 	 * For filters which would otherwise cause infinite loops.
 	 *
