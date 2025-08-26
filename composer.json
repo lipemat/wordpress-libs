@@ -18,6 +18,9 @@
     "git-hooks": "dev/bin/git-hooks.sh"
   },
   "autoload": {
+    "files": [
+      "./init.php"
+    ],
     "psr-4": {
       "Lipe\\Lib\\": "src/"
     }

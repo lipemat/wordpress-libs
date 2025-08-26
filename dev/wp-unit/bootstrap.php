@@ -20,8 +20,8 @@ if ( null === get_site( 2 ) ) {
 }
 
 // Add composer's autoloader.
-if ( is_readable( dirname( __DIR__, 4 ) . '/autoload.php' ) ) {
-	require_once dirname( __DIR__, 4 ) . '/autoload.php';
+if ( \is_readable( \dirname( __DIR__, 4 ) . '/autoload.php' ) ) {
+	require_once \dirname( __DIR__, 4 ) . '/autoload.php';
 }
 
 // Make all Mock classes available.
