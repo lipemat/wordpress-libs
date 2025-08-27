@@ -36,4 +36,12 @@ interface Manifest {
 	 * @return string
 	 */
 	public function get_integrity(): string;
+
+
+	/**
+	 * Get the URL of this resource.
+	 *
+	 * @return string
+	 */
+	public function get_url(): string;
 }

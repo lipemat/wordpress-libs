@@ -63,6 +63,19 @@ class PCSS_Manifest implements Manifest {
 
 
 	/**
+	 * Get the URL of this .css file based on SCRIPT_DEBUG.
+	 *
+	 * @return string
+	 */
+	public function get_url(): string {
+		if ( ! SCRIPT_DEBUG ) {
+			return $this->handle->dist_url() . \str_replace( '.css', '.min.css', $this->handle->file() );
+		}
+		return $this->handle->dist_url() . $this->handle->file();
+	}
+
+
+	/**
 	 * @throws \RuntimeException -- If the manifest file is not available.
 	 * @return array<string,string>
 	 */

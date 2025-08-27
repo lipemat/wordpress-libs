@@ -22,16 +22,16 @@ class ManifestTest extends \WP_UnitTestCase {
 	public function test_get_url(): void {
 		$js = Enqueue::factory( ScriptHandles::MASTER_JS );
 		if ( SCRIPT_DEBUG && Util::in()->is_webpack_running( ScriptHandles::MASTER_JS ) ) {
-			$this->assertEquals( ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . ':3000/js-dist/' . 'master.js', $js->get_url() );
+			$this->assertEquals( ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . ':3000/js-dist/' . 'master.js', $js->get_manifest()->get_url() );
 		} else {
-			$this->assertEquals( trailingslashit( get_stylesheet_directory_uri() ) . 'js-dist/master.js', $js->get_url() );
+			$this->assertEquals( trailingslashit( get_stylesheet_directory_uri() ) . 'js-dist/master.js', $js->get_manifest()->get_url() );
 		}
 
 		$pcss = Enqueue::factory( ScriptHandles::FRONT_END_CSS );
 		if ( SCRIPT_DEBUG ) {
-			$this->assertEquals( trailingslashit( get_stylesheet_directory_uri() ) . 'css-dist/front-end.css', $pcss->get_url() );
+			$this->assertEquals( trailingslashit( get_stylesheet_directory_uri() ) . 'css-dist/front-end.css', $pcss->get_manifest()->get_url() );
 		} else {
-			$this->assertEquals( trailingslashit( get_stylesheet_directory_uri() ) . 'css-dist/front-end.min.css', $pcss->get_url() );
+			$this->assertEquals( trailingslashit( get_stylesheet_directory_uri() ) . 'css-dist/front-end.min.css', $pcss->get_manifest()->get_url() );
 		}
 	}
 

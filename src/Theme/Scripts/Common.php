@@ -104,7 +104,7 @@ class Common {
 			 */
 			add_filter( 'block_editor_settings_all', function( $settings ) use ( $enum ) {
 				$settings['styles'] = \array_map( function( $style ) use ( $enum ) {
-					if ( \array_key_exists( 'baseURL', $style ) && $enum->get_url() === $style['baseURL'] ) {
+					if ( \array_key_exists( 'baseURL', $style ) && $enum->get_manifest()->get_url() === $style['baseURL'] ) {
 						$style['css'] = \preg_replace( '/\/\*# sourceMap.*?\*\//', '', $style['css'] );
 					}
 					return $style;

@@ -71,6 +71,23 @@ class JS_Manifest implements Manifest {
 
 
 	/**
+	 * Get the URL of this .js file based on:
+	 * - SCRIPT_DEBUG
+	 * - Webpack running.
+	 *
+	 * @return string
+	 */
+	public function get_url(): string {
+		// Use webpack on all requests except Legacy Widget iframes.
+		if ( SCRIPT_DEBUG && Util::in()->is_webpack_running( $this->handle ) && 0 === \preg_match( '/\/wp-json.*?widget-types./', \trim( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ) ) ) ) {
+			return set_url_scheme( 'https://' . \trim( sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) ) . ':3000/js/dist/' . $this->handle->file() );
+		}
+
+		return $this->handle->dist_url() . $this->handle->file();
+	}
+
+
+	/**
 	 * @throws \RuntimeException -- If the manifest file is not available.
 	 * @return array<string,array{hash:string, integrity:string}>
 	 */

@@ -50,7 +50,7 @@ class Enqueue {
 	 */
 	public function enqueue( bool $in_footer = true ): void {
 		if ( \str_ends_with( $this->file_name, '.js' ) ) {
-			wp_enqueue_script( $this->handle->handle(), $this->get_url(), $this->handle->dependencies(), $this->get_version(), $in_footer );
+			wp_enqueue_script( $this->handle->handle(), $this->get_manifest()->get_url(), $this->handle->dependencies(), $this->get_version(), $in_footer );
 
 			/**
 			 * Add a `defer` or `async` attribute to the script tag.
@@ -80,7 +80,7 @@ class Enqueue {
 		 * Webpack uses `style-loader` during development, so we only load a "JS" based CSS file if Webpack is not running.
 		 */
 		if ( self::BOILER_PCSS === $this->handle->boilerplate() || ! Util::in()->is_webpack_running( $this->handle ) ) {
-			wp_enqueue_style( $this->handle->handle(), $this->get_url(), $this->handle->dependencies(), $this->get_version() );
+			wp_enqueue_style( $this->handle->handle(), $this->get_manifest()->get_url(), $this->handle->dependencies(), $this->get_version() );
 		}
 
 		if ( ! SCRIPT_DEBUG && $this->handle->is_inline() ) {
@@ -103,9 +103,9 @@ class Enqueue {
 	 */
 	public function register(): void {
 		if ( \str_ends_with( $this->file_name, '.js' ) ) {
-			wp_register_script( $this->handle->handle(), $this->get_url(), $this->handle->dependencies(), $this->get_version(), true );
+			wp_register_script( $this->handle->handle(), $this->get_manifest()->get_url(), $this->handle->dependencies(), $this->get_version(), true );
 		} else {
-			wp_register_style( $this->handle->handle(), $this->get_url(), $this->handle->dependencies(), $this->get_version() );
+			wp_register_style( $this->handle->handle(), $this->get_manifest()->get_url(), $this->handle->dependencies(), $this->get_version() );
 		}
 	}
 
@@ -113,7 +113,7 @@ class Enqueue {
 	/**
 	 * Return the path of the file relative to the theme.
 	 *
-	 * @param bool $full_path - Include full path to the file.
+	 * @param bool $full_path - Include a full path to the file.
 	 *
 	 * @return string
 	 */
@@ -124,27 +124,6 @@ class Enqueue {
 
 		$path = \str_replace( trailingslashit( get_stylesheet_directory() ), '', $this->handle->dist_path() );
 		return "{$path}{$this->file_name}";
-	}
-
-
-	/**
-	 * Return the full URL of the resource.
-	 *
-	 * Automatically switches to Webpack URL if the dev server is running.
-	 *
-	 * @return string
-	 */
-	public function get_url(): string {
-		if ( self::BOILER_PCSS === $this->handle->boilerplate() ) {
-			return $this->handle->dist_url() . $this->file_name;
-		}
-
-		// Use webpack on all requests except Legacy Widget iframes.
-		if ( SCRIPT_DEBUG && Util::in()->is_webpack_running( $this->handle ) && 0 === \preg_match( '/\/wp-json.*?widget-types./', \trim( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ) ) ) ) {
-			return set_url_scheme( 'https://' . \trim( sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) ) . ':3000/js/dist/' . $this->file_name );
-		}
-
-		return $this->handle->dist_url() . $this->file_name;
 	}
 
 
@@ -177,9 +156,13 @@ class Enqueue {
 	 * - Webpack `dist`.
 	 * - PostCSS `dist`.
 	 *
+	 * @todo In version 6, kill this method in favor of using the handle method.
+	 *
+	 * @internal
+	 *
 	 * @return Manifest
 	 */
-	protected function get_manifest(): Manifest {
+	public function get_manifest(): Manifest {
 		if ( \method_exists( $this->handle,
 			'get_manifest' ) ) {
 			return $this->handle->get_manifest();
