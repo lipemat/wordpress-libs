@@ -44,4 +44,24 @@ interface Manifest {
 	 * @return string
 	 */
 	public function get_url(): string;
+
+
+	/**
+	 * Return the path of the file relative to the theme.
+	 *
+	 * @param bool $full_path - Include a full path to the file.
+	 *
+	 * @return string
+	 */
+	public function get_file( bool $full_path = false ): string;
+
+
+	/**
+	 * Enqueue the current script or style with WP_Scripts.
+	 *
+	 * @param bool $in_footer - Load a JS script in the footer. Does not apply to CSS.
+	 *
+	 * @return void
+	 */
+	public function enqueue( bool $in_footer = true ): void;
 }

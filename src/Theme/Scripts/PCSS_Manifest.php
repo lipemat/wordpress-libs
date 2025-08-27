@@ -22,6 +22,13 @@ class PCSS_Manifest implements Manifest {
 	 */
 	protected static array $manifest = [];
 
+	/**
+	 * The file name of the resource without the path.
+	 *
+	 * @var string
+	 */
+	public readonly string $file_name;
+
 
 	/**
 	 * Instantiate the PCSS manifest.
@@ -31,6 +38,11 @@ class PCSS_Manifest implements Manifest {
 	public function __construct(
 		protected readonly ResourceHandles $handle
 	) {
+		if ( SCRIPT_DEBUG ) {
+			$this->file_name = $this->handle->file();
+		} else {
+			$this->file_name = \str_replace( '.css', '.min.css', $this->handle->file() );
+		}
 	}
 
 
@@ -45,8 +57,7 @@ class PCSS_Manifest implements Manifest {
 	 */
 	public function get_version(): string {
 		$manifest = $this->get_json();
-		$file = Enqueue::factory( $this->handle )->file_name;
-		return $manifest[ $file ] ?? (string) Resources::in()->get_revision();
+		return $manifest[ $this->file_name ] ?? (string) Resources::in()->get_revision();
 	}
 
 
@@ -63,6 +74,23 @@ class PCSS_Manifest implements Manifest {
 
 
 	/**
+	 * Return the path of the file relative to the theme.
+	 *
+	 * @param bool $full_path - Include a full path to the file.
+	 *
+	 * @return string
+	 */
+	public function get_file( bool $full_path = false ): string {
+		if ( $full_path ) {
+			return $this->handle->dist_path() . $this->file_name;
+		}
+
+		$path = \str_replace( trailingslashit( get_stylesheet_directory() ), '', $this->handle->dist_path() );
+		return "{$path}{$this->file_name}";
+	}
+
+
+	/**
 	 * Get the URL of this .css file based on SCRIPT_DEBUG.
 	 *
 	 * @return string
@@ -72,6 +100,27 @@ class PCSS_Manifest implements Manifest {
 			return $this->handle->dist_url() . \str_replace( '.css', '.min.css', $this->handle->file() );
 		}
 		return $this->handle->dist_url() . $this->handle->file();
+	}
+
+
+	/**
+	 * Enqueue the current style with WP_Scripts.
+	 *
+	 * @param bool $in_footer - Does not apply to CSS.
+	 *
+	 * @return void
+	 */
+	public function enqueue( bool $in_footer = true ): void {
+		wp_enqueue_style( $this->handle->handle(), $this->get_url(), $this->handle->dependencies(), $this->get_version() );
+
+		if ( ! SCRIPT_DEBUG && $this->handle->is_inline() ) {
+			/**
+			 * Allow WP Core to inline the stylesheet if under 20k.
+			 *
+			 * @see    wp_maybe_inline_styles
+			 */
+			wp_style_add_data( $this->handle->handle(), 'path', $this->get_file( true ) );
+		}
 	}
 
 
