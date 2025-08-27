@@ -180,6 +180,11 @@ class Enqueue {
 	 * @return Manifest
 	 */
 	protected function get_manifest(): Manifest {
+		if ( \method_exists( $this->handle,
+			'get_manifest' ) ) {
+			return $this->handle->get_manifest();
+		}
+
 		if ( self::BOILER_PCSS === $this->handle->boilerplate() ) {
 			return new PCSS_Manifest( $this->handle );
 		}

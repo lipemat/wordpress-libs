@@ -8,6 +8,8 @@ namespace Lipe\Lib\Theme\Scripts;
  * Enum rules for managing resources.
  *
  * @since    5.1.0
+ * @todo     In version 6, include a `get_manifest` method. See tools project for example
+ *
  */
 interface ResourceHandles extends \BackedEnum {
 
