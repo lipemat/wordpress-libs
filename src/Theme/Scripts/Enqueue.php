@@ -117,7 +117,7 @@ class Enqueue {
 
 		_deprecated_function( __METHOD__, '5.7.0', 'get_manifest directly on the handle' );
 		// @phpstan-ignore classConstant.deprecated
-		if ( self::BOILER_PCSS === $this->handle->boilerplate() ) {
+		if ( \method_exists( $this->handle, 'boilerplate' ) && self::BOILER_PCSS === $this->handle->boilerplate() ) {
 			return new PCSS_Manifest( $this->handle );
 		}
 		return new JS_Manifest( $this->handle );

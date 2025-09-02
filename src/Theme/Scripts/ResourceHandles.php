@@ -20,14 +20,6 @@ interface ResourceHandles extends \BackedEnum {
 
 
 	/**
-	 * @todo Kill in version 6 as will not be needed by wp-libs.
-	 *
-	 * @return string
-	 */
-	public function boilerplate(): string;
-
-
-	/**
 	 * The resource file.
 	 *
 	 * Switching to the minfied version is handled automatically
@@ -68,7 +60,7 @@ interface ResourceHandles extends \BackedEnum {
 
 
 	/**
-	 * Should this resource be enqueued using `enqueue_block_assets` hook?
+	 * Should this resource be enqueued using the `enqueue_block_assets` hook?
 	 *
 	 * @return bool
 	 */
