@@ -5,6 +5,7 @@ namespace Lipe\Lib\Theme\Scripts;
 
 use Lipe\Lib\Theme\Resources;
 use Lipe\Lib\Traits\Memoize;
+use Lipe\Project\Theme\Handles;
 
 /**
  * Common resource loading and configuration shared cross site.
@@ -19,6 +20,10 @@ use Lipe\Lib\Traits\Memoize;
 class Common {
 	use Memoize;
 
+	/**
+	 * @todo Remove this constant in version 6.
+	 * @deprecated
+	 */
 	public const CSS_ENUM_HANDLE = 'lipe/project/theme/css-enums';
 
 
@@ -224,16 +229,27 @@ class Common {
 	/**
 	 * Load the CSS enums available in postcss-boilerplate version 4.9.0+.
 	 *
-	 * @action init 10 0
+	 * @action     init 10 0
 	 *
 	 * @return void
 	 */
 	public function load_css_enums(): void {
-		$enum = $this->handles[0]::from( self::CSS_ENUM_HANDLE );
-		if ( SCRIPT_DEBUG ) {
-			require get_stylesheet_directory() . '/css/' . $enum->file();
+		// @phpstan-ignore classConstant.deprecated
+		$enum = $this->handles[0]::tryFrom( self::CSS_ENUM_HANDLE );
+
+		if ( null === $enum ) {
+			if ( SCRIPT_DEBUG ) {
+				require trailingslashit( get_stylesheet_directory() ) . 'css/module-enums.php';
+			} else {
+				require trailingslashit( get_stylesheet_directory() ) . 'css/dist/module-enums.min.inc';
+			}
 		} else {
-			require $enum->dist_path() . $enum->file();
+			_deprecated_argument( __METHOD__, '5.7.0', 'Using the `CSS_ENUM_HANDLE`, constant is deprecated and will be removed in version 6.' );
+			if ( SCRIPT_DEBUG ) {
+				require get_stylesheet_directory() . '/css/' . $enum->file();
+			} else {
+				require $enum->dist_path() . $enum->file();
+			}
 		}
 	}
 

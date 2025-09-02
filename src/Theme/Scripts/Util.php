@@ -13,6 +13,10 @@ use Lipe\Lib\Traits\Singleton;
 class Util {
 	use Singleton;
 
+	/**
+	 * @todo Remove this constant in version 6.
+	 * @deprecated
+	 */
 	public const RUNNING_HANDLE = 'lipe/project/theme/running';
 
 
@@ -25,15 +29,14 @@ class Util {
 	 *
 	 * @requires js-boilerplate:v9.2.0+
 	 *
-	 * @param ResourceHandles $handles - The handles to check.
+	 * @param ResourceHandles $handle - The handles to check.
 	 *
 	 * @return bool
 	 */
-	public function is_webpack_running( ResourceHandles $handles ): bool {
+	public function is_webpack_running( ResourceHandles $handle ): bool {
 		if ( ! SCRIPT_DEBUG || 'local' !== wp_get_environment_type() ) {
 			return false;
 		}
-		$enum = $handles::from( self::RUNNING_HANDLE );
-		return file_exists( $enum->dist_path() . $enum->file() );
+		return file_exists( $handle->dist_path() . '.running' );
 	}
 }

@@ -38,25 +38,25 @@ class ManifestTest extends \WP_UnitTestCase {
 
 	public function test_get_dist_path(): void {
 		$url = trailingslashit( get_stylesheet_directory_uri() );
-		$this->assertSame( $url . 'js-dist/', ScriptHandles::JS_MANIFEST->dist_url() );
-		$this->assertSame( $url . 'css-dist/', ScriptHandles::PCSS_MANIFEST->dist_url() );
+		$this->assertSame( $url . 'js-dist/', ScriptHandles::MASTER_JS->dist_url() );
+		$this->assertSame( $url . 'css-dist/', ScriptHandles::MASTER_CSS->dist_url() );
 
 		$path = trailingslashit( $this->getStylesheetDirectory() );
-		$this->assertSame( $path . 'js-dist/', ScriptHandles::JS_MANIFEST->dist_path() );
-		$this->assertSame( $path . 'css-dist/', ScriptHandles::PCSS_MANIFEST->dist_path() );
+		$this->assertSame( $path . 'js-dist/', ScriptHandles::MASTER_JS->dist_path() );
+		$this->assertSame( $path . 'css-dist/', ScriptHandles::MASTER_CSS->dist_path() );
 
-		$this->assertSame( 'js-manifest.json', ScriptHandles::JS_MANIFEST->file() );
-		$this->assertSame( 'css-manifest.json', ScriptHandles::PCSS_MANIFEST->file() );
+		$this->assertSame( 'master.js', ScriptHandles::MASTER_JS->file() );
+		$this->assertSame( 'master.css', ScriptHandles::MASTER_CSS->file() );
 	}
 
 
 	public function test_get_version(): void {
 		$path = trailingslashit( get_stylesheet_directory() );
-		$manifest = json_decode( file_get_contents( $path . 'js-dist/js-manifest.json' ), true );
+		$manifest = json_decode( file_get_contents( $path . 'js-dist/manifest.json' ), true );
 		$js = Enqueue::factory( ScriptHandles::MASTER_JS );
 		$this->assertEquals( $manifest['master.js']['hash'], $js->get_version() );
 
-		$manifest = json_decode( file_get_contents( $path . 'css-dist/css-manifest.json' ), true );
+		$manifest = json_decode( file_get_contents( $path . 'css-dist/manifest.json' ), true );
 		$pcss = Enqueue::factory( ScriptHandles::FRONT_END_CSS );
 		if ( SCRIPT_DEBUG ) {
 			$this->assertEquals( $manifest['front-end.css'], $pcss->get_version() );
@@ -67,7 +67,7 @@ class ManifestTest extends \WP_UnitTestCase {
 
 
 	public function test_get_integrity(): void {
-		$manifest = json_decode( file_get_contents( ScriptHandles::JS_MANIFEST->dist_path() . 'js-manifest.json' ), true );
+		$manifest = json_decode( file_get_contents( ScriptHandles::MASTER_JS->dist_path() . 'manifest.json' ), true );
 		$js = Enqueue::factory( ScriptHandles::MASTER_JS );
 		$this->assertEquals( $manifest['master.js']['integrity'], $js->get_integrity() );
 
@@ -83,7 +83,7 @@ class ManifestTest extends \WP_UnitTestCase {
 		$this->assertEquals( ScriptHandles::MASTER_JS->dist_path() . 'master.js', $js->get_file( true ) );
 
 		$pcss = Enqueue::factory( ScriptHandles::ADMIN_CSS );
-		$path = \str_replace( trailingslashit( get_stylesheet_directory() ), '', ScriptHandles::PCSS_MANIFEST->dist_path() );
+		$path = \str_replace( trailingslashit( get_stylesheet_directory() ), '', ScriptHandles::FRONT_END_CSS->dist_path() );
 		if ( SCRIPT_DEBUG ) {
 			$this->assertEquals( $path . 'admin.css', $pcss->get_file() );
 			$this->assertEquals( ScriptHandles::ADMIN_CSS->dist_path() . 'admin.css', $pcss->get_file( true ) );
@@ -101,7 +101,7 @@ class ManifestTest extends \WP_UnitTestCase {
 		$js = Enqueue::factory( ScriptHandles::MASTER_JS );
 		$js->enqueue();
 		$script = get_echo( fn() => wp_scripts()->do_item( ScriptHandles::MASTER_JS->handle() ) );
-		$this->assertStringContainsString( 'async', $script );
+		self::assertStringContainsString( 'async', $script );
 	}
 
 

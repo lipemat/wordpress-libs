@@ -12,7 +12,14 @@ namespace Lipe\Lib\Theme\Scripts;
  * @requires postcss-boilerplate:v4.3.0+
  */
 class Enqueue {
-	public const BOILER_JS   = 'js';
+	// @todo Kill these 2 constants in version 6 as they are not needed by wp-libs.
+	/**
+	 * @deprecated
+	 */
+	public const BOILER_JS = 'js';
+	/**
+	 * @deprecated
+	 */
 	public const BOILER_PCSS = 'pcss';
 
 
@@ -108,6 +115,8 @@ class Enqueue {
 			return $this->handle->get_manifest();
 		}
 
+		_deprecated_function( __METHOD__, '5.7.0', 'get_manifest directly on the handle' );
+		// @phpstan-ignore classConstant.deprecated
 		if ( self::BOILER_PCSS === $this->handle->boilerplate() ) {
 			return new PCSS_Manifest( $this->handle );
 		}

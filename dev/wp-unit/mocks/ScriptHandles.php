@@ -29,10 +29,8 @@ enum ScriptHandles: string implements ResourceHandles {
 	case MASTER_JS     = 'lipe/project/theme/master/js';
 
 	// Utility handles.
-	case CSS_ENUMS     = Common::CSS_ENUM_HANDLE;
-	case JS_MANIFEST   = JS_Manifest::HANDLE;
-	case PCSS_MANIFEST = PCSS_Manifest::HANDLE;
-	case RUNNING       = Util::RUNNING_HANDLE;
+	case CSS_ENUMS = Common::CSS_ENUM_HANDLE;
+	case RUNNING   = Util::RUNNING_HANDLE;
 
 
 	/**
@@ -69,14 +67,12 @@ enum ScriptHandles: string implements ResourceHandles {
 		return match ( $this ) {
 			self::ADMIN_CSS,
 			self::BLOCKS_CSS,
+			self::MASTER_CSS,
 			self::CSS_ENUMS,
-			self::FRONT_END_CSS,
-			self::PCSS_MANIFEST => Enqueue::BOILER_PCSS,
+			self::FRONT_END_CSS => Enqueue::BOILER_PCSS,
 
 			self::ADMIN_JS,
 			self::ADMIN_JS_CSS,
-			self::JS_MANIFEST,
-			self::MASTER_CSS,
 			self::MASTER_JS,
 			self::RUNNING       => Enqueue::BOILER_JS,
 		};
@@ -95,8 +91,6 @@ enum ScriptHandles: string implements ResourceHandles {
 			self::MASTER_JS     => 'master.js',
 
 			self::CSS_ENUMS     => SCRIPT_DEBUG ? 'module-enums.php' : 'module-enums.min.inc',
-			self::JS_MANIFEST   => 'js-manifest.json',
-			self::PCSS_MANIFEST => 'css-manifest.json',
 			self::RUNNING       => '.running'
 		};
 	}
@@ -181,6 +175,14 @@ enum ScriptHandles: string implements ResourceHandles {
 	}
 
 
+	public function get_manifest(): PCSS_Manifest|JS_Manifest {
+		if ( Enqueue::BOILER_PCSS === $this->boilerplate() ) {
+			return new PCSS_Manifest( $this );
+		}
+		return new JS_Manifest( $this );
+	}
+
+
 	public function dist_url(): string {
 		$path = trailingslashit( get_stylesheet_directory_uri() );
 		if ( Enqueue::BOILER_PCSS === $this->boilerplate() ) {
@@ -192,8 +194,8 @@ enum ScriptHandles: string implements ResourceHandles {
 
 	public function dist_path(): string {
 		if ( Enqueue::BOILER_PCSS === $this->boilerplate() ) {
-			return dirname( __DIR__ ) . '/data/' . self::CSS_DIST_PATH;
+			return \dirname( __DIR__ ) . '/data/' . self::CSS_DIST_PATH;
 		}
-		return dirname( __DIR__ ) . '/data/' . self::JS_DIST_PATH;
+		return \dirname( __DIR__ ) . '/data/' . self::JS_DIST_PATH;
 	}
 }

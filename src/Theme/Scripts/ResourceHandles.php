@@ -22,6 +22,8 @@ interface ResourceHandles extends \BackedEnum {
 	/**
 	 * @phpstan-return Enqueue::BOILER_*
 	 *
+	 * @todo Kill in version 6 as will not be needed by wp-libs.
+	 *
 	 * @return string
 	 */
 	public function boilerplate(): string;

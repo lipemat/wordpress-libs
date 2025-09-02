@@ -13,6 +13,10 @@ use Lipe\Lib\Theme\Resources;
  * @requires postcss-boilerplate:v4.3.0+
  */
 class PCSS_Manifest implements Manifest {
+	/**
+	 * @todo Remove this constant in version 6.
+	 * @deprecated
+	 */
 	public const HANDLE = 'lipe/project/theme/scripts/pcss-manifest';
 
 	/**
@@ -130,9 +134,8 @@ class PCSS_Manifest implements Manifest {
 	 */
 	protected function get_json(): array {
 		if ( [] === static::$manifest ) {
-			$enum = $this->handle::from( self::HANDLE );
 			try {
-				static::$manifest = (array) \json_decode( (string) \file_get_contents( $enum->dist_path() . $enum->file() ), true, 512, JSON_THROW_ON_ERROR );
+				static::$manifest = (array) \json_decode( (string) \file_get_contents( $this->handle->dist_path() . 'manifest.json' ), true, 512, JSON_THROW_ON_ERROR );
 			} catch ( \JsonException ) {
 				throw new \RuntimeException( 'The PCSS manifest.json file is not available. You probably need to run `yarn dist`!' );
 			}
