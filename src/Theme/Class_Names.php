@@ -12,12 +12,12 @@ use Lipe\Lib\Util\Arrays;
  *
  * @link    https://www.npmjs.com/package/classnames
  *
- * @example new Class_Names( [ 'top' => false, 'bottom' => true ] );
- * @example new Class_Names( [ 'top', 'bottom' ] );
- * @example new Class_Names( 'top', [ 'bottom' => false ] );
- * @example $class  = new Class_Names( [ $styles['tab'] ] );
+ * @example new Class_Names(['top' => false, 'bottom' => true ]);
+ * @example new Class_Names(['top', 'bottom' ]);
+ * @example new Class_Names('top', ['bottom' => false ]);
+ * @example $class = new Class_Names([$styles['tab'] ]);
  *          // Conditionally add an active class as we go.
- *          $class[ 'active' ] = isset( $_POST['domain_list'] );
+ *          $class ['active' ] = isset( $_POST['domain_list']);
  *
  * @phpstan-type POSSIBLE array<string|\BackedEnum>|array<string,bool>|string|\BackedEnum
  * @phpstan-type CSS_CLASSES POSSIBLE|array<POSSIBLE>
@@ -42,12 +42,12 @@ class Class_Names implements \ArrayAccess {
 	 * @param string|\BackedEnum|array ...$classes - Classes to parse.
 	 */
 	public function __construct( ...$classes ) {
-		\array_walk( $classes, [ $this, 'parse_classes' ] );
+		\array_walk( $classes, $this->parse_classes( ... ) );
 	}
 
 
 	/**
-	 * Return final list of class names.
+	 * Return the final list of class names.
 	 *
 	 * @see Class_Names::__toString
 	 * @interal
@@ -56,7 +56,7 @@ class Class_Names implements \ArrayAccess {
 	 */
 	public function get_classes(): array {
 		$clean = Arrays::in()->clean( $this->classes );
-		return \array_values( \array_map( [ Template::in(), 'sanitize_html_class' ], $clean ) );
+		return \array_values( \array_map( Template::in()->sanitize_html_class( ... ), $clean ) );
 	}
 
 

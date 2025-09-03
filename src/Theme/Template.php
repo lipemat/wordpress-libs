@@ -75,7 +75,7 @@ class Template {
 	 */
 	public function sanitize_html_class( string $css_class ): string {
 		// Strip out any %-encoded octets.
-		$sanitized = preg_replace( '/%[a-fA-F\d]{2}/', '', $css_class );
+		$sanitized = \preg_replace( '/%[a-fA-F\d]{2}/', '', $css_class );
 		if ( null === $sanitized ) {
 			return '';
 		}
