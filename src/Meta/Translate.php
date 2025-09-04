@@ -24,7 +24,7 @@ trait Translate {
 	protected array $registered = [];
 
 	/**
-	 * Used internally to track, which group row are on.
+	 * Used internally to track which group row is on.
 	 *
 	 * @var int
 	 */
@@ -511,7 +511,7 @@ trait Translate {
 
 	/**
 	 * CMB2 saves taxonomy fields as terms or meta value for options.
-	 * We delete either this meta value, or these assigned terms.
+	 * We delete either this meta value or these assigned terms.
 	 *
 	 * Does not delete the actual terms, just the assignment of them.
 	 *
@@ -584,13 +584,13 @@ trait Translate {
 
 
 	/**
-	 * Certain values types are retrieve and stored from main blog when
+	 * Certain values types are retrieve and stored from the main blog when
 	 * using network settings.
 	 *
 	 * When using categories in network settings, the categories are retrieved
 	 * and saved relative to the main blog.
 	 *
-	 * If we are working with a network setting, we switch to main blog before
+	 * If we are working with a network setting, we switch to the main blog before
 	 * retrieval, otherwise we use the standard retrieval.
 	 *
 	 * @param string   $field_id - The field id.

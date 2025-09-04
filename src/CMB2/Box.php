@@ -109,7 +109,7 @@ class Box {
 	public bool $enqueue_js;
 
 	/**
-	 * Handles hooking CMB2 forms/metaboxes into the post/attachment/user screens,
+	 * Handles hooking CMB2 forms/metaboxes into the post/attachment/user screens
 	 * and handles hooking in and saving those fields.
 	 * Set to false if you plan on handling the form/field output/saving
 	 * (via something like cmb2_metabox_form()).
@@ -133,8 +133,8 @@ class Box {
 	public $register_rest_field_cb;
 
 	/**
-	 * This parameter is for post alternate-context metaboxes only.
-	 * To output the fields 'naked' (without a postbox wrapper/style)
+	 * This parameter is for post-alternate context metaboxes only.
+	 * To output the fields 'naked' (without a metabox wrapper/style)
 	 *
 	 * @note    Must set title of box to false
 	 *
@@ -157,11 +157,11 @@ class Box {
 	 * The following parameter is any additional arguments passed as $callback_args
 	 * to add_meta_box, if/when applicable.
 	 *
-	 * CMB2 does not use these arguments in the add_meta_box callback, however, these args
+	 * CMB2 does not use these arguments in the add_meta_box callback; however, these args
 	 * are parsed for certain special properties, like determining Gutenberg/block-editor
 	 * compatibility.
 	 *
-	 * We have our own Gutenberg/block-editor properties in this class so use those instead
+	 * We have our own Gutenberg/block-editor properties in this class, so use those instead
 	 * of this property if you are working with Gutenberg.
 	 *
 	 * @see Box::$display_when_gutenberg_active
@@ -177,8 +177,8 @@ class Box {
 	public array $mb_callback_args;
 
 	/**
-	 * This flag lets you set whether the meta box works in the block editor or not.
-	 * Setting it to true signifies that the you’ve confirmed that the meta box
+	 * This flag lets you set whether the meta-box works in the block editor or not.
+	 * Setting it to true signifies tha you've confirmed that the meta-box
 	 * works in the block editor, setting it to false signifies that it doesn't.
 	 *
 	 * If set to false, WP will automatically fall back to the classic editor when
@@ -189,17 +189,17 @@ class Box {
 	 *
 	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
 	 *
-	 * @uses sets the `__block_editor_compatible_meta_box` meta box flag
+	 * @sets the `__block_editor_compatible_meta_box` meta-box flag
 	 *
 	 * @var bool
 	 */
 	public bool $gutenberg_compatible = true;
 
 	/**
-	 * Set to false if you have converted this meta box fully to Gutenberg and
-	 * you don't want the default meta box to display when gutenberg is active.
+	 * Set to false if you have converted this meta-box fully to Gutenberg, and
+	 * you don't want the default meta-box to display when gutenberg is active.
 	 *
-	 * When the classic editor is loaded this meta box will load no matter what
+	 * When the classic editor is loaded, this meta-box will load no matter what
 	 * this is set to.
 	 *
 	 * @see  Box::get_args()
@@ -207,7 +207,7 @@ class Box {
 	 *
 	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
 	 *
-	 * @uses sets the `__back_compat_meta_box` meta box flag
+	 * @sets the `__back_compat_meta_box` meta box flag
 	 *
 	 * @var bool
 	 */
@@ -890,8 +890,8 @@ class Box {
 	public function translate_rest_keys( Registered $field, array $config ): array {
 		if ( $field->is_public_rest_data() ) {
 			if ( BoxType::POST === $this->get_box_type() ) {
-				// Post type must support 'custom-fields' to allow REST meta.
-				\array_walk( $this->object_types, function( $type ) {
+				// A post-type must support 'custom-fields' to allow REST meta.
+				\array_walk( $this->object_types, function( $type ): void {
 					add_post_type_support( $type, 'custom-fields' );
 				} );
 			}

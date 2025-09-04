@@ -78,7 +78,7 @@ class Options_Page extends Box {
 
 	/**
 	 * Sent along to add_menu_page()/add_submenu_page()
-	 * to define the capability required to view the options page.
+	 * to define the capability required to view the option page.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#capability
 	 *
@@ -89,7 +89,7 @@ class Options_Page extends Box {
 	protected string $capability = 'manage_options';
 
 	/**
-	 * Set to `network_admin_menu` to add the options page to the network admin menu.
+	 * Set to `network_admin_menu` to add the option page to the network admin menu.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#admin_menu_hook
 	 *
@@ -327,7 +327,7 @@ class Options_Page extends Box {
 
 
 	/**
-	 * The options hookups translate options to sitemeta for the network
+	 * The option hookups translate options to sitemeta for the network
 	 * options, among other things.
 	 *
 	 * The CMB2 plugin only runs these hookups in the admin because
@@ -345,7 +345,7 @@ class Options_Page extends Box {
 
 
 	/**
-	 * Option pages are stored in one big blob which means we
+	 * Option pages are stored in one big blob, which means we
 	 * must implement logic to separate the fields when registering.
 	 *
 	 * Gives a universal place for amending the config.

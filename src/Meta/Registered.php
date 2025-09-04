@@ -88,7 +88,7 @@ readonly class Registered {
 
 
 	/**
-	 * Get default value for the field.
+	 * Get the default value for the field.
 	 *
 	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#default
 	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#default_cb

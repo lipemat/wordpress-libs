@@ -367,7 +367,7 @@ class Field {
 	/**
 	 * Specify a default value for the field.
 	 *
-	 * @see     Checkbox::default() -- checkboxes are tricky.
+	 * @see     Checkbox::default() -- Checkboxes are tricky.
 	 *
 	 * @param callable|string|array<mixed> $default_value - A default value, or a function which will return a value.
 	 *
