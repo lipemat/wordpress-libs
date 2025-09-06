@@ -719,6 +719,10 @@ class Field_Type {
 	 * @return Taxonomy
 	 */
 	public function taxonomy_select_2( string $taxonomy, bool $assign_terms = false, ?string $no_terms_text = null, ?bool $remove_default = null ): Taxonomy {
+		if ( null !== $this->field->group ) {
+			_doing_it_wrong( __METHOD__, 'Groups do not support taxonomy select 2 fields.', '5.7.0' );
+		}
+
 		$this->field = Taxonomy::from( $this->field, $this->box );
 		$_args = $this->field->taxonomy_args( $taxonomy, $no_terms_text, $remove_default );
 		$field = $this->field->set_args( Type::TERM_SELECT_2, $_args, DataType::TAXONOMY );
