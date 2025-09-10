@@ -14,6 +14,8 @@ use Lipe\Lib\Libs\Container\Instance;
 class Testing {
 	use Instance;
 
+	public const CODE_EXIT = 17;
+
 	/**
 	 * Has the exit method been called?
 	 *
@@ -47,7 +49,7 @@ class Testing {
 	public function exit(): void {
 		if ( \defined( 'WP_UNIT_DIR' ) ) {
 			$this->did_exit = true;
-			throw new \OutOfBoundsException( 'Exit called in test context.' );
+			throw new \OutOfBoundsException( 'Exit called in test context.', \absint( self::CODE_EXIT ) );
 		}
 		exit;
 	}
