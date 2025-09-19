@@ -1,4 +1,5 @@
 <?php
+
 namespace Lipe\Lib\Traits;
 
 /**
@@ -12,7 +13,7 @@ class VT_ {
 
 class VersionTest extends \WP_UnitTestCase {
 
-	public function test_run_for_version() : void {
+	public function test_run_for_version(): void {
 		$t = new VT_();
 		\call_private_method( $t, 'run_for_version', [
 			function( $o, $t, $th ) {
@@ -31,11 +32,11 @@ class VersionTest extends \WP_UnitTestCase {
 		$outside = \call_private_method( $t, 'run_for_version', [ '__return_true', '1.0.1' ] );
 		$this->assertTrue( $outside );
 
-		$this->expectExceptionMessage( 'You may not use the Version Trait with anonymous classes, you will have to implement what you need within your anonymous class.' );
+		$this->expectExceptionMessage( 'You may not use the Version Trait with anonymous classes unless you override the `get_version_identifier` method inside your anonymous class.' );
 		$this->expectException( 'BadMethodCallException' );
 		$f = new class() {
 			use Version;
 		};
-		\call_private_method( $f, 'run_for_version', [ '__return_true', '1.0.0' ] );
+		\call_private_method( $f, 'run_for_version', [ __return_true( ... ), '1.0.0' ] );
 	}
 }
