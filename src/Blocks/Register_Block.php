@@ -36,11 +36,84 @@ use Lipe\Lib\Blocks\Args\Supports;
  * }
  * @phpstan-type BLOCK_ATTRIBUTES array<string, ATTR_SHAPE>
  *
- * @implements ArgsRules<array<string, mixed>>
+ * @phpstan-type SELECTORS array{
+ *      root: string,
+ *      border?: string | array{
+ *          color?: string,
+ *          root?: string,
+ *          radius?: string,
+ *          style?: string,
+ *          width?: string,
+ *      },
+ *      color?: string | array{
+ *           root?:string,
+ *           background?: string,
+ *           text?: string,
+ *      },
+ *      dimensions?: string | array{
+ *           root?: string,
+ *           minHeight?: string,
+ *      },
+ *      spacing?: string | array{
+ *           root?: string,
+ *           padding?: string,
+ *           margin?: string,
+ *           blockGap?: string,
+ *      },
+ *      typography?: string | array{
+ *           root?: string,
+ *           fontFamily?: string,
+ *           fontSize?: string,
+ *           fontStyle?: string,
+ *           fontWeight?: string,
+ *           letterSpacing?: string,
+ *           lineHeight?: string,
+ *           textDecoration?: string,
+ *           textTransform?: string,
+ *      }
+ *  }
+ *
+ * @phpstan-type BLOCK_REGISTER_ARGS array{
+ *    api_version?: int,
+ *    title?: string,
+ *    category?: string,
+ *    parent?: string[],
+ *    ancestor?: string[],
+ *    allowed_blocks?: string[],
+ *    icon?: string,
+ *    description?: string,
+ *    keywords?: string[],
+ *    textdomain?: string,
+ *    styles?: array<int, array{
+ *       name: string,
+ *       label: string,
+ *       inline_style?: string,
+ *       style_handle?: string,
+ *       is_default?: bool,
+ *    }>,
+ *    variations?: array<int, array<string, mixed>>,
+ *    selectors?: SELECTORS,
+ *    supports?: array<string,mixed>,
+ *    example?: array<string, array<string, mixed>>,
+ *    render_callback?: callable,
+ *    variation_callback?: callable,
+ *    attributes?: BLOCK_ATTRIBUTES,
+ *    uses_context?: string[],
+ *    provides_context?: string[],
+ *    block_hooks?: array<string, 'after'|'before'|'first_child'|'last_child'>,
+ *    editor_script_handles?: string[],
+ *    script_handles?: string[],
+ *    view_script_handles?: string[],
+ *    editor_style_handles?: string[],
+ *    style_handles?: string[],
+ *    view_style_handles?: string[],
+ *  }
+ *
+ * @implements ArgsRules<BLOCK_REGISTER_ARGS>
  */
 class Register_Block implements ArgsRules {
 	/**
-	 * @use Args<array<string, mixed>>
+	 * @use Args<BLOCK_REGISTER_ARGS>
 	 */
 	use Args;
 
@@ -204,42 +277,7 @@ class Register_Block implements ArgsRules {
 	 *
 	 * @see  BlockSelector in @types/js-boilerplate
 	 *
-	 * @phpstan-var array{
-	 *     root: string,
-	 *     border?: string | array{
-	 *         color?: string,
-	 *         root?: string,
-	 *         radius?: string,
-	 *         style?: string,
-	 *         width?: string,
-	 *     },
-	 *     color?: string | array{
-	 *          root?:string,
-	 *          background?: string,
-	 *          text?: string,
-	 *     },
-	 *     dimensions?: string | array{
-	 *          root?: string,
-	 *          minHeight?: string,
-	 *     },
-	 *     spacing?: string | array{
-	 *          root?: string,
-	 *          padding?: string,
-	 *          margin?: string,
-	 *          blockGap?: string,
-	 *     },
-	 *     typography?: string | array{
-	 *          root?: string,
-	 *          fontFamily?: string,
-	 *          fontSize?: string,
-	 *          fontStyle?: string,
-	 *          fontWeight?: string,
-	 *          letterSpacing?: string,
-	 *          lineHeight?: string,
-	 *          textDecoration?: string,
-	 *          textTransform?: string,
-	 *     }
-	 * }
+	 * @phpstan-var SELECTORS
 	 *
 	 * @var array<string, mixed>
 	 */
