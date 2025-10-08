@@ -163,10 +163,10 @@ trait Memoize {
 	 */
 	public function clear_single_item( string $identifier, ...$args ): bool {
 		$cache_key = $this->get_cache_key( $identifier, $args );
-		$nonce_key = "{$identifier}::once";
+		$once_key = "{$identifier}::once";
 		unset(
 			$this->memoize_cache[ $cache_key ],
-			$this->memoize_cache[ $nonce_key ]
+			$this->memoize_cache[ $once_key ]
 		);
 		return Cache::in()->delete( $cache_key, __CLASS__ );
 	}
