@@ -16,9 +16,6 @@ use Lipe\Lib\Args\ClauseRules;
  * @link   https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters
  *
  * @implements ClauseRules<Tax_Query>
- *
- * @internal
- *
  */
 class Tax_Query implements ClauseRules {
 	/**
