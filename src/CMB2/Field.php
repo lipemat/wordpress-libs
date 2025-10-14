@@ -88,16 +88,17 @@ class Field {
 	/**
 	 * To override the box's `show_in_rest` for this field.
 	 *
-	 * Only individual fields that are explicitly set to WP_REST_Server::ALLMETHODS will
-	 * be included in default WP `meta` response even if the box is set to true
+	 * Only individual fields that are explicitly set to `WP_REST_Server::ALLMETHODS` will
+	 * be included or editable in the default WP `meta` response even if the box is set to `true`
 	 * and all fields are in the /cmb2 response.
 	 *
-	 * CMB2 honors the WP_REST_SERVER methods of transport
+	 * CMB2 honors the `WP_REST_SERVER` methods of transport
 	 * for including fields in the /cmb2 endpoint.
 	 * WP does not so, this field will either be included
 	 * or not to default WP `meta` response based on WP_REST_Server::ALLMETHODS.
 	 *
 	 * @example \WP_REST_Server::CREATABLE
+	 * @example WP_REST_Server::EDITABLE // Only editable using CMB2 keys, not WP `meta`.
 	 *
 	 * @internal
 	 *
@@ -108,7 +109,7 @@ class Field {
 	protected string|bool $show_in_rest;
 
 	/**
-	 * Used to configure some strings for thinks like taxonomy and repeater fields.
+	 * Used to configure some strings for things like taxonomy and repeater fields.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#repeatable
@@ -573,20 +574,19 @@ class Field {
 	 * fields, which do not have a `show_in_rest` specified will be set false.
 	 *
 	 * Only individual fields that are explicitly set to `WP_REST_Server::ALLMETHODS` will
-	 * be included in the default WP ` meta ` response even if the box is set to `true`
-	 * and all fields are in the /cmb2 response.
+	 * be included in the default WP ` meta ` response or edit ability, even if the box is
+	 * set to `true` and all fields are in the /cmb2 response.
 	 *
-	 * CMB2 honors the WP_REST_SERVER methods of transport
-	 * for including fields in the /cmb2 endpoint.
+	 * CMB2 honors the WP_REST_SERVER methods of transport for including fields in the /cmb2 endpoint.
 	 * WP does not so, this field will either be included
-	 * or not to default WP `meta` response based on WP_REST_Server::ALLMETHODS.
+	 * or not to default WP `meta` response based on `WP_REST_Server::ALLMETHODS`.
 	 *
 	 * @see     Box::selectively_show_in_rest()
 	 *
 	 * @example WP_REST_Server::READABLE // Same as `true`.
 	 * @example WP_REST_Server::ALLMETHODS // All Methods must be used for the field
 	 *          show up under `meta`, otherwise it will just show up under `cmb2`.
-	 * @example WP_REST_Server::EDITABLE
+	 * @example WP_REST_Server::EDITABLE // Only editable using CMB2 keys, not WP `meta`.
 	 *
 	 * @phpstan-param \WP_REST_Server::*|bool $methods
 	 *
