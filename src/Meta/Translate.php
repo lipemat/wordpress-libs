@@ -542,16 +542,16 @@ trait Translate {
 	 * @param string     $field_id  - The field id.
 	 * @param MetaType   $meta_type - The meta type.
 	 *
-	 * @return \WP_Term|false
+	 * @return ?\WP_Term
 	 */
-	protected function get_taxonomy_singular_field_value( int|string $object_id, string $field_id, MetaType $meta_type ): \WP_Term|bool {
+	protected function get_taxonomy_singular_field_value( int|string $object_id, string $field_id, MetaType $meta_type ): ?\WP_Term {
 		try {
 			$terms = $this->get_taxonomy_field_value( $object_id, $field_id, $meta_type );
 		} catch ( \RuntimeException ) {
-			return false;
+			return null;
 		}
 
-		return [] === $terms ? false : \reset( $terms );
+		return [] === $terms ? null : \reset( $terms );
 	}
 
 

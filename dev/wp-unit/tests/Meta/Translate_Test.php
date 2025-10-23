@@ -171,6 +171,23 @@ class Translate_Test extends \WP_UnitTestCase {
 	}
 
 
+	public function test_taxonomy_singular_default(): void {
+		$box = new Box( __METHOD__, [ 'post' ], 'Test Taxonomy Field' );
+		$box->field( 'taxonomy/sr/1', 'SR 1' )
+		    ->taxonomy_select( 'category' );
+		do_action( 'cmb2_init' );
+
+		$category = self::factory()->category->create_and_get();
+		$post = Post_Mock::factory( self::factory()->post->create_and_get() );
+
+		$post->update_meta( 'taxonomy/sr/1', $category->term_id );
+		$this->assertSame( $category->term_id, $post['taxonomy/sr/1']->term_id );
+
+		$post->delete_meta( 'taxonomy/sr/1' );
+		$this->assertNull( $post['taxonomy/sr/1'] );
+	}
+
+
 	#[DataProvider( 'provideCheckboxValues' )]
 	public function test_checkbox_field( mixed $value, bool $expected ): void {
 		$box = new Box( __METHOD__, [ 'post' ], 'Test Checkbox Field' );
