@@ -29,7 +29,7 @@ parameters:
         - src
         - dev/stubs/Traitor.php
     scanFiles:
-        - %rootDir%/../../../stubs/cmb2/cmb2-2.10.php
+        - %rootDir%/../../../stubs/cmb2/cmb2-2.11.php
     ignoreErrors:
         - # Traitor contains a bunch of traits, some of which have the method and no way to suppress error locally.
             message: '#^Call to function method_exists\(\) with \$this\(stubs\\Traitor\) and ''get_extended…'' will always evaluate to true\.$#'
