@@ -99,6 +99,9 @@ trait Translate {
 			$value = cmb2_options( (string) $object_id )->get( $key, null );
 		} else {
 			$value = get_metadata( $meta_type->value, (int) $object_id, $key, true );
+			if ( false === $value ) {
+				$value = null;
+			}
 		}
 
 		if ( null !== $field && null !== $field->get_escape_cb() ) {
