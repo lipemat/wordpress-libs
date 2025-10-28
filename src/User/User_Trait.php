@@ -5,7 +5,6 @@ namespace Lipe\Lib\User;
 
 use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
-use Lipe\Lib\Meta\Repo;
 
 /**
  * Shared methods for interacting with the WordPress user object.
@@ -85,7 +84,9 @@ trait User_Trait {
 				$this->user_id = 0;
 			}
 		} elseif ( \is_a( $user, \WP_User::class ) ) {
-			$this->user = $user;
+			if ( $user->exists() ) {
+				$this->user = $user;
+			}
 			$this->user_id = $user->ID;
 		} else {
 			$this->user_id = (int) $user;
@@ -121,8 +122,10 @@ trait User_Trait {
 	public function get_object(): ?\WP_User {
 		if ( ! isset( $this->user ) && 0 !== $this->user_id ) {
 			$user = get_user_by( 'id', $this->user_id );
-			if ( false !== $user ) {
+			if ( $user instanceof \WP_User && $user->exists() ) {
 				$this->user = $user;
+			} else {
+				$this->user = null;
 			}
 		}
 
@@ -136,7 +139,7 @@ trait User_Trait {
 	 * @return bool
 	 */
 	public function exists(): bool {
-		return null !== $this->get_object();
+		return $this->get_object() instanceof \WP_User && $this->get_object()->exists();
 	}
 
 
