@@ -157,7 +157,7 @@ class Arrays {
 
 
 	/**
-	 * Mimics the Javascript `.find` array prototype to allow a user
+	 * Mimics the JavaScript `.find` array prototype to allow a user
 	 * defined predicate and return the array item of the first `true` response.
 	 *
 	 * @link https://wiki.php.net/rfc/array_find
@@ -184,11 +184,11 @@ class Arrays {
 
 
 	/**
-	 * Mimics the Javascript `.findIndex` array prototype to allow a user
+	 * Mimics the JavaScript `.findIndex` array prototype to allow a user
 	 * defined predicate and return the array key of the first `true` response.
 	 *
 	 * @link https://wiki.php.net/rfc/array_find
-	 * @todo Once minimum PHP version is 8.4, update to use native `array_find_key`.
+	 * @todo Once the minimum PHP version is 8.4, update to use native `array_find_key`.
 	 *
 	 * @template TKey
 	 * @template T
@@ -219,7 +219,7 @@ class Arrays {
 	 *
 	 * Supports both numeric and associate keys.
 	 *
-	 * @example `Arrays::in()->array_create_assoc(
+	 * @example `Arrays::in()->flatten_assoc(
 	 *              fn($a) => [$a->ID => $a->post_name ],
 	 *          [get_post(1), get_post(2)];
 	 *          // [1 => 'Hello World', 2 => 'Sample Page' ]
