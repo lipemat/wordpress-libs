@@ -186,6 +186,9 @@ trait User_Trait {
 	 * @return static
 	 */
 	public static function factory( null|\WP_User|int $user = null ): static {
+		if ( 0 === $user ) {
+			$user = null;
+		}
 		return static::createFactory( $user );
 	}
 }
