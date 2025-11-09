@@ -3,6 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Site;
 
+use Lipe\Lib\Libs\Container\Factory;
 use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 
@@ -33,6 +34,11 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @template OPTIONS of array<string, mixed>
  */
 trait Site_Trait {
+	/**
+	 * @use Factory<array{int|\WP_Site|null}>
+	 */
+	use Factory;
+
 	/**
 	 * @use Mutator_Trait<OPTIONS>
 	 */
@@ -142,6 +148,6 @@ trait Site_Trait {
 	 * @return static
 	 */
 	public static function factory( null|int|\WP_Site $site = null ): static {
-		return new static( $site );
+		return static::createFactory( $site );
 	}
 }

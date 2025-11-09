@@ -3,6 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\User;
 
+use Lipe\Lib\Libs\Container\Factory;
 use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 
@@ -50,6 +51,11 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @template OPTIONS of array<string, mixed>
  */
 trait User_Trait {
+	/**
+	 * @use Factory<array{int|\WP_User|null}>
+	 */
+	use Factory;
+
 	/**
 	 * @use Mutator_Trait<OPTIONS>
 	 */
@@ -180,6 +186,6 @@ trait User_Trait {
 	 * @return static
 	 */
 	public static function factory( null|\WP_User|int $user = null ): static {
-		return new static( $user );
+		return static::createFactory( $user );
 	}
 }

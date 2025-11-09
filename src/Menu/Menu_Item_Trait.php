@@ -3,12 +3,13 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Menu;
 
+use Lipe\Lib\Libs\Container\Factory;
 use Lipe\Lib\Post_Type\Post_Object_Trait;
 
 /**
  * Nav Menu Item post type returned from `wp_get_nav_menu_items`.
  *
- * Same as other post types except additional properties are added
+ * The same as other post types except additional properties are added
  * by `wp_setup_nav_menu_item`.
  *
  * @since 3.7.0
@@ -30,6 +31,11 @@ use Lipe\Lib\Post_Type\Post_Object_Trait;
  * @template OPTIONS of array<string, mixed>
  */
 trait Menu_Item_Trait {
+	/**
+	 * @use Factory<array{int|\WP_Post|null}>
+	 */
+	use Factory;
+
 	/**
 	 * @use Post_Object_Trait<OPTIONS>
 	 */
@@ -73,7 +79,7 @@ trait Menu_Item_Trait {
 
 
 	/**
-	 * Pass either an ID of the menu item, or a WP_Post
+	 * Pass either an ID of the menu item or a WP_Post
 	 * returned from `wp_get_nav_menu_items`.
 	 *
 	 * @param int|\WP_Post $post - ID or post object, null is not supported.
@@ -81,6 +87,6 @@ trait Menu_Item_Trait {
 	 * @return static
 	 */
 	public static function factory( int|\WP_Post $post ): static {
-		return new static( $post );
+		return static::createFactory( $post );
 	}
 }

@@ -3,9 +3,9 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy;
 
+use Lipe\Lib\Libs\Container\Factory;
 use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
-use Lipe\Lib\Meta\Repo;
 
 /**
  * Shared methods for interacting with the WordPress taxonomy object.
@@ -24,6 +24,11 @@ use Lipe\Lib\Meta\Repo;
  * @template OPTIONS of array<string, mixed>
  */
 trait Taxonomy_Trait {
+	/**
+	 * @use Factory<array{int|\WP_Term}>
+	 */
+	use Factory;
+
 	/**
 	 * @use Mutator_Trait<OPTIONS>
 	 */
@@ -108,11 +113,9 @@ trait Taxonomy_Trait {
 	 *
 	 * @param int|\WP_Term $term - Term ID or term object.
 	 *
-	 * @static
-	 *
 	 * @return static
 	 */
-	public static function factory( $term ) {
-		return new static( $term );
+	public static function factory( int|\WP_Term $term ): static {
+		return self::createFactory( $term );
 	}
 }

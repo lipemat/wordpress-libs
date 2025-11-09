@@ -3,6 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Post_Type;
 
+use Lipe\Lib\Libs\Container\Factory;
 use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 
@@ -39,6 +40,11 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @template OPTIONS of array<string, mixed>
  */
 trait Post_Object_Trait {
+	/**
+	 * @use Factory<array{int|\WP_Post|null}>
+	 */
+	use Factory;
+
 	/**
 	 * @use Mutator_Trait<OPTIONS>
 	 */
@@ -131,6 +137,6 @@ trait Post_Object_Trait {
 	 * @return static
 	 */
 	public static function factory( int|\WP_Post|null $post = null ): static {
-		return new static( $post );
+		return self::createFactory( $post );
 	}
 }

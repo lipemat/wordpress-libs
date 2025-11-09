@@ -3,6 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Network;
 
+use Lipe\Lib\Libs\Container\Factory;
 use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 
@@ -23,6 +24,11 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @template OPTIONS of array<string, mixed>
  */
 trait Network_Trait {
+	/**
+	 * @use Factory<array{int|\WP_Network|null}>
+	 */
+	use Factory;
+
 	/**
 	 * @use Mutator_Trait<OPTIONS>
 	 */
@@ -149,6 +155,6 @@ trait Network_Trait {
 	 * @return static
 	 */
 	public static function factory( null|int|\WP_Network $network = null ): static {
-		return new static( $network );
+		return static::createFactory( $network );
 	}
 }

@@ -3,9 +3,9 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Comment;
 
+use Lipe\Lib\Libs\Container\Factory;
 use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
-use Lipe\Lib\Meta\Repo;
 
 /**
  * Shared methods for interacting with the WordPress comment object.
@@ -29,6 +29,11 @@ use Lipe\Lib\Meta\Repo;
  * @template OPTIONS of array<string, mixed>
  */
 trait Comment_Trait {
+	/**
+	 * @use Factory<array{int|\WP_Comment}>
+	 */
+	use Factory;
+
 	/**
 	 * @use Mutator_Trait<OPTIONS>
 	 */
@@ -137,6 +142,6 @@ trait Comment_Trait {
 	 * @return static
 	 */
 	public static function factory( int|\WP_Comment $comment ): static {
-		return new static( $comment );
+		return static::createFactory( $comment );
 	}
 }
