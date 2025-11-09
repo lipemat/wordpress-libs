@@ -3,6 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Cron;
 
+use Lipe\Lib\Libs\Container\Factory;
+
 /**
  * Run on cron event based on the cron object passed in.
  *
@@ -13,6 +15,11 @@ namespace Lipe\Lib\Cron;
  *
  */
 class Runner {
+	/**
+	 * @use Factory<array{Cron}>
+	 */
+	use Factory;
+
 	/**
 	 * Build a new cron runner instance.
 	 *
@@ -95,6 +102,6 @@ class Runner {
 	 * @return static
 	 */
 	public static function factory( Cron $event ): static {
-		return new static( $event );
+		return static::createFactory( $event );
 	}
 }

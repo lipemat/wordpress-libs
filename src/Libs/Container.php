@@ -29,6 +29,13 @@ final class Container {
 	private array $services = [];
 
 	/**
+	 * List of factories for services available in the container.
+	 *
+	 * @var array<class-string, \Closure>
+	 */
+	private array $factories = [];
+
+	/**
 	 * Track services that have been initialized.
 	 *
 	 * @see Hooks::init()
@@ -73,6 +80,43 @@ final class Container {
 	 */
 	public function set( string $id, object $class_instance ): void {
 		$this->services[ $id ] = $class_instance;
+	}
+
+
+	/**
+	 * Set a factory for a service in the container.
+	 *
+	 * @template T of object
+	 * @phpstan-param class-string<T>       $id
+	 * @phpstan-param \Closure(mixed...): T $factory
+	 *
+	 * @formatter:off
+	 * @param string $id        - The identifier for the service to set.
+	 * @param \Closure $factory - The factory to use to create the service.
+	 * @formatter:on
+	 *
+	 * @return void
+	 */
+	public function set_factory( string $id, \Closure $factory ): void {
+		$this->factories[ $id ] = $factory;
+	}
+
+
+	/**
+	 * Get a factory for a service in the container.
+	 *
+	 * @template T of object
+	 * @phpstan-param class-string<T> $id
+	 *
+	 * @formatter:off
+	 * @param string $id The identifier for the factory to get.
+	 * @formatter:on
+	 *
+	 * @phpstan-return (\Closure(mixed...): T)|null
+	 * @return ?\Closure
+	 */
+	public function get_factory( string $id ): ?\Closure {
+		return $this->factories[ $id ] ?? null;
 	}
 
 
