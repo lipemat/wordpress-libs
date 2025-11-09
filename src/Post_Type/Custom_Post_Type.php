@@ -73,6 +73,7 @@ class Custom_Post_Type {
 	/**
 	 * The post type slug.
 	 *
+	 * @phpstan-var lowercase-string&non-empty-string
 	 * @var string
 	 */
 	public readonly string $name;
@@ -100,7 +101,11 @@ class Custom_Post_Type {
 	/**
 	 * Takes care of the necessary hook and registering.
 	 *
+	 * @phpstan-param lowercase-string&non-empty-string $post_type
+	 *
+	 * @formatter:off
 	 * @param string $post_type The post type slug.
+	 * @formatter:on
 	 */
 	final public function __construct( string $post_type ) {
 		$this->name = $post_type;
