@@ -21,10 +21,10 @@ trait Instance {
 	 * @return static
 	 */
 	public static function instance(): static {
-		$instance = Container::instance()->get( static::class );
+		$instance = Container::instance()->get_service( static::class );
 		if ( ! $instance instanceof static ) {
 			// @phpstan-ignore new.static (No way to enforce an optional constructor in a trait.)
-			Container::instance()->set( static::class, $instance = new static() );
+			Container::instance()->set_service( static::class, $instance = new static() );
 		}
 		return $instance;
 	}

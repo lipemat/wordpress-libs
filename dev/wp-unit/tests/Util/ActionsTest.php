@@ -1,16 +1,38 @@
 <?php
+declare( strict_types=1 );
 /**
- * ActionsTest.php
- *
  * @author  mat
  * @since   2/21/2018
- *
- * @package starting-point *
  */
 
 namespace Lipe\Lib\Util;
 
+use Lipe\Lib\Libs\Container;
+
 class ActionsTest extends \WP_UnitTestCase {
+	public function test_container_change(): void {
+		$this->assertFalse( has_action( 'arb' ) );
+		$this->assertFalse( has_action( 'wombat' ) );
+		$this->assertFalse( has_action( 'varb' ) );
+		$this->assertFalse( has_action( 'octo' ) );
+		$this->assertInstanceOf( Actions::class, Actions::in() );
+
+		Actions::instance()->add_action_all( [ 'arb', 'wombat' ], function() {
+		} );
+		$this->assertTrue( has_action( 'arb' ) );
+		$this->assertTrue( has_action( 'wombat' ) );
+
+		Container::instance()->set_service( Actions::class, new class extends Actions {
+			public function add_action_all( array $actions, callable $callback, int $priority = 10 ): void {
+				// do nothing.
+			}
+		} );
+		Actions::in()->add_action_all( [ 'varb', 'octo' ], function() {
+		} );
+		$this->assertFalse( has_action( 'varb' ) );
+		$this->assertFalse( has_action( 'octo' ) );
+	}
+
 
 	public function test_add_single_filter(): void {
 		$callable = function( $o, $t, $tr ) {

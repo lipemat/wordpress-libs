@@ -59,7 +59,7 @@ final class Container {
 	 *
 	 * @phpstan-return T|null
 	 */
-	public function get( string $id ): ?object {
+	public function get_service( string $id ): ?object {
 		return $this->services[ $id ] ?? null;
 	}
 
@@ -78,7 +78,7 @@ final class Container {
 	 *
 	 * @return void
 	 */
-	public function set( string $id, object $class_instance ): void {
+	public function set_service( string $id, object $class_instance ): void {
 		$this->services[ $id ] = $class_instance;
 	}
 
