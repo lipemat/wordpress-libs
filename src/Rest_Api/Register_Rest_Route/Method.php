@@ -10,13 +10,13 @@ use Lipe\Lib\Rest_Api\Arguments_Schema;
 /**
  * @author Mat Lipe
  * @since  5.8.0
- * @phpstan-type CALLBACK \Closure( \WP_REST_Request<array<string, mixed>> $request ): (\WP_REST_Response|\WP_Error)
+ * @phpstan-type CALLBACK \Closure( \WP_REST_Request $request ): (\WP_REST_Response|\WP_Error)
  *
  * @phpstan-type METHOD_ARGS array{
  *     args?: array<string, array<string, mixed>>|Arguments_Schema,
  *     callback?: CALLBACK,
  *     methods?: \WP_REST_Server::*,
- *     permission_callback?: \Closure( \WP_REST_Request<array<string, mixed>> $request ): bool
+ *     permission_callback?: \Closure( \WP_REST_Request $request ): bool
  * }
  *
  * @implements ArgsRules<METHOD_ARGS>
@@ -59,7 +59,7 @@ class Method implements ArgsRules {
 	 *
 	 * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/#permissions-callback
 	 *
-	 * @phpstan-var \Closure( \WP_REST_Request<array<string, mixed>> $request ): bool
+	 * @phpstan-var \Closure( \WP_REST_Request $request ): bool
 	 * @var \Closure
 	 */
 	public \Closure $permission_callback;
@@ -100,7 +100,7 @@ class Method implements ArgsRules {
 	 *
 	 * @link     https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/#permissions-callback
 	 *
-	 * @phpstan-param \Closure( \WP_REST_Request<array<string, mixed>> $request ): bool $callback
+	 * @phpstan-param \Closure( \WP_REST_Request $request ): bool $callback
 	 *
 	 * @formatter:off
 	 * @param \Closure $callback - Verification function.

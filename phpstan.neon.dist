@@ -36,3 +36,8 @@ parameters:
             identifier: function.alreadyNarrowedType
             count: 8
             path: dev/stubs/Traitor.php
+        - # WP_Request requires a generic but fluent interfaces can't always have it.
+            message: '#with generic class WP_REST_Request (but )?does not specify its types#'
+            identifier: missingType.generics
+            count: 15
+            path: 'src/Rest_Api/Register_Rest_Route/Method.php'
