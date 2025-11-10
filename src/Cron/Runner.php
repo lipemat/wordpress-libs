@@ -102,6 +102,6 @@ class Runner {
 	 * @return static
 	 */
 	public static function factory( Cron $event ): static {
-		return static::createFactory( $event );
+		return static::factorize( $event );
 	}
 }

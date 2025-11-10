@@ -142,6 +142,6 @@ trait Comment_Trait {
 	 * @return static
 	 */
 	public static function factory( int|\WP_Comment $comment ): static {
-		return static::createFactory( $comment );
+		return static::factorize( $comment );
 	}
 }

@@ -155,6 +155,6 @@ trait Network_Trait {
 	 * @return static
 	 */
 	public static function factory( null|int|\WP_Network $network = null ): static {
-		return static::createFactory( $network );
+		return static::factorize( $network );
 	}
 }

@@ -116,6 +116,6 @@ trait Taxonomy_Trait {
 	 * @return static
 	 */
 	public static function factory( int|\WP_Term $term ): static {
-		return self::createFactory( $term );
+		return self::factorize( $term );
 	}
 }

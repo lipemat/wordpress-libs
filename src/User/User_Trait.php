@@ -189,6 +189,6 @@ trait User_Trait {
 		if ( 0 === $user ) {
 			$user = null;
 		}
-		return static::createFactory( $user );
+		return static::factorize( $user );
 	}
 }

@@ -148,6 +148,6 @@ trait Site_Trait {
 	 * @return static
 	 */
 	public static function factory( null|int|\WP_Site $site = null ): static {
-		return static::createFactory( $site );
+		return static::factorize( $site );
 	}
 }

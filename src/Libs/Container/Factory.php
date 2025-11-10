@@ -30,7 +30,7 @@ trait Factory {
 	 *
 	 * @return static
 	 */
-	protected static function createFactory( ...$construct_args ): static {
+	protected static function factorize( ...$construct_args ): static {
 		$factory = Container::instance()->get_factory( static::class );
 		if ( ! $factory instanceof \Closure ) {
 			Container::instance()->set_factory( static::class, $factory = fn( ...$construct_args ) => new static( ...$construct_args ) );

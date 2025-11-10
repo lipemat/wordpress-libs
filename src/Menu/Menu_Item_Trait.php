@@ -87,6 +87,6 @@ trait Menu_Item_Trait {
 	 * @return static
 	 */
 	public static function factory( int|\WP_Post $post ): static {
-		return static::createFactory( $post );
+		return static::factorize( $post );
 	}
 }
