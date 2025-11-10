@@ -3,7 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Post_Type;
 
-use Lipe\Lib\Libs\Container\Factory;
+use Lipe\Lib\Container\Factory;
 use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 
@@ -41,7 +41,7 @@ use Lipe\Lib\Meta\Mutator_Trait;
  */
 trait Post_Object_Trait {
 	/**
-	 * @use Factory<array{int|\WP_Post|null}>
+	 * @use \Lipe\Lib\Container\Factory<array{int|\WP_Post|null}>
 	 */
 	use Factory;
 

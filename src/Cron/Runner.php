@@ -3,7 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Cron;
 
-use Lipe\Lib\Libs\Container\Factory;
+use Lipe\Lib\Container\Factory;
 
 /**
  * Run on cron event based on the cron object passed in.
@@ -16,7 +16,7 @@ use Lipe\Lib\Libs\Container\Factory;
  */
 class Runner {
 	/**
-	 * @use Factory<array{Cron}>
+	 * @use \Lipe\Lib\Container\Factory<array{Cron}>
 	 */
 	use Factory;
 

@@ -3,7 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
-use Lipe\Lib\Libs\Container\Instance;
+use Lipe\Lib\Container\Instance;
 
 /**
  * Utility class for testing purposes.

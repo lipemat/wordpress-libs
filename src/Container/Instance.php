@@ -1,9 +1,7 @@
 <?php
 declare( strict_types=1 );
 
-namespace Lipe\Lib\Libs\Container;
-
-use Lipe\Lib\Libs\Container;
+namespace Lipe\Lib\Container;
 
 /**
  * Provides static methods to get an instance of the class from the container.

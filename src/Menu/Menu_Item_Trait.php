@@ -3,7 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Menu;
 
-use Lipe\Lib\Libs\Container\Factory;
+use Lipe\Lib\Container\Factory;
 use Lipe\Lib\Post_Type\Post_Object_Trait;
 
 /**

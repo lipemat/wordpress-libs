@@ -3,7 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Comment;
 
-use Lipe\Lib\Libs\Container\Factory;
+use Lipe\Lib\Container\Factory;
 use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 
@@ -30,7 +30,7 @@ use Lipe\Lib\Meta\Mutator_Trait;
  */
 trait Comment_Trait {
 	/**
-	 * @use Factory<array{int|\WP_Comment}>
+	 * @use \Lipe\Lib\Container\Factory<array{int|\WP_Comment}>
 	 */
 	use Factory;
 

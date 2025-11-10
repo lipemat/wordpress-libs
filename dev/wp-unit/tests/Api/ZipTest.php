@@ -4,7 +4,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Api;
 
-use Lipe\Lib\Libs\Container;
+use Lipe\Lib\Container\Container;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**

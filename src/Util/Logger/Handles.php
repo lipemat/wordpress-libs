@@ -3,7 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Util\Logger;
 
-use Lipe\Lib\Libs\Container\Instance;
+use Lipe\Lib\Container\Instance;
 
 /**
  * Registered handles for the Logger.

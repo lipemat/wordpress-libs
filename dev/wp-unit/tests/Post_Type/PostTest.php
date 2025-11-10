@@ -3,7 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Post_Type;
 
-use Lipe\Lib\Libs\Container;
+use Lipe\Lib\Container\Container;
 
 /**
  * @author Mat Lipe

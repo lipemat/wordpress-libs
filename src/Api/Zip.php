@@ -4,8 +4,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Api;
 
-use Lipe\Lib\Libs\Container\Hooks;
-use Lipe\Lib\Libs\Container\Instance;
+use Lipe\Lib\Container\Hooks;
+use Lipe\Lib\Container\Instance;
 use Lipe\Lib\Util\Files;
 use Lipe\Lib\Util\Testing;
 

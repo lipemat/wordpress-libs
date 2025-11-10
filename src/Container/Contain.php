@@ -1,48 +1,19 @@
 <?php
-//phpcs:disable Universal.Classes.DisallowFinalClass, LipePlugin.CodeAnalysis.PrivateInClass
 declare( strict_types=1 );
 
-namespace Lipe\Lib\Libs;
+namespace Lipe\Lib\Container;
 
 /**
- * Container for holding instances of various classes.
- *
- * Used to reset during unit tests consistently instead
- * of relying on internal $instance values.
+ * Interface for dependency injection containers.
  *
  * @author Mat Lipe
- * @since  5.6.0
+ * @since  5.8.0
  */
-final class Container {
+interface Contain {
 	/**
-	 * The singleton instance of the container.
-	 *
-	 * @var ?self
+	 * Here to protect the `instance` call from incorrect signatures.
 	 */
-	private static ?Container $instance = null;
-
-	/**
-	 * List of services available in the container.
-	 *
-	 * @var array<class-string, mixed>
-	 */
-	private array $services = [];
-
-	/**
-	 * List of factories for services available in the container.
-	 *
-	 * @var array<class-string, \Closure>
-	 */
-	private array $factories = [];
-
-	/**
-	 * Track services that have been initialized.
-	 *
-	 * @see Hooks::init()
-	 *
-	 * @var array<class-string, bool>
-	 */
-	private array $intialized = [];
+	public function __construct();
 
 
 	/**
@@ -59,9 +30,7 @@ final class Container {
 	 *
 	 * @phpstan-return T|null
 	 */
-	public function get_service( string $id ): ?object {
-		return $this->services[ $id ] ?? null;
-	}
+	public function get_service( string $id ): ?object;
 
 
 	/**
@@ -78,9 +47,7 @@ final class Container {
 	 *
 	 * @return void
 	 */
-	public function set_service( string $id, object $class_instance ): void {
-		$this->services[ $id ] = $class_instance;
-	}
+	public function set_service( string $id, object $class_instance ): void;
 
 
 	/**
@@ -97,9 +64,7 @@ final class Container {
 	 *
 	 * @return void
 	 */
-	public function set_factory( string $id, \Closure $factory ): void {
-		$this->factories[ $id ] = $factory;
-	}
+	public function set_factory( string $id, \Closure $factory ): void;
 
 
 	/**
@@ -115,9 +80,7 @@ final class Container {
 	 * @phpstan-return (\Closure(mixed...): T)|null
 	 * @return ?\Closure
 	 */
-	public function get_factory( string $id ): ?\Closure {
-		return $this->factories[ $id ] ?? null;
-	}
+	public function get_factory( string $id ): ?\Closure;
 
 
 	/**
@@ -129,9 +92,7 @@ final class Container {
 	 *
 	 * @return void
 	 */
-	public function set_initialized( string $id ): void {
-		$this->intialized[ $id ] = true;
-	}
+	public function set_initialized( string $id ): void;
 
 
 	/**
@@ -143,9 +104,7 @@ final class Container {
 	 *
 	 * @return bool - True if the service is initialized, false otherwise.
 	 */
-	public function is_initialized( string $id ): bool {
-		return isset( $this->intialized[ $id ] ) && $this->intialized[ $id ];
-	}
+	public function is_initialized( string $id ): bool;
 
 
 	/**
@@ -155,20 +114,13 @@ final class Container {
 	 *
 	 * @return void
 	 */
-	public static function reset(): void {
-		self::$instance = null;
-	}
+	public static function reset(): void;
 
 
 	/**
 	 * Get the singleton instance of the container.
 	 *
-	 * @return self
+	 * @return static
 	 */
-	public static function instance(): self {
-		if ( null === self::$instance ) {
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
+	public static function instance(): static;
 }

@@ -11,7 +11,7 @@ declare( strict_types=1 );
  * @since  5.6.1
  */
 
-use Lipe\Lib\Libs\Container;
+use Lipe\Lib\Container\Container;
 
 // Reset the DI container between tests.
 if ( \defined( 'WP_UNIT_DIR' ) ) {

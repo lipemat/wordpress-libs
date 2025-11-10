@@ -7,7 +7,7 @@ declare( strict_types=1 );
  */
 
 use Lipe\Lib\Api\Route;
-use Lipe\Lib\Libs\Container;
+use Lipe\Lib\Container\Container;
 use Lipe\Lib\Meta\Repo;
 
 /**

@@ -3,7 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Taxonomy;
 
-use Lipe\Lib\Libs\Container\Factory;
+use Lipe\Lib\Container\Factory;
 use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Mutator_Trait;
 
@@ -25,7 +25,7 @@ use Lipe\Lib\Meta\Mutator_Trait;
  */
 trait Taxonomy_Trait {
 	/**
-	 * @use Factory<array{int|\WP_Term}>
+	 * @use \Lipe\Lib\Container\Factory<array{int|\WP_Term}>
 	 */
 	use Factory;
 

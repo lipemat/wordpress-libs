@@ -7,7 +7,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
-use Lipe\Lib\Libs\Container;
+use Lipe\Lib\Container\Container;
 
 class ActionsTest extends \WP_UnitTestCase {
 	public function test_container_change(): void {
