@@ -95,6 +95,7 @@ trait Args {
 	 */
 	protected function load_array_into_properties( array $existing ): void {
 		foreach ( $existing as $arg => $value ) {
+			// @phpstan-ignore function.alreadyNarrowedType (Safeguard against data making it pastphpstan)
 			if ( \property_exists( $this, $arg ) ) {
 				$this->{$arg} = $value;
 			} else {
