@@ -9,7 +9,8 @@ use Lipe\Lib\Args\ArgsRules;
 use Lipe\Lib\Post_Type\Capabilities;
 
 /**
- * A fluent interface for registering a custom post type.
+ * A fluent interface for registering a custom post type
+ * via the `register_post_type()` function.
  *
  * @link   https://developer.wordpress.org/reference/functions/register_post_type/
  *
