@@ -7,7 +7,6 @@ use Lipe\Lib\CMB2\Field\Checkbox;
 use Lipe\Lib\CMB2\Field\Term_Select_2;
 use Lipe\Lib\CMB2\Field\Term_Select_2\Select_2_Field;
 use Lipe\Lib\CMB2\Field\True_False;
-use Lipe\Lib\CMB2\Field\True_False_Display;
 use Lipe\Lib\CMB2\Field\Type;
 use Lipe\Lib\CMB2\Variation\Date;
 use Lipe\Lib\CMB2\Variation\File;
