@@ -512,12 +512,14 @@ trait Display {
 	 * You will be completely responsible for outputting that row's HTML.
 	 * The callback function gets passed the field $args array, and the $field object.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#render_row_cb
-	 * @link https://github.com/WebDevStudios/CMB2/issues/596#issuecomment-187941343
+	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#render_row_cb
+	 * @link     https://github.com/WebDevStudios/CMB2/issues/596#issuecomment-187941343
 	 *
-	 * @phpstan-param callable( array<string, mixed>, \CMB2_Field ): void $render_row_cb
+	 * @phpstan-param callable( array<string, mixed>, \CMB2_Field ): (void|\CMB2_Field) $render_row_cb
 	 *
-	 * @param callable                                                    $render_row_cb - Callback to render the row.
+	 * @formatter:off
+	 * @param callable $render_row_cb - Callback to render the row.
+	 * @formatter:on
 	 */
 	public function render_row_cb( callable $render_row_cb ): static {
 		$this->render_row_cb = $render_row_cb;

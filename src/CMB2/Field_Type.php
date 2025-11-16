@@ -3,7 +3,6 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
-use Lipe\Lib\CMB2\Field\Checkbox;
 use Lipe\Lib\CMB2\Field\Term_Select_2;
 use Lipe\Lib\CMB2\Field\Term_Select_2\Select_2_Field;
 use Lipe\Lib\CMB2\Field\True_False;
@@ -57,9 +56,9 @@ class Field_Type {
 	 *
 	 * Custom to WP-Libs.
 	 *
-	 * @return Field
+	 * @return Variation\Checkbox
 	 */
-	public function true_false(): Field {
+	public function true_false(): Variation\Checkbox {
 		$this->field = Variation\Checkbox::from( $this->field, $this->box );
 		$this->field->render_class( True_False::class );
 		$this->field->display_cb( fn( $a, \CMB2_Field $field ) => 'on' === $field->value ? 'Yes' : 'No' );
@@ -72,9 +71,9 @@ class Field_Type {
 	 *
 	 * @alias Field_Type::true_false
 	 *
-	 * @return Field
+	 * @return Variation\Checkbox
 	 */
-	public function toggle(): Field {
+	public function toggle(): Variation\Checkbox {
 		return $this->true_false();
 	}
 
@@ -351,20 +350,19 @@ class Field_Type {
 	 *
 	 * @link          https://github.com/CMB2/CMB2/wiki/Field-Types#checkbox
 	 *
-	 * @phpstan-param 'compact'|'block' $layout
+	 * @phpstan-param Field\Checkbox::LAYOUT_* $layout
 	 *
-	 * @param string                    $layout - compact, block (cmb2 default is block).
+	 * @param string                           $layout - compact, block (cmb2 default is block).
 	 *
-	 * @return Field
+	 * @return Variation\Checkbox
 	 */
-	public function checkbox( string $layout = 'block' ): Field {
+	public function checkbox( string $layout = Field\Checkbox::LAYOUT_BLOCK ): Variation\Checkbox {
 		$this->field = Variation\Checkbox::from( $this->field, $this->box );
-		$_args = [];
 		if ( 'block' !== $layout ) {
-			$_args['render_row_cb'] = [ Checkbox::in(), 'render_field_callback' ];
+			$this->field->render_row_cb( Field\Checkbox::in()->render_field_callback( ... ) );
 		}
 
-		return $this->field->set_args( Type::CHECKBOX, $_args, DataType::CHECKBOX );
+		return $this->field->set_args( Type::CHECKBOX, [], DataType::CHECKBOX );
 	}
 
 
