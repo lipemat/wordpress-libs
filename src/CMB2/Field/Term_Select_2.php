@@ -19,8 +19,8 @@ class Term_Select_2 {
 	use Memoize;
 	use Singleton;
 
-	public const GET_TERMS        = 'lipe/lib/cmb2/field-types/term-select-2/ajax';
-	public const NONCE            = 'lipe/lib/cmb2/field/term-select-2/nonce';
+	public const GET_TERMS = 'lipe/lib/cmb2/field-types/term-select-2/ajax';
+	public const NONCE     = 'lipe/lib/cmb2/field/term-select-2/nonce';
 
 	/**
 	 * Fields that have been registered.
@@ -181,7 +181,7 @@ class Term_Select_2 {
 	 * @param int|string           $id         - Post id on post screens, field key on settings screens.
 	 * @param array<string, mixed> $field_args - The field args.
 	 *
-	 * @return int[]|array<List<int>>|null
+	 * @return int[]|array<int[]>|null
 	 */
 	public function set_object_terms( mixed $filtered, mixed $meta_value, int|string $id, array $field_args ): ?array {
 		if ( ! \is_array( $meta_value ) ) {
@@ -191,10 +191,10 @@ class Term_Select_2 {
 		$registered = $this->get_select_2_fields( $field_args['id'] );
 		foreach ( $meta_value as $key => $val ) {
 			if ( ! \is_array( $val ) ) {
-				$meta_value[ $key ] = (int) ( $val );
+				$meta_value[ $key ] = (int) $val;
 				continue;
 			}
-			$meta_value[ $key ] = \array_map( '\intval', $val );
+			$meta_value[ $key ] = \array_map( \intval( ... ), $val );
 		}
 
 		if ( null === $registered || ! $registered->assign_terms ) {
@@ -204,10 +204,11 @@ class Term_Select_2 {
 		$box_type = $registered->field->get_box()->get_box_type();
 		if ( '' !== $id && 0 !== $id && Repo::in()->supports_taxonomy_relationships( $box_type, $registered->field ) ) {
 			if ( $registered->field->is_repeatable() ) {
+				$meta_value = \array_map( fn( array|int $value ) => (array) $value, $meta_value );
 				$ids = \array_merge( ...$meta_value );
-				wp_set_object_terms( (int) $id, \array_map( '\intval', $ids ), $registered->taxonomy );
+				wp_set_object_terms( (int) $id, \array_map( \intval( ... ), $ids ), $registered->taxonomy );
 			} else {
-				wp_set_object_terms( (int) $id, \array_map( '\intval', $meta_value ), $registered->taxonomy );
+				wp_set_object_terms( (int) $id, \array_map( \intval( ... ), $meta_value ), $registered->taxonomy );
 			}
 		}
 
