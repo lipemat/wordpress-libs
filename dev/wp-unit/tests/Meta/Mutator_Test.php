@@ -5,6 +5,7 @@ namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\CMB2\Box;
 use Lipe\Lib\CMB2\BoxType;
+use Lipe\Lib\CMB2\Event_Callbacks;
 use Lipe\Lib\CMB2\Options_Page;
 use Lipe\Lib\Settings\Settings_Trait;
 use mocks\Comment_Mock;
@@ -144,6 +145,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 			'tags',
 			[],
 			BoxType::POST,
+			'update',
 		], $this->changed_args );
 
 		// Via meta repo.
@@ -169,6 +171,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 			'file',
 			wp_get_attachment_image_url( $this->attachment_id ),
 			BoxType::POST,
+			'delete',
 		], $this->changed_args );
 		$this->assertEquals( [
 			$id,
@@ -199,6 +202,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 			'checkbox',
 			true,
 			BoxType::POST,
+			'delete',
 		], $this->changed_args );
 		$this->assertEquals( [
 			$id,
@@ -221,6 +225,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 			'tags',
 			[],
 			BoxType::POST,
+			'update',
 		], $this->changed_args );
 		$field->save_field( null );
 		$this->assertEquals( [
@@ -229,6 +234,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 			'tags',
 			$this->tags,
 			BoxType::POST,
+			'delete',
 		], $this->changed_args );
 		$this->assertEquals( [
 			$id,
@@ -285,6 +291,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 			'categories',
 			null,
 			BoxType::OPTIONS,
+			Event_Callbacks::CALL_UPDATE,
 		], $this->changed_args );
 
 		$this->assertEquals( [ $id, $id ], $this->changed );
@@ -297,6 +304,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 			'categories',
 			$cat_id,
 			BoxType::OPTIONS,
+			Event_Callbacks::CALL_UPDATE,
 		], $this->changed_args );
 		$this->assertEquals( [
 			$id,
@@ -343,6 +351,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 			'categories',
 			$cat_id,
 			BoxType::OPTIONS,
+			Event_Callbacks::CALL_UPDATE,
 		], $this->changed_args );
 		$this->assertEquals( [
 			$id,

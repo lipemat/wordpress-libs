@@ -17,17 +17,23 @@ use Lipe\Lib\Taxonomy\Get_Terms;
  * - Subscribe to values being deleted via `delete_cb`.
  * - Subscribe to values being changed via `change_cb`.
  *
- * @author Mat Lipe
- * @since  4.0.0
+ * @author   Mat Lipe
+ * @since    4.0.0
  *
  * @interal
  *
+ * @formatter:off
  * @phpstan-type DELETE_CB callable( int|string $object_id, string $key, mixed $previous, BoxType $type ): void
- * @phpstan-type CHANGE_CB callable( int|string $object_id, mixed $value, string $key, mixed $previous, BoxType $type): void
+ * @phpstan-type CHANGE_CB callable( int|string $object_id, mixed $value, string $key, mixed $previous, BoxType $type, Event_Callbacks::CALL_* $call_type ): void
+ * @formatter:on
  */
 class Event_Callbacks {
 	public const TYPE_CHANGE = 'change';
 	public const TYPE_DELETE = 'delete';
+
+	public const CALL_ADD    = 'add';
+	public const CALL_UPDATE = 'update';
+	public const CALL_DELETE = 'delete';
 
 	/**
 	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
@@ -163,7 +169,7 @@ class Event_Callbacks {
 					return;
 				}
 				$this->previous_value = $old_tt_ids;
-				$this->fire_change_callback( $object_id, $terms );
+				$this->fire_change_callback( $object_id, $terms, self::CALL_UPDATE );
 			}
 		}, 10, 6 );
 
@@ -179,7 +185,7 @@ class Event_Callbacks {
 			if ( \in_array( get_post_type( $object_id ), $this->object_types, true ) ) {
 				$this->fire_change_callback( $object_id, wp_get_object_terms( $object_id, $taxonomy, [
 					'fields' => Get_Terms::FIELD_IDS,
-				] ) );
+				] ), self::CALL_DELETE );
 			}
 		}, 10, 3 );
 	}
@@ -232,7 +238,7 @@ class Event_Callbacks {
 
 
 	/**
-	 * Hooks required to track a change event for an options page value.
+	 * Hooks required to track a change event for an option's page value.
 	 *
 	 * @see \CMB2_Options_Hookup::hooks
 	 *
@@ -250,12 +256,12 @@ class Event_Callbacks {
 			$this->previous_value = $old_value[ $this->key ] ?? null;
 			// Values is removed.
 			if ( ! isset( $value[ $this->key ] ) && null !== $this->previous_value ) {
-				$this->fire_change_callback( $this->box->get_id(), null );
+				$this->fire_change_callback( $this->box->get_id(), null, self::CALL_UPDATE );
 			}
 
 			// Value is changed.
 			if ( isset( $value[ $this->key ] ) && $value[ $this->key ] !== $this->previous_value ) {
-				$this->fire_change_callback( $this->box->get_id(), $value[ $this->key ] );
+				$this->fire_change_callback( $this->box->get_id(), $value[ $this->key ], self::CALL_UPDATE );
 			}
 		}, 10, 2 );
 
@@ -268,7 +274,7 @@ class Event_Callbacks {
 		add_action( $action, function( $option, $value ) {
 			$this->previous_value = null;
 			if ( isset( $value[ $this->key ] ) ) {
-				$this->fire_change_callback( $this->box->get_id(), null );
+				$this->fire_change_callback( $this->box->get_id(), null, self::CALL_ADD );
 			}
 		}, 10, 2 );
 	}
@@ -306,13 +312,13 @@ class Event_Callbacks {
 		add_action( "added_{$this->box_type->value}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key, $value ] = $args;
 			if ( $this->key === $key ) {
-				$this->fire_change_callback( $object_id, $value );
+				$this->fire_change_callback( $object_id, $value, self::CALL_ADD );
 			}
 		}, 10, 4 );
 		add_action( "updated_{$this->box_type->value}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key, $value ] = $args;
 			if ( $this->key === $key && $value !== $this->previous_value ) {
-				$this->fire_change_callback( $object_id, $value );
+				$this->fire_change_callback( $object_id, $value, self::CALL_UPDATE );
 			}
 		}, 10, 4 );
 
@@ -320,7 +326,7 @@ class Event_Callbacks {
 		add_action( "deleted_{$this->box_type->value}_meta", function( ...$args ) {
 			[ $meta_id, $object_id, $key, $value ] = $args;
 			if ( $this->key === $key && null !== $this->previous_value ) {
-				$this->fire_change_callback( $object_id, $value );
+				$this->fire_change_callback( $object_id, $value, self::CALL_DELETE );
 			}
 		}, 10, 4 );
 	}
@@ -367,19 +373,23 @@ class Event_Callbacks {
 	/**
 	 * Call the field's `change_cb` callback.
 	 *
-	 * @param int|string $object_id - ID of the object, or the options page.
-	 * @param mixed      $value     - The new value.
+	 * @phpstan-param self::CALL_* $change_type
+	 *
+	 * @param int|string           $object_id   - ID of the object, or the option's page.
+	 * @param mixed                $value       - The new value.
+	 * @param string               $change_type - The type of change. Either 'add', 'update' or 'delete'.
 	 *
 	 * @return void
 	 */
-	public function fire_change_callback( int|string $object_id, mixed $value ): void {
+	public function fire_change_callback( int|string $object_id, mixed $value, string $change_type ): void {
 		\call_user_func(
 			$this->callback,
 			$object_id,
 			$value,
 			$this->key,
 			$this->previous_value,
-			$this->box_type
+			$this->box_type,
+			$change_type
 		);
 	}
 
