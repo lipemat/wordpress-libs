@@ -606,16 +606,61 @@ class Mutator_Test extends \WP_UnitTestCase {
 		$this->assertEquals( \wp_get_attachment_url( $this->attachment_id ), $o['file']['url'] );
 
 		$o['checkbox'] = true;
-		$this->assertEquals( true, $o->get_option( 'checkbox' ) );
+		$this->assertTrue( $o->get_option( 'checkbox' ) );
 		$this->assertEquals( true, $o['checkbox'] );
 
 		$o['checkbox'] = false;
-		$this->assertEquals( false, $o->get_option( 'checkbox' ) );
+		$this->assertFalse( $o->get_option( 'checkbox' ) );
 		$this->assertEquals( false, $o['checkbox'] );
 
 		$o['text'] = 'nothing';
 		$this->assertEquals( 'nothing', $o->get_option( 'text' ) );
 		$this->assertEquals( 'nothing', $o['text'] );
+	}
+
+
+	public function test_default_values(): void {
+		$box = new Box( 'f', [ 'post' ], null );
+		$box->field( 'bool', 'Boolean' )
+		    ->checkbox();
+		$box->field( 'int', 'Integer' )
+		    ->text_number()
+		    ->default_cb( fn() => 0 );
+		$box->field( 'str', 'String' )
+		    ->text();
+		$box->field( 'repeat', 'Repeater' )
+		    ->text()
+		    ->repeatable();
+		do_action( 'cmb2_init' );
+
+		$post = Post_Mock::factory( self::factory()->post->create_and_get() );
+
+		$post['bool'] = true;
+		$this->assertTrue( $post->get_meta( 'bool' ) );
+		$post['bool'] = false;
+		$this->assertFalse( $post->get_meta( 'bool', true ) );
+		$this->assertFalse( $post->get_meta( 'bool' ) );
+
+		$this->assertSame( 0, $post['int'] );
+		$post['int'] = 1;
+		$this->assertSame( '1', $post->get_meta( 'int', 5 ) );
+		$post['int'] = 0;
+		$this->assertSame( 1, $post->get_meta( 'int', 1 ) );
+
+		$this->assertSame( '', $post['str'] );
+		$post['str'] = 'test';
+		$this->assertSame( 'test', $post->get_meta( 'str', 'other' ) );
+		$post['str'] = '';
+		$this->assertSame( 'other', $post->get_meta( 'str', 'other' ) );
+		unset( $post['str'] );
+		$this->assertSame( 'other', $post->get_meta( 'str', 'other' ) );
+
+		$this->assertSame( [], $post['repeat'] );
+		$post['repeat'] = [ 'one', 'two' ];
+		$this->assertSame( [ 'one', 'two' ], $post->get_meta( 'repeat' ) );
+		unset( $post['repeat'] );
+		$this->assertSame( [], $post->get_meta( 'repeat' ) );
+		$this->assertSame( [ 'one', 'two' ], $post->get_meta( 'repeat', [ 'one', 'two' ] ) );
 	}
 
 }
