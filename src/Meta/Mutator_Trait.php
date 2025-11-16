@@ -131,9 +131,13 @@ trait Mutator_Trait {
 	 */
 	public function get_meta( string $key, mixed $default_value = null ): mixed {
 		Repo::in()->pre_get_field( $key );
-
 		$value = Repo::in()->get_value( $this->get_id(), $key, $this->get_meta_type() );
-		if ( null !== $default_value && \in_array( $value, [ false, '', 0, '0', [], null ], true ) ) {
+
+		$empties = [ '', '0', 0, [], null ];
+		if ( ! \is_bool( $default_value ) ) {
+			$empties[] = false;
+		}
+		if ( null !== $default_value && \in_array( $value, $empties, true ) ) {
 			return $default_value;
 		}
 
@@ -142,7 +146,7 @@ trait Mutator_Trait {
 
 
 	/**
-	 * Update a value of this object's meta field
+	 * Update the value of this object's meta field
 	 * using the meta repo to map the appropriate data type.
 	 *
 	 * If a callable is passed, it will be called with the previous value
