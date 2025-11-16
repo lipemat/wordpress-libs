@@ -61,10 +61,9 @@ class Field_Type {
 	 */
 	public function true_false(): Field {
 		$this->field = Variation\Checkbox::from( $this->field, $this->box );
-		return $this->field->set_args( Type::CHECKBOX, [
-			'render_class' => True_False::class,
-			'display_cb'   => fn( $a, \CMB2_Field $field ) => 'on' === $field->value ? 'Yes' : 'No',
-		], DataType::CHECKBOX );
+		$this->field->render_class( True_False::class );
+		$this->field->display_cb( fn( $a, \CMB2_Field $field ) => 'on' === $field->value ? 'Yes' : 'No' );
+		return $this->field->set_args( Type::CHECKBOX, [], DataType::CHECKBOX );
 	}
 
 
@@ -152,10 +151,11 @@ class Field_Type {
 			'type'  => 'url',
 			'class' => 'cmb2-text-url regular-text',
 		] );
+		if ( null !== $protocols ) {
+			$this->field->protocols( $protocols );
+		}
 
-		return $this->field->set_args( Type::TEXT_URL, [
-			'protocols' => $protocols,
-		], DataType::DEFAULT );
+		return $this->field->set_args( Type::TEXT_URL, [], DataType::DEFAULT );
 	}
 
 

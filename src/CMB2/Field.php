@@ -170,20 +170,6 @@ class Field {
 	protected array|bool $column;
 
 	/**
-	 * To be used with $this->column or $this->column().
-	 * Callback function to display the output of the column in the
-	 * object-lists.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#display_cb
-	 * @see     link for markup example
-	 *
-	 * @example my_callback_function_to_display_output( $field_args, $field )
-	 *
-	 * @var callable
-	 */
-	protected $display_cb;
-
-	/**
 	 * ID of boxes tab, which this field should display in.
 	 * The tab must be first registered with the box.
 	 *
@@ -311,14 +297,16 @@ class Field {
 	 * Add this field as a post list column on the attached
 	 * posts, comments, users, terms.
 	 *
-	 * @phpstan-param callable( array<string, mixed>, \CMB2_Field, mixed ): string $display_cb
+	 * @phpstan-param callable( array<string, mixed>, \CMB2_Field, mixed): (void|string) $display_cb
 	 *
 	 * @formatter:off
+	 *
 	 * @param bool|int      $position         - The column position.
 	 * @param string        $name             - defaults to field name.
 	 * @param callable|null $display_cb       - optional display callback.
 	 * @param bool          $disable_sorting  - Set to true to prevent this column from being
-	 *                                        sortable in post list.
+	 *                                          sortable in the object list.
+	 *
 	 * @formatter:on
 	 *
 	 * @return static
