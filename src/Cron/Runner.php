@@ -16,7 +16,7 @@ use Lipe\Lib\Container\Factory;
  */
 class Runner {
 	/**
-	 * @use \Lipe\Lib\Container\Factory<array{Cron}>
+	 * @use Factory<array{Cron}>
 	 */
 	use Factory;
 
@@ -40,23 +40,8 @@ class Runner {
 	 * @return void
 	 */
 	public function init(): void {
-		add_action( $this->cron->get_name(), [ $this, 'run_task' ] );
+		add_action( $this->cron->get_name(), $this->run_task( ... ) );
 		$this->schedule_task();
-	}
-
-
-	/**
-	 * Store a last run stamp and run the `run` method.
-	 *
-	 * @interal
-	 *
-	 * @see Cron::run()
-	 *
-	 * @return void
-	 */
-	public function run_task(): void {
-		update_option( $this->cron->get_name() . '/last-run', time() );
-		$this->cron->run();
 	}
 
 
@@ -79,6 +64,19 @@ class Runner {
 	 */
 	public function get_last_run(): int|false {
 		return get_option( $this->cron->get_name() . '/last-run', false );
+	}
+
+
+	/**
+	 * Store a last run stamp and run the `run` method.
+	 *
+	 * @see Cron::run()
+	 *
+	 * @return void
+	 */
+	protected function run_task(): void {
+		update_option( $this->cron->get_name() . '/last-run', time() );
+		$this->cron->run();
 	}
 
 

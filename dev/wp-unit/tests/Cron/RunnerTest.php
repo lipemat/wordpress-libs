@@ -35,7 +35,7 @@ class RunnerTest extends \WP_UnitTestCase {
 		call_private_method( $runner, 'schedule_task' );
 		$this->assertNotEmpty( wp_get_schedule( 'runner-test' ) );
 		$this->assertEquals( date( 'd/m/y' ), date( 'd/m/y', wp_next_scheduled( 'runner-test' ) ) );
-		\wp_cron_run_all();
+		wp_cron_run_all();
 
 		$this->assertEquals( date( 'd/m/y' ), date( 'd/m/y', get_option( 'runner-test' ) ) );
 
