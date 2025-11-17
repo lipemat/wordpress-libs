@@ -30,7 +30,7 @@ use Lipe\Lib\Meta\Mutator_Trait;
  */
 trait Comment_Trait {
 	/**
-	 * @use \Lipe\Lib\Container\Factory<array{int|\WP_Comment}>
+	 * @use Factory<array{int|\WP_Comment}>
 	 */
 	use Factory;
 

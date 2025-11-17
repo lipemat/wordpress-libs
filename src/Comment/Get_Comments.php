@@ -37,23 +37,26 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, ArgsRu
 	public const ORDERBY_AUTHOR_EMAIL = 'comment_author_email';
 	public const ORDERBY_AUTHOR_IP    = 'comment_author_IP';
 	public const ORDERBY_AUTHOR_URL   = 'comment_author_url';
+	public const ORDERBY_COMMENT_IN   = 'comment__in';
+	public const ORDERBY_COMMENT_TYPE = 'comment_type';
 	public const ORDERBY_CONTENT      = 'comment_content';
 	public const ORDERBY_DATE         = 'comment_date';
 	public const ORDERBY_DATE_GMT     = 'comment_date_gmt';
 	public const ORDERBY_ID           = 'comment_ID';
 	public const ORDERBY_KARMA        = 'comment_karma';
+	public const ORDERBY_META_VALUE   = 'meta_value';
+	public const ORDERBY_NONE         = 'none';
 	public const ORDERBY_PARENT       = 'comment_parent';
 	public const ORDERBY_POST_ID      = 'comment_post_ID';
-	public const ORDERBY_COMMENT_TYPE = 'comment_type';
 	public const ORDERBY_USER_ID      = 'user_id';
-	public const ORDERBY_COMMENT_IN   = 'comment__in';
-	public const ORDERBY_META_VALUE   = 'meta_value';
 
-	public const STATUS_HOLD    = 'hold';
-	public const STATUS_APPROVE = 'approve';
 	public const STATUS_ALL     = 'all';
+	public const STATUS_APPROVE = 'approve';
+	public const STATUS_HOLD    = 'hold';
+	public const STATUS_TRASH   = 'trash';
 
 	public const TYPE_COMMENT = 'comment';
+	public const TYPE_NOTE    = 'note';
 	public const TYPE_PINGS   = 'pings';
 
 	/**
@@ -187,8 +190,9 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, ArgsRu
 	public bool $no_found_rows;
 
 	/**
-	 * Field(s) to order comments by. To use 'meta_value' or 'meta_value_num', `$meta_key`
-	 * must also be defined.
+	 * Field(s) to order comments by.
+	 *
+	 * To use 'meta_value' or 'meta_value_num', `$meta_key` must also be defined.
 	 *
 	 * To sort by a specific `$meta_query` clause, use that clause's array key.
 	 *
@@ -212,15 +216,13 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, ArgsRu
 	 *   - 'comment__in'
 	 *   - 'meta_value'
 	 *   - 'meta_value_num'
-	 *   - the value of `$meta_key`
-	 *   - the array keys of `$meta_query`
-	 *   - an empty array or 'none' to disable `ORDER BY` clause.
+	 *
+	 * Special values:
+	 *   - An empty array or 'none' to disable `ORDER BY` clause.
 	 *
 	 * Default: 'comment_date_gmt'.
 	 *
-	 * @phpstan-var self::ORDERBY*|array<self::ORDERBY*>|string
-	 *
-	 * @var string|array<int,string>
+	 * @var self::ORDERBY*|array<self::ORDERBY*>
 	 */
 	public string|array $orderby;
 
@@ -366,13 +368,12 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, ArgsRu
 	 *
 	 *   - 'hold' (`comment_status=0`)
 	 *   - 'approve' (`comment_status=1`)
+	 *   - 'trash' (`comment_status=trash`)
 	 *   - 'all'
-	 *   - a custom comment status
 	 *
 	 * Default 'all'.
 	 *
-	 * @phpstan-var self::STATUS_*|array<int, self::STATUS_*>|string
-	 * @var string|array<int,string>
+	 * @var self::STATUS_*|array<int,self::STATUS_*>
 	 */
 	public string|array $status;
 
@@ -381,12 +382,11 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, ArgsRu
 	 *
 	 *   - 'comment'
 	 *   - 'pings' (includes 'pingback' and 'trackback')
-	 *   - any custom type string
+	 *   - 'note'
 	 *
 	 * Default empty.
 	 *
-	 * @phpstan-var self::TYPE_*|array<int,self::TYPE_*>|string
-	 * @var string|array<int,string>
+	 * @var self::TYPE_*|array<int,self::TYPE_*>
 	 */
 	public string|array $type;
 

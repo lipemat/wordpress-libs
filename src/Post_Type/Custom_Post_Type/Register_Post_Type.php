@@ -271,11 +271,13 @@ class Register_Post_Type implements ArgsRules {
 	 *   - 'custom-fields'
 	 *   - 'post-formats'
 	 *
-	 * Additionally, the 'revisions' feature dictates whether the post type will store revisions, and the 'comments'
-	 * feature dictates whether the comments count will show on the edit screen. A feature can also be specified as
-	 * an array of arguments to provide additional information about supporting feature. Example:
+	 * The 'revisions' feature dictates whether the post type will store revisions,
+	 * The 'comments' feature dictates whether the comment count will show on the edit screen.
 	 *
-	 *     array('my_feature', array('field' => 'value'))
+	 * A feature can also be specified as an array of arguments to provide information
+	 * about supporting feature.
+	 * Example:
+	 *     ['editor', ['notes' => true]]
 	 *
 	 * Default is an array containing 'title' and 'editor'.
 	 *
