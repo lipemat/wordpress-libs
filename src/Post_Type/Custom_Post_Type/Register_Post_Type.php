@@ -43,6 +43,7 @@ class Register_Post_Type implements ArgsRules {
 	public const SUPPORTS_COMMENTS        = 'comments';
 	public const SUPPORTS_CUSTOM_FIELDS   = 'custom-fields';
 	public const SUPPORTS_EDITOR          = 'editor';
+	public const SUPPORTS_EDITOR_NOTES    = [ 'editor' => [ 'notes' => true ] ];
 	public const SUPPORTS_EXCERPT         = 'excerpt';
 	public const SUPPORTS_PAGE_ATTRIBUTES = 'page-attributes';
 	public const SUPPORTS_POST_FORMATS    = 'post-formats';
@@ -54,7 +55,7 @@ class Register_Post_Type implements ArgsRules {
 	/**
 	 * Name of the post type shown in the menu. Usually plural.
 	 *
-	 * Default is value of `$labels['name']`.
+	 * Default is the value of `$labels['name']`.
 	 */
 	public string $label;
 
@@ -116,7 +117,7 @@ class Register_Post_Type implements ArgsRules {
 	/**
 	 * Whether to generate and allow a UI for managing this post type in the admin.
 	 *
-	 * Default is value of `$public`.
+	 * Default is the value of `$public`.
 	 */
 	public bool $show_ui;
 
@@ -128,7 +129,7 @@ class Register_Post_Type implements ArgsRules {
 	 *   - If a string of an existing top level menu (eg. 'tools.php' or 'edit.php?post_type=page'), the post type will be placed as a
 	 *   sub-menu of that.
 	 *
-	 * Default is value of `$show_ui`.
+	 * Default is the value of `$show_ui`.
 	 *
 	 * @var bool|string
 	 */
@@ -137,14 +138,14 @@ class Register_Post_Type implements ArgsRules {
 	/**
 	 * Makes this post type available for selection in navigation menus.
 	 *
-	 * Default is value of `$public`.
+	 * Default is the value of `$public`.
 	 */
 	public bool $show_in_nav_menus;
 
 	/**
 	 * Makes this post type available via the admin bar.
 	 *
-	 * Default is value of `$show_in_menu`.
+	 * Default is the value of `$show_in_menu`.
 	 */
 	public bool $show_in_admin_bar;
 
@@ -260,7 +261,7 @@ class Register_Post_Type implements ArgsRules {
 	 * Core features include:
 	 *
 	 *   - 'title'
-	 *   - 'editor'
+	 *   - 'editor' => ['notes' => true]
 	 *   - 'comments'
 	 *   - 'revisions'
 	 *   - 'trackbacks'
@@ -281,7 +282,7 @@ class Register_Post_Type implements ArgsRules {
 	 *
 	 * Default is an array containing 'title' and 'editor'.
 	 *
-	 * @var array<int, (string|array<string, mixed>)>
+	 * @var array<int|string, (string|array<string, string|bool>)>
 	 */
 	public array $supports;
 
@@ -392,7 +393,7 @@ class Register_Post_Type implements ArgsRules {
 	 *
 	 * @since WP 6.8
 	 *
-	 * Default is value of `public`.
+	 * Default is the value of `public`.
 	 *
 	 * @var bool
 	 */

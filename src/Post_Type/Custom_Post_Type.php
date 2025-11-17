@@ -28,7 +28,7 @@ class Custom_Post_Type {
 	 * @see Custom_Post_Type::add_support()
 	 * @see Custom_Post_Type::remove_support()
 	 *
-	 * @phpstan-var array<Register_Post_Type::SUPPORTS_*>
+	 * @phpstan-var list<Register_Post_Type::SUPPORTS_*>
 	 */
 	public const DEFAULT_SUPPORTS = [
 		Register_Post_Type::SUPPORTS_TITLE,
@@ -112,7 +112,10 @@ class Custom_Post_Type {
 		$this->labels = new Labels();
 		$this->capabilities = new Capabilities( $this );
 		$this->register_args = new Register_Post_Type( [] );
-		$this->register_args->supports = static::DEFAULT_SUPPORTS;
+		$this->register_args->supports = [];
+		foreach ( static::DEFAULT_SUPPORTS as $support ) {
+			$this->add_support( $support );
+		}
 
 		$this->hook();
 		$this->labels();
@@ -374,35 +377,51 @@ class Custom_Post_Type {
 	 * Adds post type support.
 	 *
 	 * Serves as an alias for calling `add_post_type_support()` directly.
+	 * Must be called before the post type is registered.
 	 *
-	 * Must be called before the post type is registered
+	 * @phpstan-param Register_Post_Type::SUPPORTS_*           $feature
 	 *
-	 * @phpstan-param Register_Post_Type::SUPPORTS_* $feature
-	 *
-	 * @param string                                 $feature - The feature being added.
+	 * @param string|array<string, array<string, bool|string>> $feature - The feature being added.
 	 *
 	 * @return void
 	 */
-	public function add_support( string $feature ): void {
-		if ( ! \in_array( $feature, $this->register_args->supports, true ) ) {
+	public function add_support( string|array $feature ): void {
+		if ( \is_string( $feature ) && ! \in_array( $feature, $this->register_args->supports, true ) ) {
 			$this->register_args->supports[] = $feature;
+		}
+		if ( \is_array( $feature ) ) {
+			$key = \array_key_first( $feature );
+			if ( ! isset( $this->register_args->supports[ $key ] ) || ! \is_array( $this->register_args->supports[ $key ] ) ) {
+				$this->register_args->supports[ $key ] = [];
+			}
+			$this->register_args->supports[ $key ] = \array_merge( $this->register_args->supports[ $key ], $feature[ $key ] );
 		}
 	}
 
 
 	/**
 	 * Removes post type support.
+	 *
 	 * Serves as an alias for calling `remove_post_type_support()` directly.
+	 * Must be called before the post type is registered.
 	 *
-	 * Must be called before the post type is registered
+	 * @phpstan-param Register_Post_Type::SUPPORTS_*           $feature
 	 *
-	 * @phpstan-param Register_Post_Type::SUPPORTS_* $feature
 	 *
-	 * @param string                                 $feature - The feature(s) to removed.
+	 * @param string|array<string, array<string, bool|string>> $feature - The feature being removed.
 	 *
 	 * @return void
 	 */
-	public function remove_support( string $feature ): void {
+	public function remove_support( string|array $feature ): void {
+		if ( \is_array( $feature ) ) {
+			foreach ( $feature as $key => $config ) {
+				foreach ( $config as $sub_key => $value ) {
+					unset( $this->register_args->supports[ $key ][ $sub_key ] );
+				}
+			}
+			return;
+		}
+
 		$existing = \array_search( $feature, $this->register_args->supports, true );
 		if ( false !== $existing ) {
 			unset( $this->register_args->supports[ $existing ] );

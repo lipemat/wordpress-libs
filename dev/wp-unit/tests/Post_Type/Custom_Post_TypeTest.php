@@ -73,4 +73,79 @@ class Custom_Post_TypeTest extends \WP_UnitTestCase {
 		$cpt->publicly_queryable( false );
 		$this->assertFalse( $cpt->register_args->rewrite );
 	}
+
+
+	public function test_add_support(): void {
+		$cpt = new Custom_Post_Type( 'wp-unit-testing' );
+		$cpt->add_support( Register_Post_Type::SUPPORTS_TRACKBACKS );
+		$this->assertSame( [
+			...Post_Type::DEFAULT_SUPPORTS,
+			Register_Post_Type::SUPPORTS_TRACKBACKS,
+		], $cpt->register_args->supports );
+
+		$cpt->add_support( Register_Post_Type::SUPPORTS_POST_FORMATS );
+		$this->assertSame( [
+			...Post_Type::DEFAULT_SUPPORTS,
+			Register_Post_Type::SUPPORTS_TRACKBACKS,
+			Register_Post_Type::SUPPORTS_POST_FORMATS,
+		], $cpt->register_args->supports );
+
+		$cpt->add_support( Register_Post_Type::SUPPORTS_EDITOR_NOTES );
+		$this->assertSame( [
+			...Post_Type::DEFAULT_SUPPORTS,
+			Register_Post_Type::SUPPORTS_TRACKBACKS,
+			Register_Post_Type::SUPPORTS_POST_FORMATS,
+			'editor' => [
+				'notes' => true,
+			],
+		], $cpt->register_args->supports );
+
+		$cpt->add_support( [ 'editor' => [ 'default-mode' => 'template-locked' ] ] );
+		$this->assertEqualSets( [
+			...Post_Type::DEFAULT_SUPPORTS,
+			Register_Post_Type::SUPPORTS_TRACKBACKS,
+			Register_Post_Type::SUPPORTS_POST_FORMATS,
+			'editor' => [
+				'notes'        => true,
+				'default-mode' => 'template-locked',
+			],
+		], $cpt->register_args->supports );
+	}
+
+
+	public function test_remove_support(): void {
+		$cpt = new Custom_Post_Type( 'wp-unit-testing' );
+		$cpt->add_support( Register_Post_Type::SUPPORTS_TRACKBACKS );
+		$cpt->add_support( Register_Post_Type::SUPPORTS_POST_FORMATS );
+		$cpt->add_support( Register_Post_Type::SUPPORTS_EDITOR_NOTES );
+		$cpt->add_support( [ 'editor' => [ 'default-mode' => 'template-locked' ] ] );
+		$this->assertSame( [
+			...Post_Type::DEFAULT_SUPPORTS,
+			Register_Post_Type::SUPPORTS_TRACKBACKS,
+			Register_Post_Type::SUPPORTS_POST_FORMATS,
+			'editor' => [
+				'notes'        => true,
+				'default-mode' => 'template-locked',
+			],
+		], $cpt->register_args->supports );
+
+		$cpt->remove_support( Register_Post_Type::SUPPORTS_TRACKBACKS );
+		$this->assertEqualSets( [
+			...Post_Type::DEFAULT_SUPPORTS,
+			Register_Post_Type::SUPPORTS_POST_FORMATS,
+			'editor' => [
+				'notes'        => true,
+				'default-mode' => 'template-locked',
+			],
+		], $cpt->register_args->supports );
+
+		$cpt->remove_support( Register_Post_Type::SUPPORTS_EDITOR_NOTES );
+		$this->assertEqualSets( [
+			...Post_Type::DEFAULT_SUPPORTS,
+			Register_Post_Type::SUPPORTS_POST_FORMATS,
+			'editor' => [
+				'default-mode' => 'template-locked',
+			],
+		], $cpt->register_args->supports );
+	}
 }
