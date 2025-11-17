@@ -87,19 +87,19 @@ trait Translate {
 	protected function get_meta_value( int|string $object_id, string $key, MetaType $meta_type ): mixed {
 		$field = $this->get_registered( $key );
 		if ( null !== $field && null !== $field->get_group() ) {
-			$group = $this->get_meta_value( $object_id, $field->get_group()->id, $meta_type );
-			if ( '' === $group ) {
+			$group_values = $this->get_meta_value( $object_id, $field->get_group()->id, $meta_type );
+			if ( null === $group_values ) {
 				$default = $field->get_default( $object_id );
 				if ( null !== $default ) {
 					return $default;
 				}
 			}
-			$value = $group[ $this->group_row ][ $key ] ?? null;
+			$value = $group_values[ $this->group_row ][ $key ] ?? null;
 		} elseif ( MetaType::OPTION === $meta_type ) {
 			$value = cmb2_options( (string) $object_id )->get( $key, null );
 		} else {
 			$value = get_metadata( $meta_type->value, (int) $object_id, $key, true );
-			if ( false === $value ) {
+			if ( false === $value || '' === $value ) {
 				$value = null;
 			}
 		}

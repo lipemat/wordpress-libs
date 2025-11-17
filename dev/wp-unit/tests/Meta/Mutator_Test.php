@@ -647,7 +647,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 		$post['int'] = 0;
 		$this->assertSame( 1, $post->get_meta( 'int', 1 ) );
 
-		$this->assertSame( '', $post['str'] );
+		$this->assertNull( $post['str'] );
 		$post['str'] = 'test';
 		$this->assertSame( 'test', $post->get_meta( 'str', 'other' ) );
 		$post['str'] = '';
@@ -655,11 +655,11 @@ class Mutator_Test extends \WP_UnitTestCase {
 		unset( $post['str'] );
 		$this->assertSame( 'other', $post->get_meta( 'str', 'other' ) );
 
-		$this->assertSame( [], $post['repeat'] );
+		$this->assertSame( null, $post['repeat'] );
 		$post['repeat'] = [ 'one', 'two' ];
 		$this->assertSame( [ 'one', 'two' ], $post->get_meta( 'repeat' ) );
 		unset( $post['repeat'] );
-		$this->assertSame( [], $post->get_meta( 'repeat' ) );
+		$this->assertSame( [], $post->get_meta( 'repeat', [] ) );
 		$this->assertSame( [ 'one', 'two' ], $post->get_meta( 'repeat', [ 'one', 'two' ] ) );
 	}
 

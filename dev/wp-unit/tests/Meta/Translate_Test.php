@@ -78,7 +78,7 @@ class Translate_Test extends \WP_UnitTestCase {
 
 		$this->assertSame( 'value3', $post->get_meta( 'meta/prefixed/dmv' ) );
 		unset( $post['meta/prefixed/dmv'] );
-		$this->assertSame( '', $post->get_meta( 'meta/prefixed/dmv' ) );
+		$this->assertNull( $post->get_meta( 'meta/prefixed/dmv' ) );
 	}
 
 
