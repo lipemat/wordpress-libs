@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Util;
 
 use Lipe\Lib\Traits\Singleton;
+use WP_Object_Cache;
 
 /**
  * Ability to use arrays or objects as cache keys
@@ -29,7 +30,7 @@ class Cache {
 	 * @return void
 	 */
 	public function hook(): void {
-		add_action( 'init', [ $this, 'maybe_clear_cache' ], 9, 0 );
+		add_action( 'init', $this->maybe_clear_cache( ... ), 9, 0 );
 
 		if ( current_user_can( 'manage_options' ) ) {
 			add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_button' ], 100 );
@@ -110,11 +111,50 @@ class Cache {
 
 
 	/**
+	 * Free memory by flushing the runtime cache.
+	 *
+	 * 1. Clear the saved queries from the `wpdb` object.
+	 * 2. Calls `wp_cache_flush_runtime()` if available.
+	 * 3. Clear the runtime caches from the `WP_Object_Cache` object.
+	 *
+	 * - More verbose than `wp_cache_flush_runtime()` because it also clears the stats.
+	 * - Works on projects which do not have `wp_cache_flush_runtime()` available.
+	 *
+	 * @return void
+	 */
+	public function flush_runtime_cache(): void {
+		global $wpdb, $wp_object_cache;
+		if ( $wpdb instanceof \wpdb ) {
+			$wpdb->queries = [];
+		}
+
+		if ( wp_cache_supports( 'flush_runtime' ) ) {
+			wp_cache_flush_runtime();
+		}
+
+		if ( $wp_object_cache instanceof \WP_Object_Cache ) {
+			foreach ( [ 'group_ops', 'stat_operations', 'memcache_debug', 'cache' ] as $prop ) {
+				if ( \property_exists( $wp_object_cache, $prop ) ) {
+					$wp_object_cache->{$prop} = [];
+				}
+			}
+			if ( \property_exists( $wp_object_cache, 'stats' ) ) {
+				$wp_object_cache->stats = \array_fill_keys( \array_keys( $wp_object_cache->stats ), 0 );
+			}
+
+			if ( \is_callable( [ $wp_object_cache, '__remoteset' ] ) ) {
+				$wp_object_cache->__remoteset();
+			}
+		}
+	}
+
+
+	/**
 	 * Clear the entire cache using the "Clear Cache" button in the admin bar.
 	 *
 	 * @return void
 	 */
-	public function maybe_clear_cache(): void {
+	protected function maybe_clear_cache(): void {
 		if ( ! isset( $_REQUEST[ static::QUERY_ARG ], $_REQUEST['_wpnonce'] ) || false === wp_verify_nonce( sanitize_text_field( \wp_unslash( $_REQUEST['_wpnonce'] ) ), static::QUERY_ARG ) ) {
 			return;
 		}
