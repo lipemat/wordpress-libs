@@ -144,6 +144,10 @@ class Event_Callbacks {
 				$this->meta_delete_hooks();
 			}
 		}
+
+		add_action( 'wp-unit/reset-container', function() {
+			$this->previous_value = null;
+		} );
 	}
 
 
