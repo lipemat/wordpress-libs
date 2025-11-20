@@ -51,7 +51,7 @@ class Autoloader {
 	/**
 	 * Registers this instance as an autoloader.
 	 *
-	 * @param bool $prepend - Add the autoloader to beginning of stack.
+	 * @param bool $prepend - Add the autoloader to the beginning of the stack.
 	 *
 	 * @return void
 	 */
@@ -89,15 +89,13 @@ class Autoloader {
 	 *
 	 * @param string $class_name - Name of the class to attempt to load.
 	 *
-	 * @return bool
+	 * @return void
 	 */
-	protected function maybe_load_class( string $class_name ): bool {
+	public function maybe_load_class( string $class_name ): void {
 		$file = $this->find_file( $class_name );
 		if ( null !== $file ) {
 			require $file;
-			return true;
 		}
-		return false;
 	}
 
 
