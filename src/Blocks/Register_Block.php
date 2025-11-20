@@ -74,7 +74,7 @@ use Lipe\Lib\Blocks\Args\Supports;
  *  }
  *
  * @phpstan-type BLOCK_REGISTER_ARGS array{
- *    api_version?: int,
+ *    api_version?: 3,
  *    title?: string,
  *    category?: string,
  *    parent?: string[],
@@ -120,9 +120,10 @@ class Register_Block implements ArgsRules {
 	/**
 	 * Block API version.
 	 *
+	 * @phpstan-var 3
 	 * @var int
 	 */
-	public int $api_version;
+	public int $api_version = 3;
 
 	/**
 	 * Human-readable block type label.
