@@ -63,7 +63,11 @@ class Runner {
 	 * @return int|false
 	 */
 	public function get_last_run(): int|false {
-		return get_option( $this->cron->get_name() . '/last-run', false );
+		$value = get_option( $this->cron->get_name() . '/last-run', false );
+		if ( ! \is_numeric( $value ) ) {
+			return false;
+		}
+		return (int) $value;
 	}
 
 
