@@ -60,10 +60,11 @@ class Field_Type {
 	 */
 	public function true_false(): Variation\Checkbox {
 		$this->field = Variation\Checkbox::from( $this->field, $this->box );
-		return $this->field->set_args( Type::CHECKBOX, [
-			'render_class' => True_False::class,
-			'display_cb'   => fn( $a, \CMB2_Field $field ) => 'on' === $field->value ? 'Yes' : 'No',
-		], DataType::CHECKBOX );
+
+		$this->field->render_class( True_False::class );
+		$this->field->column_display_cb( fn( $a, \CMB2_Field $field ) => 'on' === $field->value ? 'Yes' : 'No' );
+		$this->field->set_args( Type::CHECKBOX, [], DataType::CHECKBOX );
+		return $this->field;
 	}
 
 

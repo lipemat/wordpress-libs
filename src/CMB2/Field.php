@@ -333,9 +333,33 @@ class Field {
 			$this->column = true;
 		}
 		if ( null !== $display_cb ) {
-			$this->display_cb = $display_cb;
+			$this->column_display_cb( $display_cb );
 		}
 
+		return $this;
+	}
+
+
+	/**
+	 * Callback function to display the output of the column in the
+	 *  object-lists.
+	 *
+	 * Only needed for special cases where `$this->coulmn` can't do
+	 * what you need.
+	 *
+	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#display_cb
+	 * @see      link for a markup example
+	 *
+	 * @phpstan-param callable( array<string, mixed>, \CMB2_Field, mixed): (void|string) $display_cb
+	 *
+	 * @formatter:off
+	 *
+	 * @param callable $display_cb - Callback to display the column output.
+	 *
+	 * @formatter:on
+	 */
+	public function column_display_cb( callable $display_cb ): static {
+		$this->display_cb = $display_cb;
 		return $this;
 	}
 
