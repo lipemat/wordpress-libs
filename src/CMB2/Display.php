@@ -99,21 +99,6 @@ trait Display {
 	protected $after_display_wrap;
 
 	/**
-	 * To be used with $this->column or $this->column().
-	 * Callback function to display the output of the column in the
-	 * object-lists.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#display_cb
-	 * @see     link for a markup example
-	 *
-	 * @example my_callback_function_to_display_output( $field_args, $field )
-	 *
-	 * @phpstan-var callable( array<string, mixed>, \CMB2_Field, mixed): (void|string)
-	 * @var callable
-	 */
-	protected $display_cb;
-
-	/**
 	 * Entirely replace the class to used to display the field (in admin columns, etc.)
 	 *
 	 * @var \CMB2_Field_Display
@@ -434,28 +419,6 @@ trait Display {
 	 */
 	public function classes_cb( callable $classes_cb ): static {
 		$this->classes_cb = $classes_cb;
-		return $this;
-	}
-
-
-	/**
-	 * To be used with $this->column or $this->column().
-	 * Callback function to display the output of the column in the
-	 * object-lists.
-	 *
-	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#display_cb
-	 * @see      link for a markup example
-	 *
-	 * @example  my_callback_function_to_display_output( $field_args, $field )
-	 *
-	 * @phpstan-param callable( array<string, mixed>, \CMB2_Field, mixed): (void|string) $display_cb
-	 *
-	 * @formatter:off
-	 * @param callable $display_cb - Callback to display the column output.
-	 * @formatter:on
-	 */
-	public function display_cb( callable $display_cb ): static {
-		$this->display_cb = $display_cb;
 		return $this;
 	}
 
