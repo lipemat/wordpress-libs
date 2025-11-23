@@ -118,7 +118,6 @@ class BoxTest extends \WP_UnitTestCase {
 
 
 	public function test_comment(): void {
-		global $wp_meta_boxes;
 		$comment = self::factory()->comment->create_and_get();
 		update_comment_meta( $comment->comment_ID, 'priv', 'testing u' );
 		$comment = Comment_Mock::factory( $comment );

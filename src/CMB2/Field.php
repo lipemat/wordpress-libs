@@ -71,6 +71,23 @@ class Field {
 	protected $sanitization_cb;
 
 	/**
+	 * If false, this field will not be saved to the database when the
+	 * meta box or options are saved.
+	 *
+	 * For fields with data controlled directly using the meta repo or
+	 * WP native functions.
+	 *
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#save_field
+	 *
+	 * @example A field to display a readonly toggle but only change the value
+	 *          via `$object->update_meta( $field_id, $value)`
+	 *
+	 * @var bool
+	 */
+	protected bool $save_field;
+
+	/**
 	 * Used internally to store the CMB sanitization callback used
 	 * with `register_meta`.
 	 *
@@ -777,6 +794,31 @@ class Field {
 		} else {
 			$this->sanitization_cb = $callback;
 		}
+		return $this;
+	}
+
+
+	/**
+	 * If false, this field will not be saved to the database when the
+	 * meta box or options are saved.
+	 *
+	 * For fields with data managed externally using the meta repo or
+	 * WP native functions.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#save_field
+	 *
+	 * @since   5.8.0
+	 *
+	 * @example A field to display a readonly toggle but only change the value
+	 *          via `$object->update_meta( $field_id, $value)` or REST API.
+	 *
+	 * @param bool $prevent_save - Whether to save this field.
+	 *                           Defaults to false.
+	 *
+	 * @return static
+	 */
+	public function disable_field_saving( bool $prevent_save = true ): static {
+		$this->save_field = ! $prevent_save;
 		return $this;
 	}
 

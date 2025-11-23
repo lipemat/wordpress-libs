@@ -91,7 +91,8 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		$group->show_in_rest();
 		$group
 			->field( 'first', '' )
-			->text();
+			->text()
+			->disable_field_saving();
 		$group
 			->field( 'second', '' )
 			->text();
@@ -179,7 +180,8 @@ class FieldTest extends \WP_Test_REST_TestCase {
 	public function test_default_callback(): void {
 		$box = new Box( __FUNCTION__, [ 'post' ], __METHOD__ );
 		$box->field( 'd1', __METHOD__ . '-d1' )
-		    ->text();
+		    ->text()
+		    ->disable_field_saving();
 		$box->field( __FUNCTION__ . '-d2', __METHOD__ . '-d2' )
 		    ->text()
 		    ->default_cb( function( array $config, \CMB2_Field $field ) {
@@ -227,12 +229,14 @@ class FieldTest extends \WP_Test_REST_TestCase {
 		$box = new Box( 'object_subtypes', [ 'page' ], 'Sanitize Box' );
 		$box->field( 'tos', 'TEST 1' )
 		    ->text()
+		    ->disable_field_saving()
 		    ->show_in_rest( \WP_REST_Server::ALLMETHODS );
 		$group = $box->group( 'tos2', 'Test 3' );
 		$group->show_in_rest();
 		$group
 			->field( 'first-tos', '' )
-			->text();
+			->text()
+			->disable_field_saving();
 		do_action( 'cmb2_init' );
 		( new \CMB2_REST( $box->get_cmb2_box() ) )->universal_hooks()::register_cmb2_fields();
 

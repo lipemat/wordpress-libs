@@ -145,9 +145,9 @@ trait Display {
 	/**
 	 * Whether to show labels for the fields.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_names
+	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_names
 	 *
-	 * Default  true
+	 * Default true
 	 *
 	 * @var bool
 	 */
