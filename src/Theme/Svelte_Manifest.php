@@ -100,7 +100,10 @@ class Svelte_Manifest implements Manifest {
 	 * @return void
 	 */
 	public function enqueue( bool $in_footer = true ): void {
-		wp_enqueue_script_module( (string) $this->handle->value, $this->get_url(), [], null );
+		$args = new Wp_Enqueue_Script_Module( [] );
+		$args->in_footer = $in_footer;
+
+		wp_enqueue_script_module( (string) $this->handle->value, $this->get_url(), [], null, $args->get_args() );
 		if ( ! SCRIPT_DEBUG ) {
 			Resources::in()->integrity_javascript( (string) $this->handle->value, $this->get_integrity() );
 		}

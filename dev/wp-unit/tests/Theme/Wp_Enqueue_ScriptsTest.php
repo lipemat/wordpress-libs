@@ -40,5 +40,13 @@ class Wp_Enqueue_ScriptsTest extends \WP_UnitTestCase {
 		$this->assertSame( [
 			'in_footer' => true,
 		], $args->get_args() );
+
+		$args = new Wp_Enqueue_Script( [] );
+		$args->strategy = 'async';
+		$args->fetchpriority = Wp_Enqueue_Script::FETCH_PRIORITY_HIGH;
+		$this->assertSame( [
+			'strategy'      => 'async',
+			'fetchpriority' => 'high',
+		], $args->get_args() );
 	}
 }

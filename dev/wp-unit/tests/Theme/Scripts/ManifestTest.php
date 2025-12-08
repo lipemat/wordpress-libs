@@ -125,7 +125,7 @@ class ManifestTest extends \WP_UnitTestCase {
 
 
 	private function getStylesheetDirectory(): string {
-		return dirname( __DIR__, 3 ) . '/data/';
+		return \dirname( __DIR__, 3 ) . '/data/';
 	}
 
 }

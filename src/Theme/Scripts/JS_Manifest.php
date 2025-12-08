@@ -4,6 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Theme\Scripts;
 
 use Lipe\Lib\Theme\Resources;
+use Lipe\Lib\Theme\Wp_Enqueue_Script;
 
 /**
  * Manifest handling for files from the js-boilerplate.
@@ -80,16 +81,16 @@ class JS_Manifest implements Manifest {
 	 */
 	public function enqueue( bool $in_footer = true ): void {
 		if ( \str_ends_with( $this->handle->file(), '.js' ) ) {
-			wp_enqueue_script( $this->handle->handle(), $this->get_url(), $this->handle->dependencies(), $this->get_version(), $in_footer );
+			$args = new Wp_Enqueue_Script( [] );
+			$args->in_footer = $in_footer;
 
-			/**
-			 * Add a `defer` or `async` attribute to the script tag.
-			 */
 			if ( $this->handle->is_defer() ) {
-				wp_script_add_data( $this->handle->handle(), 'strategy', 'defer' );
+				$args->strategy = Wp_Enqueue_Script::STRATEGY_DEFER;
 			} elseif ( $this->handle->is_async() ) {
-				wp_script_add_data( $this->handle->handle(), 'strategy', 'async' );
+				$args->strategy = Wp_Enqueue_Script::STRATEGY_ASYNC;
 			}
+
+			wp_enqueue_script( $this->handle->handle(), $this->get_url(), $this->handle->dependencies(), $this->get_version(), $args->get_args() );
 
 			if ( ! SCRIPT_DEBUG ) {
 				Resources::in()->integrity_javascript( $this->handle->handle(), $this->get_integrity() );
