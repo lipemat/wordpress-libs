@@ -4,7 +4,6 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Util;
 
 use Lipe\Lib\Traits\Singleton;
-use WP_Object_Cache;
 
 /**
  * Ability to use arrays or objects as cache keys
@@ -51,13 +50,16 @@ class Cache {
 	 * @return bool
 	 */
 	public function set( object|array|int|string $key, mixed $value, string $group = self::DEFAULT_GROUP, int $expire_in_seconds = 0 ): bool {
-		$group = $this->get_group_key( $group );
-
 		if ( null === $value ) {
 			// Store an empty value that memcache can handle.
 			$value = '';
 		}
 
+		if ( \function_exists( 'wp_cache_set_salted' ) ) {
+			return wp_cache_set_salted( $this->filter_key( $key ), $value, $group, wp_cache_get_last_changed( $group ) );
+		}
+
+		$group = $this->get_group_key( $group );
 		return wp_cache_set( $this->filter_key( $key ), $value, $group, $expire_in_seconds );
 	}
 
@@ -73,8 +75,11 @@ class Cache {
 	 * @return false|mixed - false on failure to retrieve contents, or the cache contents on success.
 	 */
 	public function get( object|array|int|string $key, string $group = self::DEFAULT_GROUP ): mixed {
-		$group = $this->get_group_key( $group );
+		if ( \function_exists( 'wp_cache_get_salted' ) ) {
+			return wp_cache_get_salted( $this->filter_key( $key ), $group, wp_cache_get_last_changed( $group ) );
+		}
 
+		$group = $this->get_group_key( $group );
 		return wp_cache_get( $this->filter_key( $key ), $group );
 	}
 
@@ -92,7 +97,9 @@ class Cache {
 	 * @return bool
 	 */
 	public function delete( object|array|int|string $key, string $group = self::DEFAULT_GROUP ): bool {
-		$group = $this->get_group_key( $group );
+		if ( ! \function_exists( 'wp_cache_get_salted' ) ) {
+			$group = $this->get_group_key( $group );
+		}
 
 		return wp_cache_delete( $this->filter_key( $key ), $group );
 	}
