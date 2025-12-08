@@ -30,10 +30,7 @@ class Cache {
 	 */
 	public function hook(): void {
 		add_action( 'init', $this->maybe_clear_cache( ... ), 9, 0 );
-
-		if ( current_user_can( 'manage_options' ) ) {
-			add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_button' ], 100 );
-		}
+		add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_button' ], 100 );
 	}
 
 
@@ -162,7 +159,7 @@ class Cache {
 	 * @return void
 	 */
 	protected function maybe_clear_cache(): void {
-		if ( ! isset( $_REQUEST[ static::QUERY_ARG ], $_REQUEST['_wpnonce'] ) || false === wp_verify_nonce( sanitize_text_field( \wp_unslash( $_REQUEST['_wpnonce'] ) ), static::QUERY_ARG ) ) {
+		if ( ! isset( $_REQUEST[ static::QUERY_ARG ], $_REQUEST['_wpnonce'] ) || 1 !== wp_verify_nonce( sanitize_text_field( \wp_unslash( $_REQUEST['_wpnonce'] ) ), static::QUERY_ARG ) ) {
 			return;
 		}
 		wp_cache_flush();
@@ -181,6 +178,9 @@ class Cache {
 	 * @return void
 	 */
 	public function add_admin_bar_button( \WP_Admin_Bar $admin_bar ): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
 		$admin_bar->add_menu( [
 			'parent' => '',
 			'id'     => static::QUERY_ARG,
