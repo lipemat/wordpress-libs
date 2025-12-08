@@ -172,7 +172,11 @@ class Api {
 			$args = Arrays::in()->chunk_to_associative( $args );
 		}
 
+		$action = $this->get_action( $endpoint );
+		if ( '' === $action ) {
+			return;
+		}
 		//phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- Dynamic action.
-		do_action( $this->get_action( $endpoint ), $args );
+		do_action( $action, $args );
 	}
 }
