@@ -1,10 +1,10 @@
 <?php
 declare( strict_types=1 );
 
-namespace Lipe\Lib\Theme;
+namespace Lipe\Lib\Theme\Scripts;
 
-use Lipe\Lib\Theme\Scripts\Manifest;
-use Lipe\Lib\Theme\Scripts\ResourceHandles;
+use Lipe\Lib\Theme\Resources;
+use Lipe\Lib\Theme\Wp_Enqueue_Script_Module;
 
 /**
  * @author  Mat Lipe
