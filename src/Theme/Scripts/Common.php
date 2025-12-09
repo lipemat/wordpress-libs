@@ -125,17 +125,20 @@ class Common {
 	 *
 	 * @link https://make.wordpress.org/core/2021/07/01/block-styles-loading-enhancements-in-wordpress-5-8/
 	 * @link https://make.wordpress.org/core/2025/03/24/new-filter-should_load_block_assets_on_demand-in-6-8/
+	 * @link https://make.wordpress.org/core/2025/11/18/wordpress-6-9-frontend-performance-field-guide/#load-block-styles-on-demand-in-classic-themes
 	 *
 	 * @return void
 	 */
 	public function support_block_inline_styles(): void {
-		$return_true = __return_true( ... );
-		// Previous filter covers both WP core and custom blocks.
-		add_filter( 'should_load_separate_core_block_assets', $return_true );
+		// The previous filter covers both WP core and custom blocks.
+		add_filter( 'should_load_separate_core_block_assets', __return_true( ... ) );
 
 		// New WP 6.8 filters, separate for WP core and custom blocks.
-		add_filter( 'should_load_separate_core_block_assets', $return_true );
-		add_filter( 'should_load_block_assets_on_demand', $return_true );
+		add_filter( 'should_load_separate_core_block_assets', __return_true( ... ) );
+		add_filter( 'should_load_block_assets_on_demand', __return_true( ... ) );
+
+		// Remove unnecessary template output buffering to reduce page load overhead (TTFB).
+		add_filter( 'wp_should_output_buffer_template_for_enhancement', __return_false( ... ), 5 );
 
 		/**
 		 * Use stylesheets instead of inline styles for WP core blocks when
