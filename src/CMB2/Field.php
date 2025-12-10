@@ -477,7 +477,10 @@ class Field {
 	 * @return static
 	 */
 	public function disabled(): static {
-		$this->attributes( [ 'disabled' => 'disabled' ] );
+		$this->disable_field_saving();
+		$this->attributes( [
+			'disabled' => 'disabled',
+		] );
 
 		return $this;
 	}
@@ -564,7 +567,10 @@ class Field {
 			$this->disabled();
 		}
 
-		$this->attributes( [ 'readonly' => 'readonly' ] );
+		$this->disable_field_saving();
+		$this->attributes( [
+			'readonly' => 'readonly',
+		] );
 
 		return $this;
 	}
