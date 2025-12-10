@@ -219,4 +219,13 @@ class Supports implements ArgsRules {
 	 * }
 	 */
 	public array $typography;
+
+	/**
+	 * Can this block be hidden?
+	 *
+	 * Defaults to true.
+	 *
+	 * @var bool
+	 */
+	public bool $visibility;
 }
