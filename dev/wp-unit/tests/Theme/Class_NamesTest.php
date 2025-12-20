@@ -142,4 +142,14 @@ class Class_NamesTest extends \WP_UnitTestCase {
 		$this->assertSame( '', $o[ Class_Names_Enum_Mock::M ] );
 		$this->assertFalse( isset( $o[ Class_Names_Enum_Mock::M ] ) );
 	}
+
+
+	public function test_push(): void {
+		$o = new Class_Names( Class_Names_Enum_Mock::F );
+		$o->push( 'a' );
+		$o->push( 'b' );
+		$o->push( Class_Names_Enum_Mock::T );
+
+		$this->assertSame( [ 'first', 'a', 'b', 'third' ], $o->get_classes() );
+	}
 }

@@ -61,6 +61,18 @@ class Class_Names implements \ArrayAccess {
 
 
 	/**
+	 * Add a class name to the list.
+	 *
+	 * @param string|\BackedEnum $class_name - Class name to add.
+	 *
+	 * @return void
+	 */
+	public function push( string|\BackedEnum $class_name ): void {
+		$this->parse_classes( $class_name );
+	}
+
+
+	/**
 	 * Extract classes out of arrays, strings, or a combination.
 	 *
 	 * Allows us to pass any combination of arrays or strings
