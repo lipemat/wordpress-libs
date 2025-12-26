@@ -3,6 +3,7 @@
 namespace Lipe\Lib\Theme;
 
 use Lipe\Lib\Util\Actions;
+use mocks\Class_Names_Enum_Mock;
 
 class ResourcesTest extends \WP_UnitTestCase {
 	private $requests = [];
@@ -112,6 +113,18 @@ class ResourcesTest extends \WP_UnitTestCase {
 		[ $url, $callback, $handle ] = $this->get_script_handler();
 		Resources::in()->crossorigin_javascript( $handle, 'anonymous' );
 		$this->assertEquals( "<script crossorigin='anonymous' src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+	}
+
+
+	public function test_add_body_class(): void {
+		Resources::in()->add_body_class( 'test-class-one' );
+		Resources::in()->add_body_class( 'test-class-two' );
+		Resources::in()->add_body_class( 'test-class-two' );
+		Resources::in()->add_body_class( 'test-class-two' );
+		Resources::in()->add_body_class( Class_Names_Enum_Mock::L );
+
+		$classes = get_body_class();
+		$this->assertSame( [ 'wp-embed-responsive', 'wp-theme-twentytwentyfour', 'test-class-one', 'test-class-two', 'last' ], $classes );
 	}
 
 

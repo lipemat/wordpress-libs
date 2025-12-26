@@ -52,7 +52,7 @@ class Class_Names implements \ArrayAccess {
 	 * @see Class_Names::__toString
 	 * @interal
 	 *
-	 * @return array<string>
+	 * @return list<string>
 	 */
 	public function get_classes(): array {
 		$clean = Arrays::in()->clean( $this->classes );

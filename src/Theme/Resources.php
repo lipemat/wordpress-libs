@@ -23,7 +23,7 @@ class Resources {
 	/**
 	 * Classes to be added to the main <body> tag.
 	 *
-	 * @var string[]
+	 * @var array<int, string|\BackedEnum>
 	 */
 	protected static array $body_class = [];
 
@@ -219,13 +219,18 @@ class Resources {
 	 * Must be called before `get_body_class`. Most likely called
 	 * in the theme's "header.php".
 	 *
-	 * @param string $css_class - Class to append.
+	 * @param string|\BackedEnum $css_class - Class to append.
 	 */
-	public function add_body_class( string $css_class ): void {
+	public function add_body_class( string|\BackedEnum $css_class ): void {
 		static::$body_class[] = $css_class;
 		$this->once( function() {
-			add_filter( 'body_class', function( $classes ) {
-				return \array_unique( \array_merge( static::$body_class, $classes ) );
+			/**
+			 * @param list<string> $classes - Existing body classes.
+			 *
+			 * @return array<int, string>
+			 */
+			add_filter( 'body_class', function( array $classes ): array {
+				return ( new Class_Names( $classes, static::$body_class ) )->get_classes();
 			}, 11 );
 		}, __METHOD__ );
 	}
@@ -298,7 +303,7 @@ class Resources {
 	 * @param array<'jquery' | 'react' | 'react-dom' | 'lodash'> $handles - Resource handles to include.
 	 */
 	public function use_cdn_for_resources( array $handles ): void {
-		_deprecated_function( __METHOD__, '5.6.0', );
+		_deprecated_function( __METHOD__, '5.6.0' );
 
 		// The admin will throw errors when calling `wp_deregister_script` in other actions.
 		if ( is_admin() && 'admin_enqueue_scripts' !== current_filter() ) {
@@ -390,7 +395,7 @@ class Resources {
 	 * @return bool
 	 */
 	public function unpkg_integrity( string $handle, string $url ): bool {
-		_deprecated_function( __METHOD__, '5.6.0', );
+		_deprecated_function( __METHOD__, '5.6.0' );
 
 		$cached = get_network_option( 0, self::INTEGRITY, [] );
 
