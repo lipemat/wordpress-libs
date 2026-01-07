@@ -10,10 +10,6 @@ use Lipe\Lib\Args\ClauseRules;
 /**
  * Generate a `date_query` argument for a `WP_Query.
  *
- * @note   Far too many possibilities to add methods the same
- * way we do for Date_Query and Tax_Query. Instead, we are using the properties
- * of this class.
- *
  * @author Mat Lipe
  * @since  4.0.0
  *
@@ -203,7 +199,7 @@ class Date_Query implements ClauseRules {
 	 * The week number of the year. Accept numbers 0-53, or an
 	 * array of valid numbers if `$compare` supports it.
 	 *
-	 * @phpstan-param  int<0,53>|array<int, int<0,53>> $week
+	 * @phpstan-param  int<1,53>|array<int, int<1,53>> $week
 	 *
 	 * @param int|int[]                                $week - Week of the year to retrieve posts for.
 	 *
@@ -233,7 +229,7 @@ class Date_Query implements ClauseRules {
 	 * The hour of the day. Accept numbers 0-23, or an array
 	 * of valid numbers if `$compare` supports it.
 	 *
-	 * @phpstan-param  int<1,23>|array<int, int<1,23>> $hour
+	 * @phpstan-param  int<0,23>|array<int, int<0,23>> $hour
 	 *
 	 * @param int|int[]                                $hour - Hour to retrieve posts for.
 	 *
