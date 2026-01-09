@@ -17,7 +17,7 @@ class LoggerTest extends \WP_UnitTestCase {
 	public function test_notice(): void {
 		Logger::factory( __METHOD__ )->notice( 'This is a notice message.' );
 
-		$messages = Handles::in()->get_handles()[ 'testing' ]->get_messages();
+		$messages = Handles::in()->get_handles()['testing']->get_messages();
 		$this->assertCount( 1, $messages );
 		$this->assertSame( [
 			[
@@ -28,7 +28,7 @@ class LoggerTest extends \WP_UnitTestCase {
 		], $messages );
 
 		Logger::factory( __METHOD__ )->notice( 'This is another notice message.' );
-		$messages = Handles::in()->get_handles()[ 'testing' ]->get_messages();
+		$messages = Handles::in()->get_handles()['testing']->get_messages();
 		$this->assertCount( 2, $messages );
 		$this->assertSame( [
 			[
@@ -53,7 +53,7 @@ class LoggerTest extends \WP_UnitTestCase {
 	public function test_error(): void {
 		Logger::factory( __METHOD__ )->error( 'This is an error message.' );
 
-		$messages = Handles::in()->get_handles()[ 'testing' ]->get_messages();
+		$messages = Handles::in()->get_handles()['testing']->get_messages();
 		$this->assertCount( 1, $messages );
 		$this->assertSame( [
 			[
@@ -64,7 +64,7 @@ class LoggerTest extends \WP_UnitTestCase {
 		], $messages );
 
 		Logger::factory( __METHOD__ )->error( 'This is another error message.' );
-		$messages = Handles::in()->get_handles()[ 'testing' ]->get_messages();
+		$messages = Handles::in()->get_handles()['testing']->get_messages();
 		$this->assertCount( 2, $messages );
 		$this->assertSame( [
 			[
@@ -89,7 +89,7 @@ class LoggerTest extends \WP_UnitTestCase {
 	public function test_warn(): void {
 		Logger::factory( __METHOD__ )->warn( 'This is a warning message.' );
 
-		$messages = Handles::in()->get_handles()[ 'testing' ]->get_messages();
+		$messages = Handles::in()->get_handles()['testing']->get_messages();
 		$this->assertCount( 1, $messages );
 		$this->assertSame( [
 			[
@@ -101,7 +101,7 @@ class LoggerTest extends \WP_UnitTestCase {
 
 		Logger::factory( __METHOD__ )->warn( 'This is another warning message.' );
 
-		$messages = Handles::in()->get_handles()[ 'testing' ]->get_messages();
+		$messages = Handles::in()->get_handles()['testing']->get_messages();
 		$this->assertCount( 2, $messages );
 		$this->assertSame( [
 			[
@@ -126,7 +126,7 @@ class LoggerTest extends \WP_UnitTestCase {
 	public function test_debug(): void {
 		Logger::factory( __METHOD__ )->debug( 'This is a debug message.' );
 
-		$messages = Handles::in()->get_handles()[ 'testing' ]->get_messages();
+		$messages = Handles::in()->get_handles()['testing']->get_messages();
 		$this->assertCount( 1, $messages );
 		$this->assertSame( [
 			[
@@ -137,7 +137,7 @@ class LoggerTest extends \WP_UnitTestCase {
 		], $messages );
 
 		Logger::factory( __METHOD__ )->debug( 'This is another debug message.' );
-		$messages = Handles::in()->get_handles()[ 'testing' ]->get_messages();
+		$messages = Handles::in()->get_handles()['testing']->get_messages();
 		$this->assertCount( 2, $messages );
 		$this->assertSame( [
 			[
@@ -159,11 +159,25 @@ class LoggerTest extends \WP_UnitTestCase {
 	}
 
 
+	public function test_with_context(): void {
+		Logger::factory( __METHOD__ )->debug( 'This is a debug message.', [ 'foo' => 'bar' ] );
+		$messages = Handles::in()->get_handles()['testing']->get_messages( true );
+		$this->assertSame( [
+			[
+				'id'      => __METHOD__,
+				'level'   => Level::Debug,
+				'message' => 'This is a debug message.',
+				'context' => [ 'foo' => 'bar' ],
+			],
+		], $messages );
+	}
+
+
 	public function test_debug_off(): void {
 		Testing::in()->is_wp_debug = false;
 		Logger::factory( __METHOD__ )->debug( 'This message should not be logged.' );
 
-		$messages = Handles::in()->get_handles()[ 'testing' ]->get_messages();
+		$messages = Handles::in()->get_handles()['testing']->get_messages();
 		$this->assertCount( 0, $messages );
 	}
 }

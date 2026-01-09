@@ -12,7 +12,26 @@ namespace Lipe\Lib\Util\Logger;
  * @see    \QM_Collector_Logger::set_up
  *
  */
-class Query_Monitor implements Handle {
+class Query_Monitor implements Handle, WithContext {
+	/**
+	 * Context for the last log message.
+	 *
+	 * @var array<string, mixed>
+	 */
+	protected array $context = [];
+
+
+	/**
+	 * Add a context array to the log messages.
+	 *
+	 * @see \QM_Collector_Logger::interpolate
+	 *
+	 * @param array<string, mixed> $context - Context to provide.
+	 */
+	public function provide_context( array $context ): void {
+		$this->context = $context;
+	}
+
 
 	/**
 	 * Log a message to Query Monitor.
@@ -38,10 +57,10 @@ class Query_Monitor implements Handle {
 		$message = \sprintf( '%s: %s', $id, $message );
 
 		match ( $level ) {
-			Level::Debug   => \QM::debug( $message ),
-			Level::Error   => \QM::error( $message ),
-			Level::Notice  => \QM::notice( $message ),
-			Level::Warning => \QM::warning( $message ),
+			Level::Debug   => \QM::debug( $message, $this->context ),
+			Level::Error   => \QM::error( $message, $this->context ),
+			Level::Notice  => \QM::notice( $message, $this->context ),
+			Level::Warning => \QM::warning( $message, $this->context ),
 		};
 	}
 }
