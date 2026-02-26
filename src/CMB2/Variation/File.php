@@ -14,15 +14,6 @@ use Lipe\Lib\Query\Get_Posts;
  */
 class File extends Field {
 	/**
-	 * Special options for the file field type.
-	 *
-	 * @var array{
-	 *     url?: bool,
-	 * }
-	 */
-	protected array $options = [];
-
-	/**
 	 * For use with the file fields only to control the preview size
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file
@@ -30,6 +21,15 @@ class File extends Field {
 	 * @var string
 	 */
 	public string $preview_size;
+
+	/**
+	 * Special options for the file field type.
+	 *
+	 * @var array{
+	 *     url?: bool,
+	 * }
+	 */
+	protected array $options = [];
 
 	/**
 	 * Field parameter, which can be used to override the media library query arguments.

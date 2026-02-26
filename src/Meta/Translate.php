@@ -3,7 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Meta;
 
-use Lipe\Lib\CMB2\BoxType;
+use Lipe\Lib\CMB2\Box\BoxType;
 use Lipe\Lib\CMB2\Field\Term_Select_2;
 use Lipe\Lib\CMB2\Field\Term_Select_2\Select_2_Field;
 use Lipe\Lib\CMB2\Field\Type;

@@ -1,7 +1,7 @@
 <?php
 declare( strict_types=1 );
 
-namespace Lipe\Lib\CMB2;
+namespace Lipe\Lib\CMB2\Box;
 
 /**
  * Types of CMB2 meta boxes.

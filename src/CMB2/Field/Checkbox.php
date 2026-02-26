@@ -3,7 +3,6 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2\Field;
 
-use Lipe\Lib\CMB2\Field_Type;
 use Lipe\Lib\Libs\Scripts;
 use Lipe\Lib\Libs\Scripts\StyleHandles;
 use Lipe\Lib\Traits\Memoize;

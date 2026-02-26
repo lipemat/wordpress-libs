@@ -4,6 +4,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\CMB2\Box\BoxType;
 use Lipe\Lib\Meta\MetaType;
 use Lipe\Lib\Meta\Repo;
 use Lipe\Lib\Settings\Settings_Trait;

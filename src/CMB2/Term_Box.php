@@ -3,6 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\CMB2\Box\BoxType;
+
 /**
  * A fluent interface for a CMB2 taxonomy meta box.
  */

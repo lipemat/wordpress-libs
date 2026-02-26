@@ -3,6 +3,8 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\CMB2\Box\BoxType;
+
 /**
  * CMB2 meta box for users
  */

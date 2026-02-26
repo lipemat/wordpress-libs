@@ -3,7 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2\Variation;
 
-use Lipe\Lib\CMB2\BoxType;
+use Lipe\Lib\CMB2\Box\BoxType;
 use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\Meta\DataType;
 use Lipe\Lib\Taxonomy\Get_Terms;
@@ -64,18 +64,18 @@ class Taxonomy extends Field {
 	 * Save terms assigned to users as meta instead of the default
 	 * object terms system.
 	 *
+	 * @see        \CMB2_Type_Taxonomy_Base::get_object_terms
+	 * * @see    \CMB2_Sanitize::taxonomy
+	 *
 	 * @deprecated In favor of `store_terms_in_meta` which applies to both
 	 *             posts and users.
 	 *
 	 * Prevent conflicts with User ID and Post ID in the same
 	 * `term_relationship` table.
 	 *
-	 * @notice Required lipemat version of CMB2 to support this argument.
+	 * @notice     Required lipemat version of CMB2 to support this argument.
 	 *
-	 * * @see    \CMB2_Type_Taxonomy_Base::get_object_terms
-	 * * @see    \CMB2_Sanitize::taxonomy
-	 *
-	 * @var bool
+	 * * @var bool
 	 */
 	protected bool $store_user_terms_in_meta = true;
 
@@ -178,10 +178,10 @@ class Taxonomy extends Field {
 	 * Prevent conflicts with User ID and Post ID in the same
 	 * `term_relationship` table.
 	 *
-	 * @note   The meta repo has never supported using object terms so setting
+	 * @note       The meta repo has never supported using object terms so setting
 	 *         this to false will not change the behavior of the meta repo.
 	 *
-	 * @notice The default value is `true` so this need only be called with `false`.
+	 * @notice     The default value is `true` so this need only be called with `false`.
 	 *
 	 * @param bool $use_meta - Whether to use meta or not.
 	 *

@@ -4,7 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\CMB2\Field;
 
 use Lipe\Lib\CMB2\Box;
-use Lipe\Lib\CMB2\BoxType;
+use Lipe\Lib\CMB2\Box\BoxType;
 
 /**
  * @author Mat Lipe

@@ -2,7 +2,9 @@
 /** @noinspection ClassMethodNameMatchesFieldNameInspection */
 declare( strict_types=1 );
 
-namespace Lipe\Lib\CMB2;
+namespace Lipe\Lib\CMB2\Field;
+
+use Lipe\Lib\CMB2\Field;
 
 /**
  *  These allow you to add arbitrary text/markup at different points in the field markup.

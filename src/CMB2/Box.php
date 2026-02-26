@@ -4,7 +4,9 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\CMB2\Box\BoxType;
 use Lipe\Lib\CMB2\Box\Tabs;
+use Lipe\Lib\CMB2\Field\Field_Type;
 use Lipe\Lib\Meta\DataType;
 use Lipe\Lib\Meta\Meta_Box;
 use Lipe\Lib\Meta\Registered;

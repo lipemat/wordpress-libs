@@ -1,12 +1,12 @@
 <?php
 declare( strict_types=1 );
 
-namespace Lipe\Lib\CMB2;
+namespace Lipe\Lib\CMB2\Field;
 
-use Lipe\Lib\CMB2\Field\Term_Select_2;
+use Lipe\Lib\CMB2\Box;
+use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\CMB2\Field\Term_Select_2\Select_2_Field;
-use Lipe\Lib\CMB2\Field\True_False;
-use Lipe\Lib\CMB2\Field\Type;
+use Lipe\Lib\CMB2\Variation;
 use Lipe\Lib\CMB2\Variation\Date;
 use Lipe\Lib\CMB2\Variation\File;
 use Lipe\Lib\CMB2\Variation\Options;

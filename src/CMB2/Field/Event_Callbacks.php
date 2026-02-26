@@ -1,8 +1,11 @@
 <?php
 declare( strict_types=1 );
 
-namespace Lipe\Lib\CMB2;
+namespace Lipe\Lib\CMB2\Field;
 
+use Lipe\Lib\CMB2\Box;
+use Lipe\Lib\CMB2\Box\BoxType;
+use Lipe\Lib\CMB2\Field;
 use Lipe\Lib\CMB2\Variation\Taxonomy;
 use Lipe\Lib\Meta\Registered;
 use Lipe\Lib\Meta\Repo;

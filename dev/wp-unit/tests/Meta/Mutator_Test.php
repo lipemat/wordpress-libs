@@ -4,8 +4,8 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Meta;
 
 use Lipe\Lib\CMB2\Box;
-use Lipe\Lib\CMB2\BoxType;
-use Lipe\Lib\CMB2\Event_Callbacks;
+use Lipe\Lib\CMB2\Box\BoxType;
+use Lipe\Lib\CMB2\Field\Event_Callbacks;
 use Lipe\Lib\CMB2\Options_Page;
 use Lipe\Lib\Settings\Settings_Trait;
 use mocks\Comment_Mock;
