@@ -44,7 +44,7 @@ class Box {
 	 *
 	 * @var string
 	 */
-	public string $priority = 'high';
+	public string $priority = Meta_Box::PRIORITY_HIGH;
 
 	/**
 	 * This property allows you to optionally add classes to the CMB2 wrapper.
