@@ -38,9 +38,12 @@ class Box {
 	/**
 	 * Priority of the metabox in its context.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#priority
+	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#priority
 	 *
 	 * @phpstan-var  Meta_Box::PRIORITY_*
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use priority() instead.
 	 *
 	 * @var string
 	 */
@@ -50,10 +53,13 @@ class Box {
 	 * This property allows you to optionally add classes to the CMB2 wrapper.
 	 * This property can take a string, or array.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#classes
+	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#classes
 	 *
-	 * @example 'additional-class'
-	 * @example array( 'additional-class', 'another-class' ),
+	 * @example    'additional-class'
+	 * @example    array( 'additional-class', 'another-class' ),
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use classes() instead.
 	 *
 	 * @var string|array<string>
 	 */
@@ -66,9 +72,12 @@ class Box {
 	 * The callback gets passed the CMB2 $properties array as the first argument,
 	 * and the CMB2 $cmb object as the second argument.
 	 *
-	 * @link   https://github.com/CMB2/CMB2/wiki/Box-Properties#classes_cb
+	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#classes_cb
 	 *
-	 * @example: 'yourprefix_function_to_add_classes( $properties, $cmb ){ return [] }',
+	 * @example    : 'yourprefix_function_to_add_classes( $properties, $cmb ){ return [] }',
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use classes_cb() instead.
 	 *
 	 * @var callable
 	 */
@@ -77,10 +86,13 @@ class Box {
 	/**
 	 * Set to true to default metabox being closed
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#closed
+	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#closed
 	 *
-	 * @example true
-	 * @default false
+	 * @example    true
+	 * @default    false
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use closed() instead.
 	 *
 	 * @var bool
 	 */
@@ -89,10 +101,13 @@ class Box {
 	/**
 	 * Whether to enqeue CMB2 stylesheet
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#cmb_styles
+	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#cmb_styles
 	 *
-	 * @example false
-	 * @default true
+	 * @example    false
+	 * @default    true
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use cmb_styles() instead.
 	 *
 	 * @var bool
 	 */
@@ -101,10 +116,13 @@ class Box {
 	/**
 	 * Whether to enqeue CMB2 Javascript files.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#enqueue_js
+	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#enqueue_js
 	 *
-	 * @example false
-	 * @default true
+	 * @example    false
+	 * @default    true
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use enqueue_js() instead.
 	 *
 	 * @var bool
 	 */
@@ -116,9 +134,12 @@ class Box {
 	 * Set to false if you plan on handling the form/field output/saving
 	 * (via something like cmb2_metabox_form()).
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#hookup
+	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#hookup
 	 *
-	 * @default true
+	 * @default    true
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use hookup() instead.
 	 *
 	 * @var bool
 	 */
@@ -128,7 +149,10 @@ class Box {
 	 * Override the rendering of the box on rest api responses.
 	 * Used to create an entirely custom response.
 	 *
-	 * @link  https://gist.github.com/jtsternberg/a70e845aca44356b8fbf05aafff4d0c8
+	 * @link       https://gist.github.com/jtsternberg/a70e845aca44356b8fbf05aafff4d0c8
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use register_rest_field_cb() instead.
 	 *
 	 * @var callable
 	 */
@@ -138,18 +162,19 @@ class Box {
 	 * This parameter is for post-alternate context metaboxes only.
 	 * To output the fields 'naked' (without a metabox wrapper/style)
 	 *
-	 * @note    Must set title of box to false
+	 * @see        Box::$context
+	 * @see        Box::remove_box_wrap();
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#context
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#remove_box_wrap
+	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#context
+	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#remove_box_wrap
 	 *
-	 * @see     Box::$context
-	 * @see     Box::remove_box_wrap();
+	 * @todo       Make protected in version 6
+	 * @example    true
+	 * @default    false
 	 *
-	 * @example true
-	 * @default false
+	 * @internal   Use remove_box_wrap() instead.
 	 *
-	 * @internal
+	 * @note       Must set title of box to false
 	 *
 	 * @var bool
 	 */
@@ -166,10 +191,13 @@ class Box {
 	 * We have our own Gutenberg/block-editor properties in this class, so use those instead
 	 * of this property if you are working with Gutenberg.
 	 *
-	 * @see Box::$display_when_gutenberg_active
-	 * @see Box::$gutenberg_compatible
+	 * @see        Box::$display_when_gutenberg_active
+	 * @see        Box::$gutenberg_compatible
 	 *
 	 * More: https://wordpress.org/gutenberg/handbook/designers-developers/developers/backwards-compatibility/meta-box/
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use mb_callback_args() instead.
 	 *
 	 * @var array{
 	 *     __back_compat_meta_box?: bool,
@@ -186,12 +214,15 @@ class Box {
 	 * If set to false, WP will automatically fall back to the classic editor when
 	 * this box is loaded.
 	 *
-	 * @see  Box::get_args()
-	 * @see  Box::$display_when_gutenberg_active
+	 * @see        Box::get_args()
+	 * @see        Box::$display_when_gutenberg_active
 	 *
-	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
+	 * @link       https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
 	 *
-	 * @sets the `__block_editor_compatible_meta_box` meta-box flag
+	 * @sets       the `__block_editor_compatible_meta_box` meta-box flag
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use gutenberg_compatible() instead.
 	 *
 	 * @var bool
 	 */
@@ -204,12 +235,15 @@ class Box {
 	 * When the classic editor is loaded, this meta-box will load no matter what
 	 * this is set to.
 	 *
-	 * @see  Box::get_args()
-	 * @see  Box::$gutenberg_compatible
+	 * @see        Box::get_args()
+	 * @see        Box::$gutenberg_compatible
 	 *
-	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
+	 * @link       https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
 	 *
-	 * @sets the `__back_compat_meta_box` meta box flag
+	 * @sets       the `__back_compat_meta_box` meta box flag
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use display_when_gutenberg_active() instead.
 	 *
 	 * @var bool
 	 */
@@ -218,12 +252,15 @@ class Box {
 	/**
 	 * If false, will not save during hookup
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#save_fields
+	 * @see        Box
 	 *
-	 * @see     Box
+	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#save_fields
 	 *
-	 * @example false
-	 * @default true
+	 * @todo       Make protected in version 6
+	 * @example    false
+	 * @default    true
+	 *
+	 * @internal   Use save_fields() instead.
 	 *
 	 * @var bool
 	 */
@@ -236,17 +273,20 @@ class Box {
 	 * be included in default WP response.
 	 * If the box is set to true and all fields are in the /cmb2 response.
 	 *
-	 * @link    https://github.com/WebDevStudios/CMB2/wiki/REST-API
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_in_rest
+	 * @link       https://github.com/WebDevStudios/CMB2/wiki/REST-API
+	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#show_in_rest
 	 *
-	 * @example WP_REST_Server::READABLE // Same as `true`
-	 * @example WP_REST_Server::ALLMETHODS
-	 * @example WP_REST_Server::EDITABLE
+	 * @example    WP_REST_Server::READABLE // Same as `true`
+	 * @example    WP_REST_Server::ALLMETHODS
+	 * @example    WP_REST_Server::EDITABLE
 	 *
-	 * @notice  Boxes must be registered on `cmb2_init` instead of `cmb2_admin_init`
+	 * @notice     Boxes must be registered on `cmb2_init` instead of `cmb2_admin_init`
 	 *         to use this property. Change in `Meta_Provider` if applicable.
 	 *
-	 * @default false
+	 * @default    false
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use show_in_rest() instead.
 	 *
 	 * @var string|bool
 	 */
@@ -255,9 +295,12 @@ class Box {
 	/**
 	 * Whether to show labels for the fields
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_names
-	 * @default true
-	 * @example false
+	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#show_names
+	 * @default    true
+	 * @example    false
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use show_names() instead.
 	 *
 	 * @var bool
 	 */
@@ -268,11 +311,14 @@ class Box {
 	 * Overrides 'show_on_cb'.
 	 * More info:
 	 *
-	 * @link    https://github.com/WebDevStudios/CMB2/wiki/Adding-your-own-show_on-filters
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on
+	 * @link       https://github.com/WebDevStudios/CMB2/wiki/Adding-your-own-show_on-filters
+	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on
 	 *
-	 * @example array( 'key' => 'page-template', 'value' => 'template-contact.php' )
-	 * @example array( 'key' => 'id', 'value' => array( 50, 24 ) )
+	 * @example    array( 'key' => 'page-template', 'value' => 'template-contact.php' )
+	 * @example    array( 'key' => 'id', 'value' => array( 50, 24 ) )
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use show_on() instead.
 	 *
 	 * @var  array{key:string,value:string|array<int>}
 	 */
@@ -283,9 +329,12 @@ class Box {
 	 * of a function.
 	 * Pass a function name here
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on_cb
+	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on_cb
 	 *
-	 * @example should_show_meta_box( $cmb ){ return bool; }
+	 * @example    should_show_meta_box( $cmb ){ return bool; }
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use show_on_cb() instead.
 	 *
 	 * @var callable
 	 */
@@ -294,7 +343,10 @@ class Box {
 	/**
 	 * Tabs for this box
 	 *
-	 * @see Box::add_tab
+	 * @see        Box::add_tab
+	 *
+	 * @todo       Make protected in version 6
+	 * @internal   Use tabs() instead.
 	 *
 	 * @var array<string, string>
 	 */
@@ -302,6 +354,9 @@ class Box {
 
 	/**
 	 * The CMB2 object
+	 *
+	 * @todo     Make protected in version 6
+	 * @internal Use cmb() instead.
 	 *
 	 * @var \CMB2
 	 */
@@ -475,6 +530,290 @@ class Box {
 
 
 	/**
+	 * Priority of the metabox in its context.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#priority
+	 *
+	 * @phpstan-param Meta_Box::PRIORITY_* $priority
+	 *
+	 * @param string                       $priority - Priority of the metabox.
+	 *
+	 * @return void
+	 */
+	public function priority( string $priority ): void {
+		$this->priority = $priority;
+	}
+
+
+	/**
+	 * This property allows you to optionally add classes to the CMB2 wrapper.
+	 * This property can take a string, or array.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#classes
+	 *
+	 * @param string|array<string> $classes - Classes to add to the CMB2 wrapper.
+	 *
+	 * @return void
+	 */
+	public function classes( string|array $classes ): void {
+		$this->classes = $classes;
+	}
+
+
+	/**
+	 * Like the classes property, allows adding classes to the CMB2 wrapper,
+	 * but takes a callback.
+	 * That callback should return an array of classes.
+	 * The callback gets passed the CMB2 $properties array as the first argument,
+	 * and the CMB2 $cmb object as the second argument.
+	 *
+	 * @link   https://github.com/CMB2/CMB2/wiki/Box-Properties#classes_cb
+	 *
+	 * @param callable $classes_cb - Callback to add classes.
+	 *
+	 * @return void
+	 */
+	public function classes_cb( callable $classes_cb ): void {
+		$this->classes_cb = $classes_cb;
+	}
+
+
+	/**
+	 * Set to true to default metabox being closed
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#closed
+	 *
+	 * @param bool $closed - Whether the metabox is closed by default.
+	 *
+	 * @return void
+	 */
+	public function closed( bool $closed ): void {
+		$this->closed = $closed;
+	}
+
+
+	/**
+	 * Whether to enqeue CMB2 stylesheet
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#cmb_styles
+	 *
+	 * @param bool $cmb_styles - Whether to enqueue CMB2 stylesheet.
+	 *
+	 * @return void
+	 */
+	public function cmb_styles( bool $cmb_styles ): void {
+		$this->cmb_styles = $cmb_styles;
+	}
+
+
+	/**
+	 * Whether to enqeue CMB2 Javascript files.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#enqueue_js
+	 *
+	 * @param bool $enqueue_js - Whether to enqueue CMB2 Javascript files.
+	 *
+	 * @return void
+	 */
+	public function enqueue_js( bool $enqueue_js ): void {
+		$this->enqueue_js = $enqueue_js;
+	}
+
+
+	/**
+	 * Handles hooking CMB2 forms/metaboxes into the post/attachment/user screens
+	 * and handles hooking in and saving those fields.
+	 * Set to false if you plan on handling the form/field output/saving
+	 * (via something like cmb2_metabox_form()).
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#hookup
+	 *
+	 * @param bool $hookup - Whether to handle hooking CMB2 forms/metaboxes.
+	 *
+	 * @return void
+	 */
+	public function hookup( bool $hookup ): void {
+		$this->hookup = $hookup;
+	}
+
+
+	/**
+	 * Override the rendering of the box on rest api responses.
+	 * Used to create an entirely custom response.
+	 *
+	 * @link  https://gist.github.com/jtsternberg/a70e845aca44356b8fbf05aafff4d0c8
+	 *
+	 * @param callable $register_rest_field_cb - Callback to override the rendering of the box on rest api responses.
+	 *
+	 * @return void
+	 */
+	public function register_rest_field_cb( callable $register_rest_field_cb ): void {
+		$this->register_rest_field_cb = $register_rest_field_cb;
+	}
+
+
+	/**
+	 * The following parameter is any additional arguments passed as $callback_args
+	 * to add_meta_box, if/when applicable.
+	 *
+	 * CMB2 does not use these arguments in the add_meta_box callback; however, these args
+	 * are parsed for certain special properties, like determining Gutenberg/block-editor
+	 * compatibility.
+	 *
+	 * We have our own Gutenberg/block-editor properties in this class, so use those instead
+	 * of this property if you are working with Gutenberg.
+	 *
+	 * @see Box::$display_when_gutenberg_active
+	 * @see Box::$gutenberg_compatible
+	 *
+	 * @phpstan-param array{
+	 *      __back_compat_meta_box?: bool,
+	 *      __block_editor_compatible_meta_box?: bool
+	 *  }           $mb_callback_args
+	 *
+	 *
+	 * @param array $mb_callback_args - Additional arguments passed as $callback_args to add_meta_box.
+	 *
+	 * @return void
+	 */
+	public function mb_callback_args( array $mb_callback_args ): void {
+		$this->mb_callback_args = $mb_callback_args;
+	}
+
+
+	/**
+	 * This flag lets you set whether the meta-box works in the block editor or not.
+	 * Setting it to true signifies tha you've confirmed that the meta-box
+	 * works in the block editor, setting it to false signifies that it doesn't.
+	 *
+	 * If set to false, WP will automatically fall back to the classic editor when
+	 * this box is loaded.
+	 *
+	 * @see  Box::get_args()
+	 * @see  Box::$display_when_gutenberg_active
+	 *
+	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
+	 *
+	 * @param bool $gutenberg_compatible - Whether the meta-box works in the block editor.
+	 *
+	 * @return void
+	 */
+	public function gutenberg_compatible( bool $gutenberg_compatible ): void {
+		$this->gutenberg_compatible = $gutenberg_compatible;
+	}
+
+
+	/**
+	 * Set to false if you have converted this meta-box fully to Gutenberg, and
+	 * you don't want the default meta-box to display when gutenberg is active.
+	 *
+	 * When the classic editor is loaded, this meta-box will load no matter what
+	 * this is set to.
+	 *
+	 * @see  Box::get_args()
+	 * @see  Box::$gutenberg_compatible
+	 *
+	 * @link https://make.wordpress.org/core/2018/11/07/meta-box-compatibility-flags/
+	 *
+	 * @param bool $display_when_gutenberg_active - Whether to display when gutenberg is active.
+	 *
+	 * @return void
+	 */
+	public function display_when_gutenberg_active( bool $display_when_gutenberg_active ): void {
+		$this->display_when_gutenberg_active = $display_when_gutenberg_active;
+	}
+
+
+	/**
+	 * If false, will not save during hookup
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#save_fields
+	 *
+	 * @see     Box
+	 *
+	 * @param bool $save_fields - Whether to save during hookup.
+	 *
+	 * @return void
+	 */
+	public function save_fields( bool $save_fields ): void {
+		$this->save_fields = $save_fields;
+	}
+
+
+	/**
+	 * Whether to show labels for the fields
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_names
+	 *
+	 * @param bool $show_names - Whether to show labels for the fields.
+	 *
+	 * @return void
+	 */
+	public function show_names( bool $show_names ): void {
+		$this->show_names = $show_names;
+	}
+
+
+	/**
+	 * Post IDs or page templates to display this metabox.
+	 * Overrides 'show_on_cb'.
+	 * More info:
+	 *
+	 * @link    https://github.com/WebDevStudios/CMB2/wiki/Adding-your-own-show_on-filters
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on
+	 *
+	 * @param array{key:string,value:string|array<int>} $show_on - Post IDs or page templates to display this metabox.
+	 *
+	 * @return void
+	 */
+	public function show_on( array $show_on ): void {
+		$this->show_on = $show_on;
+	}
+
+
+	/**
+	 * To show or not based on the result
+	 * of a function.
+	 * Pass a function name here
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on_cb
+	 *
+	 * @param callable $show_on_cb - To show or not based on the result of a function.
+	 *
+	 * @return void
+	 */
+	public function show_on_cb( callable $show_on_cb ): void {
+		$this->show_on_cb = $show_on_cb;
+	}
+
+
+	/**
+	 * Tabs for this box
+	 *
+	 * @see Box::add_tab
+	 *
+	 * @param array<string, string> $tabs - Tabs for this box.
+	 *
+	 * @return void
+	 */
+	public function tabs( array $tabs ): void {
+		$this->tabs = $tabs;
+	}
+
+
+	/**
+	 * The CMB2 object
+	 *
+	 * @param \CMB2 $cmb - The CMB2 object.
+	 *
+	 * @return void
+	 */
+	public function cmb( \CMB2 $cmb ): void {
+		$this->cmb = $cmb;
+	}
+
+
+	/**
 	 * Set the display location of the meta box.
 	 *
 	 * @phpstan-param self::CONTEXT_* $context
@@ -567,11 +906,13 @@ class Box {
 	 *
 	 * @link  https://github.com/CMB2/CMB2/wiki/Box-Properties#context
 	 *
+	 * @param bool $remove_box_wrap - Whether to remove meta box wrap.
+	 *
 	 * @return void
 	 */
-	public function remove_box_wrap(): void {
-		$this->title = null;
-		$this->remove_box_wrap = true;
+	public function remove_box_wrap( bool $remove_box_wrap = true ): void {
+		$this->title = $remove_box_wrap ? null : $this->title;
+		$this->remove_box_wrap = $remove_box_wrap;
 	}
 
 
