@@ -55,6 +55,15 @@ class Supports implements ArgsRules {
 	public bool $ariaLabel;
 
 	/**
+	 * Automatically register the block using PHP only.
+	 *
+	 * @link https://make.wordpress.org/core/2026/03/03/php-only-block-registration/
+	 *
+	 * @var bool
+	 */
+	public bool $autoRegister;
+
+	/**
 	 * False removes the support for the generated className.
 	 *
 	 * @var bool
