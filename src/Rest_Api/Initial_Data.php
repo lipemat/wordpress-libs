@@ -214,7 +214,7 @@ class Initial_Data {
 	 * Get an instance of the WP_REST_Request setup with
 	 * the 'view' context.
 	 *
-	 * @return \WP_REST_Request<array<mixed>>
+	 * @return \WP_REST_Request<array<string, mixed>>
 	 */
 	protected function get_request(): \WP_REST_Request {
 		$request = new \WP_REST_Request();

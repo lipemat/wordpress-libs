@@ -64,8 +64,8 @@ class Taxonomy extends Field {
 	 * Save terms assigned to users as meta instead of the default
 	 * object terms system.
 	 *
-	 * @see        \CMB2_Type_Taxonomy_Base::get_object_terms
-	 * * @see    \CMB2_Sanitize::taxonomy
+	 * @see    \CMB2_Type_Taxonomy_Base::get_object_terms
+	 * @see    \CMB2_Sanitize::taxonomy
 	 *
 	 * @deprecated In favor of `store_terms_in_meta` which applies to both
 	 *             posts and users.
@@ -75,7 +75,7 @@ class Taxonomy extends Field {
 	 *
 	 * @notice     Required lipemat version of CMB2 to support this argument.
 	 *
-	 * * @var bool
+	 * @var bool
 	 */
 	protected bool $store_user_terms_in_meta = true;
 

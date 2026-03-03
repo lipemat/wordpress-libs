@@ -335,7 +335,7 @@ class Date_Query implements ClauseRules {
 			$this->relation();
 		}
 		$this->clauses[] = [];
-		$this->current_index = \array_key_last( $this->clauses );
+		$this->current_index = (int) \array_key_last( $this->clauses );
 
 		return $this;
 	}
