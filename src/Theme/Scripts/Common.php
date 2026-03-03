@@ -26,6 +26,11 @@ class Common {
 	 */
 	public const CSS_ENUM_HANDLE = 'lipe/project/theme/css-enums';
 
+	/**
+	 * Control the CSS enum file that is loaded.
+	 */
+	public const CSS_ENUMS = 'lipe/lib/theme/scripts/common/css-enums';
+
 
 	/**
 	 * Instantiate the Common class with the required dependencies.
@@ -237,22 +242,41 @@ class Common {
 	 * @return void
 	 */
 	public function load_css_enums(): void {
-		// @phpstan-ignore classConstant.deprecated
-		$enum = $this->handles[0]::tryFrom( self::CSS_ENUM_HANDLE );
+		$enum = $this->handles[0]::tryFrom( self::CSS_ENUMS );
 
-		if ( null === $enum ) {
+		// @phpstan-ignore classConstant.deprecated
+		$old_enum = $this->handles[0]::tryFrom( self::CSS_ENUM_HANDLE );
+
+		/**
+		 * Fallback for old automatic way of loading CSS enums.
+		 */
+		if ( null === $old_enum && null === $enum ) {
 			if ( SCRIPT_DEBUG ) {
-				require trailingslashit( get_stylesheet_directory() ) . 'css/module-enums.php';
+				$file = trailingslashit( get_stylesheet_directory() ) . 'css/module-enums.php';
 			} else {
-				require trailingslashit( get_stylesheet_directory() ) . 'css/dist/module-enums.min.inc';
+				$file = trailingslashit( get_stylesheet_directory() ) . 'css/dist/module-enums.min.inc';
 			}
-		} else {
+			/**
+			 * Deprecated way to load CSS enums, which relies on the `CSS_ENUM_HANDLE` constant being set in the `Handles` enum.
+			 */
+		} elseif ( null === $enum ) {
 			_deprecated_argument( __METHOD__, '5.7.0', 'Using the `CSS_ENUM_HANDLE`, constant is deprecated and will be removed in version 6.' );
 			if ( SCRIPT_DEBUG ) {
-				require get_stylesheet_directory() . '/css/' . $enum->file();
+				$file = get_stylesheet_directory() . '/css/' . $old_enum->file();
 			} else {
-				require $enum->dist_path() . $enum->file();
+				$file = $old_enum->dist_path() . $old_enum->file();
 			}
+			/**
+			 * New proper way to load CSS enums.
+			 *
+			 * Define `CSS_ENUMS` constant in the `Handles` enum.
+			 */
+		} else {
+			$file = $enum->dist_path() . $enum->file();
+		}
+
+		if ( \file_exists( $file ) ) {
+			require $file;
 		}
 	}
 
