@@ -18,6 +18,9 @@ class File extends Field {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file
 	 *
+	 * @todo Make protected in version 6
+	 * @internal Use preview_size() instead.
+	 *
 	 * @var string
 	 */
 	public string $preview_size;
@@ -49,9 +52,9 @@ class File extends Field {
 	 *
 	 * @param Get_Posts $args - The arguments to pass to get_posts().
 	 *
-	 * @return File
+	 * @return static
 	 */
-	public function file_query_args( Get_Posts $args ): File {
+	public function file_query_args( Get_Posts $args ): static {
 		$this->query_args = $args->get_args();
 		return $this;
 	}
@@ -133,6 +136,21 @@ class File extends Field {
 			$this->options['url'] = true;
 		}
 		parent::required();
+		return $this;
+	}
+
+
+	/**
+	 * For use with the file fields only to control the preview size
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file
+	 *
+	 * @param string $preview_size - Preview size to use.
+	 *
+	 * @return static
+	 */
+	public function preview_size( string $preview_size ): static {
+		$this->preview_size = $preview_size;
 		return $this;
 	}
 }

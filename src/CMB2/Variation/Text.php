@@ -14,12 +14,18 @@ class Text extends Field {
 	/**
 	 * Used with `char_counter` to count character/words remaining.
 	 *
+	 * @todo Make protected in version 6
+	 * @internal Use char_max() instead.
+	 *
 	 * @var int
 	 */
 	public int $char_max;
 
 	/**
 	 * Used with `char_max` to enforce length when counting characters.
+	 *
+	 * @todo Make protected in version 6
+	 * @internal Use char_max_enforce() instead.
 	 *
 	 * @var bool
 	 */
@@ -60,9 +66,9 @@ class Text extends Field {
 	 *                             'characters_text' - Default: "Characters"
 	 *                             'characters_truncated_text' - Default: "Your text may be truncated.".
 	 *
-	 * @return Text
+	 * @return static
 	 */
-	public function char_counter( bool $count_words = false, ?int $max = null, bool $enforce = false, array $labels = [] ): Text {
+	public function char_counter( bool $count_words = false, ?int $max = null, bool $enforce = false, array $labels = [] ): static {
 		$this->char_counter = $count_words ? 'words' : true;
 
 		if ( null !== $max ) {
