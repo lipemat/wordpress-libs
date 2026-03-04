@@ -1,4 +1,5 @@
 <?php
+/* @noinspection ClassMethodNameMatchesFieldNameInspection */
 declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
@@ -15,61 +16,71 @@ use Lipe\Lib\Util\Arrays;
  * logic of a Box and a Field.
  *
  * A fluent interface for CMB2 group properties.
+ *
+ * @phpstan-type GROUP_CALLBACK string|(\Closure( array<string, mixed> $field_args, \CMB2_Field $field ): (string|void))
  */
 class Group extends Field {
 	/**
-	 * ONLY APPLIES TO GROUPS
+	 * Add arbitrary text/markup before the group.
 	 *
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
-	 * @var callable|string
+	 * @todo Make protected in version 6
+	 * @internal Use before_group() instead.
+	 *
+	 * @phpstan-var GROUP_CALLBACK
+	 * @var \Closure|string
 	 */
 	public $before_group;
 
 	/**
-	 * ONLY APPLIES TO GROUPS
+	 * Add arbitrary text/markup after the group.
 	 *
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
-	 * @var callable|string
+	 * @todo Make protected in version 6
+	 * @internal Use after_group() instead.
+	 *
+	 * @phpstan-var GROUP_CALLBACK
+	 * @var \Closure|string
 	 */
 	public $after_group;
 
 	/**
-	 * ONLY APPLIES TO GROUPS
+	 * Add arbitrary text/markup before the group row.
 	 *
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
-	 * @var callable|string
+	 * @todo Make protected in version 6
+	 * @internal Use before_group_row() instead.
+	 *
+	 * @phpstan-var GROUP_CALLBACK
+	 * @var \Closure|string
 	 */
 	public $before_group_row;
 
 	/**
-	 * ONLY APPLIES TO GROUPS
+	 * Add arbitrary text/markup after the group row.
 	 *
-	 * These allow you to add arbitrary text/markup at different points in the field markup.
-	 * These also accept a callback.
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
-	 * @var callable|string
+	 * @todo Make protected in version 6
+	 * @internal Use after_group_row() instead.
+	 *
+	 * @phpstan-var GROUP_CALLBACK
+	 * @var \Closure|string
 	 */
 	public $after_group_row;
 
@@ -218,6 +229,86 @@ class Group extends Field {
 		$this->options = \array_merge( $this->options, [ 'closed' => $closed ] );
 
 		return $this;
+	}
+
+
+	/**
+	 * Add arbitrary text/markup before the group.
+	 *
+	 * These also accept a callback.
+	 * The callback will receive $field_args as the first argument,
+	 * and the CMB2_Field $field object as the second argument.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
+	 *
+	 * @phpstan-param GROUP_CALLBACK $before_group
+	 *
+	 * @param \Closure|string $before_group - Markup/callback to display before the group.
+	 *
+	 * @return void
+	 */
+	public function before_group( $before_group ): void {
+		$this->before_group = $before_group;
+	}
+
+
+	/**
+	 * Add arbitrary text/markup after the group.
+	 *
+	 * These also accept a callback.
+	 * The callback will receive $field_args as the first argument,
+	 * and the CMB2_Field $field object as the second argument.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
+	 *
+	 * @phpstan-param GROUP_CALLBACK $after_group
+	 *
+	 * @param \Closure|string $after_group - Markup/callback to display after the group.
+	 *
+	 * @return void
+	 */
+	public function after_group( $after_group ): void {
+		$this->after_group = $after_group;
+	}
+
+
+	/**
+	 * Add arbitrary text/markup before the group row.
+	 *
+	 * These also accept a callback.
+	 * The callback will receive $field_args as the first argument,
+	 * and the CMB2_Field $field object as the second argument.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
+	 *
+	 * @phpstan-param GROUP_CALLBACK $before_group_row
+	 *
+	 * @param \Closure|string $before_group_row - Markup/callback to display before the group row.
+	 *
+	 * @return void
+	 */
+	public function before_group_row( $before_group_row ): void {
+		$this->before_group_row = $before_group_row;
+	}
+
+
+	/**
+	 * Add arbitrary text/markup after the group row.
+	 *
+	 * These also accept a callback.
+	 * The callback will receive $field_args as the first argument,
+	 * and the CMB2_Field $field object as the second argument.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
+	 *
+	 * @phpstan-param GROUP_CALLBACK $after_group_row
+	 *
+	 * @param \Closure|string $after_group_row - Markup/callback to display after the group row.
+	 *
+	 * @return void
+	 */
+	public function after_group_row( $after_group_row ): void {
+		$this->after_group_row = $after_group_row;
 	}
 
 
