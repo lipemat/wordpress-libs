@@ -1,5 +1,5 @@
 <?php
-
+/* @noinspection ClassMethodNameMatchesFieldNameInspection */
 declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
