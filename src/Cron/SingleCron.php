@@ -3,6 +3,12 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Cron;
 
+/**
+ * Represents a single cron task.
+ *
+ * @author  Mat Lipe
+ * @since   4.10.0
+ */
 interface SingleCron {
 	public const NAME = __CLASS__;
 

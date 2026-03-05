@@ -16,7 +16,7 @@ class RunnerTest extends \WP_UnitTestCase {
 			}
 
 
-			public function get_recurrence(): string {
+			public function get_recurrence(): string|\BackedEnum {
 				return 'daily';
 			}
 

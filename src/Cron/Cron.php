@@ -4,7 +4,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Cron;
 
 /**
- * Represents a single cron task.
+ * Represents a cron task.
  *
  * @author  Mat Lipe
  * @since   4.10.0
@@ -37,7 +37,7 @@ interface Cron {
 	 * to create a class for managing them with interval constants to return
 	 * with this method.
 	 *
-	 * @return string
+	 * @return string|\BackedEnum
 	 */
-	public function get_recurrence(): string;
+	public function get_recurrence();
 }

@@ -90,9 +90,14 @@ class Runner {
 	 * @return void
 	 */
 	protected function schedule_task(): void {
-		if ( false === $this->get_next_run() ) {
-			wp_schedule_event( time() - 1, $this->cron->get_recurrence(), $this->cron->get_name() );
+		if ( false !== $this->get_next_run() ) {
+			return;
 		}
+		$recurrence = $this->cron->get_recurrence();
+		if ( $recurrence instanceof \BackedEnum ) {
+			$recurrence = (string) $recurrence->value;
+		}
+		wp_schedule_event( \time() - 1, $recurrence, $this->cron->get_name() );
 	}
 
 
