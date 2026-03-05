@@ -323,7 +323,7 @@ class Field {
 		public readonly Box $box,
 		public readonly ?Group $group,
 	) {
-		if ( method_exists( $this, 'hook' ) ) {
+		if ( \method_exists( $this, 'hook' ) ) {
 			$this->hook();
 		}
 	}
@@ -846,9 +846,11 @@ class Field {
 		if ( ! isset( $this->type ) ) {
 			_doing_it_wrong( __METHOD__, esc_html__( 'You must specify a field type (use $field->type() ).', 'lipe' ), '5.0.0' );
 		}
+		$excluded = [ 'box', 'event_callbacks', 'group' ];
+
 		$args = [];
 		foreach ( \get_object_vars( $this ) as $_var => $_value ) {
-			if ( ! isset( $this->{$_var} ) ) {
+			if ( ! isset( $this->{$_var} ) || \in_array( $_var, $excluded, true ) ) {
 				continue;
 			}
 			$args[ $_var ] = $this->{$_var};
