@@ -511,8 +511,6 @@ class Box {
 	/**
 	 * Add a group to this box.
 	 *
-	 * For shorthand calls where no special setting is necessary.
-	 *
 	 * @example $group = $box->group( $id, $name );
 	 *
 	 * @param string  $id        - Group ID.
