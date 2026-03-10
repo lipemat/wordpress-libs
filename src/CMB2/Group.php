@@ -26,9 +26,9 @@ class Group extends Field {
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
+	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
-	 * @todo Make protected in version 6
+	 * @todo     Make protected in version 6
 	 * @internal Use before_group() instead.
 	 *
 	 * @phpstan-var GROUP_CALLBACK
@@ -42,9 +42,9 @@ class Group extends Field {
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
+	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
-	 * @todo Make protected in version 6
+	 * @todo     Make protected in version 6
 	 * @internal Use after_group() instead.
 	 *
 	 * @phpstan-var GROUP_CALLBACK
@@ -58,9 +58,9 @@ class Group extends Field {
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
+	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
-	 * @todo Make protected in version 6
+	 * @todo     Make protected in version 6
 	 * @internal Use before_group_row() instead.
 	 *
 	 * @phpstan-var GROUP_CALLBACK
@@ -74,9 +74,9 @@ class Group extends Field {
 	 * The callback will receive $field_args as the first argument,
 	 * and the CMB2_Field $field object as the second argument.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
+	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
-	 * @todo Make protected in version 6
+	 * @todo     Make protected in version 6
 	 * @internal Use after_group_row() instead.
 	 *
 	 * @phpstan-var GROUP_CALLBACK
@@ -104,6 +104,8 @@ class Group extends Field {
 
 	/**
 	 * Repeatable group options.
+	 *
+	 * @see self::repeatable()
 	 *
 	 * @var array<'add_button'|'closed'|'remove_button'|'remove_confirm'|'sortable',bool|string>
 	 */
@@ -208,10 +210,8 @@ class Group extends Field {
 	 * Set the group to be sortable.
 	 *
 	 * @param bool $sortable - Enable/disable sortable support for this group.
-	 *
-	 * @return Group
 	 */
-	public function sortable( bool $sortable = true ): Group {
+	public function sortable( bool $sortable = true ): static {
 		$this->options = \array_merge( $this->options, [ 'sortable' => $sortable ] );
 
 		return $this;
@@ -222,10 +222,12 @@ class Group extends Field {
 	 * Set the group to be closed by default.
 	 *
 	 * @param bool $closed - Enable/disable closed by default for this group.
-	 *
-	 * @return Group
 	 */
-	public function closed( bool $closed = true ): Group {
+	public function closed( bool $closed = true ): static {
+		if ( $closed && isset( $this->layout ) && Layout::BLOCK !== $this->layout ) {
+			_doing_it_wrong( __METHOD__, 'Custom group layouts do not support closing', '5.10.0' );
+		}
+
 		$this->options = \array_merge( $this->options, [ 'closed' => $closed ] );
 
 		return $this;
@@ -243,7 +245,7 @@ class Group extends Field {
 	 *
 	 * @phpstan-param GROUP_CALLBACK $before_group
 	 *
-	 * @param \Closure|string $before_group - Markup/callback to display before the group.
+	 * @param \Closure|string        $before_group - Markup/callback to display before the group.
 	 *
 	 * @return void
 	 */
@@ -263,7 +265,7 @@ class Group extends Field {
 	 *
 	 * @phpstan-param GROUP_CALLBACK $after_group
 	 *
-	 * @param \Closure|string $after_group - Markup/callback to display after the group.
+	 * @param \Closure|string        $after_group - Markup/callback to display after the group.
 	 *
 	 * @return void
 	 */
@@ -283,7 +285,7 @@ class Group extends Field {
 	 *
 	 * @phpstan-param GROUP_CALLBACK $before_group_row
 	 *
-	 * @param \Closure|string $before_group_row - Markup/callback to display before the group row.
+	 * @param \Closure|string        $before_group_row - Markup/callback to display before the group row.
 	 *
 	 * @return void
 	 */
@@ -303,7 +305,7 @@ class Group extends Field {
 	 *
 	 * @phpstan-param GROUP_CALLBACK $after_group_row
 	 *
-	 * @param \Closure|string $after_group_row - Markup/callback to display after the group row.
+	 * @param \Closure|string        $after_group_row - Markup/callback to display after the group row.
 	 *
 	 * @return void
 	 */

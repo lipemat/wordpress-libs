@@ -82,6 +82,9 @@ class Repo {
 	 * @return ?Registered
 	 */
 	protected function get_registered( ?string $field_id ): ?Registered {
+		if ( null === $field_id ) {
+			return null;
+		}
 		return $this->registered[ $field_id ] ?? null;
 	}
 
