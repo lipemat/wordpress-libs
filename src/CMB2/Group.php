@@ -163,12 +163,13 @@ class Group extends Field {
 		}
 		Layout::init_once();
 		if ( isset( $this->tab ) ) {
-			$this->tab_content_cb = [ Layout::in(), 'render_group_callback' ];
+			$this->tab_content_cb = Layout::in()->render_group_callback( ... );
 		} else {
-			$this->render_row_cb( [ Layout::in(), 'render_group_callback' ] );
+			$this->render_row_cb( Layout::in()->render_group_callback( ... ) );
 		}
 
 		$this->layout = $layout;
+		$this->closed( false );
 
 		return $this;
 	}
@@ -225,7 +226,7 @@ class Group extends Field {
 	 */
 	public function closed( bool $closed = true ): static {
 		if ( $closed && isset( $this->layout ) && Layout::BLOCK !== $this->layout ) {
-			_doing_it_wrong( __METHOD__, 'Custom group layouts do not support closing', '5.10.0' );
+			_doing_it_wrong( __METHOD__, 'Custom group layouts do not support closing.', '5.10.0' );
 		}
 
 		$this->options = \array_merge( $this->options, [ 'closed' => $closed ] );
