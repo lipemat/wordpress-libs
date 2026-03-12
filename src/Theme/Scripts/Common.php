@@ -5,7 +5,6 @@ namespace Lipe\Lib\Theme\Scripts;
 
 use Lipe\Lib\Theme\Resources;
 use Lipe\Lib\Traits\Memoize;
-use Lipe\Project\Theme\Handles;
 
 /**
  * Common resource loading and configuration shared cross site.
@@ -15,7 +14,7 @@ use Lipe\Project\Theme\Handles;
  *
  * @since    5.1.0
  *
- * @see      Handles - For configuring which scripts load.
+ * @see      \Lipe\Project\Theme\Handles - For configuring which scripts load.
  */
 class Common {
 	use Memoize;
