@@ -138,7 +138,11 @@ class JS_Manifest implements Manifest {
 			return set_url_scheme( 'https://' . \trim( sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) ) . ':3000/js/dist/' . $this->handle->file() );
 		}
 
-		return $this->handle->dist_url() . $this->handle->file();
+		$file = $this->handle->file();
+		if ( '' !== $file ) {
+			return trailingslashit( $this->handle->dist_url() ) . $file;
+		}
+		return $this->handle->dist_url();
 	}
 
 
@@ -150,12 +154,17 @@ class JS_Manifest implements Manifest {
 	 * @return string
 	 */
 	public function get_file( bool $full_path = false ): string {
+		$file = $this->handle->file();
+		$path = $this->handle->dist_path();
+		if ( '' !== $file ) {
+			$path = trailingslashit( $path );
+		}
 		if ( $full_path ) {
-			return $this->handle->dist_path() . $this->handle->file();
+			return $path . $file;
 		}
 
-		$path = \str_replace( trailingslashit( get_stylesheet_directory() ), '', $this->handle->dist_path() );
-		return "{$path}{$this->handle->file()}";
+		$path = \str_replace( trailingslashit( get_stylesheet_directory() ), '', $path );
+		return "{$path}{$file}";
 	}
 
 

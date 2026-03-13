@@ -85,8 +85,12 @@ class PCSS_Manifest implements Manifest {
 	 * @return string
 	 */
 	public function get_file( bool $full_path = false ): string {
+		$path = $this->handle->dist_path();
+		if ( '' !== $this->file_name ) {
+			$path = trailingslashit( $path );
+		}
 		if ( $full_path ) {
-			return $this->handle->dist_path() . $this->file_name;
+			return $path . $this->file_name;
 		}
 
 		$path = \str_replace( trailingslashit( get_stylesheet_directory() ), '', $this->handle->dist_path() );
@@ -103,7 +107,11 @@ class PCSS_Manifest implements Manifest {
 		if ( ! SCRIPT_DEBUG ) {
 			return $this->handle->dist_url() . \str_replace( '.css', '.min.css', $this->handle->file() );
 		}
-		return $this->handle->dist_url() . $this->handle->file();
+		$file = $this->handle->file();
+		if ( '' !== $file ) {
+			return trailingslashit( $this->handle->dist_url() ) . $file;
+		}
+		return $this->handle->dist_url();
 	}
 
 
