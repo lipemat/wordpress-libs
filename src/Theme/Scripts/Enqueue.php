@@ -54,7 +54,7 @@ class Enqueue {
 	 * @return void
 	 */
 	public function register(): void {
-		if ( \str_ends_with( $this->handle->file(), '.js' ) ) {
+		if ( Util::in()->is_javascript_resource( $this->handle ) ) {
 			wp_register_script( $this->handle->handle(), $this->get_manifest()->get_url(), $this->handle->dependencies(), $this->get_version(), true );
 		} else {
 			wp_register_style( $this->handle->handle(), $this->get_manifest()->get_url(), $this->handle->dependencies(), $this->get_version() );

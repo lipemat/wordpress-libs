@@ -80,7 +80,7 @@ class JS_Manifest implements Manifest {
 	 * @return void
 	 */
 	public function enqueue( bool $in_footer = true ): void {
-		if ( \str_ends_with( $this->handle->file(), '.js' ) ) {
+		if ( Util::in()->is_javascript_resource( $this->handle ) ) {
 			$args = new Wp_Enqueue_Script( [] );
 			$args->in_footer = $in_footer;
 
@@ -103,24 +103,22 @@ class JS_Manifest implements Manifest {
 					$registered->extra['data'] = file_get_contents( $this->get_file( true ) );
 				}
 			}
-
-			return;
-		}
-
-		/**
-		 * Webpack uses `style-loader` during development, so we only load a "JS" based CSS file if Webpack is not running.
-		 */
-		if ( ! Util::in()->is_webpack_running( $this->handle ) ) {
-			wp_enqueue_style( $this->handle->handle(), $this->get_url(), $this->handle->dependencies(), $this->get_version() );
-		}
-
-		if ( ! SCRIPT_DEBUG && $this->handle->is_inline() ) {
+		} else {
 			/**
-			 * Allow WP Core to inline the stylesheet if under 20k.
-			 *
-			 * @see    wp_maybe_inline_styles
+			 * Webpack uses `style-loader` during development, so we only load a "JS" based CSS file if Webpack is not running.
 			 */
-			wp_style_add_data( $this->handle->handle(), 'path', $this->get_file( true ) );
+			if ( ! Util::in()->is_webpack_running( $this->handle ) ) {
+				wp_enqueue_style( $this->handle->handle(), $this->get_url(), $this->handle->dependencies(), $this->get_version() );
+			}
+
+			if ( ! SCRIPT_DEBUG && $this->handle->is_inline() ) {
+				/**
+				 * Allow WP Core to inline the stylesheet if under 20k.
+				 *
+				 * @see    wp_maybe_inline_styles
+				 */
+				wp_style_add_data( $this->handle->handle(), 'path', $this->get_file( true ) );
+			}
 		}
 	}
 

@@ -5,7 +5,9 @@ namespace mocks;
 
 use Lipe\Lib\Theme\Scripts\Common;
 use Lipe\Lib\Theme\Scripts\Enqueue;
+use Lipe\Lib\Theme\Scripts\External_Manifest;
 use Lipe\Lib\Theme\Scripts\JS_Manifest;
+use Lipe\Lib\Theme\Scripts\Manifest;
 use Lipe\Lib\Theme\Scripts\PCSS_Manifest;
 use Lipe\Lib\Theme\Scripts\ResourceHandles;
 use Lipe\Lib\Theme\Scripts\Util;
@@ -27,6 +29,11 @@ enum ScriptHandles: string implements ResourceHandles {
 	case FRONT_END_CSS = 'lipe/project/theme/front-end/css';
 	case MASTER_CSS    = 'lipe/project/theme/master/css';
 	case MASTER_JS     = 'lipe/project/theme/master/js';
+
+	// External handles.
+	case FONT_AWESOME  = 'lipe-project/theme-font-awesome';
+	case VERSIONED_CSS = 'lipe-project/theme-versioned-css';
+	case VERSIONED_JS  = 'lipe-project/theme-versioned-js';
 
 	// Utility handles.
 	case CSS_ENUMS = Common::CSS_ENUM_HANDLE;
@@ -91,7 +98,10 @@ enum ScriptHandles: string implements ResourceHandles {
 			self::MASTER_JS     => 'master.js',
 
 			self::CSS_ENUMS     => SCRIPT_DEBUG ? 'module-enums.php' : 'module-enums.min.inc',
-			self::RUNNING       => '.running'
+			self::RUNNING       => '.running',
+			self::FONT_AWESOME  => '5f1bf1fe19.js',
+			self::VERSIONED_CSS => '',
+			self::VERSIONED_JS  => 'cooler.js?ver=1.0.0&d=DDDD'
 		};
 	}
 
@@ -184,6 +194,16 @@ enum ScriptHandles: string implements ResourceHandles {
 
 
 	public function dist_url(): string {
+		if ( $this === self::VERSIONED_CSS ) {
+			return 'https://someotherplace.com/css/versioned.css?abritrayy';
+		}
+		if ( $this === self::VERSIONED_JS ) {
+			return 'https://unpgk@11.com/js/11';
+		}
+		if ( $this === self::FONT_AWESOME ) {
+			return 'https://kit.fontawesome.com/';
+		}
+
 		$path = trailingslashit( get_stylesheet_directory_uri() );
 		if ( Enqueue::BOILER_PCSS === $this->boilerplate() ) {
 			return trailingslashit( $path . self::CSS_DIST_PATH );

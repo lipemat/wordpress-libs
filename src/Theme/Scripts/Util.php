@@ -39,4 +39,29 @@ class Util {
 		}
 		return file_exists( $handle->dist_path() . '.running' );
 	}
+
+
+	/**
+	 * Detect if we're working with a javascript resource.
+	 *
+	 * - Supports URL containing or not containing separate file names.
+	 * - Supports URL containing or not a query string.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param ResourceHandles $handle - Handle to check.
+	 *
+	 * @return bool
+	 */
+	public function is_javascript_resource( ResourceHandles $handle ): bool {
+		$file = $handle->file();
+		if ( '' === $file ) {
+			$file = $handle->dist_url();
+		}
+		$part = \strtok( $file, '?' );
+		if ( false === $part ) {
+			return false;
+		}
+		return \str_ends_with( $part, '.js' );
+	}
 }
