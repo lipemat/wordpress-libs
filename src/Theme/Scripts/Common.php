@@ -103,17 +103,21 @@ class Common {
 			if ( ! $resource->in_editor() ) {
 				continue;
 			}
+			$enqueue = Enqueue::factory( $resource );
+			$file = $enqueue->get_file();
+			if ( '' === $file ) {
+				continue;
+			}
 			add_theme_support( 'editor-styles' );
-			$enum = Enqueue::factory( $resource );
-			add_editor_style( $enum->get_file() );
+			add_editor_style( $file );
 
 			/**
 			 * Use regular expression to strip out the sourcemap, otherwise the
 			 * sources point to random files.
 			 */
-			add_filter( 'block_editor_settings_all', function( $settings ) use ( $enum ) {
-				$settings['styles'] = \array_map( function( $style ) use ( $enum ) {
-					if ( \array_key_exists( 'baseURL', $style ) && $enum->get_manifest()->get_url() === $style['baseURL'] ) {
+			add_filter( 'block_editor_settings_all', function( $settings ) use ( $enqueue ) {
+				$settings['styles'] = \array_map( function( $style ) use ( $enqueue ) {
+					if ( \array_key_exists( 'baseURL', $style ) && $enqueue->get_manifest()->get_url() === $style['baseURL'] ) {
 						$style['css'] = \preg_replace( '/\/\*# sourceMap.*?\*\//', '', $style['css'] );
 					}
 					return $style;

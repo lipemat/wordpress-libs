@@ -100,7 +100,7 @@ class JS_Manifest implements Manifest {
 				$registered = wp_scripts()->query( $this->handle->handle() );
 				if ( $registered instanceof \_WP_Dependency && $this->handle->is_inline() ) {
 					$registered->src = false;
-					$registered->extra['data'] = file_get_contents( $this->get_file( true ) );
+					$registered->extra['data'] = \file_get_contents( $this->get_file( true ) );
 				}
 			}
 		} else {

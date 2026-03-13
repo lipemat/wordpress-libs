@@ -185,7 +185,11 @@ enum ScriptHandles: string implements ResourceHandles {
 	}
 
 
-	public function get_manifest(): PCSS_Manifest|JS_Manifest {
+	public function get_manifest(): Manifest {
+		if ( \in_array( $this, [ self::VERSIONED_CSS, self::VERSIONED_JS, self::FONT_AWESOME ], true ) ) {
+			return new External_Manifest( $this );
+		}
+
 		if ( Enqueue::BOILER_PCSS === $this->boilerplate() ) {
 			return new PCSS_Manifest( $this );
 		}

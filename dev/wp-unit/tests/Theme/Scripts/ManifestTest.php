@@ -36,6 +36,33 @@ class ManifestTest extends \WP_UnitTestCase {
 	}
 
 
+	public function test_get_all_url(): void {
+		$result = [];
+		foreach ( ScriptHandles::cases() as $handle ) {
+			$result[ $handle->value ] = $handle->get_manifest()->get_url();
+		}
+		$this->assertSame( [
+			'lipe/project/theme/admin/css'    => 'http://wp-libs.loc/wp-content/themes/twentytwentyfour/css-dist/admin.min.css',
+			'lipe/project/theme/admin/js'     => 'http://wp-libs.loc/wp-content/themes/twentytwentyfour/js-dist/admin.js',
+			'lipe-project/theme-admin-js-css' => 'http://wp-libs.loc/wp-content/themes/twentytwentyfour/js-dist/admin.css',
+
+			'lipe-project/theme-blocks-css' => 'http://wp-libs.loc/wp-content/themes/twentytwentyfour/css-dist/blocks.min.css',
+
+			'lipe/project/theme/front-end/css' => 'http://wp-libs.loc/wp-content/themes/twentytwentyfour/css-dist/front-end.min.css',
+
+			'lipe/project/theme/master/css' => 'http://wp-libs.loc/wp-content/themes/twentytwentyfour/css-dist/master.min.css',
+			'lipe/project/theme/master/js'  => 'http://wp-libs.loc/wp-content/themes/twentytwentyfour/js-dist/master.js',
+
+			'lipe-project/theme-font-awesome'  => 'https://kit.fontawesome.com/5f1bf1fe19.js',
+			'lipe-project/theme-versioned-css' => 'https://someotherplace.com/css/versioned.css?abritrayy',
+			'lipe-project/theme-versioned-js'  => 'https://unpgk@11.com/js/11/cooler.js?ver=1.0.0&d=DDDD',
+
+			'lipe/project/theme/css-enums' => 'http://wp-libs.loc/wp-content/themes/twentytwentyfour/css-dist/module-enums.min.inc',
+			'lipe/project/theme/running'   => 'http://wp-libs.loc/wp-content/themes/twentytwentyfour/js-dist/.running',
+		], $result );
+	}
+
+
 	public function test_get_dist_path(): void {
 		$url = trailingslashit( get_stylesheet_directory_uri() );
 		$this->assertSame( $url . 'js-dist/', ScriptHandles::MASTER_JS->dist_url() );
