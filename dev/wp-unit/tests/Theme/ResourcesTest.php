@@ -124,7 +124,12 @@ class ResourcesTest extends \WP_UnitTestCase {
 		Resources::in()->add_body_class( Class_Names_Enum_Mock::L );
 
 		$classes = get_body_class();
-		$this->assertSame( [ 'wp-embed-responsive', 'wp-theme-twentytwentyfour', 'test-class-one', 'test-class-two', 'last' ], $classes );
+		// Remove unreliable classes cross different projects.
+		$classes = \array_values( \array_filter( $classes, function( $class ) {
+			return 'wp-embed-responsive' !== $class;
+		} ) );
+
+		$this->assertSame( [ 'wp-theme-twentytwentyfour', 'test-class-one', 'test-class-two', 'last' ], $classes );
 	}
 
 

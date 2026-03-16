@@ -207,12 +207,24 @@ class Common {
 				continue;
 			}
 
-			Enqueue::factory( $resource )->enqueue();
+			$enqueue = Enqueue::factory( $resource );
+			$enqueue->enqueue();
 
 			if ( $resource->with_js_config() ) {
-				add_action( 'wp_print_footer_scripts', function() use ( $resource ) {
-					wp_localize_script( $resource->handle(), 'CORE_CONFIG', $this->scripts->js_config() );
-				}, 1 );
+				// Modules don't support standard localization, so we need to use the `script_module_data` filter instead.
+				if ( $enqueue->get_manifest() instanceof Svelte_Manifest ) {
+					/**
+					 * @see \WP_Script_Modules::print_script_module_data for how to use this data in TS.
+					 */
+					add_filter( 'script_module_data_' . $resource->handle(), function( array $data ): array {
+						$data['CORE_CONFIG'] = $this->scripts->js_config();
+						return $data;
+					} );
+				} else {
+					add_action( 'wp_print_footer_scripts', function() use ( $resource ): void {
+						wp_localize_script( $resource->handle(), 'CORE_CONFIG', $this->scripts->js_config() );
+					}, 1 );
+				}
 			}
 		}
 	}
