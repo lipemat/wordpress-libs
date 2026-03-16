@@ -24,6 +24,9 @@ class Prop implements ArgsRules {
 	 */
 	use Args;
 
+	public const ROLE_CONTENT = 'content';
+	public const ROLE_LOCAL   = 'local';
+
 	public const TYPE_STRING  = 'string';
 	public const TYPE_ARRAY   = 'array';
 	public const TYPE_OBJECT  = 'object';
@@ -53,6 +56,14 @@ class Prop implements ArgsRules {
 	 * @var mixed
 	 */
 	public mixed $default;
+
+	/**
+	 * Role of the property.
+	 *
+	 * @phpstan-var static::ROLE_*
+	 * @var string
+	 */
+	public string $role;
 
 	/**
 	 * Selector used to get the value.
@@ -173,6 +184,23 @@ class Prop implements ArgsRules {
 		}
 
 		$this->default = $value;
+		return $this;
+	}
+
+
+	/**
+	 * Role of the property.
+	 *
+	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-attributes/#role
+	 *
+	 * @phpstan-param static::ROLE_* $role
+	 *
+	 * @param string                 $role - Role of the property.
+	 *
+	 * @return static
+	 */
+	public function role( string $role ): static {
+		$this->role = $role;
 		return $this;
 	}
 
