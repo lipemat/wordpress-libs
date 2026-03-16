@@ -255,6 +255,7 @@ class Supports implements ArgsRules {
 	 *     fontSize?: bool,
 	 *     lineHeight?: bool,
 	 *     textAlign?: bool|array<'left'|'right'|'center'>,
+	 *     textIndent?: bool
 	 * }
 	 */
 	public array $typography;
