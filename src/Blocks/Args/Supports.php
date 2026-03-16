@@ -102,6 +102,13 @@ class Supports implements ArgsRules {
 	public bool $customClassName;
 
 	/**
+	 * False removes the support for the custom CSS.
+	 *
+	 * @var bool
+	 */
+	public bool $customCSS;
+
+	/**
 	 * Enable dimensions UI control.
 	 *
 	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/#dimensions
