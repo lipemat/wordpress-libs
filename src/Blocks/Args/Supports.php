@@ -104,9 +104,13 @@ class Supports implements ArgsRules {
 	/**
 	 * Enable dimensions UI control.
 	 *
+	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/#dimensions
+	 *
 	 * @var array{
 	 *     aspectRatio?: bool,
+	 *     height?: bool,
 	 *     minHeight?: bool,
+	 *     width?: bool,
 	 * }
 	 */
 	public array $dimensions;
