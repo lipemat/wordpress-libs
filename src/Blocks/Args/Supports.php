@@ -165,6 +165,16 @@ class Supports implements ArgsRules {
 	public array|bool $layout;
 
 	/**
+	 * Enables a List View panel in the block inspector for the block’s inner blocks.
+	 *
+	 *
+	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/#listview
+	 *
+	 * @var bool
+	 */
+	public bool $listView;
+
+	/**
 	 * False allows the block just once per post.
 	 *
 	 * @var bool
