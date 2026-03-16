@@ -86,6 +86,15 @@ class Supports implements ArgsRules {
 	public array $color;
 
 	/**
+	 * True allows editing when in content-only mode like unsynced patterns.
+	 *
+	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/#contentrole
+	 *
+	 * @var bool
+	 */
+	public bool $contentRole;
+
+	/**
 	 * False removes the support for the custom className.
 	 *
 	 * @var bool
