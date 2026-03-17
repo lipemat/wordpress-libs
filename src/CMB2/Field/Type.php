@@ -37,7 +37,7 @@ enum Type: string {
 	case TEXT_AREA_SMALL                  = 'textarea_small';
 	case TEXT_DATE                        = 'text_date';
 	case TEXT_DATETIME_TIMESTAMP          = 'text_datetime_timestamp';
-	case TEXT_DATETIME_TIMESTAMP_TZ       = 'text_date_timestamp_timezone';
+	case TEXT_DATETIME_TIMESTAMP_TZ       = 'text_datetime_timestamp_timezone';
 	case TEXT_DATE_TIMESTAMP              = 'text_date_timestamp';
 	case TEXT_EMAIL                       = 'text_email';
 	case TEXT_MEDIUM                      = 'text_medium';
