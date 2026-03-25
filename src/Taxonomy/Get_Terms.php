@@ -302,13 +302,16 @@ class Get_Terms implements Meta_Query_Interface, ArgsRules {
 	public bool $update_term_meta_cache;
 
 	/**
-	 * Whether to suppress filters.
+	 * Whether to skip the `get_terms` filter.
+	 *
+	 * - Has no effect on performance unless something heavy is attached
+	 * to the `get_terms` filter.
 	 *
 	 * Default false.
 	 *
 	 * @var bool
 	 */
-	public bool $suppress_filters;
+	public bool $suppress_filter;
 
 
 	/**
@@ -319,7 +322,6 @@ class Get_Terms implements Meta_Query_Interface, ArgsRules {
 	public function get_light_args(): array {
 		return \array_merge( [
 			'cache_results'          => true,
-			'suppress_filters'       => false,
 			'update_term_meta_cache' => false,
 		], $this->get_args() );
 	}
