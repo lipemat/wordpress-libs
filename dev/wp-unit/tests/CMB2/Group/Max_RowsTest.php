@@ -26,7 +26,7 @@ class Max_RowsTest extends \WP_UnitTestCase {
 
 		/** @var Group $group */
 		$group = PrivateAccess::in()->get_private_property( $box, 'fields' )['mx'];
-		\call_user_func( $group->after_group );
+		\call_user_func( $group->get_field_args()['after_group'] );
 
 		$script = wp_scripts()->query( ScriptHandles::ADMIN->value );
 		$this->assertStringContainsString( 'var LIPE_LIBS_CMB2_GROUP_LIMIT = [{"groupId":"mx","limit":2},{"groupId":"mx2","limit":7}];', $script->extra['data'] );
@@ -49,10 +49,10 @@ class Max_RowsTest extends \WP_UnitTestCase {
 
 		/** @var Group $group */
 		$group = PrivateAccess::in()->get_private_property( $box, 'fields' )['mx'];
-		\call_user_func( $group->after_group );
+		\call_user_func( $group->get_field_args()['after_group'] );
 
 		$group_2 = PrivateAccess::in()->get_private_property( $box_2, 'fields' )['mx3'];
-		\call_user_func( $group_2->after_group );
+		\call_user_func( $group->get_field_args()['after_group'] );
 
 		$script = wp_scripts()->query( ScriptHandles::ADMIN->value );
 		$this->assertStringContainsString( 'var LIPE_LIBS_CMB2_GROUP_LIMIT = [{"groupId":"mx","limit":2},{"groupId":"mx2","limit":7},{"groupId":"mx3","limit":10}];', $script->extra['data'] );
@@ -69,11 +69,11 @@ class Max_RowsTest extends \WP_UnitTestCase {
 		/** @var Group $group */
 		$group = PrivateAccess::in()->get_private_property( $box, 'fields' )['mx'];
 
-		$this->assertIsNotCallable( $group->after_group );
+		$this->assertArrayNotHasKey( 'after_group', $group->get_field_args() );
 		$this->assertFalse( wp_script_is( ScriptHandles::ADMIN->value, 'enqueued' ) );
 
 		$group->max_rows( 2 );
-		\call_user_func( $group->after_group );
+		\call_user_func( $group->get_field_args()['after_group'] );
 		$this->assertTrue( wp_script_is( ScriptHandles::ADMIN->value, 'enqueued' ) );
 	}
 
@@ -86,7 +86,7 @@ class Max_RowsTest extends \WP_UnitTestCase {
 
 		/** @var Group $group */
 		$group = PrivateAccess::in()->get_private_property( $box, 'fields' )['no-repeat'];
-		\call_user_func( $group->after_group );
+		\call_user_func( $group->get_field_args()['after_group'] );
 
 		$this->assertFalse( wp_script_is( ScriptHandles::ADMIN->value, 'enqueued' ) );
 

@@ -29,13 +29,10 @@ class Group extends Field {
 	 *
 	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
-	 * @todo     Make protected in version 6
-	 * @internal Use before_group() instead.
-	 *
 	 * @phpstan-var GROUP_CALLBACK
 	 * @var \Closure|string
 	 */
-	public $before_group;
+	protected $before_group;
 
 	/**
 	 * Add arbitrary text/markup after the group.
@@ -45,13 +42,10 @@ class Group extends Field {
 	 *
 	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
-	 * @todo     Make protected in version 6
-	 * @internal Use after_group() instead.
-	 *
 	 * @phpstan-var GROUP_CALLBACK
 	 * @var \Closure|string
 	 */
-	public $after_group;
+	protected $after_group;
 
 	/**
 	 * Add arbitrary text/markup before the group row.
@@ -61,13 +55,11 @@ class Group extends Field {
 	 *
 	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
-	 * @todo     Make protected in version 6
-	 * @internal Use before_group_row() instead.
 	 *
 	 * @phpstan-var GROUP_CALLBACK
 	 * @var \Closure|string
 	 */
-	public $before_group_row;
+	protected $before_group_row;
 
 	/**
 	 * Add arbitrary text/markup after the group row.
@@ -77,13 +69,10 @@ class Group extends Field {
 	 *
 	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_group-after_group-before_group_row-after_group_row
 	 *
-	 * @todo     Make protected in version 6
-	 * @internal Use after_group_row() instead.
-	 *
 	 * @phpstan-var GROUP_CALLBACK
 	 * @var \Closure|string
 	 */
-	public $after_group_row;
+	protected $after_group_row;
 
 	/**
 	 * Display format for the group
