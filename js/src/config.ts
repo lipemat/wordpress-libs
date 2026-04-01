@@ -14,6 +14,10 @@ type AdminConfig = {
 declare global {
 	interface Window {
 		LIPE_LIBS_ADMIN_CONFIG: AdminConfig;
+		LIPE_LIBS_CMB2_GROUP_LIMIT?: Array<{
+			groupId: string;
+			limit: number;
+		}>
 		LIPE_LIBS_CMB2_TERM_SELECT2?: {
 			ajaxUrl: string;
 			fields: SelectField[];

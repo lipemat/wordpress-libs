@@ -6,6 +6,7 @@ namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Field\Field_Type;
 use Lipe\Lib\CMB2\Group\Layout;
+use Lipe\Lib\CMB2\Group\Max_Rows;
 use Lipe\Lib\Meta\DataType;
 use Lipe\Lib\Meta\Registered;
 use Lipe\Lib\Meta\Repo;
@@ -103,6 +104,13 @@ class Group extends Field {
 	protected array $fields = [];
 
 	/**
+	 * Max number of rows allowed in the group.
+	 *
+	 * @var int
+	 */
+	protected int $max_rows;
+
+	/**
 	 * Repeatable group options.
 	 *
 	 * @see self::repeatable()
@@ -161,7 +169,6 @@ class Group extends Field {
 		if ( Layout::BLOCK === $layout ) {
 			return $this;
 		}
-		Layout::init_once();
 		if ( isset( $this->tab ) ) {
 			$this->tab_content_cb = Layout::in()->render_group_callback( ... );
 		} else {
@@ -171,6 +178,27 @@ class Group extends Field {
 		$this->layout = $layout;
 		$this->closed( false );
 
+		return $this;
+	}
+
+
+	/**
+	 * Limit a repeatable group to a certain number of rows.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param int $max_rows - Max number of rows allowed in the group.
+	 *
+	 * @return static
+	 */
+	public function max_rows( int $max_rows ): static {
+		$this->max_rows = $max_rows;
+		Max_Rows::in()->register( $this );
+
+		$add_button = $this->options['add_button'] ?? esc_html__( 'Add Group', 'lipe' );
+		$this->options = \array_merge( $this->options, [
+			'add_button' => $add_button . ' ({#}/' . $max_rows . ')',
+		] );
 		return $this;
 	}
 
