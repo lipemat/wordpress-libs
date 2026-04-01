@@ -82,22 +82,21 @@ class Meta_Box {
 		if ( ! \in_array( $this->taxonomy, $taxos, true ) ) {
 			return;
 		}
-		$object = get_taxonomy( $this->taxonomy );
-		if ( false === $object || ! current_user_can( $object->cap->assign_terms ) ) {
+		$tax = get_taxonomy( $this->taxonomy );
+		if ( false === $tax || ! current_user_can( $tax->cap->assign_terms ) ) {
 			return;
 		}
 
 		// Remove default meta box from classic editor.
-		if ( $object->hierarchical ) {
+		if ( $tax->hierarchical ) {
 			remove_meta_box( "{$this->taxonomy}div", $post_type, 'side' );
 		} else {
 			remove_meta_box( "tagsdiv-{$this->taxonomy}", $post_type, 'side' );
 		}
 
-		$label = 'simple' === $this->type ? $object->labels->name : $object->labels->singular_name;
+		$label = 'simple' === $this->type ? $tax->labels->name : $tax->labels->singular_name;
 
-		$tax = get_taxonomy( $this->taxonomy );
-		if ( false !== $tax && $tax->show_in_rest && Scripts::in()->is_block_editor() ) {
+		if ( $tax->show_in_rest && Scripts::in()->is_block_editor() ) {
 			Gutenberg_Box::factory( $this );
 		} else {
 			add_meta_box( "{$this->taxonomy}div", $label, [ $this, 'do_meta_box' ], $post_type, 'side' );

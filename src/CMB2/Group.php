@@ -225,7 +225,7 @@ class Group extends Field {
 	 * @param bool $closed - Enable/disable closed by default for this group.
 	 */
 	public function closed( bool $closed = true ): static {
-		if ( $closed && isset( $this->layout ) && Layout::BLOCK !== $this->layout ) {
+		if ( $closed && Layout::BLOCK !== $this->layout ) {
 			_doing_it_wrong( __METHOD__, 'Custom group layouts do not support closing.', '5.10.0' );
 		}
 
