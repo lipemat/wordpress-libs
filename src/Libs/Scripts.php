@@ -27,7 +27,7 @@ class Scripts {
 	 */
 	public function enqueue_style( StyleHandles $style ): void {
 		$dir = trailingslashit( plugin_dir_url( \dirname( __DIR__ ) ) ) . 'css/';
-		\wp_enqueue_style( $style->value, $dir . $style->file() . '.css', [], $this->get_version() );
+		wp_enqueue_style( $style->value, $dir . $style->file() . '.css', [], $this->get_version() );
 	}
 
 
@@ -42,7 +42,7 @@ class Scripts {
 		$dir = plugin_dir_url( \dirname( __DIR__ ) ) . 'js/dist/';
 		if ( SCRIPT_DEBUG && $this->is_webpack_running() ) {
 			$dir = set_url_scheme( 'https://starting-point.loc:3000/js/dist/' );
-			if ( doing_action( 'admin_enqueue_scripts' ) ) {
+			if ( is_admin() ) {
 				wp_enqueue_script( 'lipe/lib/scripts/runtime', $dir . 'runtime.js', [], $this->get_version(), true );
 			}
 		}
