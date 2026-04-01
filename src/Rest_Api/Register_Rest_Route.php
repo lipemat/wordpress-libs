@@ -51,8 +51,9 @@ class Register_Rest_Route implements ArgsRules {
 	/**
 	 * Overriden to prevent throwing an exception.
 	 *
-	 * @param array<string, mixed> $do_not_use - Not supported by this class.
+	 * @phpstan-param ROUTE_ARGS   $do_not_use
 	 *
+	 * @param array<string, mixed> $do_not_use - Not supported by this class.
 	 */
 	public function __construct( array $do_not_use ) {
 		if ( [] !== $do_not_use ) {
@@ -108,6 +109,9 @@ class Register_Rest_Route implements ArgsRules {
 
 	/**
 	 * Get the arguments for the `register_rest_route` function.
+	 *
+	 * @phpstan-return list<METHOD_ARGS>|array{schema: \Closure(): array<string, mixed>}
+	 * @phpstan-ignore method.childReturnType (Not compatible with parent return type beccause of `int` keys.)
 	 */
 	public function get_args(): array {
 		$args = [];
