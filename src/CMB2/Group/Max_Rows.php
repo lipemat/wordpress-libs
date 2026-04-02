@@ -33,14 +33,18 @@ class Max_Rows {
 	/**
 	 * Register a group to be included with the max rows limit.
 	 *
-	 * - Only fields with a max_rows config should be registered.
+	 * - Only fields with a `max_rows` config should be registered.
 	 *
 	 * @param Group $field - The field to register.
+	 *
+	 * @throws \InvalidArgumentException If the field does not have a `max_rows` config.
 	 */
 	public function register( Group $field ): void {
+		if ( ! isset( $field->max_rows ) ) {
+			throw new \InvalidArgumentException( 'Max rows limit must be set on the group.' );
+		}
 		$this->registered[ $field->id ] = $field;
-
-		$field->after_group( $this->load_scripts( ... ) );
+		$field->box->after_form( $this->load_scripts( ... ) );
 	}
 
 
@@ -50,6 +54,9 @@ class Max_Rows {
 	 * @return void
 	 */
 	protected function load_scripts(): void {
+		if ( wp_is_serving_rest_request() ) {
+			return;
+		}
 		$this->once( function() {
 			$config = $this->js_config();
 			if ( [] !== $config ) {
@@ -71,13 +78,12 @@ class Max_Rows {
 		$groups = [];
 		foreach ( $this->registered as $id => $group ) {
 			$registerd = Registered::factory( $group );
-
-			if ( ! isset( $registerd->get_config()['max_rows'] ) || ! $registerd->is_repeatable() ) {
+			if ( ! isset( $group->max_rows ) || ! $registerd->is_repeatable() ) {
 				continue;
 			}
 			$groups[] = [
 				'groupId' => $id,
-				'limit'   => $registerd->get_config()['max_rows'],
+				'limit'   => $group->max_rows,
 			];
 		}
 		return $groups;

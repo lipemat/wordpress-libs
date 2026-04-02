@@ -444,6 +444,7 @@ class Box {
 	 * - `echo` statements are supported for outputting HTML.
 	 * - Callbacks without output are allowed.
 	 * - May be called within the REST API so callbacks should be prepared for that.
+	 * - Subsequent calls to this method will chain callbacks instead of replacing existing ones.
 	 *
 	 * @see      \CMB2::render_form_close
 	 *

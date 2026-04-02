@@ -14,7 +14,6 @@ use Lipe\WP_Unit\Utils\PrivateAccess;
  *
  */
 class Max_RowsTest extends \WP_UnitTestCase {
-
 	public function test_js_config(): void {
 		$box = new Box( 'no-title', [ 'post' ], null );
 		$box->group( 'mx', 'MX' )
@@ -24,9 +23,7 @@ class Max_RowsTest extends \WP_UnitTestCase {
 		    ->repeatable( true )
 		    ->max_rows( 7 );
 
-		/** @var Group $group */
-		$group = PrivateAccess::in()->get_private_property( $box, 'fields' )['mx'];
-		\call_user_func( $group->get_field_args()['after_group'] );
+		cmb2_get_metabox_form( $box->get_cmb2_box() );
 
 		$script = wp_scripts()->query( ScriptHandles::ADMIN->value );
 		$this->assertStringContainsString( 'var LIPE_LIBS_CMB2_GROUP_LIMIT = [{"groupId":"mx","limit":2},{"groupId":"mx2","limit":7}];', $script->extra['data'] );
@@ -47,12 +44,7 @@ class Max_RowsTest extends \WP_UnitTestCase {
 		      ->repeatable( true )
 		      ->max_rows( 10 );
 
-		/** @var Group $group */
-		$group = PrivateAccess::in()->get_private_property( $box, 'fields' )['mx'];
-		\call_user_func( $group->get_field_args()['after_group'] );
-
-		$group_2 = PrivateAccess::in()->get_private_property( $box_2, 'fields' )['mx3'];
-		\call_user_func( $group->get_field_args()['after_group'] );
+		cmb2_get_metabox_form( $box->get_cmb2_box() );
 
 		$script = wp_scripts()->query( ScriptHandles::ADMIN->value );
 		$this->assertStringContainsString( 'var LIPE_LIBS_CMB2_GROUP_LIMIT = [{"groupId":"mx","limit":2},{"groupId":"mx2","limit":7},{"groupId":"mx3","limit":10}];', $script->extra['data'] );
@@ -69,11 +61,11 @@ class Max_RowsTest extends \WP_UnitTestCase {
 		/** @var Group $group */
 		$group = PrivateAccess::in()->get_private_property( $box, 'fields' )['mx'];
 
-		$this->assertArrayNotHasKey( 'after_group', $group->get_field_args() );
+		cmb2_get_metabox_form( $box->get_cmb2_box() );
 		$this->assertFalse( wp_script_is( ScriptHandles::ADMIN->value, 'enqueued' ) );
 
 		$group->max_rows( 2 );
-		\call_user_func( $group->get_field_args()['after_group'] );
+		cmb2_get_metabox_form( $box->get_cmb2_box() );
 		$this->assertTrue( wp_script_is( ScriptHandles::ADMIN->value, 'enqueued' ) );
 	}
 
@@ -84,9 +76,7 @@ class Max_RowsTest extends \WP_UnitTestCase {
 		    ->repeatable( false )
 		    ->max_rows( 2 );
 
-		/** @var Group $group */
-		$group = PrivateAccess::in()->get_private_property( $box, 'fields' )['no-repeat'];
-		\call_user_func( $group->get_field_args()['after_group'] );
+		cmb2_get_metabox_form( $box->get_cmb2_box() );
 
 		$this->assertFalse( wp_script_is( ScriptHandles::ADMIN->value, 'enqueued' ) );
 

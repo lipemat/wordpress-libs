@@ -275,6 +275,9 @@ readonly class Registered {
 	 * @return bool
 	 */
 	public function is_repeatable(): bool {
+		if ( \CMB2_Utils::does_not_support_repeating( $this->variation->type->value ) ) {
+			return false;
+		}
 		return $this->variation->repeatable;
 	}
 

@@ -22,6 +22,13 @@ use Lipe\Lib\Util\Arrays;
  */
 class Group extends Field {
 	/**
+	 * Max number of rows allowed in the group.
+	 *
+	 * @var int
+	 */
+	protected(set) int $max_rows;
+
+	/**
 	 * Add arbitrary text/markup before the group.
 	 *
 	 * The callback will receive $field_args as the first argument,
@@ -32,7 +39,7 @@ class Group extends Field {
 	 * @phpstan-var GROUP_CALLBACK
 	 * @var \Closure|string
 	 */
-	protected $before_group;
+	protected(set) \Closure|string $before_group;
 
 	/**
 	 * Add arbitrary text/markup after the group.
@@ -45,7 +52,7 @@ class Group extends Field {
 	 * @phpstan-var GROUP_CALLBACK
 	 * @var \Closure|string
 	 */
-	protected $after_group;
+	protected(set) \Closure|string $after_group;
 
 	/**
 	 * Add arbitrary text/markup before the group row.
@@ -59,7 +66,7 @@ class Group extends Field {
 	 * @phpstan-var GROUP_CALLBACK
 	 * @var \Closure|string
 	 */
-	protected $before_group_row;
+	protected(set) \Closure|string $before_group_row;
 
 	/**
 	 * Add arbitrary text/markup after the group row.
@@ -72,7 +79,7 @@ class Group extends Field {
 	 * @phpstan-var GROUP_CALLBACK
 	 * @var \Closure|string
 	 */
-	protected $after_group_row;
+	protected(set) \Closure|string $after_group_row;
 
 	/**
 	 * Display format for the group
@@ -83,21 +90,14 @@ class Group extends Field {
 	 *
 	 * @var string
 	 */
-	protected string $layout = 'block';
+	protected(set) string $layout = 'block';
 
 	/**
 	 * All fields registered to this box.
 	 *
 	 * @var Field[]
 	 */
-	protected array $fields = [];
-
-	/**
-	 * Max number of rows allowed in the group.
-	 *
-	 * @var int
-	 */
-	protected int $max_rows;
+	protected(set) array $fields = [];
 
 	/**
 	 * Repeatable group options.
@@ -106,7 +106,7 @@ class Group extends Field {
 	 *
 	 * @var array<'add_button'|'closed'|'remove_button'|'remove_confirm'|'sortable',bool|string>
 	 */
-	protected array $options = [];
+	protected(set) array $options = [];
 
 
 	/**
