@@ -1,53 +1,53 @@
 <?xml version="1.0"?>
 <ruleset
-	name="WP Libs - Rules"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/refs/heads/master/phpcs.xsd"
+    name="WP Libs - Rules"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/refs/heads/master/phpcs.xsd"
 >
-	<!-- See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-Ruleset -->
+    <!-- See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-Ruleset -->
 
-	<description>Ruleset for WordPress Libs</description>
-	<!-- Version: 4.4.0 -->
+    <description>Ruleset for WordPress Libs</description>
+    <!-- Version: 4.4.0 -->
 
-	<!-- Include when not specified -->
-	<file>./src</file>
+    <!-- Include when not specified -->
+    <file>./src</file>
 
-	<!-- Show file path based on project root. -->
-	<arg name="basepath" value="." />
+    <!-- Show file path based on project root. -->
+    <arg name="basepath" value="." />
 
-	<!-- Cache between runs -->
-	<arg name="cache" value="./.phpcs.cache" />
+    <!-- Cache between runs -->
+    <arg name="cache" value="./.phpcs.cache" />
 
-	<!-- @see https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#various-sniffs-set-the-minimum-supported-wp-version -->
-	<config name="minimum_wp_version" value="6.3" />
+    <!-- @see https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#various-sniffs-set-the-minimum-supported-wp-version -->
+    <config name="minimum_wp_version" value="6.3" />
 
-	<!-- @see https://github.com/PHPCompatibility/PHPCompatibilityWP#how-to-use -->
-	<config name="testVersion" value="8.2-" />
+    <!-- @see https://github.com/PHPCompatibility/PHPCompatibilityWP#how-to-use -->
+    <config name="testVersion" value="8.4-" />
 
-	<rule ref="LipePlugin">
-		<exclude name="Generic.PHP.DisallowShortOpenTag.EchoFound" />
+    <rule ref="LipePlugin">
+        <exclude name="Generic.PHP.DisallowShortOpenTag.EchoFound" />
 
-		<exclude name="LipePlugin.TypeHints.PreventStrictTypes" />
-	</rule>
+        <exclude name="LipePlugin.TypeHints.PreventStrictTypes" />
+    </rule>
 
-	<!-- Allow the "lipe" or "Lipe" prefix for hooks, namespaces and functions -->
-	<!-- https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#wordpressnamingconventionsprefixallglobals-prefix-everything-in-the-global-namespace -->
-	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
-		<properties>
-			<property name="prefixes" type="array">
-				<element value="Lipe\Lib" />
-				<element value="lipe/lib" />
-			</property>
-		</properties>
-	</rule>
+    <!-- Allow the "lipe" or "Lipe" prefix for hooks, namespaces and functions -->
+    <!-- https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#wordpressnamingconventionsprefixallglobals-prefix-everything-in-the-global-namespace -->
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+        <properties>
+            <property name="prefixes" type="array">
+                <element value="Lipe\Lib" />
+                <element value="lipe/lib" />
+            </property>
+        </properties>
+    </rule>
 
-	<!-- Translations -->
-	<rule ref="WordPress.WP.I18n">
-		<properties>
-			<!-- https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#wordpresswpi18n-setting-your-text-domain -->
-			<property name="text_domain" type="array">
-				<element value="lipe" />
-			</property>
-		</properties>
-	</rule>
+    <!-- Translations -->
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <!-- https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#wordpresswpi18n-setting-your-text-domain -->
+            <property name="text_domain" type="array">
+                <element value="lipe" />
+            </property>
+        </properties>
+    </rule>
 </ruleset>
