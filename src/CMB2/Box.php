@@ -439,6 +439,30 @@ class Box {
 
 
 	/**
+	 * Run a callback after the form for this box is rendered.
+	 *
+	 * - `echo` statements are supported for outputting HTML.
+	 * - Callbacks without output are allowed.
+	 * - May be called within the REST API so callbacks should be prepared for that.
+	 *
+	 * @see      \CMB2::render_form_close
+	 *
+	 * @phpstan-param \Closure( int|string $object_id, \CMB2 $cmb ): void $after_form_cb
+	 *
+	 * @formatter:off
+	 * @param \Closure $after_form_cb - Callback to run after the form.
+	 * @formatter:on
+	 *
+	 * @return void
+	 */
+	public function after_form( \Closure $after_form_cb ): void {
+		foreach ( $this->get_object_types() as $object_type ) {
+			add_action( "cmb2_after_{$object_type}_form_{$this->get_id()}", $after_form_cb, 10, 2 );
+		}
+	}
+
+
+	/**
 	 * Add a field to this box.
 	 *
 	 * @example $box->field( $id, $name )->checkbox();

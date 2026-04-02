@@ -4,6 +4,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2;
 
+use Lipe\Lib\CMB2\Box\BoxType;
 use Lipe\Lib\CMB2\Field\Type;
 use Lipe\Lib\Meta\Registered;
 use Lipe\Lib\Settings\Settings_Trait;
@@ -295,5 +296,32 @@ class BoxTest extends \WP_UnitTestCase {
 			$this->assertArrayNotHasKey( 'label', $meta['with-description'] );
 		}
 		$this->assertSame( 'A longer description', $meta['with-description']['description'] );
+	}
+
+
+	public function test_after_form_callback(): void {
+		$box = new Box( 'after-form-test', [ 'post', 'page' ], null );
+		$box->after_form( function( int|string $object_id, \CMB2 $cmb ) {
+			echo '<p>After form callback executed.</p>';
+		} );
+		$setting = new Options_Page( 'after-form-settings', '' );
+		$setting->after_form( function( int|string $object_id, \CMB2 $cmb ) {
+			echo '<p>After form settings callback executed.</p>';
+		} );
+
+		$output = cmb2_get_metabox_form( $box->get_cmb2_box(), args: [ 'object_type' => 'product' ] );
+		$this->assertStringNotContainsString( '<p>After form callback executed.</p>', $output );
+
+		$output = cmb2_get_metabox_form( $box->get_cmb2_box(), args: [ 'object_type' => 'post' ] );
+		$this->assertStringContainsString( '<p>After form callback executed.</p>', $output );
+
+		$output = cmb2_get_metabox_form( $box->get_cmb2_box(), args: [ 'object_type' => 'page' ] );
+		$this->assertStringContainsString( '<p>After form callback executed.</p>', $output );
+
+		$output = cmb2_get_metabox_form( $setting->get_cmb2_box(), args: [ 'object_type' => 'post' ] );
+		$this->assertStringNotContainsString( '<p>After form settings callback executed.</p>', $output );
+
+		$output = cmb2_get_metabox_form( $setting->get_cmb2_box(), args: [ 'object_type' => BoxType::OPTIONS->value ] );
+		$this->assertStringContainsString( '<p>After form settings callback executed.</p>', $output );
 	}
 }
