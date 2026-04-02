@@ -1,8 +1,8 @@
 {
   "admin.js": {
     "src": "admin.js",
-    "integrity": "sha384-L2jR5JA5p+ajtk8odbSUmOnsfkB3n5gBPVNuCEcfkD+q01Fyovv1LHzI6SrfyjlC",
-    "hash": "747c516a8f609e0efb51"
+    "integrity": "sha384-krTDNLxG8VzyG85p7Ldc9U5hHSgANzxNszw1VosgQJZa7eSGtGvFXaNEHv9z1ngR",
+    "hash": "9f83033e8678db081e78"
   },
   "admin.js.LICENSE.txt": {
     "src": "admin.js.LICENSE.txt",
@@ -11,13 +11,13 @@
   },
   "admin.js.br": {
     "src": "admin.js.br",
-    "integrity": "sha384-So8OGnr+oMbl5sTcYThlp2CVNyZ6MJd8nJRhRoAFtrICAt5yFotmJP2mnnEVK0T+",
-    "hash": "82e2707274c5c52c6e67"
+    "integrity": "sha384-8LSxfVskY38Ch/bHs105Y/ipeK6npHIrdyOD+/v37RKRL+u5vW2YT/iXU8386GGL",
+    "hash": "7d9f2d3bdb7e711169ab"
   },
   "admin.js.map": {
     "src": "admin.js.map",
-    "integrity": "sha384-99/rPEvVeZBq8ICEMwHeoBFX0cxoDY2o0poq9W3pQfsPjTkKAn1mnVZI8sEIseDZ",
-    "hash": "54fed8eb0d59296a5e10"
+    "integrity": "sha384-XBYMzbXXhFdOstVdkCN7QxBc+2zHJfNn4RQE1dyuam4SwhfMfRAySjm1m5SNh5SN",
+    "hash": "3aefca9a4519c67c0ccd"
   },
   "block-editor.js": {
     "src": "block-editor.js",

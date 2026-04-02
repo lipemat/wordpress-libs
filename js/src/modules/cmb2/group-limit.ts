@@ -16,8 +16,14 @@ function countRows( table: HTMLElement ): number {
  *
  * Using `<span>` to wrap the number to give us something to target.
  */
-function updateButtonLabel( table: HTMLElement, addButton: HTMLButtonElement ): void {
+function updateAddGroupButton( table: HTMLElement, addButton: HTMLButtonElement, limit: number ): void {
 	addButton.innerHTML = DOMPurify.sanitize( addButton.innerHTML.replace( /\{#}|<span>\d+<\/span>/, '<span>' + countRows( table ).toString() + '</span>' ) );
+
+	if ( countRows( table ) >= limit ) {
+		addButton.setAttribute( 'disabled', '' );
+	} else {
+		addButton.removeAttribute( 'disabled' );
+	}
 }
 
 
@@ -37,20 +43,14 @@ function limitFieldGroup( fieldGroupId: string, limit: number ): void {
 	if ( null === addButton ) {
 		return;
 	}
-	updateButtonLabel( table, addButton );
+	updateAddGroupButton( table, addButton, limit );
 
 	$( table )
 		.on( 'cmb2_add_row', function() {
-			updateButtonLabel( table, addButton );
-			if ( countRows( table ) >= limit ) {
-				addButton?.setAttribute( 'disabled', '' );
-			}
+			updateAddGroupButton( table, addButton, limit );
 		} )
 		.on( 'cmb2_remove_row', function() {
-			updateButtonLabel( table, addButton );
-			if ( countRows( table ) < limit ) {
-				addButton?.removeAttribute( 'disabled' );
-			}
+			updateAddGroupButton( table, addButton, limit );
 		} );
 }
 
