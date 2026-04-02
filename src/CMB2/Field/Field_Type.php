@@ -902,9 +902,10 @@ class Field_Type {
 	 * @param Field $field - Field instance.
 	 * @param Box   $box   - Box the field belongs to.
 	 *
-	 * @return Field_Type
+	 * @phpstan-ignore return.deprecatedClass
 	 */
-	public static function factory( Field $field, Box $box ): Field_Type {
-		return new Field_Type( $field, $box );
+	public static function factory( Field $field, Box $box ): \Lipe\Lib\CMB2\Field_Type {
+		// @phpstan-ignore new.deprecatedClass
+		return new \Lipe\Lib\CMB2\Field_Type( $field, $box );
 	}
 }

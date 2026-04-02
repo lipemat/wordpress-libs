@@ -29,6 +29,7 @@ parameters:
     - src
     - dev/stubs/Traitor.php
   scanFiles:
+    - deprecated.php
     - %rootDir%/../../../stubs/cmb2/cmb2-2.11.php
   ignoreErrors:
     - # Traitor contains a bunch of traits, some of which have the method and no way to suppress error locally.

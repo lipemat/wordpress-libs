@@ -6,7 +6,6 @@ namespace Lipe\Lib\CMB2;
 
 use Lipe\Lib\CMB2\Box\BoxType;
 use Lipe\Lib\CMB2\Box\Tabs;
-use Lipe\Lib\CMB2\Field\Field_Type;
 use Lipe\Lib\Meta\DataType;
 use Lipe\Lib\Meta\Meta_Box;
 use Lipe\Lib\Meta\Registered;
@@ -495,15 +494,18 @@ class Box {
 	/**
 	 * Add a field to this box.
 	 *
-	 * @example $box->field( $id, $name )->checkbox();
+	 * @example                  $box->field( $id, $name )->checkbox();
 	 *
 	 * @param string $id   - Field ID.
 	 * @param string $name - Field name.
 	 *
 	 * @return Field_Type
+	 *
+	 * @phpstan-ignore-next-line return.deprecatedClass
 	 */
 	public function field( string $id, string $name ): Field_Type {
 		$field = $this->add_field( Field::factory( $id, $name, $this, null ) );
+		// @phpstan-ignore staticMethod.deprecatedClass
 		return Field_Type::factory( $field, $this );
 	}
 
@@ -522,6 +524,7 @@ class Box {
 	public function group( string $id, string $name, ?string $row_title = null ): Group {
 		$group = Group::factory( $id, $name, $this );
 		$this->add_field( $group );
+		// @phpstan-ignore staticMethod.deprecatedClass
 		Field_Type::factory( $group, $this )->group( $row_title );
 		return $group;
 	}
