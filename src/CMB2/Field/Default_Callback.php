@@ -15,7 +15,7 @@ use Lipe\Lib\Util\Actions;
  * @author Mat Lipe
  * @since  5.0.0
  *
- * @phpstan-type DEFAULT_CB callable( array<string, mixed>, \CMB2_Field ): mixed
+ * @phpstan-type DEFAULT_CB \Closure( array<string, mixed>, \CMB2_Field ): mixed
  */
 class Default_Callback {
 	/**

@@ -21,6 +21,38 @@ use Lipe\Lib\CMB2\Field;
  */
 trait Display {
 	/**
+	 * Bypass the CMB row rendering.
+	 * You will be completely responsible for outputting that row's HTML.
+	 * The callback function gets passed the field $args array, and the $field object.
+	 *
+	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#render_row_cb
+	 * @link https://github.com/WebDevStudios/CMB2/issues/596#issuecomment-187941343
+	 *
+	 * @var \Closure|null
+	 */
+	protected(set) \Closure|null $render_row_cb;
+
+	/**
+	 * If you're planning on using your metabox fields on the front-end as well (user-facing),
+	 * then you can specify that certain fields do not get displayed there
+	 * by setting this parameter to false.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#on_front
+	 *
+	 * @default true
+	 *
+	 * @var bool
+	 */
+	protected(set) bool $on_front;
+
+	/**
+	 * Order the field will display in.
+	 *
+	 * @var int
+	 */
+	protected(set) int $position = 0;
+
+	/**
 	 * Display a message or any arbitrary text/markup before the field.
 	 *
 	 * @phpstan-var PARAM_CB
@@ -181,38 +213,6 @@ trait Display {
 	 * @var string
 	 */
 	protected string $render_class;
-
-	/**
-	 * Bypass the CMB row rendering.
-	 * You will be completely responsible for outputting that row's HTML.
-	 * The callback function gets passed the field $args array, and the $field object.
-	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#render_row_cb
-	 * @link https://github.com/WebDevStudios/CMB2/issues/596#issuecomment-187941343
-	 *
-	 * @var callable|null
-	 */
-	protected $render_row_cb;
-
-	/**
-	 * If you're planning on using your metabox fields on the front-end as well (user-facing),
-	 * then you can specify that certain fields do not get displayed there
-	 * by setting this parameter to false.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#on_front
-	 *
-	 * @default true
-	 *
-	 * @var bool
-	 */
-	protected bool $on_front;
-
-	/**
-	 * Order the field will display in.
-	 *
-	 * @var int
-	 */
-	protected int $position = 0;
 
 
 	/**
@@ -480,13 +480,13 @@ trait Display {
 	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#render_row_cb
 	 * @link     https://github.com/WebDevStudios/CMB2/issues/596#issuecomment-187941343
 	 *
-	 * @phpstan-param callable( array<string, mixed>, \CMB2_Field ): (void|\CMB2_Field) $render_row_cb
+	 * @phpstan-param \Closure( array<string, mixed>, \CMB2_Field ): (void|\CMB2_Field) $render_row_cb
 	 *
 	 * @formatter:off
-	 * @param callable $render_row_cb - Callback to render the row.
+	 * @param \Closure|null $render_row_cb - Callback to render the row.
 	 * @formatter:on
 	 */
-	public function render_row_cb( callable $render_row_cb ): static {
+	public function render_row_cb( \Closure|null $render_row_cb ): static {
 		$this->render_row_cb = $render_row_cb;
 		return $this;
 	}

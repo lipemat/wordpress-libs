@@ -31,7 +31,7 @@ class Field {
 	 *
 	 * @var DataType
 	 */
-	protected DataType $data_type = DataType::DEFAULT;
+	protected(set) DataType $data_type = DataType::DEFAULT;
 
 	/**
 	 * Specify a default value for the field.
@@ -42,7 +42,7 @@ class Field {
 	 *
 	 * @var string|false|array<mixed>
 	 */
-	protected string|array|false $default;
+	protected(set) string|array|false $default;
 
 	/**
 	 * Bypass the CMB escaping (escapes before display) methods with your own callback.
@@ -53,9 +53,9 @@ class Field {
 	 * @see  Field::escape_cb()
 	 *
 	 * @phpstan-var ESC_CB
-	 * @var callable
+	 * @var \Closure
 	 */
-	protected $escape_cb;
+	protected(set) \Closure $escape_cb;
 
 	/**
 	 * Bypass the CMB sanitization (sanitizes before saving) methods with your own callback.
@@ -71,9 +71,9 @@ class Field {
 	 * @example sanitize_function( $value, $field_args, $field ){ return string }
 	 *
 	 * @phpstan-var ESC_CB
-	 * @var callable
+	 * @var \Closure
 	 */
-	protected $sanitization_cb;
+	protected(set) \Closure $sanitization_cb;
 
 	/**
 	 * If false, this field will not be saved to the database when the
@@ -90,7 +90,7 @@ class Field {
 	 *
 	 * @var bool
 	 */
-	protected bool $save_field;
+	protected(set) bool $save_field;
 
 	/**
 	 * Used internally to store the CMB sanitization callback used
@@ -103,9 +103,9 @@ class Field {
 	 * @see Field::$sanitization_cb
 	 *
 	 * @phpstan-var ESC_CB
-	 * @var callable
+	 * @var \Closure
 	 */
-	protected $meta_sanitizer;
+	protected(set) \Closure $meta_sanitizer;
 
 	/**
 	 * To override the box's `show_in_rest` for this field.
@@ -122,13 +122,11 @@ class Field {
 	 * @example \WP_REST_Server::CREATABLE
 	 * @example WP_REST_Server::EDITABLE // Only editable using CMB2 keys, not WP `meta`.
 	 *
-	 * @internal
-	 *
 	 * @phpstan-var \WP_REST_Server::*|bool
 	 *
 	 * @var string|bool
 	 */
-	protected string|bool $show_in_rest;
+	protected(set) string|bool $show_in_rest;
 
 	/**
 	 * Used to configure some strings for things like taxonomy and repeater fields.
@@ -141,11 +139,9 @@ class Field {
 	 *          'no_terms_text' => 'Sorry, no terms could be found.'
 	 * )
 	 *
-	 * @interal
-	 *
 	 * @var  array<string, string>
 	 */
-	protected array $text = [];
+	protected(set) array $text = [];
 
 	/**
 	 * Enable revision support for 'post' objects.
@@ -156,7 +152,7 @@ class Field {
 	 *
 	 * @var bool
 	 */
-	protected bool $revisions_enabled;
+	protected(set) bool $revisions_enabled;
 
 	/**
 	 * Will modify default attributes (class, input type, rows, etc),
@@ -174,11 +170,9 @@ class Field {
 	 * 'min'  => '101',
 	 *          ]
 	 *
-	 * @internal
-	 *
 	 * @var     array<string, string>
 	 */
-	protected array $attributes = [];
+	protected(set) array $attributes = [];
 
 	/**
 	 * Columns work for post (all post-types), comment, user and term object types.
@@ -189,7 +183,7 @@ class Field {
 	 *
 	 * @var array{disable_sortable: bool, name: string, position: int|bool}|bool
 	 */
-	protected array|bool $column;
+	protected(set) array|bool $column;
 
 	/**
 	 * To be used with $this->column or $this->column().
@@ -201,9 +195,9 @@ class Field {
 	 *
 	 * @example my_callback_function_to_display_output( $field_args, $field )
 	 *
-	 * @var callable
+	 * @var \Closure
 	 */
-	protected $display_cb;
+	protected(set) \Closure $display_cb;
 
 	/**
 	 * ID of boxes tab, which this field should display in.
@@ -214,14 +208,14 @@ class Field {
 	 *
 	 * @var string
 	 */
-	protected string $tab;
+	protected(set) string $tab;
 
 	/**
 	 * Shorten a group's child field keys when displayed in REST API.
 	 *
 	 * @var string|bool
 	 */
-	protected string|bool $rest_short_name;
+	protected(set) string|bool $rest_short_name;
 
 	/**
 	 * The type of field
@@ -235,16 +229,16 @@ class Field {
 	 *
 	 * @var Type
 	 */
-	protected Type $type;
+	protected(set) Type $type;
 
 	/**
 	 * Specify a callback to retrieve default value for the field.
 	 *
 	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#default_cb
 	 *
-	 * @var callable
+	 * @var \Closure
 	 */
-	protected $default_cb;
+	protected(set) \Closure $default_cb;
 
 	/**
 	 * Field description. Usually under or adjacent to the field input.
@@ -253,7 +247,7 @@ class Field {
 	 *
 	 * @var string
 	 */
-	protected string $desc = '';
+	protected(set) string $desc = '';
 
 	/**
 	 * Supported by most field types, and will make the individual field a repeatable one.
@@ -266,11 +260,9 @@ class Field {
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#repeatable
 	 * @link    https://github.com/WebDevStudios/CMB2/wiki/Field-Types#types
 	 *
-	 * @internal
-	 *
 	 * @var bool
 	 */
-	protected bool $repeatable = false;
+	protected(set) bool $repeatable = false;
 
 	/**
 	 * Filter the value returned in the REST API responses
@@ -280,29 +272,29 @@ class Field {
 	 *
 	 * @see     Field::rest_value_cb()
 	 *
-	 * @example 'intval'
+	 * @example \intval(...)
 	 *
-	 * @var callable
+	 * @var \Closure
 	 */
-	protected $rest_value_cb;
+	protected(set) \Closure $rest_value_cb;
 
 	/**
 	 * A render row cb to use inside a tab.
 	 * Stored here, so we can set the `render_row_cb` to the tab's
 	 * method to keep outside `render_row_cb` intact.
 	 *
-	 * @phpstan-var callable( array<string, mixed>, \CMB2_Field ): void
+	 * @phpstan-var \Closure( array<string, mixed>, \CMB2_Field ): void
 	 *
-	 * @var callable
+	 * @var \Closure
 	 */
-	protected $tab_content_cb;
+	protected(set) \Closure $tab_content_cb;
 
 	/**
 	 * Callback Event handlers registered with this field.
 	 *
 	 * @var Event_Callbacks[]
 	 */
-	protected array $event_callbacks = [];
+	protected(set) array $event_callbacks = [];
 
 
 	/**
@@ -333,14 +325,16 @@ class Field {
 	 * Add this field as a post list column on the attached
 	 * posts, comments, users, terms.
 	 *
-	 * @phpstan-param callable( array<string, mixed>, \CMB2_Field, mixed ): string $display_cb
+	 * @phpstan-param \Closure( array<string, mixed>, \CMB2_Field, mixed ): string $display_cb
 	 *
 	 * @formatter:off
+	 *
 	 * @param bool|int      $position         - The column position.
 	 * @param string        $name             - defaults to field name.
 	 * @param callable|null $display_cb       - optional display callback.
 	 * @param bool          $disable_sorting  - Set to true to prevent this column from being
 	 *                                        sortable in post list.
+	 *
 	 * @formatter:on
 	 *
 	 * @return static
@@ -372,15 +366,15 @@ class Field {
 	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#display_cb
 	 * @see      link for a markup example
 	 *
-	 * @phpstan-param callable( array<string, mixed>, \CMB2_Field, mixed): (void|string) $display_cb
+	 * @phpstan-param \Closure( array<string, mixed>, \CMB2_Field, mixed): (void|string) $display_cb
 	 *
 	 * @formatter:off
 	 *
-	 * @param callable $display_cb - Callback to display the column output.
+	 * @param \Closure $display_cb - Callback to display the column output.
 	 *
 	 * @formatter:on
 	 */
-	public function column_display_cb( callable $display_cb ): static {
+	public function column_display_cb( \Closure $display_cb ): static {
 		$this->display_cb = $display_cb;
 		return $this;
 	}
@@ -416,21 +410,16 @@ class Field {
 	 *
 	 * @see     Checkbox::default() -- Checkboxes are tricky.
 	 *
-	 * @param callable|string|array<mixed> $default_value - A default value, or a function which will return a value.
+	 * @param string|array<mixed> $default_value - A default value, or a function which will return a value.
 	 *
 	 * @return static
 	 */
-	public function default( callable|string|array $default_value ): static {
-		if ( \is_callable( $default_value ) ) {
-			_doing_it_wrong( __METHOD__, 'Callbacks should use `default_cb` instead of `default`', '3.2.1' );
-			$this->default_cb( $default_value );
-		} else {
-			$this->default = $default_value;
-			if ( BoxType::OPTIONS === $this->box->get_box_type() ) {
-				add_filter( "cmb2_default_option_{$this->box->get_id()}_{$this->id}", function() {
-					return $this->default;
-				} );
-			}
+	public function default( string|array $default_value ): static {
+		$this->default = $default_value;
+		if ( BoxType::OPTIONS === $this->box->get_box_type() ) {
+			add_filter( "cmb2_default_option_{$this->box->get_id()}_{$this->id}", function() {
+				return $this->default;
+			} );
 		}
 		return $this;
 	}
@@ -447,13 +436,13 @@ class Field {
 	 *
 	 * @formatter:off
 	 *
-	 * @param callable $callback - Callback to retrieve the default value.
+	 * @param \Closure $callback - Callback to retrieve the default value.
 	 *
 	 * @formatter:on
 	 *
 	 * @return static
 	 */
-	public function default_cb( callable $callback ): static {
+	public function default_cb( \Closure $callback ): static {
 		Default_Callback::factory( $this, $this->box, $callback );
 		$this->default_cb = $callback;
 		return $this;
@@ -538,13 +527,13 @@ class Field {
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#rest_value_cb
 	 * @link    https://github.com/CMB2/CMB2/wiki/REST-API#overriding-a-returned-value-for-a-individual-field
 	 *
-	 * @param callable $callback - The callback to use for filtering.
+	 * @param \Closure $callback - The callback to use for filtering.
 	 *
 	 * @example 'intval'
 	 *
 	 * @return static
 	 */
-	public function rest_value_cb( callable $callback ): static {
+	public function rest_value_cb( \Closure $callback ): static {
 		$this->rest_value_cb = $callback;
 		return $this;
 	}
@@ -692,7 +681,7 @@ class Field {
 		if ( null !== $this->render_row_cb ) {
 			$this->tab_content_cb = $this->render_row_cb;
 		}
-		$this->render_row_cb( [ Tabs::in(), 'render_field' ] );
+		$this->render_row_cb( Tabs::in()->render_field( ... ) );
 
 		return $this;
 	}

@@ -19,21 +19,22 @@ use Lipe\Lib\Meta\Repo;
  *
  */
 class Box {
-	public const CONTEXT_NORMAL   = 'normal';
-	public const CONTEXT_SIDE     = 'side';
-	public const CONTEXT_ADVANCED = 'advanced';
+	public const string CONTEXT_NORMAL   = 'normal';
+	public const string CONTEXT_SIDE     = 'side';
+	public const string CONTEXT_ADVANCED = 'advanced';
+
 	// Custom Contexts https://github.com/CMB2/CMB2/releases/tag/v2.2.4.
-	public const CONTEXT_FORM_TOP         = 'form_top';
-	public const CONTEXT_BEFORE_PERMALINK = 'before_permalink';
-	public const CONTEXT_AFTER_TITLE      = 'after_title';
-	public const CONTEXT_AFTER_EDITOR     = 'after_editor';
+	public const string CONTEXT_FORM_TOP         = 'form_top';
+	public const string CONTEXT_BEFORE_PERMALINK = 'before_permalink';
+	public const string CONTEXT_AFTER_TITLE      = 'after_title';
+	public const string CONTEXT_AFTER_EDITOR     = 'after_editor';
 
 	/**
 	 * Used as a flag to allow REST fields to be added
 	 * to the `meta` response without the `cmb2` REST
 	 * endpoint being added.
 	 */
-	protected const EXCLUDE_CMB2_REST_ENDPOINT = 'lipe/lib/cmb2/box/exclude-cmb2-rest-endpoint';
+	protected const string EXCLUDE_CMB2_REST_ENDPOINT = 'lipe/lib/cmb2/box/exclude-cmb2-rest-endpoint';
 
 	/**
 	 * Priority of the metabox in its context.
@@ -42,12 +43,9 @@ class Box {
 	 *
 	 * @phpstan-var  Meta_Box::PRIORITY_*
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use priority() instead.
-	 *
 	 * @var string
 	 */
-	public string $priority = Meta_Box::PRIORITY_HIGH;
+	protected(set) string $priority = Meta_Box::PRIORITY_HIGH;
 
 	/**
 	 * This property allows you to optionally add classes to the CMB2 wrapper.
@@ -58,12 +56,10 @@ class Box {
 	 * @example    'additional-class'
 	 * @example    array( 'additional-class', 'another-class' ),
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use classes() instead.
 	 *
 	 * @var string|array<string>
 	 */
-	public string|array $classes;
+	protected(set) string|array $classes;
 
 	/**
 	 * Like the classes property, allows adding classes to the CMB2 wrapper,
@@ -76,12 +72,9 @@ class Box {
 	 *
 	 * @example    : 'yourprefix_function_to_add_classes( $properties, $cmb ){ return [] }',
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use classes_cb() instead.
-	 *
-	 * @var callable
+	 * @var \Closure
 	 */
-	public $classes_cb;
+	protected(set) \Closure $classes_cb;
 
 	/**
 	 * Set to true to default metabox being closed
@@ -91,12 +84,9 @@ class Box {
 	 * @example    true
 	 * @default    false
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use closed() instead.
-	 *
 	 * @var bool
 	 */
-	public bool $closed;
+	protected(set) bool $closed;
 
 	/**
 	 * Whether to enqeue CMB2 stylesheet
@@ -106,12 +96,9 @@ class Box {
 	 * @example    false
 	 * @default    true
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use cmb_styles() instead.
-	 *
 	 * @var bool
 	 */
-	public bool $cmb_styles;
+	protected(set) bool $cmb_styles;
 
 	/**
 	 * Whether to enqeue CMB2 Javascript files.
@@ -121,12 +108,9 @@ class Box {
 	 * @example    false
 	 * @default    true
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use enqueue_js() instead.
-	 *
 	 * @var bool
 	 */
-	public bool $enqueue_js;
+	protected(set) bool $enqueue_js;
 
 	/**
 	 * Handles hooking CMB2 forms/metaboxes into the post/attachment/user screens
@@ -138,12 +122,9 @@ class Box {
 	 *
 	 * @default    true
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use hookup() instead.
-	 *
 	 * @var bool
 	 */
-	public bool $hookup;
+	protected(set) bool $hookup;
 
 	/**
 	 * Override the rendering of the box on rest api responses.
@@ -151,12 +132,9 @@ class Box {
 	 *
 	 * @link       https://gist.github.com/jtsternberg/a70e845aca44356b8fbf05aafff4d0c8
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use register_rest_field_cb() instead.
-	 *
-	 * @var callable
+	 * @var \Closure
 	 */
-	public $register_rest_field_cb;
+	protected(set) \Closure $register_rest_field_cb;
 
 	/**
 	 * This parameter is for post-alternate context metaboxes only.
@@ -168,17 +146,14 @@ class Box {
 	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#context
 	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#remove_box_wrap
 	 *
-	 * @todo       Make protected in version 6
 	 * @example    true
 	 * @default    false
-	 *
-	 * @internal   Use remove_box_wrap() instead.
 	 *
 	 * @note       Must set title of box to false
 	 *
 	 * @var bool
 	 */
-	public bool $remove_box_wrap;
+	protected(set) bool $remove_box_wrap;
 
 	/**
 	 * The following parameter is any additional arguments passed as $callback_args
@@ -196,15 +171,13 @@ class Box {
 	 *
 	 * More: https://wordpress.org/gutenberg/handbook/designers-developers/developers/backwards-compatibility/meta-box/
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use mb_callback_args() instead.
 	 *
 	 * @var array{
 	 *     __back_compat_meta_box?: bool,
 	 *     __block_editor_compatible_meta_box?: bool
 	 * }
 	 */
-	public array $mb_callback_args;
+	protected(set) array $mb_callback_args;
 
 	/**
 	 * This flag lets you set whether the meta-box works in the block editor or not.
@@ -221,12 +194,9 @@ class Box {
 	 *
 	 * @sets       the `__block_editor_compatible_meta_box` meta-box flag
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use gutenberg_compatible() instead.
-	 *
 	 * @var bool
 	 */
-	public bool $gutenberg_compatible = true;
+	protected(set) bool $gutenberg_compatible = true;
 
 	/**
 	 * Set to false if you have converted this meta-box fully to Gutenberg, and
@@ -242,12 +212,9 @@ class Box {
 	 *
 	 * @sets       the `__back_compat_meta_box` meta box flag
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use display_when_gutenberg_active() instead.
-	 *
 	 * @var bool
 	 */
-	public bool $display_when_gutenberg_active = true;
+	protected(set) bool $display_when_gutenberg_active = true;
 
 	/**
 	 * If false, will not save during hookup
@@ -256,15 +223,12 @@ class Box {
 	 *
 	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#save_fields
 	 *
-	 * @todo       Make protected in version 6
 	 * @example    false
 	 * @default    true
 	 *
-	 * @internal   Use save_fields() instead.
-	 *
 	 * @var bool
 	 */
-	public bool $save_fields;
+	protected(set) bool $save_fields;
 
 	/**
 	 * Determines if/how fields/metabox are available in the REST API.
@@ -285,12 +249,9 @@ class Box {
 	 *
 	 * @default    false
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use show_in_rest() instead.
-	 *
 	 * @var string|bool
 	 */
-	public string|bool $show_in_rest;
+	protected(set) string|bool $show_in_rest;
 
 	/**
 	 * Whether to show labels for the fields
@@ -299,12 +260,9 @@ class Box {
 	 * @default    true
 	 * @example    false
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use show_names() instead.
-	 *
 	 * @var bool
 	 */
-	public bool $show_names;
+	protected(set) bool $show_names;
 
 	/**
 	 * Post IDs or page templates to display this metabox.
@@ -317,12 +275,9 @@ class Box {
 	 * @example    array( 'key' => 'page-template', 'value' => 'template-contact.php' )
 	 * @example    array( 'key' => 'id', 'value' => array( 50, 24 ) )
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use show_on() instead.
-	 *
 	 * @var  array{key:string,value:string|array<int>}
 	 */
-	public array $show_on;
+	protected(set) array $show_on;
 
 	/**
 	 * To show or not based on the result
@@ -333,34 +288,25 @@ class Box {
 	 *
 	 * @example    should_show_meta_box( $cmb ){ return bool; }
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use show_on_cb() instead.
-	 *
-	 * @var callable
+	 * @var \Closure
 	 */
-	public $show_on_cb;
+	protected(set) \Closure $show_on_cb;
 
 	/**
 	 * Tabs for this box
 	 *
 	 * @see        Box::add_tab
 	 *
-	 * @todo       Make protected in version 6
-	 * @internal   Use tabs() instead.
-	 *
 	 * @var array<string, string>
 	 */
-	public array $tabs = [];
+	protected(set) array $tabs = [];
 
 	/**
 	 * The CMB2 object
 	 *
-	 * @todo     Make protected in version 6
-	 * @internal Use cmb() instead.
-	 *
 	 * @var \CMB2
 	 */
-	public \CMB2 $cmb;
+	protected(set) \CMB2 $cmb;
 
 	/**
 	 * The id of metabox
@@ -369,7 +315,7 @@ class Box {
 	 *
 	 * @var string
 	 */
-	protected string $id;
+	protected(set) string $id;
 
 	/**
 	 * The context within the screen where the boxes should display.
@@ -382,7 +328,7 @@ class Box {
 	 * @phpstan-var self::CONTEXT_*
 	 * @var string
 	 */
-	protected string $context;
+	protected(set) string $context;
 
 	/**
 	 * Title display in the admin metabox.
@@ -398,7 +344,7 @@ class Box {
 	 *
 	 * @var ?string
 	 */
-	protected ?string $title = '';
+	protected(set) ?string $title = '';
 
 	/**
 	 * Tabs to display either vertical or horizontal
@@ -408,14 +354,14 @@ class Box {
 	 * @phpstan-var Tabs::STYLE_* $layout
 	 * @var string
 	 */
-	protected string $tab_style = 'vertical';
+	protected(set) string $tab_style = 'vertical';
 
 	/**
 	 * The type of CMB2 box.
 	 *
 	 * @var BoxType
 	 */
-	protected BoxType $box_type;
+	protected(set) BoxType $box_type;
 
 	/**
 	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
@@ -425,14 +371,14 @@ class Box {
 	 *
 	 * @var string[]
 	 */
-	protected array $object_types = [];
+	protected(set) array $object_types = [];
 
 	/**
 	 * All fields registered to this box.
 	 *
 	 * @var Field[]|Group[]
 	 */
-	protected array $fields = [];
+	protected(set) array $fields = [];
 
 
 	/**
@@ -567,11 +513,11 @@ class Box {
 	 *
 	 * @link   https://github.com/CMB2/CMB2/wiki/Box-Properties#classes_cb
 	 *
-	 * @param callable $classes_cb - Callback to add classes.
+	 * @param \Closure $classes_cb - Callback to add classes.
 	 *
 	 * @return void
 	 */
-	public function classes_cb( callable $classes_cb ): void {
+	public function classes_cb( \Closure $classes_cb ): void {
 		$this->classes_cb = $classes_cb;
 	}
 
@@ -641,11 +587,11 @@ class Box {
 	 *
 	 * @link  https://gist.github.com/jtsternberg/a70e845aca44356b8fbf05aafff4d0c8
 	 *
-	 * @param callable $register_rest_field_cb - Callback to override the rendering of the box on rest api responses.
+	 * @param \Closure $register_rest_field_cb - Callback to override the rendering of the box on rest api responses.
 	 *
 	 * @return void
 	 */
-	public function register_rest_field_cb( callable $register_rest_field_cb ): void {
+	public function register_rest_field_cb( \Closure $register_rest_field_cb ): void {
 		$this->register_rest_field_cb = $register_rest_field_cb;
 	}
 
@@ -770,17 +716,15 @@ class Box {
 
 
 	/**
-	 * To show or not based on the result
-	 * of a function.
-	 * Pass a function name here
+	 * To show or not based on the result of a function.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on_cb
 	 *
-	 * @param callable $show_on_cb - To show or not based on the result of a function.
+	 * @param \Closure $show_on_cb - To show or not based on the result of a function.
 	 *
 	 * @return void
 	 */
-	public function show_on_cb( callable $show_on_cb ): void {
+	public function show_on_cb( \Closure $show_on_cb ): void {
 		$this->show_on_cb = $show_on_cb;
 	}
 
@@ -1045,7 +989,7 @@ class Box {
 	 */
 	protected function add_field_to_box( Field $field ): void {
 		$box = $this->get_cmb2_box();
-		$box->add_field( $field->get_field_args(), Registered::factory( $field )->get_position() );
+		$box->add_field( $field->get_field_args(), $field->position );
 
 		Repo::in()->register_field( $field );
 	}
@@ -1078,16 +1022,16 @@ class Box {
 			$config = $this->translate_rest_keys( $registered, $config );
 		}
 
-		if ( null !== $registered->get_meta_sanitizer() ) {
+		if ( isset( $registered->variation->meta_sanitizer ) ) {
 			$config['sanitize_callback'] = function( $value ) use ( $registered, $config ) {
 				// Allow other sanitize callbacks to run like group untranslate of fields.
 				if ( isset( $config['sanitize_callback'] ) ) {
 					$value = \call_user_func( $config['sanitize_callback'], $value );
 				}
-				return \call_user_func( $registered->get_meta_sanitizer(), $value, $registered->get_config(), $registered->get_cmb2_field() );
+				return \call_user_func( $registered->variation->meta_sanitizer, $value, $registered->get_config(), $registered->get_cmb2_field() );
 			};
 		}
-		$config['revisions_enabled'] = $registered->are_revisions_enabled();
+		$config['revisions_enabled'] = $registered->variation->revisions_enabled ?? false;
 
 		// Nothing to register.
 		if ( 3 > \count( $config ) ) {
@@ -1163,7 +1107,7 @@ class Box {
 		$config = [
 			'single'      => true,
 			'type'        => 'string',
-			'description' => $registered->get_description() ?? $registered->variation->name,
+			'description' => $registered->variation->desc ?? $registered->variation->name,
 			'label'       => $registered->variation->name,
 		];
 		if ( $registered->is_using_array_data() ) {

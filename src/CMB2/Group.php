@@ -366,7 +366,7 @@ class Group extends Field {
 
 		$args = $field->get_field_args();
 		$args['group'] = $this->id;
-		$this->box->get_cmb2_box()->add_group_field( $this->id, $args, $registered->get_position() );
+		$this->box->get_cmb2_box()->add_group_field( $this->id, $args, $field->position );
 
 		Repo::in()->register_field( $field );
 	}

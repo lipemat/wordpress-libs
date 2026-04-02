@@ -81,13 +81,12 @@ class BoxTest extends \WP_UnitTestCase {
 		$this->assertEquals( 14, get_private_property( $field, 'position' ) );
 		$this->assertEquals( [ 'o' => 'one', 't' => 'two' ], get_private_property( $field, 'options' ) );
 
-		$this->expectDoingItWrong( 'Lipe\Lib\CMB2\Field::default', 'Callbacks should use `default_cb` instead of `default` (This message was added in version 3.2.1.)' );
 		$group = $box->group( 'g1', 'Group 1' );
 		$group->field( 't2', 'TEST 2' )
 		      ->checkbox()
 		      ->column( 4 )
 		      ->position( 9 )
-		      ->default( fn() => 'on' );
+		      ->default_cb( fn() => 'on' );
 		$group->field( 't3', 'TEST 3' )
 		      ->text()
 		      ->default( 'some other' );

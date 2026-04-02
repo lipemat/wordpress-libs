@@ -16,7 +16,7 @@ use Lipe\Lib\CMB2\Group;
  * @author Mat Lipe
  * @since  5.0.0
  *
- * @phpstan-type ESC_CB callable( mixed $value, array<string, mixed>, ?\CMB2_Field ): mixed
+ * @phpstan-type ESC_CB \Closure( mixed $value, array<string, mixed>, ?\CMB2_Field ): mixed
  */
 readonly class Registered {
 	/**
@@ -27,18 +27,6 @@ readonly class Registered {
 	final protected function __construct(
 		public Field $variation
 	) {
-	}
-
-
-	/**
-	 * Are revisions enabled for this field?
-	 *
-	 * @see Field::$revisions_enabled
-	 *
-	 * @return bool
-	 */
-	public function are_revisions_enabled(): bool {
-		return $this->get_config()['revisions_enabled'] ?? false;
 	}
 
 
@@ -83,7 +71,7 @@ readonly class Registered {
 	 * @return DataType
 	 */
 	public function get_data_type(): DataType {
-		return $this->get_config()['data_type'];
+		return $this->variation->data_type;
 	}
 
 
@@ -101,12 +89,11 @@ readonly class Registered {
 	 * @return mixed
 	 */
 	public function get_default( null|int|string $object_id = null ): mixed {
-		$config = $this->get_config();
-		if ( isset( $config['default'] ) ) {
-			return $config['default'];
+		if ( isset( $this->variation->default ) ) {
+			return $this->variation->default;
 		}
-		if ( null !== $object_id && isset( $config['default_cb'] ) && null !== $this->get_cmb2_field( $object_id ) ) {
-			return \call_user_func( $config['default_cb'], $config, $this->get_cmb2_field( $object_id ) );
+		if ( null !== $object_id && isset( $this->variation->default_cb ) && null !== $this->get_cmb2_field( $object_id ) ) {
+			return \call_user_func( $this->variation->default_cb, $this->get_config(), $this->get_cmb2_field( $object_id ) );
 		}
 		return null;
 	}
@@ -115,10 +102,10 @@ readonly class Registered {
 	/**
 	 * Get the fields long description if one has been provided.
 	 *
-	 * @return ?string
+	 * @return string
 	 */
-	public function get_description(): ?string {
-		return $this->get_config()['desc'] ?? null;
+	public function get_description(): string {
+		return $this->variation->desc;
 	}
 
 
@@ -130,7 +117,7 @@ readonly class Registered {
 	 * @return ?callable
 	 */
 	public function get_escape_cb(): ?callable {
-		return $this->get_config()['escape_cb'] ?? null;
+		return $this->variation->escape_cb ?? null;
 	}
 
 
@@ -169,19 +156,7 @@ readonly class Registered {
 	 * @return  ?callable
 	 */
 	public function get_meta_sanitizer(): ?callable {
-		return $this->get_config()['meta_sanitizer'] ?? null;
-	}
-
-
-	/**
-	 * Get the position of the field.
-	 *
-	 * @see Field::$position
-	 *
-	 * @return int
-	 */
-	public function get_position(): int {
-		return $this->get_config()['position'] ?? 0;
+		return $this->variation->meta_sanitizer ?? null;
 	}
 
 
@@ -193,9 +168,9 @@ readonly class Registered {
 	 * @return string
 	 */
 	public function get_rest_short_name(): string {
-		$config = $this->get_config();
-		if ( isset( $config['rest_short_name'] ) && \is_string( $config['rest_short_name'] ) ) {
-			return $config['rest_short_name'];
+		$short_name = $this->variation->rest_short_name ?? false;
+		if ( \is_string( $short_name ) ) {
+			return $short_name;
 		}
 		$name = \explode( '/', $this->get_id() );
 		return \end( $name );
@@ -211,7 +186,7 @@ readonly class Registered {
 	 * @return ?callable
 	 */
 	public function get_sanitization_cb(): ?callable {
-		return $this->get_config()['sanitization_cb'] ?? null;
+		return $this->variation->sanitization_cb ?? null;
 	}
 
 
@@ -224,7 +199,7 @@ readonly class Registered {
 	 * @return string|bool
 	 */
 	public function get_show_in_rest(): string|bool {
-		return $this->get_config()['show_in_rest'] ?? false;
+		return $this->variation->show_in_rest ?? false;
 	}
 
 
@@ -238,7 +213,7 @@ readonly class Registered {
 	 * @return string|null
 	 */
 	public function get_text( string $key ): ?string {
-		return $this->get_config()['text'][ $key ] ?? null;
+		return $this->variation->text[ $key ] ?? null;
 	}
 
 
@@ -250,7 +225,7 @@ readonly class Registered {
 	 * @return Type
 	 */
 	public function get_type(): Type {
-		return Type::from( $this->get_config()['type'] );
+		return $this->variation->type;
 	}
 
 
@@ -262,7 +237,8 @@ readonly class Registered {
 	 * @return bool
 	 */
 	public function has_rest_short_name(): bool {
-		return isset( $this->get_config()['rest_short_name'] ) && false !== $this->get_config()['rest_short_name'];
+		$short_name = $this->variation->rest_short_name ?? false;
+		return false !== $short_name;
 	}
 
 
@@ -299,7 +275,7 @@ readonly class Registered {
 	 * @return bool
 	 */
 	public function is_repeatable(): bool {
-		return $this->get_config()['repeatable'] ?? false;
+		return $this->variation->repeatable;
 	}
 
 

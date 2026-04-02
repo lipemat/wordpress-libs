@@ -9,8 +9,8 @@ use Lipe\Lib\CMB2\Box\BoxType;
  * CMB2 comments meta box fluent interface.
  */
 class Comment_Box extends Box {
-	public const CONTEXT_NORMAL = 'normal';
-	public const CONTEXT_SIDE   = 'side';
+	public const string CONTEXT_NORMAL = 'normal';
+	public const string CONTEXT_SIDE   = 'side';
 
 
 	/**
@@ -21,7 +21,7 @@ class Comment_Box extends Box {
 	 */
 	public function __construct( string $id, string $title ) {
 		parent::__construct( $id, [ BoxType::COMMENT->value ], $title );
-		$this->context( static::CONTEXT_NORMAL );
+		$this->context( self::CONTEXT_NORMAL );
 	}
 
 

@@ -12,7 +12,7 @@ use Lipe\Lib\CMB2\Field;
  */
 class Checkbox extends Field {
 	/**
-	 * Specify a function to return the default value fo rthe field
+	 * Specify a function to return the default value for the field.
 	 *
 	 * @notice  Checkboxes are tricky.
 	 * @see     https://github.com/CMB2/CMB2/wiki/Tips-&-Tricks#setting-a-default-value-for-a-checkbox
@@ -34,16 +34,14 @@ class Checkbox extends Field {
 	 * }
 	 * ```
 	 *
-	 * @param callable|string|array<mixed> $default_value - Only a callback is supported for checkboxes.
+	 * @throws \LogicException - Invalid method for checkboxes.
 	 *
-	 * @throws \LogicException - If a standard default value is passed.
-	 * @return static
+	 * @param string|array<mixed> $default_value - Only a callback is supported for checkboxes.
+	 *
+	 * @phpstan-return never
 	 */
-	public function default( callable|string|array $default_value ): static {
-		if ( ! \is_callable( $default_value ) ) {
-			/* translators: {field id} */
-			throw new \LogicException( \sprintf( esc_html__( 'Checkboxes do not support standard default values. %s', 'lipe' ), esc_html( $this->id ) ) . '. See https://github.com/CMB2/CMB2/wiki/Tips-&-Tricks#setting-a-default-value-for-a-checkbox' );
-		}
-		return parent::default( $default_value );
+	public function default( string|array $default_value ): static {
+		/* translators: {field id} */
+		throw new \LogicException( \sprintf( esc_html__( 'Checkboxes do not support standard default values. %s', 'lipe' ), esc_html( $this->id ) ) . '. See https://github.com/CMB2/CMB2/wiki/Tips-&-Tricks#setting-a-default-value-for-a-checkbox' );
 	}
 }
