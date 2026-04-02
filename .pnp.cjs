@@ -1254,6 +1254,10 @@ const RAW_RUNTIME_STATE =
       "npm:4.0.5"\
     ],\
     [\
+      "@types/trusted-types",\
+      "npm:2.0.7"\
+    ],\
+    [\
       "@types/underscore",\
       "npm:1.13.0"\
     ],\
@@ -2220,6 +2224,10 @@ const RAW_RUNTIME_STATE =
     [\
       "domhandler",\
       "npm:4.3.1"\
+    ],\
+    [\
+      "dompurify",\
+      "npm:3.3.3"\
     ],\
     [\
       "domutils",\
@@ -4992,6 +5000,7 @@ const RAW_RUNTIME_STATE =
           ["@types/react-dom", "virtual:10cca011cca3b4d5d389dd818f5310c0513d7cf2f77980eda11255ebc5561c68981e7eb9c35264279e3620469a6c1770da82fc86d40b40fb36a0bf560abb4b2e#npm:18.3.7"],\
           ["@types/select2", "npm:4.0.63"],\
           ["@types/webpack-env", "npm:1.18.8"],\
+          ["dompurify", "npm:3.3.3"],\
           ["eslint", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:9.36.0"],\
           ["stylelint", "npm:14.16.1"],\
           ["ts-node", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:10.9.2"],\
@@ -10947,6 +10956,7 @@ const RAW_RUNTIME_STATE =
           ["@types/react-dom", "virtual:10cca011cca3b4d5d389dd818f5310c0513d7cf2f77980eda11255ebc5561c68981e7eb9c35264279e3620469a6c1770da82fc86d40b40fb36a0bf560abb4b2e#npm:18.3.7"],\
           ["@types/select2", "npm:4.0.63"],\
           ["@types/webpack-env", "npm:1.18.8"],\
+          ["dompurify", "npm:3.3.3"],\
           ["eslint", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:9.36.0"],\
           ["stylelint", "npm:14.16.1"],\
           ["ts-node", "virtual:3a0c3b89775985198c13f9c8380bab5e6e1df37aaf7220e4ad4983982f9a300b7959ea1b35bddf86ced0770065f0a928c2e75193f76f57f67d6b583ccd3bbb09#npm:10.9.2"],\
@@ -12237,6 +12247,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-tough-cookie-npm-4.0.5-8c5e2162e1-68c6921721.zip/node_modules/@types/tough-cookie/",\
         "packageDependencies": [\
           ["@types/tough-cookie", "npm:4.0.5"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/trusted-types", [\
+      ["npm:2.0.7", {\
+        "packageLocation": "./.yarn/cache/@types-trusted-types-npm-2.0.7-a07fc44f59-4c4855f10d.zip/node_modules/@types/trusted-types/",\
+        "packageDependencies": [\
+          ["@types/trusted-types", "npm:2.0.7"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -16508,6 +16527,16 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["domelementtype", "npm:2.3.0"],\
           ["domhandler", "npm:4.3.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["dompurify", [\
+      ["npm:3.3.3", {\
+        "packageLocation": "./.yarn/cache/dompurify-npm-3.3.3-6b51c69448-097c14a21a.zip/node_modules/dompurify/",\
+        "packageDependencies": [\
+          ["@types/trusted-types", "npm:2.0.7"],\
+          ["dompurify", "npm:3.3.3"]\
         ],\
         "linkType": "HARD"\
       }]\

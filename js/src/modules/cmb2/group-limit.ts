@@ -1,3 +1,5 @@
+import DOMPurify from 'dompurify';
+
 const CONFIG = window.LIPE_LIBS_CMB2_GROUP_LIMIT;
 if ( ! CONFIG ) {
 	throw new Error( 'LIPE_LIBS_CMB2_GROUP_LIMIT is not defined' );
@@ -15,7 +17,7 @@ function countRows( table: HTMLElement ): number {
  * Using `<span>` to wrap the number to give us something to target.
  */
 function updateButtonLabel( table: HTMLElement, addButton: HTMLButtonElement ): void {
-	addButton.innerHTML = addButton.innerHTML.replace( /\{#}|<span>\d+<\/span>/, '<span>' + countRows( table ).toString() + '</span>' );
+	addButton.innerHTML = DOMPurify.sanitize( addButton.innerHTML.replace( /\{#}|<span>\d+<\/span>/, '<span>' + countRows( table ).toString() + '</span>' ) );
 }
 
 
