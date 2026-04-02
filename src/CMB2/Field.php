@@ -678,7 +678,7 @@ class Field {
 		Tabs::init_once();
 
 		$this->tab = $id;
-		if ( null !== $this->render_row_cb ) {
+		if ( isset( $this->render_row_cb ) ) {
 			$this->tab_content_cb = $this->render_row_cb;
 		}
 		$this->render_row_cb( Tabs::in()->render_field( ... ) );

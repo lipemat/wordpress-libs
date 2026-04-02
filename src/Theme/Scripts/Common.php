@@ -28,7 +28,7 @@ class Common {
 	/**
 	 * Control the CSS enum file that is loaded.
 	 */
-	public const CSS_ENUMS = 'lipe/lib/theme/scripts/common/css-enums';
+	public const string CSS_ENUMS = 'lipe/lib/theme/scripts/common/css-enums';
 
 
 	/**

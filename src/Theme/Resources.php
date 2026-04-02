@@ -3,7 +3,6 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Theme;
 
-use Lipe\Lib\Api\Wp_Remote;
 use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
 
@@ -230,7 +229,7 @@ class Resources {
 			 * @return array<int, string>
 			 */
 			add_filter( 'body_class', function( array $classes ): array {
-				return ( new Class_Names( $classes, static::$body_class ) )->get_classes();
+				return new Class_Names( $classes, static::$body_class )->get_classes();
 			}, 11 );
 		}, __METHOD__ );
 	}
@@ -294,154 +293,5 @@ class Resources {
 				return $tag;
 			}, 11, 2 );
 		}, __METHOD__ );
-	}
-
-
-	/**
-	 * @deprecated 5.6.0 - Unstable CDN.
-	 *
-	 * @param array<'jquery' | 'react' | 'react-dom' | 'lodash'> $handles - Resource handles to include.
-	 */
-	public function use_cdn_for_resources( array $handles ): void {
-		_deprecated_function( __METHOD__, '5.6.0' );
-
-		// The admin will throw errors when calling `wp_deregister_script` in other actions.
-		if ( is_admin() && 'admin_enqueue_scripts' !== current_filter() ) {
-			return;
-		}
-
-		// WP Core uses `jquery-core` as a dependency of a blank `jquery`.
-		$jquery = \array_search( 'jquery', $handles, true );
-		if ( false !== $jquery ) {
-			$handles[] = 'jquery-core';
-			$handles[] = 'jquery-migrate';
-			unset( $handles[ $jquery ] );
-		}
-
-		$cdn = [
-			'jquery-core'    => [
-				'dev'    => 'https://unpkg.com/jquery@{version}/dist/jquery.js',
-				'min'    => 'https://unpkg.com/jquery@{version}/dist/jquery.min.js',
-				'footer' => false,
-			],
-			'jquery-migrate' => [
-				'dev'    => 'https://unpkg.com/jquery-migrate@{version}/dist/jquery-migrate.js',
-				'min'    => 'https://unpkg.com/jquery-migrate@{version}/dist/jquery-migrate.min.js',
-				'footer' => false,
-			],
-			'lodash'         => [
-				'dev'    => 'https://unpkg.com/lodash@{version}/lodash.js',
-				'min'    => 'https://unpkg.com/lodash@{version}/lodash.min.js',
-				'footer' => true,
-				'inline' => 'window.lodash = _.noConflict();',
-			],
-			'react'          => [
-				'dev'    => 'https://unpkg.com/react@{version}/umd/react.development.js',
-				'min'    => 'https://unpkg.com/react@{version}/umd/react.production.min.js',
-				'footer' => true,
-			],
-			'react-dom'      => [
-				'dev'    => 'https://unpkg.com/react-dom@{version}/umd/react-dom.development.js',
-				'min'    => 'https://unpkg.com/react-dom@{version}/umd/react-dom.production.min.js',
-				'footer' => true,
-			],
-		];
-
-		foreach ( $handles as $handle ) {
-			if ( ! isset( $cdn[ $handle ] ) ) {
-				continue;
-			}
-			$script = wp_scripts()->query( $handle );
-			if ( ! $script instanceof \_WP_Dependency ) {
-				continue;
-			}
-			// Remove extra fork version from the URL. @see https://github.com/WordPress/WordPress/commit/7bf145d0817db20d85b9e2bf6c020d982b6b90e9.
-			$version = (string) \preg_replace( '/^(\d+\.\d+\.\d+)\.\d/', '$1', (string) $script->ver );
-			$deps = $script->deps;
-
-			$url = ( \defined( 'SCRIPT_DEBUG' ) && \SCRIPT_DEBUG ) ? $cdn[ $handle ]['dev'] : $cdn[ $handle ]['min'];
-			$url = \str_replace( '{version}', $version, $url );
-
-			// Add `integrity="<hash>"` to `<script>` tag.
-			if ( false === $this->unpkg_integrity( $handle, $url ) ) {
-				continue;
-			}
-
-			wp_deregister_script( $handle );
-			//phpcs:ignore WordPress.WP.EnqueuedResourceParameters -- Version handled by CDN URL.
-			wp_register_script( $handle, $url, $deps, null, $cdn[ $handle ]['footer'] );
-
-			if ( isset( $cdn[ $handle ]['inline'] ) ) {
-				wp_add_inline_script( $handle, $cdn[ $handle ]['inline'] );
-			}
-		}
-
-		// Adds `<link rel="dns-prefetch" href="//unpkg.com" />` to `<head>`.
-		add_filter( 'wp_resource_hints', function( array $urls, $type ) {
-			if ( 'dns-prefetch' === $type ) {
-				$urls[] = 'unpkg.com';
-			}
-			return $urls;
-		}, 10, 2 );
-	}
-
-
-	/**
-	 * @deprecated 5.6.0 - Unstable CDN.
-	 *
-	 * @param string $handle - Script handle.
-	 * @param string $url    - Full unpkg.com URL. (required as versions change).
-	 *
-	 * @return bool
-	 */
-	public function unpkg_integrity( string $handle, string $url ): bool {
-		_deprecated_function( __METHOD__, '5.6.0' );
-
-		$cached = get_network_option( 0, self::INTEGRITY, [] );
-
-		// Add `integrity="<hash>"` to `<script>` tag.
-		$integrity = '';
-		if ( isset( $cached[ $url ] ) ) {
-			if ( \is_string( $cached[ $url ] ) && '' !== $cached[ $url ] ) {
-				$integrity = $cached[ $url ];
-			}
-		} else {
-			$failed_cache = wp_cache_get( self::INTEGRITY . $handle, 'default' );
-			if ( 'failed' === $failed_cache ) {
-				return false;
-			}
-			$remote_args = new Wp_Remote( [] );
-			$remote_args->timeout = 2;
-			$response = wp_safe_remote_get( "{$url}?meta", $remote_args->get_args() );
-			if ( is_wp_error( $response ) ) {
-				wp_cache_set( self::INTEGRITY . $handle, 'failed', 'default', DAY_IN_SECONDS );
-				return false;
-			}
-			try {
-				$meta = json_decode( $response['body'], true, 512, JSON_THROW_ON_ERROR );
-			} catch ( \JsonException ) {
-				//phpcs:ignore WordPress.PHP.DevelopmentFunctions
-				\error_log( "Failed to decode JSON from unpkg.com. {$url}?meta" );
-				wp_cache_set( self::INTEGRITY . $handle, 'failed', 'default', DAY_IN_SECONDS );
-				return false;
-			}
-
-			if ( ! isset( $meta['integrity'] ) || ! \is_string( $meta['integrity'] ) || '' === $meta['integrity'] ) {
-				//phpcs:ignore WordPress.PHP.DevelopmentFunctions
-				\error_log( "Integrity not returned from unpkg.com. {$url}?meta" );
-				wp_cache_set( self::INTEGRITY . $handle, 'failed', 'default', DAY_IN_SECONDS );
-				return false;
-			}
-
-			$integrity = $meta['integrity'];
-			$cached[ $url ] = $integrity;
-			update_network_option( 0, self::INTEGRITY, $cached );
-		}
-
-		if ( '' !== $integrity ) {
-			$this->integrity_javascript( $handle, $integrity );
-			return true;
-		}
-		return false;
 	}
 }

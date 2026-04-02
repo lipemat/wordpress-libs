@@ -14,13 +14,6 @@ class Util {
 	use Singleton;
 
 	/**
-	 * @todo Remove this constant in version 6.
-	 * @deprecated
-	 */
-	public const RUNNING_HANDLE = 'lipe/project/theme/running';
-
-
-	/**
 	 * Is webpack currently running on this environment?
 	 *
 	 * - If SCRIPT_DEBUG is false, we always return false.

@@ -121,4 +121,14 @@ interface ResourceHandles extends \BackedEnum {
 	 * @return string
 	 */
 	public function dist_path(): string;
+
+
+	/**
+	 * Get the manifest for this resource.
+	 *
+	 * @since 6.0.0
+	 *
+	 * @return Manifest
+	 */
+	public function get_manifest(): Manifest;
 }

@@ -14,12 +14,6 @@ use Lipe\Lib\Theme\Resources;
  */
 class PCSS_Manifest implements Manifest {
 	/**
-	 * @todo Remove this constant in version 6.
-	 * @deprecated
-	 */
-	public const HANDLE = 'lipe/project/theme/scripts/pcss-manifest';
-
-	/**
 	 * Cache of the manifest file.
 	 *
 	 * @var array<string,string>

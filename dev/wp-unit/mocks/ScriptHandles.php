@@ -4,13 +4,11 @@ declare( strict_types=1 );
 namespace mocks;
 
 use Lipe\Lib\Theme\Scripts\Common;
-use Lipe\Lib\Theme\Scripts\Enqueue;
 use Lipe\Lib\Theme\Scripts\External_Manifest;
 use Lipe\Lib\Theme\Scripts\JS_Manifest;
 use Lipe\Lib\Theme\Scripts\Manifest;
 use Lipe\Lib\Theme\Scripts\PCSS_Manifest;
 use Lipe\Lib\Theme\Scripts\ResourceHandles;
-use Lipe\Lib\Theme\Scripts\Util;
 
 /**
  * Mock a common site setup of enums for testing.
@@ -18,8 +16,11 @@ use Lipe\Lib\Theme\Scripts\Util;
  * @notice Intentially changed the names of some things to test versitiltiy.
  */
 enum ScriptHandles: string implements ResourceHandles {
-	private const CSS_DIST_PATH = 'css-dist/';
-	private const JS_DIST_PATH  = 'js-dist/';
+	private const string CSS_DIST_PATH   = 'css-dist/';
+	private const string JS_DIST_PATH    = 'js-dist/';
+	private const string BOILER_PCSS     = 'pcss';
+	private const string BOILER_JS       = 'js';
+	private const string BOILER_EXTERNAL = 'external';
 
 	// Core handles.
 	case ADMIN_CSS     = 'lipe/project/theme/admin/css';
@@ -36,8 +37,7 @@ enum ScriptHandles: string implements ResourceHandles {
 	case VERSIONED_JS  = 'lipe-project/theme-versioned-js';
 
 	// Utility handles.
-	case CSS_ENUMS = Common::CSS_ENUM_HANDLE;
-	case RUNNING   = Util::RUNNING_HANDLE;
+	case CSS_ENUM = Common::CSS_ENUMS;
 
 
 	/**
@@ -68,20 +68,23 @@ enum ScriptHandles: string implements ResourceHandles {
 
 
 	/**
-	 * @phpstan-return Enqueue::BOILER_*
+	 * @phpstan-returns self::BOILER_*
 	 */
 	public function boilerplate(): string {
 		return match ( $this ) {
 			self::ADMIN_CSS,
 			self::BLOCKS_CSS,
 			self::MASTER_CSS,
-			self::CSS_ENUMS,
-			self::FRONT_END_CSS => Enqueue::BOILER_PCSS,
+			self::CSS_ENUM,
+			self::FRONT_END_CSS => self::BOILER_PCSS,
 
 			self::ADMIN_JS,
 			self::ADMIN_JS_CSS,
-			self::MASTER_JS,
-			self::RUNNING       => Enqueue::BOILER_JS,
+			self::MASTER_JS     => self::BOILER_JS,
+
+			self::FONT_AWESOME,
+			self::VERSIONED_CSS,
+			self::VERSIONED_JS  => self::BOILER_EXTERNAL
 		};
 	}
 
@@ -97,8 +100,7 @@ enum ScriptHandles: string implements ResourceHandles {
 			self::MASTER_CSS    => 'master.css',
 			self::MASTER_JS     => 'master.js',
 
-			self::CSS_ENUMS     => SCRIPT_DEBUG ? 'module-enums.php' : 'module-enums.min.inc',
-			self::RUNNING       => '.running',
+			self::CSS_ENUM      => SCRIPT_DEBUG ? 'module-enums.php' : 'module-enums.min.inc',
 			self::FONT_AWESOME  => '5f1bf1fe19.js',
 			self::VERSIONED_CSS => '',
 			self::VERSIONED_JS  => 'cooler.js?ver=1.0.0&d=DDDD'
@@ -186,11 +188,11 @@ enum ScriptHandles: string implements ResourceHandles {
 
 
 	public function get_manifest(): Manifest {
-		if ( \in_array( $this, [ self::VERSIONED_CSS, self::VERSIONED_JS, self::FONT_AWESOME ], true ) ) {
+		if ( self::BOILER_EXTERNAL === $this->boilerplate() ) {
 			return new External_Manifest( $this );
 		}
 
-		if ( Enqueue::BOILER_PCSS === $this->boilerplate() ) {
+		if ( self::BOILER_PCSS === $this->boilerplate() ) {
 			return new PCSS_Manifest( $this );
 		}
 		return new JS_Manifest( $this );
@@ -209,7 +211,7 @@ enum ScriptHandles: string implements ResourceHandles {
 		}
 
 		$path = trailingslashit( get_stylesheet_directory_uri() );
-		if ( Enqueue::BOILER_PCSS === $this->boilerplate() ) {
+		if ( self::BOILER_PCSS === $this->boilerplate() ) {
 			return trailingslashit( $path . self::CSS_DIST_PATH );
 		}
 		return trailingslashit( $path . self::JS_DIST_PATH );
@@ -217,7 +219,7 @@ enum ScriptHandles: string implements ResourceHandles {
 
 
 	public function dist_path(): string {
-		if ( Enqueue::BOILER_PCSS === $this->boilerplate() ) {
+		if ( self::BOILER_PCSS === $this->boilerplate() ) {
 			return \dirname( __DIR__ ) . '/data/' . self::CSS_DIST_PATH;
 		}
 		return \dirname( __DIR__ ) . '/data/' . self::JS_DIST_PATH;
