@@ -17,6 +17,3 @@ use Lipe\Lib\Container\Container;
 if ( \defined( 'WP_UNIT_DIR' ) ) {
 	add_action( 'wp-unit/reset-container', Container::reset( ... ) );
 }
-
-
-require_once __DIR__ . '/deprecated.php';
