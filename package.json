@@ -14,13 +14,13 @@
     "dist": "lipemat-js-boilerplate dist",
     "lint": "lipemat-js-boilerplate lint && stylelint js/src/**/*.pcss --fix --cache",
     "postinstall": "lipemat-js-boilerplate fix-pnp",
-    "start": "node -e \"console.error('lipemat-js-boilerplate may be called, but be sure to `dist` before committing.')\"",
+    "start": "node -e \"console.error('`yarn lipemat-js-boilerplate start` may be called, but be sure to `dist` before committing.')\"",
     "start-sass": "sass --watch ./css/ --style compressed",
     "test": "lipemat-js-boilerplate test"
   },
   "certificates": {
-    "cert": "D:/xampp/apache/certs/starting-point.loc.crt",
-    "key": "D:/xampp/apache/certs/starting-point.loc.key"
+    "cert": "./dev/certs/localhost.crt",
+    "key": "./dev/certs/localhost.key"
   },
   "devDependencies": {
     "@lipemat/eslint-config": "^5.1.3",
