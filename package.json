@@ -7,7 +7,7 @@
   "brotliFiles": true,
   "jsPath": "./js",
   "shortCssClasses": false,
-  "url": "https://starting-point.loc",
+  "url": "https://localhost",
   "scripts": {
     "analyze": "lipemat-js-boilerplate analyze",
     "browserslist": "lipemat-js-boilerplate browserslist",
@@ -15,6 +15,7 @@
     "lint": "lipemat-js-boilerplate lint && stylelint js/src/**/*.pcss --fix --cache",
     "postinstall": "lipemat-js-boilerplate fix-pnp",
     "start": "node -e \"console.error('`yarn lipemat-js-boilerplate start` may be called, but be sure to `dist` before committing.')\"",
+    "dangerous-start": "lipemat-js-boilerplate start",
     "start-sass": "sass --watch ./css/ --style compressed",
     "test": "lipemat-js-boilerplate test"
   },
@@ -24,7 +25,7 @@
   },
   "devDependencies": {
     "@lipemat/eslint-config": "^5.1.3",
-    "@lipemat/js-boilerplate": "^10.14.5",
+    "@lipemat/js-boilerplate": "^10.15.0",
     "@lipemat/js-boilerplate-gutenberg": "^4.2.0",
     "@lipemat/stylelint-config": "^2.2.2",
     "@types/jquery": "^3",
@@ -45,8 +46,8 @@
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
-  "packageManager": "yarn@4.10.3",
   "dependencies": {
     "dompurify": "^3.3.3"
   }
+  "packageManager": "yarn@4.13.0"
 }

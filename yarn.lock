@@ -2667,67 +2667,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lipemat/js-boilerplate@npm:^10.14.3":
-  version: 10.14.4
-  resolution: "@lipemat/js-boilerplate@npm:10.14.4"
-  dependencies:
-    "@babel/core": "npm:^7.24.7"
-    "@babel/preset-env": "npm:^7.24.7"
-    "@babel/preset-react": "npm:^7.24.7"
-    "@babel/preset-typescript": "npm:^7.24.7"
-    "@csstools/postcss-global-data": "npm:2.0.0"
-    "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.6.1"
-    "@statoscope/webpack-plugin": "npm:^5.29.0"
-    "@types/babel__preset-env": "npm:^7.9.6"
-    "@types/clean-css": "npm:^4.2.11"
-    "@types/postcss-load-config": "npm:^3.0.1"
-    "@types/postcss-preset-env": "npm:^7.7.0"
-    "@wordpress/browserslist-config": "npm:^6.19.0"
-    babel-jest: "npm:^29.0.0"
-    babel-loader: "npm:^10.0.0"
-    browserslist: "npm:^4.21.9"
-    chalk: "npm:^4.0"
-    clean-css: "npm:^5.3.3"
-    clean-webpack-plugin: "npm:^4.0.0"
-    compression-webpack-plugin: "npm:^10.0.0"
-    core-js: "npm:^3.33.1"
-    cross-spawn: "npm:^7.0.6"
-    css-loader: "npm:6.7.1"
-    fork-ts-checker-webpack-plugin: "npm:^7.2.13"
-    html-webpack-plugin: "npm:^5.5.0"
-    identity-obj-proxy: "npm:^3.0.0"
-    jest: "npm:^29.0.0"
-    jest-cli: "npm:^29.0.0"
-    jest-environment-jsdom: "npm:^29.0.0"
-    mini-css-extract-plugin: "npm:^2.9.2"
-    minimist: "npm:^1.2.8"
-    postcss: "npm:^8.4.47"
-    postcss-color-mod-function: "npm:^4.1.1"
-    postcss-custom-media: "npm:^8.0.1"
-    postcss-import: "npm:^15.1.0"
-    postcss-loader: "npm:^8.1.1"
-    postcss-nested: "npm:^5.0.6"
-    postcss-preset-env: "npm:^7.8.3"
-    postcss-scss: "npm:^4.0.4"
-    postcss-sort-media-queries: "npm:^5.2.0"
-    react-refresh: "npm:^0.17.0"
-    style-loader: "npm:^3.3.1"
-    ts-node: "npm:^10.9.1"
-    typescript: "npm:~5.8.3"
-    webpack: "npm:^5.101.0"
-    webpack-assets-manifest: "npm:^6.2.1"
-    webpack-cli: "npm:^6.0.1"
-    webpack-dev-server: "npm:^5.2.2"
-    webpack-subresource-integrity: "npm:^5.1.0"
-  bin:
-    lipemat-js-boilerplate: bin/lipemat-js-boilerplate.js
-  checksum: 10c0/adf96c8432857fc53048bbf277f8686f228890739137e81672da24d554e03fb81b181975b26bd019820ba33d64fb250c568a2fc1213b43795bc1e5d185615678
-  languageName: node
-  linkType: hard
-
-"@lipemat/js-boilerplate@npm:^10.14.5":
-  version: 10.14.5
-  resolution: "@lipemat/js-boilerplate@npm:10.14.5"
+"@lipemat/js-boilerplate@npm:^10.14.3, @lipemat/js-boilerplate@npm:^10.15.0":
+  version: 10.15.0
+  resolution: "@lipemat/js-boilerplate@npm:10.15.0"
   dependencies:
     "@babel/core": "npm:^7.24.7"
     "@babel/preset-env": "npm:^7.24.7"
@@ -2779,7 +2721,7 @@ __metadata:
     webpack-subresource-integrity: "npm:^5.1.0"
   bin:
     lipemat-js-boilerplate: bin/lipemat-js-boilerplate.js
-  checksum: 10c0/e2919497daf17d047fcf9d1347ce6cdb231d1c79b5d9ab7dc822088b0abcd0be7b5a6c70ec47b8c4beeed575d2090fed1808bf8b8c7280c302855c70a6d580f7
+  checksum: 10c0/53bc0acb9d7e9a681a310d052bfa544d6c96751c93a12335ea8d00474abc53c280c784f2e0a2be37f94f79d538356d1334932d2c528f9ecf288dcbb91c62d27e
   languageName: node
   linkType: hard
 
@@ -2801,7 +2743,7 @@ __metadata:
   resolution: "@lipemat/wordpress-libs@workspace:."
   dependencies:
     "@lipemat/eslint-config": "npm:^5.1.3"
-    "@lipemat/js-boilerplate": "npm:^10.14.5"
+    "@lipemat/js-boilerplate": "npm:^10.15.0"
     "@lipemat/js-boilerplate-gutenberg": "npm:^4.2.0"
     "@lipemat/stylelint-config": "npm:^2.2.2"
     "@types/jquery": "npm:^3"
@@ -2811,7 +2753,6 @@ __metadata:
     "@types/react-dom": "npm:~18.3.2"
     "@types/select2": "npm:^4.0.63"
     "@types/webpack-env": "npm:^1.18.8"
-    dompurify: "npm:^3.3.3"
     eslint: "npm:^9"
     stylelint: "npm:^14"
     ts-node: "npm:^10.9.2"
@@ -3798,13 +3739,6 @@ __metadata:
   version: 4.0.5
   resolution: "@types/tough-cookie@npm:4.0.5"
   checksum: 10c0/68c6921721a3dcb40451543db2174a145ef915bc8bcbe7ad4e59194a0238e776e782b896c7a59f4b93ac6acefca9161fccb31d1ce3b3445cb6faa467297fb473
-  languageName: node
-  linkType: hard
-
-"@types/trusted-types@npm:^2.0.7":
-  version: 2.0.7
-  resolution: "@types/trusted-types@npm:2.0.7"
-  checksum: 10c0/4c4855f10de7c6c135e0d32ce462419d8abbbc33713b31d294596c0cc34ae1fa6112a2f9da729c8f7a20707782b0d69da3b1f8df6645b0366d08825ca1522e0c
   languageName: node
   linkType: hard
 
@@ -6861,18 +6795,6 @@ __metadata:
   dependencies:
     domelementtype: "npm:^2.2.0"
   checksum: 10c0/5c199c7468cb052a8b5ab80b13528f0db3d794c64fc050ba793b574e158e67c93f8336e87fd81e9d5ee43b0e04aea4d8b93ed7be4899cb726a1601b3ba18538b
-  languageName: node
-  linkType: hard
-
-"dompurify@npm:^3.3.3":
-  version: 3.3.3
-  resolution: "dompurify@npm:3.3.3"
-  dependencies:
-    "@types/trusted-types": "npm:^2.0.7"
-  dependenciesMeta:
-    "@types/trusted-types":
-      optional: true
-  checksum: 10c0/097c14a21a3f6cb95beded9ecd255f7c3512c42767b048390c747b0fe35736f6a71e02320fc50a9ac2be645834b463e4760915d595d502a56452daf339d0ea9c
   languageName: node
   linkType: hard
 
@@ -14095,16 +14017,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:~5.8.3":
-  version: 5.8.3
-  resolution: "typescript@npm:5.8.3"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10c0/5f8bb01196e542e64d44db3d16ee0e4063ce4f3e3966df6005f2588e86d91c03e1fb131c2581baf0fb65ee79669eea6e161cd448178986587e9f6844446dbb48
-  languageName: node
-  linkType: hard
-
 "typescript@patch:typescript@npm%3A^5.9.3#optional!builtin<compat/typescript>":
   version: 5.9.3
   resolution: "typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"
@@ -14112,16 +14024,6 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/ad09fdf7a756814dce65bc60c1657b40d44451346858eea230e10f2e95a289d9183b6e32e5c11e95acc0ccc214b4f36289dcad4bf1886b0adb84d711d336a430
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@npm%3A~5.8.3#optional!builtin<compat/typescript>":
-  version: 5.8.3
-  resolution: "typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10c0/39117e346ff8ebd87ae1510b3a77d5d92dae5a89bde588c747d25da5c146603a99c8ee588c7ef80faaf123d89ed46f6dbd918d534d641083177d5fac38b8a1cb
   languageName: node
   linkType: hard
 
