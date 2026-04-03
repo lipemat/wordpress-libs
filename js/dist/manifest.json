@@ -1,28 +1,23 @@
 {
   "admin.js": {
     "src": "admin.js",
-    "integrity": "sha384-krTDNLxG8VzyG85p7Ldc9U5hHSgANzxNszw1VosgQJZa7eSGtGvFXaNEHv9z1ngR",
-    "hash": "9f83033e8678db081e78"
-  },
-  "admin.js.LICENSE.txt": {
-    "src": "admin.js.LICENSE.txt",
-    "integrity": "sha384-VajrdCthWulPD3vFG+Ow6ZZqh2mkeXKZDq1LmbU/EmA6D8Hh3GdRRfZQ2iwAvP6G",
-    "hash": "d87eb72d15e9b121485c"
+    "integrity": "sha384-gAZTxW1Pf4qSdCFnfj9KIQf7CqiPobo7gUSl/WgltDy5OhwJZL75ddvVr0zHWqtL",
+    "hash": "c36410419be01b9114db"
   },
   "admin.js.br": {
     "src": "admin.js.br",
-    "integrity": "sha384-8LSxfVskY38Ch/bHs105Y/ipeK6npHIrdyOD+/v37RKRL+u5vW2YT/iXU8386GGL",
-    "hash": "7d9f2d3bdb7e711169ab"
+    "integrity": "sha384-Vt86FNgkgY8OFCxBKxxCtoikwQdXcYR2hajfZBjU7MeRIGVR/IM76qA4pVrGzILy",
+    "hash": "7a9f7297d4036ebd659b"
   },
   "admin.js.map": {
     "src": "admin.js.map",
-    "integrity": "sha384-XBYMzbXXhFdOstVdkCN7QxBc+2zHJfNn4RQE1dyuam4SwhfMfRAySjm1m5SNh5SN",
-    "hash": "3aefca9a4519c67c0ccd"
+    "integrity": "sha384-yDbYjmadkJRs9fY1Jqy4IqO2iZrq7iLGR6+Cb0S3jqZqz8kRvgjjcwWG5HGmLShI",
+    "hash": "2840610c14b579ff9f9f"
   },
   "block-editor.js": {
     "src": "block-editor.js",
-    "integrity": "sha384-CaYlPkcmpOruNS5d3GmCsFqdUm+z+OjZFLH6BqHEMjvRXGIiGFyC+Xw2lRh6djxs",
-    "hash": "e3796a7a1e85f76fa90b"
+    "integrity": "sha384-NTQ8ij0W4uPnmpk7/cch9OmI1hw2bSmWAn/B29LWQcUpFPDo2fxvjMxV1kSCA32u",
+    "hash": "9b7701bc19c9eef7c555"
   },
   "block-editor.js.LICENSE.txt": {
     "src": "block-editor.js.LICENSE.txt",
@@ -31,12 +26,12 @@
   },
   "block-editor.js.br": {
     "src": "block-editor.js.br",
-    "integrity": "sha384-YVRcd67UAENxXyvXejQlfluf0H91y833EWWfG/x/4wpnk3US2UAkaS71daGYw6dR",
-    "hash": "7f6f66c28862f4c198ac"
+    "integrity": "sha384-6kERFrmn43LlhirltGxe+DF4NL/WpEa4uTE7/a73AVGMwsT0VTRepO7WfUbnMtFm",
+    "hash": "9324065e19d7f4ffcd86"
   },
   "block-editor.js.map": {
     "src": "block-editor.js.map",
-    "integrity": "sha384-EbMW+27b5GwL/jWyzH9wUZ1xvvbSG58jBhaCTV0P9sS2WQC74/meOgczSWD+oSzh",
-    "hash": "d49f8f1088a674e22e7c"
+    "integrity": "sha384-B01V2WRNVNekdvCIHna8UKVmx6LuIKegLFvtFq4cFUE5dXHVUpCGpu665orEMFHu",
+    "hash": "e7c11e1d6a034e94fe28"
   }
 }

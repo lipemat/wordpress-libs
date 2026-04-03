@@ -183,11 +183,6 @@ class Group extends Field {
 	public function max_rows( int $max_rows ): static {
 		$this->max_rows = $max_rows;
 		Max_Rows::in()->register( $this );
-
-		$add_button = $this->options['add_button'] ?? esc_html__( 'Add Group', 'lipe' );
-		$this->options = \array_merge( $this->options, [
-			'add_button' => $add_button . ' ({#}/' . $max_rows . ')',
-		] );
 		return $this;
 	}
 

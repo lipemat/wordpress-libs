@@ -26,7 +26,7 @@ class Max_RowsTest extends \WP_UnitTestCase {
 		cmb2_get_metabox_form( $box->get_cmb2_box() );
 
 		$script = wp_scripts()->query( ScriptHandles::ADMIN->value );
-		$this->assertStringContainsString( 'var LIPE_LIBS_CMB2_GROUP_LIMIT = [{"groupId":"mx","limit":2},{"groupId":"mx2","limit":7}];', $script->extra['data'] );
+		$this->assertStringContainsString( 'var LIPE_LIBS_CMB2_GROUP_MAX_ROWS = [{"groupId":"mx","limit":2},{"groupId":"mx2","limit":7}];', $script->extra['data'] );
 	}
 
 
@@ -47,7 +47,7 @@ class Max_RowsTest extends \WP_UnitTestCase {
 		cmb2_get_metabox_form( $box->get_cmb2_box() );
 
 		$script = wp_scripts()->query( ScriptHandles::ADMIN->value );
-		$this->assertStringContainsString( 'var LIPE_LIBS_CMB2_GROUP_LIMIT = [{"groupId":"mx","limit":2},{"groupId":"mx2","limit":7},{"groupId":"mx3","limit":10}];', $script->extra['data'] );
+		$this->assertStringContainsString( 'var LIPE_LIBS_CMB2_GROUP_MAX_ROWS = [{"groupId":"mx","limit":2},{"groupId":"mx2","limit":7},{"groupId":"mx3","limit":10}];', $script->extra['data'] );
 	}
 
 

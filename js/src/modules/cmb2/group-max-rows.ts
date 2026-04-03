@@ -1,8 +1,6 @@
-import DOMPurify from 'dompurify';
-
-const CONFIG = window.LIPE_LIBS_CMB2_GROUP_LIMIT;
+const CONFIG = window.LIPE_LIBS_CMB2_GROUP_MAX_ROWS;
 if ( ! CONFIG ) {
-	throw new Error( 'LIPE_LIBS_CMB2_GROUP_LIMIT is not defined' );
+	throw new Error( 'LIPE_LIBS_CMB2_GROUP_MAX_ROWS is not defined' );
 }
 
 
@@ -17,7 +15,12 @@ function countRows( table: HTMLElement ): number {
  * Using `<span>` to wrap the number to give us something to target.
  */
 function updateAddGroupButton( table: HTMLElement, addButton: HTMLButtonElement, limit: number ): void {
-	addButton.innerHTML = DOMPurify.sanitize( addButton.innerHTML.replace( /\{#}|<span>\d+<\/span>/, '<span>' + countRows( table ).toString() + '</span>' ) );
+	addButton.querySelector( 'span' )?.remove();
+
+	const label = document.createElement( 'span' );
+	label.classList.add( 'cmb2-group-max-rows-label' );
+	label.innerText = ` (${countRows( table )}/${limit})`;
+	addButton.append( label );
 
 	if ( countRows( table ) >= limit ) {
 		addButton.setAttribute( 'disabled', '' );

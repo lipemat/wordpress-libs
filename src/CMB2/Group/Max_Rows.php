@@ -15,6 +15,9 @@ use Lipe\Lib\Traits\Memoize;
  *
  * @author Mat Lipe
  * @since  5.10.0
+ *
+ * @see    wp-content/plugins/core/vendor/lipemat/wordpress-libs/js/src/modules/cmb2/group-max-rows.ts
+ *
  */
 class Max_Rows {
 	use Instance;
@@ -61,7 +64,7 @@ class Max_Rows {
 			$config = $this->js_config();
 			if ( [] !== $config ) {
 				Scripts::in()->enqueue_script( ScriptHandles::ADMIN );
-				wp_localize_script( ScriptHandles::ADMIN->value, 'LIPE_LIBS_CMB2_GROUP_LIMIT', $config );
+				wp_localize_script( ScriptHandles::ADMIN->value, 'LIPE_LIBS_CMB2_GROUP_MAX_ROWS', $config );
 			}
 		}, __METHOD__ );
 	}
