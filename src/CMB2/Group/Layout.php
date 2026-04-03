@@ -137,7 +137,7 @@ class Layout {
 							data-grouptitle="{#}"
 							class="cmb-add-group-row button-secondary"
 						>
-							<?= esc_html( $field_group->options( 'add_button' ) ) ?>
+							<?= wp_kses_post( $field_group->options( 'add_button' ) ) ?>
 						</button>
 					</p>
 				</div>
