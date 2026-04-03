@@ -36,6 +36,7 @@
     "@types/select2": "^4.0.63",
     "@types/webpack-env": "^1.18.8",
     "eslint": "^9",
+    "sass": "^1.99.0",
     "stylelint": "^14",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
