@@ -2,6 +2,29 @@
 	width: 100%;
 }
 
+.cmb-group-display-row {
+	margin-top: -1em;
+
+	table {
+		width: 100%;
+	}
+
+	.cmb-row {
+		border: none !important;
+	}
+
+	.cmb-rows-wrap {
+		border-collapse: separate;
+		border-spacing: 0 1em;
+		margin: -1em 0;
+
+		> tbody > tr > td {
+			border-bottom: #dfdfdf solid 1px;
+			border-top: #dfdfdf solid 1px;
+		}
+	}
+}
+
 .cmb-layout-non-repeatable,
 .cmb-group-table th {
 	border-top: #dfdfdf solid 1px;
@@ -92,7 +115,6 @@
 }
 
 .cmb-group-table .cmb-group-table-control .cmb-remove-group-row {
-
 	margin-top: 12px !important;
 }
 

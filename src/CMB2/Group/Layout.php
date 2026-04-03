@@ -101,7 +101,7 @@ class Layout {
 			echo '</div>';
 		}
 
-		$classnames = new Class_Names( 'cmb-table', [
+		$classnames = new Class_Names( 'cmb-table', 'cmb-rows-wrap', [
 			'cmb-layout-non-repeatable' => ! $this->is_table( $field_group ) && ! $this->is_repeatable( $field_group ),
 		] );
 
