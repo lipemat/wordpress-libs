@@ -250,9 +250,9 @@ class Term_Select_2 {
 	 */
 	protected function load_scripts(): void {
 		//phpcs:ignore WordPress.WP.EnqueuedResourceParameters -- Version handled by the CDN.
-		wp_enqueue_style( 'select2', 'https://unpkg.com/select2@4.0.13/dist/css/select2.min.css', [], null );
+		wp_enqueue_style( 'select2', 'https://unpkg.com/select2@4.1.0-rc.0/dist/css/select2.min.css', [], null );
 		//phpcs:ignore WordPress.WP.EnqueuedResourceParameters -- Version handled by the CDN.
-		wp_enqueue_script( 'select2', 'https://unpkg.com/select2@4.0.13/dist/js/select2.min.js', [ 'jquery' ], null );
+		wp_enqueue_script( 'select2', 'https://unpkg.com/select2@4.1.0-rc.0/dist/js/select2.min.js', [ 'jquery' ], null );
 
 		Scripts::in()->enqueue_script( ScriptHandles::ADMIN );
 		Scripts::in()->enqueue_style( StyleHandles::META_BOXES );
