@@ -6,11 +6,12 @@ namespace Lipe\Lib\Util\Logger;
 /**
  * Query_Monitor class for logging messages to the Query Monitor plugin.
  *
- * @author Mat Lipe
- * @since  5.6.0
+ * @author         Mat Lipe
+ * @since          5.6.0
  *
- * @see    \QM_Collector_Logger::set_up
+ * @see            \QM_Collector_Logger::set_up
  *
+ * @phpstan-ignore class.implementsDeprecatedInterface
  */
 class Query_Monitor implements Handle, WithContext {
 	/**

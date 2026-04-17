@@ -7,10 +7,12 @@ namespace Lipe\Lib\Util\Logger;
  * A temporary interface to allow log handles to support context
  * information without breaking backwards compatibility.
  *
- * @author Mat Lipe
- * @since  5.9.0
+ * @author     Mat Lipe
+ * @since      5.9.0
  *
- * @todo   Remove in 6.0.0 in favor of adding context to the Handle interface.
+ * @todo       Remove in 6.0.0 in favor of adding context to the Handle interface.
+ *
+ * @deprecated Removed in version 6, add `provide_context` to Handles instead.
  *
  */
 interface WithContext {

@@ -6,9 +6,10 @@ namespace Lipe\Lib\Util\Logger;
 /**
  * Storing log messages during unit tests.
  *
- * @author Mat Lipe
- * @since  5.6.0
+ * @author         Mat Lipe
+ * @since          5.6.0
  *
+ * @phpstan-ignore class.implementsDeprecatedInterface
  */
 class Testing implements Handle, WithContext {
 	/**

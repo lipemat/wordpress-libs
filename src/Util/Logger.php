@@ -3,8 +3,6 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
 
-use Lipe\Lib\Util\Logger\WithContext;
-
 /**
  * Utility class for logging messages.
  *
@@ -93,7 +91,7 @@ class Logger {
 	protected function log( Logger\Level $level, string $message, array $context = [] ): void {
 		$handles = Logger\Handles::in()->get_handles();
 		foreach ( $handles as $handle ) {
-			if ( $handle instanceof WithContext ) {
+			if ( \method_exists( $handle, 'provide_context' ) ) {
 				$handle->provide_context( $context );
 			}
 
