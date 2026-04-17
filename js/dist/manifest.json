@@ -16,8 +16,8 @@
   },
   "block-editor.js": {
     "src": "block-editor.js",
-    "integrity": "sha384-NTQ8ij0W4uPnmpk7/cch9OmI1hw2bSmWAn/B29LWQcUpFPDo2fxvjMxV1kSCA32u",
-    "hash": "9b7701bc19c9eef7c555"
+    "integrity": "sha384-FbzgyQDMrFWZB7nKeu934iNqVY/TZVz6NnVNrqMxsKQU9zl39uma5yg+gFggrNNs",
+    "hash": "c554283e7715c9c588de"
   },
   "block-editor.js.LICENSE.txt": {
     "src": "block-editor.js.LICENSE.txt",
@@ -26,12 +26,12 @@
   },
   "block-editor.js.br": {
     "src": "block-editor.js.br",
-    "integrity": "sha384-6kERFrmn43LlhirltGxe+DF4NL/WpEa4uTE7/a73AVGMwsT0VTRepO7WfUbnMtFm",
-    "hash": "9324065e19d7f4ffcd86"
+    "integrity": "sha384-2z2dn/TwHk0dO+RwoC2BAH0qyPEVCovTp2MQ4WCiAycW90tSgEDULGzhCLYgoHGM",
+    "hash": "886e4975dcc947ca924d"
   },
   "block-editor.js.map": {
     "src": "block-editor.js.map",
-    "integrity": "sha384-B01V2WRNVNekdvCIHna8UKVmx6LuIKegLFvtFq4cFUE5dXHVUpCGpu665orEMFHu",
-    "hash": "e7c11e1d6a034e94fe28"
+    "integrity": "sha384-JzhsyRN3w+yFGnd2zgbxDoHO7j7nmplwA9Gtrn6mVNBI/5xEHNLuO0Ftd1Hn8NO4",
+    "hash": "a6a1280ef0b443df2f53"
   }
 }

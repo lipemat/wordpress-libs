@@ -4,10 +4,7 @@ import {type ComponentType, type PropsWithChildren, useEffect} from 'react';
 import type {Tag, Taxonomy} from '@wordpress/core-data/entities';
 import {useTerms} from '@lipemat/js-boilerplate-gutenberg';
 import {dispatch} from '@wordpress/data';
-
-// @todo Remove this fallback when minimum WP version is 6.6.
-// @ts-expect-error
-const PluginDocumentSettingPanel = window.wp.editor?.PluginDocumentSettingPanel ?? window.wp.editPost.PluginDocumentSettingPanel;
+import {PluginDocumentSettingPanel} from '@wordpress/editor';
 
 export type FromPanel = {
 	tax: Taxonomy<'edit'> | null;
@@ -30,13 +27,7 @@ type Props = {
  * Thus, allowing a fallback to the default panel if our JS fails to load.
  */
 function removeDefaultMetaBox( taxonomy: string ): void {
-	if ( 'function' === typeof dispatch( 'core/editor' ).removeEditorPanel ) {
-		dispatch( 'core/editor' ).removeEditorPanel( sprintf( 'taxonomy-panel-%1$s', taxonomy ) );
-	} else {
-		// @todo Remove `core/edit-post` fallback when minimum WP version is 6.5.
-		// @ts-expect-error
-		dispatch( 'core/edit-post' ).removeEditorPanel( sprintf( 'taxonomy-panel-%1$s', taxonomy ) );
-	}
+	dispatch( 'core/editor' ).removeEditorPanel( sprintf( 'taxonomy-panel-%1$s', taxonomy ) );
 }
 
 

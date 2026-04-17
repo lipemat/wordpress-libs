@@ -4,7 +4,7 @@
   <a href="https://github.com/lipemat/wordpress-libs/releases/latest">
     <img alt="Version" src="https://img.shields.io/packagist/v/lipemat/wordpress-libs.svg?label=version" />
   </a>
-  <img alt="WordPress" src="https://img.shields.io/badge/wordpress->=6.3.0-green.svg">
+  <img alt="WordPress" src="https://img.shields.io/badge/wordpress->=6.6.0-green.svg">
   <img alt="PHP" src="https://img.shields.io/packagist/php-v/lipemat/wordpress-libs.svg?color=brown" />
   <img alt="License" src="https://img.shields.io/packagist/l/lipemat/wordpress-libs.svg">
 </p>
@@ -36,7 +36,7 @@ require __DIR__ . '/vendor/autoload.php'
 * Object Cache helper.
 * Post List Column registration object.
 * PostCSS Modules helper.
-* REST API initial data rendered.  
+* REST API initial data rendered.
 * Script and Styles helpers.
 * Settings Page registration object.
 * Singleton Trait.
@@ -44,6 +44,5 @@ require __DIR__ . '/vendor/autoload.php'
 * Taxonomy registration object.
 * Url Route registration object.
 * Version management helper.
-
 
 ##### Changelog may be found in [releases](https://github.com/lipemat/wordpress-libs/releases) (non exhaustive)
