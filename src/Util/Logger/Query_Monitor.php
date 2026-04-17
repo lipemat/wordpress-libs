@@ -12,7 +12,7 @@ namespace Lipe\Lib\Util\Logger;
  * @see    \QM_Collector_Logger::set_up
  *
  */
-class Query_Monitor implements Handle, WithContext {
+class Query_Monitor implements Handle {
 	/**
 	 * Context for the last log message.
 	 *

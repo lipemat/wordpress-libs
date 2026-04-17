@@ -13,6 +13,26 @@ use Lipe\Lib\Util;
  *
  */
 class Error_Log implements Handle {
+	/**
+	 * Context for the last log message.
+	 *
+	 * @var array<string, mixed>
+	 */
+	protected array $context = [];
+
+
+	/**
+	 * Add a context array to the log messages.
+	 *
+	 * @notice Not passed to the error log.
+	 *         Override this class if you want to use this.
+	 *
+	 * @param array<string, mixed> $context - Context to provide.
+	 */
+	public function provide_context( array $context ): void {
+		$this->context = $context;
+	}
+
 
 	/**
 	 * Log a message to the error log.

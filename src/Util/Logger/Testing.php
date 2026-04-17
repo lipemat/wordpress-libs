@@ -10,7 +10,7 @@ namespace Lipe\Lib\Util\Logger;
  * @since  5.6.0
  *
  */
-class Testing implements Handle, WithContext {
+class Testing implements Handle {
 	/**
 	 * The array of log messages.
 	 *

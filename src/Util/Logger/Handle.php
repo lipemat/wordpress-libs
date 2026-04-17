@@ -14,4 +14,16 @@ interface Handle {
 	 * @return void
 	 */
 	public function log( string $id, Level $level, string $message ): void;
+
+
+	/**
+	 * Provide context for the log entry to handles which support it.
+	 *
+	 * @see \QM_Collector_Logger::interpolate
+	 *
+	 * @param array<string, mixed> $context - Context to provide.
+	 *
+	 * @return void
+	 */
+	public function provide_context( array $context ): void;
 }
