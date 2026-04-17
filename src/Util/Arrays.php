@@ -175,6 +175,7 @@ class Arrays {
 	 * @return ?mixed
 	 */
 	public function find( array $items, callable $callback ) {
+		_deprecated_function( __METHOD__, '5.10.0', 'Use native PHP `array_find` instead. Will be removed in version 6.' );
 		$index = $this->find_index( $items, $callback );
 		if ( null !== $index && isset( $items[ $index ] ) ) {
 			return $items[ $index ];
@@ -202,6 +203,7 @@ class Arrays {
 	 * @return int|null|string
 	 */
 	public function find_index( array $items, callable $callback ) {
+		_deprecated_function( __METHOD__, '5.10.0', 'Use native PHP `array_find_key` instead. Will be removed in version 6.' );
 		foreach ( $items as $k => $item ) {
 			if ( true === $callback( $item, $k ) ) {
 				return $k;
