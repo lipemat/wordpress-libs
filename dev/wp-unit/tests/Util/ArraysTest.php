@@ -8,7 +8,7 @@
 namespace Lipe\Lib\Util;
 
 class ArraysTest extends \WP_UnitTestCase {
-	public function test_array_chunk_to_associative() : void {
+	public function test_array_chunk_to_associative(): void {
 		$this->assertSame( [
 			'page'     => 3,
 			'category' => 6,
@@ -29,7 +29,7 @@ class ArraysTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_clean() : void {
+	public function test_clean(): void {
 		$source = [
 			0 => '',
 			1 => false,
@@ -69,34 +69,34 @@ class ArraysTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_find_index() : void {
-		$this->assertEquals( 's', Arrays::in()->find_index( [
+	public function test_find_index(): void {
+		$this->assertEquals( 's', \array_find_key( [
 			'f' => 'first',
 			's' => 'second',
 			'x' => 5,
 			'v' => 'second',
-		], fn( $value ) => $value === 'second' ) );
+		], fn( $value ) => 'second' === $value ) );
 
-		$this->assertNull( Arrays::in()->find_index( [
+		$this->assertNull( \array_find_key( [
 			'f' => 'first',
 			's' => 'second',
 			'x' => 5,
 			'v' => 'second',
-		], fn( $value ) => $value === 'not-exists' ) );
+		], fn( $value ) => 'not-exists' === $value ) );
 
-		$this->assertEquals( 'v', Arrays::in()->find_index( [
+		$this->assertEquals( 'v', \array_find_key( [
 			'f' => 'first',
 			's' => 'second',
 			'x' => 5,
 			'v' => 'second',
-		], fn( $value, string $key ) => 's' !== $key && $value === 'second' ) );
+		], fn( $value, string $key ) => 's' !== $key && 'second' === $value ) );
 	}
 
 
-	public function test_find() : void {
+	public function test_find(): void {
 		$this->assertEquals( [
 			'some-key' => 'second',
-		], Arrays::in()->find( [
+		], \array_find( [
 			'f' => [
 				'some-key' => 'first',
 			],
@@ -109,9 +109,9 @@ class ArraysTest extends \WP_UnitTestCase {
 			'v' => [
 				'some-key' => 'second',
 			],
-		], fn( $value ) => $value['some-key'] === 'second' ) );
+		], fn( $value ) => 'second' === $value['some-key'] ) );
 
-		$this->assertNull( Arrays::in()->find( [
+		$this->assertNull( \array_find( [
 			'f' => [
 				'some-key' => 'first',
 			],
@@ -124,11 +124,11 @@ class ArraysTest extends \WP_UnitTestCase {
 			'v' => [
 				'some-key' => 'second',
 			],
-		], fn( $value ) => $value['some-key'] === 'not-exists' ) );
+		], fn( $value ) => 'not-exists' === $value['some-key'] ) );
 
 		$this->assertEquals( [
 			'some-key' => 'second',
-		], Arrays::in()->find( [
+		], \array_find( [
 			'f' => [
 				'some-key' => 'first',
 			],
@@ -141,11 +141,11 @@ class ArraysTest extends \WP_UnitTestCase {
 			'v' => [
 				'some-key' => 'second',
 			],
-		], fn( $value, string $key ) => 's' !== $key && $value['some-key'] === 'second' ) );
+		], fn( $value, string $key ) => 's' !== $key && 'second' === $value['some-key'] ) );
 	}
 
 
-	public function testArray_merge_recursive() : void {
+	public function testArray_merge_recursive(): void {
 		$default = [
 			'h' => 'x',
 			'y' => 'b',
@@ -186,9 +186,9 @@ class ArraysTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_array_flatten_assoc() : void {
+	public function test_array_flatten_assoc(): void {
 		$posts = get_posts();
-		$result = Arrays::in()->flatten_assoc( function ( \WP_Post $post ) {
+		$result = Arrays::in()->flatten_assoc( function( \WP_Post $post ) {
 			return [ $post->ID => $post->post_name ];
 		}, $posts );
 		$expected = [];
@@ -197,7 +197,7 @@ class ArraysTest extends \WP_UnitTestCase {
 		}
 		$this->assertEquals( $expected, $result );
 
-		$result = Arrays::in()->flatten_assoc( function ( \WP_Post $post ) {
+		$result = Arrays::in()->flatten_assoc( function( \WP_Post $post ) {
 			return [ $post->post_title => $post->post_name ];
 		}, $posts );
 		$expected = [];
@@ -208,7 +208,7 @@ class ArraysTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_list_pluck() : void {
+	public function test_list_pluck(): void {
 		$data = [
 			(object) [
 				'one'   => 'uno',

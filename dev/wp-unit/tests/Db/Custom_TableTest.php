@@ -3,7 +3,6 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Db;
 
-use Lipe\Lib\Util\Arrays;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
@@ -159,7 +158,7 @@ class Custom_TableTest extends \WP_UnitTestCase {
 		// Single item.
 		$single = $this->db()->get( [ 'option_name' => 'start_of_week' ], 1 );
 		$this->assertCount( 1, $single );
-		$this->assertSame( $single[0], Arrays::in()->find( $all, fn( $item ) => 'start_of_week' === $item['option_name'] ) );
+		$this->assertSame( $single[0], \array_find( $all, fn( $item ) => 'start_of_week' === $item['option_name'] ) );
 
 		// Multiple items.
 		$autoload = \version_compare( $GLOBALS['wp_version'], '6.6', '>' ) ? 'on' : 'yes';

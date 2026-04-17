@@ -6,7 +6,6 @@ namespace Lipe\Lib\Taxonomy\Meta_Box;
 use Lipe\Lib\Libs\Scripts;
 use Lipe\Lib\Libs\Scripts\ScriptHandles;
 use Lipe\Lib\Taxonomy\Meta_Box;
-use Lipe\Lib\Util\Arrays;
 
 /**
  * Hold a JS configuration for a taxonomy meta box.
@@ -50,7 +49,7 @@ class Gutenberg_Box implements \JsonSerializable {
 	 * @return void
 	 */
 	protected function add_to_js_config(): void {
-		$i = Arrays::in()->find_index( static::$boxes, fn( Gutenberg_Box $box ) => $box->taxonomy === $this->taxonomy );
+		$i = \array_find_key( static::$boxes, fn( Gutenberg_Box $box ) => $box->taxonomy === $this->taxonomy );
 		if ( null !== $i ) {
 			static::$boxes[ $i ] = $this;
 		} else {
