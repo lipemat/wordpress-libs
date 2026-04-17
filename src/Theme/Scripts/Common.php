@@ -20,12 +20,6 @@ class Common {
 	use Memoize;
 
 	/**
-	 * @todo Remove this constant in version 6.
-	 * @deprecated
-	 */
-	public const CSS_ENUM_HANDLE = 'lipe/project/theme/css-enums';
-
-	/**
 	 * Control the CSS enum file that is loaded.
 	 */
 	public const string CSS_ENUMS = 'lipe/lib/theme/scripts/common/css-enums';
@@ -47,9 +41,9 @@ class Common {
 	/**
 	 * Add the actions and filters for the class.
 	 *
-	 * @return Common
+	 * @return static
 	 */
-	public function init_once(): Common {
+	public function init_once(): static {
 		return $this->static_once( function() {
 			add_action( 'after_setup_theme', [ $this, 'load_css_enums' ] );
 			add_action( 'after_setup_theme', [ $this, 'support_block_inline_styles' ] );
@@ -252,46 +246,16 @@ class Common {
 	/**
 	 * Load the CSS enums available in postcss-boilerplate version 4.9.0+.
 	 *
-	 * @action     init 10 0
-	 *
 	 * @return void
 	 */
 	public function load_css_enums(): void {
 		$enum = $this->handles[0]::tryFrom( self::CSS_ENUMS );
-
-		// @phpstan-ignore classConstant.deprecated
-		$old_enum = $this->handles[0]::tryFrom( self::CSS_ENUM_HANDLE );
-
-		/**
-		 * Fallback for old automatic way of loading CSS enums.
-		 */
-		if ( null === $old_enum && null === $enum ) {
-			if ( SCRIPT_DEBUG ) {
-				$file = trailingslashit( get_stylesheet_directory() ) . 'css/module-enums.php';
-			} else {
-				$file = trailingslashit( get_stylesheet_directory() ) . 'css/dist/module-enums.min.inc';
-			}
-			/**
-			 * Deprecated way to load CSS enums, which relies on the `CSS_ENUM_HANDLE` constant being set in the `Handles` enum.
-			 */
-		} elseif ( null === $enum ) {
-			_deprecated_argument( __METHOD__, '5.7.0', 'Using the `CSS_ENUM_HANDLE`, constant is deprecated and will be removed in version 6.' );
-			if ( SCRIPT_DEBUG ) {
-				$file = get_stylesheet_directory() . '/css/' . $old_enum->file();
-			} else {
-				$file = $old_enum->dist_path() . $old_enum->file();
-			}
-			/**
-			 * New proper way to load CSS enums.
-			 *
-			 * Define `CSS_ENUMS` constant in the `Handles` enum.
-			 */
-		} else {
-			$file = $enum->dist_path() . $enum->file();
+		if ( null === $enum ) {
+			return;
 		}
-
+		$file = $enum->dist_path() . $enum->file();
 		if ( \file_exists( $file ) ) {
-			require $file;
+			require_once $file;
 		}
 	}
 
