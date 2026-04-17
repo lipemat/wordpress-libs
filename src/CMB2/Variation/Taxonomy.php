@@ -64,8 +64,8 @@ class Taxonomy extends Field {
 	 * Save terms assigned to users as meta instead of the default
 	 * object terms system.
 	 *
-	 * @see    \CMB2_Type_Taxonomy_Base::get_object_terms
-	 * @see    \CMB2_Sanitize::taxonomy
+	 * @see        \CMB2_Type_Taxonomy_Base::get_object_terms
+	 * @see        \CMB2_Sanitize::taxonomy
 	 *
 	 * @deprecated In favor of `store_terms_in_meta` which applies to both
 	 *             posts and users.
@@ -191,6 +191,8 @@ class Taxonomy extends Field {
 		if ( ! \in_array( $this->data_type, [ DataType::TAXONOMY, DataType::TAXONOMY_SINGULAR ], true ) || ! \in_array( BoxType::USER->value, $this->box->get_object_types(), true ) ) {
 			_doing_it_wrong( __METHOD__, 'Storing user terms in meta only applies to taxonomy fields registered on users.', '3.14.0' );
 		}
+
+		_deprecated_function( __METHOD__, '5.10.0', 'store_terms_in_meta' );
 		$this->store_user_terms_in_meta = $use_meta;
 
 		return $this;
