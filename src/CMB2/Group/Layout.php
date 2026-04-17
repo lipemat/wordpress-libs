@@ -17,9 +17,9 @@ class Layout {
 	use Singleton;
 	use Memoize;
 
-	public const BLOCK = 'block';
-	public const TABLE = 'table';
-	public const ROW   = 'row';
+	public const string BLOCK = 'block';
+	public const string TABLE = 'table';
+	public const string ROW   = 'row';
 
 
 	/**

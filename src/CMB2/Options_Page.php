@@ -17,11 +17,17 @@ class Options_Page extends Box {
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#message_cb
 	 *
-	 * @example 'my_callback_function_to_display_messages( $cmb, $args )'
-	 *
-	 * @var callable
+	 * @var \Closure( \CMB2, array{
+	 *     is_options_page: bool,
+	 *     should_nofify: bool,
+	 *     is_updated: bool,
+	 *     setting: string,
+	 *     code: string,
+	 *     message: string,
+	 *     type: string,
+	 * } ): void
 	 */
-	protected $message_cb;
+	protected(set) \Closure $message_cb;
 
 	/**
 	 * Defines the text for the options page save button. defaults to 'Save'.
@@ -30,21 +36,20 @@ class Options_Page extends Box {
 	 *
 	 * @example 'Save Settings'
 	 *
-	 * @internal
 	 * @see     Options_Page::save_button();
 	 *
 	 * @var string
 	 */
-	protected string $save_button;
+	protected(set) string $save_button;
 
 	/**
 	 * Allows overriding the options page form output.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
 	 *
-	 * @var callable
+	 * @var \Closure
 	 */
-	protected $display_cb;
+	protected(set) \Closure $display_cb;
 
 	/**
 	 * Defines the settings page slug. Defaults to $id.
@@ -53,7 +58,7 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	protected string $option_key;
+	protected(set) string $option_key;
 
 	/**
 	 * Sent along to add_submenu_page() to define the parent-menu item slug.
@@ -64,7 +69,7 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	protected string $parent_slug;
+	protected(set) string $parent_slug;
 
 	/**
 	 * Sent along to add_menu_page()/add_submenu_page() to define the menu title.
@@ -75,7 +80,7 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	protected string $menu_title;
+	protected(set) string $menu_title;
 
 	/**
 	 * Sent along to add_menu_page()/add_submenu_page()
@@ -87,7 +92,7 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	protected string $capability = 'manage_options';
+	protected(set) string $capability = 'manage_options';
 
 	/**
 	 * Set to `network_admin_menu` to add the option page to the network admin menu.
@@ -97,19 +102,7 @@ class Options_Page extends Box {
 	 * @phpstan-var 'admin_menu'|'network_admin_menu'
 	 * @var string
 	 */
-	protected string $admin_menu_hook = 'admin_menu';
-
-	/**
-	 * Sent along to add_menu_page() to define the menu position.
-	 * Only applicable if `parent_slug` is left empty.
-	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#position
-	 *
-	 * @example 6
-	 *
-	 * @var int
-	 */
-	protected int $position;
+	protected(set) string $admin_menu_hook = 'admin_menu';
 
 	/**
 	 * This parameter is sent along to add_menu_page() to define the menu icon.
@@ -122,7 +115,7 @@ class Options_Page extends Box {
 	 *
 	 * @var string
 	 */
-	protected string $icon_url;
+	protected(set) string $icon_url;
 
 	/**
 	 * Holds default values specified on individual fields
@@ -132,7 +125,19 @@ class Options_Page extends Box {
 	 *
 	 * @var array<string, mixed>
 	 */
-	protected array $default_values = [];
+	protected(set) array $default_values = [];
+
+	/**
+	 * Sent along to add_menu_page() to define the menu position.
+	 * Only applicable if `parent_slug` is left empty.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#position
+	 *
+	 * @example 6
+	 *
+	 * @var int
+	 */
+	protected(set) int $position;
 
 
 	/**
@@ -244,13 +249,13 @@ class Options_Page extends Box {
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
 	 *
-	 * @phpstan-param callable( \CMB2 $cmb ): void $display_cb
+	 * @phpstan-param \Closure( \CMB2 $cmb ): void $display_cb
 	 *
-	 * @param callable                             $display_cb - The callback to render the display.
+	 * @param \Closure                             $display_cb - The callback to render the display.
 	 *
 	 * @return void
 	 */
-	public function display_cb( callable $display_cb ): void {
+	public function display_cb( \Closure $display_cb ): void {
 		$this->display_cb = $display_cb;
 	}
 
@@ -262,7 +267,7 @@ class Options_Page extends Box {
 	 * @link     https://github.com/CMB2/CMB2/wiki/Box-Properties#message_cb
 	 * @link     https://github.com/CMB2/CMB2/commit/43d513c135e52c327bafa06309821c29323ae2dd#diff-378c74d0ffffc1759b8779a135476777
 	 *
-	 * @phpstan-param callable( \CMB2 $cmb, array{
+	 * @phpstan-param \Closure( \CMB2 $cmb, array{
 	 *     is_options_page: bool,
 	 *     should_nofify: bool,
 	 *     is_updated: bool,
@@ -274,13 +279,13 @@ class Options_Page extends Box {
 	 *
 	 * @formatter:off
 	 *
-	 * @param callable $message_cb - Callback to set custom messages.
+	 * @param \Closure $message_cb - Callback to set custom messages.
 	 *
 	 * @formatter:on
 	 *
 	 * @return void
 	 */
-	public function message_cb( callable $message_cb ): void {
+	public function message_cb( \Closure $message_cb ): void {
 		$this->message_cb = $message_cb;
 	}
 

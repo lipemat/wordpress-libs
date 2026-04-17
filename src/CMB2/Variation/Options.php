@@ -9,7 +9,7 @@ use Lipe\Lib\CMB2\Field;
 /**
  * @author Mat Lipe
  * @since  June 2024
- * @phpstan-type OPTIONS_CALLBACK (callable( \CMB2_Field ): array<string|int, string>)|array<string|int, string>
+ * @phpstan-type OPTIONS_CALLBACK (\Closure( \CMB2_Field ): array<string|int, string>)|array<string|int, string>
  */
 class Options extends Field {
 	/**
@@ -22,7 +22,7 @@ class Options extends Field {
 	 *
 	 * @var bool
 	 */
-	protected bool $select_all_button;
+	protected(set) bool $select_all_button;
 
 	/**
 	 * For fields that take an options array.
@@ -38,7 +38,7 @@ class Options extends Field {
 	 *
 	 * @var  array<string, string|bool>
 	 */
-	protected array $options = [];
+	protected(set) array $options = [];
 
 	/**
 	 * A callback to provide field options.
@@ -50,11 +50,11 @@ class Options extends Field {
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#options_cb
 	 *
-	 * @example my_get_options_function( $field ){ return [ value => label ] }
+	 * @example fn( $field ) => [ value => label ]
 	 *
-	 * @var callable( \CMB2_Field ): array<string, string>
+	 * @var \Closure( \CMB2_Field ): array<string, string>
 	 */
-	protected $options_cb;
+	protected(set) \Closure $options_cb;
 
 	/**
 	 * When using a field of a select type this defines whether we should
@@ -62,7 +62,7 @@ class Options extends Field {
 	 *
 	 * @var bool|string
 	 */
-	protected string|bool $show_option_none;
+	protected(set) string|bool $show_option_none;
 
 
 	/**
@@ -107,13 +107,13 @@ class Options extends Field {
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#options_cb
 	 *
-	 * @example my_get_options_function( $field ){ return [ value => label ] }
+	 * @example fn( $field ) => return [ value => label ]
 	 *
-	 * @phpstan-param callable( \CMB2_Field ): array<string, string> $options_cb - Callback to provide field options.
+	 * @phpstan-param \Closure( \CMB2_Field ): array<string, string> $options_cb - Callback to provide field options.
 	 *
-	 * @param callable                                               $options_cb - Callback to provide field options.
+	 * @param \Closure                                               $options_cb - Callback to provide field options.
 	 */
-	public function options_cb( callable $options_cb ): Options {
+	public function options_cb( \Closure $options_cb ): Options {
 		$this->options_cb = $options_cb;
 		return $this;
 	}
@@ -140,17 +140,17 @@ class Options extends Field {
 	 *
 	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
 	 *
-	 * @param array|callable           $options_or_callback - [ $key => $label ] || function().
+	 * @param array|\Closure           $options_or_callback - [ $key => $label ] || function().
 	 * @param bool|string|null         $show_option_none    - Label of no option selected option. Defaults to not shown.
 	 *
 	 * @return array{
-	 *     options_cb?: callable( \CMB2_Field $field ): array<string|int, string>,
+	 *     options_cb?: \Closure( \CMB2_Field $field ): array<string|int, string>,
 	 *     options?: array<string|int, string>,
 	 *     show_option_none?: string|bool
 	 * }
 	 */
-	public function option_args( callable|array $options_or_callback, bool|string|null $show_option_none = null ): array {
-		if ( \is_callable( $options_or_callback ) ) {
+	public function option_args( \Closure|array $options_or_callback, bool|string|null $show_option_none = null ): array {
+		if ( $options_or_callback instanceof \Closure ) {
 			$_args = [
 				'options_cb' => $options_or_callback,
 			];

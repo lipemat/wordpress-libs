@@ -15,7 +15,7 @@ use Lipe\Lib\CMB2\Field;
  * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
  * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
  *
- * @phpstan-type PARAM_CB string|(callable(array<string, mixed>, \CMB2_Field): (string|void) )
+ * @phpstan-type PARAM_CB string|(\Closure(array<string, mixed>, \CMB2_Field): (string|void) )
  *
  * @since 5.0.0
  */
@@ -53,91 +53,104 @@ trait Display {
 	protected(set) int $position = 0;
 
 	/**
+	 * Like the classes property, allows adding classes to the CMB2 wrapper,
+	 * but takes a callback.
+	 * That callback should return an array of classes.
+	 * The callback gets passed the CMB2 properties array as the first argument,
+	 * and the CMB2 cmb object as the second argument.
+	 *
+	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#classes_cb
+	 *
+	 * @var \Closure( array<string, mixed>, \CMB2_Field): string
+	 */
+	protected(set) \Closure $classes_cb;
+
+	/**
 	 * Display a message or any arbitrary text/markup before the field.
 	 *
 	 * @phpstan-var PARAM_CB
-	 * @var callable|string
+	 * @var \Closure|string
 	 */
-	protected $before;
+	protected(set) \Closure|string $before;
 
 	/**
 	 * Display a message or any arbitrary text/markup after the field.
 	 *
 	 * @phpstan-var PARAM_CB
-	 * @var callable|string
+	 * @var \Closure|string
 	 */
-	protected $after;
+	protected(set) \Closure|string $after;
 
 	/**
 	 * Display a message or any arbitrary text/markup before the field row.
 	 *
 	 * @phpstan-var PARAM_CB
-	 * @var callable|string
+	 * @var \Closure|string
 	 */
-	protected $before_row;
+	protected(set) \Closure|string $before_row;
 
 	/**
 	 * Display a message or any arbitrary text/markup after the field row.
 	 *
 	 * @phpstan-var PARAM_CB
-	 * @var callable|string
+	 * @var \Closure|string
 	 */
-	protected $after_row;
+	protected(set) \Closure|string $after_row;
 
 	/**
 	 * Display a message or any arbitrary text/markup before the field markup.
 	 *
 	 * @phpstan-var PARAM_CB
-	 * @var callable|string
+	 * @var \Closure|string
 	 */
-	protected $before_field;
+	protected(set) \Closure|string $before_field;
 
 	/**
 	 * Display a message or any arbitrary text/markup after the field markup.
 	 *
 	 * @phpstan-var PARAM_CB
-	 * @var callable|string
+	 * @var \Closure|string
 	 */
-	protected $after_field;
+	protected(set) \Closure|string $after_field;
 
 	/**
 	 * Display a message or any arbitrary text/markup before the field display markup.
 	 *
 	 * @phpstan-var PARAM_CB
-	 * @var callable|string
+	 * @var \Closure|string
 	 */
-	protected $before_display_wrap;
+	protected(set) \Closure|string $before_display_wrap;
 
 	/**
 	 * Display a message or any arbitrary text/markup after the field display markup.
 	 *
 	 * @phpstan-var PARAM_CB
-	 * @var callable|string
+	 * @var \Closure|string
 	 */
-	protected $before_display;
+	protected(set) \Closure|string $before_display;
 
 	/**
 	 * Display a message or any arbitrary text/markup after the field display markup.
 	 *
 	 * @phpstan-var PARAM_CB
-	 * @var callable|string
+	 * @var \Closure|string
 	 */
-	protected $after_display;
+	protected(set) \Closure|string $after_display;
 
 	/**
 	 * Display a message or any arbitrary text/markup after the field display markup.
 	 *
 	 * @phpstan-var PARAM_CB
-	 * @var callable|string
+	 * @var \Closure|string
 	 */
-	protected $after_display_wrap;
+	protected(set) \Closure|string $after_display_wrap;
 
 	/**
 	 * Entirely replace the class to used to display the field (in admin columns, etc.)
 	 *
 	 * @var \CMB2_Field_Display
 	 */
-	protected \CMB2_Field_Display $display_class;
+	protected(set) \CMB2_Field_Display $display_class;
 
 	/**
 	 * A custom callback to return the label for the field
@@ -146,9 +159,9 @@ trait Display {
 	 *
 	 * @see \CMB2_Base::do_callback
 	 *
-	 * @var callable(string, \CMB2_Field): string
+	 * @var \Closure(string, \CMB2_Field): string
 	 */
-	protected $label_cb;
+	protected(set) \Closure $label_cb;
 
 	/**
 	 * This property allows you to optionally add classes to the CMB2 wrapper.
@@ -161,20 +174,7 @@ trait Display {
 	 *
 	 * @var array<string>|string
 	 */
-	protected array|string $classes;
-
-	/**
-	 * Like the classes property, allows adding classes to the CMB2 wrapper,
-	 * but takes a callback.
-	 * That callback should return an array of classes.
-	 * The callback gets passed the CMB2 properties array as the first argument,
-	 * and the CMB2 cmb object as the second argument.
-	 *
-	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#classes_cb
-	 *
-	 * @var callable( array<string, mixed>, \CMB2_Field): string
-	 */
-	protected $classes_cb;
+	protected(set) array|string $classes;
 
 	/**
 	 * Whether to show labels for the fields.
@@ -185,7 +185,7 @@ trait Display {
 	 *
 	 * @var bool
 	 */
-	protected bool $show_names;
+	protected(set) bool $show_names;
 
 	/**
 	 * To show this field or not based on the result of a function.
@@ -197,10 +197,10 @@ trait Display {
 	 *
 	 * @interal
 	 *
-	 * @phpstan-var callable( \CMB2_Field ): bool $func
-	 * @var callable
+	 * @phpstan-var \Closure( \CMB2_Field ): bool $func
+	 * @var \Closure
 	 */
-	protected $show_on_cb;
+	protected(set) \Closure $show_on_cb;
 
 	/**
 	 * Allows overriding the default CMB2_Type_Base class used when rendering the field.
@@ -212,7 +212,7 @@ trait Display {
 	 *
 	 * @var string
 	 */
-	protected string $render_class;
+	protected(set) string $render_class;
 
 
 	/**
@@ -236,9 +236,9 @@ trait Display {
 	 *
 	 * @phpstan-param PARAM_CB $after
 	 *
-	 * @param callable|string  $after - Callback or string to display after the field.
+	 * @param \Closure|string  $after - Callback or string to display after the field.
 	 */
-	public function after( string|callable $after ): static {
+	public function after( string|\Closure $after ): static {
 		$this->after = $after;
 		return $this;
 	}
@@ -249,9 +249,9 @@ trait Display {
 	 *
 	 * @phpstan-param PARAM_CB $after_display
 	 *
-	 * @param callable|string  $after_display - Callback or string to display before the field.
+	 * @param \Closure|string  $after_display - Callback or string to display before the field.
 	 */
-	public function after_display( callable|string $after_display ): static {
+	public function after_display( \Closure|string $after_display ): static {
 		$this->after_display = $after_display;
 		return $this;
 	}
@@ -262,9 +262,9 @@ trait Display {
 	 *
 	 * @phpstan-param PARAM_CB $after_display_wrap
 	 *
-	 * @param callable|string  $after_display_wrap - Callback or string to display after the field.
+	 * @param \Closure|string  $after_display_wrap - Callback or string to display after the field.
 	 */
-	public function after_display_wrap( callable|string $after_display_wrap ): static {
+	public function after_display_wrap( \Closure|string $after_display_wrap ): static {
 		$this->after_display_wrap = $after_display_wrap;
 		return $this;
 	}
@@ -275,9 +275,9 @@ trait Display {
 	 *
 	 * @phpstan-param PARAM_CB $after_field
 	 *
-	 * @param callable|string  $after_field - Callback or string to display after the field.
+	 * @param \Closure|string  $after_field - Callback or string to display after the field.
 	 */
-	public function after_field( callable|string $after_field ): static {
+	public function after_field( \Closure|string $after_field ): static {
 		$this->after_field = $after_field;
 		return $this;
 	}
@@ -288,9 +288,9 @@ trait Display {
 	 *
 	 * @phpstan-param PARAM_CB $after_row
 	 *
-	 * @param callable|string  $after_row - Callback or string to display after the field.
+	 * @param \Closure|string  $after_row - Callback or string to display after the field.
 	 */
-	public function after_row( callable|string $after_row ): static {
+	public function after_row( \Closure|string $after_row ): static {
 		$this->after_row = $after_row;
 		return $this;
 	}
@@ -301,9 +301,9 @@ trait Display {
 	 *
 	 * @phpstan-param PARAM_CB $before
 	 *
-	 * @param callable|string  $before - Callback or string to display before the field.
+	 * @param \Closure|string  $before - Callback or string to display before the field.
 	 */
-	public function before( callable|string $before ): static {
+	public function before( \Closure|string $before ): static {
 		$this->before = $before;
 		return $this;
 	}
@@ -314,9 +314,9 @@ trait Display {
 	 *
 	 * @phpstan-param PARAM_CB $before_display
 	 *
-	 * @param callable|string  $before_display - Callback or string to display before the field.
+	 * @param \Closure|string  $before_display - Callback or string to display before the field.
 	 */
-	public function before_display( callable|string $before_display ): static {
+	public function before_display( \Closure|string $before_display ): static {
 		$this->before_display = $before_display;
 		return $this;
 	}
@@ -327,9 +327,9 @@ trait Display {
 	 *
 	 * @phpstan-param PARAM_CB $before_display_wrap
 	 *
-	 * @param callable|string  $before_display_wrap - Callback or string to display after the field.
+	 * @param \Closure|string  $before_display_wrap - Callback or string to display after the field.
 	 */
-	public function before_display_wrap( callable|string $before_display_wrap ): static {
+	public function before_display_wrap( \Closure|string $before_display_wrap ): static {
 		$this->before_display_wrap = $before_display_wrap;
 		return $this;
 	}
@@ -340,9 +340,9 @@ trait Display {
 	 *
 	 * @phpstan-param PARAM_CB $before_field
 	 *
-	 * @param callable|string  $before_field - Callback or string to display before the field.
+	 * @param \Closure|string  $before_field - Callback or string to display before the field.
 	 */
-	public function before_field( callable|string $before_field ): static {
+	public function before_field( \Closure|string $before_field ): static {
 		$this->before_field = $before_field;
 		return $this;
 	}
@@ -353,9 +353,9 @@ trait Display {
 	 *
 	 * @phpstan-param PARAM_CB $before_row
 	 *
-	 * @param callable|string  $before_row - Callback or string to display before the field.
+	 * @param \Closure|string  $before_row - Callback or string to display before the field.
 	 */
-	public function before_row( callable|string $before_row ): static {
+	public function before_row( \Closure|string $before_row ): static {
 		$this->before_row = $before_row;
 		return $this;
 	}
@@ -368,9 +368,9 @@ trait Display {
 	 *
 	 * @see \CMB2_Base::do_callback
 	 *
-	 * @param callable(string, \CMB2_Field): string $label_cb - Callback to return the label for the field.
+	 * @param \Closure(string, \CMB2_Field): string $label_cb - Callback to return the label for the field.
 	 */
-	public function label_cb( callable $label_cb ): static {
+	public function label_cb( \Closure $label_cb ): static {
 		$this->label_cb = $label_cb;
 		return $this;
 	}
@@ -415,11 +415,11 @@ trait Display {
 	 *
 	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#classes_cb
 	 *
-	 * @phpstan-param callable( array<string, mixed>, \CMB2_Field): string $classes_cb
+	 * @phpstan-param \Closure( array<string, mixed>, \CMB2_Field): string $classes_cb
 	 *
-	 * @param callable                                                     $classes_cb - Callback to return the classes for the field.
+	 * @param \Closure                                                     $classes_cb - Callback to return the classes for the field.
 	 */
-	public function classes_cb( callable $classes_cb ): static {
+	public function classes_cb( \Closure $classes_cb ): static {
 		$this->classes_cb = $classes_cb;
 		return $this;
 	}
@@ -457,15 +457,15 @@ trait Display {
 	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_on_cb
 	 * @example  should_i_show($field){ return bool}
 	 *
-	 * @phpstan-param callable( \CMB2_Field ): bool $func
+	 * @phpstan-param \Closure( \CMB2_Field ): bool $func
 	 *
 	 * @formatter:off
-	 * @param callable $func - The function to use for determining if the field should show.
+	 * @param \Closure $func - The function to use for determining if the field should show.
 	 * @formatter:on
 	 *
 	 * @return Field
 	 */
-	public function show_on_cb( callable $func ): Field {
+	public function show_on_cb( \Closure $func ): Field {
 		$this->show_on_cb = $func;
 
 		return $this;

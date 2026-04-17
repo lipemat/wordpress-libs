@@ -13,12 +13,9 @@ class TextUrl extends Text {
 	/**
 	 * Used by the `text_url` field type to specify the protocols allowed.
 	 *
-	 * @todo Make protected in version 6
-	 * @internal Use protocols() instead.
-	 *
 	 * @var ?string[]
 	 */
-	public ?array $protocols = null;
+	protected(set) ?array $protocols = null;
 
 
 	/**

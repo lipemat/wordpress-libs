@@ -511,12 +511,12 @@ class Field_Type {
 	 *
 	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
 	 *
-	 * @param array|callable           $options_or_callback - [ $key => $label ] || function().
+	 * @param array|\Closure           $options_or_callback - [ $key => $label ] || function().
 	 * @param bool                     $select_all          - display select all button or not.
 	 *
 	 * @return Options
 	 */
-	public function multicheck( callable|array $options_or_callback, bool $select_all = true ): Options {
+	public function multicheck( \Closure|array $options_or_callback, bool $select_all = true ): Options {
 		$this->field = Options::from( $this->field, $this->box );
 		$_args = $this->field->option_args( $options_or_callback );
 		$_args['select_all_button'] = $select_all;
@@ -532,12 +532,12 @@ class Field_Type {
 	 *
 	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
 	 *
-	 * @param array|callable           $options_or_callback - [ $key => $label ] || function().
+	 * @param array|\Closure           $options_or_callback - [ $key => $label ] || function().
 	 * @param bool                     $select_all          - display select all button or not.
 	 *
 	 * @return Options
 	 */
-	public function multicheck_inline( callable|array $options_or_callback, bool $select_all = true ): Options {
+	public function multicheck_inline( \Closure|array $options_or_callback, bool $select_all = true ): Options {
 		$this->field = Options::from( $this->field, $this->box );
 		$_args = $this->field->option_args( $options_or_callback );
 		$_args['select_all_button'] = $select_all;
@@ -553,12 +553,12 @@ class Field_Type {
 	 *
 	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
 	 *
-	 * @param array|callable           $options_or_callback - [ $key => $label ] || function().
+	 * @param array|\Closure           $options_or_callback - [ $key => $label ] || function().
 	 * @param bool|string              $show_option_none    - disable or set the text of the option.
 	 *
 	 * @return Options
 	 */
-	public function radio( callable|array $options_or_callback, bool|string $show_option_none = true ): Options {
+	public function radio( \Closure|array $options_or_callback, bool|string $show_option_none = true ): Options {
 		$this->field = Options::from( $this->field, $this->box );
 		$_args = $this->field->option_args( $options_or_callback, $show_option_none );
 
@@ -573,12 +573,12 @@ class Field_Type {
 	 *
 	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
 	 *
-	 * @param callable|array           $options_or_callback - [ $key => $label ] || function().
+	 * @param \Closure|array           $options_or_callback - [ $key => $label ] || function().
 	 * @param bool|string              $show_option_none    - disable or set the text of the option.
 	 *
 	 * @return Options
 	 */
-	public function radio_inline( callable|array $options_or_callback, bool|string $show_option_none = true ): Options {
+	public function radio_inline( \Closure|array $options_or_callback, bool|string $show_option_none = true ): Options {
 		$this->field = Options::from( $this->field, $this->box );
 		$_args = $this->field->option_args( $options_or_callback, $show_option_none );
 
@@ -596,12 +596,12 @@ class Field_Type {
 	 *
 	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
 	 *
-	 * @param array|callable           $options_or_callback - [ $key => $label ] || function().
+	 * @param array|\Closure           $options_or_callback - [ $key => $label ] || function().
 	 * @param bool|string              $show_option_none    - disable or set the text of the option.
 	 *
 	 * @return Options
 	 */
-	public function select( array|callable $options_or_callback, bool|string $show_option_none = true ): Options {
+	public function select( array|\Closure $options_or_callback, bool|string $show_option_none = true ): Options {
 		$this->field = Options::from( $this->field, $this->box );
 		$_args = $this->field->option_args( $options_or_callback, $show_option_none );
 

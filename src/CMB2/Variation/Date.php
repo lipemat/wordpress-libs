@@ -22,7 +22,7 @@ class Date extends Field {
 	 *
 	 * @var string
 	 */
-	protected string $date_format;
+	protected(set) string $date_format;
 
 	/**
 	 * Used for date/timestamp fields.
@@ -34,7 +34,7 @@ class Date extends Field {
 	 *
 	 * @var string
 	 */
-	protected string $timezone;
+	protected(set) string $timezone;
 
 	/**
 	 * Used for date/time fields
@@ -49,7 +49,7 @@ class Date extends Field {
 	 *
 	 * @var string
 	 */
-	protected string $timezone_meta_key;
+	protected(set) string $timezone_meta_key;
 
 
 	/**

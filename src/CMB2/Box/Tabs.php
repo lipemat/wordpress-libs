@@ -192,7 +192,7 @@ class Tabs {
 	 * @return void
 	 */
 	public function render_field( array $field_args, \CMB2_Field $field ): void {
-		ob_start();
+		\ob_start();
 		if ( isset( $field_args['tab_content_cb'] ) && \is_callable( $field_args['tab_content_cb'] ) ) {
 			$field_args['tab_content_cb']( $field_args, $field );
 		} elseif ( 'group' === $field_args['type'] ) {

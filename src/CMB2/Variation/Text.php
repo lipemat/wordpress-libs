@@ -6,6 +6,8 @@ namespace Lipe\Lib\CMB2\Variation;
 use Lipe\Lib\CMB2\Field;
 
 /**
+ * Text fields variation.
+ *
  * @author Mat Lipe
  * @since  5.0.0
  *
@@ -14,22 +16,16 @@ class Text extends Field {
 	/**
 	 * Used with `char_counter` to count character/words remaining.
 	 *
-	 * @todo Make protected in version 6
-	 * @internal Use char_max() instead.
-	 *
 	 * @var int
 	 */
-	public int $char_max;
+	protected(set) int $char_max;
 
 	/**
 	 * Used with `char_max` to enforce length when counting characters.
 	 *
-	 * @todo Make protected in version 6
-	 * @internal Use char_max_enforce() instead.
-	 *
 	 * @var bool
 	 */
-	public bool $char_max_enforce;
+	protected(set) bool $char_max_enforce;
 
 	/**
 	 * Enable a character/word counter for a 'textarea', 'wysiwyg', or 'text' type field.
@@ -38,7 +34,7 @@ class Text extends Field {
 	 *
 	 * @var bool|string
 	 */
-	protected string|bool $char_counter;
+	protected(set) string|bool $char_counter;
 
 
 	/**
@@ -75,7 +71,7 @@ class Text extends Field {
 			$this->char_max = $max;
 			if ( $enforce ) {
 				if ( 'words' === $this->char_counter ) {
-					\_doing_it_wrong( 'char_counter', esc_html__( 'You cannot enforce max length when counting words', 'lipe' ), '2.17.0' );
+					_doing_it_wrong( 'char_counter', esc_html__( 'You cannot enforce max length when counting words', 'lipe' ), '2.17.0' );
 				}
 				$this->char_max_enforce = true;
 			}

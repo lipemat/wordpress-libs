@@ -10,8 +10,7 @@ use Lipe\Lib\CMB2\Box\BoxType;
  */
 class Term_Box extends Box {
 	/**
-	 * If object_types is set to 'term', and set to false,
-	 * will remove the fields from the new-term screen.
+	 * If set to false, will remove the fields from the new-term screen.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#new_term_section
 	 *
@@ -19,7 +18,7 @@ class Term_Box extends Box {
 	 *
 	 * @var bool
 	 */
-	public bool $new_term_section;
+	protected(set) bool $new_term_section;
 
 	/**
 	 * If object_types is set to 'term',
@@ -32,7 +31,7 @@ class Term_Box extends Box {
 	 *
 	 * @var string[]
 	 */
-	public array $taxonomies;
+	protected(set) array $taxonomies;
 
 
 	/**
@@ -45,5 +44,22 @@ class Term_Box extends Box {
 	public function __construct( string $id, array $taxonomies, string $title ) {
 		parent::__construct( $id, [ BoxType::TERM->value ], $title );
 		$this->taxonomies = $taxonomies;
+	}
+
+
+	/**
+	 * Set to false to remove the fields from the new-term screen.
+	 *
+	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#new_term_section
+	 *
+	 * Default true
+	 *
+	 * @param bool $show - Whether to show the fields on the new-term screen.
+	 *
+	 * @return static
+	 */
+	public function show_on_new_terms( bool $show ): static {
+		$this->new_term_section = $show;
+		return $this;
 	}
 }

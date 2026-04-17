@@ -20,7 +20,7 @@ class User_Box extends Box {
 	 *
 	 * @var string
 	 */
-	public string $new_user_section;
+	protected(set) string $new_user_section;
 
 
 	/**

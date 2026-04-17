@@ -26,17 +26,17 @@ use Lipe\Lib\Taxonomy\Get_Terms;
  * @interal
  *
  * @formatter:off
- * @phpstan-type DELETE_CB callable( int|string $object_id, string $key, mixed $previous, BoxType $type ): void
- * @phpstan-type CHANGE_CB callable( int|string $object_id, mixed $value, string $key, mixed $previous, BoxType $type, Event_Callbacks::CALL_* $call_type ): void
+ * @phpstan-type DELETE_CB \Closure( int|string $object_id, string $key, mixed $previous, BoxType $type ): void
+ * @phpstan-type CHANGE_CB \Closure( int|string $object_id, mixed $value, string $key, mixed $previous, BoxType $type, Event_Callbacks::CALL_* $call_type ): void
  * @formatter:on
  */
 class Event_Callbacks {
-	public const TYPE_CHANGE = 'change';
-	public const TYPE_DELETE = 'delete';
+	public const string TYPE_CHANGE = 'change';
+	public const string TYPE_DELETE = 'delete';
 
-	public const CALL_ADD    = 'add';
-	public const CALL_UPDATE = 'update';
-	public const CALL_DELETE = 'delete';
+	public const string CALL_ADD    = 'add';
+	public const string CALL_UPDATE = 'update';
+	public const string CALL_DELETE = 'delete';
 
 	/**
 	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
@@ -95,12 +95,12 @@ class Event_Callbacks {
 	 * @phpstan-param CHANGE_CB|DELETE_CB $callback
 	 *
 	 * @param Registered                  $field    - Field to register events for.
-	 * @param callable                    $callback - Callback to run when the field changes or is deleted.
+	 * @param \Closure                    $callback - Callback to run when the field changes or is deleted.
 	 * @param string                      $cb_type  - Callback type, either 'change' or 'delete'.
 	 */
 	final protected function __construct(
 		protected readonly Registered $field,
-		protected $callback,
+		protected \Closure $callback,
 		string $cb_type,
 	) {
 		$this->box = $this->field->get_box();
@@ -426,12 +426,12 @@ class Event_Callbacks {
 	 * @phpstan-param CHANGE_CB|DELETE_CB $callback
 	 *
 	 * @param Field                       $field    - Field to register events for.
-	 * @param callable                    $callback - Callback to run when the field changes or is deleted.
+	 * @param \Closure                    $callback - Callback to run when the field changes or is deleted.
 	 * @param string                      $cb_type  - Callback type, either 'change' or 'delete'.
 	 *
 	 * @return static
 	 */
-	public static function factory( Field $field, callable $callback, string $cb_type ): static {
+	public static function factory( Field $field, \Closure $callback, string $cb_type ): static {
 		return new static( Registered::factory( $field ), $callback, $cb_type );
 	}
 }

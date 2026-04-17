@@ -25,12 +25,12 @@ class Default_Callback {
 	 *
 	 * @param Registered         $field    - Field instance.
 	 * @param Box                $box      - Box instance.
-	 * @param callable           $callback - Callback to use for default value.
+	 * @param \Closure           $callback - Callback to use for default value.
 	 */
 	final protected function __construct(
 		protected readonly Registered $field,
 		protected readonly Box $box,
-		protected $callback,
+		protected \Closure $callback,
 	) {
 		$this->hook();
 	}
@@ -120,11 +120,11 @@ class Default_Callback {
 	 *
 	 * @param Field              $field    - Field instance.
 	 * @param Box                $box      - Box instance.
-	 * @param callable           $callback - Callback to use for default value.
+	 * @param \Closure           $callback - Callback to use for default value.
 	 *
-	 * @return Default_Callback
+	 * @return static
 	 */
-	public static function factory( Field $field, Box $box, callable $callback ): Default_Callback {
+	public static function factory( Field $field, Box $box, \Closure $callback ): static {
 		return new static( Registered::factory( $field ), $box, $callback );
 	}
 }

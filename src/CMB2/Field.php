@@ -331,7 +331,7 @@ class Field {
 	 *
 	 * @param bool|int      $position         - The column position.
 	 * @param string        $name             - defaults to field name.
-	 * @param callable|null $display_cb       - optional display callback.
+	 * @param \Closure|null $display_cb       - optional display callback.
 	 * @param bool          $disable_sorting  - Set to true to prevent this column from being
 	 *                                        sortable in post list.
 	 *
@@ -339,7 +339,7 @@ class Field {
 	 *
 	 * @return static
 	 */
-	public function column( bool|int $position = false, string $name = '', ?callable $display_cb = null, bool $disable_sorting = false ): static {
+	public function column( bool|int $position = false, string $name = '', ?\Closure $display_cb = null, bool $disable_sorting = false ): static {
 		$this->column = [
 			'disable_sortable' => $disable_sorting,
 			'name'             => '' === $name ? $this->name : $name,
@@ -488,11 +488,11 @@ class Field {
 	 *
 	 * @phpstan-param ESC_CB $callback
 	 *
-	 * @param callable       $callback - The callback to use for escaping.
+	 * @param \Closure       $callback - The callback to use for escaping.
 	 *
 	 * @return static
 	 */
-	public function escape_cb( callable $callback ): static {
+	public function escape_cb( \Closure $callback ): static {
 		$this->escape_cb = $callback;
 		return $this;
 	}
@@ -731,11 +731,11 @@ class Field {
 	 *
 	 * @phpstan-param DELETE_CB $callback
 	 *
-	 * @param callable          $callback - The callback to be fired when a meta item is deleted.
+	 * @param \Closure          $callback - The callback to be fired when a meta item is deleted.
 	 *
 	 * @return static
 	 */
-	public function delete_cb( callable $callback ): static {
+	public function delete_cb( \Closure $callback ): static {
 		$this->event_callbacks[] = Event_Callbacks::factory( $this, $callback, Event_Callbacks::TYPE_DELETE );
 		return $this;
 	}
@@ -762,11 +762,11 @@ class Field {
 	 *
 	 * @phpstan-param CHANGE_CB $callback
 	 *
-	 * @param callable          $callback - The callback to be fired when an items data is updated.
+	 * @param \Closure          $callback - The callback to be fired when an items data is updated.
 	 *
 	 * @return static
 	 */
-	public function change_cb( callable $callback ): static {
+	public function change_cb( \Closure $callback ): static {
 		$this->event_callbacks[] = Event_Callbacks::factory( $this, $callback, Event_Callbacks::TYPE_CHANGE );
 
 		return $this;
@@ -783,11 +783,11 @@ class Field {
 	 *
 	 * @phpstan-param ESC_CB $callback
 	 *
-	 * @param callable       $callback - The callback to be used for sanitization.
+	 * @param \Closure       $callback - The callback to be used for sanitization.
 	 *
 	 * @return static
 	 */
-	public function sanitization_cb( callable $callback ): static {
+	public function sanitization_cb( \Closure $callback ): static {
 		$registered = Registered::factory( $this );
 		if ( [ BoxType::OPTIONS->value ] !== $this->box->get_object_types() && $registered->is_allowed_to_register_meta() ) {
 			$this->meta_sanitizer = $callback;

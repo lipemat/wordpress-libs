@@ -31,5 +31,5 @@ class Wysiwyg extends Text {
 	 *
 	 * @var  MCE_OPTIONS
 	 */
-	protected array $options = [];
+	protected(set) array $options = [];
 }

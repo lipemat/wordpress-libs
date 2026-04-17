@@ -25,7 +25,7 @@ class Taxonomy extends Field {
 	 *
 	 * @var string
 	 */
-	protected string $taxonomy;
+	protected(set) string $taxonomy;
 
 	/**
 	 * Whether to show select all button for items
@@ -37,7 +37,7 @@ class Taxonomy extends Field {
 	 *
 	 * @var bool
 	 */
-	protected bool $select_all_button;
+	protected(set) bool $select_all_button;
 
 	/**
 	 * New field parameter for taxonomy fields, 'remove_default'
@@ -49,7 +49,7 @@ class Taxonomy extends Field {
 	 *
 	 * @var bool
 	 */
-	protected bool $remove_default;
+	protected(set) bool $remove_default;
 
 	/**
 	 * Field parameter, which can be used to override the arguments passed to get_terms()
@@ -58,14 +58,14 @@ class Taxonomy extends Field {
 	 *
 	 * @var  array<string, mixed>
 	 */
-	protected array $query_args;
+	protected(set) array $query_args;
 
 	/**
 	 * Save terms assigned to users as meta instead of the default
 	 * object terms system.
 	 *
-	 * @see    \CMB2_Type_Taxonomy_Base::get_object_terms
-	 * @see    \CMB2_Sanitize::taxonomy
+	 * @see        \CMB2_Type_Taxonomy_Base::get_object_terms
+	 * @see        \CMB2_Sanitize::taxonomy
 	 *
 	 * @deprecated In favor of `store_terms_in_meta` which applies to both
 	 *             posts and users.
@@ -77,7 +77,7 @@ class Taxonomy extends Field {
 	 *
 	 * @var bool
 	 */
-	protected bool $store_user_terms_in_meta = true;
+	protected(set) bool $store_user_terms_in_meta = true;
 
 	/**
 	 * Save terms assigned to posts as meta instead of the default
@@ -92,7 +92,7 @@ class Taxonomy extends Field {
 	 *
 	 * @var bool
 	 */
-	protected bool $store_terms_in_meta;
+	protected(set) bool $store_terms_in_meta;
 
 
 	/**
