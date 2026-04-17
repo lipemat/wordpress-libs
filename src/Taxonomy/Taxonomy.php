@@ -347,7 +347,7 @@ class Taxonomy {
 	 *
 	 * @since    5.0.0
 	 *
-	 * @see      Custom_Post_Type::rest_controllers()
+	 * @see      Post_Type::rest_controllers()
 	 *
 	 * @formatter:off
 	 * @phpstan-param class-string<\WP_REST_Controller> $controller

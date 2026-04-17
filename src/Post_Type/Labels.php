@@ -11,8 +11,8 @@ namespace Lipe\Lib\Post_Type;
  * @author Mat Lipe
  * @since  4.0.0
  *
- * @see    Custom_Post_Type::labels()
- * @see    Custom_Post_Type::get_post_type_labels()
+ * @see    Post_Type::labels()
+ * @see    Post_Type::get_post_type_labels()
  */
 class Labels {
 	public const NAME                     = 'name';
@@ -312,7 +312,7 @@ class Labels {
 	 *
 	 * Default is 'Featured image'.
 	 *
-	 * @see Custom_Post_Type::set_featured_image_labels()
+	 * @see Post_Type::set_featured_image_labels()
 	 *
 	 * @param string $label - Label for the featured image meta box title.
 	 *
@@ -328,7 +328,7 @@ class Labels {
 	 *
 	 * Default is 'Set featured image'.
 	 *
-	 * @see Custom_Post_Type::set_featured_image_labels()
+	 * @see Post_Type::set_featured_image_labels()
 	 *
 	 * @param string $label - Label for setting the featured image.
 	 *
@@ -344,7 +344,7 @@ class Labels {
 	 *
 	 * Default is 'Remove featured image'.
 	 *
-	 * @see Custom_Post_Type::set_featured_image_labels()
+	 * @see Post_Type::set_featured_image_labels()
 	 *
 	 * @param string $label - Label for removing the featured image.
 	 *
@@ -360,7 +360,7 @@ class Labels {
 	 *
 	 * Default is 'Use as featured image'.
 	 *
-	 * @see Custom_Post_Type::set_featured_image_labels()
+	 * @see Post_Type::set_featured_image_labels()
 	 *
 	 * @param string $label - Label in the media frame for using a featured image.
 	 *
