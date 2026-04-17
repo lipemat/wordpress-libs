@@ -3,9 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\CMB2\Variation;
 
-use Lipe\Lib\CMB2\Box\BoxType;
 use Lipe\Lib\CMB2\Field;
-use Lipe\Lib\Meta\DataType;
 use Lipe\Lib\Taxonomy\Get_Terms;
 
 /**
@@ -59,25 +57,6 @@ class Taxonomy extends Field {
 	 * @var  array<string, mixed>
 	 */
 	protected(set) array $query_args;
-
-	/**
-	 * Save terms assigned to users as meta instead of the default
-	 * object terms system.
-	 *
-	 * @see        \CMB2_Type_Taxonomy_Base::get_object_terms
-	 * @see        \CMB2_Sanitize::taxonomy
-	 *
-	 * @deprecated In favor of `store_terms_in_meta` which applies to both
-	 *             posts and users.
-	 *
-	 * Prevent conflicts with User ID and Post ID in the same
-	 * `term_relationship` table.
-	 *
-	 * @notice     Required lipemat version of CMB2 to support this argument.
-	 *
-	 * @var bool
-	 */
-	protected(set) bool $store_user_terms_in_meta = true;
 
 	/**
 	 * Save terms assigned to posts as meta instead of the default
@@ -165,35 +144,6 @@ class Taxonomy extends Field {
 		}
 
 		return $_args;
-	}
-
-
-	/**
-	 * Save terms assigned to users as meta instead of the default
-	 * object terms system.
-	 *
-	 * @deprecated In favor of `store_terms_in_meta` which applies to both
-	 *             posts and users.
-	 *
-	 * Prevent conflicts with User ID and Post ID in the same
-	 * `term_relationship` table.
-	 *
-	 * @note       The meta repo has never supported using object terms so setting
-	 *         this to false will not change the behavior of the meta repo.
-	 *
-	 * @notice     The default value is `true` so this need only be called with `false`.
-	 *
-	 * @param bool $use_meta - Whether to use meta or not.
-	 *
-	 * @return Taxonomy
-	 */
-	public function store_user_terms_in_meta( bool $use_meta = true ): Taxonomy {
-		if ( ! \in_array( $this->data_type, [ DataType::TAXONOMY, DataType::TAXONOMY_SINGULAR ], true ) || ! \in_array( BoxType::USER->value, $this->box->get_object_types(), true ) ) {
-			_doing_it_wrong( __METHOD__, 'Storing user terms in meta only applies to taxonomy fields registered on users.', '3.14.0' );
-		}
-		$this->store_user_terms_in_meta = $use_meta;
-
-		return $this;
 	}
 
 
