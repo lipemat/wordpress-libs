@@ -109,9 +109,9 @@ class Common {
 			 * Use regular expression to strip out the sourcemap, otherwise the
 			 * sources point to random files.
 			 */
-			add_filter( 'block_editor_settings_all', function( $settings ) use ( $enqueue ) {
-				$settings['styles'] = \array_map( function( $style ) use ( $enqueue ) {
-					if ( \array_key_exists( 'baseURL', $style ) && $enqueue->get_manifest()->get_url() === $style['baseURL'] ) {
+			add_filter( 'block_editor_settings_all', function( $settings ) use ( $resource ) {
+				$settings['styles'] = \array_map( function( $style ) use ( $resource ) {
+					if ( \array_key_exists( 'baseURL', $style ) && $resource->get_manifest()->get_url() === $style['baseURL'] ) {
 						$style['css'] = \preg_replace( '/\/\*# sourceMap.*?\*\//', '', $style['css'] );
 					}
 					return $style;
@@ -205,8 +205,7 @@ class Common {
 			$enqueue->enqueue();
 
 			if ( $resource->with_js_config() ) {
-				// Modules don't support standard localization, so we need to use the `script_module_data` filter instead.
-				if ( $enqueue->get_manifest() instanceof Svelte_Manifest ) {
+				if ( $resource->get_manifest() instanceof Svelte_Manifest ) {
 					/**
 					 * @see \WP_Script_Modules::print_script_module_data for how to use this data in TS.
 					 */
