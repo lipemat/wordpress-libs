@@ -55,7 +55,7 @@ trait Translate {
 		}
 
 		if ( $field->variation instanceof Taxonomy ) {
-			$use_meta = $field->get_config()['store_terms_in_meta'] ?? false;
+			$use_meta = $field->variation->store_terms_in_meta ?? false;
 			if ( true === $use_meta ) {
 				return false;
 			}

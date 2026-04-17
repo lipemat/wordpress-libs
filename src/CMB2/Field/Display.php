@@ -368,7 +368,9 @@ trait Display {
 	 *
 	 * @see \CMB2_Base::do_callback
 	 *
-	 * @param \Closure(string, \CMB2_Field): string $label_cb - Callback to return the label for the field.
+	 * @phpstan-param (\Closure(string, \CMB2_Field): string) $label_cb
+	 *
+	 * @param \Closure                                        $label_cb - Callback to return the label for the field.
 	 */
 	public function label_cb( \Closure $label_cb ): static {
 		$this->label_cb = $label_cb;
