@@ -8,7 +8,7 @@ namespace Lipe\Lib\Post_Type;
  *
  * @link https://developer.wordpress.org/reference/functions/get_post_type_capabilities/
  *
- * @see  Custom_Post_Type::capabilities()
+ * @see  Post_Type::capabilities()
  */
 class Capabilities {
 	public const CREATE_POSTS           = 'create_posts';
@@ -36,10 +36,10 @@ class Capabilities {
 	/**
 	 * Capabilities constructor.
 	 *
-	 * @param Custom_Post_Type $post_type - Post type object.
+	 * @param Post_Type $post_type - Post type object.
 	 */
 	public function __construct(
-		protected Custom_Post_Type $post_type
+		protected Post_Type $post_type
 	) {
 	}
 

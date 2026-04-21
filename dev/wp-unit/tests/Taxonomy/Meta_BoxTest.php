@@ -67,6 +67,7 @@ class Meta_BoxTest extends \WP_UnitTestCase {
 
 
 	public function test_replace_default_meta_box(): void {
+		$this->expectDeprecated( 'Lipe\Lib\Util\Arrays::find_index' );
 		$tax = register_taxonomy( 'test', 'post', [
 			'show_in_rest' => true,
 			'capabilities' => [

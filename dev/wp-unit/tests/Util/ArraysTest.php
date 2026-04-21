@@ -8,7 +8,7 @@
 namespace Lipe\Lib\Util;
 
 class ArraysTest extends \WP_UnitTestCase {
-	public function test_array_chunk_to_associative() : void {
+	public function test_array_chunk_to_associative(): void {
 		$this->assertSame( [
 			'page'     => 3,
 			'category' => 6,
@@ -29,7 +29,7 @@ class ArraysTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_clean() : void {
+	public function test_clean(): void {
 		$source = [
 			0 => '',
 			1 => false,
@@ -69,7 +69,8 @@ class ArraysTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_find_index() : void {
+	public function test_find_index(): void {
+		$this->expectDeprecated( 'Lipe\Lib\Util\Arrays::find_index' );
 		$this->assertEquals( 's', Arrays::in()->find_index( [
 			'f' => 'first',
 			's' => 'second',
@@ -93,7 +94,9 @@ class ArraysTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_find() : void {
+	public function test_find(): void {
+		$this->expectDeprecated( 'Lipe\Lib\Util\Arrays::find' );
+		$this->expectDeprecated( 'Lipe\Lib\Util\Arrays::find_index' );
 		$this->assertEquals( [
 			'some-key' => 'second',
 		], Arrays::in()->find( [
@@ -145,7 +148,7 @@ class ArraysTest extends \WP_UnitTestCase {
 	}
 
 
-	public function testArray_merge_recursive() : void {
+	public function testArray_merge_recursive(): void {
 		$default = [
 			'h' => 'x',
 			'y' => 'b',
@@ -186,9 +189,9 @@ class ArraysTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_array_flatten_assoc() : void {
+	public function test_array_flatten_assoc(): void {
 		$posts = get_posts();
-		$result = Arrays::in()->flatten_assoc( function ( \WP_Post $post ) {
+		$result = Arrays::in()->flatten_assoc( function( \WP_Post $post ) {
 			return [ $post->ID => $post->post_name ];
 		}, $posts );
 		$expected = [];
@@ -197,7 +200,7 @@ class ArraysTest extends \WP_UnitTestCase {
 		}
 		$this->assertEquals( $expected, $result );
 
-		$result = Arrays::in()->flatten_assoc( function ( \WP_Post $post ) {
+		$result = Arrays::in()->flatten_assoc( function( \WP_Post $post ) {
 			return [ $post->post_title => $post->post_name ];
 		}, $posts );
 		$expected = [];
@@ -208,7 +211,7 @@ class ArraysTest extends \WP_UnitTestCase {
 	}
 
 
-	public function test_list_pluck() : void {
+	public function test_list_pluck(): void {
 		$data = [
 			(object) [
 				'one'   => 'uno',

@@ -11,7 +11,7 @@ namespace Lipe\Lib\Post_Type;
 class Custom_Post_TypeTest extends \WP_UnitTestCase {
 
 	public function test_labels(): void {
-		$cpt = new Custom_Post_Type( 'wp-unit-testing' );
+		$cpt = new Post_Type( 'wp-unit-testing' );
 		$labels = $cpt->labels( 'Testing', 'Testings' );
 
 		$this->assertSame( 'Testing', $labels->get_label( Labels::SINGULAR_NAME ) );
@@ -20,12 +20,12 @@ class Custom_Post_TypeTest extends \WP_UnitTestCase {
 		$this->assertSame( 'Testing', $labels->get_label( Labels::SINGULAR_NAME ) );
 		$this->assertSame( 'Testings', $labels->get_label( Labels::NAME ) );
 
-		$cpt = new Custom_Post_Type( 'wp-unit-testing' );
+		$cpt = new Post_Type( 'wp-unit-testing' );
 		$labels = $cpt->labels();
 		$this->assertSame( 'Wp Unit Testing', $labels->get_label( Labels::SINGULAR_NAME ) );
 		$this->assertSame( 'Wp Unit Testings', $labels->get_label( Labels::NAME ) );
 
-		$cpt = new Custom_Post_Type( 'wp_unit_testing' );
+		$cpt = new Post_Type( 'wp_unit_testing' );
 		$labels = $cpt->labels();
 		$this->assertSame( 'Wp Unit Testing', $labels->get_label( Labels::SINGULAR_NAME ) );
 		$this->assertSame( 'Wp Unit Testings', $labels->get_label( Labels::NAME ) );
@@ -33,7 +33,7 @@ class Custom_Post_TypeTest extends \WP_UnitTestCase {
 
 
 	public function test_get_get_post_type_labels(): void {
-		$cpt = new Custom_Post_Type( 'wp-unit-testing' );
+		$cpt = new Post_Type( 'wp-unit-testing' );
 		$cpt->labels( 'Testing', 'Testings' );
 
 		$generated = call_private_method( $cpt, 'get_post_type_labels' );
@@ -44,13 +44,13 @@ class Custom_Post_TypeTest extends \WP_UnitTestCase {
 		$this->assertSame( 'Testing', $generated[ Labels::SINGULAR_NAME ] );
 		$this->assertSame( 'Testings', $generated[ Labels::NAME ] );
 
-		$cpt = new Custom_Post_Type( 'wp-unit-testing' );
+		$cpt = new Post_Type( 'wp-unit-testing' );
 		$cpt->labels();
 		$generated = call_private_method( $cpt, 'get_post_type_labels' );
 		$this->assertSame( 'Wp Unit Testing', $generated[ Labels::SINGULAR_NAME ] );
 		$this->assertSame( 'Wp Unit Testings', $generated[ Labels::NAME ] );
 
-		$cpt = new Custom_Post_Type( 'wp_unit_testing' );
+		$cpt = new Post_Type( 'wp_unit_testing' );
 		$generated = call_private_method( $cpt, 'get_post_type_labels' );
 		$this->assertSame( 'Wp Unit Testing', $generated[ Labels::SINGULAR_NAME ] );
 		$this->assertSame( 'Wp Unit Testings', $generated[ Labels::NAME ] );
@@ -58,15 +58,15 @@ class Custom_Post_TypeTest extends \WP_UnitTestCase {
 
 
 	public function test_automatic_rewrite_disabled(): void {
-		$cpt = new Custom_Post_Type( 'wp-unit-testing' );
+		$cpt = new Post_Type( 'wp-unit-testing' );
 		$cpt->public( false );
 		$this->assertFalse( $cpt->register_args->rewrite );
 
-		$cpt = new Custom_Post_Type( 'wp-unit-testing' );
+		$cpt = new Post_Type( 'wp-unit-testing' );
 		$cpt->publicly_queryable( false );
 		$this->assertFalse( $cpt->register_args->rewrite );
 
-		$cpt = new Custom_Post_Type( 'wp-unit-testing' );
+		$cpt = new Post_Type( 'wp-unit-testing' );
 		$cpt->rewrite( true );
 		$cpt->public( false );
 		$this->assertTrue( $cpt->register_args->rewrite );
@@ -76,7 +76,7 @@ class Custom_Post_TypeTest extends \WP_UnitTestCase {
 
 
 	public function test_add_support(): void {
-		$cpt = new Custom_Post_Type( 'wp-unit-testing' );
+		$cpt = new Post_Type( 'wp-unit-testing' );
 		$cpt->add_support( Register_Post_Type::SUPPORTS_TRACKBACKS );
 		$this->assertSame( [
 			...Post_Type::DEFAULT_SUPPORTS,
@@ -114,7 +114,7 @@ class Custom_Post_TypeTest extends \WP_UnitTestCase {
 
 
 	public function test_remove_support(): void {
-		$cpt = new Custom_Post_Type( 'wp-unit-testing' );
+		$cpt = new Post_Type( 'wp-unit-testing' );
 		$cpt->add_support( Register_Post_Type::SUPPORTS_TRACKBACKS );
 		$cpt->add_support( Register_Post_Type::SUPPORTS_POST_FORMATS );
 		$cpt->add_support( Register_Post_Type::SUPPORTS_EDITOR_NOTES );

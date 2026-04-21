@@ -159,6 +159,8 @@ class Custom_TableTest extends \WP_UnitTestCase {
 		// Single item.
 		$single = $this->db()->get( [ 'option_name' => 'start_of_week' ], 1 );
 		$this->assertCount( 1, $single );
+		$this->expectDeprecated( 'Lipe\Lib\Util\Arrays::find' );
+		$this->expectDeprecated( 'Lipe\Lib\Util\Arrays::find_index' );
 		$this->assertSame( $single[0], Arrays::in()->find( $all, fn( $item ) => 'start_of_week' === $item['option_name'] ) );
 
 		// Multiple items.
