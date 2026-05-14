@@ -28,6 +28,8 @@
         <exclude name="Generic.PHP.DisallowShortOpenTag.EchoFound" />
 
         <exclude name="LipePlugin.TypeHints.PreventStrictTypes" />
+
+        <exclude name="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents" />
     </rule>
 
     <!-- Allow the "lipe" or "Lipe" prefix for hooks, namespaces and functions -->
