@@ -6,6 +6,8 @@ namespace Lipe\Lib\Theme;
 /**
  * Full list of @wordpress/icons available on the PHP side.
  *
+ * @link     https://wordpress.github.io/gutenberg/?path=/story/icons-icon--library
+ *
  * @reauires WP 7.0+
  *
  * @author   Mat Lipe
