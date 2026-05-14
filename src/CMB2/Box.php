@@ -1132,7 +1132,7 @@ class Box {
 		$config = [
 			'single'      => true,
 			'type'        => 'string',
-			'description' => $registered->variation->desc ?? $registered->variation->name,
+			'description' => '' === $registered->variation->desc ? $registered->variation->name : $registered->variation->desc,
 			'label'       => $registered->variation->name,
 		];
 		if ( $registered->is_using_array_data() ) {
