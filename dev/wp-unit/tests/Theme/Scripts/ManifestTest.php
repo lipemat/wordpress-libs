@@ -51,6 +51,8 @@ class ManifestTest extends \WP_UnitTestCase {
 			'lipe/project/theme/master/css' => 'http://wp-libs.loc/wp-content/themes/twentytwentyfour/css-dist/master.min.css',
 			'lipe/project/theme/master/js'  => 'http://wp-libs.loc/wp-content/themes/twentytwentyfour/js-dist/master.js',
 
+			'lipe/project/theme/inline' => 'http://wp-libs.loc/wp-content/themes/twentytwentyfour/js-dist/inline.js',
+
 			'lipe-project/theme-font-awesome'  => 'https://kit.fontawesome.com/5f1bf1fe19.js',
 			'lipe-project/theme-versioned-css' => 'https://someotherplace.com/css/versioned.css?abritrayy',
 			'lipe-project/theme-versioned-js'  => 'https://unpgk@11.com/js/11/cooler.js?ver=1.0.0&d=DDDD',

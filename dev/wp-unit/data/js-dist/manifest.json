@@ -204,6 +204,11 @@
     "integrity": "sha384-JQjYKmhjrniQbmczWI9NA08R7JpiDAoAN4sjLjS4AfTTp2tvjrNaQ5ZsWbyqkNfk",
     "hash": "627273e28be242462c18"
   },
+  "inline.js": {
+    "src": "inline.js",
+    "integrity": "sha384-9sXo7n2mLh3qj8l5u+q1aQyHkKZt0vVh6n7e5z1sP4b9iYpXo+8uJr2c3f5e6g7h8",
+    "hash": "1234567890abcdef1234"
+  },
   "routes.6446d7086c5190a03520.js.br": {
     "src": "routes.6446d7086c5190a03520.js.br",
     "integrity": "sha384-SMIkCOyrOypnEfp5wjFAztVsVve0JHf80N5e8TfaXrXVh0fUZ8AeJMLRefieqDrw",

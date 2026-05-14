@@ -30,6 +30,7 @@ enum ScriptHandles: string implements ResourceHandles {
 	case FRONT_END_CSS = 'lipe/project/theme/front-end/css';
 	case MASTER_CSS    = 'lipe/project/theme/master/css';
 	case MASTER_JS     = 'lipe/project/theme/master/js';
+	case INLINE_JS     = 'lipe/project/theme/inline';
 
 	// External handles.
 	case FONT_AWESOME  = 'lipe-project/theme-font-awesome';
@@ -80,6 +81,7 @@ enum ScriptHandles: string implements ResourceHandles {
 
 			self::ADMIN_JS,
 			self::ADMIN_JS_CSS,
+			self::INLINE_JS,
 			self::MASTER_JS     => self::BOILER_JS,
 
 			self::FONT_AWESOME,
@@ -97,6 +99,7 @@ enum ScriptHandles: string implements ResourceHandles {
 			self::ADMIN_JS      => 'admin.js',
 			self::BLOCKS_CSS    => 'blocks.css',
 			self::FRONT_END_CSS => 'front-end.css',
+			self::INLINE_JS     => 'inline.js',
 			self::MASTER_CSS    => 'master.css',
 			self::MASTER_JS     => 'master.js',
 
@@ -151,9 +154,10 @@ enum ScriptHandles: string implements ResourceHandles {
 
 	public function is_inline(): bool {
 		return match ( $this ) {
-			self::BLOCKS_CSS => true,
+			self::BLOCKS_CSS,
+			self::INLINE_JS => true,
 
-			default          => false,
+			default         => false,
 		};
 	}
 
