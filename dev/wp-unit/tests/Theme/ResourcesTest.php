@@ -73,46 +73,46 @@ class ResourcesTest extends \WP_UnitTestCase {
 
 	public function test_async_javascript(): void {
 		[ $url, $callback ] = $this->get_script_handler();
-		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+		$this->assertEqualHTML( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
 		[ $url, $callback, $handle ] = $this->get_script_handler();
 		wp_script_add_data( $handle, 'strategy', 'async' );
-		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js' async data-wp-strategy='async'></script>" . "\n", $callback() );
+		$this->assertEqualHTML( "<script src='" . $url . "' id='arbuitrary-js' async data-wp-strategy='async'></script>" . "\n", $callback() );
 	}
 
 
 	public function test_defer_javascript(): void {
 		[ $url, $callback ] = $this->get_script_handler();
-		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+		$this->assertEqualHTML( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
 		[ $url, $callback, $handle ] = $this->get_script_handler();
 		wp_script_add_data( $handle, 'strategy', 'defer' );
-		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js' defer data-wp-strategy='defer'></script>" . "\n", $callback() );
+		$this->assertEqualHTML( "<script src='" . $url . "' id='arbuitrary-js' defer data-wp-strategy='defer'></script>" . "\n", $callback() );
 	}
 
 
 	public function test_integrity_javascript(): void {
 		[ $url, $callback ] = $this->get_script_handler();
-		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+		$this->assertEqualHTML( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
 
 		[ $url, $callback, $handle ] = $this->get_script_handler();
 		Resources::in()->integrity_javascript( $handle, '' );
-		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+		$this->assertEqualHTML( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
 
 		Resources::in()->integrity_javascript( $handle, 'sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7' );
-		$this->assertEquals( "<script integrity='sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7' crossorigin='anonymous' src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+		$this->assertEqualHTML( "<script integrity='sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7' crossorigin='anonymous' src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
 	}
 
 
 	public function test_crossorigin_javascript(): void {
 		[ $url, $callback ] = $this->get_script_handler();
-		$this->assertEquals( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+		$this->assertEqualHTML( "<script src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
 
 		[ $url, $callback, $handle ] = $this->get_script_handler();
 		Resources::in()->crossorigin_javascript( $handle );
-		$this->assertEquals( "<script crossorigin src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+		$this->assertEqualHTML( "<script crossorigin src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
 
 		[ $url, $callback, $handle ] = $this->get_script_handler();
 		Resources::in()->crossorigin_javascript( $handle, 'anonymous' );
-		$this->assertEquals( "<script crossorigin='anonymous' src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
+		$this->assertEqualHTML( "<script crossorigin='anonymous' src='" . $url . "' id='arbuitrary-js'></script>" . "\n", $callback() );
 	}
 
 
