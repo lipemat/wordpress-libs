@@ -1,0 +1,18 @@
+title: WordPress Libs
+description: WordPress library which supports a core plugin and theme
+theme: just-the-docs
+url: https://lipemat.github.io
+baseurl: /wordpress-libs
+
+color_scheme: dark
+
+aux_links:
+  "GitHub":
+    - "https://github.com/lipemat/wordpress-libs"
+
+search_enabled: true
+heading_anchors: true
+
+nav_sort: case_insensitive
+
+footer_content: "WordPress Libs by Mat Lipe. MIT License."

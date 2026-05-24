@@ -1,0 +1,67 @@
+---
+---
+
+// Darcula color scheme overrides for Just the Docs
+$body-background-color: #2B2B2B !default;
+$sidebar-color: #313335 !default;
+$body-text-color: #A9B7C6 !default;
+$link-color: #6897BB !default;
+$nav-child-link-color: #A9B7C6 !default;
+$code-background-color: #1e1e1e !default;
+$code-linenumber-color: #6897BB !default;
+$border-color: #4A4A4A !default;
+$table-background-color: #313335 !default;
+$feedback-color: darken(#2B2B2B, 2%) !default;
+$base-button-color: #313335 !default;
+$btn-primary-color: #CC7832 !default;
+$search-background-color: #313335 !default;
+$search-result-preview-color: #A9B7C6 !default;
+$nav-filter-button-icon-color: #A9B7C6 !default;
+
+@import "just-the-docs";
+
+.site-title {
+  color: #FFC66D !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #FFC66D;
+}
+
+.nav-list .nav-list-item .nav-list-link.active {
+  color: #CC7832 !important;
+}
+
+code {
+  background-color: #1e1e1e !important;
+  color: #A9B7C6 !important;
+  border-color: #4A4A4A !important;
+}
+
+pre {
+  background-color: #1e1e1e !important;
+  border-color: #4A4A4A !important;
+}
+
+pre code {
+  color: #A9B7C6 !important;
+}
+
+.search-input {
+  background-color: #313335 !important;
+  color: #A9B7C6 !important;
+  border-color: #4A4A4A !important;
+}
+
+.search-results-list-item {
+  background-color: #313335 !important;
+}
+
+table {
+  border-color: #4A4A4A;
+}
+
+th {
+  background-color: #313335;
+  color: #FFC66D;
+}
