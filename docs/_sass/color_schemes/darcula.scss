@@ -1,0 +1,75 @@
+$color-scheme: dark;
+
+$body-background-color: #2b2b2b;
+$sidebar-color: #3c3f41;
+$search-background-color: #45494a;
+$table-background-color: #313335;
+$code-background-color: #2b2b2b;
+$feedback-color: #2f3133;
+
+$body-text-color: #a9b7c6;
+$body-heading-color: #ffc66d;
+$nav-child-link-color: #a9b7c6;
+$search-result-preview-color: #808080;
+$link-color: #6897bb;
+$btn-primary-color: #6897bb;
+$base-button-color: #3c3f41;
+
+$border-color: #555555;
+$code-linenumber-color: #606366;
+
+.main-content {
+	pre.highlight,
+	code {
+		color: #a9b7c6;
+		background-color: #2b2b2b;
+	}
+
+	blockquote {
+		border-left-color: #6897bb;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		color: #ffc66d;
+	}
+
+	a {
+		color: #6897bb;
+
+		&:hover {
+			color: lighten(#6897bb, 10%);
+		}
+	}
+
+	table {
+		th {
+			background-color: #3c3f41;
+			color: #ffc66d;
+		}
+
+		td {
+			background-color: #313335;
+		}
+	}
+}
+
+.highlight {
+	.c, .c1, .cm, .cs { color: #808080; font-style: italic; }
+	.k, .kd, .kn, .kp, .kr, .kt { color: #cc7832; font-weight: bold; }
+	.s, .s1, .s2, .sb, .sc, .sd, .se, .sh, .si, .sx, .sr, .ss { color: #6a8759; }
+	.n, .na, .nb, .nc, .nd, .ne, .nf, .ni, .nl, .nn, .no, .nx, .py, .nt, .nv { color: #a9b7c6; }
+	.nf, .fm { color: #ffc66d; }
+	.nv, .vc, .vg, .vi { color: #9876aa; }
+	.mi, .mf, .mh, .mo, .il { color: #6897bb; }
+	.o, .ow { color: #a9b7c6; }
+	.p { color: #a9b7c6; }
+	.err { color: #ff6b68; background-color: transparent; }
+	.gh, .gu { color: #ffc66d; font-weight: bold; }
+	.gd { color: #ff6b68; }
+	.gi { color: #6a8759; }
+}
