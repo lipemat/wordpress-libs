@@ -186,3 +186,5 @@ The variation classes adapt a base `Field` into more specific fluent builders:
 Use `Field::from()` internally to translate a base field into the appropriate variation wrapper.
 
 Callback/config state is now exposed via typed `protected(set)` properties, so consumers can inspect values directly (for example on `Box`, `Field`, `Group`, `Options_Page`, and Variation classes) without relying on `get_config()`.
+
+`Field::default()` now accepts only `string|array`; use `Field::default_cb(\Closure $callback)` for dynamic defaults.
