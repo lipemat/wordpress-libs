@@ -74,11 +74,11 @@ if (Route::in()->is_current_route('account/orders')) {
 
 ## `Wp_Remote`
 
-A fluent interface for building request arguments before calling WordPress HTTP functions.
+A fluent interface for building request arguments before calling WordPress HTTP functions. HTTP method constants (`METHOD_GET`, `METHOD_POST`, `METHOD_HEAD`, `METHOD_PUT`, `METHOD_DELETE`, `METHOD_TRACE`, `METHOD_OPTIONS`, `METHOD_PATCH`) are exposed for use with `wp_remote_request()`.
 
 ### Key public methods
 
-- `public function header(string $key, string $value): static`
+- `public function header( string $key, string $value ): static`
 - `public function get_args(): array`
 
 ### Example
@@ -87,11 +87,11 @@ A fluent interface for building request arguments before calling WordPress HTTP 
 <?php
 use Lipe\Lib\Api\Wp_Remote;
 
-$args = (new Wp_Remote([]))
-    ->header('Accept', 'application/json')
+$args = ( new Wp_Remote( [] ) )
+    ->header( 'Accept', 'application/json' )
     ->get_args();
 
-$response = wp_remote_get('https://example.com/api/books', $args);
+$response = wp_remote_get( 'https://example.com/api/books', $args );
 ```
 
 ## `Zip`
@@ -100,11 +100,11 @@ Handles creation and delivery of ZIP archives from a simple POST-driven endpoint
 
 ### Key public methods
 
-- `public function handle_request(): void`
-- `public function build_zip(array $files, ?string $zip_name = null): void`
-- `public function get_post_data_to_send(array $urls, ?string $name = null): array`
-- `public function get_url_for_endpoint(): string`
 - `public static function init(): void`
+- `public function handle_request(): void`
+- `public function build_zip( array $files, ?string $zip_name = null ): void`
+- `public function get_post_data_to_send( array $urls, ?string $name = null ): array`
+- `public function get_url_for_endpoint(): string`
 
 ### Example
 

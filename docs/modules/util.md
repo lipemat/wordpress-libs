@@ -45,6 +45,9 @@ Helper methods for advanced action/filter registration patterns.
 - `public function add_single_action(string $action, callable $callback, int $priority = 10): void`
 - `public function remove_action_always(string $action, callable $callback, int $priority = 10): void`
 - `public function remove_filter_always(string $filter, callable $callback, int $priority = 10): void`
+- `public function add_filter_during(string $filter, callable $callback, string $start, string $end, int $priority = 10): void`
+- `public function add_looping_action(string $action, callable $callback, int $priority = 10): void`
+- `public function add_looping_filter(string $filter, callable $callback, int $priority = 10): void`
 
 ## `Arrays`
 
@@ -57,8 +60,11 @@ Array transformation helpers.
 - `public function map_recursive(callable $callback, array $input_array): array`
 - `public function merge_recursive(array $args, array $defaults): array`
 - `public function map_assoc(callable $callback, array $input_array): array`
+- `public function recursive_unset(string $key, array $input_array): array`
 - `public function find(array $items, callable $callback)`
 - `public function find_index(array $items, callable $callback)`
+- `public function flatten_assoc(callable $callback, array $input_array): array`
+- `public function list_pluck(array $input_array, array $keys): array`
 
 ## `Autoloader`
 
@@ -84,6 +90,7 @@ Object-cache helper with support for complex keys and group flushing.
 - `public function delete(object|array|int|string $key, string $group = self::DEFAULT_GROUP): bool`
 - `public function flush_group(string $group = self::DEFAULT_GROUP): void`
 - `public function flush_runtime_cache(): void`
+- `public function add_admin_bar_button(\WP_Admin_Bar $admin_bar): void`
 
 ## Other utility classes
 

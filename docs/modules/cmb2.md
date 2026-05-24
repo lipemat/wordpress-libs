@@ -59,7 +59,10 @@ The main CMB2 box wrapper. It collects fields, groups, REST settings, tabs, and 
 - `public function description(string $description): void`
 - `public function show_in_rest($methods = \WP_REST_Server::READABLE): void`
 - `public function add_tab(string $id, string $label): void`
+- `public function tabs_style(string $layout): void`
+- `public function remove_box_wrap(bool $remove_box_wrap = true): void`
 - `public function get_cmb2_box(): \CMB2`
+- `public function get_box_type(): BoxType`
 
 ### Example
 
@@ -144,6 +147,31 @@ Specialized box subclasses for term, user, and comment screens.
 - `public function __construct(string $id, string $title)` (`User_Box`)
 - `public function __construct(string $id, string $title)` (`Comment_Box`)
 - `public function context(string $context): void` (`Comment_Box`)
+
+## `Field_Type`
+
+Factory exposed via `Box::field()` and `Group::field()` that returns the appropriate concrete CMB2 field type. Each method corresponds to a CMB2 field type and returns either a base `Field` or the matching variation builder.
+
+### Selected public methods
+
+- `public function title(): Field`
+- `public function text(): Text`
+- `public function text_url(?array $protocols = null): TextUrl`
+- `public function textarea(?int $rows = null): Text`
+- `public function text_date(string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = []): Date`
+- `public function checkbox(string $layout = Field\Checkbox::LAYOUT_BLOCK): Variation\Checkbox`
+- `public function true_false(): Variation\Checkbox`
+- `public function select(array|callable $options_or_callback, bool|string $show_option_none = true): Options`
+- `public function radio(callable|array $options_or_callback, bool|string $show_option_none = true): Options`
+- `public function multicheck(callable|array $options_or_callback, bool $select_all = true): Options`
+- `public function taxonomy_select(string $taxonomy, ?string $no_terms_text = null, ?bool $remove_default = null): Taxonomy`
+- `public function taxonomy_select_2(string $taxonomy, bool $assign_terms = false, ?string $no_terms_text = null, ?bool $remove_default = null): Taxonomy`
+- `public function wysiwyg(array $mce_options = []): Wysiwyg`
+- `public function file(?string $button_text = null, ?string $file_mime_type = null, ?bool $show_text_input = null, ?string $preview_size = null, ?string $select_text = null): File`
+- `public function image(string $button_text = 'Add Image', ?bool $show_text_input = null, ?string $preview_size = null): File`
+- `public function group(?string $title = null): Field`
+
+Additional methods cover small/medium/email text, money/number text, hidden inputs, oEmbed, color pickers, the full date/timestamp/timezone family, taxonomy radio/multicheck variants, and `file_list`. Refer to `src/CMB2/Field/Field_Type.php` for the complete list.
 
 ## Variations and field helpers
 

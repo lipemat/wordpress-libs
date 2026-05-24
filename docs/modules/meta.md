@@ -18,7 +18,6 @@ The Meta module ties together field registration, meta translation, validation, 
 - `Lipe\Lib\Meta\Meta_Box`
 - `Lipe\Lib\Meta\Mutator_Trait`
 - `Lipe\Lib\Meta\Register_Meta`
-- `Lipe\Lib\Meta\Registered`
 - `Lipe\Lib\Meta\Repo`
 - `Lipe\Lib\Meta\Translate` (trait)
 - `Lipe\Lib\Meta\Validation`
@@ -84,20 +83,39 @@ use Lipe\Lib\Meta\Repo;
 $value = Repo::in()->get_value(42, 'isbn', MetaType::POST);
 ```
 
-## `Mutator_Trait`
+## `Registered`
 
-Trait used by post, user, term, site, and network wrappers to route property access into the meta repository.
+Readonly value object returned by `Repo::register_field()` representing a CMB2 field after it has been registered. Provides typed accessors for the field's configuration without polluting the `Field` builder with read-only helpers.
 
 ### Key public methods
 
-- `public function __get(string $name)`
-- `public function __set(string $name, $value)`
-- `public function __call(string $name, array $arguments)`
-- `public function get_meta(string $key, mixed $default_value = null): mixed`
-- `public function update_meta(string $key, mixed $value, mixed $callback_default = null): void`
-- `public function delete_meta(string $key): void`
+- `public static function factory(Field $variation): static`
+- `public function are_revisions_enabled(): bool`
+- `public function get_box(): \Lipe\Lib\CMB2\Box`
+- `public function get_cmb2_field(int|string $object_id = 0): ?\CMB2_Field`
+- `public function get_config(): array`
+- `public function get_data_type(): DataType`
+- `public function get_default(null|int|string $object_id = null): mixed`
+- `public function get_description(): ?string`
+- `public function get_escape_cb(): ?callable`
+- `public function get_group(): ?\Lipe\Lib\CMB2\Group`
+- `public function get_id(): string`
+- `public function get_meta_sanitizer(): ?callable`
+- `public function get_position(): int`
+- `public function get_rest_short_name(): string`
+- `public function get_sanitization_cb(): ?callable`
+- `public function get_show_in_rest(): string|bool`
+- `public function get_text(string $key): ?string`
+- `public function get_type(): \Lipe\Lib\CMB2\Field\Type`
+- `public function has_rest_short_name(): bool`
+- `public function is_allowed_to_register_meta(): bool`
+- `public function is_public_rest_data(): bool`
+- `public function is_repeatable(): bool`
+- `public function is_using_array_data(): bool`
+- `public function is_using_object_data(): bool`
 
-## Supporting enums and validation
+## `Mutator_Trait`
+
 
 - `DataType` and `MetaType` enumerate supported storage shapes and WordPress meta object types.
 - `Validation` exposes `public function warn_for_repeatable_group_sub_fields(string $field_id, ?Registered $registered): void` and `public function warn_for_conflicting_taxonomies(array $registered): void`.

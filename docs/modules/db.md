@@ -38,8 +38,12 @@ High-level helper for reading and writing rows in a custom table.
 - `public function get_by_id(int $id): ?array`
 - `public function add(array $columns): ?int`
 - `public function delete(int $id): bool`
+- `public function delete_where(array $where): bool|int`
 - `public function update(int $id, array $columns): bool`
+- `public function update_where(array $where, array $columns): bool|int`
 - `public function replace(array $columns): int|bool`
+- `public function get_select_query(array $columns, array $where, ?int $count = null, ?string $order_by = null, string $order = 'ASC', ?int $offset = null): string`
+- `public function get_wpdb(): \wpdb`
 - `public static function factory(Table $config): static`
 
 ### Example
