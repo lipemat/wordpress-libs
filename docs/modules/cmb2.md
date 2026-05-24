@@ -8,9 +8,9 @@ nav_order: 4
 
 ## Overview
 
-The CMB2 module is one of the largest parts of the library. It provides a fluent interface for creating CMB2 boxes, fields, groups, options pages, and field variations while also integrating with the library's meta repository and REST helpers.
+The CMB2 module is one of the largest parts of the library. It provides a fluent interface for creating CMB2 boxes, fields, groups, options pages, and field variations while also integrating with the library's meta repository and REST helpers. In v6.0 beta, callback registration arguments were tightened to `\Closure` and many config properties became `protected(set)` for public read access.
 
-## Primary types
+## Types in this module
 
 - `Lipe\Lib\CMB2\Box`
 - `Lipe\Lib\CMB2\Field`
@@ -20,20 +20,18 @@ The CMB2 module is one of the largest parts of the library. It provides a fluent
 - `Lipe\Lib\CMB2\User_Box`
 - `Lipe\Lib\CMB2\Comment_Box`
 
-## Supporting types
-
 - `Lipe\Lib\CMB2\Box\BoxType` (enum)
 - `Lipe\Lib\CMB2\Box\Tabs`
 - `Lipe\Lib\CMB2\Field\Checkbox`
 - `Lipe\Lib\CMB2\Field\Default_Callback`
 - `Lipe\Lib\CMB2\Field\Display` (trait)
-- `Lipe\Lib\CMB2\Field\Event_Callbacks` (trait)
+- `Lipe\Lib\CMB2\Field\Event_Callbacks`
 - `Lipe\Lib\CMB2\Field\Field_Type`
 - `Lipe\Lib\CMB2\Field\Term_Select_2`
 - `Lipe\Lib\CMB2\Field\Term_Select_2\Select_2_Field`
 - `Lipe\Lib\CMB2\Field\True_False`
 - `Lipe\Lib\CMB2\Field\Type` (enum)
-- `Lipe\Lib\CMB2\Group\Layout` (enum)
+- `Lipe\Lib\CMB2\Group\Layout`
 - `Lipe\Lib\CMB2\Group\Max_Rows`
 - `Lipe\Lib\CMB2\Variation\Checkbox`
 - `Lipe\Lib\CMB2\Variation\Date`
@@ -82,9 +80,9 @@ Represents a single CMB2 field and exposes shared field configuration for column
 
 ### Key public methods
 
-- `public function column(bool|int $position = false, string $name = '', ?callable $display_cb = null, bool $disable_sorting = false): static`
+- `public function column(bool|int $position = false, string $name = '', ?\Closure $display_cb = null, bool $disable_sorting = false): static`
 - `public function attributes(array $attributes): static`
-- `public function default(callable|string|array $default_value): static`
+- `public function default(string|array $default_value): static`
 - `public function description(string $description): static`
 - `public function repeatable(bool $repeatable = true, ?string $add_row_text = null): static`
 - `public function show_in_rest(bool|string $methods = \WP_REST_Server::ALLMETHODS): static`
@@ -121,7 +119,8 @@ Extends `Box` for CMB2-backed settings pages, including network-aware storage be
 - `public function network(bool $is_network = true): void`
 - `public function position(int $position): void`
 - `public function icon(string|Dashicons $icon): void`
-- `public function display_cb(callable $display_cb): void`
+- `public function display_cb(\Closure $display_cb): void`
+- `public function message_cb(\Closure $message_cb): void`
 - `public function save_button(?string $text): void`
 - `public function is_network(): bool`
 
@@ -161,9 +160,9 @@ Factory exposed via `Box::field()` and `Group::field()` that returns the appropr
 - `public function text_date(string $date_format = 'm/d/Y', string $timezone_meta_key = '', array $date_picker_options = []): Date`
 - `public function checkbox(string $layout = Field\Checkbox::LAYOUT_BLOCK): Variation\Checkbox`
 - `public function true_false(): Variation\Checkbox`
-- `public function select(array|callable $options_or_callback, bool|string $show_option_none = true): Options`
-- `public function radio(callable|array $options_or_callback, bool|string $show_option_none = true): Options`
-- `public function multicheck(callable|array $options_or_callback, bool $select_all = true): Options`
+- `public function select(array|\Closure $options_or_callback, bool|string $show_option_none = true): Options`
+- `public function radio(\Closure|array $options_or_callback, bool|string $show_option_none = true): Options`
+- `public function multicheck(\Closure|array $options_or_callback, bool $select_all = true): Options`
 - `public function taxonomy_select(string $taxonomy, ?string $no_terms_text = null, ?bool $remove_default = null): Taxonomy`
 - `public function taxonomy_select_2(string $taxonomy, bool $assign_terms = false, ?string $no_terms_text = null, ?bool $remove_default = null): Taxonomy`
 - `public function wysiwyg(array $mce_options = []): Wysiwyg`
@@ -179,9 +178,11 @@ The variation classes adapt a base `Field` into more specific fluent builders:
 
 - `Variation\Date` adds `public function date_format(string $date_format): Date` and timezone helpers.
 - `Variation\File` adds `public function file_query_args(Get_Posts $args): static` and `public function preview_size(string $preview_size): static`.
-- `Variation\Options` adds `public function options(array $options): Options` and `public function options_cb(callable $options_cb): Options`.
+- `Variation\Options` adds `public function options(array $options): Options` and `public function options_cb(\Closure $options_cb): Options`.
 - `Variation\Taxonomy` adds `public function taxonomy_args(string $taxonomy, ?string $no_terms_text = null, ?bool $remove_default = null): array` and `public function get_taxonomy(): string`.
 - `Variation\TextUrl` adds `public function protocols(array $protocols): static`.
 - `Variation\Text` adds `public function char_counter(bool $count_words = false, ?int $max = null, bool $enforce = false, array $labels = []): static`.
 
 Use `Field::from()` internally to translate a base field into the appropriate variation wrapper.
+
+Callback/config state is now exposed via typed `protected(set)` properties, so consumers can inspect values directly (for example on `Box`, `Field`, `Group`, `Options_Page`, and Variation classes) without relying on `get_config()`.

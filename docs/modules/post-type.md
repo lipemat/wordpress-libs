@@ -13,7 +13,6 @@ The Post Type module covers custom post type registration, label and capability 
 ## Types in this module
 
 - `Lipe\Lib\Post_Type\Capabilities`
-- `Lipe\Lib\Post_Type\Custom_Post_Type` (deprecated)
 - `Lipe\Lib\Post_Type\Labels`
 - `Lipe\Lib\Post_Type\Post_List_Column`
 - `Lipe\Lib\Post_Type\Post_List_Filter`
@@ -24,7 +23,6 @@ The Post Type module covers custom post type registration, label and capability 
 - `Lipe\Lib\Post_Type\Wp_Insert_Post`
 - `Lipe\Lib\Post_Type\Post_List_Column\Filter` (interface)
 - `Lipe\Lib\Post_Type\Post_List_Column\ListColumn` (interface)
-- `Lipe\Lib\Post_Type\Custom_Post_Type\Register_Post_Type` (deprecated)
 
 ## `Post_Type`
 
@@ -34,6 +32,7 @@ Primary fluent wrapper for registering a custom post type and related admin beha
 
 - `public function __construct(string $post_type)`
 - `public function labels(string $singular = '', string $plural = ''): Labels`
+- `public function featured_image_labels(string $label): void`
 - `public function gutenberg_template(array $template, bool|string $template_lock = false): Post_Type`
 - `public function capabilities(): Capabilities`
 - `public function archive_label(string $label): void`
@@ -96,4 +95,3 @@ Fluent capability builder used by `Post_Type`.
 
 - `Post_Object_Trait` wraps a `WP_Post` and exposes `get_object()`, `get_id()`, `exists()`, and `factory()`.
 - `Register_Post_Status`, `Register_Post_Type`, and `Wp_Insert_Post` are fluent arg objects for the corresponding WordPress core functions.
-- `Custom_Post_Type` and `Custom_Post_Type\Register_Post_Type` are deprecated compatibility layers.
