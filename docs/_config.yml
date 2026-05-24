@@ -1,0 +1,22 @@
+title: WordPress Libs
+description: WordPress library which supports a core plugin and theme
+remote_theme: just-the-docs/just-the-docs@v0.10.0
+url: https://lipemat.github.io
+baseurl: /wordpress-libs
+permalink: pretty
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+
+color_scheme: darcula
+
+aux_links:
+  "GitHub":
+    - "https://github.com/lipemat/wordpress-libs"
+
+search_enabled: true
+heading_anchors: true
+
+nav_sort: case_insensitive
+
+footer_content: "WordPress Libs by Mat Lipe. MIT License."
