@@ -8,7 +8,7 @@ nav_order: 18
 
 ## Overview
 
-The Taxonomy module handles taxonomy registration, labels, capabilities, admin menu placement, custom taxonomy meta boxes, term query helpers, and object wrapping for individual terms.
+The Taxonomy module handles taxonomy registration, labels, capabilities, admin menu placement, custom taxonomy meta boxes, term query helpers, and object wrapping for individual terms. Legacy `store_user_terms_in_meta` behavior has been removed in v6.0 beta.
 
 ## Types in this module
 

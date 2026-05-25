@@ -30,7 +30,6 @@ The Util module gathers the library's general-purpose helpers: actions, arrays, 
 - `Lipe\Lib\Util\Logger\Level` (enum)
 - `Lipe\Lib\Util\Logger\Query_Monitor`
 - `Lipe\Lib\Util\Logger\Testing`
-- `Lipe\Lib\Util\Logger\WithContext` (interface)
 
 ## `Actions`
 
@@ -61,8 +60,6 @@ Array transformation helpers.
 - `public function merge_recursive(array $args, array $defaults): array`
 - `public function map_assoc(callable $callback, array $input_array): array`
 - `public function recursive_unset(string $key, array $input_array): array`
-- `public function find(array $items, callable $callback)`
-- `public function find_index(array $items, callable $callback)`
 - `public function flatten_assoc(callable $callback, array $input_array): array`
 - `public function list_pluck(array $input_array, array $keys): array`
 
@@ -105,8 +102,7 @@ Object-cache helper with support for complex keys and group flushing.
 ## Logging subsystem
 
 - `Logger` is the main entry point and exposes `warn()`, `error()`, `notice()`, `debug()`, and `factory()`.
-- `Logger\Handle` defines `public function log(string $id, Level $level, string $message): void`.
-- `Logger\WithContext` adds `public function provide_context(array $context): void`.
+- `Logger\Handle` defines `public function log(string $id, Level $level, string $message): void` and `public function provide_context(array $context): void`.
 - `Logger\Handles` stores named log handles via `get_handles()`, `register_handle()`, and `unregister_handle()`.
 - `Logger\Error_Log`, `Logger\Query_Monitor`, and `Logger\Testing` are concrete handle implementations.
 - `Logger\Level` is the enum of supported log levels.

@@ -15,6 +15,7 @@ The Theme module contains helpers for front-end assets, manifest-driven script l
 - `Lipe\Lib\Theme\CSS_Modules`
 - `Lipe\Lib\Theme\Class_Names`
 - `Lipe\Lib\Theme\Dashicons` (enum)
+- `Lipe\Lib\Theme\Icons` (enum)
 - `Lipe\Lib\Theme\Register_Sidebar`
 - `Lipe\Lib\Theme\Resources`
 - `Lipe\Lib\Theme\Template`
@@ -102,4 +103,11 @@ Theme template helpers.
 ## Additional theme helpers
 
 - `Dashicons` enumerates core dashicon values and exposes `public function icon(string|\BackedEnum $class_name = ''): string`.
+- `Icons` maps to the WordPress 7.0+ icon registry and exposes `public function icon(string|\BackedEnum $class_name = ''): string` and `public function svg_url(): string`.
 - `Register_Sidebar` is the fluent args wrapper for `register_sidebar()`.
+
+## Notes for v6.0 beta changes
+
+- `Scripts\Enqueue` no longer exposes a `get_manifest()` method; consumers should interact with `enqueue()`, `register()`, `get_file()`, `get_version()`, and `get_integrity()`.
+- `Scripts\ResourceHandles` implementations must provide a real `dist_path()`; the old `CSS_ENUM_HANDLE` fallback is no longer used.
+- Inline JavaScript registration now runs in corrected order in `Scripts\Common::theme_scripts()`.
