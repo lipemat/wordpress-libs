@@ -63,7 +63,7 @@ are not listed below; see the parent module's documentation for usage.
 ```php
 use Lipe\Lib\Query\Get_Posts;
 
-$args = new Get_Posts();
+$args = new Get_Posts( [] );
 $args->post_type      = 'book';
 $args->posts_per_page = 10;
 $args->orderby        = 'date';
