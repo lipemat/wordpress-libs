@@ -8,6 +8,9 @@ has_children: true
 
 WordPress Libs is organized as small, focused modules. Most modules provide fluent wrappers around WordPress APIs, while shared traits and utilities support consistent behavior across the package.
 
+For a single-page index of every fluent wrapper around a WordPress core
+function, see [Fluent Interfaces](../fluent-interfaces/).
+
 - [API](api/) — rewrite-endpoint API, route resolution, remote calls, and ZIP responses.
 - [Args](args/) — reusable fluent-args and nested-clause building blocks.
 - [Blocks](blocks/) — block registration, attributes, and `supports` builders.

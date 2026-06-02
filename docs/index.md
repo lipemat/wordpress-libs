@@ -43,6 +43,8 @@ $books->labels('Book', 'Books');
 
 ## Module overview
 
+For detailed module docs, start at [Modules](modules/).
+
 | Module | Summary |
 | --- | --- |
 | [API](modules/api/) | Rewrite-endpoint API helpers, route handling, remote requests, and ZIP delivery. |
@@ -68,4 +70,7 @@ $books->labels('Book', 'Books');
 | [User](modules/user/) | User object traits plus user query, update, and login form builders. |
 | [Util](modules/util/) | General utility helpers for arrays, cache, cryptography, logging, URLs, and versions. |
 
-For detailed module docs, start at [Modules](modules/).
+## Fluent Fnterfaces
+
+For a single-page list of all fluent wrappers around WordPress core
+functions, see [Fluent Interfaces](fluent-interfaces/).
