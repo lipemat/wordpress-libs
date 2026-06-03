@@ -11,9 +11,9 @@ type EntriesConfig = {
 	[ file: string ]: string[];
 };
 
-module.exports = function( config: EntriesConfig ): EntriesConfig {
+export default function( config: EntriesConfig ): EntriesConfig {
 	config[ 'block-editor' ] = [
 		'block-editor.ts',
 	];
 	return config;
-};
+}

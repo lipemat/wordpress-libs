@@ -1,12 +1,14 @@
 {
-  "extends": "@lipemat/js-boilerplate/config/tsconfig.json",
+  "extends": "@lipemat/js-boilerplate-shared/config/tsconfig.json",
   "$schema": "https://json.schemastore.org/tsconfig",
   "include": [
+    "config/**/*",
     "js/src/**/*",
     "js/jest/**/*",
     "js/types/**/*"
   ],
   "compilerOptions": {
+    "baseUrl": ".",
     "strict": true,
     "verbatimModuleSyntax": true
   }

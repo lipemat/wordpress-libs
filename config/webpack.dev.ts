@@ -1,9 +1,9 @@
-import type {Configuration, RuleSetRule} from 'webpack';
+import type {Configuration} from 'webpack';
 
 /**
  * - Allow running multiple entry points in the same runtime.
  */
-module.exports = ( config: Configuration ) => {
+export default ( config: Configuration ) => {
 	if ( typeof config.optimization === 'object' ) {
 		config.optimization.runtimeChunk = 'single';
 	}

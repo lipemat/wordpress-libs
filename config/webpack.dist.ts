@@ -23,7 +23,7 @@ function isArrayOfUse( use: RuleSetRule['use'] ): use is ExtractArray<RuleSetRul
  * - Enable source maps for dist builds because we're not supporting start.
  * - Use style-loader instead of extracting CSS to a file.
  */
-module.exports = ( config: AtLeast<Configuration, 'module'> ) => {
+export default ( config: AtLeast<Configuration, 'module'> ) => {
 	config.devtool = 'source-map';
 
 	let ruleIndex = config.module.rules?.findIndex( rule => {
