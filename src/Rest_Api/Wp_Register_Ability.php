@@ -26,6 +26,10 @@ class Wp_Register_Ability implements ArgsRules {
 	public const string ANNOTATION_DESTRUCTIVE = 'destructive';
 	public const string ANNOTATION_IDEMPOTENT  = 'idempotent';
 
+	public const string MCP_TYPE_TOOL     = 'tool';
+	public const string MCP_TYPE_PROMPT   = 'prompt';
+	public const string MCP_TYPE_RESOURCE = 'resource';
+
 	/**
 	 * The human-readable label for the ability.
 	 *
@@ -90,9 +94,26 @@ class Wp_Register_Ability implements ArgsRules {
 	/**
 	 * Additional configuration for the ability.
 	 *
+	 * `mcp` configuration requires to the `mcp-adapter` plugin to
+	 * have any effect.
+	 *
+	 * @link https://github.com/WordPress/mcp-adapter
+	 *
 	 * @phpstan-var array{
 	 *     annotations?: array<self::ANNOTATION_*, bool>,
 	 *     show_in_rest?: bool,
+	 *
+	 *     mcp: array{
+	 *        arguments?: list<array<string,mixed>>,
+	 *        icons?: array{
+	 *            src: string,
+	 *            mimeType?: 'image/png'|'image/jpeg' |'image/jpg'|'image/svg+xml'|'image/webp',
+	 *            sizes?: array<string>,
+	 *              theme?: 'light'|'dark'
+	 *        },
+	 *        public?: bool,
+	 *        type?: self::MCP_TYPE_*
+	 *     }
 	 * }
 	 * @var array<string, mixed>
 	 */
