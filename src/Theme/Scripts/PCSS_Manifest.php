@@ -14,6 +14,11 @@ use Lipe\Lib\Theme\Resources;
  */
 class PCSS_Manifest implements Manifest {
 	/**
+	 * Default LiveReload port when a `.running` file is not available.
+	 */
+	public const int LIVE_RELOAD_PORT = 35729;
+
+	/**
 	 * Cache of the manifest file.
 	 *
 	 * @var array<string,string>

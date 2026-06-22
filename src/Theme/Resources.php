@@ -3,6 +3,9 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Theme;
 
+use Lipe\Lib\Theme\Scripts\PCSS_Manifest;
+use Lipe\Lib\Theme\Scripts\ResourceHandles;
+use Lipe\Lib\Theme\Scripts\Util;
 use Lipe\Lib\Traits\Memoize;
 use Lipe\Lib\Traits\Singleton;
 
@@ -189,17 +192,20 @@ class Resources {
 	 *
 	 * @see https://github.com/gruntjs/grunt-contrib-watch#user-content-optionslivereload
 	 *
-	 * @param string|null $domain     - If specified, will load via https using the provided domain.
-	 * @param bool        $admin_also - Enqueue for the admin as well (defaults to only front end).
+	 * @param string|null          $domain       - If specified, will load via https using the provided domain.
+	 * @param bool                 $admin_also   - Enqueue for the admin as well (defaults to only front end).
+	 * @param ResourceHandles|null $css_handle   - PCSS handle used to locate the `.running` file holding the
+	 *                                           per-worktree LiveReload port. Falls back to the default port.
 	 *
 	 * @return void
 	 */
-	public function live_reload( ?string $domain = null, bool $admin_also = false ): void {
+	public function live_reload( ?string $domain = null, bool $admin_also = false, ?ResourceHandles $css_handle = null ): void {
 		if ( \defined( 'SCRIPT_DEBUG' ) && \SCRIPT_DEBUG ) {
-			$enqueue = function() use ( $domain ) {
-				$url = 'http://localhost:35729/livereload.js';
+			$port = Util::in()->get_node_process_port( $css_handle, PCSS_Manifest::LIVE_RELOAD_PORT );
+			$enqueue = function() use ( $domain, $port ) {
+				$url = "http://localhost:{$port}/livereload.js";
 				if ( null !== $domain ) {
-					$url = "https://{$domain}:35729/livereload.js";
+					$url = "https://{$domain}:{$port}/livereload.js";
 				}
 				wp_enqueue_script( 'livereload', $url, [], (string) \time(), true );
 			};

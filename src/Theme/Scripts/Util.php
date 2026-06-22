@@ -3,7 +3,7 @@ declare( strict_types=1 );
 
 namespace Lipe\Lib\Theme\Scripts;
 
-use Lipe\Lib\Traits\Singleton;
+use Lipe\Lib\Container\Instance;
 
 /**
  * Utility functions for working with manifest driven resources.
@@ -11,7 +11,17 @@ use Lipe\Lib\Traits\Singleton;
  * @since    5.1.0
  */
 class Util {
-	use Singleton;
+	use Instance;
+
+	/**
+	 * Detected ports keyed by the `.running` file they were read from.
+	 *
+	 * Cached to prevent reading for every file.
+	 *
+	 * @var array<string, int>
+	 */
+	protected array $ports = [];
+
 
 	/**
 	 * Is webpack currently running on this environment?
@@ -30,7 +40,51 @@ class Util {
 		if ( ! SCRIPT_DEBUG || 'local' !== wp_get_environment_type() ) {
 			return false;
 		}
-		return file_exists( $handle->dist_path() . '.running' );
+		return \file_exists( $handle->dist_path() . '.running' );
+	}
+
+
+	/**
+	 * Get the port a Node process (Webpack dev server, LiveReload, etc.) is
+	 * running on for the provided handle.
+	 *
+	 * The port is read from the `.running` file generated within the handle's
+	 * dist directory. Each Git worktree picks its own port, so the value is
+	 * read rather than assumed. Falls back to `$default_port` when the handle
+	 * is `null` or the `.running` file is missing or invalid.
+	 *
+	 * @requires js-boilerplate:v11.2.0+
+	 * @requires postcss-boilerplate:v5.1.0+
+	 *
+	 * @param ResourceHandles|null $handle       - The handle to read the port for.
+	 * @param int                  $default_port - Port to use when none can be resolved.
+	 *
+	 * @return int
+	 */
+	public function get_node_process_port( ?ResourceHandles $handle, int $default_port ): int {
+		if ( null === $handle ) {
+			return $default_port;
+		}
+
+		$file = $handle->dist_path() . '.running';
+		if ( isset( $this->ports[ $file ] ) ) {
+			return $this->ports[ $file ];
+		}
+		$this->ports[ $file ] = $default_port;
+
+		if ( ! \is_readable( $file ) ) {
+			return $this->ports[ $file ];
+		}
+
+		try {
+			$data = (array) \json_decode( (string) \file_get_contents( $file ), true, 512, JSON_THROW_ON_ERROR );
+		} catch ( \JsonException ) {
+			return $this->ports[ $file ];
+		}
+		if ( isset( $data['port'] ) && \is_numeric( $data['port'] ) ) {
+			$this->ports[ $file ] = (int) $data['port'];
+		}
+		return $this->ports[ $file ];
 	}
 
 

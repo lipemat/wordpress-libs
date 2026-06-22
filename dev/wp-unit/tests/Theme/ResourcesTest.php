@@ -2,8 +2,11 @@
 
 namespace Lipe\Lib\Theme;
 
+use Lipe\Lib\Theme\Scripts\PCSS_Manifest;
+use Lipe\Lib\Theme\Scripts\ResourceHandles;
 use Lipe\Lib\Util\Actions;
 use mocks\Class_Names_Enum_Mock;
+use mocks\ScriptHandles;
 
 class ResourcesTest extends \WP_UnitTestCase {
 	private $requests = [];
@@ -23,6 +26,15 @@ class ResourcesTest extends \WP_UnitTestCase {
 		$wp_scripts = new \WP_Scripts();
 
 		do_action( 'wp_default_scripts', $wp_scripts );
+	}
+
+
+	protected function tearDown(): void {
+		$running = ScriptHandles::MASTER_CSS->dist_path() . '.running';
+		if ( \file_exists( $running ) ) {
+			\unlink( $running );
+		}
+		parent::tearDown();
 	}
 
 
@@ -133,6 +145,87 @@ class ResourcesTest extends \WP_UnitTestCase {
 	}
 
 
+	public function test_live_reload_uses_default_port_without_handle(): void {
+		// Arrange
+		// Act
+		Resources::in()->live_reload();
+		do_action( 'wp_enqueue_scripts' );
+
+		// Assert
+		if ( SCRIPT_DEBUG ) {
+			$this->assertSame( 'http://localhost:' . PCSS_Manifest::LIVE_RELOAD_PORT . '/livereload.js', $this->get_livereload_src(), 'Falls back to the default LiveReload port when no handle is provided.' );
+		} else {
+			$this->assertArrayNotHasKey( 'livereload', wp_scripts()->registered, 'LiveReload is only enqueued when SCRIPT_DEBUG is enabled.' );
+		}
+	}
+
+
+	public function test_live_reload_uses_https_with_domain(): void {
+		// Arrange
+		// Act
+		Resources::in()->live_reload( 'example.com' );
+		do_action( 'wp_enqueue_scripts' );
+
+		// Assert
+		if ( SCRIPT_DEBUG ) {
+			$this->assertSame( 'https://example.com:' . PCSS_Manifest::LIVE_RELOAD_PORT . '/livereload.js', $this->get_livereload_src(), 'A provided domain loads LiveReload over https using the default port.' );
+		} else {
+			$this->assertArrayNotHasKey( 'livereload', wp_scripts()->registered, 'LiveReload is only enqueued when SCRIPT_DEBUG is enabled.' );
+		}
+	}
+
+
+	public function test_live_reload_reads_port_from_handle_running_file(): void {
+		// Arrange
+		$this->write_running_file( ScriptHandles::MASTER_CSS, '{"port":4400}' );
+
+		// Act
+		Resources::in()->live_reload( null, false, ScriptHandles::MASTER_CSS );
+		do_action( 'wp_enqueue_scripts' );
+
+		// Assert
+		if ( SCRIPT_DEBUG ) {
+			$this->assertSame( 'http://localhost:4400/livereload.js', $this->get_livereload_src(), 'The per-worktree port is read from the handle `.running` file.' );
+		} else {
+			$this->assertArrayNotHasKey( 'livereload', wp_scripts()->registered, 'LiveReload is only enqueued when SCRIPT_DEBUG is enabled.' );
+		}
+	}
+
+
+	public function test_live_reload_falls_back_to_default_port_when_running_file_missing(): void {
+		// Arrange
+		$this->assertFileDoesNotExist( ScriptHandles::MASTER_CSS->dist_path() . '.running', 'No `.running` file should exist for this handle.' );
+
+		// Act
+		Resources::in()->live_reload( null, false, ScriptHandles::MASTER_CSS );
+		do_action( 'wp_enqueue_scripts' );
+
+		// Assert
+		if ( SCRIPT_DEBUG ) {
+			$this->assertSame( 'http://localhost:' . PCSS_Manifest::LIVE_RELOAD_PORT . '/livereload.js', $this->get_livereload_src(), 'Falls back to the default port when the handle `.running` file is missing.' );
+		} else {
+			$this->assertArrayNotHasKey( 'livereload', wp_scripts()->registered, 'LiveReload is only enqueued when SCRIPT_DEBUG is enabled.' );
+		}
+	}
+
+
+	public function test_live_reload_enqueues_in_admin_when_requested(): void {
+		// Arrange
+		set_current_screen( 'dashboard' );
+
+		// Act
+		Resources::in()->live_reload( null, true );
+		do_action( 'admin_enqueue_scripts' );
+
+		// Assert
+		if ( SCRIPT_DEBUG ) {
+			$this->assertSame( 'http://localhost:' . PCSS_Manifest::LIVE_RELOAD_PORT . '/livereload.js', $this->get_livereload_src(), 'LiveReload is enqueued on the admin hook when `$admin_also` is true.' );
+		} else {
+			$this->assertArrayNotHasKey( 'livereload', wp_scripts()->registered, 'LiveReload is only enqueued when SCRIPT_DEBUG is enabled.' );
+		}
+	}
+
+
 	/**
 	 * @return array<string,callable()>
 	 */
@@ -146,5 +239,16 @@ class ResourcesTest extends \WP_UnitTestCase {
 			return \str_replace( '"', "'", ob_get_clean() );
 		};
 		return [ $url, $callback, 'arbuitrary' ];
+	}
+
+
+	private function get_livereload_src(): string {
+		$this->assertArrayHasKey( 'livereload', wp_scripts()->registered, 'The `livereload` script should be registered.' );
+		return wp_scripts()->registered['livereload']->src;
+	}
+
+
+	private function write_running_file( ResourceHandles $handle, string $contents ): void {
+		\file_put_contents( $handle->dist_path() . '.running', $contents );
 	}
 }
