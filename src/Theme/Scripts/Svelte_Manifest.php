@@ -82,7 +82,8 @@ class Svelte_Manifest implements Manifest {
 	public function get_url(): string {
 		if ( SCRIPT_DEBUG && $this->is_vite_running() ) {
 			$host = \trim( sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) );
-			$url = set_url_scheme( \str_replace( $host, $host . ':5173', $this->handle->dist_url() ) );
+			$path = wp_parse_url( $this->handle->dist_url(), PHP_URL_PATH );
+			$url = set_url_scheme( "//{$host}:5173" . $path );
 			return \str_replace( '.js', '.ts', $url . $this->handle->file() );
 		}
 
