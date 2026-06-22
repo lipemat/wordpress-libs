@@ -20,8 +20,6 @@ class Resources {
 	use Singleton;
 	use Memoize;
 
-	public const INTEGRITY = 'lipe/lib/theme/styles/integrity';
-
 	/**
 	 * Classes to be added to the main <body> tag.
 	 *
