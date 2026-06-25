@@ -26,16 +26,32 @@ class Get_Terms implements Meta_Query_Interface, ArgsRules {
 	use Args;
 	use Meta_Query_Trait;
 
-	public const FIELD_ALL                = 'all';
-	public const FIELD_ALL_WITH_OBJECT_ID = 'all_with_object_id';
-	public const FIELD_IDS                = 'ids';
-	public const FIELD_TT_IDS             = 'tt_ids';
-	public const FIELD_NAMES              = 'names';
-	public const FIELD_SLUGS              = 'slugs';
-	public const FIELD_COUNT              = 'count';
-	public const FIELD_ID_PARENT          = 'id=>parent';
-	public const FIELD_ID_NAME            = 'id=>name';
-	public const FIELD_ID_SLUG            = 'id=>slug';
+	public const string FIELD_ALL                = 'all';
+	public const string FIELD_ALL_WITH_OBJECT_ID = 'all_with_object_id';
+	public const string FIELD_IDS                = 'ids';
+	public const string FIELD_TT_IDS             = 'tt_ids';
+	public const string FIELD_NAMES              = 'names';
+	public const string FIELD_SLUGS              = 'slugs';
+	public const string FIELD_COUNT              = 'count';
+	public const string FIELD_ID_PARENT          = 'id=>parent';
+	public const string FIELD_ID_NAME            = 'id=>name';
+	public const string FIELD_ID_SLUG            = 'id=>slug';
+
+	public const string ORDER_ASC  = 'ASC';
+	public const string ORDER_DESC = 'DESC';
+
+	public const string ORDERBY_COUNT          = 'count';
+	public const string ORDERBY_DESCRIPTION    = 'description';
+	public const string ORDERBY_ID             = 'id';
+	public const string ORDERBY_META_VALUE     = 'meta_value';
+	public const string ORDERBY_META_VALUE_NUM = 'meta_value_num';
+	public const string ORDERBY_NAME           = 'name';
+	public const string ORDERBY_PARENT         = 'parent';
+	public const string ORDERBY_SLUG           = 'slug';
+	public const string ORDERBY_SLUG_IN        = 'slug__in';
+	public const string ORDERBY_TERM_GROUP     = 'term_group';
+	public const string ORDERBY_TERM_ID        = 'term_id';
+	public const string ORDERBY_TERM_ORDER     = 'term_order';
 
 	/**
 	 * Taxonomy name, or array of taxonomies, to which results should be limited.
@@ -69,6 +85,7 @@ class Get_Terms implements Meta_Query_Interface, ArgsRules {
 	 *
 	 * Default 'name'.
 	 *
+	 * @phpstan-var self::ORDERBY_*|string
 	 * @var string
 	 */
 	public string $orderby;
@@ -78,7 +95,7 @@ class Get_Terms implements Meta_Query_Interface, ArgsRules {
 	 *
 	 * Default 'ASC'.
 	 *
-	 * @phpstan-var 'ASC'|'DESC'
+	 * @phpstan-var self::ORDER_*
 	 *
 	 * @var string
 	 */

@@ -12,15 +12,15 @@ namespace Lipe\Lib\Taxonomy;
  * @since  4.10.0
  */
 class Wp_Dropdown_Categories extends Get_Terms {
-	public const FIELD_TERM_ID     = 'term_id';
-	public const FIELD_NAME        = 'name';
-	public const FIELD_SLUG        = 'slug';
-	public const FIELD_TERM_GROUP  = 'term_group';
-	public const FIELD_TAXONOMY_ID = 'term_taxonomy_id';
-	public const FIELD_TAXONOMY    = 'taxonomy';
-	public const FIELD_DESCRIPTION = 'description';
-	public const FIELD_PARENT      = 'parent';
-	public const FIELD_COUNT       = 'count';
+	public const string FIELD_TERM_ID     = 'term_id';
+	public const string FIELD_NAME        = 'name';
+	public const string FIELD_SLUG        = 'slug';
+	public const string FIELD_TERM_GROUP  = 'term_group';
+	public const string FIELD_TAXONOMY_ID = 'term_taxonomy_id';
+	public const string FIELD_TAXONOMY    = 'taxonomy';
+	public const string FIELD_DESCRIPTION = 'description';
+	public const string FIELD_PARENT      = 'parent';
+	public const string FIELD_COUNT       = 'count';
 
 	/**
 	 * The 'id' of an element that contains descriptive text for the select.
