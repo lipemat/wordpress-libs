@@ -1,5 +1,4 @@
 <?php
-//phpcs:disable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Container;
@@ -10,21 +9,13 @@ namespace Lipe\Lib\Container;
  *
  * @author Mat Lipe
  * @since  5.8.0
- *
- * @template CONSTRUCT_PARAMS
  */
 trait Factory {
 	/**
 	 * Get an instance of the class from the container
 	 * using a factory.
 	 *
-	 * @phpstan-param CONSTRUCT_PARAMS ...$construct_args
-	 *
-	 * @formatter:off
-	 *
-	 * @param mixed  ...$construct_args - Constructor arguments.
-	 *
-	 * @formatter:on
+	 * @param array<mixed> ...$construct_args - Constructor arguments.
 	 *
 	 * @return static
 	 */
