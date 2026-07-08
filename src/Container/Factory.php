@@ -15,7 +15,7 @@ trait Factory {
 	 * Get an instance of the class from the container
 	 * using a factory.
 	 *
-	 * @param array<mixed> ...$construct_args - Constructor arguments.
+	 * @param mixed ...$construct_args - Constructor arguments.
 	 *
 	 * @return static
 	 */
