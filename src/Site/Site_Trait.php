@@ -34,9 +34,6 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @template OPTIONS of array<string, mixed>
  */
 trait Site_Trait {
-	/**
-	 * @use \Lipe\Lib\Container\Factory<array{int|\WP_Site|null}>
-	 */
 	use Factory;
 
 	/**

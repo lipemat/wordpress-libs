@@ -29,9 +29,6 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @template OPTIONS of array<string, mixed>
  */
 trait Comment_Trait {
-	/**
-	 * @use Factory<array{int|\WP_Comment}>
-	 */
 	use Factory;
 
 	/**

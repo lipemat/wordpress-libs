@@ -51,9 +51,6 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @template OPTIONS of array<string, mixed>
  */
 trait User_Trait {
-	/**
-	 * @use \Lipe\Lib\Container\Factory<array{int|\WP_User|null}>
-	 */
 	use Factory;
 
 	/**

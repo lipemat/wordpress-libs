@@ -31,9 +31,6 @@ use Lipe\Lib\Post_Type\Post_Object_Trait;
  * @template OPTIONS of array<string, mixed>
  */
 trait Menu_Item_Trait {
-	/**
-	 * @use Factory<array{int|\WP_Post|null}>
-	 */
 	use Factory;
 
 	/**

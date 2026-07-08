@@ -40,9 +40,6 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @template OPTIONS of array<string, mixed>
  */
 trait Post_Object_Trait {
-	/**
-	 * @use \Lipe\Lib\Container\Factory<array{int|\WP_Post|null}>
-	 */
 	use Factory;
 
 	/**

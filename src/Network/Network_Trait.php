@@ -24,9 +24,6 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @template OPTIONS of array<string, mixed>
  */
 trait Network_Trait {
-	/**
-	 * @use \Lipe\Lib\Container\Factory<array{int|\WP_Network|null}>
-	 */
 	use Factory;
 
 	/**

@@ -19,9 +19,6 @@ use Lipe\Lib\Container\Factory;
  *
  */
 class One_Time {
-	/**
-	 * @use Factory<array{SingleCron}>
-	 */
 	use Factory;
 
 	/**

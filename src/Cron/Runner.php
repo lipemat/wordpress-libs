@@ -15,9 +15,6 @@ use Lipe\Lib\Container\Factory;
  *
  */
 class Runner {
-	/**
-	 * @use Factory<array{Cron}>
-	 */
 	use Factory;
 
 	/**

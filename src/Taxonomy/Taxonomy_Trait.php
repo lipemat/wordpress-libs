@@ -24,9 +24,6 @@ use Lipe\Lib\Meta\Mutator_Trait;
  * @template OPTIONS of array<string, mixed>
  */
 trait Taxonomy_Trait {
-	/**
-	 * @use \Lipe\Lib\Container\Factory<array{int|\WP_Term}>
-	 */
 	use Factory;
 
 	/**
