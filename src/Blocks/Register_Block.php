@@ -23,7 +23,7 @@ use Lipe\Lib\Blocks\Args\Supports;
  * @phpstan-type QUERY array<string, array{
  *          source?: Source::SOURCE_*,
  *          type?: Prop::TYPE_*,
- *          attribute?: string,
+ *          attribute?: string
  * }>
  * @phpstan-type ATTR_SHAPE array{
  *     type?: Prop::TYPE_*,
@@ -106,7 +106,7 @@ use Lipe\Lib\Blocks\Args\Supports;
  *    view_script_handles?: string[],
  *    editor_style_handles?: string[],
  *    style_handles?: string[],
- *    view_style_handles?: string[],
+ *    view_style_handles?: string[]
  *  }
  *
  * @implements ArgsRules<BLOCK_REGISTER_ARGS>

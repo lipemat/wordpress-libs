@@ -20,8 +20,7 @@ use Lipe\Lib\Rest_Api\Register_Rest_Route\Method;
  *
  * @phpstan-type ROUTE_ARGS array{
  *     schema?: (\Closure(): array<string, mixed>),
- *     ...<METHOD_ARGS>,
- * }
+ * }&METHOD_ARGS
  * @implements ArgsRules<ROUTE_ARGS>
  */
 class Register_Rest_Route implements ArgsRules {

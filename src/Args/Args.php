@@ -87,7 +87,9 @@ trait Args {
 	 * Set the arguments for this class based on an array
 	 * of values.
 	 *
-	 * @phpstan-param SHAPE        $existing
+	 * The passed values are keyed by existing property names with a
+	 * `_doing_it_wrong` fallback, so any `SHAPE` correlation is
+	 * intentionally not required here.
 	 *
 	 * @param array<string, mixed> $existing - Existing arguments to load into properties.
 	 *
@@ -95,7 +97,6 @@ trait Args {
 	 */
 	protected function load_array_into_properties( array $existing ): void {
 		foreach ( $existing as $arg => $value ) {
-			// @phpstan-ignore function.alreadyNarrowedType (Safeguard against data making it pastphpstan)
 			if ( \property_exists( $this, $arg ) ) {
 				$this->{$arg} = $value;
 			} else {
