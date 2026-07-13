@@ -25,11 +25,11 @@ class Tax_Query implements ClauseRules {
 	 */
 	use Clause;
 
-	public const FIELD_ID          = 'term_id';
-	public const FIELD_NAME        = 'name';
-	public const FIELD_NONE        = '';
-	public const FIELD_SLUG        = 'slug';
-	public const FIELD_TERM_TAX_ID = 'term_taxonomy_id';
+	public const string FIELD_ID          = 'term_id';
+	public const string FIELD_NAME        = 'name';
+	public const string FIELD_NONE        = '';
+	public const string FIELD_SLUG        = 'slug';
+	public const string FIELD_TERM_TAX_ID = 'term_taxonomy_id';
 
 
 	/**

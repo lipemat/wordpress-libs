@@ -22,19 +22,19 @@ class Register_Setting implements ArgsRules {
 	 */
 	use Args;
 
-	public const GROUP_DISCUSSION = 'discussion';
-	public const GROUP_GENERAL    = 'general';
-	public const GROUP_MEDIA      = 'media';
-	public const GROUP_OPTIONS    = 'options';
-	public const GROUP_READING    = 'reading';
-	public const GROUP_WRITING    = 'writing';
+	public const string GROUP_DISCUSSION = 'discussion';
+	public const string GROUP_GENERAL    = 'general';
+	public const string GROUP_MEDIA      = 'media';
+	public const string GROUP_OPTIONS    = 'options';
+	public const string GROUP_READING    = 'reading';
+	public const string GROUP_WRITING    = 'writing';
 
-	public const TYPE_ARRAY   = 'array';
-	public const TYPE_BOOLEAN = 'boolean';
-	public const TYPE_INTEGER = 'integer';
-	public const TYPE_NUMBER  = 'number';
-	public const TYPE_OBJECT  = 'object';
-	public const TYPE_STRING  = 'string';
+	public const string TYPE_ARRAY   = 'array';
+	public const string TYPE_BOOLEAN = 'boolean';
+	public const string TYPE_INTEGER = 'integer';
+	public const string TYPE_NUMBER  = 'number';
+	public const string TYPE_OBJECT  = 'object';
+	public const string TYPE_STRING  = 'string';
 
 	/**
 	 * The type of data associated with this setting.

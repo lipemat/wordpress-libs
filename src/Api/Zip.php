@@ -30,11 +30,11 @@ class Zip {
 		init as protected singleton_init;
 	}
 
-	public const ACTION = 'zip';
+	public const string ACTION = 'zip';
 
-	public const KEY  = 'lipe/lib/util/zip/key';
-	public const NAME = 'lipe/lib/util/zip/name';
-	public const URLS = 'lipe/lib/util/zip/urls';
+	public const string KEY  = 'lipe/lib/util/zip/key';
+	public const string NAME = 'lipe/lib/util/zip/name';
+	public const string URLS = 'lipe/lib/util/zip/urls';
 
 
 	/**

@@ -30,12 +30,12 @@ class Wp_Enqueue_Script implements ArgsRules {
 	 */
 	use Args;
 
-	public const FETCH_PRIORITY_AUTO = 'auto';
-	public const FETCH_PRIORITY_HIGH = 'high';
-	public const FETCH_PRIORITY_LOW  = 'low';
+	public const string FETCH_PRIORITY_AUTO = 'auto';
+	public const string FETCH_PRIORITY_HIGH = 'high';
+	public const string FETCH_PRIORITY_LOW  = 'low';
 
-	public const STRATEGY_ASYNC = 'async';
-	public const STRATEGY_DEFER = 'defer';
+	public const string STRATEGY_ASYNC = 'async';
+	public const string STRATEGY_DEFER = 'defer';
 
 	/**
 	 * Browser script loading strategy.

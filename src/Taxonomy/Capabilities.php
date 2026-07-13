@@ -13,10 +13,10 @@ namespace Lipe\Lib\Taxonomy;
  * @see   Taxonomy::capabilities()
  */
 class Capabilities {
-	public const ASSIGN_TERMS = 'assign_terms';
-	public const DELETE_TERMS = 'delete_terms';
-	public const EDIT_TERMS   = 'edit_terms';
-	public const MANAGE_TERMS = 'manage_terms';
+	public const string ASSIGN_TERMS = 'assign_terms';
+	public const string DELETE_TERMS = 'delete_terms';
+	public const string EDIT_TERMS   = 'edit_terms';
+	public const string MANAGE_TERMS = 'manage_terms';
 
 	/**
 	 * Any capabilities that have been set.

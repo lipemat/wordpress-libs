@@ -12,8 +12,8 @@ namespace Lipe\Lib\Taxonomy;
  * @since  5.7.0
  */
 class Wp_List_Categories extends Get_Terms {
-	public const STYLE_LIST = 'list';
-	public const STYLE_NONE = 'none';
+	public const string STYLE_LIST = 'list';
+	public const string STYLE_NONE = 'none';
 
 	/**
 	 * ID of category, or array of IDs of categories, that should get the 'current-cat' class.

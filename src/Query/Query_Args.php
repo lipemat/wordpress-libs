@@ -36,40 +36,40 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, ArgsRule
 	use Meta_Query_Trait;
 	use Tax_Query_Trait;
 
-	public const FIELDS_IDS       = 'ids';
-	public const FIELDS_ID_PARENT = 'id=>parent';
-	public const FIELDS_COMPLETE  = '';
+	public const string FIELDS_IDS       = 'ids';
+	public const string FIELDS_ID_PARENT = 'id=>parent';
+	public const string FIELDS_COMPLETE  = '';
 
-	public const ORDER_ASC  = 'ASC';
-	public const ORDER_DESC = 'DESC';
+	public const string ORDER_ASC  = 'ASC';
+	public const string ORDER_DESC = 'DESC';
 
-	public const ORDERBY_AUTHOR        = 'post_author';
-	public const ORDERBY_COMMENT_COUNT = 'comment_count';
-	public const ORDERBY_DATE          = 'post_date';
-	public const ORDERBY_ID            = 'ID';
-	public const ORDERBY_MENU_ORDER    = 'menu_order';
-	public const ORDERBY_META_VALUE    = 'meta_value';
-	public const ORDERBY_MODIFIED      = 'post_modified';
-	public const ORDERBY_NAME          = 'post_name';
-	public const ORDERBY_NAME_IN       = 'post_name__in';
-	public const ORDERBY_NONE          = 'none';
-	public const ORDERBY_PARENT        = 'parent';
-	public const ORDERBY_PARENT_IN     = 'post_parent__in';
-	public const ORDERBY_POST_IN       = 'post__in';
-	public const ORDERBY_POST_TYPE     = 'type';
-	public const ORDERBY_RAND          = 'rand';
-	public const ORDERBY_RELEVANCE     = 'relevance';
-	public const ORDERBY_TITLE         = 'post_title';
+	public const string ORDERBY_AUTHOR        = 'post_author';
+	public const string ORDERBY_COMMENT_COUNT = 'comment_count';
+	public const string ORDERBY_DATE          = 'post_date';
+	public const string ORDERBY_ID            = 'ID';
+	public const string ORDERBY_MENU_ORDER    = 'menu_order';
+	public const string ORDERBY_META_VALUE    = 'meta_value';
+	public const string ORDERBY_MODIFIED      = 'post_modified';
+	public const string ORDERBY_NAME          = 'post_name';
+	public const string ORDERBY_NAME_IN       = 'post_name__in';
+	public const string ORDERBY_NONE          = 'none';
+	public const string ORDERBY_PARENT        = 'parent';
+	public const string ORDERBY_PARENT_IN     = 'post_parent__in';
+	public const string ORDERBY_POST_IN       = 'post__in';
+	public const string ORDERBY_POST_TYPE     = 'type';
+	public const string ORDERBY_RAND          = 'rand';
+	public const string ORDERBY_RELEVANCE     = 'relevance';
+	public const string ORDERBY_TITLE         = 'post_title';
 
-	public const STATUS_ANY        = 'any';
-	public const STATUS_AUTO_DRAFT = 'auto-draft';
-	public const STATUS_DRAFT      = 'draft';
-	public const STATUS_FUTURE     = 'future';
-	public const STATUS_INHERIT    = 'inherit';
-	public const STATUS_PENDING    = 'pending';
-	public const STATUS_PRIVATE    = 'private';
-	public const STATUS_PUBLISH    = 'publish';
-	public const STATUS_TRASH      = 'trash';
+	public const string STATUS_ANY        = 'any';
+	public const string STATUS_AUTO_DRAFT = 'auto-draft';
+	public const string STATUS_DRAFT      = 'draft';
+	public const string STATUS_FUTURE     = 'future';
+	public const string STATUS_INHERIT    = 'inherit';
+	public const string STATUS_PENDING    = 'pending';
+	public const string STATUS_PRIVATE    = 'private';
+	public const string STATUS_PUBLISH    = 'publish';
+	public const string STATUS_TRASH      = 'trash';
 
 	/**
 	 * Attachment post ID. Used for 'attachment' post_type.

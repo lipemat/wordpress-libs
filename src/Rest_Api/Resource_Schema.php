@@ -5,7 +5,6 @@ namespace Lipe\Lib\Rest_Api;
 
 use Lipe\Lib\Args\Args;
 use Lipe\Lib\Args\ArgsRules;
-use Lipe\Lib\Rest_Api\Schema\Resource_Prop;
 use Lipe\Lib\Rest_Api\Schema\Type;
 
 /**
@@ -28,17 +27,17 @@ class Resource_Schema implements ArgsRules {
 		get_args as parent_get_args;
 	}
 
-	public const TYPE_STRING  = 'string';
-	public const TYPE_NUMBER  = 'number';
-	public const TYPE_INTEGER = 'integer';
-	public const TYPE_BOOLEAN = 'boolean';
-	public const TYPE_OBJECT  = 'object';
-	public const TYPE_ARRAY   = 'array';
-	public const TYPE_NULL    = 'null';
+	public const string TYPE_STRING  = 'string';
+	public const string TYPE_NUMBER  = 'number';
+	public const string TYPE_INTEGER = 'integer';
+	public const string TYPE_BOOLEAN = 'boolean';
+	public const string TYPE_OBJECT  = 'object';
+	public const string TYPE_ARRAY   = 'array';
+	public const string TYPE_NULL    = 'null';
 
-	public const CONTEXT_VIEW  = 'view';
-	public const CONTEXT_EDIT  = 'edit';
-	public const CONTEXT_EMBED = 'embed';
+	public const string CONTEXT_VIEW  = 'view';
+	public const string CONTEXT_EDIT  = 'edit';
+	public const string CONTEXT_EMBED = 'embed';
 
 	/**
 	 * The schema version. WP only offically supports version 4.

@@ -19,8 +19,8 @@ class Term_Select_2 {
 	use Memoize;
 	use Singleton;
 
-	public const GET_TERMS = 'lipe/lib/cmb2/field-types/term-select-2/ajax';
-	public const NONCE     = 'lipe/lib/cmb2/field/term-select-2/nonce';
+	public const string GET_TERMS = 'lipe/lib/cmb2/field-types/term-select-2/ajax';
+	public const string NONCE     = 'lipe/lib/cmb2/field/term-select-2/nonce';
 
 	/**
 	 * Fields that have been registered.

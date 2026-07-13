@@ -32,14 +32,14 @@ class Wp_Remote implements ArgsRules {
 		get_args as parent_get_args;
 	}
 
-	public const METHOD_GET     = 'GET';
-	public const METHOD_POST    = 'POST';
-	public const METHOD_HEAD    = 'HEAD';
-	public const METHOD_PUT     = 'PUT';
-	public const METHOD_DELETE  = 'DELETE';
-	public const METHOD_TRACE   = 'TRACE';
-	public const METHOD_OPTIONS = 'OPTIONS';
-	public const METHOD_PATCH   = 'PATCH';
+	public const string METHOD_GET     = 'GET';
+	public const string METHOD_POST    = 'POST';
+	public const string METHOD_HEAD    = 'HEAD';
+	public const string METHOD_PUT     = 'PUT';
+	public const string METHOD_DELETE  = 'DELETE';
+	public const string METHOD_TRACE   = 'TRACE';
+	public const string METHOD_OPTIONS = 'OPTIONS';
+	public const string METHOD_PATCH   = 'PATCH';
 
 	/**
 	 * Request method.

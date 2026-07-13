@@ -24,16 +24,16 @@ class Prop implements ArgsRules {
 	 */
 	use Args;
 
-	public const ROLE_CONTENT = 'content';
-	public const ROLE_LOCAL   = 'local';
+	public const string ROLE_CONTENT = 'content';
+	public const string ROLE_LOCAL   = 'local';
 
-	public const TYPE_STRING  = 'string';
-	public const TYPE_ARRAY   = 'array';
-	public const TYPE_OBJECT  = 'object';
-	public const TYPE_BOOLEAN = 'boolean';
-	public const TYPE_NUMBER  = 'number';
-	public const TYPE_INTEGER = 'integer';
-	public const TYPE_NULL    = 'null';
+	public const string TYPE_STRING  = 'string';
+	public const string TYPE_ARRAY   = 'array';
+	public const string TYPE_OBJECT  = 'object';
+	public const string TYPE_BOOLEAN = 'boolean';
+	public const string TYPE_NUMBER  = 'number';
+	public const string TYPE_INTEGER = 'integer';
+	public const string TYPE_NULL    = 'null';
 
 	/**
 	 * Data type of the property.

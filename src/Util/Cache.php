@@ -17,10 +17,10 @@ use Lipe\Lib\Traits\Singleton;
 class Cache {
 	use Singleton;
 
-	public const    DEFAULT_GROUP            = 'lipe/lib/util/cache/group';
-	public const    FLUSH_ON_SAVE_POST_GROUP = 'posts';
+	public const string DEFAULT_GROUP            = 'lipe/lib/util/cache/group';
+	public const string FLUSH_ON_SAVE_POST_GROUP = 'posts';
 
-	protected const QUERY_ARG = 'lipe/lib/util/cache/cache';
+	protected const string QUERY_ARG = 'lipe/lib/util/cache/cache';
 
 
 	/**

@@ -16,24 +16,24 @@ use Lipe\Lib\Settings\Settings_Page\Settings;
  */
 class Settings_Page {
 	// Menu positions (see add_menu_page docs for more details).
-	public const POSITION_DASHBOARD  = 2;
-	public const POSITION_POSTS      = 5;
-	public const POSITION_MEDIA      = 10;
-	public const POSITION_PAGES      = 20;
-	public const POSITION_COMMENTS   = 25;
-	public const POSITION_APPEARANCE = 60;
-	public const POSITION_PLUGINS    = 65;
-	public const POSITION_USERS      = 70;
-	public const POSITION_TOOLS      = 75;
-	public const POSITION_SETTINGS   = 80;
+	public const int POSITION_DASHBOARD  = 2;
+	public const int POSITION_POSTS      = 5;
+	public const int POSITION_MEDIA      = 10;
+	public const int POSITION_PAGES      = 20;
+	public const int POSITION_COMMENTS   = 25;
+	public const int POSITION_APPEARANCE = 60;
+	public const int POSITION_PLUGINS    = 65;
+	public const int POSITION_USERS      = 70;
+	public const int POSITION_TOOLS      = 75;
+	public const int POSITION_SETTINGS   = 80;
 	// Network Menu positions.
-	public const POSITION_NETWORK_DASHBOARD = 2;
-	public const POSITION_NETWORK_SITES     = 5;
-	public const POSITION_NETWORK_USERS     = 10;
-	public const POSITION_NETWORK_THEMES    = 15;
-	public const POSITION_NETWORK_PLUGINS   = 20;
-	public const POSITION_NETWORK_SETTINGS  = 25;
-	public const POSITION_NETWORK_UPDATES   = 30;
+	public const int POSITION_NETWORK_DASHBOARD = 2;
+	public const int POSITION_NETWORK_SITES     = 5;
+	public const int POSITION_NETWORK_USERS     = 10;
+	public const int POSITION_NETWORK_THEMES    = 15;
+	public const int POSITION_NETWORK_PLUGINS   = 20;
+	public const int POSITION_NETWORK_SETTINGS  = 25;
+	public const int POSITION_NETWORK_UPDATES   = 30;
 
 
 	/**

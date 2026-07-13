@@ -22,10 +22,10 @@ use Lipe\Lib\Util\Url;
 class Tabs {
 	use Singleton;
 
-	public const TAB_FIELD = 'lipe/lib/cmb2/box/tabs/active-tab';
+	public const string TAB_FIELD = 'lipe/lib/cmb2/box/tabs/active-tab';
 
-	public const STYLE_HORIZONTAL = 'horizontal';
-	public const STYLE_VERTICAL   = 'vertical';
+	public const string STYLE_HORIZONTAL = 'horizontal';
+	public const string STYLE_VERTICAL   = 'vertical';
 
 	/**
 	 * Current CMB2 instance

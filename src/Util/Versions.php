@@ -21,8 +21,8 @@ use Lipe\Lib\Traits\Singleton;
 class Versions {
 	use Singleton;
 
-	protected const OPTION = 'lipe/lib/util/versions_version';
-	protected const ONCE   = 'lipe/lib/util/versions/once';
+	protected const string OPTION = 'lipe/lib/util/versions_version';
+	protected const string ONCE   = 'lipe/lib/util/versions/once';
 
 	/**
 	 * Keeps track of version in the database.

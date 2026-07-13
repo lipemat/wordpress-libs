@@ -51,16 +51,16 @@ class Wp_Insert_Post implements ArgsRules {
 	 */
 	use Args;
 
-	public const PING_OPEN   = 'open';
-	public const PING_CLOSED = 'closed';
+	public const string PING_OPEN   = 'open';
+	public const string PING_CLOSED = 'closed';
 
-	public const STATUS_DRAFT   = 'draft';
-	public const STATUS_FUTURE  = 'future';
-	public const STATUS_INHERIT = 'inherit';
-	public const STATUS_PENDING = 'pending';
-	public const STATUS_PRIVATE = 'private';
-	public const STATUS_PUBLISH = 'publish';
-	public const STATUS_TRASH   = 'trash';
+	public const string STATUS_DRAFT   = 'draft';
+	public const string STATUS_FUTURE  = 'future';
+	public const string STATUS_INHERIT = 'inherit';
+	public const string STATUS_PENDING = 'pending';
+	public const string STATUS_PRIVATE = 'private';
+	public const string STATUS_PUBLISH = 'publish';
+	public const string STATUS_TRASH   = 'trash';
 
 	/**
 	 * The post ID. If equal to something other than 0, the post with that ID will be updated.

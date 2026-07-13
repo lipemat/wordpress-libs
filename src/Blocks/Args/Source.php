@@ -12,11 +12,11 @@ namespace Lipe\Lib\Blocks\Args;
  * @link   https://developer.wordpress.org/block-editor/reference-guides/block-api/block-attributes/#value-source
  */
 class Source {
-	public const SOURCE_ATTRIBUTE = 'attribute';
-	public const SOURCE_HTML      = 'html';
-	public const SOURCE_META      = 'meta';
-	public const SOURCE_QUERY     = 'query';
-	public const SOURCE_TEXT      = 'text';
+	public const string SOURCE_ATTRIBUTE = 'attribute';
+	public const string SOURCE_HTML      = 'html';
+	public const string SOURCE_META      = 'meta';
+	public const string SOURCE_QUERY     = 'query';
+	public const string SOURCE_TEXT      = 'text';
 
 
 	/**

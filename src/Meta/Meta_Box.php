@@ -10,14 +10,14 @@ namespace Lipe\Lib\Meta;
  * @since  4.10.0
  */
 class Meta_Box {
-	public const CONTEXT_ADVANCED = 'advanced';
-	public const CONTEXT_NORMAL   = 'normal';
-	public const CONTEXT_SIDE     = 'side';
+	public const string CONTEXT_ADVANCED = 'advanced';
+	public const string CONTEXT_NORMAL   = 'normal';
+	public const string CONTEXT_SIDE     = 'side';
 
-	public const PRIORITY_CORE    = 'core';
-	public const PRIORITY_DEFAULT = 'default';
-	public const PRIORITY_HIGH    = 'high';
-	public const PRIORITY_LOW     = 'low';
+	public const string PRIORITY_CORE    = 'core';
+	public const string PRIORITY_DEFAULT = 'default';
+	public const string PRIORITY_HIGH    = 'high';
+	public const string PRIORITY_LOW     = 'low';
 
 
 	/**

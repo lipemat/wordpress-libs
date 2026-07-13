@@ -17,8 +17,8 @@ use Lipe\Lib\Args\ArgsRules;
  * @implements ArgsRules<array<string, mixed>>
  */
 class Wp_Nav_Menu implements ArgsRules {
-	public const ITEM_SPACING_DISCARD  = 'discard';
-	public const ITEM_SPACING_PRESERVE = 'preserve';
+	public const string ITEM_SPACING_DISCARD  = 'discard';
+	public const string ITEM_SPACING_PRESERVE = 'preserve';
 
 	/**
 	 * @use Args<array<string, mixed>>

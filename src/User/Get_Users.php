@@ -25,26 +25,26 @@ class Get_Users implements Meta_Query_Interface, ArgsRules {
 	use Args;
 	use Meta_Query_Trait;
 
-	public const FIELD_ID           = 'ID';
-	public const FIELD_DISPLAY_NAME = 'display_name';
-	public const FIELD_LOGIN        = 'user_login';
-	public const FIELD_NICENAME     = 'user_nicename';
-	public const FIELD_EMAIL        = 'user_email';
-	public const FIELD_URL          = 'user_url';
-	public const FIELD_REGISTERED   = 'user_registered';
+	public const string FIELD_ID           = 'ID';
+	public const string FIELD_DISPLAY_NAME = 'display_name';
+	public const string FIELD_LOGIN        = 'user_login';
+	public const string FIELD_NICENAME     = 'user_nicename';
+	public const string FIELD_EMAIL        = 'user_email';
+	public const string FIELD_URL          = 'user_url';
+	public const string FIELD_REGISTERED   = 'user_registered';
 
-	public const ORDERBY_ID           = 'ID';
-	public const ORDERBY_DISPLAY_NAME = 'display_name';
-	public const ORDERBY_INCLUDE      = 'include';
-	public const ORDERBY_LOGIN        = 'user_login';
-	public const ORDERBY_LOGIN_IN     = 'login__in';
-	public const ORDERBY_NICENAME     = 'user_nicename';
-	public const ORDERBY_NICENAME_IN  = 'nicename__in';
-	public const ORDERBY_EMAIL        = 'user_email';
-	public const ORDERBY_URL          = 'user_url';
-	public const ORDERBY_REGISTERED   = 'user_registered';
-	public const ORDERBY_POST_COUNT   = 'post_count';
-	public const ORDERBY_META_VALUE   = 'meta_value';
+	public const string ORDERBY_ID           = 'ID';
+	public const string ORDERBY_DISPLAY_NAME = 'display_name';
+	public const string ORDERBY_INCLUDE      = 'include';
+	public const string ORDERBY_LOGIN        = 'user_login';
+	public const string ORDERBY_LOGIN_IN     = 'login__in';
+	public const string ORDERBY_NICENAME     = 'user_nicename';
+	public const string ORDERBY_NICENAME_IN  = 'nicename__in';
+	public const string ORDERBY_EMAIL        = 'user_email';
+	public const string ORDERBY_URL          = 'user_url';
+	public const string ORDERBY_REGISTERED   = 'user_registered';
+	public const string ORDERBY_POST_COUNT   = 'post_count';
+	public const string ORDERBY_META_VALUE   = 'meta_value';
 
 	/**
 	 * The site ID.

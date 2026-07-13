@@ -16,15 +16,20 @@ namespace Lipe\Lib\Util;
  * @see    `js/src/helpers/crypt`
  */
 class Crypt {
-	protected const ALGORITHM  = 'sha512';
-	protected const ITERATIONS = 999;
+	/**
+	 * @var 'sha512'
+	 */
+	protected const string ALGORITHM = 'sha512';
+	protected const int ITERATIONS = 999;
 
 	/**
 	 * Recommended AES-128-CBC, AES-192-CBC, AES-256-CBC
 	 * due to there is no `openssl_cipher_iv_length()` function in JavaScript
 	 * and these methods are known as 16 in iv_length.
+	 *
+	 * @var 'AES-256-CBC'
 	 */
-	protected const METHOD = 'AES-256-CBC';
+	protected const string METHOD = 'AES-256-CBC';
 
 	/**
 	 * The encryption key.
@@ -88,7 +93,7 @@ class Crypt {
 	 */
 	public function encrypt( string $plaintext ): ?string {
 		try {
-			$iv = \random_bytes( \max( 1, (int) \openssl_cipher_iv_length( static::METHOD ) ) );
+			$iv = \random_bytes( \max( 1, \openssl_cipher_iv_length( static::METHOD ) ) );
 			$salt = \random_bytes( 256 );
 		} catch ( \Exception ) {
 			return null;
@@ -118,7 +123,7 @@ class Crypt {
 	 * @return positive-int
 	 */
 	protected function get_key_size(): int {
-		return \max( 1, \absint( \preg_replace( '/\D/', '', static::METHOD ) / 4 ) );
+		return \max( 1, \absint( (int) \preg_replace( '/\D/', '', static::METHOD ) / 4 ) );
 	}
 
 

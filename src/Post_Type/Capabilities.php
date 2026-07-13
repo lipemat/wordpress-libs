@@ -11,21 +11,21 @@ namespace Lipe\Lib\Post_Type;
  * @see  Post_Type::capabilities()
  */
 class Capabilities {
-	public const CREATE_POSTS           = 'create_posts';
-	public const DELETE_OTHERS_POSTS    = 'delete_others_posts';
-	public const DELETE_POST            = 'delete_post';
-	public const DELETE_POSTS           = 'delete_posts';
-	public const DELETE_PRIVATE_POSTS   = 'delete_private_posts';
-	public const DELETE_PUBLISHED_POSTS = 'delete_published_posts';
-	public const EDIT_OTHERS_POSTS      = 'edit_others_posts';
-	public const EDIT_POST              = 'edit_post';
-	public const EDIT_POSTS             = 'edit_posts';
-	public const EDIT_PRIVATE_POSTS     = 'edit_private_posts';
-	public const EDIT_PUBLISHED_POSTS   = 'edit_published_posts';
-	public const PUBLISH_POSTS          = 'publish_posts';
-	public const READ                   = 'read';
-	public const READ_POST              = 'read_post';
-	public const READ_PRIVATE_POSTS     = 'read_private_posts';
+	public const string CREATE_POSTS           = 'create_posts';
+	public const string DELETE_OTHERS_POSTS    = 'delete_others_posts';
+	public const string DELETE_POST            = 'delete_post';
+	public const string DELETE_POSTS           = 'delete_posts';
+	public const string DELETE_PRIVATE_POSTS   = 'delete_private_posts';
+	public const string DELETE_PUBLISHED_POSTS = 'delete_published_posts';
+	public const string EDIT_OTHERS_POSTS      = 'edit_others_posts';
+	public const string EDIT_POST              = 'edit_post';
+	public const string EDIT_POSTS             = 'edit_posts';
+	public const string EDIT_PRIVATE_POSTS     = 'edit_private_posts';
+	public const string EDIT_PUBLISHED_POSTS   = 'edit_published_posts';
+	public const string PUBLISH_POSTS          = 'publish_posts';
+	public const string READ                   = 'read';
+	public const string READ_POST              = 'read_post';
+	public const string READ_PRIVATE_POSTS     = 'read_private_posts';
 
 	/**
 	 * @var array<self::*, string>

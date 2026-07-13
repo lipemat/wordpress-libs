@@ -19,9 +19,9 @@ use Lipe\Lib\Taxonomy\Meta_Box\Radio_Walker;
  * @since  4.0.0
  */
 class Meta_Box {
-	public const TYPE_RADIO    = 'radio';
-	public const TYPE_DROPDOWN = 'dropdown';
-	public const TYPE_SIMPLE   = 'simple';
+	public const string TYPE_RADIO    = 'radio';
+	public const string TYPE_DROPDOWN = 'dropdown';
+	public const string TYPE_SIMPLE   = 'simple';
 
 	/**
 	 * The taxonomy slug.

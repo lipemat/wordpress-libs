@@ -30,9 +30,9 @@ class Wp_Enqueue_Script_Module implements ArgsRules {
 	 */
 	use Args;
 
-	public const FETCH_PRIORITY_AUTO = 'auto';
-	public const FETCH_PRIORITY_HIGH = 'high';
-	public const FETCH_PRIORITY_LOW  = 'low';
+	public const string FETCH_PRIORITY_AUTO = 'auto';
+	public const string FETCH_PRIORITY_HIGH = 'high';
+	public const string FETCH_PRIORITY_LOW  = 'low';
 
 	/**
 	 * Whether to enqueue the script in the footer.

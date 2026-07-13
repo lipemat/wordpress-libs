@@ -20,13 +20,13 @@ class Route {
 	use Singleton;
 	use Memoize;
 
-	protected const NAME = 'lipe/lib/util/route';
+	protected const string NAME = 'lipe/lib/util/route';
 
-	protected const POST_TYPE       = 'lipe-lib-util-route';
-	protected const QUERY_VAR       = 'lipe/lib/util/route/template';
-	protected const PARAM_QUERY_VAR = 'lipe/lib/util/route/param';
-	protected const OPTION          = 'lipe/lib/util/route/cache';
-	protected const POST_ID_OPTION  = 'lipe/lib/util/route/post-id';
+	protected const string POST_TYPE       = 'lipe-lib-util-route';
+	protected const string QUERY_VAR       = 'lipe/lib/util/route/template';
+	protected const string PARAM_QUERY_VAR = 'lipe/lib/util/route/param';
+	protected const string OPTION          = 'lipe/lib/util/route/cache';
+	protected const string POST_ID_OPTION  = 'lipe/lib/util/route/post-id';
 
 	/**
 	 * The id of the placeholder post.

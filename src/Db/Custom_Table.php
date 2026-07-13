@@ -18,12 +18,12 @@ namespace Lipe\Lib\Db;
  * @phpstan-type PARTIALS template-type<TABLE, Table, 'PARTIALS'>
  */
 class Custom_Table {
-	public const ORDER_ASC  = 'ASC';
-	public const ORDER_DESC = 'DESC';
+	public const string ORDER_ASC  = 'ASC';
+	public const string ORDER_DESC = 'DESC';
 
-	public const FORMAT_INT    = '%d';
-	public const FORMAT_FLOAT  = '%f';
-	public const FORMAT_STRING = '%s';
+	public const string FORMAT_INT    = '%d';
+	public const string FORMAT_FLOAT  = '%f';
+	public const string FORMAT_STRING = '%s';
 
 	/**
 	 * Holds the database name with the prefix included.

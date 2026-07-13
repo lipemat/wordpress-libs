@@ -12,8 +12,8 @@ namespace Lipe\Lib\Theme;
  * @since  5.0.0
  */
 enum Dashicons: string {
-	public const FONT   = 'dashicons';
-	public const BEFORE = 'dashicons-before';
+	public const string FONT   = 'dashicons';
+	public const string BEFORE = 'dashicons-before';
 
 	case ADMIN_APPEARANCE          = 'dashicons-admin-appearance';
 	case ADMIN_COLLAPSE            = 'dashicons-admin-collapse';

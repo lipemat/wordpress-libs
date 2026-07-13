@@ -18,7 +18,7 @@ use Lipe\Lib\Post_Type\Post_List_Column\Filter;
  *
  */
 class Post_List_Filter {
-	protected const NONCE = 'lipe/lib/post-type/post-list-filter/nonce';
+	protected const string NONCE = 'lipe/lib/post-type/post-list-filter/nonce';
 
 
 	/**

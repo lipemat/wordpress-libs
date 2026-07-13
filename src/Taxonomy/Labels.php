@@ -14,37 +14,37 @@ namespace Lipe\Lib\Taxonomy;
  * @see      Taxonomy::get_taxonomy_labels()
  */
 class Labels {
-	public const ADD_NEW_ITEM               = 'add_new_item';
-	public const ADD_OR_REMOVE_ITEMS        = 'add_or_remove_items';
-	public const ALL_ITEMS                  = 'all_items';
-	public const BACK_TO_ITEMS              = 'back_to_items';
-	public const CHOOSE_FROM_MOST_USED      = 'choose_from_most_used';
-	public const DESC_FIELD_DESCRIPTION     = 'desc_field_description';
-	public const EDIT_ITEM                  = 'edit_item';
-	public const FILTER_BY_ITEM             = 'filter_by_item';
-	public const ITEM_LINK                  = 'item_link';
-	public const ITEM_LINK_DESCRIPTION      = 'item_link_description';
-	public const ITEMS_LIST                 = 'items_list';
-	public const ITEMS_LIST_NAVIGATION      = 'items_list_navigation';
-	public const MENU_NAME                  = 'menu_name';
-	public const MOST_USED                  = 'most_used';
-	public const NAME                       = 'name';
-	public const NAME_ADMIN_BAR             = 'name_admin_bar';
-	public const NAME_FIELD_DESCRIPTION     = 'name_field_description';
-	public const NEW_ITEM_NAME              = 'new_item_name';
-	public const NO_ITEM                    = 'no_item';
-	public const NO_TERMS                   = 'no_terms';
-	public const NOT_FOUND                  = 'not_found';
-	public const PARENT_FIELD_DESCRIPTION   = 'parent_field_description';
-	public const PARENT_ITEM                = 'parent_item';
-	public const PARENT_ITEM_COLON          = 'parent_item_colon';
-	public const POPULAR_ITEMS              = 'popular_items';
-	public const SEARCH_ITEMS               = 'search_items';
-	public const SINGLE_FIELD_DESCRIPTION   = 'single_field_description';
-	public const SEPARATE_ITEMS_WITH_COMMAS = 'separate_items_with_commas';
-	public const SINGULAR_NAME              = 'singular_name';
-	public const UPDATE_ITEM                = 'update_item';
-	public const VIEW_ITEM                  = 'view_item';
+	public const string ADD_NEW_ITEM               = 'add_new_item';
+	public const string ADD_OR_REMOVE_ITEMS        = 'add_or_remove_items';
+	public const string ALL_ITEMS                  = 'all_items';
+	public const string BACK_TO_ITEMS              = 'back_to_items';
+	public const string CHOOSE_FROM_MOST_USED      = 'choose_from_most_used';
+	public const string DESC_FIELD_DESCRIPTION     = 'desc_field_description';
+	public const string EDIT_ITEM                  = 'edit_item';
+	public const string FILTER_BY_ITEM             = 'filter_by_item';
+	public const string ITEM_LINK                  = 'item_link';
+	public const string ITEM_LINK_DESCRIPTION      = 'item_link_description';
+	public const string ITEMS_LIST                 = 'items_list';
+	public const string ITEMS_LIST_NAVIGATION      = 'items_list_navigation';
+	public const string MENU_NAME                  = 'menu_name';
+	public const string MOST_USED                  = 'most_used';
+	public const string NAME                       = 'name';
+	public const string NAME_ADMIN_BAR             = 'name_admin_bar';
+	public const string NAME_FIELD_DESCRIPTION     = 'name_field_description';
+	public const string NEW_ITEM_NAME              = 'new_item_name';
+	public const string NO_ITEM                    = 'no_item';
+	public const string NO_TERMS                   = 'no_terms';
+	public const string NOT_FOUND                  = 'not_found';
+	public const string PARENT_FIELD_DESCRIPTION   = 'parent_field_description';
+	public const string PARENT_ITEM                = 'parent_item';
+	public const string PARENT_ITEM_COLON          = 'parent_item_colon';
+	public const string POPULAR_ITEMS              = 'popular_items';
+	public const string SEARCH_ITEMS               = 'search_items';
+	public const string SINGLE_FIELD_DESCRIPTION   = 'single_field_description';
+	public const string SEPARATE_ITEMS_WITH_COMMAS = 'separate_items_with_commas';
+	public const string SINGULAR_NAME              = 'singular_name';
+	public const string UPDATE_ITEM                = 'update_item';
+	public const string VIEW_ITEM                  = 'view_item';
 
 	/**
 	 * Any labels that have been set.

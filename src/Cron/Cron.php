@@ -10,7 +10,7 @@ namespace Lipe\Lib\Cron;
  * @since   4.10.0
  */
 interface Cron {
-	public const NAME = __CLASS__;
+	public const string NAME = __CLASS__;
 
 
 	/**

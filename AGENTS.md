@@ -3,6 +3,9 @@
 ## Commands
 
 **PHP**
+
+Use global executables to run the following commands from the root of the plugin:
+
 ```bash
 phpcs                          # lint src/
 phpstan analyse                # static analysis (level 8)
@@ -81,5 +84,6 @@ Sub-builders for nested clauses (date, meta, tax) are attached to the parent via
 When adding or modifying a class in `src/`, update the corresponding `docs/modules/<slug>.md`. The `update-docs` Copilot skill automates this. Only public methods are documented; sub-directory classes roll up into the parent module doc.
 
 ### Yarn Production Build
+
 The `dist/` build is commited to Git so it may be consumed directly from composer.
 - If any file in `src/` is modified, run `yarn dist` and commit the changed files in `dist/`.

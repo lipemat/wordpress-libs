@@ -14,7 +14,7 @@ use Lipe\Lib\Container\Instance;
 class Testing {
 	use Instance;
 
-	public const CODE_EXIT = 17;
+	public const int CODE_EXIT = 17;
 
 	/**
 	 * Has the exit method been called?

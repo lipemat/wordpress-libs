@@ -23,12 +23,12 @@ class StringType implements ArgsRules, TypeRules {
 	 */
 	use Args;
 
-	public const FORMAT_DATE_TIME = 'date-time';
-	public const FORMAT_EMAIL     = 'email';
-	public const FORMAT_URI       = 'uri';
-	public const FORMAT_IP        = 'ip';
-	public const FORMAT_UUID      = 'uuid';
-	public const FORMAT_HEX_COLOR = 'hex-color';
+	public const string FORMAT_DATE_TIME = 'date-time';
+	public const string FORMAT_EMAIL     = 'email';
+	public const string FORMAT_URI       = 'uri';
+	public const string FORMAT_IP        = 'ip';
+	public const string FORMAT_UUID      = 'uuid';
+	public const string FORMAT_HEX_COLOR = 'hex-color';
 
 	/**
 	 * Data type for the schema.

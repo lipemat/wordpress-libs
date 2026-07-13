@@ -26,7 +26,7 @@ use Lipe\Lib\Util\Strings;
 class Taxonomy {
 	use Memoize;
 
-	protected const REGISTRY_OPTION = 'lipe/lib/schema/taxonomy_registry';
+	protected const string REGISTRY_OPTION = 'lipe/lib/schema/taxonomy_registry';
 
 	/**
 	 * Track the register taxonomies for later use.

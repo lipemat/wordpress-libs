@@ -28,36 +28,36 @@ class Get_Comments implements Meta_Query_Interface, Date_Query_Interface, ArgsRu
 	use Date_Query_Trait;
 	use Meta_Query_Trait;
 
-	public const ORDER_ASC  = 'ASC';
-	public const ORDER_DESC = 'DESC';
+	public const string ORDER_ASC  = 'ASC';
+	public const string ORDER_DESC = 'DESC';
 
-	public const ORDERBY_AGENT        = 'comment_agent';
-	public const ORDERBY_APPROVED     = 'comment_approved';
-	public const ORDERBY_AUTHOR       = 'comment_author';
-	public const ORDERBY_AUTHOR_EMAIL = 'comment_author_email';
-	public const ORDERBY_AUTHOR_IP    = 'comment_author_IP';
-	public const ORDERBY_AUTHOR_URL   = 'comment_author_url';
-	public const ORDERBY_COMMENT_IN   = 'comment__in';
-	public const ORDERBY_COMMENT_TYPE = 'comment_type';
-	public const ORDERBY_CONTENT      = 'comment_content';
-	public const ORDERBY_DATE         = 'comment_date';
-	public const ORDERBY_DATE_GMT     = 'comment_date_gmt';
-	public const ORDERBY_ID           = 'comment_ID';
-	public const ORDERBY_KARMA        = 'comment_karma';
-	public const ORDERBY_META_VALUE   = 'meta_value';
-	public const ORDERBY_NONE         = 'none';
-	public const ORDERBY_PARENT       = 'comment_parent';
-	public const ORDERBY_POST_ID      = 'comment_post_ID';
-	public const ORDERBY_USER_ID      = 'user_id';
+	public const string ORDERBY_AGENT        = 'comment_agent';
+	public const string ORDERBY_APPROVED     = 'comment_approved';
+	public const string ORDERBY_AUTHOR       = 'comment_author';
+	public const string ORDERBY_AUTHOR_EMAIL = 'comment_author_email';
+	public const string ORDERBY_AUTHOR_IP    = 'comment_author_IP';
+	public const string ORDERBY_AUTHOR_URL   = 'comment_author_url';
+	public const string ORDERBY_COMMENT_IN   = 'comment__in';
+	public const string ORDERBY_COMMENT_TYPE = 'comment_type';
+	public const string ORDERBY_CONTENT      = 'comment_content';
+	public const string ORDERBY_DATE         = 'comment_date';
+	public const string ORDERBY_DATE_GMT     = 'comment_date_gmt';
+	public const string ORDERBY_ID           = 'comment_ID';
+	public const string ORDERBY_KARMA        = 'comment_karma';
+	public const string ORDERBY_META_VALUE   = 'meta_value';
+	public const string ORDERBY_NONE         = 'none';
+	public const string ORDERBY_PARENT       = 'comment_parent';
+	public const string ORDERBY_POST_ID      = 'comment_post_ID';
+	public const string ORDERBY_USER_ID      = 'user_id';
 
-	public const STATUS_ALL     = 'all';
-	public const STATUS_APPROVE = 'approve';
-	public const STATUS_HOLD    = 'hold';
-	public const STATUS_TRASH   = 'trash';
+	public const string STATUS_ALL     = 'all';
+	public const string STATUS_APPROVE = 'approve';
+	public const string STATUS_HOLD    = 'hold';
+	public const string STATUS_TRASH   = 'trash';
 
-	public const TYPE_COMMENT = 'comment';
-	public const TYPE_NOTE    = 'note';
-	public const TYPE_PINGS   = 'pings';
+	public const string TYPE_COMMENT = 'comment';
+	public const string TYPE_NOTE    = 'note';
+	public const string TYPE_PINGS   = 'pings';
 
 	/**
 	 * Comment author email address.

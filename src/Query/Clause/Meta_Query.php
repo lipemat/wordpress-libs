@@ -30,24 +30,24 @@ class Meta_Query implements ClauseRules {
 	/**
 	 * Compare in meta clauses.
 	 */
-	public const COMPARE_BETWEEN                = 'BETWEEN';
-	public const COMPARE_EQUALS                 = '=';
-	public const COMPARE_EXISTS                 = 'EXISTS';
-	public const COMPARE_GREATER_THAN           = '>';
-	public const COMPARE_GREATER_THAN_OR_EQUALS = '>=';
-	public const COMPARE_IN                     = 'IN';
-	public const COMPARE_LESS_THAN              = '<';
-	public const COMPARE_LESS_THAN_OR_EQUALS    = '<=';
-	public const COMPARE_LIKE                   = 'LIKE';
-	public const COMPARE_NONE                   = '';
-	public const COMPARE_NOT_BETWEEN            = 'NOT BETWEEN';
-	public const COMPARE_NOT_EQUALS             = '!=';
-	public const COMPARE_NOT_EXISTS             = 'NOT EXISTS';
-	public const COMPARE_NOT_IN                 = 'NOT IN';
-	public const COMPARE_NOT_LIKE               = 'NOT LIKE';
-	public const COMPARE_NOT_REGEXP             = 'NOT REGEXP';
-	public const COMPARE_REGEXP                 = 'REGEXP';
-	public const COMPARE_RLIKE                  = 'RLIKE';
+	public const string COMPARE_BETWEEN                = 'BETWEEN';
+	public const string COMPARE_EQUALS                 = '=';
+	public const string COMPARE_EXISTS                 = 'EXISTS';
+	public const string COMPARE_GREATER_THAN           = '>';
+	public const string COMPARE_GREATER_THAN_OR_EQUALS = '>=';
+	public const string COMPARE_IN                     = 'IN';
+	public const string COMPARE_LESS_THAN              = '<';
+	public const string COMPARE_LESS_THAN_OR_EQUALS    = '<=';
+	public const string COMPARE_LIKE                   = 'LIKE';
+	public const string COMPARE_NONE                   = '';
+	public const string COMPARE_NOT_BETWEEN            = 'NOT BETWEEN';
+	public const string COMPARE_NOT_EQUALS             = '!=';
+	public const string COMPARE_NOT_EXISTS             = 'NOT EXISTS';
+	public const string COMPARE_NOT_IN                 = 'NOT IN';
+	public const string COMPARE_NOT_LIKE               = 'NOT LIKE';
+	public const string COMPARE_NOT_REGEXP             = 'NOT REGEXP';
+	public const string COMPARE_REGEXP                 = 'REGEXP';
+	public const string COMPARE_RLIKE                  = 'RLIKE';
 
 	/**
 	 * `compare_key` is used to compare meta keys in advanced ways
@@ -57,32 +57,32 @@ class Meta_Query implements ClauseRules {
 	 *
 	 * @see \WP_Meta_Query::__construct
 	 */
-	public const KEY_EQUALS     = '=';
-	public const KEY_EXISTS     = 'EXISTS';
-	public const KEY_IN         = 'IN';
-	public const KEY_LIKE       = 'LIKE';
-	public const KEY_NONE       = '';
-	public const KEY_NOT_EQUALS = '!=';
-	public const KEY_NOT_EXISTS = 'NOT EXISTS';
-	public const KEY_NOT_IN     = 'NOT IN';
-	public const KEY_NOT_LIKE   = 'NOT LIKE';
-	public const KEY_NOT_REGEXP = 'NOT REGEXP';
-	public const KEY_REGEXP     = 'REGEXP';
-	public const KEY_RLIKE      = 'RLIKE';
+	public const string KEY_EQUALS     = '=';
+	public const string KEY_EXISTS     = 'EXISTS';
+	public const string KEY_IN         = 'IN';
+	public const string KEY_LIKE       = 'LIKE';
+	public const string KEY_NONE       = '';
+	public const string KEY_NOT_EQUALS = '!=';
+	public const string KEY_NOT_EXISTS = 'NOT EXISTS';
+	public const string KEY_NOT_IN     = 'NOT IN';
+	public const string KEY_NOT_LIKE   = 'NOT LIKE';
+	public const string KEY_NOT_REGEXP = 'NOT REGEXP';
+	public const string KEY_REGEXP     = 'REGEXP';
+	public const string KEY_RLIKE      = 'RLIKE';
 
 	/**
 	 * Data types.
 	 */
-	public const TYPE_BINARY   = 'BINARY';
-	public const TYPE_CHAR     = 'CHAR';
-	public const TYPE_DATE     = 'DATE';
-	public const TYPE_DATETIME = 'DATETIME';
-	public const TYPE_DECIMAL  = 'DECIMAL';
-	public const TYPE_NONE     = '';
-	public const TYPE_NUMERIC  = 'NUMERIC';
-	public const TYPE_SIGNED   = 'SIGNED';
-	public const TYPE_TIME     = 'TIME';
-	public const TYPE_UNSIGNED = 'UNSIGNED';
+	public const string TYPE_BINARY   = 'BINARY';
+	public const string TYPE_CHAR     = 'CHAR';
+	public const string TYPE_DATE     = 'DATE';
+	public const string TYPE_DATETIME = 'DATETIME';
+	public const string TYPE_DECIMAL  = 'DECIMAL';
+	public const string TYPE_NONE     = '';
+	public const string TYPE_NUMERIC  = 'NUMERIC';
+	public const string TYPE_SIGNED   = 'SIGNED';
+	public const string TYPE_TIME     = 'TIME';
+	public const string TYPE_UNSIGNED = 'UNSIGNED';
 
 
 	/**
@@ -314,7 +314,7 @@ class Meta_Query implements ClauseRules {
 				'type'        => $type,
 				'compare_key' => $compare_key,
 				'type_key'    => $type_key,
-			] )
+			], static fn( string $value ): bool => '' !== $value )
 		);
 		return $this;
 	}

@@ -26,13 +26,13 @@ class Api {
 	use Hooks;
 	use Version;
 
-	public const NAME = 'lipe/lib/api/api';
+	public const string NAME = 'lipe/lib/api/api';
 
-	public const ENDPOINT     = 'api';
-	public const FORMAT       = '_format';
-	public const FORMAT_ASSOC = 'assoc';
+	public const string ENDPOINT     = 'api';
+	public const string FORMAT       = '_format';
+	public const string FORMAT_ASSOC = 'assoc';
 
-	protected const VERSION = '2.2.0';
+	protected const string VERSION = '2.2.0';
 
 	/**
 	 * Are we currently handling an api request?

@@ -17,8 +17,8 @@ class Checkbox {
 	use Singleton;
 	use Memoize;
 
-	public const LAYOUT_BLOCK   = 'block';
-	public const LAYOUT_COMPACT = 'compact';
+	public const string LAYOUT_BLOCK   = 'block';
+	public const string LAYOUT_COMPACT = 'compact';
 
 
 	/**
