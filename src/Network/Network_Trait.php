@@ -41,9 +41,9 @@ trait Network_Trait {
 	/**
 	 * Object of this network.
 	 *
-	 * @var \WP_Network
+	 * @var ?\WP_Network
 	 */
-	protected $network;
+	protected ?\WP_Network $network;
 
 
 	/**
@@ -54,7 +54,7 @@ trait Network_Trait {
 	public function __construct( $network = null ) {
 		if ( null === $network ) {
 			$this->network_id = get_current_network_id();
-		} elseif ( \is_a( $network, \WP_Network::class ) ) {
+		} elseif ( $network instanceof \WP_Network ) {
 			$this->network = $network;
 			$this->network_id = $this->network->id;
 		} else {

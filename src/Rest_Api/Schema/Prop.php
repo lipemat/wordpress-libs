@@ -62,7 +62,7 @@ trait Prop {
 
 
 	/**
-	 * Set a fields description.
+	 * Set a field's description.
 	 *
 	 * @param string $description - The field's description.
 	 *

@@ -61,7 +61,7 @@ class Date extends Field {
 	 *
 	 * @param string $date_format - PHP date format.
 	 */
-	public function date_format( string $date_format ): Date {
+	public function date_format( string $date_format ): static {
 		$this->date_format = $date_format;
 		return $this;
 	}
@@ -77,7 +77,7 @@ class Date extends Field {
 	 *
 	 * @param string $timezone - Timezone to use.
 	 */
-	public function timezone( string $timezone ): Date {
+	public function timezone( string $timezone ): static {
 		$this->timezone = $timezone;
 		return $this;
 	}
@@ -94,7 +94,7 @@ class Date extends Field {
 	 *
 	 * @param string $timezone_meta_key - Meta key to retrieve timezone from.
 	 */
-	public function timezone_meta_key( string $timezone_meta_key ): Date {
+	public function timezone_meta_key( string $timezone_meta_key ): static {
 		$this->timezone_meta_key = $timezone_meta_key;
 		return $this;
 	}

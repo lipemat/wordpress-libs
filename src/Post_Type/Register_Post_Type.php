@@ -125,7 +125,7 @@ class Register_Post_Type implements ArgsRules {
 	 *
 	 *   - If true the post type is shown in its own top level menu.
 	 *   - If false, no menu is shown.
-	 *   - If a string of an existing top level menu (eg. 'tools.php' or 'edit.php?post_type=page'), the post type will be placed as a
+	 *   - If a string of an existing top level menu (e.g. 'tools.php' or 'edit.php?post_type=page'), the post type will be placed as a
 	 *   sub-menu of that.
 	 *
 	 * Default is the value of `$show_ui`.

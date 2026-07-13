@@ -112,7 +112,7 @@ class Wp_Register_Ability implements ArgsRules {
 	 *              theme?: 'light'|'dark'
 	 *        },
 	 *        public?: bool,
-	 *        type?: self::MCP_TYPE_*
+	 *        type?: static::MCP_TYPE_*
 	 *     }
 	 * }
 	 * @var array<string, mixed>

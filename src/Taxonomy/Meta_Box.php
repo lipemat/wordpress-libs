@@ -146,7 +146,7 @@ class Meta_Box {
 		<div id="taxonomy-<?= esc_attr( $this->taxonomy ) ?>" class="categorydiv lipe-libs-terms-box">
 			<?php
 			if ( 'dropdown' === $this->type ) {
-				printf(
+				\printf(
 					'<label for="%1$s" class="screen-reader-text">%2$s</label>',
 					esc_attr( "{$this->taxonomy}dropdown" ),
 					esc_html( $object->labels->singular_name )

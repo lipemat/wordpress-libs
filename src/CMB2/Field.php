@@ -814,8 +814,6 @@ class Field {
 	 *
 	 * @param bool $prevent_save - Whether to save this field.
 	 *                           Defaults to false.
-	 *
-	 * @return static
 	 */
 	public function disable_field_saving( bool $prevent_save = true ): static {
 		$this->save_field = ! $prevent_save;
@@ -854,8 +852,6 @@ class Field {
 	 *
 	 * @param Field $field - The field to translate.
 	 * @param Box   $box   - The box this field is assigned to.
-	 *
-	 * @return static
 	 */
 	public static function from( Field $field, Box $box ): static {
 		$field = new static( $field->id, $field->name, $field->box, $field->group );
@@ -871,8 +867,6 @@ class Field {
 	 * @param string $name  - Field label.
 	 * @param Box    $box   - Parent class using this Field.
 	 * @param ?Group $group - Group this field is assigned to.
-	 *
-	 * @return static
 	 */
 	public static function factory( string $id, string $name, Box $box, ?Group $group = null ): static {
 		return new static( $id, $name, $box, $group );

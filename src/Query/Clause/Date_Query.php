@@ -50,7 +50,7 @@ class Date_Query implements ClauseRules {
 	 *
 	 * @return $this
 	 */
-	public function after( string $year, ?string $month = null, ?string $day = null ): Date_Query {
+	public function after( string $year, ?string $month = null, ?string $day = null ): static {
 		$this->update_current_clause( \array_filter( [
 			'year'  => $year,
 			'month' => $month,
@@ -66,10 +66,8 @@ class Date_Query implements ClauseRules {
 	 * @see Date_Query::after()
 	 *
 	 * @param string $date - strtotime() compatible string.
-	 *
-	 * @return Date_Query
 	 */
-	public function after_string( string $date ): Date_Query {
+	public function after_string( string $date ): static {
 		$this->update_current_clause( $date, 'after' );
 		return $this;
 	}
@@ -90,7 +88,7 @@ class Date_Query implements ClauseRules {
 	 *
 	 * @return $this
 	 */
-	public function before( string $year, ?string $month = null, ?string $day = null ): Date_Query {
+	public function before( string $year, ?string $month = null, ?string $day = null ): static {
 		$this->update_current_clause( \array_filter( [
 			'year'  => $year,
 			'month' => $month,
@@ -106,10 +104,8 @@ class Date_Query implements ClauseRules {
 	 * @see Date_Query::before()
 	 *
 	 * @param string $date - strtotime() compatible string.
-	 *
-	 * @return Date_Query
 	 */
-	public function before_string( string $date ): Date_Query {
+	public function before_string( string $date ): static {
 		$this->update_current_clause( $date, 'before' );
 
 		return $this;
@@ -123,10 +119,8 @@ class Date_Query implements ClauseRules {
 	 * @see date_query_valid_columns filter
 	 *
 	 * @param string $column - Database column to compare against.
-	 *
-	 * @return Date_Query
 	 */
-	public function column( string $column ): Date_Query {
+	public function column( string $column ): static {
 		$this->update_current_clause( $column, 'column' );
 		return $this;
 	}
@@ -140,10 +134,8 @@ class Date_Query implements ClauseRules {
 	 * @phpstan-param COMPARE $compare
 	 *
 	 * @param string          $compare - The comparison operator.
-	 *
-	 * @return Date_Query
 	 */
-	public function compare( string $compare ): Date_Query {
+	public function compare( string $compare ): static {
 		$this->update_current_clause( $compare, 'compare' );
 		return $this;
 	}
@@ -156,10 +148,8 @@ class Date_Query implements ClauseRules {
 	 * Default false.
 	 *
 	 * @param bool $inclusive - Whether to be inclusive or not.
-	 *
-	 * @return Date_Query
 	 */
-	public function inclusive( bool $inclusive = true ): Date_Query {
+	public function inclusive( bool $inclusive = true ): static {
 		$this->update_current_clause( $inclusive, 'inclusive' );
 		return $this;
 	}
@@ -170,10 +160,8 @@ class Date_Query implements ClauseRules {
 	 * or an array of years if `$compare` supports it.
 	 *
 	 * @param int|int[] $year - Year to retrieve posts for.
-	 *
-	 * @return Date_Query
 	 */
-	public function year( array|int $year ): Date_Query {
+	public function year( array|int $year ): static {
 		$this->update_current_clause( $year, 'year' );
 		return $this;
 	}
@@ -186,10 +174,8 @@ class Date_Query implements ClauseRules {
 	 * @phpstan-param  int<1,12>|array<int, int<1,12>> $month
 	 *
 	 * @param int|int[]                                $month - Month to retrieve posts for.
-	 *
-	 * @return Date_Query
 	 */
-	public function month( array|int $month ): Date_Query {
+	public function month( array|int $month ): static {
 		$this->update_current_clause( $month, 'month' );
 		return $this;
 	}
@@ -202,10 +188,8 @@ class Date_Query implements ClauseRules {
 	 * @phpstan-param  int<1,53>|array<int, int<1,53>> $week
 	 *
 	 * @param int|int[]                                $week - Week of the year to retrieve posts for.
-	 *
-	 * @return Date_Query
 	 */
-	public function week( array|int $week ): Date_Query {
+	public function week( array|int $week ): static {
 		$this->update_current_clause( $week, 'week' );
 		return $this;
 	}
@@ -219,7 +203,7 @@ class Date_Query implements ClauseRules {
 	 *
 	 * @param int|int[]                                $day - Day of the month to retrieve posts for.
 	 */
-	public function day( array|int $day ): Date_Query {
+	public function day( array|int $day ): static {
 		$this->update_current_clause( $day, 'day' );
 		return $this;
 	}
@@ -232,10 +216,8 @@ class Date_Query implements ClauseRules {
 	 * @phpstan-param  int<0,23>|array<int, int<0,23>> $hour
 	 *
 	 * @param int|int[]                                $hour - Hour to retrieve posts for.
-	 *
-	 * @return Date_Query
 	 */
-	public function hour( array|int $hour ): Date_Query {
+	public function hour( array|int $hour ): static {
 		$this->update_current_clause( $hour, 'hour' );
 		return $this;
 	}
@@ -248,10 +230,8 @@ class Date_Query implements ClauseRules {
 	 * @phpstan-param  int<0,59>|array<int, int<0,59>> $minute
 	 *
 	 * @param int|int[]                                $minute - Minute to retrieve posts for.
-	 *
-	 * @return Date_Query
 	 */
-	public function minute( array|int $minute ): Date_Query {
+	public function minute( array|int $minute ): static {
 		$this->update_current_clause( $minute, 'minute' );
 		return $this;
 	}
@@ -264,10 +244,8 @@ class Date_Query implements ClauseRules {
 	 * @phpstan-param  int<0,59>|array<int, int<0,59>> $second
 	 *
 	 * @param int|int[]                                $second - Second to retrieve posts for.
-	 *
-	 * @return Date_Query
 	 */
-	public function second( array|int $second ): Date_Query {
+	public function second( array|int $second ): static {
 		$this->update_current_clause( $second, 'second' );
 		return $this;
 	}
@@ -280,10 +258,8 @@ class Date_Query implements ClauseRules {
 	 * @phpstan-param  int<1,366>|array<int, int<1,366>> $dayofyear
 	 *
 	 * @param int|int[]                                  $dayofyear - Day of the year to retrieve posts for.
-	 *
-	 * @return Date_Query
 	 */
-	public function dayofyear( array|int $dayofyear ): Date_Query {
+	public function dayofyear( array|int $dayofyear ): static {
 		$this->update_current_clause( $dayofyear, 'dayofyear' );
 		return $this;
 	}
@@ -296,10 +272,8 @@ class Date_Query implements ClauseRules {
 	 * @phpstan-param  int<1,7>|array<int, int<1,7>> $dayofweek
 	 *
 	 * @param int|int[]                              $dayofweek - Day of the week to retrieve posts for.
-	 *
-	 * @return Date_Query
 	 */
-	public function dayofweek( array|int $dayofweek ): Date_Query {
+	public function dayofweek( array|int $dayofweek ): static {
 		$this->update_current_clause( $dayofweek, 'dayofweek' );
 		return $this;
 	}
@@ -312,10 +286,8 @@ class Date_Query implements ClauseRules {
 	 * @phpstan-param  int<1,7>|array<int, int<1,7>> $dayofweek_iso
 	 *
 	 * @param int|int[]                              $dayofweek_iso - Day of the week (ISO) to retrieve posts for.
-	 *
-	 * @return Date_Query
 	 */
-	public function dayofweek_iso( array|int $dayofweek_iso ): Date_Query {
+	public function dayofweek_iso( array|int $dayofweek_iso ): static {
 		$this->update_current_clause( $dayofweek_iso, 'dayofweek_iso' );
 		return $this;
 	}
@@ -327,10 +299,8 @@ class Date_Query implements ClauseRules {
 	 * @see    Date_QueryTest::test_next_clause() for example of the resulting array.
 	 *
 	 * @notice Do not use with a single taxonomy array.
-	 *
-	 * @return Date_Query
 	 */
-	public function next_clause(): Date_Query {
+	public function next_clause(): static {
 		if ( ! isset( $this->clauses['relation'] ) ) {
 			$this->relation();
 		}

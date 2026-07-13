@@ -32,9 +32,9 @@ class Checkbox {
 	 * @param array<string, mixed> $args  Array of field arguments for the group field parent.
 	 * @param \CMB2_Field          $field The CMB2_Field group object.
 	 *
-	 * @return \CMB2_Field|void
+	 * @return void
 	 */
-	public function render_field_callback( array $args, \CMB2_Field $field ) {
+	public function render_field_callback( array $args, \CMB2_Field $field ): void {
 		if ( ! $field->should_show() || ( ! is_admin() && ! (bool) $field->args( 'on_front' ) ) ) {
 			return;
 		}
@@ -74,8 +74,5 @@ class Checkbox {
 		echo "\n\t</div>";
 
 		$field->peform_param_callback( 'after_row' );
-
-		// For chaining.
-		return $field;
 	}
 }

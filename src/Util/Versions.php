@@ -116,8 +116,6 @@ class Versions {
 	 *
 	 * To be used when items have pre-requisites that must be run in a particular order.
 	 *
-	 * @uses $this->updates
-	 *
 	 * @param float|string $version  - The version to check against.
 	 * @param callable     $callback - Method or function to run if the version checks out.
 	 * @param mixed        $args     - Args to pass to the function.

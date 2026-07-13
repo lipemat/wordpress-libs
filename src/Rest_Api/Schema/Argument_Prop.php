@@ -45,9 +45,9 @@ class Argument_Prop implements ArgsRules, PropRules {
 	 *
 	 * @param mixed $default_value - Default value.
 	 *
-	 * @return Argument_Prop
+	 * @return static
 	 */
-	public function default( mixed $default_value ): Argument_Prop {
+	public function default( mixed $default_value ): static {
 		$this->default = $default_value;
 		return $this;
 	}
@@ -64,9 +64,9 @@ class Argument_Prop implements ArgsRules, PropRules {
 	 * @param callable $callback - Callback to validate the value.
 	 * @formatter      :on
 	 *
-	 * @return Argument_Prop
+	 * @return static
 	 */
-	public function validate_callback( callable $callback ): Argument_Prop {
+	public function validate_callback( callable $callback ): static {
 		$this->validate_callback = $callback;
 		return $this;
 	}
@@ -83,9 +83,9 @@ class Argument_Prop implements ArgsRules, PropRules {
 	 * @param callable $callback - Callback to sanitize the value.
 	 * @formatter:on
 	 *
-	 * @return Argument_Prop
+	 * @return static
 	 */
-	public function sanitize_callback( callable $callback ): Argument_Prop {
+	public function sanitize_callback( callable $callback ): static {
 		$this->sanitize_callback = $callback;
 		return $this;
 	}

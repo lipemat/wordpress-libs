@@ -151,10 +151,8 @@ class Group extends Field {
 	 * @phpstan-param Layout::* $layout
 	 *
 	 * @param string            $layout - Layout type.
-	 *
-	 * @return Group
 	 */
-	public function layout( string $layout ): Group {
+	public function layout( string $layout ): static {
 		if ( Layout::BLOCK === $layout ) {
 			return $this;
 		}

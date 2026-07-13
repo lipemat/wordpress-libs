@@ -56,7 +56,7 @@ trait Mutator_Trait {
 		$object = $this->get_object();
 		if ( null === $object ) {
 			/* translators: {property name} */
-			throw new \ErrorException( \sprintf( esc_html__( 'Undefined object to retrieve property: %s', 'lipe' ), __CLASS__ . ':' . esc_html( $name ) ) );
+			throw new \ErrorException( \sprintf( esc_html__( 'No object to retrieve property: %s', 'lipe' ), __CLASS__ . ':' . esc_html( $name ) ) );
 		}
 		if ( \property_exists( $object, $name ) || ( \property_exists( $object, 'data' ) && \property_exists( $object->data, $name ) ) ) {
 			return $object->{$name};

@@ -78,10 +78,8 @@ class Section {
 	 * @see Section::field()
 	 *
 	 * @param Field $field - Field to add to the section.
-	 *
-	 * @return Section
 	 */
-	public function add_field( Field $field ): Section {
+	public function add_field( Field $field ): static {
 		$this->fields[] = $field;
 		return $this;
 	}
@@ -92,10 +90,8 @@ class Section {
 	 * Receives the section’s class name as %s.
 	 *
 	 * @param string $before_section - HTML content to prepend.
-	 *
-	 * @return Section
 	 */
-	public function before_section( string $before_section ): Section {
+	public function before_section( string $before_section ): static {
 		$this->args->before_section = $before_section;
 		return $this;
 	}
@@ -106,9 +102,9 @@ class Section {
 	 *
 	 * @param string $after_section - HTML content to append.
 	 *
-	 * @return Section
+	 * @return static
 	 */
-	public function after_section( string $after_section ): Section {
+	public function after_section( string $after_section ): static {
 		$this->args->after_section = $after_section;
 		return $this;
 	}
@@ -120,9 +116,9 @@ class Section {
 	 *
 	 * @param string $section_class - Class name.
 	 *
-	 * @return Section
+	 * @return static
 	 */
-	public function section_class( string $section_class ): Section {
+	public function section_class( string $section_class ): static {
 		$this->args->section_class = $section_class;
 		return $this;
 	}
@@ -133,9 +129,9 @@ class Section {
 	 *
 	 * @param string $description - Description.
 	 *
-	 * @return Section
+	 * @return static
 	 */
-	public function description( string $description ): Section {
+	public function description( string $description ): static {
 		$this->description = $description;
 		return $this;
 	}
@@ -175,7 +171,7 @@ class Section {
 	 * @param string $id    - Unique ID for this section.
 	 * @param string $title - Title of the section. Use '' to hide the title.
 	 */
-	public static function factory( string $id, string $title ): Section {
-		return new Section( $id, $title );
+	public static function factory( string $id, string $title ): static {
+		return new static( $id, $title );
 	}
 }

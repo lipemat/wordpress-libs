@@ -70,9 +70,9 @@ class Labels {
 	 *
 	 * @param string $value - Name of the taxonomy.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function name( string $value ): Labels {
+	public function name( string $value ): static {
 		return $this->set( 'name', $value );
 	}
 
@@ -82,9 +82,9 @@ class Labels {
 	 *
 	 * @param string $value - Singular name of the taxonomy.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function singular_name( string $value ): Labels {
+	public function singular_name( string $value ): static {
 		return $this->set( 'singular_name', $value );
 	}
 
@@ -94,9 +94,9 @@ class Labels {
 	 *
 	 * @param string $value - Search items label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function search_items( string $value ): Labels {
+	public function search_items( string $value ): static {
 		return $this->set( 'search_items', $value );
 	}
 
@@ -106,9 +106,9 @@ class Labels {
 	 *
 	 * @param string $value - Popular items label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function popular_items( string $value ): Labels {
+	public function popular_items( string $value ): static {
 		return $this->set( 'popular_items', $value );
 	}
 
@@ -118,9 +118,9 @@ class Labels {
 	 *
 	 * @param string $value - All items label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function all_items( string $value ): Labels {
+	public function all_items( string $value ): static {
 		return $this->set( 'all_items', $value );
 	}
 
@@ -130,9 +130,9 @@ class Labels {
 	 *
 	 * @param string $value - Parent item label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function parent_item( string $value ): Labels {
+	public function parent_item( string $value ): static {
 		return $this->set( 'parent_item', $value );
 	}
 
@@ -142,9 +142,9 @@ class Labels {
 	 *
 	 * @param string $value - Parent item colon label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function parent_item_colon( string $value ): Labels {
+	public function parent_item_colon( string $value ): static {
 		return $this->set( 'parent_item_colon', $value );
 	}
 
@@ -154,9 +154,9 @@ class Labels {
 	 *
 	 * @param string $value - Edit item label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function edit_item( string $value ): Labels {
+	public function edit_item( string $value ): static {
 		return $this->set( 'edit_item', $value );
 	}
 
@@ -166,9 +166,9 @@ class Labels {
 	 *
 	 * @param string $value - View item label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function view_item( string $value ): Labels {
+	public function view_item( string $value ): static {
 		return $this->set( 'view_item', $value );
 	}
 
@@ -178,9 +178,9 @@ class Labels {
 	 *
 	 * @param string $value - Update item label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function update_item( string $value ): Labels {
+	public function update_item( string $value ): static {
 		return $this->set( 'update_item', $value );
 	}
 
@@ -190,9 +190,9 @@ class Labels {
 	 *
 	 * @param string $value - Add new item label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function add_new_item( string $value ): Labels {
+	public function add_new_item( string $value ): static {
 		return $this->set( 'add_new_item', $value );
 	}
 
@@ -202,9 +202,9 @@ class Labels {
 	 *
 	 * @param string $value - New item name label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function new_item_name( string $value ): Labels {
+	public function new_item_name( string $value ): static {
 		return $this->set( 'new_item_name', $value );
 	}
 
@@ -214,9 +214,9 @@ class Labels {
 	 *
 	 * @param string $value - Separate items with commas label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function separate_items_with_commas( string $value ): Labels {
+	public function separate_items_with_commas( string $value ): static {
 		return $this->set( 'separate_items_with_commas', $value );
 	}
 
@@ -226,9 +226,9 @@ class Labels {
 	 *
 	 * @param string $value - Add or remove items label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function add_or_remove_items( string $value ): Labels {
+	public function add_or_remove_items( string $value ): static {
 		return $this->set( 'add_or_remove_items', $value );
 	}
 
@@ -238,9 +238,9 @@ class Labels {
 	 *
 	 * @param string $value - Choose from most used label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function choose_from_most_used( string $value ): Labels {
+	public function choose_from_most_used( string $value ): static {
 		return $this->set( 'choose_from_most_used', $value );
 	}
 
@@ -250,9 +250,9 @@ class Labels {
 	 *
 	 * @param string $value - "Not found" label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function not_found( string $value ): Labels {
+	public function not_found( string $value ): static {
 		return $this->set( 'not_found', $value );
 	}
 
@@ -262,9 +262,9 @@ class Labels {
 	 *
 	 * @param string $value - No terms label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function no_terms( string $value ): Labels {
+	public function no_terms( string $value ): static {
 		return $this->set( 'no_terms', $value );
 	}
 
@@ -274,9 +274,9 @@ class Labels {
 	 *
 	 * @param string $value - Items list navigation label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function no_item( string $value ): Labels {
+	public function no_item( string $value ): static {
 		return $this->set( 'no_item', $value );
 	}
 
@@ -286,9 +286,9 @@ class Labels {
 	 *
 	 * @param string $value - Items list navigation label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function items_list_navigation( string $value ): Labels {
+	public function items_list_navigation( string $value ): static {
 		return $this->set( 'items_list_navigation', $value );
 	}
 
@@ -298,9 +298,9 @@ class Labels {
 	 *
 	 * @param string $value - Items list label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function items_list( string $value ): Labels {
+	public function items_list( string $value ): static {
 		return $this->set( 'items_list', $value );
 	}
 
@@ -310,9 +310,9 @@ class Labels {
 	 *
 	 * @param string $value - Most used label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function most_used( string $value ): Labels {
+	public function most_used( string $value ): static {
 		return $this->set( 'most_used', $value );
 	}
 
@@ -322,9 +322,9 @@ class Labels {
 	 *
 	 * @param string $value - Back to items label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function back_to_items( string $value ): Labels {
+	public function back_to_items( string $value ): static {
 		return $this->set( 'back_to_items', $value );
 	}
 
@@ -334,9 +334,9 @@ class Labels {
 	 *
 	 * @param string $value - Menu name label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function menu_name( string $value ): Labels {
+	public function menu_name( string $value ): static {
 		return $this->set( 'menu_name', $value );
 	}
 
@@ -346,9 +346,9 @@ class Labels {
 	 *
 	 * @param string $value - Description shown in the field.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function desc_field_description( string $value ): Labels {
+	public function desc_field_description( string $value ): static {
 		return $this->set( 'desc_field_description', $value );
 	}
 
@@ -358,9 +358,9 @@ class Labels {
 	 *
 	 * @param string $value - Description shown for the name of the field in the admin bar.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function name_admin_bar( string $value ): Labels {
+	public function name_admin_bar( string $value ): static {
 		return $this->set( 'name_admin_bar', $value );
 	}
 
@@ -370,9 +370,9 @@ class Labels {
 	 *
 	 * @param string $value - Description shown for the name of the field.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function name_field_description( string $value ): Labels {
+	public function name_field_description( string $value ): static {
 		return $this->set( 'name_field_description', $value );
 	}
 
@@ -382,9 +382,9 @@ class Labels {
 	 *
 	 * @param string $value - Description shown for the parent of the field.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function parent_field_description( string $value ): Labels {
+	public function parent_field_description( string $value ): static {
 		return $this->set( 'parent_field_description', $value );
 	}
 
@@ -394,9 +394,9 @@ class Labels {
 	 *
 	 * @param string $value - Description shown for the single field.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function single_field_description( string $value ): Labels {
+	public function single_field_description( string $value ): static {
 		return $this->set( 'single_field_description', $value );
 	}
 
@@ -406,9 +406,9 @@ class Labels {
 	 *
 	 * @param string $value - Filter by item label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function filter_by_item( string $value ): Labels {
+	public function filter_by_item( string $value ): static {
 		return $this->set( 'filter_by_item', $value );
 	}
 
@@ -418,9 +418,9 @@ class Labels {
 	 *
 	 * @param string $value - Item link label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function item_link( string $value ): Labels {
+	public function item_link( string $value ): static {
 		return $this->set( 'item_link', $value );
 	}
 
@@ -430,9 +430,9 @@ class Labels {
 	 *
 	 * @param string $value - Item link description label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function item_link_description( string $value ): Labels {
+	public function item_link_description( string $value ): static {
 		return $this->set( 'item_link_description', $value );
 	}
 
@@ -445,9 +445,9 @@ class Labels {
 	 * @param string          $key   - Key of the label to set.
 	 * @param string          $value - Value of the label to set.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	protected function set( string $key, string $value ): Labels {
+	protected function set( string $key, string $value ): static {
 		$this->labels[ $key ] = $value;
 		return $this;
 	}

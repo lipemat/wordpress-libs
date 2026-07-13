@@ -84,7 +84,7 @@ class Taxonomy extends Field {
 	 *
 	 * @param bool $remove_default - Whether to remove the default metabox.
 	 */
-	public function remove_default( bool $remove_default ): Taxonomy {
+	public function remove_default( bool $remove_default ): static {
 		$this->remove_default = $remove_default;
 		return $this;
 	}
@@ -100,7 +100,7 @@ class Taxonomy extends Field {
 	 *
 	 * @param bool $select_all_button - Whether to show the select all button.
 	 */
-	public function select_all_button( bool $select_all_button ): Taxonomy {
+	public function select_all_button( bool $select_all_button ): static {
 		$this->select_all_button = $select_all_button;
 		return $this;
 	}
@@ -113,10 +113,8 @@ class Taxonomy extends Field {
 	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
 	 *
 	 * @param Get_Terms $args - The arguments to pass to get_terms().
-	 *
-	 * @return Taxonomy
 	 */
-	public function term_query_args( Get_Terms $args ): Taxonomy {
+	public function term_query_args( Get_Terms $args ): static {
 		$this->query_args = $args->get_args();
 		return $this;
 	}
@@ -162,7 +160,7 @@ class Taxonomy extends Field {
 	 *
 	 * @return $this
 	 */
-	public function store_terms_in_meta( bool $use_meta = true ): Taxonomy {
+	public function store_terms_in_meta( bool $use_meta = true ): static {
 		$this->store_terms_in_meta = $use_meta;
 
 		return $this;

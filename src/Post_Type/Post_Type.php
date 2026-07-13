@@ -43,7 +43,7 @@ class Post_Type {
 	/**
 	 * Track the register post types for later use.
 	 *
-	 * @var array<string, Post_Type>
+	 * @var array<string, static>
 	 */
 	protected static array $registry = [];
 
@@ -218,10 +218,8 @@ class Post_Type {
 	 *
 	 * @param array<int, array<int, string|array<string|int, mixed>>> $template      - The template to use.
 	 * @param bool|string                                             $template_lock - The template lock to use.
-	 *
-	 * @return Post_Type
 	 */
-	public function gutenberg_template( array $template, bool|string $template_lock = false ): Post_Type {
+	public function gutenberg_template( array $template, bool|string $template_lock = false ): static {
 		$this->gutenberg_compatible( true );
 
 		$this->register_args->template = $template;
@@ -955,7 +953,7 @@ class Post_Type {
 			'item_scheduled'           => \sprintf( __( '%s scheduled.' ), $single ),
 			'item_updated'             => \sprintf( __( '%s updated.' ), $single ),
 			'item_link'                => \sprintf( __( '%s Link.' ), $single ),
-			'item_link_description'    => \sprintf( __( 'A link to a %s.' ), $single ),
+			'item_link_description'    => \sprintf( __( 'A link to an %s.' ), $single ),
 		];
 
 		$labels = wp_parse_args( $this->labels()->get_labels(), $labels );
@@ -1043,10 +1041,8 @@ class Post_Type {
 	 * Get a registered post type object.
 	 *
 	 * @param string $post_type - The post type slug.
-	 *
-	 * @return ?Post_Type
 	 */
-	public static function get_post_type( string $post_type ): ?Post_Type {
+	public static function get_post_type( string $post_type ): ?static {
 		return static::$registry[ $post_type ] ?? null;
 	}
 }

@@ -420,7 +420,7 @@ class Event_Callbacks {
 
 
 	/**
-	 * Create a Event_Callbacks instance from a field and callback.
+	 * Create an Event_Callbacks instance from a field and callback.
 	 *
 	 * @phpstan-param static::TYPE_*      $cb_type
 	 * @phpstan-param CHANGE_CB|DELETE_CB $callback

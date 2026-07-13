@@ -79,7 +79,7 @@ class Options extends Field {
 	 *
 	 * @param array<string, string|bool> $options - Array of options.
 	 */
-	public function options( array $options ): Options {
+	public function options( array $options ): static {
 		$this->options = $options;
 		return $this;
 	}
@@ -91,7 +91,7 @@ class Options extends Field {
 	 *
 	 * @param bool|string $show_option_none - Label of no option selected option. Defaults to not shown.
 	 */
-	public function show_option_none( bool|string $show_option_none ): Options {
+	public function show_option_none( bool|string $show_option_none ): static {
 		$this->show_option_none = $show_option_none;
 		return $this;
 	}
@@ -113,7 +113,7 @@ class Options extends Field {
 	 *
 	 * @param \Closure                                               $options_cb - Callback to provide field options.
 	 */
-	public function options_cb( \Closure $options_cb ): Options {
+	public function options_cb( \Closure $options_cb ): static {
 		$this->options_cb = $options_cb;
 		return $this;
 	}
@@ -129,7 +129,7 @@ class Options extends Field {
 	 *
 	 * @param bool $select_all_button - Whether to show the select all button.
 	 */
-	public function select_all_button( bool $select_all_button ): Options {
+	public function select_all_button( bool $select_all_button ): static {
 		$this->select_all_button = $select_all_button;
 		return $this;
 	}

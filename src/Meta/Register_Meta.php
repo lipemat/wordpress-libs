@@ -20,7 +20,7 @@ use Lipe\Lib\Rest_Api\Resource_Schema;
  *
  * @phpstan-type EXISTING array{
  *     object_subtype: string,
- *     type: self::TYPE_*,
+ *     type: static::TYPE_*,
  *     description: string,
  *     label: string,
  *     single: bool,

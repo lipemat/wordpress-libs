@@ -31,7 +31,7 @@ class Taxonomy {
 	/**
 	 * Track the register taxonomies for later use.
 	 *
-	 * @var Taxonomy[]
+	 * @var static[]
 	 */
 	protected static array $registry = [];
 
@@ -788,10 +788,8 @@ class Taxonomy {
 	 * Get a registered taxonomy object.
 	 *
 	 * @param string $taxonomy - Taxonomy slug.
-	 *
-	 * @return ?Taxonomy
 	 */
-	public static function get_taxonomy( string $taxonomy ): ?Taxonomy {
+	public static function get_taxonomy( string $taxonomy ): ?static {
 		return static::$registry[ $taxonomy ] ?? null;
 	}
 }

@@ -82,10 +82,8 @@ class StringType implements ArgsRules, TypeRules {
 	 * Define a list of allowed strings.
 	 *
 	 * @param string[] $values - List of allowed strings.
-	 *
-	 * @return StringType
 	 */
-	public function enum( array $values ): StringType {
+	public function enum( array $values ): static {
 		$this->enum = $values;
 		return $this;
 	}
@@ -99,10 +97,8 @@ class StringType implements ArgsRules, TypeRules {
 	 * @phpstan-param self::FORMAT_* $format
 	 *
 	 * @param string                 $format - Required format.
-	 *
-	 * @return StringType
 	 */
-	public function format( string $format ): StringType {
+	public function format( string $format ): static {
 		$this->format = $format;
 		return $this;
 	}
@@ -112,10 +108,8 @@ class StringType implements ArgsRules, TypeRules {
 	 * Maximum length of the string.
 	 *
 	 * @param int $maxLength - Maximum length.
-	 *
-	 * @return StringType
 	 */
-	public function max_length( int $maxLength ): StringType {
+	public function max_length( int $maxLength ): static {
 		$this->maxLength = $maxLength;
 		return $this;
 	}
@@ -125,10 +119,8 @@ class StringType implements ArgsRules, TypeRules {
 	 * Minimum length of the string.
 	 *
 	 * @param int $minLength - Minimum length.
-	 *
-	 * @return StringType
 	 */
-	public function min_length( int $minLength ): StringType {
+	public function min_length( int $minLength ): static {
 		$this->minLength = $minLength;
 		return $this;
 	}
@@ -138,10 +130,8 @@ class StringType implements ArgsRules, TypeRules {
 	 * Regular expression pattern to match against.
 	 *
 	 * @param string $pattern - Regular expression pattern.
-	 *
-	 * @return StringType
 	 */
-	public function pattern( string $pattern ): StringType {
+	public function pattern( string $pattern ): static {
 		$this->pattern = $pattern;
 		return $this;
 	}

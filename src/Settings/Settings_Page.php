@@ -289,7 +289,7 @@ class Settings_Page {
 	 *
 	 * @param Settings $settings - Setting configuration.
 	 */
-	public static function factory( Settings $settings ): Settings_Page {
+	public static function factory( Settings $settings ): static {
 		return new static( $settings );
 	}
 }

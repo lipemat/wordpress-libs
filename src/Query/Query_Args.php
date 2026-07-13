@@ -467,7 +467,7 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, ArgsRule
 	 * Prepending a term with a hyphen will exclude posts matching that term. Eg, 'pillow -sofa' will return posts
 	 * containing 'pillow' but not 'sofa'.
 	 *
-	 * The character used for exclusion can be modified using the the 'wp_query_search_exclusion_prefix' filter.
+	 * The character used for exclusion can be modified using the 'wp_query_search_exclusion_prefix' filter.
 	 *
 	 * @var string
 	 */
@@ -594,7 +594,7 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, ArgsRule
 	 * @see      \WP_Query::parse_orderby
 	 *
 	 * @phpstan-param self::ORDERBY*|array<self::ORDERBY_*, self::ORDER_*> $orderby
-	 * @phpstan-param ($orderby is array ? '' : self::ORDER_* )            $order
+	 * @phpstan-param ($orderby is array ? '' : static::ORDER_* )          $order
 	 *
 	 * @formatter:off
 	 * @param array|string  $orderby - Post field to order by or array of fields and their order.

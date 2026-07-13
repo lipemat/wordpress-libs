@@ -22,7 +22,7 @@ class Term_Box extends Box {
 
 	/**
 	 * If object_types is set to 'term',
-	 * it is required to provide a taxonomies property,
+	 * it is required to provide a taxonomy property,
 	 * which should be an array of Taxonomies.
 	 *
 	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#taxonomies

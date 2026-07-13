@@ -12,7 +12,7 @@ class Colors {
 	use Singleton;
 
 	/**
-	 * Convert a hexadecimal color to an rgba version.
+	 * Convert a hexadecimal color to a rgba version.
 	 *
 	 * @param string $color        - Hexadecimal version of color with leading #.
 	 * @param float  $transparency - Adds an alpha value to make the color transparent.

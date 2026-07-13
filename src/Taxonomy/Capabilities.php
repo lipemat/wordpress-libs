@@ -42,9 +42,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - The capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function manage_terms( string $capability = 'manage_categories' ): Capabilities {
+	public function manage_terms( string $capability = 'manage_categories' ): static {
 		return $this->set( 'manage_terms', $capability );
 	}
 
@@ -54,9 +54,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - The capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function edit_terms( string $capability = 'manage_categories' ): Capabilities {
+	public function edit_terms( string $capability = 'manage_categories' ): static {
 		return $this->set( 'edit_terms', $capability );
 	}
 
@@ -66,9 +66,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - The capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function delete_terms( string $capability = 'manage_categories' ): Capabilities {
+	public function delete_terms( string $capability = 'manage_categories' ): static {
 		return $this->set( 'delete_terms', $capability );
 	}
 
@@ -78,9 +78,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - The capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function assign_terms( string $capability = 'edit_posts' ): Capabilities {
+	public function assign_terms( string $capability = 'edit_posts' ): static {
 		return $this->set( 'assign_terms', $capability );
 	}
 
@@ -93,9 +93,9 @@ class Capabilities {
 	 * @param string          $key   - Key for the capability.
 	 * @param string          $value - The capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	protected function set( string $key, string $value ): Capabilities {
+	protected function set( string $key, string $value ): static {
 		$this->capabilities[ $key ] = $value;
 		return $this;
 	}

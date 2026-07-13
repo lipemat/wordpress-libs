@@ -17,7 +17,7 @@ interface Contain {
 
 
 	/**
-	 * Get key from container
+	 * Get key from the container
 	 *
 	 * @template T of object
 	 * @phpstan-param class-string<T> $id

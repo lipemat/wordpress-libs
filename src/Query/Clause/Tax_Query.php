@@ -41,10 +41,8 @@ class Tax_Query implements ClauseRules {
 	 * @param string                  $taxonomy - The taxonomy to query.
 	 * @param bool                    $children - Include children for hierarchical taxonomies.
 	 * @param string                  $field    - The field to query against.
-	 *
-	 * @return Tax_Query
 	 */
-	public function and( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ): Tax_Query {
+	public function and( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ): static {
 		$this->add_clause( $terms, $taxonomy, $field, 'AND', $children );
 		return $this;
 	}
@@ -59,10 +57,8 @@ class Tax_Query implements ClauseRules {
 	 * @param string                  $taxonomy - The taxonomy to query.
 	 * @param bool                    $children - Include children for hierarchical taxonomies.
 	 * @param string                  $field    - The field to query against.
-	 *
-	 * @return Tax_Query
 	 */
-	public function in( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ): Tax_Query {
+	public function in( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ): static {
 		$this->add_clause( $terms, $taxonomy, $field, 'IN', $children );
 		return $this;
 	}
@@ -77,10 +73,8 @@ class Tax_Query implements ClauseRules {
 	 * @param string                  $taxonomy - The taxonomy to query.
 	 * @param bool                    $children - Include children for hierarchical taxonomies.
 	 * @param string                  $field    - The field to query against.
-	 *
-	 * @return Tax_Query
 	 */
-	public function not_in( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ): Tax_Query {
+	public function not_in( array $terms, string $taxonomy, bool $children = true, string $field = 'term_id' ): static {
 		$this->add_clause( $terms, $taxonomy, $field, 'NOT IN', $children );
 		return $this;
 	}
@@ -90,10 +84,8 @@ class Tax_Query implements ClauseRules {
 	 * Create an 'EXISTS' clause.
 	 *
 	 * @param string $taxonomy - The taxonomy to query.
-	 *
-	 * @return Tax_Query
 	 */
-	public function exists( string $taxonomy ): Tax_Query {
+	public function exists( string $taxonomy ): static {
 		$this->add_clause( '', $taxonomy, '', 'EXISTS' );
 		return $this;
 	}
@@ -103,10 +95,8 @@ class Tax_Query implements ClauseRules {
 	 * Create a 'NOT EXISTS' clause.
 	 *
 	 * @param string $taxonomy - The taxonomy to query.
-	 *
-	 * @return Tax_Query
 	 */
-	public function not_exists( string $taxonomy ): Tax_Query {
+	public function not_exists( string $taxonomy ): static {
 		$this->add_clause( '', $taxonomy, '', 'NOT EXISTS' );
 		return $this;
 	}

@@ -65,9 +65,9 @@ class Labels {
 	 *
 	 * @param string $label - General name for the post type, usually plural.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function name( string $label ): Labels {
+	public function name( string $label ): static {
 		return $this->set( self::NAME, $label );
 	}
 
@@ -79,9 +79,9 @@ class Labels {
 	 *
 	 * @param string $label - Name for one object of this post type.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function singular_name( string $label ): Labels {
+	public function singular_name( string $label ): static {
 		return $this->set( self::SINGULAR_NAME, $label );
 	}
 
@@ -91,9 +91,9 @@ class Labels {
 	 *
 	 * @param string $label - Add new post label.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function add_new( string $label ): Labels {
+	public function add_new( string $label ): static {
 		return $this->set( self::ADD_NEW, $label );
 	}
 
@@ -105,9 +105,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for adding a new singular item.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function add_new_item( string $label ): Labels {
+	public function add_new_item( string $label ): static {
 		return $this->set( self::ADD_NEW_ITEM, $label );
 	}
 
@@ -117,9 +117,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for the archive page.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function archive_label( string $label ): Labels {
+	public function archive_label( string $label ): static {
 		return $this->set( self::ARCHIVE_LABEL, $label );
 	}
 
@@ -131,9 +131,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for editing a singular item.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function edit_item( string $label ): Labels {
+	public function edit_item( string $label ): static {
 		return $this->set( self::EDIT_ITEM, $label );
 	}
 
@@ -145,9 +145,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for the new item page title.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function new_item( string $label ): Labels {
+	public function new_item( string $label ): static {
 		return $this->set( self::NEW_ITEM, $label );
 	}
 
@@ -159,9 +159,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for viewing a singular item.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function view_item( string $label ): Labels {
+	public function view_item( string $label ): static {
 		return $this->set( self::VIEW_ITEM, $label );
 	}
 
@@ -173,9 +173,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for viewing <post type singular> type archives.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function view_items( string $label ): Labels {
+	public function view_items( string $label ): static {
 		return $this->set( self::VIEW_ITEMS, $label );
 	}
 
@@ -187,9 +187,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for searching plural items.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function search_items( string $label ): Labels {
+	public function search_items( string $label ): static {
 		return $this->set( self::SEARCH_ITEMS, $label );
 	}
 
@@ -201,9 +201,9 @@ class Labels {
 	 *
 	 * @param string $label - Label used when no items are found.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function not_found( string $label ): Labels {
+	public function not_found( string $label ): static {
 		return $this->set( self::NOT_FOUND, $label );
 	}
 
@@ -215,9 +215,9 @@ class Labels {
 	 *
 	 * @param string $label - Label used when no items are in the Trash.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function not_found_in_trash( string $label ): Labels {
+	public function not_found_in_trash( string $label ): static {
 		return $this->set( self::NOT_FOUND_IN_TRASH, $label );
 	}
 
@@ -230,9 +230,9 @@ class Labels {
 	 *
 	 * @param string $label - Label used to prefix parents of hierarchical items.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function parent_item_colon( string $label ): Labels {
+	public function parent_item_colon( string $label ): static {
 		return $this->set( self::PARENT_ITEM_COLON, $label );
 	}
 
@@ -244,9 +244,9 @@ class Labels {
 	 *
 	 * @param string $label - Label to signify all items in a submenu link.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function all_items( string $label ): Labels {
+	public function all_items( string $label ): static {
 		return $this->set( self::ALL_ITEMS, $label );
 	}
 
@@ -258,9 +258,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for archives in nav menus.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function archives( string $label ): Labels {
+	public function archives( string $label ): static {
 		return $this->set( self::ARCHIVES, $label );
 	}
 
@@ -272,9 +272,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for the attributes meta box.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function attributes( string $label ): Labels {
+	public function attributes( string $label ): static {
 		return $this->set( self::ATTRIBUTES, $label );
 	}
 
@@ -286,9 +286,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for the media frame button.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function insert_into_item( string $label ): Labels {
+	public function insert_into_item( string $label ): static {
 		return $this->set( self::INSERT_INTO_ITEM, $label );
 	}
 
@@ -300,9 +300,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for the media frame filter.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function uploaded_to_this_item( string $label ): Labels {
+	public function uploaded_to_this_item( string $label ): static {
 		return $this->set( self::UPLOADED_TO_THIS_ITEM, $label );
 	}
 
@@ -316,9 +316,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for the featured image meta box title.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function featured_image( string $label ): Labels {
+	public function featured_image( string $label ): static {
 		return $this->set( self::FEATURED_IMAGE, $label );
 	}
 
@@ -332,9 +332,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for setting the featured image.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function set_featured_image( string $label ): Labels {
+	public function set_featured_image( string $label ): static {
 		return $this->set( self::SET_FEATURED_IMAGE, $label );
 	}
 
@@ -348,9 +348,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for removing the featured image.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function remove_featured_image( string $label ): Labels {
+	public function remove_featured_image( string $label ): static {
 		return $this->set( self::REMOVE_FEATURED_IMAGE, $label );
 	}
 
@@ -364,9 +364,9 @@ class Labels {
 	 *
 	 * @param string $label - Label in the media frame for using a featured image.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function use_featured_image( string $label ): Labels {
+	public function use_featured_image( string $label ): static {
 		return $this->set( self::USE_FEATURED_IMAGE, $label );
 	}
 
@@ -378,9 +378,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for the menu name.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function menu_name( string $label ): Labels {
+	public function menu_name( string $label ): static {
 		return $this->set( self::MENU_NAME, $label );
 	}
 
@@ -392,9 +392,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for the table views hidden heading.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function filter_items_list( string $label ): Labels {
+	public function filter_items_list( string $label ): static {
 		return $this->set( self::FILTER_ITEMS_LIST, $label );
 	}
 
@@ -406,9 +406,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for the date filter in list tables.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function filter_by_date( string $label ): Labels {
+	public function filter_by_date( string $label ): static {
 		return $this->set( self::FILTER_BY_DATE, $label );
 	}
 
@@ -420,9 +420,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for the table pagination hidden heading.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function items_list_navigation( string $label ): Labels {
+	public function items_list_navigation( string $label ): static {
 		return $this->set( self::ITEMS_LIST_NAVIGATION, $label );
 	}
 
@@ -434,9 +434,9 @@ class Labels {
 	 *
 	 * @param string $label - Label for the table hidden heading.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function items_list( string $label ): Labels {
+	public function items_list( string $label ): static {
 		return $this->set( self::ITEMS_LIST, $label );
 	}
 
@@ -448,9 +448,9 @@ class Labels {
 	 *
 	 * @param string $label - Label used when an item is published.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function item_published( string $label ): Labels {
+	public function item_published( string $label ): static {
 		return $this->set( self::ITEM_PUBLISHED, $label );
 	}
 
@@ -462,9 +462,9 @@ class Labels {
 	 *
 	 * @param string $label - Label used when an item is published with private visibility.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function item_published_privately( string $label ): Labels {
+	public function item_published_privately( string $label ): static {
 		return $this->set( self::ITEM_PUBLISHED_PRIVATELY, $label );
 	}
 
@@ -476,9 +476,9 @@ class Labels {
 	 *
 	 * @param string $label - Label used when an item is switched to a draft.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function item_reverted_to_draft( string $label ): Labels {
+	public function item_reverted_to_draft( string $label ): static {
 		return $this->set( self::ITEM_REVERTED_TO_DRAFT, $label );
 	}
 
@@ -490,9 +490,9 @@ class Labels {
 	 *
 	 * @param string $label - Label used when an item is scheduled for publishing.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function item_scheduled( string $label ): Labels {
+	public function item_scheduled( string $label ): static {
 		return $this->set( self::ITEM_SCHEDULED, $label );
 	}
 
@@ -504,9 +504,9 @@ class Labels {
 	 *
 	 * @param string $label - Label used when an item is updated.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function item_updated( string $label ): Labels {
+	public function item_updated( string $label ): static {
 		return $this->set( self::ITEM_UPDATED, $label );
 	}
 
@@ -518,9 +518,9 @@ class Labels {
 	 *
 	 * @param string $label - Title for a navigation link block variation.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function item_link( string $label ): Labels {
+	public function item_link( string $label ): static {
 		return $this->set( self::ITEM_LINK, $label );
 	}
 
@@ -532,9 +532,9 @@ class Labels {
 	 *
 	 * @param string $label - Description for a navigation link block variation.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	public function item_link_description( string $label ): Labels {
+	public function item_link_description( string $label ): static {
 		return $this->set( self::ITEM_LINK_DESCRIPTION, $label );
 	}
 
@@ -571,9 +571,9 @@ class Labels {
 	 * @param string          $label_key - The label to set.
 	 * @param string          $label     - The value to set.
 	 *
-	 * @return Labels
+	 * @return static
 	 */
-	protected function set( string $label_key, string $label ): Labels {
+	protected function set( string $label_key, string $label ): static {
 		$this->labels[ $label_key ] = $label;
 		return $this;
 	}

@@ -73,9 +73,9 @@ class Field {
 	 *
 	 * @param string $label_for - ID of the input element.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function label_for( string $label_for ): Field {
+	public function label_for( string $label_for ): static {
 		$this->args->label_for = $label_for;
 		return $this;
 	}
@@ -87,9 +87,9 @@ class Field {
 	 *
 	 * @param string $css_class - CSS class to add.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function class( string $css_class ): Field {
+	public function class( string $css_class ): static {
 		$this->args->class = $css_class;
 		return $this;
 	}
@@ -100,9 +100,9 @@ class Field {
 	 *
 	 * @param string $help - Help text.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function help( string $help ): Field {
+	public function help( string $help ): static {
 		$this->help = $help;
 		return $this;
 	}
@@ -115,9 +115,9 @@ class Field {
 	 *
 	 * @param callable                                                        $callback - Callback to render the field.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function render_callback( callable $callback ): Field {
+	public function render_callback( callable $callback ): static {
 		$this->render_callback = $callback;
 		return $this;
 	}
@@ -130,9 +130,9 @@ class Field {
 	 *
 	 * @param callable                                              $callback - Callback to sanitize the value.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function sanitize_callback( callable $callback ): Field {
+	public function sanitize_callback( callable $callback ): static {
 		$this->settings_args->sanitize_callback = fn( mixed $value ) => $callback( $value, $this );
 		return $this;
 	}
@@ -143,9 +143,9 @@ class Field {
 	 *
 	 * @param Register_Setting $settings_args - Arguments to pass to `register_setting`.
 	 *
-	 * @return Field
+	 * @return static
 	 */
-	public function settings_args( Register_Setting $settings_args ): Field {
+	public function settings_args( Register_Setting $settings_args ): static {
 		$this->settings_args->merge( $settings_args );
 		return $this;
 	}
@@ -163,7 +163,7 @@ class Field {
 			\call_user_func( $this->render_callback, $this, $settings );
 		} else {
 			$value = $settings->get_option( $this->id, '' );
-			printf( '<input type="text" name="%1$s" value="%2$s" class="regular-text" />', esc_attr( $this->id ), esc_attr( $value ) );
+			\printf( '<input type="text" name="%1$s" value="%2$s" class="regular-text" />', esc_attr( $this->id ), esc_attr( $value ) );
 		}
 
 		if ( isset( $this->help ) ) {
@@ -184,7 +184,7 @@ class Field {
 	 * @param string $id    - Unique ID for this field.
 	 * @param string $title - Title of the field.
 	 */
-	public static function factory( string $id, string $title ): Field {
-		return new Field( $id, $title );
+	public static function factory( string $id, string $title ): static {
+		return new static( $id, $title );
 	}
 }

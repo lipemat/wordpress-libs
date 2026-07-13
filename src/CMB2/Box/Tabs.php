@@ -148,7 +148,7 @@ class Tabs {
 					$this->active_panel = $key;
 				}
 
-				printf(
+				\printf(
 					'<li class="%s" data-panel="%s"><a href="#"><span>%s</span></a></li>',
 					esc_attr( $class ),
 					esc_attr( $key ),

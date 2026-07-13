@@ -106,7 +106,7 @@ class Gutenberg_Box implements \JsonSerializable {
 	 *
 	 * @param Meta_Box $box Taxonomy Meta_Box to convert to a Gutenberg_Box.
 	 */
-	public static function factory( Meta_Box $box ): Gutenberg_Box {
+	public static function factory( Meta_Box $box ): static {
 		return new static( $box->type, $box->taxonomy, $box->checked_ontop );
 	}
 }

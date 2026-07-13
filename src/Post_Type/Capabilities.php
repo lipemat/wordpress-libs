@@ -49,9 +49,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function edit_post( string $capability ): Capabilities {
+	public function edit_post( string $capability ): static {
 		return $this->set( 'edit_post', $capability );
 	}
 
@@ -61,9 +61,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function read_post( string $capability ): Capabilities {
+	public function read_post( string $capability ): static {
 		return $this->set( 'read_post', $capability );
 	}
 
@@ -73,9 +73,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function delete_post( string $capability ): Capabilities {
+	public function delete_post( string $capability ): static {
 		return $this->set( 'delete_post', $capability );
 	}
 
@@ -85,9 +85,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function edit_posts( string $capability ): Capabilities {
+	public function edit_posts( string $capability ): static {
 		return $this->set( 'edit_posts', $capability );
 	}
 
@@ -97,9 +97,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function edit_others_posts( string $capability ): Capabilities {
+	public function edit_others_posts( string $capability ): static {
 		return $this->set( 'edit_others_posts', $capability );
 	}
 
@@ -109,9 +109,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function publish_posts( string $capability ): Capabilities {
+	public function publish_posts( string $capability ): static {
 		return $this->set( 'publish_posts', $capability );
 	}
 
@@ -121,9 +121,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function read_private_posts( string $capability ): Capabilities {
+	public function read_private_posts( string $capability ): static {
 		return $this->set( 'read_private_posts', $capability );
 	}
 
@@ -133,9 +133,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function read( string $capability ): Capabilities {
+	public function read( string $capability ): static {
 		return $this->set( 'read', $capability );
 	}
 
@@ -145,9 +145,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function delete_posts( string $capability ): Capabilities {
+	public function delete_posts( string $capability ): static {
 		return $this->set( 'delete_posts', $capability );
 	}
 
@@ -157,9 +157,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function delete_private_posts( string $capability ): Capabilities {
+	public function delete_private_posts( string $capability ): static {
 		return $this->set( 'delete_private_posts', $capability );
 	}
 
@@ -169,9 +169,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function delete_published_posts( string $capability ): Capabilities {
+	public function delete_published_posts( string $capability ): static {
 		return $this->set( 'delete_published_posts', $capability );
 	}
 
@@ -181,9 +181,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function delete_others_posts( string $capability ): Capabilities {
+	public function delete_others_posts( string $capability ): static {
 		return $this->set( 'delete_others_posts', $capability );
 	}
 
@@ -193,9 +193,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function edit_private_posts( string $capability ): Capabilities {
+	public function edit_private_posts( string $capability ): static {
 		return $this->set( 'edit_private_posts', $capability );
 	}
 
@@ -205,9 +205,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function edit_published_posts( string $capability ): Capabilities {
+	public function edit_published_posts( string $capability ): static {
 		return $this->set( 'edit_published_posts', $capability );
 	}
 
@@ -217,9 +217,9 @@ class Capabilities {
 	 *
 	 * @param string $capability - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	public function create_posts( string $capability ): Capabilities {
+	public function create_posts( string $capability ): static {
 		return $this->set( 'create_posts', $capability );
 	}
 
@@ -234,9 +234,9 @@ class Capabilities {
 	 * @param string          $capability_name - Capability name to set.
 	 * @param string          $capability      - Capability to set.
 	 *
-	 * @return Capabilities
+	 * @return static
 	 */
-	protected function set( string $capability_name, string $capability ): Capabilities {
+	protected function set( string $capability_name, string $capability ): static {
 		$this->capabilities[ $capability_name ] = $capability;
 		$this->post_type->map_meta_cap( true );
 		return $this;

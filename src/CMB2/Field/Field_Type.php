@@ -120,7 +120,7 @@ class Field_Type {
 
 
 	/**
-	 * Standard text field which enforces an email address..
+	 * Standard text field which enforces an email address.
 	 *
 	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_email
 	 *
@@ -902,7 +902,7 @@ class Field_Type {
 	 * @param Field $field - Field instance.
 	 * @param Box   $box   - Box the field belongs to.
 	 */
-	public static function factory( Field $field, Box $box ): Field_Type {
-		return new Field_Type( $field, $box );
+	public static function factory( Field $field, Box $box ): static {
+		return new static( $field, $box );
 	}
 }
