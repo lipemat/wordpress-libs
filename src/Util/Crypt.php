@@ -1,6 +1,5 @@
 <?php
 //phpcs:disable WordPress.PHP.DiscouragedPHPFunctions -- Intentionally obfuscating contents.
-//phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Don't have a better place to log errors.
 declare( strict_types=1 );
 
 namespace Lipe\Lib\Util;
@@ -19,8 +18,8 @@ class Crypt {
 	/**
 	 * @var 'sha512'
 	 */
-	protected const string ALGORITHM = 'sha512';
-	protected const int ITERATIONS = 999;
+	protected const string ALGORITHM  = 'sha512';
+	protected const int    ITERATIONS = 999;
 
 	/**
 	 * Recommended AES-128-CBC, AES-192-CBC, AES-256-CBC
@@ -54,8 +53,6 @@ class Crypt {
 	 *
 	 * @link         https://gist.github.com/ve3/0f77228b174cf92a638d81fddb17189d
 	 *
-	 * @noinspection ForgottenDebugOutputInspection
-	 *
 	 * @param string $message - The encrypted string that is base64 encoded.
 	 *
 	 * @return ?string
@@ -64,7 +61,7 @@ class Crypt {
 		try {
 			$json = \json_decode( (string) \base64_decode( $message, true ), true, 512, JSON_THROW_ON_ERROR );
 		} catch ( \JsonException $e ) {
-			\error_log( "Unable to decrypt message: {$message}. {$e->getMessage()}" );
+			Logger::factory( __CLASS__ )->error( "Unable to decrypt message: {$message}. {$e->getMessage()}" );
 			return null;
 		}
 		$iterations = \max( 1, \absint( $json['iterations'] ?? static::ITERATIONS ) );
@@ -74,7 +71,7 @@ class Crypt {
 			$iv = (string) \hex2bin( $json['iv'] );
 			$hash_key = (string) \hex2bin( \hash_pbkdf2( static::ALGORITHM, $this->key, $salt, $iterations, $this->get_key_size() ) );
 		} catch ( \Exception $e ) {
-			\error_log( "Unable to decrypt message: {$message}. {$e->getMessage()}" );
+			Logger::factory( __CLASS__ )->error( "Unable to decrypt message: {$message}. {$e->getMessage()}" );
 			return null;
 		}
 
