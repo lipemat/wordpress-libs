@@ -64,6 +64,17 @@ class Supports implements ArgsRules {
 	public bool $autoRegister;
 
 	/**
+	 * Suport background styles
+	 *
+	 * @var array{
+	 *     backgroundImage?: bool,
+	 *     backgroundSize?: bool,
+	 *     gradient?: bool
+	 * }
+	 */
+	public array $background;
+
+	/**
 	 * False removes the support for the generated className.
 	 *
 	 * @var bool
@@ -117,6 +128,7 @@ class Supports implements ArgsRules {
 	 *     aspectRatio?: bool,
 	 *     height?: bool,
 	 *     minHeight?: bool,
+	 *     minWidth?: bool,
 	 *     width?: bool,
 	 * }
 	 */
