@@ -2,7 +2,7 @@ import {__, sprintf} from '@wordpress/i18n';
 import {useEntityRecord, useEntityRecords} from '@wordpress/core-data';
 import {type ComponentType, type PropsWithChildren, useEffect} from 'react';
 import type {Tag, Taxonomy} from '@wordpress/core-data/entities';
-import {useTerms} from '@lipemat/js-boilerplate-gutenberg';
+import {useTerms} from '@lipemat/js-boilerplate-gutenberg/hooks';
 import {dispatch} from '@wordpress/data';
 import {PluginDocumentSettingPanel} from '@wordpress/editor';
 

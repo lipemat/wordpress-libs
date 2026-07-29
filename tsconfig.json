@@ -9,7 +9,11 @@
   ],
   "compilerOptions": {
     "baseUrl": ".",
-    "strict": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "types": [
+      "jest",
+      "lipemat__js-boilerplate",
+      "webpack-env"
+    ]
   }
 }

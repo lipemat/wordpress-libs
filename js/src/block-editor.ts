@@ -1,4 +1,4 @@
-import {autoloadPlugins} from '@lipemat/js-boilerplate-gutenberg';
+import {autoloadPlugins} from '@lipemat/js-boilerplate-gutenberg/autoload';
 
 /**
  * Use our custom autoloader to automatically require,
