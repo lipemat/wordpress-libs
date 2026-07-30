@@ -105,7 +105,7 @@ readonly class Registered {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return $this->variation->desc;
+		return $this->variation->description;
 	}
 
 

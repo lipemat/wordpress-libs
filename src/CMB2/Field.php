@@ -247,7 +247,7 @@ class Field {
 	 *
 	 * @var string
 	 */
-	protected(set) string $desc = '';
+	protected(set) string $description = '';
 
 	/**
 	 * Supported by most field types, and will make the individual field a repeatable one.
@@ -459,7 +459,7 @@ class Field {
 	 * @return static
 	 */
 	public function description( string $description ): static {
-		$this->desc = $description;
+		$this->description = $description;
 
 		return $this;
 	}
