@@ -146,6 +146,22 @@ trait Display {
 	protected(set) \Closure|string $after_display_wrap;
 
 	/**
+	 * Field description. Usually under or adjacent to the field input.
+	 *
+	 * @link https://cmb2.io/docs/Field-Parameters#desc
+	 *
+	 * @var string
+	 */
+	protected(set) string $description = '';
+
+	/**
+	 * Specify a callback to retrieve the field description
+	 *
+	 * @var \Closure
+	 */
+	protected(set) \Closure $description_cb;
+
+	/**
 	 * Entirely replace the class to used to display the field (in admin columns, etc.)
 	 *
 	 * @var \CMB2_Field_Display
@@ -421,6 +437,40 @@ trait Display {
 	 */
 	public function classes_cb( \Closure $classes_cb ): static {
 		$this->classes_cb = $classes_cb;
+		return $this;
+	}
+
+
+	/**
+	 * Field description. Usually under or adjacent to the field input.
+	 *
+	 * @link https://cmb2.io/docs/Field-Parameters#desc
+	 *
+	 * @param string $description - The field description.
+	 *
+	 * @return static
+	 */
+	public function description( string $description ): static {
+		$this->description = $description;
+
+		return $this;
+	}
+
+
+	/**
+	 * Like the description property. Usually under or adjacent to the field input.
+	 * But takes a callback.
+	 *
+	 * Custom to lipemat version of CMB2 version 2.12.0+
+	 *
+	 * @phpstan-param (\Closure(array<string, mixed>, \CMB2_Field): string) $description_cb
+	 *
+	 * @param \Closure                                                      $description_cb - Callback to populate the description.
+	 *
+	 * @return static
+	 */
+	public function description_cb( \Closure $description_cb ): static {
+		$this->description_cb = $description_cb;
 		return $this;
 	}
 

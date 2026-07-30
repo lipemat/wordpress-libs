@@ -241,15 +241,6 @@ class Field {
 	protected(set) \Closure $default_cb;
 
 	/**
-	 * Field description. Usually under or adjacent to the field input.
-	 *
-	 * @link https://cmb2.io/docs/Field-Parameters#desc
-	 *
-	 * @var string
-	 */
-	protected(set) string $description = '';
-
-	/**
 	 * Supported by most field types, and will make the individual field a repeatable one.
 	 *
 	 * To customize Add Row button label, set
@@ -445,22 +436,6 @@ class Field {
 	public function default_cb( \Closure $callback ): static {
 		Default_Callback::factory( $this, $this->box, $callback );
 		$this->default_cb = $callback;
-		return $this;
-	}
-
-
-	/**
-	 * Field description. Usually under or adjacent to the field input.
-	 *
-	 * @link https://cmb2.io/docs/Field-Parameters#desc
-	 *
-	 * @param string $description - The field description.
-	 *
-	 * @return static
-	 */
-	public function description( string $description ): static {
-		$this->description = $description;
-
 		return $this;
 	}
 
