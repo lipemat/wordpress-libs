@@ -13,7 +13,7 @@ class User_Box extends Box {
 	 * Will determine where fields are output in the new-user screen.
 	 * Options are 'add-existing-user' and 'add-new-user'.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#new_user_section
+	 * @link    https://cmb2.io/docs/Box-Properties#new_user_section
 	 *
 	 * @default 'add-new-user'
 	 * @example 'add-existing-user'

@@ -15,7 +15,7 @@ class Checkbox extends Field {
 	 * Specify a function to return the default value for the field.
 	 *
 	 * @notice  Checkboxes are tricky.
-	 * @see     https://github.com/CMB2/CMB2/wiki/Tips-&-Tricks#setting-a-default-value-for-a-checkbox
+	 * @see     https://cmb2.io/docs/Tips-&-Tricks#setting-a-default-value-for-a-checkbox
 	 *
 	 * @example On a posts screen
 	 * ```php
@@ -42,6 +42,6 @@ class Checkbox extends Field {
 	 */
 	public function default( string|array $default_value ): static {
 		/* translators: {field id} */
-		throw new \LogicException( \sprintf( esc_html__( 'Checkboxes do not support standard default values. %s', 'lipe' ), esc_html( $this->id ) ) . '. See https://github.com/CMB2/CMB2/wiki/Tips-&-Tricks#setting-a-default-value-for-a-checkbox' );
+		throw new \LogicException( \sprintf( esc_html__( 'Checkboxes do not support standard default values. %s', 'lipe' ), esc_html( $this->id ) ) . '. See https://cmb2.io/docs/Tips-&-Tricks#setting-a-default-value-for-a-checkbox' );
 	}
 }

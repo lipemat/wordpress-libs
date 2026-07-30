@@ -18,7 +18,7 @@ class File extends Field {
 	/**
 	 * For use with the file fields only to control the preview size
 	 *
-	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Types#file
+	 * @link     https://cmb2.io/docs/Field-Types#file
 	 *
 	 * @var string
 	 */
@@ -36,7 +36,7 @@ class File extends Field {
 	/**
 	 * Field parameter, which can be used to override the media library query arguments.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
+	 * @link https://cmb2.io/docs/Field-Parameters#query_args
 	 *
 	 * @var  array<string, mixed>
 	 */
@@ -47,7 +47,7 @@ class File extends Field {
 	 * Field parameter, which can be used by the  'file_*' field types.
 	 * allows overriding the media library query arguments.
 	 *
-	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
+	 * @link  https://cmb2.io/docs/Field-Parameters#query_args
 	 *
 	 * @param Get_Posts $args - The arguments to pass to get_posts().
 	 *
@@ -62,7 +62,7 @@ class File extends Field {
 	/**
 	 * A field for uploading a list of files.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file_list
+	 * @link https://cmb2.io/docs/Field-Types#file_list
 	 *
 	 * @param string|null $button_text      - (default 'Add File').
 	 * @param string|null $file_mime_type   - (default all).
@@ -142,7 +142,7 @@ class File extends Field {
 	/**
 	 * For use with the file fields only to control the preview size
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file
+	 * @link https://cmb2.io/docs/Field-Types#file
 	 *
 	 * @param string $preview_size - Preview size to use.
 	 *

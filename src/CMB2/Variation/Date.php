@@ -17,7 +17,7 @@ class Date extends Field {
 	 * Field parameter used in the date field types which allows specifying
 	 * the php date format for your field.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#date_format
+	 * @link https://cmb2.io/docs/Field-Parameters#date_format
 	 * @link https://php.net/manual/en/function.date.php.
 	 *
 	 * @var string
@@ -42,8 +42,8 @@ class Date extends Field {
 	 * Optionally make this field honor the timezone selected
 	 * in the select_timezone field specified above in the form.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#text_date
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#select_timezone
+	 * @link    https://cmb2.io/docs/Field-Types#text_date
+	 * @link    https://cmb2.io/docs/Field-Types#select_timezone
 	 *
 	 * @example 'key_of_select_timezone_field'
 	 *
@@ -56,7 +56,7 @@ class Date extends Field {
 	 * Field parameter used in the date field types which allows specifying
 	 * the php date format for your field.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#date_format
+	 * @link https://cmb2.io/docs/Field-Parameters#date_format
 	 * @link https://php.net/manual/en/function.date.php.
 	 *
 	 * @param string $date_format - PHP date format.
@@ -89,8 +89,8 @@ class Date extends Field {
 	 * Optionally make this field honor the timezone selected
 	 * in the select_timezone field specified above in the form.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#text_date
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#select_timezone
+	 * @link    https://cmb2.io/docs/Field-Types#text_date
+	 * @link    https://cmb2.io/docs/Field-Types#select_timezone
 	 *
 	 * @param string $timezone_meta_key - Meta key to retrieve timezone from.
 	 */
@@ -103,7 +103,7 @@ class Date extends Field {
 	/**
 	 * A field for selecting a date.
 	 *
-	 * @example https://github.com/CMB2/CMB2/wiki/Field-Types#additional-field-options
+	 * @example https://cmb2.io/docs/Field-Types#additional-field-options
 	 *
 	 * @param string               $date_format         - PHP date format.
 	 * @param string               $timezone_meta_key   - Meta key to retrieve timezone from.

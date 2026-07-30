@@ -27,7 +27,7 @@ class Wysiwyg extends Text {
 	/**
 	 * Tinymce options.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#wysiwyg
+	 * @link https://cmb2.io/docs/Field-Types#wysiwyg
 	 *
 	 * @var  MCE_OPTIONS
 	 */

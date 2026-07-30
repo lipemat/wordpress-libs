@@ -39,7 +39,7 @@ class Box {
 	/**
 	 * Priority of the metabox in its context.
 	 *
-	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#priority
+	 * @link       https://cmb2.io/docs/Box-Properties#priority
 	 *
 	 * @phpstan-var  Meta_Box::PRIORITY_*
 	 *
@@ -51,7 +51,7 @@ class Box {
 	 * This property allows you to optionally add classes to the CMB2 wrapper.
 	 * This property can take a string, or array.
 	 *
-	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#classes
+	 * @link       https://cmb2.io/docs/Box-Properties#classes
 	 *
 	 * @example    'additional-class'
 	 * @example    array( 'additional-class', 'another-class' ),
@@ -68,7 +68,7 @@ class Box {
 	 * The callback gets passed the CMB2 $properties array as the first argument,
 	 * and the CMB2 $cmb object as the second argument.
 	 *
-	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#classes_cb
+	 * @link       https://cmb2.io/docs/Box-Properties#classes-cb
 	 *
 	 * @example    : 'yourprefix_function_to_add_classes( $properties, $cmb ){ return [] }',
 	 *
@@ -79,7 +79,7 @@ class Box {
 	/**
 	 * Set to true to default metabox being closed
 	 *
-	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#closed
+	 * @link       https://cmb2.io/docs/Box-Properties#closed
 	 *
 	 * @example    true
 	 * @default    false
@@ -91,7 +91,7 @@ class Box {
 	/**
 	 * Whether to enqeue CMB2 stylesheet
 	 *
-	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#cmb_styles
+	 * @link       https://cmb2.io/docs/Box-Properties#cmb_styles
 	 *
 	 * @example    false
 	 * @default    true
@@ -103,7 +103,7 @@ class Box {
 	/**
 	 * Whether to enqeue CMB2 Javascript files.
 	 *
-	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#enqueue_js
+	 * @link       https://cmb2.io/docs/Box-Properties#enqueue_js
 	 *
 	 * @example    false
 	 * @default    true
@@ -118,7 +118,7 @@ class Box {
 	 * Set to false if you plan on handling the form/field output/saving
 	 * (via something like cmb2_metabox_form()).
 	 *
-	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#hookup
+	 * @link       https://cmb2.io/docs/Box-Properties#hookup
 	 *
 	 * @default    true
 	 *
@@ -143,8 +143,8 @@ class Box {
 	 * @see        Box::$context
 	 * @see        Box::remove_box_wrap();
 	 *
-	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#context
-	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#remove_box_wrap
+	 * @link       https://cmb2.io/docs/Box-Properties#context
+	 * @link       https://cmb2.io/docs/Box-Properties#remove_box_wrap
 	 *
 	 * @example    true
 	 * @default    false
@@ -221,7 +221,7 @@ class Box {
 	 *
 	 * @see        Box
 	 *
-	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#save_fields
+	 * @link       https://cmb2.io/docs/Box-Properties#save_fields
 	 *
 	 * @example    false
 	 * @default    true
@@ -238,7 +238,7 @@ class Box {
 	 * If the box is set to true and all fields are in the /cmb2 response.
 	 *
 	 * @link       https://github.com/WebDevStudios/CMB2/wiki/REST-API
-	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#show_in_rest
+	 * @link       https://cmb2.io/docs/Box-Properties#show_in_rest
 	 *
 	 * @example    WP_REST_Server::READABLE // Same as `true`
 	 * @example    WP_REST_Server::ALLMETHODS
@@ -256,7 +256,7 @@ class Box {
 	/**
 	 * Whether to show labels for the fields
 	 *
-	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#show_names
+	 * @link       https://cmb2.io/docs/Box-Properties#show_names
 	 * @default    true
 	 * @example    false
 	 *
@@ -270,7 +270,7 @@ class Box {
 	 * More info:
 	 *
 	 * @link       https://github.com/WebDevStudios/CMB2/wiki/Adding-your-own-show_on-filters
-	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on
+	 * @link       https://cmb2.io/docs/Box-Properties#show_on
 	 *
 	 * @example    array( 'key' => 'page-template', 'value' => 'template-contact.php' )
 	 * @example    array( 'key' => 'id', 'value' => array( 50, 24 ) )
@@ -284,7 +284,7 @@ class Box {
 	 * of a function.
 	 * Pass a function name here
 	 *
-	 * @link       https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on_cb
+	 * @link       https://cmb2.io/docs/Box-Propertiess#show-on-cb
 	 *
 	 * @example    should_show_meta_box( $cmb ){ return bool; }
 	 *
@@ -311,7 +311,7 @@ class Box {
 	/**
 	 * The id of metabox
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#id
+	 * @link https://cmb2.io/docs/Box-Properties#id
 	 *
 	 * @var string
 	 */
@@ -321,7 +321,7 @@ class Box {
 	 * The context within the screen where the boxes should display.
 	 * Available contexts vary from screen to screen.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#context
+	 * @link    https://cmb2.io/docs/Box-Properties#context
 	 * @example 'normal', 'side', 'advanced' 'form_top',
 	 *          'before_permalink', 'after_title', 'after_editor'
 	 *
@@ -340,7 +340,7 @@ class Box {
 	 * This is a good solution if you want to handle outputting your
 	 * metaboxes/fields elsewhere in the post-screen.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#title
+	 * @link https://cmb2.io/docs/Box-Properties#title
 	 *
 	 * @var ?string
 	 */
@@ -366,7 +366,7 @@ class Box {
 	/**
 	 * An array containing <post type slugs>|'user'|'term'|'comment'|'options-page'.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#object_types
+	 * @link    https://cmb2.io/docs/Box-Properties#object_types
 	 * @example ['page', 'post']
 	 *
 	 * @var string[]
@@ -501,7 +501,7 @@ class Box {
 	/**
 	 * Priority of the metabox in its context.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#priority
+	 * @link    https://cmb2.io/docs/Box-Properties#priority
 	 *
 	 * @phpstan-param Meta_Box::PRIORITY_* $priority
 	 *
@@ -518,7 +518,7 @@ class Box {
 	 * This property allows you to optionally add classes to the CMB2 wrapper.
 	 * This property can take a string, or array.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#classes
+	 * @link    https://cmb2.io/docs/Box-Properties#classes
 	 *
 	 * @param string|array<string> $classes - Classes to add to the CMB2 wrapper.
 	 *
@@ -536,7 +536,7 @@ class Box {
 	 * The callback gets passed the CMB2 $properties array as the first argument,
 	 * and the CMB2 $cmb object as the second argument.
 	 *
-	 * @link   https://github.com/CMB2/CMB2/wiki/Box-Properties#classes_cb
+	 * @link   https://cmb2.io/docs/Box-Properties#classes-cb
 	 *
 	 * @param \Closure $classes_cb - Callback to add classes.
 	 *
@@ -550,7 +550,7 @@ class Box {
 	/**
 	 * Set to true to default metabox being closed
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#closed
+	 * @link    https://cmb2.io/docs/Box-Properties#closed
 	 *
 	 * @param bool $closed - Whether the metabox is closed by default.
 	 *
@@ -564,7 +564,7 @@ class Box {
 	/**
 	 * Whether to enqeue CMB2 stylesheet
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#cmb_styles
+	 * @link    https://cmb2.io/docs/Box-Properties#cmb_styles
 	 *
 	 * @param bool $cmb_styles - Whether to enqueue CMB2 stylesheet.
 	 *
@@ -578,7 +578,7 @@ class Box {
 	/**
 	 * Whether to enqeue CMB2 Javascript files.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#enqueue_js
+	 * @link    https://cmb2.io/docs/Box-Properties#enqueue_js
 	 *
 	 * @param bool $enqueue_js - Whether to enqueue CMB2 Javascript files.
 	 *
@@ -595,7 +595,7 @@ class Box {
 	 * Set to false if you plan on handling the form/field output/saving
 	 * (via something like cmb2_metabox_form()).
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#hookup
+	 * @link    https://cmb2.io/docs/Box-Properties#hookup
 	 *
 	 * @param bool $hookup - Whether to handle hooking CMB2 forms/metaboxes.
 	 *
@@ -696,7 +696,7 @@ class Box {
 	/**
 	 * If false, will not save during hookup
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#save_fields
+	 * @link    https://cmb2.io/docs/Box-Properties#save_fields
 	 *
 	 * @see     Box
 	 *
@@ -712,7 +712,7 @@ class Box {
 	/**
 	 * Whether to show labels for the fields
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_names
+	 * @link    https://cmb2.io/docs/Box-Properties#show_names
 	 *
 	 * @param bool $show_names - Whether to show labels for the fields.
 	 *
@@ -729,7 +729,7 @@ class Box {
 	 * More info:
 	 *
 	 * @link    https://github.com/WebDevStudios/CMB2/wiki/Adding-your-own-show_on-filters
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on
+	 * @link    https://cmb2.io/docs/Box-Properties#show_on
 	 *
 	 * @param array{key:string,value:string|array<int>} $show_on - Post IDs or page templates to display this metabox.
 	 *
@@ -743,7 +743,7 @@ class Box {
 	/**
 	 * To show or not based on the result of a function.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#show_on_cb
+	 * @link    https://cmb2.io/docs/Box-Properties#show-on-cb
 	 *
 	 * @param \Closure $show_on_cb - To show or not based on the result of a function.
 	 *
@@ -871,7 +871,7 @@ class Box {
 	 * Takes care of setting the title to false required
 	 * by the native `remove_box_wrap` property
 	 *
-	 * @link  https://github.com/CMB2/CMB2/wiki/Box-Properties#context
+	 * @link  https://cmb2.io/docs/Box-Properties#context
 	 *
 	 * @param bool $remove_box_wrap - Whether to remove meta box wrap.
 	 *
@@ -901,7 +901,7 @@ class Box {
 	/**
 	 * The id of the CMB2 meta box, also stored as the id of this class.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#id
+	 * @link    https://cmb2.io/docs/Box-Properties#id
 	 *
 	 * @example 'lipe/project/meta/category-fields',
 	 *

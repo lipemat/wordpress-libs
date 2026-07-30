@@ -6,7 +6,7 @@ namespace Lipe\Lib\CMB2\Field;
 /**
  * CMB2 field types.
  *
- * @link    https://github.com/CMB2/CMB2/wiki/Field-Types
+ * @link    https://cmb2.io/docs/Field-Types
  */
 enum Type: string {
 	case CHECKBOX                         = 'checkbox';

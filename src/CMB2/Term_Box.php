@@ -12,7 +12,7 @@ class Term_Box extends Box {
 	/**
 	 * If set to false, will remove the fields from the new-term screen.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#new_term_section
+	 * @link    https://cmb2.io/docs/Box-Properties#new_term_section
 	 *
 	 * Default true
 	 *
@@ -25,7 +25,7 @@ class Term_Box extends Box {
 	 * it is required to provide a taxonomy property,
 	 * which should be an array of Taxonomies.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#taxonomies
+	 * @link    https://cmb2.io/docs/Box-Properties#taxonomies
 	 *
 	 * @example array( 'category', 'post_tag' ),
 	 *
@@ -50,7 +50,7 @@ class Term_Box extends Box {
 	/**
 	 * Set to false to remove the fields from the new-term screen.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#new_term_section
+	 * @link    https://cmb2.io/docs/Box-Properties#new_term_section
 	 *
 	 * Default true
 	 *

@@ -16,7 +16,7 @@ class Options extends Field {
 	 * Whether to show select all button for items
 	 * with multi select like multicheck.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
+	 * @link    https://cmb2.io/docs/Field-Types#taxonomy_multicheck
 	 *
 	 * @default true
 	 *
@@ -34,7 +34,7 @@ class Options extends Field {
 	 * If you are doing any kind of database querying or logic/conditional checking,
 	 * you're almost always better off using the options_cb parameter.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#options
+	 * @link https://cmb2.io/docs/Field-Parameters#options
 	 *
 	 * @var  array<string, string|bool>
 	 */
@@ -48,7 +48,7 @@ class Options extends Field {
 	 * as the '*_cb' parameters are run when the field is generated,
 	 * instead of on every page load (admin or otherwise).
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#options_cb
+	 * @link    https://cmb2.io/docs/Field-Parameters#options-cb
 	 *
 	 * @example fn( $field ) => [ value => label ]
 	 *
@@ -75,7 +75,7 @@ class Options extends Field {
 	 * If you are doing any kind of database querying or logic/conditional checking,
 	 * you're almost always better off using the options_cb parameter.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#options
+	 * @link https://cmb2.io/docs/Field-Parameters#options
 	 *
 	 * @param array<string, string|bool> $options - Array of options.
 	 */
@@ -105,7 +105,7 @@ class Options extends Field {
 	 * as the '*_cb' parameters are run when the field is generated,
 	 * instead of on every page load (admin or otherwise).
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#options_cb
+	 * @link    https://cmb2.io/docs/Field-Parameters#options-cb
 	 *
 	 * @example fn( $field ) => return [ value => label ]
 	 *
@@ -123,7 +123,7 @@ class Options extends Field {
 	 * Whether to show select all button for items
 	 * with multi select like multicheck.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
+	 * @link    https://cmb2.io/docs/Field-Types#taxonomy_multicheck
 	 *
 	 * @default true
 	 *

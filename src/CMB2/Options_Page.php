@@ -15,7 +15,7 @@ class Options_Page extends Box {
 	 * Allows specifying a custom callback for setting the
 	 * error/success message on save.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#message_cb
+	 * @link    https://cmb2.io/docs/Box-Properties#message-cb
 	 *
 	 * @var \Closure( \CMB2, array{
 	 *     is_options_page: bool,
@@ -32,7 +32,7 @@ class Options_Page extends Box {
 	/**
 	 * Defines the text for the options page save button. defaults to 'Save'.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#save_button
+	 * @link    https://cmb2.io/docs/Box-Properties#save_button
 	 *
 	 * @example 'Save Settings'
 	 *
@@ -45,7 +45,7 @@ class Options_Page extends Box {
 	/**
 	 * Allows overriding the options page form output.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
+	 * @link https://cmb2.io/docs/Box-Properties#display-cb
 	 *
 	 * @var \Closure
 	 */
@@ -63,7 +63,7 @@ class Options_Page extends Box {
 	/**
 	 * Sent along to add_submenu_page() to define the parent-menu item slug.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#parent_slug
+	 * @link    https://cmb2.io/docs/Box-Properties#parent_slug
 	 *
 	 * @example 'tools.php'
 	 *
@@ -74,7 +74,7 @@ class Options_Page extends Box {
 	/**
 	 * Sent along to add_menu_page()/add_submenu_page() to define the menu title.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#menu_title
+	 * @link    https://cmb2.io/docs/Box-Properties#menu_title
 	 *
 	 * @example 'Site Options
 	 *
@@ -86,7 +86,7 @@ class Options_Page extends Box {
 	 * Sent along to add_menu_page()/add_submenu_page()
 	 * to define the capability required to view the option page.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#capability
+	 * @link    https://cmb2.io/docs/Box-Properties#capability
 	 *
 	 * @example 'edit_posts'
 	 *
@@ -97,7 +97,7 @@ class Options_Page extends Box {
 	/**
 	 * Set to `network_admin_menu` to add the option page to the network admin menu.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#admin_menu_hook
+	 * @link    https://cmb2.io/docs/Box-Properties#admin_menu_hook
 	 *
 	 * @phpstan-var 'admin_menu'|'network_admin_menu'
 	 * @var string
@@ -108,7 +108,7 @@ class Options_Page extends Box {
 	 * This parameter is sent along to add_menu_page() to define the menu icon.
 	 * Only applicable if `parent_slug` is left empty.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#icon_url
+	 * @link    https://cmb2.io/docs/Box-Properties#icon_url
 	 *
 	 * @example 'dashicons-chart-pie'
 	 * @see     Dashicons
@@ -131,7 +131,7 @@ class Options_Page extends Box {
 	 * Sent along to add_menu_page() to define the menu position.
 	 * Only applicable if `parent_slug` is left empty.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#position
+	 * @link    https://cmb2.io/docs/Box-Properties#position
 	 *
 	 * @example 6
 	 *
@@ -158,7 +158,7 @@ class Options_Page extends Box {
 	 * Sent along to add_menu_page()/add_submenu_page()
 	 * to define the capability required to view the options page.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#capability
+	 * @link    https://cmb2.io/docs/Box-Properties#capability
 	 *
 	 * @default 'manage_options'
 	 *
@@ -172,7 +172,7 @@ class Options_Page extends Box {
 	/**
 	 * Sent along to add_menu_page()/add_submenu_page() to define the menu title.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#menu_title
+	 * @link    https://cmb2.io/docs/Box-Properties#menu_title
 	 *
 	 * @example 'Site Options
 	 *
@@ -186,7 +186,7 @@ class Options_Page extends Box {
 	/**
 	 * Sent along to add_submenu_page() to define the parent-menu item slug.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#parent_slug
+	 * @link    https://cmb2.io/docs/Box-Properties#parent_slug
 	 *
 	 * @example 'tools.php'
 	 *
@@ -217,7 +217,7 @@ class Options_Page extends Box {
 	 * Sent along to add_menu_page() to define the menu position.
 	 * - Only applicable if `parent_slug` is left empty.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#position
+	 * @link    https://cmb2.io/docs/Box-Properties#position
 	 *
 	 * @param int $position - The position of the menu.
 	 *
@@ -233,7 +233,7 @@ class Options_Page extends Box {
 	 * - Sent along to add_menu_page() to define the menu icon.
 	 * - Only applicable if `parent_slug` is left empty.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Box-Properties#icon_url
+	 * @link    https://cmb2.io/docs/Box-Properties#icon_url
 	 *
 	 * @param string|Dashicons $icon - The icon to use.
 	 *
@@ -247,7 +247,7 @@ class Options_Page extends Box {
 	/**
 	 * Override the options page form output.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Box-Properties#display_cb
+	 * @link https://cmb2.io/docs/Box-Properties#display-cb
 	 *
 	 * @phpstan-param \Closure( \CMB2 $cmb ): void $display_cb
 	 *
@@ -264,7 +264,7 @@ class Options_Page extends Box {
 	 * Use a custom callback to set the error/info message when the
 	 * settings are saved.
 	 *
-	 * @link     https://github.com/CMB2/CMB2/wiki/Box-Properties#message_cb
+	 * @link     https://cmb2.io/docs/Box-Properties#message-cb
 	 * @link     https://github.com/CMB2/CMB2/commit/43d513c135e52c327bafa06309821c29323ae2dd#diff-378c74d0ffffc1759b8779a135476777
 	 *
 	 * @phpstan-param \Closure( \CMB2 $cmb, array{

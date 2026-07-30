@@ -12,8 +12,8 @@ use Lipe\Lib\CMB2\Field;
  *  The callback will receive `array $field_args` as the first argument,
  *  and the `CMB2_Field $field` object as the second argument.
  *
- * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
- * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#before-after-before_row-after_row-before_field-after_field
+ * @link  https://cmb2.io/docs/Field-Parameters#before_display_wrap-before_display-after_display-after_display_wrap
+ * @link  https://cmb2.io/docs/Field-Parameters#before-after-before_row-after_row-before_field-after_field
  *
  * @phpstan-type PARAM_CB string|(\Closure(array<string, mixed>, \CMB2_Field): (string|void) )
  *
@@ -25,7 +25,7 @@ trait Display {
 	 * You will be completely responsible for outputting that row's HTML.
 	 * The callback function gets passed the field $args array, and the $field object.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#render_row_cb
+	 * @link https://cmb2.io/docs/Field-Parameters#render-row-cb
 	 * @link https://github.com/WebDevStudios/CMB2/issues/596#issuecomment-187941343
 	 *
 	 * @var \Closure|null
@@ -37,7 +37,7 @@ trait Display {
 	 * then you can specify that certain fields do not get displayed there
 	 * by setting this parameter to false.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#on_front
+	 * @link    https://cmb2.io/docs/Field-Parameters#on_front
 	 *
 	 * @default true
 	 *
@@ -59,7 +59,7 @@ trait Display {
 	 * The callback gets passed the CMB2 properties array as the first argument,
 	 * and the CMB2 cmb object as the second argument.
 	 *
-	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#classes_cb
+	 * @link   https://cmb2.io/docs/Field-Parameters#classes-cb
 	 *
 	 * @var \Closure( array<string, mixed>, \CMB2_Field): string
 	 */
@@ -167,7 +167,7 @@ trait Display {
 	 * This property allows you to optionally add classes to the CMB2 wrapper.
 	 * This property can take a string, or array.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#classes
+	 * @link    https://cmb2.io/docs/Field-Parameters#classes
 	 *
 	 * @example 'additional-class'
 	 * @example array('additional-class', 'another-class'),
@@ -179,7 +179,7 @@ trait Display {
 	/**
 	 * Whether to show labels for the fields.
 	 *
-	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_names
+	 * @link   https://cmb2.io/docs/Field-Parameters#show_names
 	 *
 	 * Default true
 	 *
@@ -190,7 +190,7 @@ trait Display {
 	/**
 	 * To show this field or not based on the result of a function.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_on_cb
+	 * @link    https://cmb2.io/docs/Field-Parameters#show-on-cb
 	 * @example should_i_show($field){ return bool}
 	 *
 	 * @see     Field::show_on_cb
@@ -208,7 +208,7 @@ trait Display {
 	 * by subclassing the default class and overriding methods.
 	 * For best results, your class should extend the class it is overriding.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#render_class
+	 * @link https://cmb2.io/docs/Field-Parameters#render_class
 	 *
 	 * @var string
 	 */
@@ -383,7 +383,7 @@ trait Display {
 	 * then you can specify that certain fields do not get displayed there
 	 * by setting this parameter to false.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#on_front
+	 * @link https://cmb2.io/docs/Field-Parameters#on_front
 	 *
 	 * @param bool $on_front - Whether to show the field on the front end.
 	 */
@@ -397,7 +397,7 @@ trait Display {
 	 * This property allows you to optionally add classes to the CMB2 wrapper.
 	 * This property can take a string, or array.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#classes
+	 * @link    https://cmb2.io/docs/Field-Parameters#classes
 	 * @example 'additional-class'
 	 *          array('additional-class', 'another-class'),
 	 *
@@ -415,7 +415,7 @@ trait Display {
 	 * but takes a callback.
 	 * That callback should return an array of classes.
 	 *
-	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#classes_cb
+	 * @link   https://cmb2.io/docs/Field-Parameters#classes-cb
 	 *
 	 * @phpstan-param \Closure( array<string, mixed>, \CMB2_Field): string $classes_cb
 	 *
@@ -441,7 +441,7 @@ trait Display {
 	/**
 	 * Whether to show labels for the fields.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_names
+	 * @link    https://cmb2.io/docs/Field-Parameters#show_names
 	 *
 	 * @default true
 	 *
@@ -456,7 +456,7 @@ trait Display {
 	/**
 	 * To show this field or not based on the result of a function.
 	 *
-	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#show_on_cb
+	 * @link     https://cmb2.io/docs/Field-Parameters#show-on-cb
 	 * @example  should_i_show($field){ return bool}
 	 *
 	 * @phpstan-param \Closure( \CMB2_Field ): bool $func
@@ -479,7 +479,7 @@ trait Display {
 	 * You will be completely responsible for outputting that row's HTML.
 	 * The callback function gets passed the field $args array, and the $field object.
 	 *
-	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#render_row_cb
+	 * @link     https://cmb2.io/docs/Field-Parameters#render-row-cb
 	 * @link     https://github.com/WebDevStudios/CMB2/issues/596#issuecomment-187941343
 	 *
 	 * @phpstan-param \Closure( array<string, mixed>, \CMB2_Field ): (void|\CMB2_Field) $render_row_cb
@@ -500,7 +500,7 @@ trait Display {
 	 * by subclassing the default class and overriding methods.
 	 * For best results, your class should extend the class it is overriding.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#render_class
+	 * @link https://cmb2.io/docs/Field-Parameters#render_class
 	 *
 	 * @phpstan-param class-string<\CMB2_Type_Base> $render_class
 	 *

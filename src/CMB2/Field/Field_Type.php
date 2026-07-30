@@ -22,7 +22,7 @@ use Lipe\Lib\Util\Arrays;
  *
  * A fluent interface complete with callbacks for each possible field type.
  *
- * @link    https://github.com/CMB2/CMB2/wiki/Field-Types
+ * @link    https://cmb2.io/docs/Field-Types
  *
  * @phpstan-import-type OPTIONS_CALLBACK from Options
  * @phpstan-import-type MCE_OPTIONS from Wysiwyg
@@ -44,7 +44,7 @@ class Field_Type {
 	/**
 	 * A large title (useful for breaking up sections of fields in metabox)
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#title
+	 * @link https://cmb2.io/docs/Field-Types#title
 	 */
 	public function title(): Field {
 		return $this->field->set_args( Type::TITLE, [], DataType::DEFAULT );
@@ -83,7 +83,7 @@ class Field_Type {
 	/**
 	 * Standard text field (large).
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text
+	 * @link https://cmb2.io/docs/Field-Types#text
 	 *
 	 * @return Text
 	 */
@@ -96,7 +96,7 @@ class Field_Type {
 	/**
 	 * Small text field.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_small
+	 * @link https://cmb2.io/docs/Field-Types#text_small
 	 *
 	 * @return Text
 	 */
@@ -109,7 +109,7 @@ class Field_Type {
 	/**
 	 * Medium text field.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_medium
+	 * @link https://cmb2.io/docs/Field-Types#text_medium
 	 *
 	 * @return Text
 	 */
@@ -122,7 +122,7 @@ class Field_Type {
 	/**
 	 * Standard text field which enforces an email address.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_email
+	 * @link https://cmb2.io/docs/Field-Types#text_email
 	 *
 	 * @return Text
 	 */
@@ -135,7 +135,7 @@ class Field_Type {
 	/**
 	 * Standard text field, which enforces a url.
 	 *
-	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Types#text_url
+	 * @link     https://cmb2.io/docs/Field-Types#text_url
 	 *
 	 * @formatter:off
 	 * @phpstan-param array<'http'|'https'|'ftp'|'ftps'|'mailto'|'news'|'irc'|'gopher'|'nntp'|'feed'|'telnet'> $protocols
@@ -163,7 +163,7 @@ class Field_Type {
 	 * Standard text field with dollar sign in front of it
 	 * (useful to prevent users from adding a dollar sign to input). .
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_money
+	 * @link https://cmb2.io/docs/Field-Types#text_money
 	 *
 	 * @return Text
 	 */
@@ -206,7 +206,7 @@ class Field_Type {
 	/**
 	 * Standard textarea.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea
+	 * @link https://cmb2.io/docs/Field-Types#textarea
 	 *
 	 * @param int|null $rows - For small text areas use `textarea_small`.
 	 *
@@ -225,7 +225,7 @@ class Field_Type {
 	/**
 	 * Smaller textarea..
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#textarea_small
+	 * @link https://cmb2.io/docs/Field-Types#textarea_small
 	 *
 	 * @return Text
 	 */
@@ -241,7 +241,7 @@ class Field_Type {
 	 * The defaults are most likely what you want to use, but arguments are
 	 * available for specialize fine-tuning
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#textarea_code
+	 * @link    https://cmb2.io/docs/Field-Types#textarea_code
 	 * @link    https://codemirror.net/doc/manual.html#option_mode
 	 * @link    https://codemirror.net/mode/
 	 *
@@ -284,7 +284,7 @@ class Field_Type {
 	/**
 	 * Time picker field.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#text_time
+	 * @link https://cmb2.io/docs/Field-Types#text_time
 	 *
 	 * @return Field
 	 */
@@ -296,7 +296,7 @@ class Field_Type {
 	/**
 	 * Timezone field.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#select_timezone
+	 * @link https://cmb2.io/docs/Field-Types#select_timezone
 	 *
 	 * @return Field
 	 */
@@ -308,7 +308,7 @@ class Field_Type {
 	/**
 	 * Adds a hidden input type to the bottom of the CMB2 output.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#hidden
+	 * @link https://cmb2.io/docs/Field-Types#hidden
 	 *
 	 * @return Field
 	 */
@@ -330,7 +330,7 @@ class Field_Type {
 	 *
 	 * @see     Field_Type::file()
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#file
+	 * @link    https://cmb2.io/docs/Field-Types#file
 	 *
 	 * @param string      $button_text     - (default 'Add Image' ).
 	 * @param bool|null   $show_text_input - (default true) May not be turned off for required fields.
@@ -349,7 +349,7 @@ class Field_Type {
 	/**
 	 * Standard checkbox.
 	 *
-	 * @link          https://github.com/CMB2/CMB2/wiki/Field-Types#checkbox
+	 * @link          https://cmb2.io/docs/Field-Types#checkbox
 	 *
 	 * @phpstan-param Field\Checkbox::LAYOUT_* $layout
 	 *
@@ -372,7 +372,7 @@ class Field_Type {
 	 *
 	 * See codex.wordpress.org/Embeds for more info and for a list of embed services supported
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#oembed
+	 * @link https://cmb2.io/docs/Field-Types#oembed
 	 *
 	 * @return Field
 	 */
@@ -384,7 +384,7 @@ class Field_Type {
 	/**
 	 * Date field. Stored and displayed according to the date_format.
 	 *
-	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_date
+	 * @link  https://cmb2.io/docs/Field-Types#text_date
 	 *
 	 * @param string               $date_format         - PHP date format string.
 	 * @param string               $timezone_meta_key   - To use the value of another timezone_select field
@@ -402,7 +402,7 @@ class Field_Type {
 	/**
 	 * Date field, stored as UNIX timestamp. Useful if you plan to query based on it.
 	 *
-	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_date_timestamp
+	 * @link  https://cmb2.io/docs/Field-Types#text_date_timestamp
 	 *
 	 * @param string               $date_format         - PHP date format string.
 	 * @param string               $timezone_meta_key   - To use the value of another timezone_select field
@@ -421,7 +421,7 @@ class Field_Type {
 	/**
 	 * Date and time field, stored as UNIX timestamp. Useful if you plan to query based on it.
 	 *
-	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp
+	 * @link  https://cmb2.io/docs/Field-Types#text_datetime_timestamp
 	 *
 	 * @param string               $date_format         - PHP date format string.
 	 * @param string               $timezone_meta_key   - To use the value of another timezone_select field
@@ -440,7 +440,7 @@ class Field_Type {
 	/**
 	 * Date, time and timezone field, stored as serialized DateTime object.
 	 *
-	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types#text_datetime_timestamp_timezone
+	 * @link  https://cmb2.io/docs/Field-Types#text_datetime_timestamp_timezone
 	 *
 	 * @param string               $date_format         - PHP date format string.
 	 * @param string               $timezone_meta_key   - To use the value of another timezone_select field
@@ -467,7 +467,7 @@ class Field_Type {
 	 *
 	 * [Default Iris Options] (http://automattic.github.io/Iris/#options):
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#colorpicker
+	 * @link https://cmb2.io/docs/Field-Types#colorpicker
 	 *
 	 * @phpstan-param array{
 	 *     color?: bool,
@@ -507,7 +507,7 @@ class Field_Type {
 	/**
 	 * A field with multiple checkboxes (and multiple can be selected)
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
+	 * @link https://cmb2.io/docs/Field-Types#multicheck-and-multicheck_inline
 	 *
 	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
 	 *
@@ -528,7 +528,7 @@ class Field_Type {
 	/**
 	 * A field with multiple checkboxes (and multiple can be selected)
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#multicheck-and-multicheck_inline
+	 * @link https://cmb2.io/docs/Field-Types#multicheck-and-multicheck_inline
 	 *
 	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
 	 *
@@ -549,7 +549,7 @@ class Field_Type {
 	/**
 	 * Standard radio buttons.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio
+	 * @link https://cmb2.io/docs/Field-Types#radio
 	 *
 	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
 	 *
@@ -569,7 +569,7 @@ class Field_Type {
 	/**
 	 * Inline radio buttons.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#radio_inline
+	 * @link https://cmb2.io/docs/Field-Types#radio_inline
 	 *
 	 * @phpstan-param OPTIONS_CALLBACK $options_or_callback
 	 *
@@ -589,7 +589,7 @@ class Field_Type {
 	/**
 	 * Standard select dropdown.
 	 *
-	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Types#select
+	 * @link   https://cmb2.io/docs/Field-Types#select
 	 *
 	 * @notice If a callback is passed and this field is displayed using `column`,
 	 *         the callback will be called again for each row in the posts list table.
@@ -612,7 +612,7 @@ class Field_Type {
 	/**
 	 * Radio buttons pre-populated with taxonomy terms
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
+	 * @link https://cmb2.io/docs/Field-Types#taxonomy_radio
 	 *
 	 * @param string      $taxonomy       - slug.
 	 * @param string|null $no_terms_text  - text to display if no terms are found.
@@ -631,7 +631,7 @@ class Field_Type {
 	/**
 	 * Hierarchical radio buttons pre-populated with taxonomy terms
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
+	 * @link https://cmb2.io/docs/Field-Types#taxonomy_radio
 	 *
 	 * @param string      $taxonomy       - slug.
 	 * @param string|null $no_terms_text  - text to display if no terms are found.
@@ -650,7 +650,7 @@ class Field_Type {
 	/**
 	 * Inline radio buttons pre-populated with taxonomy terms
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio_inline
+	 * @link https://cmb2.io/docs/Field-Types#taxonomy_radio_inline
 	 *
 	 * @param string      $taxonomy       - slug.
 	 * @param string|null $no_terms_text  - text to display if no terms are found.
@@ -669,7 +669,7 @@ class Field_Type {
 	/**
 	 * A select field pre-populated with taxonomy terms.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_select
+	 * @link https://cmb2.io/docs/Field-Types#taxonomy_select
 	 *
 	 * @param string      $taxonomy       - slug.
 	 * @param string|null $no_terms_text  - text to display if no terms are found.
@@ -732,7 +732,7 @@ class Field_Type {
 	/**
 	 * A field with checkboxes with taxonomy terms, and multiple terms can be selected.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
+	 * @link https://cmb2.io/docs/Field-Types#taxonomy_multicheck
 	 *
 	 * @param string      $taxonomy       - slug.
 	 * @param string|null $no_terms_text  - text to display if no terms are found.
@@ -753,7 +753,7 @@ class Field_Type {
 	/**
 	 * Hierarchical checkboxes with taxonomy terms, and multiple terms can be selected.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_hierarchical
+	 * @link https://cmb2.io/docs/Field-Types#taxonomy_multicheck_hierarchical
 	 *
 	 * @param string      $taxonomy       - slug.
 	 * @param string|null $no_terms_text  - text to display if no terms are found.
@@ -774,7 +774,7 @@ class Field_Type {
 	/**
 	 * Inline checkboxes with taxonomy terms.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck_inline
+	 * @link https://cmb2.io/docs/Field-Types#taxonomy_multicheck_inline
 	 *
 	 * @param string      $taxonomy       - slug.
 	 * @param string|null $no_terms_text  - text to display if no terms are found.
@@ -797,7 +797,7 @@ class Field_Type {
 	 *
 	 * @see  \_WP_Editors::parse_settings()
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#wysiwyg
+	 * @link https://cmb2.io/docs/Field-Types#wysiwyg
 	 *
 	 * @phpstan-param MCE_OPTIONS $mce_options
 	 *
@@ -827,7 +827,7 @@ class Field_Type {
 	 * You can also limit it to only allowing attachments
 	 * (can't manually type in a URL), also useful if you plan to use the attachment ID.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#file
+	 * @link    https://cmb2.io/docs/Field-Types#file
 	 *
 	 * @example file('Add PDF', 'application/pdf', true);
 	 *
@@ -855,7 +855,7 @@ class Field_Type {
 	 * This is a repeatable field, and will store its data in an array,
 	 * with the attachment ID as the array key, and the attachment url as the value.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#file_list
+	 * @link https://cmb2.io/docs/Field-Types#file_list
 	 *
 	 * @param string|null $button_text      - (default 'Add File').
 	 * @param string|null $file_mime_type   - (default all).
@@ -878,7 +878,7 @@ class Field_Type {
 	/**
 	 * A hybrid field that supports adding other fields as a repeatable group.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types#group
+	 * @link https://cmb2.io/docs/Field-Types#group
 	 *
 	 * @interal
 	 *

@@ -78,8 +78,8 @@ readonly class Registered {
 	/**
 	 * Get the default value for the field.
 	 *
-	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#default
-	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#default_cb
+	 * @link   https://cmb2.io/docs/Field-Parameters#default
+	 * @link   https://cmb2.io/docs/Field-Parameters#default-cb
 	 * @see    Field::default()
 	 *
 	 * @notice Will not use the `default_cb` if no object_id is passed.
@@ -135,7 +135,7 @@ readonly class Registered {
 	 * The data key. If using for posts, will be the post-meta key.
 	 * If using for an options page, will be the array key.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#id
+	 * @link    https://cmb2.io/docs/Field-Parameters#id
 	 *
 	 * @example 'lipe/project/meta/category-fields/caption',
 	 *

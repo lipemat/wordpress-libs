@@ -36,7 +36,7 @@ class Field {
 	/**
 	 * Specify a default value for the field.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#default
+	 * @link https://cmb2.io/docs/Field-Parameters#default
 	 *
 	 * @internal
 	 *
@@ -48,7 +48,7 @@ class Field {
 	 * Bypass the CMB escaping (escapes before display) methods with your own callback.
 	 * Set to false if you do not want any escaping (not recommended).
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#escape_cb
+	 * @link https://cmb2.io/docs/Field-Parameters#escape-cb
 	 *
 	 * @see  Field::escape_cb()
 	 *
@@ -63,7 +63,7 @@ class Field {
 	 *
 	 * Only used when a field's data type cannot be registered with `register_meta`.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
+	 * @link    https://cmb2.io/docs/Field-Parameters#sanitization-cb
 	 *
 	 * @see     Field::sanitization_cb()
 	 * @see     Field::$meta_sanitizer
@@ -83,7 +83,7 @@ class Field {
 	 * WP native functions.
 	 *
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#save_field
+	 * @link    https://cmb2.io/docs/Field-Parameters#save_field
 	 *
 	 * @example A field to display a readonly toggle but only change the value
 	 *          via `$object->update_meta( $field_id, $value)`
@@ -131,8 +131,8 @@ class Field {
 	/**
 	 * Used to configure some strings for things like taxonomy and repeater fields.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_radio
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#repeatable
+	 * @link    https://cmb2.io/docs/Field-Types#taxonomy_radio
+	 * @link    https://cmb2.io/docs/Field-Parameters#repeatable
 	 *
 	 * @example array(
 	 *          'add_row_text' => 'Add Another Special Row',
@@ -158,7 +158,7 @@ class Field {
 	 * Will modify default attributes (class, input type, rows, etc),
 	 * or add your own (placeholder, data attributes)
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#attributes
+	 * @link    https://cmb2.io/docs/Field-Parameters#attributes
 	 *
 	 * @see     Field::attributes()
 	 *
@@ -179,7 +179,7 @@ class Field {
 	 *
 	 * @see  Field::column
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#column
+	 * @link https://cmb2.io/docs/Field-Parameters#column
 	 *
 	 * @var array{disable_sortable: bool, name: string, position: int|bool}|bool
 	 */
@@ -190,7 +190,7 @@ class Field {
 	 * Callback function to display the output of the column in the
 	 * object-lists.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#display_cb
+	 * @link    https://cmb2.io/docs/Field-Parameters#display-cb
 	 * @see     link for markup example
 	 *
 	 * @example my_callback_function_to_display_output( $field_args, $field )
@@ -222,8 +222,8 @@ class Field {
 	 * Calling Field::type() will return the Field_Type object, which
 	 * will auto complete any type.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#type
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Types
+	 * @link https://cmb2.io/docs/Field-Parameters#type
+	 * @link https://cmb2.io/docs/Field-Types
 	 *
 	 * @see  Field_Type
 	 *
@@ -234,7 +234,7 @@ class Field {
 	/**
 	 * Specify a callback to retrieve default value for the field.
 	 *
-	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Parameters#default_cb
+	 * @link   https://cmb2.io/docs/Field-Parameters#default-cb
 	 *
 	 * @var \Closure
 	 */
@@ -243,7 +243,7 @@ class Field {
 	/**
 	 * Field description. Usually under or adjacent to the field input.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#desc
+	 * @link https://cmb2.io/docs/Field-Parameters#desc
 	 *
 	 * @var string
 	 */
@@ -257,7 +257,7 @@ class Field {
 	 *
 	 * @see     Field::repeatable()
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#repeatable
+	 * @link    https://cmb2.io/docs/Field-Parameters#repeatable
 	 * @link    https://github.com/WebDevStudios/CMB2/wiki/Field-Types#types
 	 *
 	 * @var bool
@@ -267,8 +267,8 @@ class Field {
 	/**
 	 * Filter the value returned in the REST API responses
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#rest_value_cb
-	 * @link    https://github.com/CMB2/CMB2/wiki/REST-API#overriding-a-returned-value-for-a-individual-field
+	 * @link    https://cmb2.io/docs/Field-Parameters#rest-value-cb
+	 * @link    https://cmb2.io/docs/REST-API#overriding-a-returned-value-for-a-individual-field
 	 *
 	 * @see     Field::rest_value_cb()
 	 *
@@ -363,7 +363,7 @@ class Field {
 	 * Only needed for special cases where `$this->coulmn` can't do
 	 * what you need.
 	 *
-	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#display_cb
+	 * @link     https://cmb2.io/docs/Field-Parameters#display-cb
 	 * @see      link for a markup example
 	 *
 	 * @phpstan-param \Closure( array<string, mixed>, \CMB2_Field, mixed): (void|string) $display_cb
@@ -384,7 +384,7 @@ class Field {
 	 * Will modify default attributes (class, input type, rows, etc.),
 	 * or add your own (placeholder, data attributes).
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#attributes
+	 * @link    https://cmb2.io/docs/Field-Parameters#attributes
 	 *
 	 * @example [
 	 *          'placeholder' => 'A small amount of text',
@@ -428,7 +428,7 @@ class Field {
 	/**
 	 * Specify a callback which will return the default value for this field.
 	 *
-	 * @link     https://github.com/CMB2/CMB2/wiki/Field-Parameters#default_cb
+	 * @link     https://cmb2.io/docs/Field-Parameters#default-cb
 	 *
 	 * @since    5.2.1
 	 *
@@ -452,7 +452,7 @@ class Field {
 	/**
 	 * Field description. Usually under or adjacent to the field input.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#desc
+	 * @link https://cmb2.io/docs/Field-Parameters#desc
 	 *
 	 * @param string $description - The field description.
 	 *
@@ -484,7 +484,7 @@ class Field {
 	 * Bypass the CMB escaping (escapes before display) methods with your own callback.
 	 * Set to false if you do not want any escaping (not recommended).
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#escape_cb
+	 * @link https://cmb2.io/docs/Field-Parameters#escape-cb
 	 *
 	 * @phpstan-param ESC_CB $callback
 	 *
@@ -524,8 +524,8 @@ class Field {
 	 * Callback to filter the return value for this field in
 	 * the rest api responses.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#rest_value_cb
-	 * @link    https://github.com/CMB2/CMB2/wiki/REST-API#overriding-a-returned-value-for-a-individual-field
+	 * @link    https://cmb2.io/docs/Field-Parameters#rest-value-cb
+	 * @link    https://cmb2.io/docs/REST-API#overriding-a-returned-value-for-a-individual-field
 	 *
 	 * @param \Closure $callback - The callback to use for filtering.
 	 *
@@ -690,7 +690,7 @@ class Field {
 	/**
 	 * Set a Fields Type and register the type with Meta\Repo
 	 *
-	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Types
+	 * @link  https://cmb2.io/docs/Field-Types
 	 *
 	 * @internal
 	 *
@@ -778,7 +778,7 @@ class Field {
 	 * set the `sanitize_callback` property. If not, we use the CMB2
 	 * `sanitize_cb` property to allow CMB2 and/or meta repo to handle sanitization.
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#sanitization_cb
+	 * @link https://cmb2.io/docs/Field-Parameters#sanitization-cb
 	 * @link https://developer.wordpress.org/reference/functions/register_meta/
 	 *
 	 * @phpstan-param ESC_CB $callback
@@ -805,7 +805,7 @@ class Field {
 	 * For fields with data managed externally using the meta repo or
 	 * WP native functions.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#save_field
+	 * @link    https://cmb2.io/docs/Field-Parameters#save_field
 	 *
 	 * @since   5.8.0
 	 *

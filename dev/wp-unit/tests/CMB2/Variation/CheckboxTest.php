@@ -17,7 +17,7 @@ class CheckboxTest extends \WP_UnitTestCase {
 		$box = new Box( 'checkbox-text/default', [ 'post' ], 'Test Box' );
 
 		$this->expectException( \LogicException::class );
-		$this->expectExceptionMessage( 'Checkboxes do not support standard default values. checker. See https://github.com/CMB2/CMB2/wiki/Tips-&-Tricks#setting-a-default-value-for-a-checkbox' );
+		$this->expectExceptionMessage( 'Checkboxes do not support standard default values. checker. See https://cmb2.io/docs/Tips-&-Tricks#setting-a-default-value-for-a-checkbox' );
 
 		$box->field( 'checker', 'Checker' )
 		    ->checkbox()
@@ -29,7 +29,7 @@ class CheckboxTest extends \WP_UnitTestCase {
 		$box = new Box( 'checkbox-text/default', [ 'post' ], 'Test Box' );
 		$field = $box->field( 'checker', 'Checker' )
 		             ->checkbox()
-			->default_cb( fn( array $args, \CMB2_Field $field ) => isset( $_GET['post'] ) ? '' : true );
+		             ->default_cb( fn( array $args, \CMB2_Field $field ) => isset( $_GET['post'] ) ? '' : true );
 
 		$this->assertInstanceOf( Checkbox::class, $field );
 

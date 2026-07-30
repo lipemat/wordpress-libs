@@ -19,7 +19,7 @@ class Taxonomy extends Field {
 	 *
 	 * @notice These fields will save terms not meta.
 	 *
-	 * @link   https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_select
+	 * @link   https://cmb2.io/docs/Field-Types#taxonomy_select
 	 *
 	 * @var string
 	 */
@@ -29,7 +29,7 @@ class Taxonomy extends Field {
 	 * Whether to show select all button for items
 	 * with multi select like multicheck.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
+	 * @link    https://cmb2.io/docs/Field-Types#taxonomy_multicheck
 	 *
 	 * @default true
 	 *
@@ -41,7 +41,7 @@ class Taxonomy extends Field {
 	 * New field parameter for taxonomy fields, 'remove_default'
 	 * which allows disabling the default taxonomy metabox.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#remove_default
+	 * @link    https://cmb2.io/docs/Field-Parameters#remove_default
 	 *
 	 * @default false
 	 *
@@ -52,7 +52,7 @@ class Taxonomy extends Field {
 	/**
 	 * Field parameter, which can be used to override the arguments passed to get_terms()
 	 *
-	 * @link https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
+	 * @link https://cmb2.io/docs/Field-Parameters#query_args
 	 *
 	 * @var  array<string, mixed>
 	 */
@@ -78,7 +78,7 @@ class Taxonomy extends Field {
 	 * New field parameter for taxonomy fields, 'remove_default'
 	 * which allows disabling the default taxonomy metabox.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Parameters#remove_default
+	 * @link    https://cmb2.io/docs/Field-Parameters#remove_default
 	 *
 	 * @default false
 	 *
@@ -94,7 +94,7 @@ class Taxonomy extends Field {
 	 * Whether to show select all button for items
 	 * with multi select like multicheck.
 	 *
-	 * @link    https://github.com/CMB2/CMB2/wiki/Field-Types#taxonomy_multicheck
+	 * @link    https://cmb2.io/docs/Field-Types#taxonomy_multicheck
 	 *
 	 * @default true
 	 *
@@ -110,7 +110,7 @@ class Taxonomy extends Field {
 	 * Field parameter, which can be used by the  'taxonomy_*' field types.
 	 * allows overriding the media library query arguments.
 	 *
-	 * @link  https://github.com/CMB2/CMB2/wiki/Field-Parameters#query_args
+	 * @link  https://cmb2.io/docs/Field-Parameters#query_args
 	 *
 	 * @param Get_Terms $args - The arguments to pass to get_terms().
 	 */
