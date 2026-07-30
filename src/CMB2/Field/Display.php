@@ -364,9 +364,7 @@ trait Display {
 	/**
 	 * A custom callback to return the label for the field
 	 *
-	 * Part of cmb2 core but undocumented.
-	 *
-	 * @see \CMB2_Base::do_callback
+	 * @link https://cmb2.io/docs/Field-Parameters#label-cb
 	 *
 	 * @phpstan-param (\Closure(string, \CMB2_Field): string) $label_cb
 	 *
