@@ -18,7 +18,7 @@ use PHPUnit\Framework\Attributes\RequiresMethod;
  *
  * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
  */
-#[RequiresMethod( \CMB2_Bootstrap_2101::class, 'initiate' )]
+#[RequiresMethod( \CMB2_Bootstrap_2120::class, 'initiate' )]
 class BoxTest extends \WP_UnitTestCase {
 	private $attachment_id;
 

@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\RequiresMethod;
  * @since  March 2026
  *
  */
-#[RequiresMethod( \CMB2_Bootstrap_2101::class, 'initiate' )]
+#[RequiresMethod( \CMB2_Bootstrap_2120::class, 'initiate' )]
 class TypeTest extends \WP_UnitTestCase {
 	public function test_types(): void {
 		$external = [ Type::GROUP, Type::TERM_SELECT_2 ];

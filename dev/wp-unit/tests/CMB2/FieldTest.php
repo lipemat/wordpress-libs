@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\RequiresMethod;
  *
  * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
  */
-#[RequiresMethod( \CMB2_Bootstrap_2101::class, 'initiate' )]
+#[RequiresMethod( \CMB2_Bootstrap_2120::class, 'initiate' )]
 class FieldTest extends \WP_Test_REST_TestCase {
 	public function setUp(): void {
 		parent::setUp();
@@ -169,7 +169,7 @@ class FieldTest extends \WP_Test_REST_TestCase {
 			->field( 'second', '' )
 			->text();
 
-		\CMB2_Bootstrap_2101::initiate()->include_cmb();
+		\CMB2_Bootstrap_2120::initiate()->include_cmb();
 		do_action( 'cmb2_init' );
 
 		$this->assertEquals( 'secret', get_post_meta( $post->ID, 'd1', true ) );

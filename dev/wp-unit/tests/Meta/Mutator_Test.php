@@ -19,7 +19,7 @@ use PHPUnit\Framework\Attributes\RequiresMethod;
  *
  * @link     https://docs.phpunit.de/en/9.5/incomplete-and-skipped-tests.html#skipping-tests-using-requires
  */
-#[RequiresMethod( \CMB2_Bootstrap_2101::class, 'initiate' )]
+#[RequiresMethod( \CMB2_Bootstrap_2120::class, 'initiate' )]
 class Mutator_Test extends \WP_UnitTestCase {
 	protected array $deleted_args;
 
@@ -85,7 +85,7 @@ class Mutator_Test extends \WP_UnitTestCase {
 
 		$this->tags = self::factory()->term->create_many( 2 );
 
-		\CMB2_Bootstrap_2101::initiate()->include_cmb();
+		\CMB2_Bootstrap_2120::initiate()->include_cmb();
 		do_action( 'cmb2_init' );
 	}
 

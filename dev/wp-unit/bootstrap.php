@@ -29,4 +29,6 @@ foreach ( glob( __DIR__ . '/mocks/*.php' ) as $file ) {
 	require $file;
 }
 
-\CMB2_Bootstrap_2101::initiate()->include_cmb();
+if( \class_exists( 'CMB2_Bootstrap_2120') ) {
+	\CMB2_Bootstrap_2120::initiate()->include_cmb();
+}
