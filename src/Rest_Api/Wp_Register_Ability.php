@@ -101,6 +101,7 @@ class Wp_Register_Ability implements ArgsRules {
 	 *
 	 * @phpstan-var array{
 	 *     annotations?: array<self::ANNOTATION_*, bool>,
+	 *     public?: bool,
 	 *     show_in_rest?: bool,
 	 *
 	 *     mcp: array{
