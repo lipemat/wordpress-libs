@@ -21,7 +21,9 @@ class Template {
 	public function esc_attr( array $attributes ): string {
 		$e = [];
 		foreach ( $attributes as $k => $v ) {
-			if ( \is_array( $v ) || \is_object( $v ) ) {
+			if ( $v instanceof \Stringable ) {
+				$v = $v->__toString();
+			} elseif ( \is_array( $v ) || \is_object( $v ) ) {
 				$v = wp_json_encode( $v );
 			} elseif ( true === $v ) {
 				$e[] = $k;

@@ -88,6 +88,12 @@ class TemplateTest extends \WP_UnitTestCase {
 				],
 				'break/&gt;="bar" &lt;h1&gt;tag&lt;/h1&gt;="spaced"',
 			],
+			'Class Names' => [
+				[
+					'class' => new Class_Names( [ 'foo', 'bar' ] ),
+				],
+				'class="foo bar"',
+			],
 		];
 	}
 }
