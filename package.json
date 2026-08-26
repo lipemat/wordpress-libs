@@ -16,8 +16,7 @@
     "postinstall": "lipemat-js-boilerplate fix-pnp",
     "start": "node -e \"console.error('`yarn lipemat-js-boilerplate start` may be called, but be sure to `dist` before committing.')\"",
     "dangerous-start": "lipemat-js-boilerplate start",
-    "start-sass": "sass --watch ./css/ --style compressed",
-    "test": "lipemat-js-boilerplate test"
+    "start-sass": "sass --watch ./css/ --style compressed"
   },
   "certificates": {
     "cert": "./dev/certs/localhost.crt",
