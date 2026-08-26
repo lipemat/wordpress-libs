@@ -17,7 +17,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  *a
  */
 class Settings_PageTest extends \WP_UnitTestCase {
-	public const NAME = 'testing/anon/mock-settings';
+	public const string NAME = 'testing/anon/mock-settings';
 
 
 	protected function setUp(): void {
@@ -277,7 +277,10 @@ class Settings_PageTest extends \WP_UnitTestCase {
 		$standard->init();
 		do_action( 'admin_menu' );
 		$full = get_echo( fn() => do_action( 'admin_page_' . self::NAME ) );
-		$this->assertSame( $html, $full );
+		// WP 7.1+ appends auto-incrementing counters to section IDs; normalize
+		// them before comparing so the assertion is stable across WP versions.
+		$normalize = static fn( string $markup ): string => preg_replace( '/wp-settings-section-[\w\/%]+-\d+/', 'wp-settings-section-ID', $markup );
+		$this->assertSame( $normalize( $html ), $normalize( $full ) );
 
 		remove_all_actions( 'admin_page_' . self::NAME );
 		$network = Settings_Page::factory( new Settings_Page_Mock( true ) );
@@ -290,7 +293,7 @@ class Settings_PageTest extends \WP_UnitTestCase {
 		$network->init();
 		do_action( 'network_admin_menu' );
 		$full = get_echo( fn() => do_action( 'admin_page_' . self::NAME ) );
-		$this->assertSame( $html, $full );
+		$this->assertSame( $normalize( $html ), $normalize( $full ) );
 	}
 
 
@@ -492,6 +495,10 @@ class Settings_PageTest extends \WP_UnitTestCase {
 
 
 	public function test_section_extras(): void {
+		// WP 7.1+ adds id attributes to <h2> section headings; strip them so
+		// assertions remain stable across WP versions.
+		$strip_h2_ids = static fn( string $markup ): string => preg_replace( '/<h2 id="[^"]*">/', '<h2>', $markup );
+
 		$mock = Settings_Page::factory( new Settings_Page_Mock( false ) );
 		$mock->settings->get_sections()[0]->args->merge( new SectionArgs( [
 			'before_section' => '<div>before',
@@ -499,7 +506,7 @@ class Settings_PageTest extends \WP_UnitTestCase {
 			'section_class'  => 'section-class',
 		] ) );
 		$mock->register();
-		$html = get_echo( [ $mock, 'render' ] );
+		$html = $strip_h2_ids( get_echo( [ $mock, 'render' ] ) );
 		$this->assertStringContainsString( '<div>before<h2>First Section</h2>', $html );
 		$this->assertStringContainsString( 'after</div><h2>Second Section</h2>', $html );
 		$this->assertStringNotContainsString( 'section-class', $html );
@@ -510,7 +517,7 @@ class Settings_PageTest extends \WP_UnitTestCase {
 			'section_class'  => 'section-class',
 		] ) );
 		$mock->register();
-		$html = get_echo( [ $mock, 'render' ] );
+		$html = $strip_h2_ids( get_echo( [ $mock, 'render' ] ) );
 		$this->assertStringContainsString( '<div class="section-class">before<h2>First Section</h2>', $html );
 		$this->assertStringContainsString( 'after</div><h2>Second Section</h2>', $html );
 		$this->assertStringContainsString( 'section-class', $html );
