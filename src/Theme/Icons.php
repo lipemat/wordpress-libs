@@ -158,10 +158,17 @@ enum Icons: string {
 		$svg = \WP_Icons_Registry::get_instance()->get_registered_icon( $this->value );
 		if ( null === $svg ) {
 			_doing_it_wrong( __METHOD__, esc_html( "Icon {$this->value} not found." ), '6.0.0' );
+			return null;
 		}
+
+		if ( '' === $svg['content'] ) {
+			_doing_it_wrong( __METHOD__, esc_html( "Icon {$this->value} has no content." ), '6.0.1' );
+			return null;
+		}
+
 		return [
 			'content' => $svg['content'] ?? '',
-			'path'    => $svg['filePath'] ?? '',
+			'path'    => $svg['file_path'] ?? '',
 		];
 	}
 }
