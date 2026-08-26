@@ -2371,7 +2371,7 @@ const RAW_RUNTIME_STATE =
     ],\
     [\
       "fast-uri",\
-      "npm:3.1.4"\
+      "npm:3.1.5"\
     ],\
     [\
       "fastest-levenshtein",\
@@ -2963,7 +2963,7 @@ const RAW_RUNTIME_STATE =
     ],\
     [\
       "js-yaml",\
-      "npm:4.3.0"\
+      "npm:4.3.1"\
     ],\
     [\
       "jsdoc-type-pratt-parser",\
@@ -9073,7 +9073,7 @@ const RAW_RUNTIME_STATE =
           ["globals", "npm:14.0.0"],\
           ["ignore", "npm:5.3.2"],\
           ["import-fresh", "npm:3.3.1"],\
-          ["js-yaml", "npm:4.3.0"],\
+          ["js-yaml", "npm:4.3.1"],\
           ["minimatch", "npm:3.1.5"],\
           ["strip-json-comments", "npm:3.1.1"]\
         ],\
@@ -9183,7 +9183,7 @@ const RAW_RUNTIME_STATE =
           ["camelcase", "npm:5.3.1"],\
           ["find-up", "npm:4.1.0"],\
           ["get-package-type", "npm:0.1.0"],\
-          ["js-yaml", "npm:3.15.0"],\
+          ["js-yaml", "npm:3.15.1"],\
           ["resolve-from", "npm:5.0.0"]\
         ],\
         "linkType": "HARD"\
@@ -13016,7 +13016,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["ajv", "npm:8.20.0"],\
           ["fast-deep-equal", "npm:3.1.3"],\
-          ["fast-uri", "npm:3.1.4"],\
+          ["fast-uri", "npm:3.1.5"],\
           ["json-schema-traverse", "npm:1.0.0"],\
           ["require-from-string", "npm:2.0.2"]\
         ],\
@@ -14452,7 +14452,7 @@ const RAW_RUNTIME_STATE =
           ["cosmiconfig", "virtual:a91e2b3975d811b840a5ed430b41e4b893afc2e8d597e3099b7e6efac5a9cddf1c8dafc6897c0d9edf8bb398a07dd29b6d8a6d436e103e9070b6f247bfd1b861#npm:9.0.2"],\
           ["env-paths", "npm:2.2.1"],\
           ["import-fresh", "npm:3.3.1"],\
-          ["js-yaml", "npm:4.3.0"],\
+          ["js-yaml", "npm:4.3.1"],\
           ["parse-json", "npm:5.2.0"],\
           ["typescript", null]\
         ],\
@@ -16294,10 +16294,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["fast-uri", [\
-      ["npm:3.1.4", {\
-        "packageLocation": "./.yarn/cache/fast-uri-npm-3.1.4-e2023ad958-f90948821c.zip/node_modules/fast-uri/",\
+      ["npm:3.1.5", {\
+        "packageLocation": "./.yarn/cache/fast-uri-npm-3.1.5-39a8d368d6-2bf60eb800.zip/node_modules/fast-uri/",\
         "packageDependencies": [\
-          ["fast-uri", "npm:3.1.4"]\
+          ["fast-uri", "npm:3.1.5"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -18177,20 +18177,20 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["js-yaml", [\
-      ["npm:3.15.0", {\
-        "packageLocation": "./.yarn/cache/js-yaml-npm-3.15.0-c152ef7c11-ca966bd354.zip/node_modules/js-yaml/",\
+      ["npm:3.15.1", {\
+        "packageLocation": "./.yarn/cache/js-yaml-npm-3.15.1-057b38bd76-6c693b8c59.zip/node_modules/js-yaml/",\
         "packageDependencies": [\
           ["argparse", "npm:1.0.10"],\
           ["esprima", "npm:4.0.1"],\
-          ["js-yaml", "npm:3.15.0"]\
+          ["js-yaml", "npm:3.15.1"]\
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:4.3.0", {\
-        "packageLocation": "./.yarn/cache/js-yaml-npm-4.3.0-1586601382-058b30473d.zip/node_modules/js-yaml/",\
+      ["npm:4.3.1", {\
+        "packageLocation": "./.yarn/cache/js-yaml-npm-4.3.1-6383f7fb93-13c500ca32.zip/node_modules/js-yaml/",\
         "packageDependencies": [\
           ["argparse", "npm:2.0.1"],\
-          ["js-yaml", "npm:4.3.0"]\
+          ["js-yaml", "npm:4.3.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -31372,10 +31372,7 @@ Required by: ${issuerForDisplay}
             if (runtimeState.enableTopLevelFallback) {
               if (dependencyReference == null && fallbackReference === null) {
                 const reference = runtimeState.fallbackPool.get(dependencyName);
-                // # Warnings suppressed via @lipemat/js-boilerplate/fix-pnp script. 
-if (! alwaysWarnOnFallback && reference != null) { 
-dependencyReference = reference; 
-} else if (alwaysWarnOnFallback && reference != null) {
+                if (reference != null) {
                   fallbackReference = reference;
                 }
               }
