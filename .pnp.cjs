@@ -3702,10 +3702,6 @@ const RAW_RUNTIME_STATE =
       "npm:4.0.1"\
     ],\
     [\
-      "randombytes",\
-      "npm:2.1.0"\
-    ],\
-    [\
       "range-parser",\
       "npm:1.2.1"\
     ],\
@@ -3925,7 +3921,7 @@ const RAW_RUNTIME_STATE =
     ],\
     [\
       "serialize-javascript",\
-      "npm:6.0.2"\
+      "npm:7.1.0"\
     ],\
     [\
       "serve-index",\
@@ -4381,7 +4377,7 @@ const RAW_RUNTIME_STATE =
     ],\
     [\
       "uuid",\
-      "npm:8.3.2"\
+      "npm:11.1.1"\
     ],\
     [\
       "v8-compile-cache",\
@@ -14302,7 +14298,7 @@ const RAW_RUNTIME_STATE =
           ["@types/webpack", null],\
           ["compression-webpack-plugin", "virtual:3be96df1fb4c179ecdd94296de92c4c6c7cfa8dbfe4a92c6c4e01f94f6c46ab19e7c94af06a85d9a1fd8682a1754ffdd22b270b987938b9183cac64f67f58c75#npm:10.0.0"],\
           ["schema-utils", "npm:4.3.3"],\
-          ["serialize-javascript", "npm:6.0.2"],\
+          ["serialize-javascript", "npm:7.1.0"],\
           ["webpack", "virtual:3be96df1fb4c179ecdd94296de92c4c6c7cfa8dbfe4a92c6c4e01f94f6c46ab19e7c94af06a85d9a1fd8682a1754ffdd22b270b987938b9183cac64f67f58c75#npm:5.109.0"]\
         ],\
         "packagePeers": [\
@@ -21073,16 +21069,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["randombytes", [\
-      ["npm:2.1.0", {\
-        "packageLocation": "./.yarn/cache/randombytes-npm-2.1.0-e3da76bccf-50395efda7.zip/node_modules/randombytes/",\
-        "packageDependencies": [\
-          ["randombytes", "npm:2.1.0"],\
-          ["safe-buffer", "npm:5.2.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["range-parser", [\
       ["npm:1.2.1", {\
         "packageLocation": "./.yarn/cache/range-parser-npm-1.2.1-1a470fa390-96c032ac24.zip/node_modules/range-parser/",\
@@ -21758,11 +21744,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["serialize-javascript", [\
-      ["npm:6.0.2", {\
-        "packageLocation": "./.yarn/cache/serialize-javascript-npm-6.0.2-cc09461d45-2dd09ef4b6.zip/node_modules/serialize-javascript/",\
+      ["npm:7.1.0", {\
+        "packageLocation": "./.yarn/cache/serialize-javascript-npm-7.1.0-45141b8409-8a03dd3c6d.zip/node_modules/serialize-javascript/",\
         "packageDependencies": [\
-          ["randombytes", "npm:2.1.0"],\
-          ["serialize-javascript", "npm:6.0.2"]\
+          ["serialize-javascript", "npm:7.1.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -21989,7 +21974,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["faye-websocket", "npm:0.11.4"],\
           ["sockjs", "npm:0.3.24"],\
-          ["uuid", "npm:8.3.2"],\
+          ["uuid", "npm:11.1.1"],\
           ["websocket-driver", "npm:0.7.5"]\
         ],\
         "linkType": "HARD"\
@@ -23428,10 +23413,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["uuid", [\
-      ["npm:8.3.2", {\
-        "packageLocation": "./.yarn/cache/uuid-npm-8.3.2-eca0baba53-bcbb807a91.zip/node_modules/uuid/",\
+      ["npm:11.1.1", {\
+        "packageLocation": "./.yarn/cache/uuid-npm-11.1.1-311687c807-9e3af58eba.zip/node_modules/uuid/",\
         "packageDependencies": [\
-          ["uuid", "npm:8.3.2"]\
+          ["uuid", "npm:11.1.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -31372,7 +31357,10 @@ Required by: ${issuerForDisplay}
             if (runtimeState.enableTopLevelFallback) {
               if (dependencyReference == null && fallbackReference === null) {
                 const reference = runtimeState.fallbackPool.get(dependencyName);
-                if (reference != null) {
+                // # Warnings suppressed via @lipemat/js-boilerplate/fix-pnp script. 
+if (! alwaysWarnOnFallback && reference != null) { 
+dependencyReference = reference; 
+} else if (alwaysWarnOnFallback && reference != null) {
                   fallbackReference = reference;
                 }
               }
