@@ -35,6 +35,7 @@ class IconsTest extends \WP_UnitTestCase {
 			$class = 'icon-' . \str_replace( '/', '-', $icon->value );
 
 			$svg = \file_get_contents( $config['path'] );
+			$svg = PrivateAccess::in()->call_private_method( \WP_Icons_Registry::get_instance(), 'sanitize_icon_content', [ $svg ] );
 
 			$html = '<i class="wp-core-icon ' . $class . '">' . \str_replace( [ "\n", "\t" ], '', $svg ) . '</i>';
 
