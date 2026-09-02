@@ -16,8 +16,9 @@ The Meta module ties together field registration, meta translation, validation, 
 - `Lipe\Lib\Meta\DataType` (enum)
 - `Lipe\Lib\Meta\MetaType` (enum)
 - `Lipe\Lib\Meta\Meta_Box`
-- `Lipe\Lib\Meta\Mutator_Trait`
+- `Lipe\Lib\Meta\Mutator_Trait` (trait)
 - `Lipe\Lib\Meta\Register_Meta`
+- `Lipe\Lib\Meta\Registered`
 - `Lipe\Lib\Meta\Repo`
 - `Lipe\Lib\Meta\Translate` (trait)
 - `Lipe\Lib\Meta\Validation`
@@ -43,7 +44,7 @@ Registers a classic meta box with WordPress and handles nonce rendering and save
 
 ### Key public methods
 
-- `public function __construct(protected Box $box,)`
+- `public function __construct(protected Box $box)`
 - `public function render_nonce(\WP_Post $post): void`
 - `public function save(int $post_id, \WP_Post $post): void`
 - `public function register(\WP_Post $post): void`
@@ -54,8 +55,8 @@ Fluent wrapper around `register_meta()`, `register_post_meta()`, and `register_t
 
 ### Key public methods
 
-- `public function show_in_rest(?string $name = null, ?Resource_Schema $schema = null, ?callable $prepare_callback = null): static`
 - `public function __construct(array $existing)`
+- `public function show_in_rest(?string $name = null, ?Resource_Schema $schema = null, ?callable $prepare_callback = null): static`
 - `public function merge(ArgsRules $overrides): void`
 - `public function get_args(): array`
 
@@ -89,34 +90,77 @@ Readonly value object returned by `Repo::register_field()` representing a CMB2 f
 
 ### Key public methods
 
-- `public static function factory(Field $variation): static`
-- `public function are_revisions_enabled(): bool`
 - `public function get_box(): \Lipe\Lib\CMB2\Box`
 - `public function get_cmb2_field(int|string $object_id = 0): ?\CMB2_Field`
-- `public function get_config(): array`
 - `public function get_data_type(): DataType`
 - `public function get_default(null|int|string $object_id = null): mixed`
-- `public function get_description(): ?string`
+- `public function get_description(): string`
 - `public function get_escape_cb(): ?callable`
-- `public function get_group(): ?\Lipe\Lib\CMB2\Group`
+- `public function get_group(): ?Group`
 - `public function get_id(): string`
 - `public function get_meta_sanitizer(): ?callable`
-- `public function get_position(): int`
 - `public function get_rest_short_name(): string`
 - `public function get_sanitization_cb(): ?callable`
 - `public function get_show_in_rest(): string|bool`
 - `public function get_text(string $key): ?string`
-- `public function get_type(): \Lipe\Lib\CMB2\Field\Type`
+- `public function get_type(): Type`
 - `public function has_rest_short_name(): bool`
 - `public function is_allowed_to_register_meta(): bool`
 - `public function is_public_rest_data(): bool`
 - `public function is_repeatable(): bool`
 - `public function is_using_array_data(): bool`
 - `public function is_using_object_data(): bool`
+- `public function get_config(): array`
+- `public static function factory(Field $variation): static`
 
 ## `Mutator_Trait`
 
+Adds `get_meta()`/`update_meta()`/`delete_meta()` (backed by `Repo`) plus `\ArrayAccess` support to any class that supplies `get_id()` and `get_meta_type()`. Used by `Post_Object_Trait` and similar object wrappers.
+
+### Key public methods
+
+- `abstract public function get_id(): string|int`
+- `abstract public function get_meta_type(): MetaType`
+- `public function get_meta(string $key, mixed $default_value = null): mixed`
+- `public function update_meta(string $key, mixed $value, mixed $callback_default = null): void`
+- `public function delete_meta(string $key): void`
+- `public function offsetGet($field_id): mixed`
+- `public function offsetSet($field_id, $value): void`
+- `public function offsetUnset($field_id): void`
+- `public function offsetExists($field_id): bool`
+
+### Example
+
+```php
+<?php
+use Lipe\Lib\Meta\Mutator_Trait;
+use Lipe\Lib\Meta\MetaType;
+
+final class Book {
+    use Mutator_Trait;
+
+    public function __construct(
+        protected int $id
+    ) {
+    }
+
+
+    public function get_id(): int {
+        return $this->id;
+    }
+
+
+    public function get_meta_type(): MetaType {
+        return MetaType::POST;
+    }
+}
+
+$book = new Book(42);
+$isbn = $book->get_meta('isbn');
+```
+
+## Supporting types
 
 - `DataType` and `MetaType` enumerate supported storage shapes and WordPress meta object types.
 - `Validation` exposes `public function warn_for_repeatable_group_sub_fields(string $field_id, ?Registered $registered): void` and `public function warn_for_conflicting_taxonomies(array $registered): void`.
-- `Translate` contains the conversion logic that maps stored values back to the correct runtime shape.
+- `Translate` contains the conversion logic that maps stored values back to the correct runtime shape and exposes `public function supports_taxonomy_relationships(null|BoxType|MetaType $meta_type, Registered $field): bool`.

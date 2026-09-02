@@ -89,23 +89,68 @@ Object-cache helper with support for complex keys and group flushing.
 - `public function flush_runtime_cache(): void`
 - `public function add_admin_bar_button(\WP_Admin_Bar $admin_bar): void`
 
-## Other utility classes
+## `Colors`
 
-- `Colors` converts between `hex` and `rgba` via `hex_to_rgba()` and `rgba_to_hex()`.
-- `Crypt` encrypts and decrypts strings via `encrypt()`, `decrypt()`, `is_encrypted()`, and `factory()`.
-- `Files` exposes `copy_directory()` and `get_wp_filesystem()`.
-- `Strings` provides `pluralize()` and `unformat_money_value()`.
-- `Testing` wraps test-only behaviors such as `exit()`, `error_log()`, and `is_wp_debug()`.
-- `Url` provides `get_current_url()` and `get_query_arg()`.
-- `Versions` coordinates one-time and versioned updates through `get_version()`, `once()`, and `add_update()`.
+Convert colors between hexadecimal and rgb(a) notation.
 
-## Logging subsystem
+### Key public methods
 
-- `Logger` is the main entry point and exposes `warn()`, `error()`, `notice()`, `debug()`, and `factory()`.
-- `Logger\Handle` defines `public function log(string $id, Level $level, string $message): void` and `public function provide_context(array $context): void`.
-- `Logger\Handles` stores named log handles via `get_handles()`, `register_handle()`, and `unregister_handle()`.
-- `Logger\Error_Log`, `Logger\Query_Monitor`, and `Logger\Testing` are concrete handle implementations.
-- `Logger\Level` is the enum of supported log levels.
+- `public function hex_to_rgba(string $color, float $transparency = 1.0): string`
+- `public function rgba_to_hex(string $rgba): string`
+
+### Example
+
+```php
+<?php
+use Lipe\Lib\Util\Colors;
+
+$rgba = Colors::in()->hex_to_rgba('#ff0000', 0.5);
+// rgba(255,0,0,0.5)
+```
+
+## `Crypt`
+
+Encrypts and decrypts strings using a custom key, compatible with JS encryption/decryption via `crypto-js`.
+
+### Key public methods
+
+- `public function __construct(string $key)`
+- `public function decrypt(string $message): ?string`
+- `public function encrypt(string $plaintext): ?string`
+- `public static function is_encrypted(string $data): bool`
+- `public static function factory(string $key): static`
+
+### Example
+
+```php
+<?php
+use Lipe\Lib\Util\Crypt;
+
+$crypt = Crypt::factory('my-secret-key');
+$encrypted = $crypt->encrypt('sensitive data');
+$decrypted = $crypt->decrypt($encrypted);
+```
+
+## `Files`
+
+Filesystem helpers backed by the WordPress filesystem API.
+
+### Key public methods
+
+- `public function copy_directory(string $source, string $destination): bool`
+- `public function get_wp_filesystem(): \WP_Filesystem_Base`
+
+## `Logger`
+
+Main entry point for logging messages to all registered log handles.
+
+### Key public methods
+
+- `public function warn(string $message, array $context = []): void`
+- `public function error(string $message, array $context = []): void`
+- `public function notice(string $message, array $context = []): void`
+- `public function debug(string $message, array $context = []): void`
+- `public static function factory(string $id): static`
 
 ### Example
 
@@ -115,3 +160,108 @@ use Lipe\Lib\Util\Logger;
 
 Logger::factory('acme/books')->notice('Catalog synchronized', ['count' => 12]);
 ```
+
+## `Strings`
+
+String utilities.
+
+### Key public methods
+
+- `public function pluralize(string $word): string`
+- `public function unformat_money_value(string|int|float $value): float`
+
+## `Testing`
+
+Utility class for testing purposes, including a test-safe `exit()` and error capture.
+
+### Key public methods
+
+- `public function exit(): void`
+- `public function error_log(string $message): void`
+- `public function is_wp_debug(): bool`
+
+## `Url`
+
+Url helpers.
+
+### Key public methods
+
+- `public function get_current_url(bool $with_query = true): string`
+- `public function get_query_arg(string $url, string $key): array|string|null`
+
+## `Versions`
+
+Run callable based on a version or simply run an item only once.
+
+### Key public methods
+
+- `public function get_version(): string`
+- `public function once(string $key, callable $callback, mixed $args = null): void`
+- `public function add_update(float|string $version, callable $callback, mixed $args = null): void`
+
+### Example
+
+```php
+<?php
+use Lipe\Lib\Util\Versions;
+
+Versions::in()->add_update('2.0', function( $args ) {
+    // Run only when the stored version is below 2.0.
+}, ['migrate' => true] );
+
+Versions::in()->once('acme/seed-data', function() {
+    // Run exactly once, ever.
+} );
+```
+
+## `Error_Log`
+
+Logs messages to the PHP error log. Implements `Logger\Handle`.
+
+### Key public methods
+
+- `public function provide_context(array $context): void`
+- `public function log(string $id, Level $level, string $message): void`
+
+## `Handle`
+
+Contract for a Logger handle.
+
+### Methods
+
+- `public function log(string $id, Level $level, string $message): void`
+- `public function provide_context(array $context): void`
+
+## `Handles`
+
+Registered handles for the Logger. Registers `query-monitor` and `error-log` handles by default, plus `testing` when `WP_TESTS_DIR` is defined.
+
+### Key public methods
+
+- `public function __construct()`
+- `public function get_handles(): array`
+- `public function register_handle(string $name, Handle $handle): void`
+- `public function unregister_handle(string $name): void`
+
+## `Level`
+
+Enum of supported log severity levels: `Debug`, `Notice`, `Warning`, `Error`.
+
+## `Query_Monitor`
+
+Logs messages to the Query Monitor plugin. Implements `Logger\Handle`.
+
+### Key public methods
+
+- `public function provide_context(array $context): void`
+- `public function log(string $id, Level $level, string $message): void`
+
+## `Testing` (Logger\Testing)
+
+Stores log messages during unit tests. Implements `Logger\Handle`.
+
+### Key public methods
+
+- `public function get_messages(bool $with_context = false): array`
+- `public function provide_context(array $context): void`
+- `public function log(string $id, Level $level, string $message): void`

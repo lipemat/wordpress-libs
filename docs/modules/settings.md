@@ -47,7 +47,7 @@ Registers, renders, and saves a composed settings page.
 - `public function render(): void`
 - `public function is_settings_page(): bool`
 - `public function get_option(string $field, mixed $default_value = null): mixed`
-- `public static function factory(Settings $settings): Settings_Page`
+- `public static function factory(Settings $settings): static`
 
 ### Example
 
@@ -77,14 +77,14 @@ Represents one settings field inside a section.
 
 ### Key public methods
 
-- `public function label_for(string $label_for): Field`
-- `public function class(string $css_class): Field`
-- `public function help(string $help): Field`
-- `public function render_callback(callable $callback): Field`
-- `public function sanitize_callback(callable $callback): Field`
-- `public function settings_args(Register_Setting $settings_args): Field`
+- `public function label_for(string $label_for): static`
+- `public function class(string $css_class): static`
+- `public function help(string $help): static`
+- `public function render_callback(callable $callback): static`
+- `public function sanitize_callback(callable $callback): static`
+- `public function settings_args(Register_Setting $settings_args): static`
 - `public function render(Settings_Page $settings): void`
-- `public static function factory(string $id, string $title): Field`
+- `public static function factory(string $id, string $title): static`
 
 ## `Section`
 
@@ -93,14 +93,14 @@ Container for a group of settings fields.
 ### Key public methods
 
 - `public function field(string $id, string $title): Field`
-- `public function add_field(Field $field): Section`
-- `public function before_section(string $before_section): Section`
-- `public function after_section(string $after_section): Section`
-- `public function section_class(string $section_class): Section`
-- `public function description(string $description): Section`
+- `public function add_field(Field $field): static`
+- `public function before_section(string $before_section): static`
+- `public function after_section(string $after_section): static`
+- `public function section_class(string $section_class): static`
+- `public function description(string $description): static`
 - `public function get_fields(): array`
 - `public function render_description(): void`
-- `public static function factory(string $id, string $title): Section`
+- `public static function factory(string $id, string $title): static`
 
 ## Supporting types
 

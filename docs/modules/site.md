@@ -20,6 +20,7 @@ Shared behavior for classes representing a single site.
 
 ### Key public methods
 
+- `public function __construct(int|null|\WP_Site $site = null)`
 - `public function get_object(): ?\WP_Site`
 - `public function get_id(): int`
 - `public function get_meta_type(): MetaType`
