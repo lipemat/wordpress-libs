@@ -13,7 +13,7 @@ class TemplateTest extends \WP_UnitTestCase {
 
 	#[DataProvider( 'provideCssClassNames' )]
 	public function test_sanitize_css_class( string $value, string $expected ): void {
-		$this->assertEquals( $value, Template::in()->sanitize_html_class( $expected ) );
+		$this->assertSame( $expected, Template::in()->sanitize_html_class( $value ) );
 	}
 
 
@@ -27,19 +27,19 @@ class TemplateTest extends \WP_UnitTestCase {
 		return [
 			'quote'                       => [
 				'value'    => "quotes-test'",
-				'expected' => 'quotes-test',
+				'expected' => 'quotes-test\\\'',
 			],
 			'double quote'                => [
 				'value'    => 'quotes-test"',
-				'expected' => 'quotes-test',
+				'expected' => 'quotes-test\\"',
 			],
 			'quote wrap'                  => [
 				'value'    => "'quotes-test'",
-				'expected' => 'quotes-test',
+				'expected' => '\\\'quotes-test\\\'',
 			],
 			'double quote wrap'           => [
 				'value'    => '"quotes-test"',
-				'expected' => 'quotes-test',
+				'expected' => '\\"quotes-test\\"',
 			],
 			'hyphen'                      => [
 				'value'    => '-hyphen',

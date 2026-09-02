@@ -64,11 +64,12 @@ class Template {
 	 * 1. Prefix with `_` when leading digits exist.
 	 * 2. Prefix with `_` when leading hyphens exist.
 	 * 3. Unicode's characters are supported.
+	 * 4. Quotes are escaped with a backslash instead of removed.
 	 *
 	 * We prefix instead of remove in case of a CSS class like '-1-234'
 	 * would become ''.
 	 *
-	 * @link  https://www.w3.org/TR/CSS21/syndata.html#characters
+	 * @link  https://www.w3.org/TR/css-syntax-3/#ident-token-diagram
 	 * @link  https://core.trac.wordpress.org/ticket/33924
 	 *
 	 * @param string $css_class - Unsanitized CSS class.
@@ -81,6 +82,8 @@ class Template {
 		if ( null === $sanitized ) {
 			return '';
 		}
+		// Escape quotes which are not valid in identifiers unescaped.
+		$sanitized = \str_replace( [ '"', "'" ], [ '\\"', "\\'" ], $sanitized );
 		// Prefix any leading digits or hyphens with '_'.
 		return (string) \preg_replace( '/^([\d-])/', '_$1', $sanitized );
 	}
