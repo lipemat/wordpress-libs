@@ -11,33 +11,69 @@ use PHPUnit\Framework\Attributes\DataProvider;
  */
 class TemplateTest extends \WP_UnitTestCase {
 
-	public function test_sanitize_css_class(): void {
-		$valid = [
-			'_first-',
-			'second-_1234',
-			'Ⓜnav__global-composes__fY',
-		];
-		foreach ( $valid as $class ) {
-			$this->assertEquals( $class, Template::in()->sanitize_html_class( $class ) );
-		}
-
-		$invalid = [
-			'-hyphen',
-			'234_numbers',
-			'--double',
-			'2Ⓜnav__global',
-		];
-		foreach ( $invalid as $class ) {
-			$this->assertEquals( "_{$class}", Template::in()->sanitize_html_class( $class ) );
-		}
-
-		$this->assertEquals( 'httptest.com', Template::in()->sanitize_html_class( urlencode( 'http:://test.com' ) ) );
+	#[DataProvider( 'provideCssClassNames' )]
+	public function test_sanitize_css_class( string $value, string $expected ): void {
+		$this->assertEquals( $value, Template::in()->sanitize_html_class( $expected ) );
 	}
 
 
 	#[DataProvider( 'providerEscAttr' )]
 	public function test_esc_attr( array $attr, string $expected ): void {
 		$this->assertSame( $expected, Template::in()->esc_attr( $attr ) );
+	}
+
+
+	public static function provideCssClassNames(): array {
+		return [
+			'quote'                       => [
+				'value'    => "quotes-test'",
+				'expected' => 'quotes-test',
+			],
+			'double quote'                => [
+				'value'    => 'quotes-test"',
+				'expected' => 'quotes-test',
+			],
+			'quote wrap'                  => [
+				'value'    => "'quotes-test'",
+				'expected' => 'quotes-test',
+			],
+			'double quote wrap'           => [
+				'value'    => '"quotes-test"',
+				'expected' => 'quotes-test',
+			],
+			'hyphen'                      => [
+				'value'    => '-hyphen',
+				'expected' => '_-hyphen',
+			],
+			'leading number'              => [
+				'value'    => '234_numbers',
+				'expected' => '_234_numbers',
+			],
+			'double hyphen'               => [
+				'value'    => '--double',
+				'expected' => '_--double',
+			],
+			'leading number with unicode' => [
+				'value'    => '2Ⓜnav__global',
+				'expected' => '_2Ⓜnav__global',
+			],
+			'url encoded'                 => [
+				'value'    => urlencode( 'http:://test.com' ),
+				'expected' => 'httptest.com',
+			],
+			'underscore'                  => [
+				'value'    => '_first-',
+				'expected' => '_first-',
+			],
+			'underscore with numbers'     => [
+				'value'    => 'second-_1234',
+				'expected' => 'second-_1234',
+			],
+			'unicode'                     => [
+				'value'    => 'Ⓜnav__global-composes__fY',
+				'expected' => 'Ⓜnav__global-composes__fY',
+			],
+		];
 	}
 
 
