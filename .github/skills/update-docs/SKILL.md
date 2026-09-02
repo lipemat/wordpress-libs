@@ -3,8 +3,6 @@ name: update-docs
 description: Update the Jekyll module documentation in `docs/modules/` based on changes to source files in `src/`.
 ---
 
-@version 1.0.0
-
 ## Purpose
 
 The `docs/` directory contains a Just the Docs Jekyll site published to GitHub Pages. Each top-level directory in `src/` is documented by a single Markdown file at `docs/modules/<slug>.md`. This skill keeps those docs in sync with the PHP source.
