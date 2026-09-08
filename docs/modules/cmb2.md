@@ -61,6 +61,11 @@ The main CMB2 box wrapper. It collects fields, groups, REST settings, tabs, and 
 - `public function remove_box_wrap(bool $remove_box_wrap = true): void`
 - `public function get_cmb2_box(): \CMB2`
 - `public function get_box_type(): BoxType`
+- `public function get_id(): string`
+- `public function cmb(\CMB2 $cmb): void`
+- `public function show_on(array $show_on): void`
+- `public function tabs(array $tabs): void`
+- `public function save_fields(bool $save_fields): void`
 
 ### Example
 
@@ -69,7 +74,7 @@ The main CMB2 box wrapper. It collects fields, groups, REST settings, tabs, and 
 use Lipe\Lib\CMB2\Box;
 
 $box = new Box('book-details', ['book'], 'Book Details');
-$field = $box->field('isbn', 'ISBN');
+$field = $box->field('isbn', 'ISBN')->text();
 $field->description('13 digit ISBN');
 $box->show_in_rest();
 ```
@@ -89,6 +94,13 @@ Represents a single CMB2 field and exposes shared field configuration for column
 - `public function tab(string $id): static`
 - `public function set_args(Type $type, array $args, DataType $data_type): static`
 - `public function get_field_args(): array`
+- `public function default_cb(\Closure $callback): static`
+- `public function sanitization_cb(\Closure $callback): static`
+- `public function escape_cb(\Closure $callback): static`
+- `public function change_cb(\Closure $callback): static`
+- `public function delete_cb(\Closure $callback): static`
+- `public function readonly(): static`
+- `public function disabled(): static`
 - `public static function from(Field $field, Box $box): static`
 - `public static function factory(string $id, string $name, Box $box, ?Group $group = null): static`
 
@@ -99,7 +111,7 @@ A repeatable group field that behaves like both a field and a field container.
 ### Key public methods
 
 - `public function field(string $id, string $name): Field_Type`
-- `public function layout(string $layout): Group`
+- `public function layout(string $layout): static`
 - `public function max_rows(int $max_rows): static`
 - `public function repeatable(bool $repeatable = true, ?string $add_row_text = null, ?string $remove_row_text = null, ?string $remove_confirm = null): static`
 - `public function sortable(bool $sortable = true): static`
@@ -134,26 +146,40 @@ use Lipe\Lib\CMB2\Options_Page;
 $page = new Options_Page('acme-settings', 'Acme Settings');
 $page->menu_title('Acme');
 $page->capability('manage_options');
-$page->field('api_key', 'API Key')->description('Used for upstream requests.');
+$page->field('api_key', 'API Key')->text()->description('Used for upstream requests.');
 ```
 
-## `Term_Box`, `User_Box`, and `Comment_Box`
+## `Term_Box`
 
-Specialized box subclasses for term, user, and comment screens.
+Specialized `Box` subclass for taxonomy term-edit screens.
 
 ### Key public methods
 
-- `public function __construct(string $id, array $taxonomies, string $title)` (`Term_Box`)
-- `public function __construct(string $id, string $title)` (`User_Box`)
-- `public function __construct(string $id, string $title)` (`Comment_Box`)
-- `public function context(string $context): void` (`Comment_Box`)
-- `public function show_on_new_terms(bool $show): static` (`Term_Box`)
+- `public function __construct(string $id, array $taxonomies, string $title)`
+- `public function show_on_new_terms(bool $show): static`
+
+## `User_Box`
+
+Specialized `Box` subclass for the user-profile screen.
+
+### Key public methods
+
+- `public function __construct(string $id, string $title)`
+
+## `Comment_Box`
+
+Specialized `Box` subclass for the comment-edit screen.
+
+### Key public methods
+
+- `public function __construct(string $id, string $title)`
+- `public function context(string $context): void`
 
 ## `Field_Type`
 
 Factory exposed via `Box::field()` and `Group::field()` that returns the appropriate concrete CMB2 field type. Each method corresponds to a CMB2 field type and returns either a base `Field` or the matching variation builder.
 
-### Selected public methods
+### Key public methods
 
 - `public function title(): Field`
 - `public function text(): Text`
@@ -243,7 +269,7 @@ Trait mixed into `Field` providing the shared "display" configuration parameters
 
 - `public function position(int $position = 1): Field`
 - `public function before(\Closure|string $before): static`
-- `public function after(\Closure|string $after): static`
+- `public function after(string|\Closure $after): static`
 - `public function before_row(\Closure|string $before_row): static`
 - `public function after_row(\Closure|string $after_row): static`
 - `public function before_field(\Closure|string $before_field): static`

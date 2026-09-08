@@ -225,7 +225,7 @@ Custom admin menu placement for a taxonomy (WordPress does not natively support 
 
 ### Key public methods
 
-- `public function __construct(Taxonomy $taxonomy)`
+- `public function __construct(protected Taxonomy $taxonomy)`
 - `public function sub_menu(string $parent_menu, int $position = 100): void`
 - `public function parent_menu(string|Dashicons $icon = 'dashicons-category', ?int $position = null): void`
 

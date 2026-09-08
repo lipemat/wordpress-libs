@@ -289,7 +289,7 @@ Manifest for external resources (CDN/UNPKG) loaded outside the build process. Ha
 
 ### Key public methods
 
-- `public function __construct(ResourceHandles $handle)`
+- `public function __construct(protected readonly ResourceHandles $handle)`
 - `public function get_version(): string`
 - `public function get_integrity(): string`
 - `public function set_integrity(string $integrity): static`
@@ -303,7 +303,7 @@ Manifest handling for files produced by the js-boilerplate.
 
 ### Key public methods
 
-- `public function __construct(ResourceHandles $handle)`
+- `public function __construct(protected readonly ResourceHandles $handle)`
 - `public function get_version(): string`
 - `public function get_integrity(): string`
 - `public function enqueue(bool $in_footer = true): void`
@@ -329,7 +329,7 @@ Manifest handling for CSS files produced by the postcss-boilerplate.
 
 ### Key public methods
 
-- `public function __construct(ResourceHandles $handle)`
+- `public function __construct(protected readonly ResourceHandles $handle)`
 - `public function get_version(): string`
 - `public function get_integrity(): string`
 - `public function get_file(bool $full_path = false): string`
@@ -363,7 +363,7 @@ Manifest handling for Svelte-based JS module resources enqueued via `wp_enqueue_
 
 ### Key public methods
 
-- `public function __construct(ResourceHandles $handle)`
+- `public function __construct(protected readonly ResourceHandles $handle)`
 - `public function get_version(): string`
 - `public function get_integrity(): string`
 - `public function get_url(): string`

@@ -256,7 +256,7 @@ Logs messages to the Query Monitor plugin. Implements `Logger\Handle`.
 - `public function provide_context(array $context): void`
 - `public function log(string $id, Level $level, string $message): void`
 
-## `Testing` (Logger\Testing)
+## `Logger\Testing`
 
 Stores log messages during unit tests. Implements `Logger\Handle`.
 
