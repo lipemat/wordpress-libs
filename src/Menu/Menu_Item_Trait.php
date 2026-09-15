@@ -14,6 +14,28 @@ use Lipe\Lib\Post_Type\Post_Object_Trait;
  *
  * @since 3.7.0
  *
+ * @phpstan-type NAV_ITEM object{
+ *      ID: int|string,
+ *      attr_title?: string,
+ *      classes: string[]|string,
+ *      db_id: int|string,
+ *      description: string,
+ *      menu_item_parent: int|string,
+ *      menu_order: int,
+ *      object: string,
+ *      object_id: string|int,
+ *      post_parent?: string,
+ *      post_title?: string,
+ *      target: string,
+ *      title: string,
+ *      type: string,
+ *      type_label?: string,
+ *      url: string,
+ *      xfn: string,
+ *      _invalid?: bool
+ * }
+ *
+ *
  * @property int      $db_id
  * @property int      $menu_item_parent
  * @property int      $object_id
