@@ -89,6 +89,51 @@ class Util {
 
 
 	/**
+	 * Get the URL a Node process (Webpack dev server, Vite, etc.) is serving
+	 * the provided handle from.
+	 *
+	 * The Node process listens on the site's host using its own port, so any
+	 * port already on the host is dropped. Sites served from a ported domain,
+	 * like `https://localhost:9084`, would otherwise produce a URL holding
+	 * two ports.
+	 *
+	 * @since 6.1.0
+	 *
+	 * @param ResourceHandles|null $handle       - The handle to read the port for.
+	 * @param int                  $default_port - Port to use when none can be resolved.
+	 * @param string               $path         - Path to append to the URL, including a leading slash.
+	 *
+	 * @return string
+	 */
+	public function get_node_process_url( ?ResourceHandles $handle, int $default_port, string $path = '' ): string {
+		return set_url_scheme( '//' . $this->get_host() . ':' . $this->get_node_process_port( $handle, $default_port ) . $path );
+	}
+
+
+	/**
+	 * Get a host name with any port removed.
+	 *
+	 * Local dev servers are commonly served from a ported domain, which makes
+	 * `HTTP_HOST` hold something like `localhost:9084`. Anything appending its
+	 * own port must work from the bare host name.
+	 *
+	 * @since 6.1.0
+	 *
+	 * @param string|null $host - Host to strip the port from. Defaults to the current request's host.
+	 *
+	 * @return string
+	 */
+	public function get_host( ?string $host = null ): string {
+		$host = \trim( $host ?? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) );
+		if ( '' === $host ) {
+			return '';
+		}
+		$parsed = wp_parse_url( '//' . $host, PHP_URL_HOST );
+		return \is_string( $parsed ) ? $parsed : $host;
+	}
+
+
+	/**
 	 * Detect if we're working with a javascript resource.
 	 *
 	 * - Supports URL containing or not containing separate file names.

@@ -135,7 +135,7 @@ class JS_Manifest implements Manifest {
 	public function get_url(): string {
 		// Use webpack on all requests except Legacy Widget iframes.
 		if ( SCRIPT_DEBUG && Util::in()->is_webpack_running( $this->handle ) && 0 === \preg_match( '/\/wp-json.*?widget-types./', \trim( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ) ) ) ) {
-			return set_url_scheme( 'https://' . \trim( sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) ) . ':' . Util::in()->get_node_process_port( $this->handle, self::WEBPACK_PORT ) . '/js/dist/' . $this->handle->file() );
+			return Util::in()->get_node_process_url( $this->handle, self::WEBPACK_PORT, '/js/dist/' . $this->handle->file() );
 		}
 
 		$file = $this->handle->file();

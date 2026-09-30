@@ -200,10 +200,11 @@ class Resources {
 	public function live_reload( ?string $domain = null, bool $admin_also = false, ?ResourceHandles $css_handle = null ): void {
 		if ( \defined( 'SCRIPT_DEBUG' ) && \SCRIPT_DEBUG ) {
 			$port = Util::in()->get_node_process_port( $css_handle, PCSS_Manifest::LIVE_RELOAD_PORT );
-			$enqueue = function() use ( $domain, $port ) {
+			$host = null === $domain ? null : Util::in()->get_host( $domain );
+			$enqueue = function() use ( $host, $port ) {
 				$url = "http://localhost:{$port}/livereload.js";
-				if ( null !== $domain ) {
-					$url = "https://{$domain}:{$port}/livereload.js";
+				if ( null !== $host ) {
+					$url = "https://{$host}:{$port}/livereload.js";
 				}
 				wp_enqueue_script( 'livereload', $url, [], (string) \time(), true );
 			};

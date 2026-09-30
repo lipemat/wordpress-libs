@@ -378,4 +378,6 @@ Utility helpers for detecting dev-server state and resource types.
 
 - `public function is_webpack_running(ResourceHandles $handle): bool`
 - `public function get_node_process_port(?ResourceHandles $handle, int $default_port): int`
+- `public function get_node_process_url(?ResourceHandles $handle, int $default_port, string $path = ''): string`
+- `public function get_host(?string $host = null): string`
 - `public function is_javascript_resource(ResourceHandles $handle): bool`

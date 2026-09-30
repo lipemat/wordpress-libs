@@ -23,6 +23,11 @@ use Lipe\Lib\Theme\Wp_Enqueue_Script_Module;
  */
 class Svelte_Manifest implements Manifest {
 	/**
+	 * Default port used by the Vite dev server.
+	 */
+	protected const int VITE_PORT = 5173;
+
+	/**
 	 * Cache of the manifest file.
 	 *
 	 * @var array<string, MANIFEST_ENTRY>
@@ -81,10 +86,9 @@ class Svelte_Manifest implements Manifest {
 	 */
 	public function get_url(): string {
 		if ( SCRIPT_DEBUG && $this->is_vite_running() ) {
-			$host = \trim( sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) );
 			$path = wp_parse_url( $this->handle->dist_url(), PHP_URL_PATH );
-			$url = set_url_scheme( "//{$host}:5173" . $path );
-			return \str_replace( '.js', '.ts', $url . $this->handle->file() );
+			$url = Util::in()->get_node_process_url( $this->handle, self::VITE_PORT, ( \is_string( $path ) ? $path : '/' ) . $this->handle->file() );
+			return \str_replace( '.js', '.ts', $url );
 		}
 
 		// Used the hashed file name from the manifest.
