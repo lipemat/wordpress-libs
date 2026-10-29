@@ -594,7 +594,7 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, ArgsRule
 	 * @see      \WP_Query::parse_orderby
 	 *
 	 * @phpstan-param self::ORDERBY*|array<self::ORDERBY_*, self::ORDER_*> $orderby
-	 * @phpstan-param ($orderby is array ? '' : static::ORDER_* )          $order
+	 * @phpstan-param ($orderby is array ? '' : self::ORDER_*)             $order
 	 *
 	 * @formatter:off
 	 * @param array|string  $orderby - Post field to order by or array of fields and their order.
@@ -638,7 +638,8 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, ArgsRule
 	 * @return void
 	 */
 	public function merge_query( \WP_Query $query ): void {
-		foreach ( $query->query as $arg => $value ) {
+		$query_args = $query->query ?? [];
+		foreach ( $query_args as $arg => $value ) {
 			if ( '' !== $value && \property_exists( $this, $arg ) && ! isset( $this->{$arg} ) ) {
 				if ( 'paged' === $arg || 'page' === $arg ) {
 					$this->{$arg} = (int) $value;
@@ -648,7 +649,7 @@ class Query_Args implements Meta_Query_Interface, Date_Query_Interface, ArgsRule
 			}
 		}
 		$local_args = $this->get_args();
-		$query->query = \array_merge( $query->query, $local_args );
+		$query->query = \array_merge( $query_args, $local_args );
 		$query->query_vars = \array_merge( $query->query_vars, $local_args );
 	}
 

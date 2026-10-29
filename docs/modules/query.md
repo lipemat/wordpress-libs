@@ -29,6 +29,8 @@ The Query module builds `WP_Query`, `get_posts()`, and reusable nested query cla
 
 Primary fluent wrapper for building a `WP_Query` argument array.
 
+`orderby()` accepts `ASC` or `DESC` for a single field, or an empty order when passing a field/order map. `merge_query()` also supports a newly constructed `WP_Query` with no initial arguments.
+
 ### Key public methods
 
 - `public function orderby(array|string $orderby, string $order = ''): void`

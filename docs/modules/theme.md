@@ -340,6 +340,8 @@ Manifest handling for CSS files produced by the postcss-boilerplate.
 
 Contract implemented by a `BackedEnum` of theme resource handles.
 
+`handle()` and each entry returned by `dependencies()` must be non-empty strings. Registering a script with an empty manifest URL uses WordPress's source-less script registration.
+
 ### Methods
 
 - `public function dependencies(): array`

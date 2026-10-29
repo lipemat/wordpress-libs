@@ -40,6 +40,8 @@ Scripts::in()->enqueue_style(StyleHandles::META_BOXES);
 
 Enum of known script handles plus metadata helpers.
 
+`dependencies()` returns a list of non-empty WordPress script handles.
+
 ### Key public methods
 
 - `public function dependencies(): array`

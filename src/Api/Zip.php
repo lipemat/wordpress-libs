@@ -89,7 +89,7 @@ class Zip {
 	 * }
 	 */
 	protected function get_paths( array $file_urls, ?string $zip_name = null ): object {
-		$path = sys_get_temp_dir();
+		$path = wp_normalize_path( sys_get_temp_dir() );
 		$name = \hash( 'murmur3f', \implode( '|', $file_urls ) );
 
 		return (object) [

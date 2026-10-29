@@ -54,6 +54,7 @@ class Max_Rows {
 	/**
 	 * Enqueue the admin script and include the JS configurations.
 	 *
+	 * @throws \RuntimeException If the group configuration cannot be encoded.
 	 * @return void
 	 */
 	protected function load_scripts(): void {
@@ -64,7 +65,11 @@ class Max_Rows {
 			$config = $this->js_config();
 			if ( [] !== $config ) {
 				Scripts::in()->enqueue_script( ScriptHandles::ADMIN );
-				wp_localize_script( ScriptHandles::ADMIN->value, 'LIPE_LIBS_CMB2_GROUP_MAX_ROWS', $config );
+				$json = wp_json_encode( $config, JSON_HEX_TAG );
+				if ( false === $json ) {
+					$json = '[]';
+				}
+				wp_add_inline_script( ScriptHandles::ADMIN->value, 'var LIPE_LIBS_CMB2_GROUP_MAX_ROWS = ' . $json . ';', 'before' );
 			}
 		}, __METHOD__ );
 	}

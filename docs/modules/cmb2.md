@@ -320,6 +320,8 @@ $box->field('isbn', 'ISBN')->text()->change_cb( function( $object_id, $value, $k
 
 Singleton backing the Select2-powered term selector field created by `Field_Type::taxonomy_select_2()`. Handles AJAX term search, sanitization, and escaping for the field.
 
+AJAX searches return a JSON error if term retrieval produces an error or a non-array result.
+
 ### Key public methods
 
 - `public function ajax_get_terms(): void`
@@ -379,7 +381,7 @@ $group->layout(Layout::TABLE);
 
 ## `Group\Max_Rows`
 
-Container service backing `Group::max_rows()`. Enqueues the admin script and localizes the per-group row limits enforced in JS.
+Container service backing `Group::max_rows()`. Enqueues the admin script and adds the per-group row limits as an inline JavaScript array before the script runs.
 
 ### Key public methods
 

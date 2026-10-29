@@ -80,7 +80,7 @@ class Term_Select_2 {
 		if ( is_wp_error( $terms ) ) {
 			wp_send_json_error( $terms->get_error_message() );
 		}
-		if ( \is_string( $terms ) ) {
+		if ( ! \is_array( $terms ) ) {
 			wp_send_json_error( 'Failed to retrieve terms.' );
 		}
 

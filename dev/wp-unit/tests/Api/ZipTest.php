@@ -5,6 +5,7 @@ declare( strict_types=1 );
 namespace Lipe\Lib\Api;
 
 use Lipe\Lib\Container\Container;
+use Lipe\WP_Unit\Utils\PrivateAccess;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
@@ -104,7 +105,8 @@ class ZipTest extends \WP_UnitTestCase {
 
 
 	public function test_get_paths(): void {
-		$paths = call_private_method( Zip::in(), 'get_paths', [
+		$path = wp_normalize_path( sys_get_temp_dir() );
+		$paths = PrivateAccess::in()->call_private_method( Zip::in(), 'get_paths', [
 			[
 				'https://onpointplugins.com/wp/readme.html',
 				'https://onpointplugins.com/wp/license.txt',
@@ -112,12 +114,12 @@ class ZipTest extends \WP_UnitTestCase {
 		] );
 		$this->assertEquals( (object) [
 			'file_name' => 'd7d4671eed44043cd98b9f2498db9711',
-			'file_path' => 'C:\Users\mat\AppData\Local\Temp',
-			'zip_path'  => 'C:\Users\mat\AppData\Local\Temp/d7d4671eed44043cd98b9f2498db9711',
+			'file_path' => $path,
+			'zip_path'  => $path . '/d7d4671eed44043cd98b9f2498db9711',
 			'zip_name'  => 'frank',
 		], $paths );
 
-		$paths = call_private_method( Zip::in(), 'get_paths', [
+		$paths = PrivateAccess::in()->call_private_method( Zip::in(), 'get_paths', [
 			[
 				'https://onpointplugins.com/wp/readme.html',
 				'https://onpointplugins.com/wp/license.txt',
@@ -125,8 +127,8 @@ class ZipTest extends \WP_UnitTestCase {
 		] );
 		$this->assertEquals( (object) [
 			'file_name' => 'd7d4671eed44043cd98b9f2498db9711',
-			'file_path' => 'C:\Users\mat\AppData\Local\Temp',
-			'zip_path'  => 'C:\Users\mat\AppData\Local\Temp/d7d4671eed44043cd98b9f2498db9711',
+			'file_path' => $path,
+			'zip_path'  => $path . '/d7d4671eed44043cd98b9f2498db9711',
 			'zip_name'  => 'd7d4671eed44043cd98b9f2498db9711',
 		], $paths );
 	}

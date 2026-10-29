@@ -20,17 +20,19 @@ use Lipe\Lib\Rest_Api\Resource_Schema;
  *
  * @phpstan-type EXISTING array{
  *     object_subtype: string,
- *     type: static::TYPE_*,
+ *     type: self::TYPE_*,
  *     description: string,
  *     label: string,
  *     single: bool,
  *     default: mixed,
- *     sanitize_callback: callable,
- *     auth_callback: callable,
+ *     sanitize_callback: callable(mixed,string,string,string=): mixed,
+ *     auth_callback: callable(bool,string,string,string=): mixed,
  *     show_in_rest: bool|array{
- *          schema: array<string,mixed>,
- *          prepare_callback: callable(mixed,\WP_REST_Request<array<string, mixed>>): mixed
- *     }
+ *          name?: string,
+ *          schema?: array<string,mixed>,
+ *          prepare_callback?: callable(mixed,\WP_REST_Request<array<string,mixed>>,array<string,mixed>): mixed
+ *     },
+ *     revisions_enabled: bool
  * }
  *
  * @implements ArgsRules<\Partial<EXISTING>>

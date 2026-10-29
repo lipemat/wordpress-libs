@@ -184,6 +184,18 @@ class Term_Select_2Test extends \WP_Ajax_UnitTestCase {
 	}
 
 
+	public function test_ajax_get_terms_count_result(): void {
+		$this->get_box();
+		$_POST['id'] = 'ts';
+		$_POST['_wpnonce'] = wp_create_nonce( Term_Select_2::NONCE . 'ts' );
+		add_filter( 'get_terms', fn(): int => 1 );
+
+		$this->send_request_ends_in_wp_send();
+
+		$this->assertSame( '{"success":false,"data":"Failed to retrieve terms."}', $this->_last_response );
+	}
+
+
 	private function get_box(): Box {
 		$box = new Box( 'no-title', [ 'post' ], null );
 		$box->field( 'ts', 'TS' )

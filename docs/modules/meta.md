@@ -53,6 +53,8 @@ Registers a classic meta box with WordPress and handles nonce rendering and save
 
 Fluent wrapper around `register_meta()`, `register_post_meta()`, and `register_term_meta()`.
 
+Preloaded arguments support revision settings and partial REST configuration, including a custom name, schema, and three-argument prepare callback.
+
 ### Key public methods
 
 - `public function __construct(array $existing)`

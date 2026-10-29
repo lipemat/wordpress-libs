@@ -12,7 +12,7 @@ namespace Lipe\Lib\Theme\Scripts;
 interface ResourceHandles extends \BackedEnum {
 
 	/**
-	 * @return list<string>
+	 * @return list<non-empty-string>
 	 */
 	public function dependencies(): array;
 
@@ -36,7 +36,7 @@ interface ResourceHandles extends \BackedEnum {
 	 *
 	 * Also used to call `ResourceHandles::from()`.
 	 *
-	 * @return string
+	 * @return non-empty-string
 	 */
 	public function handle(): string;
 

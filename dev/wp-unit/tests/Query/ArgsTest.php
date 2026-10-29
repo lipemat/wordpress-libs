@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Lipe\Lib\Query;
 
@@ -59,5 +60,17 @@ class ArgsTest extends \WP_UnitTestCase {
 		$args->merge_query( $query );
 		$this->assertEquals( 2, $args->get_args()['paged'] );
 		$this->assertEquals( 4, $args->get_args()['page'] );
+	}
+
+
+	public function test_merge_query_uninitialized(): void {
+		$query = new \WP_Query();
+		$args = new Query_Args( [] );
+		$args->posts_per_page = 10;
+
+		$args->merge_query( $query );
+
+		$this->assertSame( [ 'posts_per_page' => 10 ], $query->query, 'Initial query arguments should include the local arguments.' );
+		$this->assertSame( 10, $query->get( 'posts_per_page' ), 'Query variables should include the local arguments.' );
 	}
 }

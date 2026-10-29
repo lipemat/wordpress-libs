@@ -44,7 +44,10 @@ class Enqueue {
 	 */
 	public function register(): void {
 		if ( Util::in()->is_javascript_resource( $this->handle ) ) {
-			wp_register_script( $this->handle->handle(), $this->handle->get_manifest()->get_url(), $this->handle->dependencies(), $this->get_version(), true );
+			$url = $this->handle->get_manifest()->get_url();
+			if ( '' !== $url ) {
+				wp_register_script( $this->handle->handle(), $url, $this->handle->dependencies(), $this->get_version(), true );
+			}
 		} else {
 			wp_register_style( $this->handle->handle(), $this->handle->get_manifest()->get_url(), $this->handle->dependencies(), $this->get_version() );
 		}

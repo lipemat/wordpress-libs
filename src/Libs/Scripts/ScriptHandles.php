@@ -20,7 +20,7 @@ enum ScriptHandles: string {
 	/**
 	 * Get the dependencies for this script.
 	 *
-	 * @return list<string>
+	 * @return list<non-empty-string>
 	 */
 	public function dependencies(): array {
 		return match ( $this ) {
