@@ -44,6 +44,15 @@ class Wp_Register_AbilityTest extends \WP_UnitTestCase {
 	}
 
 
+	public function test_required_capabilities(): void {
+		$ability = new Wp_Register_Ability( [
+			'required_capabilities' => [ 'manage_options' ],
+		] );
+
+		$this->assertSame( [ 'manage_options' ], $ability->get_args()['required_capabilities'] );
+	}
+
+
 	public function test_input_schema(): void {
 		$ability = new Wp_Register_Ability( [] );
 		$ability->input_schema()
@@ -105,6 +114,7 @@ class Wp_Register_AbilityTest extends \WP_UnitTestCase {
 		$ability->execute_callback = $execute;
 		$ability->permission_callback = $permission;
 		$ability->ability_class = 'My_Custom_Ability';
+		$ability->required_capabilities = [ 'edit_posts' ];
 
 		$ability->input_schema()
 		        ->type()->integer();
@@ -125,5 +135,6 @@ class Wp_Register_AbilityTest extends \WP_UnitTestCase {
 		$this->assertSame( 'string', $args['output_schema']['type'] );
 		$this->assertSame( [ 'show_in_rest' => false ], $args['meta'] );
 		$this->assertSame( 'My_Custom_Ability', $args['ability_class'] );
+		$this->assertSame( [ 'edit_posts' ], $args['required_capabilities'] );
 	}
 }

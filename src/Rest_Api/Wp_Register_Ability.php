@@ -70,12 +70,28 @@ class Wp_Register_Ability implements ArgsRules {
 	 *
 	 * Receives optional mixed input and returns bool or WP_Error.
 	 *
-	 * @required
+	 * Required unless a non-empty `$required_capabilities` covers every call.
+	 * Runs after `$required_capabilities` pass and receives prepared input.
 	 *
 	 * @phpstan-var \Closure(mixed=): (bool|\WP_Error)
 	 * @var \Closure
 	 */
 	public \Closure $permission_callback;
+
+	/**
+	 * Capabilities the current user must have for every invocation.
+	 *
+	 * Each is checked with `current_user_can()` before `$permission_callback`.
+	 * Also used by `wp_get_abilities( [ 'has_required_capabilities' => true ] )`.
+	 *
+	 * @since  WP 7.2
+	 *
+	 * @link   https://make.wordpress.org/core/2026/11/19/abilities-api-updates-in-wordpress-7-2/
+	 *
+	 * @phpstan-var non-empty-list<non-empty-string>
+	 * @var string[]
+	 */
+	public array $required_capabilities;
 
 	/**
 	 * JSON Schema definition for the ability's input.
