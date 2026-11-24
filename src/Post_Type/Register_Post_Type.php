@@ -156,6 +156,15 @@ class Register_Post_Type implements ArgsRules {
 	public bool $show_in_rest;
 
 	/**
+	 * Whether to include the post type in the abilities endpoint.
+	 *
+	 * @requires WP 7.2+
+	 *
+	 * @var bool
+	 */
+	public bool $show_in_abilities;
+
+	/**
 	 * To change the base URL of REST API route.
 	 *
 	 * Default is `$post_type`.

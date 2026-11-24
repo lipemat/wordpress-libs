@@ -558,6 +558,22 @@ class Post_Type {
 
 
 	/**
+	 * Show or hide this post type in the abilities API.
+	 *
+	 * @requires WP 7.2+
+	 *
+	 * @default  false
+	 *
+	 * @param bool $show - Whether to show in abilities.
+	 *
+	 * @return void
+	 */
+	public function show_in_abilities( bool $show = true ): void {
+		$this->register_args->show_in_abilities = $show;
+	}
+
+
+	/**
 	 * Show or hide this post type in the REST API.
 	 *
 	 * @since 5.0.0
