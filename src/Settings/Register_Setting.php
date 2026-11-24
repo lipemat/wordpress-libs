@@ -72,10 +72,11 @@ class Register_Setting implements ArgsRules {
 	/**
 	 * Whether the setting should be registered for the REST API.
 	 *
-	 * When registering complex settings, this argument may optionally be an array with a 'schema' key.
+	 * @see self::show_in_rest() for a more advanced usage.
 	 *
 	 * @phpstan-var bool|array{
-	 *     schema: array<string, mixed>
+	 *     name?: string,
+	 *     schema?: array<string,mixed>,
 	 * }
 	 *
 	 * @var bool|array
